@@ -63,3 +63,34 @@ IntegrityEvent:
     Ω: 0.85
     Λ: "Калибровать после 20 LAB-сессий"
 ```
+
+---
+
+### 2026-01-02T20:00:00+01:00 — vΩ.2.1 (Deep Audit & Setup)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-01-02T20:00:00+01:00
+  actor: Claude (Opus 4.5)
+  scope: [docs, runtime, governance, ledger, root]
+  files_changed:
+    - docs/AUDIT_REPORT.md (created)
+    - docs/ROADMAP.md (created)
+    - docs/QUICKSTART.md (created)
+    - runtime/package.json (created)
+    - runtime/tsconfig.json (created)
+    - runtime/src/types/metrics.ts (created)
+    - runtime/src/types/voices.ts (created)
+    - runtime/src/types/protocols.ts (created)
+    - runtime/src/index.ts (created)
+    - runtime/README.md (updated)
+    - LICENSE (created)
+    - .gitignore (expanded)
+    - ledger/sot.json (regenerated)
+  reason: "Deep Audit & Repository Setup"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Полный аудит + документация + TypeScript scaffold"
+    D: "37 файлов SoT → анализ пробелов → документация + настройка"
+    Ω: 0.88
+    Λ: "Реализовать Phase 1 scaffolding → npm install → build"
+```

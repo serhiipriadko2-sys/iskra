@@ -1,25 +1,111 @@
-# secrets
+# ========================================
+# ISKRA .gitignore
+# ========================================
+
+# Secrets (CRITICAL - never commit!)
 .env
 .env.*
+.env.local
+.env.*.local
 *.key
 *.pem
+*.p12
+credentials.json
+secrets/
+*.secret
 
-# OS
+# API Keys
+.gemini
+.openai
+.anthropic
+
+# OS Files
 .DS_Store
+.DS_Store?
+._*
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Node
+# Node.js
 node_modules/
 dist/
 build/
+.next/
+.nuxt/
+.output/
+.cache/
+.parcel-cache/
+.npm
 .npmrc
+*.tgz
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
 .venv/
 venv/
+env/
+.Python
+*.egg-info/
+.eggs/
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
 
-# IDE
+# IDE & Editors
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Supabase local
+.supabase/
+
+# Local development
+.local/
+*.local
+
+# ISKRA specific
+# (Keep ledger/sot.json tracked, but ignore local experiments)
+mind/experiments/
+appendix/drafts/

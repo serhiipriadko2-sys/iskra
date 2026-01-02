@@ -5,7 +5,16 @@
 - layer: governance
 - created: 2026-01-01
 - updated: 2026-01-02
-- version: vΩ.2.0
+- version: vΩ.2.1
+
+## vΩ.2.1 — 2026-01-02
+- **Deep Audit** — полный анализ репозитория (docs/AUDIT_REPORT.md).
+- **ROADMAP** — 6-фазный план развития (docs/ROADMAP.md).
+- **QUICKSTART** — быстрый старт для новых разработчиков (docs/QUICKSTART.md).
+- **Runtime Scaffold** — TypeScript типы (metrics, voices, protocols).
+- **LICENSE** — MIT + CC BY-SA 4.0 для Canon.
+- **.gitignore** — расширенные правила безопасности.
+- Updated ledger hashes (38 files).
 
 ## vΩ.2.0 — 2026-01-02
 - **ARCHITECTURE.md** — 4-уровневая когнитивная архитектура (27 сервисов).
