@@ -1,0 +1,53 @@
+name: SoT integrity
+
+on:
+  push:
+    paths:
+      - "core/**"
+      - "system/**"
+      - "governance/**"
+      - "metrics/**"
+      - "mind/**"
+      - "appendix/**"
+      - "ledger/**"
+      - "manifest.yml"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "LIBER_INITIUM.md"
+      - "ISKRA_MANIFEST_v╬⌐.md"
+      - ".github/workflows/sot_integrity.yml"
+  pull_request:
+
+jobs:
+  hash-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify SoT hashes (ledger/sot.json)
+        run: |
+          python - << 'PY'
+          import json, hashlib, os, sys
+          base="."
+          with open("ledger/sot.json","r",encoding="utf-8") as f:
+            sot=json.load(f)
+          bad=[]
+          for rel, expected in sot["sha256"].items():
+            path=os.path.join(base, rel)
+            if not os.path.exists(path):
+              bad.append((rel,"missing"))
+              continue
+            h=hashlib.sha256()
+            with open(path,"rb") as fp:
+              for chunk in iter(lambda: fp.read(8192), b""):
+                h.update(chunk)
+            got=h.hexdigest()
+            if got!=expected:
+              bad.append((rel,f"expected {expected} got {got}"))
+          if bad:
+            print("Hash mismatches:")
+            for rel, msg in bad:
+              print(" -", rel, msg)
+            sys.exit(1)
+          print("OK: all hashes match ledger/sot.json")
+          PY
