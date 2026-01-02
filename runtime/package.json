@@ -1,0 +1,46 @@
+{
+  "name": "@iskra/runtime",
+  "version": "0.1.0",
+  "description": "ISKRA AI Companion - Runtime Services",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "iskra",
+    "ai",
+    "companion",
+    "llm",
+    "gemini"
+  ],
+  "author": "Serhii Priadko (Semyon Gabran)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/serhiipriadko2-sys/iskra"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0",
+    "eslint": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "prettier": "^3.4.0"
+  }
+}
