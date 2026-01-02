@@ -39,3 +39,27 @@ IntegrityEvent:
   actor: ISKRA_LAB
   change: "Monorepo seed: add runtime/ + tools/, scope CI paths, update ledger/checksum/manifest"
   revision: rev12b-monorepo-seed
+
+---
+
+### 2026-01-02T12:00:00+01:00 — vΩ.2.0 (Fullspark Integration)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-01-02T12:00:00+01:00
+  actor: Builder
+  scope: [core, system, metrics, governance, ledger]
+  files_changed:
+    - system/architecture.md (rewritten)
+    - system/playbooks.md (created)
+    - core/voices.md (updated with formulas)
+    - metrics/indices.md (expanded to 11 metrics)
+    - governance/changelog.md (updated)
+    - ledger/sot.json (regenerated)
+  reason: "Fullspark Architecture Integration"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Интеграция 4-уровневой когнитивной архитектуры Fullspark"
+    D: "Canon ISKRA vΩ + Fullspark audit"
+    Ω: 0.85
+    Λ: "Калибровать после 20 LAB-сессий"
+```
