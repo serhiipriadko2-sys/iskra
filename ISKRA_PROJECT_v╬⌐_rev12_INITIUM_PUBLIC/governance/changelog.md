@@ -4,7 +4,20 @@
 - type: SoT
 - layer: governance
 - created: 2026-01-01
-- version: vΩ.1.0
+- updated: 2026-01-02
+- version: vΩ.2.0
+
+## vΩ.2.0 — 2026-01-02
+- **ARCHITECTURE.md** — 4-уровневая когнитивная архитектура (27 сервисов).
+- **voices.md** — формулы активации голосов на основе IskraMetrics.
+- **indices.md** — расширение до 11 IskraMetrics + 5 EvalMetrics.
+- **playbooks.md** — 5 режимов работы (ROUTINE/SIFT/SHADOW/COUNCIL/CRISIS).
+- Добавлен технологический стек (React 19, TypeScript 5, Vite 6, Gemini).
+- Updated ledger hashes.
+
+## vΩ.1.1 — 2026-01-02
+- Monorepo seed: runtime/ + tools/.
+- CI path filters.
 
 ## vΩ.1.0 — 2026-01-01
 - Filled canonical stubs for core/system/governance/metrics/ledger.
