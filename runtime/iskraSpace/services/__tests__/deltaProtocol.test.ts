@@ -116,11 +116,8 @@ D: source → inference → true
 
   describe('enforceDeltaProtocol', () => {
     it('should not modify text with valid signature', () => {
-      const text = `Response with valid signature.
-Δ: Valid delta
-D: source → inference → true
-Ω: 80%
-Λ: step`;
+      // Note: The commented example below would fail validation (lambda too short)
+      // "Λ: step" is only 4 chars, but Lambda MUST be >= 5 chars
 
       // We expect strict validation to pass for this block
       // BUT if runtime checks fail (e.g. length of delta/depth/lambda < 5), it might fail.

@@ -120,7 +120,7 @@ export async function buildRAGContext(
     type: r.type,
     layer: r.layer,
     score: r.score,
-    tags: r.meta?.tags,
+    tags: Array.isArray(r.meta?.tags) ? r.meta.tags as string[] : undefined,
   }));
 
   // Always check Mantra for core principles
@@ -649,7 +649,7 @@ export async function buildRAGContextWithSIFT(
                 type: r.type,
                 layer: r.layer,
                 score: r.score,
-                tags: r.meta?.tags,
+                tags: Array.isArray(r.meta?.tags) ? r.meta.tags as string[] : undefined,
               });
             }
           });

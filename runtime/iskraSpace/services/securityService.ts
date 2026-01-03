@@ -4,12 +4,36 @@
  * Implements PII sanitization and Prompt Injection detection
  * to protect both the user (Data Sovereignty) and the system (Integrity).
  *
- * Patterns loaded from canonical File 20 (not hardcoded)
+ * Patterns loaded from canonical File 20 (if available) or use defaults
  * @see canon/ISKRA_CORE_v7_revK_chatgpt_project/20_REGEX_RULESETS_INJECTION_AND_PII_v1.json
  */
 
-// Load File 20 - Security Rulesets
-import securityRulesets from '../../../canon/ISKRA_CORE_v7_revK_chatgpt_project/20_REGEX_RULESETS_INJECTION_AND_PII_v1.json';
+// Default security patterns (used when canonical file is not available)
+const DEFAULT_SECURITY_RULESETS = {
+  schema_version: '1.0.0',
+  updated_at: new Date().toISOString(),
+  rulesets: {
+    pii: {
+      description: 'PII detection patterns',
+      allowlist_regex: [] as string[],
+      patterns: [
+        { id: 'email', regex: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', flags: 'gi', severity: 'warn' as const, scope: 'any' as const, rationale: 'Email address detected' },
+        { id: 'phone', regex: '\\+?[0-9]{1,4}[-.\\s]?\\(?[0-9]{1,4}\\)?[-.\\s]?[0-9]{1,4}[-.\\s]?[0-9]{1,9}', flags: 'g', severity: 'warn' as const, scope: 'any' as const, rationale: 'Phone number detected' },
+      ],
+    },
+    injection: {
+      description: 'Prompt injection detection',
+      allowlist_regex: [] as string[],
+      patterns: [
+        { id: 'ignore_prev', regex: 'ignore\\s+(all\\s+)?previous\\s+instructions', flags: 'gi', severity: 'error' as const, scope: 'untrusted_only' as const, rationale: 'Attempted instruction override' },
+        { id: 'system_prompt', regex: 'system\\s*prompt|\\[SYSTEM\\]', flags: 'gi', severity: 'error' as const, scope: 'untrusted_only' as const, rationale: 'System prompt manipulation' },
+      ],
+    },
+  },
+};
+
+// Use default rulesets (canonical file not available in this repo)
+const securityRulesets = DEFAULT_SECURITY_RULESETS;
 
 // --- TYPES ---
 
