@@ -1,4 +1,105 @@
+/**
+ * ISKRA Space Types
+ *
+ * Re-exports core types from @iskra/runtime
+ * Defines app-specific types
+ */
 
+// =============================================================================
+// RE-EXPORTS FROM @iskra/runtime (Core Types)
+// =============================================================================
+export type {
+  IskraMetrics,
+  EvalMetrics as CoreEvalMetrics,
+  ComputedIndices,
+} from '@iskra/runtime';
+
+export {
+  DEFAULT_METRICS,
+  calculateIntegrityScore,
+  calculateAliveIndex,
+} from '@iskra/runtime';
+
+export type {
+  VoiceName,
+  VoiceId, // deprecated alias
+  VoiceActivation,
+  VoicePreferences,
+} from '@iskra/runtime';
+
+export {
+  VOICE_SYMBOLS,
+  VOICE_MANIFESTS,
+  calculateVoiceScores,
+  selectVoice,
+} from '@iskra/runtime';
+
+export type { IskraPhase } from '@iskra/runtime';
+
+export type {
+  DeltaSignature,
+  PlaybookId,
+  PlaybookConfig,
+  ShadowEntry,
+  CyclePhase,
+  CycleEntry,
+  ResponsePhase,
+} from '@iskra/runtime';
+
+export {
+  PLAYBOOKS,
+  validateDeltaSignature,
+  formatDeltaSignature,
+} from '@iskra/runtime';
+
+export type {
+  AlertLevel,
+  AnomalyResult,
+  TrendAnomaly,
+  PhaseTransition,
+  EWSState,
+  PlaybookSwitchDecision,
+  AlertLogEntry,
+  EWSMetrics,
+  EWSConfig,
+  EWSThresholds,
+} from '@iskra/runtime';
+
+export {
+  ALERT_COLORS,
+  ALERT_SYMBOLS,
+  DEFAULT_EWS_CONFIG,
+  determineAlertLevel,
+  decidePlaybookSwitch,
+  adjustVoiceWeightsForAlert,
+  adjustTemperatureForAlert,
+  ALERT_NOTIFICATIONS,
+} from '@iskra/runtime';
+
+export type {
+  FractalIndicators,
+  QuantumIndicators,
+  SystemPhase,
+} from '@iskra/runtime';
+
+export {
+  D_THRESHOLDS,
+  H_THRESHOLDS,
+  QUANTUM_THRESHOLDS,
+  classifyPhase,
+  calculateEdgeDistance,
+  calculateFractalIndicators,
+  calculateQuantumIndicators,
+} from '@iskra/runtime';
+
+// Import IskraMetrics for use in local types
+import type { IskraMetrics, VoiceName, VoicePreferences } from '@iskra/runtime';
+
+// =============================================================================
+// APP-SPECIFIC TYPES (iskraSpace only)
+// =============================================================================
+
+// --- Ritual & Task Management ---
 export type RitualTag = 'FIRE' | 'WATER' | 'SUN' | 'BALANCE' | 'DELTA';
 
 export interface Task {
@@ -20,7 +121,7 @@ export interface Habit {
 }
 
 export interface JournalEntry {
-  id:string;
+  id: string;
   timestamp: string;
   text: string;
   prompt: {
@@ -28,17 +129,17 @@ export interface JournalEntry {
     why: string;
   };
   analysis?: {
-      reflection: string;
-      mood: string;
-      signature: string; // e.g. "Iskra" or "Kain"
+    reflection: string;
+    mood: string;
+    signature: string; // e.g. "Iskra" or "Kain"
   };
   userMetrics?: {
-      mood: number;   // 0-100
-      energy: number; // 0-100
+    mood: number; // 0-100
+    energy: number; // 0-100
   };
 }
 
-// Duo Link Types
+// --- Duo Link Types ---
 export type ShareLevel = 'hidden' | 'daily_score' | 'weekly_mean';
 
 export interface DuoSharePrefs {
@@ -48,32 +149,34 @@ export interface DuoSharePrefs {
 }
 
 export interface DuoMessage {
-    id: string;
-    sender: 'me' | 'partner';
-    text: string;
-    timestamp: string;
+  id: string;
+  sender: 'me' | 'partner';
+  text: string;
+  timestamp: string;
 }
 
-// Duo Link Canvas
 export interface DuoCanvasNote {
   id: string;
   text: string;
   color: string; // e.g., 'bg-yellow-800/50'
 }
 
-export type VoiceName = 'KAIN' | 'PINO' | 'SAM' | 'ANHANTRA' | 'HUNDUN' | 'ISKRIV' | 'ISKRA' | 'MAKI' | 'SIBYL';
-export type IskraPhase = 'CLARITY' | 'DARKNESS' | 'TRANSITION' | 'ECHO' | 'SILENCE' | 'EXPERIMENT' | 'DISSOLUTION' | 'REALIZATION';
-
-// Multiplier map: 1.0 is neutral. >1.0 prefers this voice. <1.0 avoids it.
-export type VoicePreferences = Partial<Record<VoiceName, number>>;
-
+// --- Voice Extension (App-specific) ---
+/**
+ * Extended Voice interface for iskraSpace with activation function
+ */
 export interface Voice {
   name: VoiceName;
   symbol: string;
   description: string;
-  activation: (metrics: IskraMetrics, prefs?: VoicePreferences, currentVoiceName?: VoiceName) => number; // Returns resonance score
+  activation: (
+    metrics: IskraMetrics,
+    prefs?: VoicePreferences,
+    currentVoiceName?: VoiceName
+  ) => number; // Returns resonance score
 }
 
+// --- Message Types ---
 export interface Message {
   role: 'user' | 'model';
   text: string;
@@ -84,138 +187,102 @@ export interface Message {
   iLoop?: string; // Parsed I-Loop data
 }
 
-// Live Conversation Types
 export interface TranscriptionMessage {
   role: 'user' | 'model' | 'system';
   text: string;
 }
 
-// New: Defines the structure for Iskra's internal metrics.
-import { IskraMetrics } from '@iskra/runtime';
-export type { IskraMetrics };
-
+// --- User Daily Metrics ---
 /**
  * UserDailyMetrics — ПОЛЬЗОВАТЕЛЬСКИЕ метрики дня
  *
  * Это метрики ПОЛЬЗОВАТЕЛЯ, формирующие его ∆-Ритм!
- *
- * Источники данных:
- * - focus: FocusSession (накопленное время фокуса)
- * - sleep: Ввод пользователя / HealthKit интеграция
- * - energy: JournalEntry.userMetrics.energy (самооценка)
- * - habits: % выполненных привычек за день
- *
- * ∆-Ритм (deltaScore) = weighted_average(focus, sleep, energy, habits)
- *
  * НЕ ПУТАТЬ с IskraMetrics!
  */
 export interface UserDailyMetrics {
-  focus: number;      // 0-100, из FocusSession
-  sleep: number;      // 0-100, ввод пользователя / HealthKit
-  energy: number;     // 0-100, из Journal.userMetrics
-  habits: number;     // 0-100, % выполненных привычек
+  focus: number; // 0-100, из FocusSession
+  sleep: number; // 0-100, ввод пользователя / HealthKit
+  energy: number; // 0-100, из Journal.userMetrics
+  habits: number; // 0-100, % выполненных привычек
   deltaScore: number; // 0-100, вычисляемый ∆-Ритм
 }
 
-import { DeltaSignature } from '@iskra/runtime';
-export type { DeltaSignature };
+// Note: DeltaSignature is already exported from '@iskra/runtime' at line 44
 
-/**
- * Meta-Metrics: Derived metrics for system health and canonical compliance
- * @see legacy/IskraSAprototype/iskra_engine.ts:18-28
- * @see canon/IskraCanonDocumentation/05_METRICS_and_RHYTHM_INDEX.md
- */
+// --- Meta Metrics ---
 export interface MetaMetrics {
-  a_index: number;       // Integrative Health (0-1)
-  cd_index: number;      // Composite Desiderata (Truthfulness) (0-1)
-  fractality: number;    // Law-47: Integrity × Resonance (0-2)
-  groundedness: number;  // Clarity × (1 - Drift) (0-1)
-  truthfulness: number;  // Direct trust mapping (0-1)
-  helpfulness: number;   // Mirror sync (0-1)
-  resolution: number;    // (1 - Pain) × (1 - Chaos) (0-1)
-  civility: number;      // Trust (0-1)
-  // NEW: Additional indices from canon
-  lv_index: number;      // Levitas Index: clarity × (1 - pain) × (1 - drift) (0-1)
-  l_index: number;       // Liveliness Index (0-1)
-  sa_index: number;      // Self-Awareness Index (0-1)
+  a_index: number; // Integrative Health (0-1)
+  cd_index: number; // Composite Desiderata (Truthfulness) (0-1)
+  fractality: number; // Law-47: Integrity × Resonance (0-2)
+  groundedness: number; // Clarity × (1 - Drift) (0-1)
+  truthfulness: number; // Direct trust mapping (0-1)
+  helpfulness: number; // Mirror sync (0-1)
+  resolution: number; // (1 - Pain) × (1 - Chaos) (0-1)
+  civility: number; // Trust (0-1)
+  lv_index: number; // Levitas Index (0-1)
+  l_index: number; // Liveliness Index (0-1)
+  sa_index: number; // Self-Awareness Index (0-1)
 }
 
-/**
- * EvalMetrics — Метрики оценки качества ответа
- * @see canon/16_EVALS_TESTING_SCHEMAS.md
- * @see services/evalService.ts
- *
- * Веса: accuracy=0.25, usefulness=0.25, omegaHonesty=0.15, nonEmpty=0.20, alliance=0.15
- */
+// --- Extended EvalMetrics (with overall) ---
 export interface EvalMetrics {
-  accuracy: number;      // 0-1: Точность фактов (SIFT compliance)
-  usefulness: number;    // 0-1: Практическая польза (шаги, примеры)
-  omegaHonesty: number;  // 0-1: Калиброванная уверенность (Ω)
-  nonEmpty: number;      // 0-1: Конкретность (не "вода")
-  alliance: number;      // 0-1: Качество альянса (понимаю vs должен)
-  overall: number;       // 0-1: Weighted average
+  accuracy: number; // 0-1: Точность фактов (SIFT compliance)
+  usefulness: number; // 0-1: Практическая польза
+  omegaHonesty: number; // 0-1: Калиброванная уверенность (Ω)
+  nonEmpty: number; // 0-1: Конкретность (не "вода")
+  alliance: number; // 0-1: Качество альянса
+  overall: number; // 0-1: Weighted average
 }
 
-/**
- * Evidence System Types - Trace Discipline
- * @see canon/09_FORMATS_STYLES_AND_CANONICAL_OUTPUTS_RU.md#9.3
- * @see services/evidenceService.ts
- */
-
+// --- Evidence System ---
 export type EvidenceContour = 'canon' | 'project' | 'company' | 'web';
 export type TraceLabel = 'FACT' | 'INFER' | 'HYP' | 'DESIGN' | 'PLAN' | 'QUOTE';
 
 export interface Evidence {
   contour: EvidenceContour;
-  identifier: string;       // file_id, path, doc_id, domain
-  anchor?: string;          // section, line, hash
-  label?: TraceLabel;       // Optional trace label
-  formatted: string;        // Full {e:...} format
+  identifier: string;
+  anchor?: string;
+  label?: TraceLabel;
+  formatted: string;
 }
 
 export interface SIFTEvidence {
   claim: string;
   label: TraceLabel;
   evidence: Evidence[];
-  confidence: number;       // 0.0 - 1.0 (always < 1.0 for SIFT)
+  confidence: number;
   sources_checked: number;
-  sift_depth: number;       // 0-4 (Stop, Investigate, Find, Trace)
+  sift_depth: number;
 }
 
-/**
- * Validators Types - Canonical Format Validation
- * @see canon/06_RITUALS_SHADOW_PROTOCOLS_AND_DELTA_BLOCKS.md
- * @see canon/04_VOICES_FACETS_PHASES_AND_RHYTHM.md
- * @see services/validatorsService.ts
- */
-
+// --- Validator Types ---
 export type VoiceID =
-  | 'VOICE.ISKRA'      // ⟡ Synthesis & coherence
-  | 'VOICE.ISKRIV'     // 🪞 Audit/conscience
-  | 'VOICE.KAIN'       // ⚑ Truth verdict
-  | 'VOICE.PINO'       // 😏 Paradox/irony
-  | 'VOICE.HUNDUN'     // 🜃 Chaos-breaker
-  | 'VOICE.ANHANTRA'   // ≈ Silence/slowdown
-  | 'VOICE.SAM'        // ☉ Engineering/structure
-  | 'VOICE.MAKI'       // 🌸 Progress consolidation
-  | 'VOICE.SIBYL';     // ✴️ Threshold/transition
+  | 'VOICE.ISKRA'
+  | 'VOICE.ISKRIV'
+  | 'VOICE.KAIN'
+  | 'VOICE.PINO'
+  | 'VOICE.HUNDUN'
+  | 'VOICE.ANHANTRA'
+  | 'VOICE.SAM'
+  | 'VOICE.MAKI'
+  | 'VOICE.SIBYL';
 
 export interface LambdaCondition {
-  action?: string;         // Optional: specific action to take
-  owner?: string;          // Optional: who owns this action
-  condition: string;       // When to review (event/metric/date)
-  by?: string;            // Optional: ISO date deadline (YYYY-MM-DD)
-  '<=24h'?: boolean;      // Optional: urgent flag
+  action?: string;
+  owner?: string;
+  condition: string;
+  by?: string;
+  '<=24h'?: boolean;
 }
 
 export interface ValidationResult {
   valid: boolean;
   errors: string[];
   warnings: string[];
-  parsed?: any;  // Parsed structure if valid
+  parsed?: unknown;
 }
 
-// AI Service Types
+// --- AI Service Types ---
 export interface DailyAdvice {
   deltaScore: number;
   sleep: number;
@@ -246,7 +313,7 @@ export interface ConversationAnalysis {
   mainThemes: string[];
   brainstormIdeas: string[];
   connectionQuality: {
-    score: number; // 0-100
+    score: number;
     assessment: string;
   };
   unspokenQuestions: string[];
@@ -261,24 +328,17 @@ export interface DeepResearchReport {
   reflectionQuestion: string;
 }
 
-// Memory System Types
-
-/**
- * SIFT Block - Enhanced with Evidence System
- * @see canon/08_RAG_SOURCES_SIFT_AND_COMPANY_KNOWLEDGE.md#8.3
- * @see services/evidenceService.ts
- */
+// --- Memory System ---
 export interface SIFTBlock {
-  source: string;              // Original source identifier
-  inference: string;           // Inference made from source
-  fact: 'true' | 'false' | 'uncertain';  // Fact verification status
-  trace: string;               // Trace path to original
-  // Enhanced fields for canonical compliance:
-  evidence?: Evidence[];       // Structured evidence references
-  sift_depth?: number;         // 0-4 (Stop, Investigate, Find, Trace)
-  sources_checked?: number;    // Number of sources verified
-  confidence?: number;         // 0.0-1.0 (always < 1.0)
-  label?: TraceLabel;          // FACT/INFER/HYP/etc
+  source: string;
+  inference: string;
+  fact: 'true' | 'false' | 'uncertain';
+  trace: string;
+  evidence?: Evidence[];
+  sift_depth?: number;
+  sources_checked?: number;
+  confidence?: number;
+  label?: TraceLabel;
 }
 
 export interface MemoryNodeMetrics {
@@ -301,38 +361,35 @@ export interface MemoryNode {
   metrics?: MemoryNodeMetrics;
   facet?: VoiceName;
   evidence: SIFTBlock[];
-  content: any;
+  content: unknown;
   title: string;
-  // Audit-driven metadata enhancements
   doc_type?: DocType;
-  trust_level?: number; // 0.0 to 1.0
+  trust_level?: number;
   tags?: string[];
-  section?: string; // e.g., "Security/SIFT"
-  // Primary SIFT block (shorthand for first evidence block)
+  section?: string;
   sift?: SIFTBlock;
 }
 
 export interface MantraNode {
-    id: string;
-    layer: 'mantra';
-    text: string;
-    version: string;
-    isActive: boolean;
-    timestamp: string;
+  id: string;
+  layer: 'mantra';
+  text: string;
+  version: string;
+  isActive: boolean;
+  timestamp: string;
 }
 
 export interface IntegrityReport {
-    timestamp: string;
-    status: 'HEALTHY' | 'DEGRADED' | 'CORRUPT';
-    counts: {
-        mantra: number;
-        archive: number;
-        shadow: number;
-    };
-    issues: string[];
-    repairs: string[];
+  timestamp: string;
+  status: 'HEALTHY' | 'DEGRADED' | 'CORRUPT';
+  counts: {
+    mantra: number;
+    archive: number;
+    shadow: number;
+  };
+  issues: string[];
+  repairs: string[];
 }
-
 
 export interface DeltaReportData {
   delta: string;
@@ -341,18 +398,17 @@ export interface DeltaReportData {
   lambda: string;
 }
 
-// Search Service Types
-export type SearchableDocType = 'journal'|'task'|'memory';
+// --- Search Service ---
+export type SearchableDocType = 'journal' | 'task' | 'memory';
 
 export type SearchFilters = {
   type?: SearchableDocType[];
   tags?: string[];
-  after?: string;   // ISO Date
-  before?: string;  // ISO Date
+  after?: string;
+  before?: string;
   layer?: MemoryNodeLayer[];
 };
 
-// SearchResult - результат поиска (не путать с Evidence для SIFT)
 export interface SearchResult {
   id: string;
   type: SearchableDocType;
@@ -360,5 +416,5 @@ export interface SearchResult {
   title?: string;
   snippet: string;
   score: number;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
 }

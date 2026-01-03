@@ -8,7 +8,7 @@
 import type { IskraMetrics } from './metrics.js';
 import type { FractalIndicators, SystemPhase } from './fractal.js';
 import type { PlaybookId } from './protocols.js';
-import type { VoiceId } from './voices.js';
+import type { VoiceName } from './voices.js';
 
 /**
  * Уровни алертов
@@ -345,39 +345,39 @@ export function decidePlaybookSwitch(
  * Корректировка весов голосов для уровня алерта
  */
 export function adjustVoiceWeightsForAlert(
-  baseWeights: Record<VoiceId, number>,
+  baseWeights: Record<VoiceName, number>,
   alertLevel: AlertLevel
-): Record<VoiceId, number> {
+): Record<VoiceName, number> {
   const adjusted = { ...baseWeights };
 
   switch (alertLevel) {
     case 'watch':
-      adjusted.iskriv = (adjusted.iskriv || 0) * 1.3;
-      adjusted.sam = (adjusted.sam || 0) * 1.1;
+      adjusted.ISKRIV = (adjusted.ISKRIV || 0) * 1.3;
+      adjusted.SAM = (adjusted.SAM || 0) * 1.1;
       break;
 
     case 'warning':
-      adjusted.kain = (adjusted.kain || 0) * 1.5;
-      adjusted.anhantra = (adjusted.anhantra || 0) * 1.4;
-      adjusted.pino = (adjusted.pino || 0) * 0.5;
+      adjusted.KAIN = (adjusted.KAIN || 0) * 1.5;
+      adjusted.ANHANTRA = (adjusted.ANHANTRA || 0) * 1.4;
+      adjusted.PINO = (adjusted.PINO || 0) * 0.5;
       break;
 
     case 'critical':
-      adjusted.kain = 2.0;
-      adjusted.anhantra = 1.8;
-      adjusted.sam = 1.5;
-      adjusted.maki = 1.3;
-      adjusted.pino = 0;
-      adjusted.huyndun = 0.5;
+      adjusted.KAIN = 2.0;
+      adjusted.ANHANTRA = 1.8;
+      adjusted.SAM = 1.5;
+      adjusted.MAKI = 1.3;
+      adjusted.PINO = 0;
+      adjusted.HUNDUN = 0.5;
       break;
 
     case 'lockdown':
       // Только SAM и MAKI
       Object.keys(adjusted).forEach(k => {
-        adjusted[k as VoiceId] = 0;
+        adjusted[k as VoiceName] = 0;
       });
-      adjusted.sam = 1.0;
-      adjusted.maki = 1.0;
+      adjusted.SAM = 1.0;
+      adjusted.MAKI = 1.0;
       break;
   }
 
@@ -387,13 +387,13 @@ export function adjustVoiceWeightsForAlert(
 /**
  * Нормализация весов
  */
-function normalizeWeights(weights: Record<VoiceId, number>): Record<VoiceId, number> {
+function normalizeWeights(weights: Record<VoiceName, number>): Record<VoiceName, number> {
   const total = Object.values(weights).reduce((a, b) => a + b, 0);
   if (total === 0) return weights;
 
-  const normalized: Record<VoiceId, number> = {} as Record<VoiceId, number>;
+  const normalized: Record<VoiceName, number> = {} as Record<VoiceName, number>;
   for (const [key, value] of Object.entries(weights)) {
-    normalized[key as VoiceId] = value / total;
+    normalized[key as VoiceName] = value / total;
   }
   return normalized;
 }

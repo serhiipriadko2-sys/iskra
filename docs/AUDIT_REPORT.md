@@ -372,15 +372,23 @@ runtime/src/types/
 - [x] Добавить Fractal Monitoring
 - [x] Создать Early Warning System
 
-### 7.2 Следующие шаги (Phase 2)
+### 7.2 Phase 2 (ВЫПОЛНЕНО ✅)
 
-- [ ] Реализовать metricsService.ts
-- [ ] Реализовать voiceEngine.ts
-- [ ] Реализовать siftService.ts
-- [ ] Реализовать fractalMonitor.ts
-- [ ] Реализовать earlyWarning.ts
-- [ ] Написать unit-тесты (vitest)
-- [ ] Настроить prettier/eslint
+- [x] Unit-тесты для @iskra/runtime (120 тестов в 6 файлах)
+  - metrics.test.ts (9 tests)
+  - voices.test.ts (17 tests)
+  - protocols.test.ts (15 tests)
+  - sift.test.ts (15 tests)
+  - ews.test.ts (33 tests)
+  - fractal.test.ts (31 tests)
+- [x] Унификация типов runtime ↔ iskraSpace
+  - VoiceId → VoiceName (uppercase)
+  - HUNDUN spelling fix
+  - IskraPhase, VoicePreferences exports
+- [x] iskraSpace → импорт из @iskra/runtime
+- [x] TypeScript ^5.7 → ^5.8 alignment
+- [x] Vitest ^2.0 → ^2.1 alignment
+- [x] Удалён неиспользуемый @google/generative-ai
 
 ### 7.3 Среднесрочные (Phase 3-4)
 
@@ -400,30 +408,37 @@ runtime/src/types/
 
 ## ∆DΩΛ
 
-**∆:** Полный аудит ISKRA Livebuild обновлён до vΩ.3.1 — обнаружен и задокументирован iskraSpace (54 сервиса, 42 компонента), исправлены все TypeScript ошибки, добавлен RAG-индекс, очищены дубликаты.
+**∆:** Phase 2 завершён — 120 unit-тестов для @iskra/runtime, унифицированы типы между runtime и iskraSpace, удалены дублирующиеся зависимости.
 
-**D:** 135+ TypeScript файлов в runtime/ → 13 TS-ошибок исправлено → ESLint/Prettier настроены → package-lock.json сгенерированы → REPOSITORY_INDEX.md создан.
+**D:**
+- runtime/src/__tests__/ (6 файлов, 120 тестов)
+- runtime/src/types/voices.ts (VoiceName uppercase)
+- runtime/iskraSpace/types.ts (импорты из @iskra/runtime)
+- package.json (TypeScript 5.8, Vitest 2.1, removed @google/generative-ai)
 
-**Ω:** 0.95 — высокая уверенность (TypeScript компилируется без ошибок, все конфигурации на месте).
+**Ω:** 0.95 — все тесты проходят, typecheck OK, типы унифицированы.
 
 **Λ:**
-1. Добавить unit-тесты для @iskra/runtime
-2. Унифицировать типы между iskraSpace и runtime
-3. Закоммитить и запушить изменения
+1. Интеграция e2e-тестов в CI
+2. Реализация сервисов (metricsService, voiceEngine)
+3. Production deployment
 
 ---
 
-**Version:** 3.1.0
+**Version:** 3.2.0
 **Layer:** docs (аудит)
 **Author:** Claude (Opus 4.5)
 **Date:** 2026-01-03
 **Integrity:** Audit-Updated
-**Files Changed:**
-- runtime/src/types/fractal.ts (TS fixes)
-- runtime/src/types/ews.ts (unused import)
-- runtime/package.json (ESLint deps)
-- runtime/eslint.config.js (new)
-- runtime/.prettierrc (new)
-- .gitignore (package-lock.json)
-- requirements.txt (new)
-- docs/REPOSITORY_INDEX.md (new)
+
+### Phase 2 Files Changed:
+- runtime/src/__tests__/*.test.ts (6 new files, 120 tests)
+- runtime/src/types/voices.ts (VoiceName, uppercase)
+- runtime/src/types/ews.ts (VoiceName import)
+- runtime/src/index.ts (IskraPhase, VoicePreferences exports)
+- runtime/package.json (TypeScript 5.8, no @google/generative-ai)
+- runtime/vitest.config.ts (new)
+- runtime/iskraSpace/types.ts (imports from @iskra/runtime)
+- runtime/iskraSpace/package.json (@iskra/runtime dep, Vitest 2.1)
+- docs/REPOSITORY_INDEX.md (updated)
+- docs/AUDIT_REPORT.md (this update)

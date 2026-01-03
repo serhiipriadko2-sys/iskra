@@ -19,7 +19,13 @@ export {
   calculateAliveIndex,
 } from './types/metrics.js';
 
-export type { VoiceId, Voice, VoiceActivation } from './types/voices.js';
+export type {
+  VoiceName,
+  VoiceId, // deprecated alias
+  Voice,
+  VoiceActivation,
+  VoicePreferences,
+} from './types/voices.js';
 
 export {
   VOICE_SYMBOLS,
@@ -27,6 +33,19 @@ export {
   calculateVoiceScores,
   selectVoice,
 } from './types/voices.js';
+
+/**
+ * ISKRA Phase (conversation state)
+ */
+export type IskraPhase =
+  | 'CLARITY'
+  | 'DARKNESS'
+  | 'TRANSITION'
+  | 'ECHO'
+  | 'SILENCE'
+  | 'EXPERIMENT'
+  | 'DISSOLUTION'
+  | 'REALIZATION';
 
 export type {
   DeltaSignature,
