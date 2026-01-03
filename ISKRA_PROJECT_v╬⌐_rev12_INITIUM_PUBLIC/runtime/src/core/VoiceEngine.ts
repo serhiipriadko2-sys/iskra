@@ -1,8 +1,14 @@
-import { IskraMetrics, VoiceId } from '../types';
+import { IskraMetrics, VoiceId, PlaybookType } from '../types';
 
 export class VoiceEngine {
-  public selectVoice(metrics: IskraMetrics): VoiceId {
+  public selectVoice(metrics: IskraMetrics, playbook?: PlaybookType): VoiceId {
     // Logic based on formulas from system/architecture.md and v7 analysis
+
+    // 0. Strategic / Council check (SIBYL)
+    // Sibyl activates when we are in a COUNCIL mode (High Importance/Uncertainty)
+    if (playbook === 'COUNCIL') {
+      return 'SIBYL';
+    }
 
     // 1. Crisis / Pain check (KAIN)
     if (metrics.pain >= 0.3) {
