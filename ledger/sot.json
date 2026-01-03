@@ -36,11 +36,13 @@
     "appendix/maki.md": "98015b9c069011e6323bdd08663fa6316698161f845a48f21a16a0a5004793d2",
     "tools/update_ledger.py": "ca36af7ebb59378048ad5ecdb4571574d5be6d807b237ee8fbb802cdc3b273e0",
     "tools/verify_ledger.py": "35052ba6235da5baa48b2c5330ad44dacafcfa9d2a0659cd3c49d7974b9ff950",
-    ".github/workflows/sot_integrity.yml": "cff124d87de66be13e0a08f1e67d6d4212b9556cad047cb8a04d9ba7f842eae7",
+    ".github/CODEOWNERS": "52f9d45328771cd4e3758bfa80e58cebbe431e71ff66974d046ad207262c0d56",
+    ".github/PULL_REQUEST_TEMPLATE.md": "61a219a462e70d04e2d99189563c4e37ed5c91f2b07f3fa6a487893d8db0b095",
+    ".github/workflows/runtime_ci.yml": "5119aeaabda2c211101df59c6a166908dabc2006cce3774776da6d6ef2164cb8",
+    ".github/workflows/sot_integrity.yml": "1624f31294ae3aadd8f1e0dae2c9505797c2df6581b2906534d1aea7a4539fbe",
     "manifest.yml": "c333fcb4cf16fa438dcfb4b7459b4ea373db9938f1971a326ac27669a6b273f1",
     "README.md": "58df3d696202da2aaaacc0c7a1fb4d3e38ac14e5b0b9d11de465d50757af2817",
     "CONTRIBUTING.md": "5e7a13916fa1eea89938f9ebd87dee76353dd18548190d49215348e18d1da32f",
-    "ISKRA_MANIFEST_v╬⌐.md": "7e6349890bb6b29a4127e05fb8628045120951becbb331c9ee6cc1c8b7938af4",
     "LIBER_INITIUM.md": "0683d70c34ea7165c160419ee3d3cd5c61d8e22fc7668b623d387e5aa69853be"
   }
 }
