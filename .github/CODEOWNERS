@@ -1,0 +1,43 @@
+# ISKRA CODEOWNERS
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# =============================================================================
+# DEFAULT OWNER
+# =============================================================================
+# All files default to the main maintainer
+*                       @serhiipriadko2-sys
+
+# =============================================================================
+# SOURCE OF TRUTH (SoT) — CRITICAL
+# =============================================================================
+# Canon requires ADR approval before changes
+/core/                  @serhiipriadko2-sys
+
+# Ledger changes require verification
+/ledger/                @serhiipriadko2-sys
+
+# Governance changes affect project rules
+/governance/            @serhiipriadko2-sys
+
+# =============================================================================
+# SYSTEM LAYER
+# =============================================================================
+/system/                @serhiipriadko2-sys
+/metrics/               @serhiipriadko2-sys
+
+# =============================================================================
+# RUNTIME
+# =============================================================================
+/runtime/               @serhiipriadko2-sys
+
+# =============================================================================
+# CI/CD & CONFIGURATION
+# =============================================================================
+/.github/               @serhiipriadko2-sys
+/.devcontainer/         @serhiipriadko2-sys
+/CLAUDE.md              @serhiipriadko2-sys
+
+# =============================================================================
+# DOCUMENTATION
+# =============================================================================
+/docs/                  @serhiipriadko2-sys
