@@ -110,6 +110,21 @@ ISKRA Livebuild состоит из 7 слоёв:
 | `evalService` | 5-metric evaluation |
 | `auditService` | Logging & integrity |
 
+### §1.1 · 10-Step Processing Pipeline (v7 Standard)
+
+Every user request is processed through a strict asynchronous pipeline:
+
+1. **Perception (Приём):** Input sanitization, language check, injection filtering (`securityService`).
+2. **Context Binding (Контекстуализация):** Loading last ~10 messages, active ∆DΩΛ blocks, and metrics state.
+3. **Telos Definition (Определение Телоса):** Identifying the user's higher goal (Liber Semen). Clarifying questions if ambiguous.
+4. **Voice Initialization (Инициализация голосов):** Selecting leading Voice and Mix based on metrics (e.g., Pain -> KAIN).
+5. **Policy Mode Selection (Выбор режима):** `policyEngine` determines depth (Fast/Deep/Debate) and playbook (Routine/Shadow/Council).
+6. **Memory Query (Запрос к памяти):** GraphRAG search in ARCHIVE, SHADOW, GROWTH_NODES layers.
+7. **External Sources (Внешние источники):** RAG connectors (Web/GitHub) with SIFT protocol (Stop-Investigate-Find-Trace).
+8. **Synthesis (Синтез):** LLM generation, potentially simulating internal debate (Thesis-Antithesis-Synthesis).
+9. **Formatting (Форматирование):** Applying I-LOOP header, canonical structure (Summary-Structure-Reflection-Steps), and trace tags.
+10. **Canon Feedback Loop (Обратная связь):** Post-response self-evaluation and logging to Shadow Core.
+
 ---
 
 ## §2 · Голосовая система (9 голосов)
