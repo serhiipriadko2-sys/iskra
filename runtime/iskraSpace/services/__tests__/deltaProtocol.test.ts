@@ -76,7 +76,7 @@ D: source → inference → true
       expect(parsed).not.toBeNull();
       expect(parsed?.delta).toBe('Test delta');
       expect(parsed?.depth).toBe('source → inference → true');
-      expect(parsed?.omega).toBe('90%');
+      expect(parsed?.omega).toBe(90);
       expect(parsed?.lambda).toBe('Action item');
     });
 
@@ -122,8 +122,21 @@ D: source → inference → true
 Ω: 80%
 Λ: step`;
 
-      const result = enforceDeltaProtocol(text);
-      expect(result).toBe(text);
+      // We expect strict validation to pass for this block
+      // BUT if runtime checks fail (e.g. length of delta/depth/lambda < 5), it might fail.
+      // "Valid delta" is > 5 chars.
+      // "source → inference → true" is > 5.
+      // "step" is 4 chars. Lambda MUST be >= 5 chars in runtime/src/types/protocols.ts
+
+      const textValid = `Response with valid signature.
+∆DΩΛ
+Δ: Valid delta
+D: source → inference → true
+Ω: 80%
+Λ: step length check`;
+
+      const result = enforceDeltaProtocol(textValid);
+      expect(result).toBe(textValid);
     });
 
     it('should add fallback block to text without signature', () => {

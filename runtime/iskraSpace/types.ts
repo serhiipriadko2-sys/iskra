@@ -207,8 +207,7 @@ export interface UserDailyMetrics {
   deltaScore: number; // 0-100, вычисляемый ∆-Ритм
 }
 
-// Re-import DeltaSignature for local interface
-import type { DeltaSignature } from '@iskra/runtime';
+// Note: DeltaSignature is already exported from '@iskra/runtime' at line 44
 
 // --- Meta Metrics ---
 export interface MetaMetrics {
