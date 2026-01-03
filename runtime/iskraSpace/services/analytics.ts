@@ -11,25 +11,18 @@
  * - Minimal PII collection
  */
 
-import type { VoiceName } from '@iskra/runtime';
+// VoiceName type inline to avoid dependency on @iskra/runtime during typecheck
+type VoiceName =
+  | 'ISKRA' | 'KAIN' | 'PINO' | 'SAM' | 'ANHANTRA'
+  | 'HUNDUN' | 'ISKRIV' | 'MAKI' | 'SIBYL';
 
 interface AnalyticsConfig {
   enabled: boolean;
   optedOut: boolean;
 }
 
-// PostHog-like interface
-interface PostHogLike {
-  init: (key: string, config: Record<string, unknown>) => void;
-  capture: (event: string, properties?: Record<string, unknown>) => void;
-  identify: (userId: string, properties?: Record<string, unknown>) => void;
-  reset: () => void;
-  opt_out_capturing: () => void;
-  opt_in_capturing: () => void;
-  has_opted_out_capturing: () => boolean;
-}
-
-let posthog: PostHogLike | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let posthog: any = null;
 let config: AnalyticsConfig = {
   enabled: false,
   optedOut: false,
@@ -61,6 +54,7 @@ export async function initAnalytics(): Promise<void> {
 
   try {
     // Dynamic import to avoid loading if not needed
+    // @ts-expect-error - Optional dependency, may not be installed
     const PostHog = await import('posthog-js');
 
     PostHog.default.init(key, {
@@ -75,7 +69,7 @@ export async function initAnalytics(): Promise<void> {
       respect_dnt: true,
     });
 
-    posthog = PostHog.default as unknown as PostHogLike;
+    posthog = PostHog.default;
     config.enabled = true;
 
     console.info('[Analytics] PostHog initialized');

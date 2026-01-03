@@ -92,8 +92,8 @@ export {
   calculateQuantumIndicators,
 } from '@iskra/runtime';
 
-// Import IskraMetrics for use in local types
-import type { IskraMetrics, VoiceName, VoicePreferences } from '@iskra/runtime';
+// Import types for use in local interfaces
+import type { IskraMetrics, VoiceName, VoicePreferences, DeltaSignature } from '@iskra/runtime';
 
 // =============================================================================
 // APP-SPECIFIC TYPES (iskraSpace only)

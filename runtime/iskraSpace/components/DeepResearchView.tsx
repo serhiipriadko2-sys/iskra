@@ -221,7 +221,7 @@ const DeepResearchView: React.FC<DeepResearchViewProps> = ({ metrics }) => {
             title: result.title || 'Snippet',
             type: result.type === 'journal' ? 'insight' : 'event',
             layer: 'archive',
-            timestamp: new Date(result.meta?.ts || Date.now()).toISOString(),
+            timestamp: new Date(typeof result.meta?.ts === 'string' || typeof result.meta?.ts === 'number' ? result.meta.ts : Date.now()).toISOString(),
             content: result.snippet,
             evidence: []
         } as unknown as MemoryNode;

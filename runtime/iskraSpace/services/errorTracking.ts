@@ -20,17 +20,8 @@ interface ErrorTrackingConfig {
   enabled: boolean;
 }
 
-// Sentry-like interface for type safety
-interface SentryLike {
-  init: (config: Record<string, unknown>) => void;
-  captureException: (error: Error, context?: Record<string, unknown>) => void;
-  captureMessage: (message: string, level?: string) => void;
-  setUser: (user: { id: string } | null) => void;
-  setTag: (key: string, value: string) => void;
-  addBreadcrumb: (breadcrumb: Record<string, unknown>) => void;
-}
-
-let sentry: SentryLike | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let sentry: any = null;
 let config: ErrorTrackingConfig = {
   environment: import.meta.env.MODE || 'development',
   enabled: false,
@@ -50,20 +41,18 @@ export async function initErrorTracking(): Promise<void> {
 
   try {
     // Dynamic import to avoid loading Sentry if not needed
+    // @ts-expect-error - Optional dependency, may not be installed
     const Sentry = await import('@sentry/react');
 
     Sentry.init({
       dsn,
       environment: import.meta.env.MODE,
       release: import.meta.env.VITE_APP_VERSION || 'unknown',
-      // Performance monitoring (optional)
       tracesSampleRate: import.meta.env.MODE === 'production' ? 0.1 : 1.0,
-      // Session replay (optional, privacy-conscious)
       replaysSessionSampleRate: 0,
       replaysOnErrorSampleRate: 0.1,
-      // Filter sensitive data
-      beforeSend(event) {
-        // Remove potentially sensitive data
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      beforeSend(event: any) {
         if (event.request?.headers) {
           delete event.request.headers['Authorization'];
           delete event.request.headers['Cookie'];
@@ -72,7 +61,7 @@ export async function initErrorTracking(): Promise<void> {
       },
     });
 
-    sentry = Sentry as unknown as SentryLike;
+    sentry = Sentry;
     config = {
       dsn,
       environment: import.meta.env.MODE,
