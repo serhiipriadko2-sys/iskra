@@ -46,10 +46,14 @@ export const parseIskraResponse = (text: string): ResponseParseResult => {
 
   if (deltaMatch) {
     const [fullMatch, delta, depth, omega, lambda] = deltaMatch;
+    const omegaRaw = omega.trim();
+    // Parse omega as number (handling "85%" or "0.85")
+    const omegaVal = parseInt(omegaRaw.replace('%', ''), 10);
+
     signature = {
       delta: delta.trim(),
       depth: depth.trim(),
-      omega: omega.trim(),
+      omega: isNaN(omegaVal) ? 0 : omegaVal,
       lambda: lambda.trim()
     };
     content = content.replace(fullMatch, '').trim();
@@ -57,7 +61,8 @@ export const parseIskraResponse = (text: string): ResponseParseResult => {
     // Strict Validation against Philosophy
     if (!signature.delta || signature.delta.length < 5) missing.push('∆ (Смысл изменения)');
     if (!signature.depth || signature.depth.length < 5) missing.push('D (Опора/SIFT)');
-    if (!signature.omega || signature.omega.length < 1) missing.push('Ω (Уровень уверенности)');
+    // Omega is number now
+    if (signature.omega < 0) missing.push('Ω (Уровень уверенности)');
     if (!signature.lambda || signature.lambda.length < 5) missing.push('Λ (Следующий шаг)');
 
   } else {

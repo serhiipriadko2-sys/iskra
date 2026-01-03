@@ -91,28 +91,8 @@ export interface TranscriptionMessage {
 }
 
 // New: Defines the structure for Iskra's internal metrics.
-/**
- * IskraMetrics — ВНУТРЕННЕЕ состояние Искры (AI-companion)
- *
- * Это метрики ИСКРЫ, а не пользователя!
- * Обновляются через: metricsService.calculateMetricsUpdate(userText)
- * Используются для: выбора голоса, фазы, поведения AI
- *
- * НЕ ПУТАТЬ с UserDailyMetrics!
- */
-export interface IskraMetrics {
-  rhythm: number; // 0-100 (внутренний ритм Искры, НЕ пользователя)
-  trust: number;  // 0-1
-  clarity: number;// 0-1
-  pain: number;   // 0-1
-  drift: number;  // 0-1
-  chaos: number;  // 0-1
-  echo: number;   // 0-1 (Resonance/Repetition)
-  silence_mass: number; // 0-1 (Weight of silence)
-  mirror_sync: number; // 0-1 (Derived: alignment)
-  interrupt: number; // 0-1
-  ctxSwitch: number; // 0-1
-}
+import { IskraMetrics } from '@iskra/runtime';
+export type { IskraMetrics };
 
 /**
  * UserDailyMetrics — ПОЛЬЗОВАТЕЛЬСКИЕ метрики дня
@@ -137,12 +117,8 @@ export interface UserDailyMetrics {
   deltaScore: number; // 0-100, вычисляемый ∆-Ритм
 }
 
-export interface DeltaSignature {
-  delta: string; // ∆
-  depth: string; // D
-  omega: string; // Ω
-  lambda: string; // Λ
-}
+import { DeltaSignature } from '@iskra/runtime';
+export type { DeltaSignature };
 
 /**
  * Meta-Metrics: Derived metrics for system health and canonical compliance
