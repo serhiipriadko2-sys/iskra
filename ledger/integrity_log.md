@@ -94,3 +94,31 @@ IntegrityEvent:
     Ω: 0.88
     Λ: "Реализовать Phase 1 scaffolding → npm install → build"
 ```
+
+---
+
+### 2026-01-03T00:00:00+01:00 — vΩ.3.0 (Research Integration)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-01-03T00:00:00+01:00
+  actor: Claude (Opus 4.5)
+  scope: [docs, system, runtime, metrics, governance, ledger]
+  files_changed:
+    - docs/research/sift_epistemology.md (created)
+    - system/sift_protocol.md (created)
+    - system/fractal_monitoring.md (created)
+    - system/early_warning.md (created)
+    - runtime/src/types/sift.ts (created)
+    - runtime/src/types/fractal.ts (created)
+    - runtime/src/types/ews.ts (created)
+    - runtime/src/index.ts (updated)
+    - metrics/indices.md (updated)
+    - governance/changelog.md (updated)
+  reason: "Research Integration: SIFT + Fractal Monitoring + EWS"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Интеграция исследований: SIFT протокол, фрактальный мониторинг, EWS"
+    D: "Research documents → Canon adaptation → TypeScript types"
+    Ω: 0.80
+    Λ: "Имплементировать сервисы в runtime/src/services/"
+```

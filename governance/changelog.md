@@ -4,8 +4,17 @@
 - type: SoT
 - layer: governance
 - created: 2026-01-01
-- updated: 2026-01-02
-- version: vΩ.2.1
+- updated: 2026-01-03
+- version: vΩ.3.0
+
+## vΩ.3.0 — 2026-01-03
+- **SIFT Protocol** — полный протокол верификации информации (system/sift_protocol.md).
+- **Fractal Monitoring** — мониторинг фрактальной размерности D (system/fractal_monitoring.md).
+- **Early Warning System** — 5-уровневая система раннего предупреждения (system/early_warning.md).
+- **SIFT Epistemology** — эпистемологический фреймворк (docs/research/sift_epistemology.md).
+- **TypeScript Types** — новые типы для SIFT, Fractal, EWS (runtime/src/types/).
+- **Quantum Indicators** — CSI, EI, NC-Index для мониторинга когнитивной сложности.
+- Updated metrics/indices.md с фрактальными и квантовыми индикаторами.
 
 ## vΩ.2.1 — 2026-01-02
 - **Deep Audit** — полный анализ репозитория (docs/AUDIT_REPORT.md).
