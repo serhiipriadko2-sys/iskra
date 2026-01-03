@@ -33,11 +33,11 @@ jobs:
       - name: TypeScript typecheck
         run: npm run typecheck
 
-      - name: Run tests
-        run: npm run test -- --run
-
       - name: Build
         run: npm run build
+
+      - name: Run tests
+        run: npm run test -- --run
 
       - name: Lint
         run: npm run lint
