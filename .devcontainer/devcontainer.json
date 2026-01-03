@@ -1,0 +1,59 @@
+{
+  "name": "ISKRA Development",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "typescript.tsdk": "runtime/node_modules/typescript/lib",
+        "files.exclude": {
+          "**/node_modules": true,
+          "**/dist": true
+        }
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-python.python",
+        "bradlc.vscode-tailwindcss",
+        "GitHub.copilot",
+        "GitHub.vscode-pull-request-github",
+        "eamodio.gitlens"
+      ]
+    }
+  },
+
+  "postCreateCommand": "cd runtime && npm ci && cd .. && pip install --user -r requirements.txt 2>/dev/null || true",
+
+  "forwardPorts": [5173, 3000],
+
+  "remoteUser": "node",
+
+  "containerEnv": {
+    "NODE_ENV": "development"
+  },
+
+  "mounts": [
+    "source=${localWorkspaceFolder}/.env,target=${containerWorkspaceFolder}/.env,type=bind,consistency=cached"
+  ],
+
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "4gb",
+    "storage": "16gb"
+  }
+}

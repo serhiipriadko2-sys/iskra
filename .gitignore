@@ -5,6 +5,7 @@
 # Secrets (CRITICAL - never commit!)
 .env
 .env.*
+!.env.example
 .env.local
 .env.*.local
 *.key
