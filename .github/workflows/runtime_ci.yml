@@ -1,0 +1,44 @@
+name: Runtime CI
+
+on:
+  push:
+    paths:
+      - "runtime/**"
+      - ".github/workflows/runtime_ci.yml"
+  pull_request:
+    paths:
+      - "runtime/**"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: runtime
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: runtime/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript typecheck
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm run test -- --run
+
+      - name: Build
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+        continue-on-error: true  # Don't fail on lint errors for now
