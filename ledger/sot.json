@@ -38,7 +38,7 @@
     "tools/verify_ledger.py": "35052ba6235da5baa48b2c5330ad44dacafcfa9d2a0659cd3c49d7974b9ff950",
     ".github/CODEOWNERS": "52f9d45328771cd4e3758bfa80e58cebbe431e71ff66974d046ad207262c0d56",
     ".github/PULL_REQUEST_TEMPLATE.md": "61a219a462e70d04e2d99189563c4e37ed5c91f2b07f3fa6a487893d8db0b095",
-    ".github/workflows/runtime_ci.yml": "5119aeaabda2c211101df59c6a166908dabc2006cce3774776da6d6ef2164cb8",
+    ".github/workflows/runtime_ci.yml": "26f61300bc303de5430c5a2a06c5774e936d25ef1ba69e8a071024192e26f5f2",
     ".github/workflows/sot_integrity.yml": "1624f31294ae3aadd8f1e0dae2c9505797c2df6581b2906534d1aea7a4539fbe",
     "manifest.yml": "c333fcb4cf16fa438dcfb4b7459b4ea373db9938f1971a326ac27669a6b273f1",
     "README.md": "58df3d696202da2aaaacc0c7a1fb4d3e38ac14e5b0b9d11de465d50757af2817",
