@@ -40,7 +40,7 @@ build/
 .npm
 .npmrc
 *.tgz
-package-lock.json
+# package-lock.json - TRACKED for CI/CD reproducibility
 yarn.lock
 pnpm-lock.yaml
 

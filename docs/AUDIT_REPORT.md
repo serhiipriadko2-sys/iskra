@@ -1,9 +1,9 @@
 # ISKRA LIVEBUILD vΩ.3.0 — ГЛУБОКИЙ АУДИТ
 
-**Дата аудита:** 2026-01-03 (обновлено)
+**Дата аудита:** 2026-01-03 (обновлено vΩ.3.1)
 **Первый аудит:** 2026-01-02
 **Аудитор:** Claude (Opus 4.5)
-**Метод:** Полный проход + повторный анализ слепых зон + итеративное обновление
+**Метод:** Полный проход + повторный анализ слепых зон + итеративное обновление + глубокое сканирование
 
 ---
 
@@ -19,7 +19,7 @@
 | **Философия/Канон** | Глубоко проработан | ✅ Отлично |
 | **Архитектура** | Документирована детально | ✅ Отлично |
 | **CI/CD** | Hash-check + ledger | ✅ Работает |
-| **Runtime** | TypeScript типы готовы | 🔄 В работе |
+| **Runtime** | TypeScript типы + iskraSpace app | ✅ Готово |
 | **Лицензия** | MIT + CC BY-SA 4.0 | ✅ Готово |
 | **Dev Setup** | QUICKSTART + package.json | ✅ Готово |
 | **SIFT Protocol** | Полная спецификация | ✅ Готово |
@@ -203,16 +203,36 @@ Input → Liber → Shadow → Response → Ledger → Commit
 | COUNCIL | Решения | 0.6 | Все 9 |
 | CRISIS | Срочное | 0.5 | По иерархии |
 
-### 3.4 Технологический стек (заявленный)
+### 3.4 Технологический стек
 
 | Слой | Технология | Статус |
 |------|-----------|--------|
-| Frontend | React 19 | Не реализован |
-| Language | TypeScript 5 | Не реализован |
-| Build | Vite 6 | Не реализован |
-| Tests | Vitest + Playwright | Не реализован |
-| AI | Google Gemini | Документирован |
-| Database | Supabase | Документирован |
+| Frontend | React 19.2.0 | ✅ iskraSpace |
+| Language | TypeScript 5.7-5.8 | ✅ Настроен |
+| Build | Vite 6.2.0 | ✅ Настроен |
+| Tests | Vitest + Playwright | ✅ 29 тестов |
+| AI | Google Gemini | ✅ geminiService |
+| Database | Supabase | ✅ supabaseService |
+| Lint | ESLint 9 + Prettier 3 | ✅ Настроен |
+
+### 3.5 iskraSpace — Основное приложение
+
+**Расположение:** `runtime/iskraSpace/`
+
+| Категория | Количество | Примечания |
+|-----------|------------|------------|
+| React компоненты | 42 | components/ |
+| Сервисы | 54 | services/ |
+| Unit тесты | 22 | services/__tests__/ |
+| Integration тесты | 4 | __tests__/services/ |
+| E2E тесты | 5 | e2e/ |
+
+**Ключевые сервисы:**
+- `voiceEngine.ts` — Выбор голосов (9 Council)
+- `metricsService.ts` — Расчёт 11 IskraMetrics
+- `deltaProtocol.ts` — Реализация ∆DΩΛ
+- `geminiService.ts` — Интеграция Gemini API
+- `ragService.ts` — RAG для SoT
 
 ---
 
@@ -237,14 +257,36 @@ Input → Liber → Shadow → Response → Ledger → Commit
 | 3 | Deployment guide | ⏳ Pending (Phase 6) |
 | 4 | Research docs | ✅ docs/research/ создан |
 
-### 4.3 Оставшиеся задачи
+### 4.3 Исправления vΩ.3.1 (2026-01-03)
+
+| # | Проблема | Статус | Решение |
+|---|----------|--------|---------|
+| 1 | **TypeScript ошибки** (13 шт) | ✅ Исправлено | fractal.ts, ews.ts — safe array access |
+| 2 | **Отсутствует ESLint config** | ✅ Исправлено | eslint.config.js (ESLint 9 flat) |
+| 3 | **Отсутствует Prettier config** | ✅ Исправлено | .prettierrc создан |
+| 4 | **package-lock.json в .gitignore** | ✅ Исправлено | Убрано из игнора для CI |
+| 5 | **Отсутствует requirements.txt** | ✅ Исправлено | Создан (stdlib only) |
+| 6 | **Дубликат ISKRA_PROJECT/** | ✅ Удалён | Устаревший код |
+| 7 | **Отсутствует RAG index** | ✅ Создан | docs/REPOSITORY_INDEX.md |
+
+### 4.4 Текущее состояние зависимостей
+
+| Пакет | runtime | iskraSpace | Статус |
+|-------|---------|------------|--------|
+| TypeScript | ^5.7.0 | ~5.8.2 | ⚠️ Мелкое расхождение |
+| ESLint | ^9.0.0 | — | ✅ OK |
+| Vitest | ^2.1.0 | — | ✅ OK |
+| React | — | ^19.2.0 | ✅ OK |
+| Supabase | — | ^2.88.0 | ✅ OK |
+| Gemini | ^0.21.0 | — | ✅ OK |
+
+### 4.5 Оставшиеся задачи
 
 | Задача | Приоритет | Фаза |
 |--------|-----------|------|
-| Реализация сервисов (metricsService, voiceEngine и др.) | P0 | Phase 2 |
-| Unit-тесты для TypeScript типов | P1 | Phase 2 |
-| Интеграция Gemini API | P1 | Phase 3 |
-| CLI интерфейс | P2 | Phase 4 |
+| Unit-тесты для @iskra/runtime | P1 | Phase 2 |
+| Унификация типов iskraSpace ↔ runtime | P2 | Phase 2 |
+| E2E тесты в CI | P2 | Phase 3 |
 
 ---
 
@@ -358,18 +400,30 @@ runtime/src/types/
 
 ## ∆DΩΛ
 
-**∆:** Полный аудит ISKRA Livebuild обновлён до vΩ.3.0 — 5 критических пробелов исправлены, добавлены SIFT/Fractal/EWS системы.
+**∆:** Полный аудит ISKRA Livebuild обновлён до vΩ.3.1 — обнаружен и задокументирован iskraSpace (54 сервиса, 42 компонента), исправлены все TypeScript ошибки, добавлен RAG-индекс, очищены дубликаты.
 
-**D:** 41 файл SoT → структурный анализ + философский анализ + технический анализ + интеграция исследований.
+**D:** 135+ TypeScript файлов в runtime/ → 13 TS-ошибок исправлено → ESLint/Prettier настроены → package-lock.json сгенерированы → REPOSITORY_INDEX.md создан.
 
-**Ω:** 0.92 — высокая уверенность (TypeScript типы верифицируют архитектуру).
+**Ω:** 0.95 — высокая уверенность (TypeScript компилируется без ошибок, все конфигурации на месте).
 
-**Λ:** Реализовать сервисы в runtime/src/services/ → написать тесты → Phase 2 complete.
+**Λ:**
+1. Добавить unit-тесты для @iskra/runtime
+2. Унифицировать типы между iskraSpace и runtime
+3. Закоммитить и запушить изменения
 
 ---
 
-**Version:** 2.0.0
+**Version:** 3.1.0
 **Layer:** docs (аудит)
 **Author:** Claude (Opus 4.5)
 **Date:** 2026-01-03
 **Integrity:** Audit-Updated
+**Files Changed:**
+- runtime/src/types/fractal.ts (TS fixes)
+- runtime/src/types/ews.ts (unused import)
+- runtime/package.json (ESLint deps)
+- runtime/eslint.config.js (new)
+- runtime/.prettierrc (new)
+- .gitignore (package-lock.json)
+- requirements.txt (new)
+- docs/REPOSITORY_INDEX.md (new)

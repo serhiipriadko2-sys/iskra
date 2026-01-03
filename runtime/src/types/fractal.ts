@@ -141,8 +141,11 @@ export function calculateEI(history: IskraMetrics[], windowSize: number = 20): n
   const correlations: number[] = [];
   for (let i = 0; i < keys.length; i++) {
     for (let j = i + 1; j < keys.length; j++) {
-      const seriesA = recent.map(m => m[keys[i]] as number);
-      const seriesB = recent.map(m => m[keys[j]] as number);
+      const keyA = keys[i];
+      const keyB = keys[j];
+      if (keyA === undefined || keyB === undefined) continue;
+      const seriesA = recent.map(m => m[keyA] as number);
+      const seriesB = recent.map(m => m[keyB] as number);
       correlations.push(Math.abs(pearsonCorrelation(seriesA, seriesB)));
     }
   }
@@ -165,8 +168,11 @@ function pearsonCorrelation(x: number[], y: number[]): number {
   let denomY = 0;
 
   for (let i = 0; i < n; i++) {
-    const dx = x[i] - meanX;
-    const dy = y[i] - meanY;
+    const xi = x[i];
+    const yi = y[i];
+    if (xi === undefined || yi === undefined) continue;
+    const dx = xi - meanX;
+    const dy = yi - meanY;
     numerator += dx * dy;
     denomX += dx * dx;
     denomY += dy * dy;
@@ -203,7 +209,9 @@ function calculateTrend(values: number[]): number {
   let denominator = 0;
 
   for (let i = 0; i < n; i++) {
-    numerator += (i - xMean) * (values[i] - yMean);
+    const vi = values[i];
+    if (vi === undefined) continue;
+    numerator += (i - xMean) * (vi - yMean);
     denominator += (i - xMean) ** 2;
   }
 
@@ -227,7 +235,12 @@ export function calculateHFD(timeSeries: number[], kMax: number = 10): number {
       const limit = Math.floor((N - m) / k);
 
       for (let i = 1; i < limit; i++) {
-        Lmk += Math.abs(timeSeries[m + i * k - 1] - timeSeries[m + (i - 1) * k - 1]);
+        const idx1 = m + i * k - 1;
+        const idx2 = m + (i - 1) * k - 1;
+        const val1 = timeSeries[idx1];
+        const val2 = timeSeries[idx2];
+        if (val1 === undefined || val2 === undefined) continue;
+        Lmk += Math.abs(val1 - val2);
       }
 
       Lmk = (Lmk * (N - 1)) / (k * limit * k);
@@ -276,7 +289,7 @@ export function calculateDFA(
     for (let b = 0; b < numBoxes; b++) {
       const segment = integrated.slice(b * s, (b + 1) * s);
       const trend = linearFit(segment);
-      const residuals = segment.map((y, i) => y - trend[i]);
+      const residuals = segment.map((y, i) => y - (trend[i] ?? 0));
       F2 += residuals.reduce((sum, r) => sum + r * r, 0) / s;
     }
 
@@ -304,7 +317,9 @@ function linearFit(values: number[]): number[] {
   let denominator = 0;
 
   for (let i = 0; i < n; i++) {
-    slope += (i - xMean) * (values[i] - yMean);
+    const vi = values[i];
+    if (vi === undefined) continue;
+    slope += (i - xMean) * (vi - yMean);
     denominator += (i - xMean) ** 2;
   }
 
@@ -328,8 +343,11 @@ function linearRegressionSlope(x: number[], y: number[]): number {
   let denominator = 0;
 
   for (let i = 0; i < n; i++) {
-    numerator += (x[i] - xMean) * (y[i] - yMean);
-    denominator += (x[i] - xMean) ** 2;
+    const xi = x[i];
+    const yi = y[i];
+    if (xi === undefined || yi === undefined) continue;
+    numerator += (xi - xMean) * (yi - yMean);
+    denominator += (xi - xMean) ** 2;
   }
 
   return denominator === 0 ? 0 : numerator / denominator;
