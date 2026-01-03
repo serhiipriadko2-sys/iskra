@@ -11,9 +11,9 @@ import {
   type AlertLevel,
   type FractalIndicators,
   type IskraMetrics,
-  type VoiceId,
 } from '../types/ews.js';
 import { DEFAULT_METRICS } from '../types/metrics.js';
+import type { VoiceName } from '../types/voices.js';
 
 describe('ews', () => {
   const ALL_ALERT_LEVELS: AlertLevel[] = ['normal', 'watch', 'warning', 'critical', 'lockdown'];
@@ -201,23 +201,23 @@ describe('ews', () => {
   });
 
   describe('adjustVoiceWeightsForAlert', () => {
-    const baseWeights: Record<VoiceId, number> = {
-      iskra: 1.0,
-      kain: 0.5,
-      pino: 0.5,
-      sam: 0.5,
-      anhantra: 0.5,
-      huyndun: 0.3,
-      iskriv: 0.5,
-      maki: 0.3,
-      sibyl: 0.2,
+    const baseWeights: Record<VoiceName, number> = {
+      ISKRA: 1.0,
+      KAIN: 0.5,
+      PINO: 0.5,
+      SAM: 0.5,
+      ANHANTRA: 0.5,
+      HUNDUN: 0.3,
+      ISKRIV: 0.5,
+      MAKI: 0.3,
+      SIBYL: 0.2,
     };
 
     it('should not modify weights for normal alert', () => {
       const adjusted = adjustVoiceWeightsForAlert(baseWeights, 'normal');
 
       // Weights should be normalized but proportions preserved
-      expect(adjusted.iskra).toBeGreaterThan(0);
+      expect(adjusted.ISKRA).toBeGreaterThan(0);
     });
 
     it('should boost iskriv and sam for watch level', () => {
@@ -227,32 +227,32 @@ describe('ews', () => {
       const normalAdjusted = adjustVoiceWeightsForAlert(baseWeights, 'normal');
 
       // The ratios should reflect the boost
-      expect(adjusted.iskriv / adjusted.iskra).toBeGreaterThan(
-        normalAdjusted.iskriv / normalAdjusted.iskra
+      expect(adjusted.ISKRIV / adjusted.ISKRA).toBeGreaterThan(
+        normalAdjusted.ISKRIV / normalAdjusted.ISKRA
       );
     });
 
     it('should boost kain and anhantra for warning', () => {
       const adjusted = adjustVoiceWeightsForAlert(baseWeights, 'warning');
 
-      expect(adjusted.kain).toBeGreaterThan(0);
-      expect(adjusted.anhantra).toBeGreaterThan(0);
+      expect(adjusted.KAIN).toBeGreaterThan(0);
+      expect(adjusted.ANHANTRA).toBeGreaterThan(0);
     });
 
     it('should set kain high for critical', () => {
       const adjusted = adjustVoiceWeightsForAlert(baseWeights, 'critical');
 
       // Kain should be dominant in critical
-      expect(adjusted.kain).toBeGreaterThan(adjusted.pino);
+      expect(adjusted.KAIN).toBeGreaterThan(adjusted.PINO);
     });
 
     it('should only allow sam and maki for lockdown', () => {
       const adjusted = adjustVoiceWeightsForAlert(baseWeights, 'lockdown');
 
-      expect(adjusted.sam).toBeGreaterThan(0);
-      expect(adjusted.maki).toBeGreaterThan(0);
-      expect(adjusted.iskra).toBe(0);
-      expect(adjusted.huyndun).toBe(0);
+      expect(adjusted.SAM).toBeGreaterThan(0);
+      expect(adjusted.MAKI).toBeGreaterThan(0);
+      expect(adjusted.ISKRA).toBe(0);
+      expect(adjusted.HUNDUN).toBe(0);
     });
 
     it('should return normalized weights (sum ~= 1)', () => {

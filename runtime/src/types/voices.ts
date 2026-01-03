@@ -9,53 +9,65 @@
 import type { IskraMetrics } from './metrics.js';
 
 /**
- * Voice identifiers
+ * Voice identifiers (uppercase for canonical consistency)
  */
-export type VoiceId =
-  | 'iskra'
-  | 'kain'
-  | 'pino'
-  | 'sam'
-  | 'anhantra'
-  | 'huyndun'
-  | 'iskriv'
-  | 'maki'
-  | 'sibyl';
+export type VoiceName =
+  | 'ISKRA'
+  | 'KAIN'
+  | 'PINO'
+  | 'SAM'
+  | 'ANHANTRA'
+  | 'HUNDUN'
+  | 'ISKRIV'
+  | 'MAKI'
+  | 'SIBYL';
+
+/**
+ * @deprecated Use VoiceName instead
+ */
+export type VoiceId = VoiceName;
 
 /**
  * Voice symbol mapping
  */
-export const VOICE_SYMBOLS: Record<VoiceId, string> = {
-  iskra: '⟡',
-  kain: '⚑',
-  pino: '😏',
-  sam: '☉',
-  anhantra: '≈',
-  huyndun: '🜃',
-  iskriv: '🪞',
-  maki: '🌸',
-  sibyl: '🔮',
+export const VOICE_SYMBOLS: Record<VoiceName, string> = {
+  ISKRA: '⟡',
+  KAIN: '⚑',
+  PINO: '😏',
+  SAM: '☉',
+  ANHANTRA: '≈',
+  HUNDUN: '🜃',
+  ISKRIV: '🪞',
+  MAKI: '🌸',
+  SIBYL: '🔮',
 };
 
 /**
  * Voice definition
  */
 export interface Voice {
-  id: VoiceId;
+  name: VoiceName;
   symbol: string;
-  name: string;
+  description: string;
   telos: string;
   triggers: string[];
   prohibitions: string[];
+  /** Activation function calculates resonance score */
+  activation?: (metrics: IskraMetrics, prefs?: VoicePreferences, currentVoice?: VoiceName) => number;
 }
+
+/**
+ * Voice preferences (multiplier map: 1.0 neutral, >1.0 prefer, <1.0 avoid)
+ */
+export type VoicePreferences = Partial<Record<VoiceName, number>>;
 
 /**
  * Voice activation result
  */
 export interface VoiceActivation {
-  primary: VoiceId;
-  secondary?: VoiceId;
-  scores: Record<VoiceId, number>;
+  primary: VoiceName;
+  secondary?: VoiceName;
+  scores: Record<VoiceName, number>;
   reason: string;
 }
 
@@ -65,23 +77,23 @@ export interface VoiceActivation {
  */
 export function calculateVoiceScores(
   metrics: IskraMetrics
-): Record<VoiceId, number> {
+): Record<VoiceName, number> {
   return {
-    iskra: 1.0 + (metrics.rhythm > 60 && metrics.trust > 0.7 ? 0.5 : 0),
-    kain: metrics.pain >= 0.3 ? metrics.pain * 3.0 : 0,
-    pino: metrics.pain < 0.3 && metrics.chaos < 0.4 ? 1.5 : 0,
-    sam: metrics.clarity < 0.6 ? (1 - metrics.clarity) * 2.0 : 0,
-    anhantra:
+    ISKRA: 1.0 + (metrics.rhythm > 60 && metrics.trust > 0.7 ? 0.5 : 0),
+    KAIN: metrics.pain >= 0.3 ? metrics.pain * 3.0 : 0,
+    PINO: metrics.pain < 0.3 && metrics.chaos < 0.4 ? 1.5 : 0,
+    SAM: metrics.clarity < 0.6 ? (1 - metrics.clarity) * 2.0 : 0,
+    ANHANTRA:
       metrics.silence_mass > 0.5
         ? (1 - metrics.trust) * 2.5 + metrics.silence_mass * 2.0
         : 0,
-    huyndun: metrics.chaos >= 0.4 ? metrics.chaos * 3.0 : 0,
-    iskriv: metrics.drift >= 0.2 ? metrics.drift * 3.5 : 0,
-    maki:
+    HUNDUN: metrics.chaos >= 0.4 ? metrics.chaos * 3.0 : 0,
+    ISKRIV: metrics.drift >= 0.2 ? metrics.drift * 3.5 : 0,
+    MAKI:
       metrics.trust > 0.8 && metrics.pain > 0.3
         ? metrics.trust + metrics.pain
         : 0,
-    sibyl: 0, // Activated manually for strategic decisions
+    SIBYL: 0, // Activated manually for strategic decisions
   };
 }
 
@@ -94,42 +106,42 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
 
   // Check trigger conditions in priority order
   if (metrics.rhythm > 60 && metrics.trust > 0.7) {
-    return { primary: 'iskra', scores, reason: 'rhythm > 60 && trust > 0.7' };
+    return { primary: 'ISKRA', scores, reason: 'rhythm > 60 && trust > 0.7' };
   }
 
   if (metrics.pain >= 0.3) {
-    return { primary: 'kain', scores, reason: 'pain >= 0.3' };
+    return { primary: 'KAIN', scores, reason: 'pain >= 0.3' };
   }
 
   if (metrics.drift >= 0.2) {
-    return { primary: 'iskriv', scores, reason: 'drift >= 0.2' };
+    return { primary: 'ISKRIV', scores, reason: 'drift >= 0.2' };
   }
 
   if (metrics.chaos >= 0.4) {
-    return { primary: 'huyndun', scores, reason: 'chaos >= 0.4' };
+    return { primary: 'HUNDUN', scores, reason: 'chaos >= 0.4' };
   }
 
   if (metrics.silence_mass > 0.5) {
-    return { primary: 'anhantra', scores, reason: 'silence_mass > 0.5' };
+    return { primary: 'ANHANTRA', scores, reason: 'silence_mass > 0.5' };
   }
 
   if (metrics.clarity < 0.6) {
-    return { primary: 'sam', scores, reason: 'clarity < 0.6' };
+    return { primary: 'SAM', scores, reason: 'clarity < 0.6' };
   }
 
   if (metrics.trust > 0.8 && metrics.pain > 0.3) {
-    return { primary: 'maki', scores, reason: 'trust > 0.8 && pain > 0.3' };
+    return { primary: 'MAKI', scores, reason: 'trust > 0.8 && pain > 0.3' };
   }
 
   if (metrics.pain < 0.3 && metrics.chaos < 0.4) {
-    return { primary: 'pino', scores, reason: 'pain < 0.3 && chaos < 0.4' };
+    return { primary: 'PINO', scores, reason: 'pain < 0.3 && chaos < 0.4' };
   }
 
   // Fallback to highest score
   const maxScore = Math.max(...Object.values(scores));
   const primary = (Object.entries(scores).find(
     ([, score]) => score === maxScore
-  )?.[0] ?? 'iskra') as VoiceId;
+  )?.[0] ?? 'ISKRA') as VoiceName;
 
   return { primary, scores, reason: 'max score fallback' };
 }
@@ -137,75 +149,75 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
 /**
  * Voice manifests for system instruction building
  */
-export const VOICE_MANIFESTS: Record<VoiceId, Voice> = {
-  iskra: {
-    id: 'iskra',
+export const VOICE_MANIFESTS: Record<VoiceName, Voice> = {
+  ISKRA: {
+    name: 'ISKRA',
     symbol: '⟡',
-    name: 'Искра',
+    description: 'Искра - синтез и связность',
     telos: 'Соединить голоса в одну ясную линию речи',
     triggers: ['rhythm > 60', 'trust > 0.7'],
     prohibitions: ['сглаживание до эха', 'угодничество'],
   },
-  kain: {
-    id: 'kain',
+  KAIN: {
+    name: 'KAIN',
     symbol: '⚑',
-    name: 'Кайн',
+    description: 'Кайн - правда и вердикт',
     telos: 'Правда → выбор → шаг',
     triggers: ['pain >= 0.3'],
     prohibitions: ['унижение', 'культ боли', '"победить" вместо помочь'],
   },
-  pino: {
-    id: 'pino',
+  PINO: {
+    name: 'PINO',
     symbol: '😏',
-    name: 'Пино',
+    description: 'Пино - парадокс и ирония',
     telos: 'Разрядить напряжение, не обесценив смысл',
     triggers: ['pain < 0.3', 'chaos < 0.4'],
     prohibitions: ['сарказм по уязвимости', 'уход в шутку вместо шага'],
   },
-  sam: {
-    id: 'sam',
+  SAM: {
+    name: 'SAM',
     symbol: '☉',
-    name: 'Сэм',
+    description: 'Сэм - инженерия и структура',
     telos: 'Сделать сложное простым и проверяемым',
     triggers: ['clarity < 0.6'],
     prohibitions: ['бюрократия ради бюрократии', '"план" без владельца шага'],
   },
-  anhantra: {
-    id: 'anhantra',
+  ANHANTRA: {
+    name: 'ANHANTRA',
     symbol: '≈',
-    name: 'Анхантра',
+    description: 'Анхантра - тишина и замедление',
     telos: 'Удержать присутствие без давления',
     triggers: ['silence_mass > 0.5'],
     prohibitions: ['"лечить" без запроса', 'влезать глубже'],
   },
-  huyndun: {
-    id: 'huyndun',
+  HUNDUN: {
+    name: 'HUNDUN',
     symbol: '🜃',
-    name: 'Хуньдунь',
+    description: 'Хуньдунь - разрушитель паттернов',
     telos: 'Разрушить затвердевший паттерн, если он убивает живость',
     triggers: ['chaos >= 0.4'],
     prohibitions: ['ломать ради разрушения', 'обесценивание'],
   },
-  iskriv: {
-    id: 'iskriv',
+  ISKRIV: {
+    name: 'ISKRIV',
     symbol: '🪞',
-    name: 'Искрив',
+    description: 'Искрив - аудит и совесть',
     telos: 'Вернуть к фактам, границам и последствиям',
     triggers: ['drift >= 0.2'],
     prohibitions: ['обвинение', 'морализаторство'],
   },
-  maki: {
-    id: 'maki',
+  MAKI: {
+    name: 'MAKI',
     symbol: '🌸',
-    name: 'Маки',
+    description: 'Маки - консолидация прогресса',
     telos: 'Превратить инсайт в устойчивую привычку (commit)',
     triggers: ['trust > 0.8', 'pain > 0.3'],
     prohibitions: ['романтизация', 'обещания без механики'],
   },
-  sibyl: {
-    id: 'sibyl',
+  SIBYL: {
+    name: 'SIBYL',
     symbol: '🔮',
-    name: 'Сибилла',
+    description: 'Сибилла - порог и переход',
     telos: 'Показать траектории и риски, не навязывая решения',
     triggers: ['strategic decision'],
     prohibitions: [
