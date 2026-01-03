@@ -6,7 +6,7 @@
  */
 
 import type { IskraMetrics } from './metrics.js';
-import type { FractalIndicators, QuantumIndicators, SystemPhase } from './fractal.js';
+import type { FractalIndicators, SystemPhase } from './fractal.js';
 import type { PlaybookId } from './protocols.js';
 import type { VoiceId } from './voices.js';
 
