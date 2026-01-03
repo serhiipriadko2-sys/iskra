@@ -9,6 +9,7 @@
  */
 
 import { DeltaSignature, SIFTBlock } from '../types';
+import { validateDeltaSignature as validateDeltaSignatureRuntime } from '@iskra/runtime';
 
 // Regex patterns for parsing ∆DΩΛ blocks
 // Require colon after symbol to avoid matching header "∆DΩΛ"
@@ -28,6 +29,7 @@ export interface DeltaValidationResult {
 
 /**
  * Validates if a response contains proper ∆DΩΛ signature
+ * Wrapper around basic regex extraction + runtime validation
  */
 export function validateDeltaSignature(text: string): DeltaValidationResult {
   const missing: string[] = [];
@@ -46,15 +48,28 @@ export function validateDeltaSignature(text: string): DeltaValidationResult {
     return { isValid: false, missing };
   }
 
+  // Parse preliminary structure
+  const rawOmega = omegaMatch![1].trim().replace('%', '');
+  const parsed: DeltaSignature = {
+      delta: deltaMatch![1].trim(),
+      depth: dSiftMatch![1].trim(),
+      omega: parseInt(rawOmega, 10), // Iskra runtime expects number
+      lambda: lambdaMatch![1].trim(),
+  };
+
+  // Use Runtime validation for semantic rules (length, omega limits)
+  const runtimeCheck = validateDeltaSignatureRuntime(parsed);
+  if (!runtimeCheck.valid) {
+     // Map runtime errors to missing/invalid structure for compatibility
+     // Note: original only checked missing fields, but runtime checks content rules.
+     // We will return valid=false if runtime checks fail.
+     return { isValid: false, missing: runtimeCheck.errors, parsed };
+  }
+
   return {
     isValid: true,
     missing: [],
-    parsed: {
-      delta: deltaMatch![1].trim(),
-      depth: dSiftMatch![1].trim(),
-      omega: omegaMatch![1].trim(),
-      lambda: lambdaMatch![1].trim(),
-    }
+    parsed
   };
 }
 
