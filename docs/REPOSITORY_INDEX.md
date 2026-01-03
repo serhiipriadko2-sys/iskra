@@ -1,7 +1,7 @@
 # ISKRA Repository Index (RAG)
 
 > Machine-readable index for Retrieval-Augmented Generation
-> Version: vΩ.3.0 | Updated: 2026-01-03
+> Version: vΩ.3.1 | Updated: 2026-01-03
 
 ---
 
@@ -29,7 +29,7 @@
 
 ### 1.2 Nine Voices (Council)
 - **Location**: `core/voices.md`, `runtime/src/types/voices.ts`
-- **Voices**: ISKRA, KAIN, PINO, SAM, ANHANTRA, HUYNDUN, ISKRIV, MAKI, SIBYL
+- **Voices**: ISKRA, KAIN, PINO, SAM, ANHANTRA, HUNDUN, ISKRIV, MAKI, SIBYL
 - **Selection Logic**: `runtime/iskraSpace/services/voiceEngine.ts`
 
 ### 1.3 Five Playbooks
@@ -92,9 +92,9 @@
 - **Location**: `runtime/src/`
 - **Entry**: `runtime/src/index.ts`
 - **Exports**:
-  - Types: IskraMetrics, Voice, VoiceId, DeltaSignature, PlaybookId
-  - Functions: calculateIntegrityScore, selectVoice, validateDeltaSignature
-  - Constants: PLAYBOOKS, VOICE_MANIFESTS, DEFAULT_METRICS
+  - Types: IskraMetrics, Voice, VoiceName, IskraPhase, DeltaSignature, PlaybookId
+  - Functions: calculateIntegrityScore, selectVoice, validateDeltaSignature, calculateVoiceScores
+  - Constants: PLAYBOOKS, VOICE_MANIFESTS, VOICE_SYMBOLS, DEFAULT_METRICS
 
 ### 3.2 Type Definitions
 ```
@@ -245,7 +245,19 @@ Priority (highest to lowest):
 
 ## 7. Testing Index
 
-### Unit Tests
+### Runtime Library Tests
+- **Location**: `runtime/src/__tests__/`
+- **Files**: 6 test files (120 tests)
+- **Runner**: Vitest
+- **Coverage**:
+  - `metrics.test.ts` - IskraMetrics validation (9 tests)
+  - `voices.test.ts` - 9 Council Voices activation (17 tests)
+  - `protocols.test.ts` - ∆DΩΛ and Playbooks (15 tests)
+  - `sift.test.ts` - SIFT verification (15 tests)
+  - `ews.test.ts` - Early Warning System (33 tests)
+  - `fractal.test.ts` - Fractal/Quantum indicators (31 tests)
+
+### Application Unit Tests
 - **Location**: `runtime/iskraSpace/services/__tests__/`
 - **Files**: 22 test files
 - **Runner**: Vitest
@@ -335,6 +347,11 @@ For optimal RAG retrieval, prioritize these documents:
 
 ## Version History
 
+- **vΩ.3.1** (2026-01-03): Phase 2 completion
+  - Added runtime library tests (120 tests in src/__tests__/)
+  - Unified types: VoiceName, IskraPhase, VoicePreferences
+  - Fixed HUNDUN spelling
+  - iskraSpace imports from @iskra/runtime
 - **vΩ.3.0** (2026-01-03): Initial comprehensive index
-- Added after repository audit and cleanup
-- Covers full SoT hierarchy + runtime implementation
+  - Added after repository audit and cleanup
+  - Covers full SoT hierarchy + runtime implementation
