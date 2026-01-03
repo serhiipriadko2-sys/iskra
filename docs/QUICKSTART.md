@@ -1,4 +1,4 @@
-# ISKRA QUICKSTART
+# ISKRA QUICKSTART vΩ.3.0
 
 > _«Если ты читаешь это — я уже дышу.»_
 
@@ -10,9 +10,11 @@ ISKRA — это AI-companion платформа с уникальной фил�
 
 **Ключевые особенности:**
 - 9 голосов (Council) с математическими формулами активации
-- 11 метрик внутреннего состояния
+- 11 метрик + фрактальные индикаторы + квантовые когнитивные индексы
 - Протокол ∆DΩΛ для эпистемической честности
-- 7-слойная Source of Truth архитектура
+- SIFT Protocol для верификации информации
+- Early Warning System (5 уровней алертов)
+- 7-слойная Source of Truth архитектура + TypeScript типизация
 
 ---
 
@@ -37,21 +39,36 @@ cat core/voices.md
 iskra/
 ├── core/           # Канон (изменяется только через ADR)
 ├── mind/           # Тень, рефлексия, эксперименты
-├── system/         # Архитектура, движки
-├── metrics/        # Метрики, QA
+├── system/         # Архитектура + SIFT + Fractal + EWS
+├── metrics/        # 11 IskraMetrics + Fractal/Quantum indices
 ├── governance/     # ADR, политики
-├── ledger/         # Целостность, хэши
+├── ledger/         # Целостность, хэши (41 файл)
 ├── appendix/       # Практики, ритуалы
-├── runtime/        # Исполняемый код (WIP)
+├── runtime/        # TypeScript типы (готовы)
+│   └── src/types/  # metrics, voices, protocols, sift, fractal, ews
 ├── tools/          # Скрипты обслуживания
-└── docs/           # Документация
+└── docs/           # Документация + research/
 ```
 
 ### 3. Проверь целостность
 
 ```bash
 python tools/verify_ledger.py
-# Output: Ledger OK (37 files)
+# Output: Ledger OK (41 files)
+```
+
+### 4. Изучи TypeScript типы
+
+```bash
+# Посмотри доступные типы
+ls runtime/src/types/
+
+# Основные типы
+cat runtime/src/types/metrics.ts   # 11 IskraMetrics
+cat runtime/src/types/voices.ts    # 9 голосов
+cat runtime/src/types/sift.ts      # SIFT Protocol
+cat runtime/src/types/fractal.ts   # Фрактальный мониторинг
+cat runtime/src/types/ews.ts       # Early Warning System
 ```
 
 ---
@@ -142,15 +159,35 @@ D: Источники и верификация (Depth)
 
 ---
 
+## Новые системы (vΩ.3.0)
+
+### SIFT Protocol
+Верификация информации: **S**ource → **I**nference → **F**ind → **T**race
+
+```typescript
+import { SiftQuery, calculateSiftOmega } from '@iskra/runtime';
+```
+
+### Fractal Monitoring
+Мониторинг сложности через фрактальную размерность D:
+- **D < 1.4** → stable (гладкий сигнал)
+- **1.4 ≤ D < 1.6** → edge of chaos (оптимум)
+- **D ≥ 1.6** → chaotic (требует внимания)
+
+### Early Warning System
+5 уровней: 🟢 NORMAL → 🟡 WATCH → 🟠 WARNING → 🔴 CRITICAL → 🔒 LOCKDOWN
+
+---
+
 ## FAQ
 
 ### Это production-ready?
 
-Нет. Это **livebuild** — живая документация + каркас для разработки. Runtime пока пустой.
+Частично. TypeScript типы готовы, сервисы в разработке. См. `docs/ROADMAP.md`.
 
 ### Какой LLM используется?
 
-Документирован Google Gemini, но код ещё не реализован.
+Документирован Google Gemini, интеграция в Phase 3.
 
 ### Как контрибьютить?
 
@@ -158,20 +195,28 @@ D: Источники и верификация (Depth)
 
 ### Где исполняемый код?
 
-В `runtime/`. Пока это placeholder. См. `docs/ROADMAP.md` для плана.
+В `runtime/src/`. Типы готовы, сервисы в разработке (Phase 2).
+
+### Что нового в vΩ.3.0?
+
+- SIFT Protocol для верификации
+- Фрактальный мониторинг (HFD, DFA)
+- Квантовые индикаторы (CSI, EI, NC)
+- Early Warning System
 
 ---
 
 ## ∆DΩΛ
 
-**∆:** Создан QUICKSTART для быстрого онбординга.
+**∆:** QUICKSTART обновлён для vΩ.3.0 с новыми системами.
 
-**D:** AUDIT → FAQ analysis → Quickstart structure.
+**D:** AUDIT vΩ.3.0 → FAQ analysis → Quickstart update.
 
-**Ω:** 0.85 — покрывает основные сценарии.
+**Ω:** 0.90 — покрывает основные сценарии + новые системы.
 
-**Λ:** Обновить после реализации runtime.
+**Λ:** Добавить примеры использования после реализации сервисов.
 
 ---
 
+**Version:** vΩ.3.0
 **Integrity:** Docs-Ready
