@@ -424,15 +424,17 @@ class ValidatorsService {
     const validation = this.validateISODate(isoDate);
     if (!validation.valid || !validation.parsed) return false;
 
-    // Interpret ISO date as "deadline day" (end-of-day), not start-of-day.
-    // Otherwise, a same-day date becomes "in the past" after midnight and breaks <=24h checks.
     const { year, month, day } = validation.parsed as { year: number; month: number; day: number };
-    const targetDate = new Date(year, month - 1, day, 23, 59, 59, 999);
+    const targetStart = new Date(year, month - 1, day);
+    const targetEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
     const now = new Date();
-    const diffMs = targetDate.getTime() - now.getTime();
-    const diffHours = diffMs / (1000 * 60 * 60);
 
-    return diffHours >= 0 && diffHours <= 24;
+    if (now.getTime() > targetEnd.getTime()) {
+      return false;
+    }
+
+    const diffHours = (targetStart.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return diffHours <= 24;
   }
 
   /**

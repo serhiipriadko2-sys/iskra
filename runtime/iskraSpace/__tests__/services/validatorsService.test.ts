@@ -385,6 +385,15 @@ describe('ValidatorsService', () => {
       expect(isWithin).toBe(false);
     });
 
+    it('isWithin24Hours() should reject past dates', () => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayISO = validatorsService.toISODate(yesterday);
+
+      const isWithin = validatorsService.isWithin24Hours(yesterdayISO);
+      expect(isWithin).toBe(false);
+    });
+
     it('getDaysUntil() should calculate correct days', () => {
       const nextWeek = new Date();
       nextWeek.setDate(nextWeek.getDate() + 7);
