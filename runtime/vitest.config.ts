@@ -1,6 +1,16 @@
+import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@iskra/runtime': path.resolve(__dirname, './src/index.ts'),
+      '@google/genai': path.resolve(
+        __dirname,
+        './iskraSpace/testSupport/googleGenAIMock.ts'
+      ),
+    },
+  },
   test: {
     include: ['src/**/*.test.ts', 'iskraSpace/**/*.test.ts'],
     exclude: [
