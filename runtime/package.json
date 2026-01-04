@@ -1,7 +1,7 @@
 {
   "name": "@iskra/runtime",
-  "version": "0.1.0",
-  "description": "ISKRA AI Companion - Runtime Services",
+  "version": "0.3.1",
+  "description": "ISKRA AI Companion - Runtime Services and Core Types",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,10 +31,10 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "dependencies": {},
   "devDependencies": {
     "@eslint/js": "^9.0.0",
     "@types/node": "^22.19.3",
+    "@vitest/coverage-v8": "^2.1.9",
     "eslint": "^9.0.0",
     "prettier": "^3.4.0",
     "typescript": "^5.8.0",

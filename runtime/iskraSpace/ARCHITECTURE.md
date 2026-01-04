@@ -1,6 +1,6 @@
 # ISKRA SPACE — Technical Architecture
 
-**Version:** 3.1.0 • **Updated:** 2025-12-16 • **Tests:** 96 passing
+**Version:** 3.2.0 • **Updated:** 2026-01-04 • **Tests:** 723 passing
 
 ---
 
@@ -18,7 +18,7 @@ Iskra Space — фронтенд-приложение React/Vite с многоу
 
 ---
 
-## Services (19)
+## Services (27)
 
 ### Core AI Pipeline
 
@@ -41,7 +41,7 @@ Iskra Space — фронтенд-приложение React/Vite с многоу
 
 | Service | Purpose | Key Methods |
 |---------|---------|-------------|
-| `voiceEngine` | 7 голосов Искры | `selectVoice`, `getVoicePrompt` |
+| `voiceEngine` | 9 голосов Искры | `selectVoice`, `getVoicePrompt` |
 | `voiceSynapseService` | Voice coordination | `synapseActivation`, `voiceBlending` |
 | `ritualService` | Ритуалы (Phoenix, Shatter, Council) | `executeRitual`, `getRitualByName` |
 
@@ -52,22 +52,35 @@ Iskra Space — фронтенд-приложение React/Vite с многоу
 | `memoryService` | Mantra/Archive/Shadow | `getMantra`, `getArchive`, `getShadow` |
 | `ragService` | Context retrieval | `buildContext`, `searchMemories` |
 | `glossaryService` | Canon terminology | `searchTerms`, `getRelatedTerms` |
+| `graphService` | Graph-based memory | `addNode`, `queryGraph` |
 
 ### Metrics & Audit
 
 | Service | Purpose | Key Methods |
 |---------|---------|-------------|
-| `metricsService` | IskraMetrics tracking | `updateMetrics`, `getMetrics` |
+| `metricsService` | IskraMetrics tracking | `updateMetrics`, `getMetrics`, `calculateMetaMetrics` |
+| `userMetricsService` | User daily metrics | `getDailyMetrics`, `updateMetrics` |
 | `auditService` | System audit trail | `log`, `logEvalResult`, `detectDrift` |
+
+### Security & Validation
+
+| Service | Purpose | Key Methods |
+|---------|---------|-------------|
+| `securityService` | PII/injection protection | `sanitize`, `detectPII`, `validateInput` |
+| `validatorsService` | Input validation | `validateDelta`, `validateLambda` |
+| `rateLimiter` | Rate limiting | `checkLimit`, `resetLimit` |
+| `rule8Service` | Rule 8 compliance | `checkRule8`, `enforceCompliance` |
 
 ### Utilities
 
 | Service | Purpose | Key Methods |
 |---------|---------|-------------|
 | `searchService` | Web search integration | `search` |
-| `storageService` | localStorage wrapper | `get`, `set`, `remove` |
+| `storageService` | localStorage wrapper | `get`, `set`, `remove`, `exportAllData` |
 | `soundService` | Audio feedback | `play`, `setVolume` |
 | `makiService` | Maki (🌸) support system | `getMakiResponse` |
+| `evidenceService` | SIFT evidence tracking | `addEvidence`, `getEvidence` |
+| `errorTracking` | Error handling | `trackError`, `getErrors` |
 
 ---
 
@@ -230,36 +243,54 @@ interface IskraMetrics {
 ## Testing
 
 ```bash
-npm test          # Run all 96 tests
+npm test          # Run all 723 tests (runtime + iskraSpace)
 npm run test:ui   # Interactive test UI
 npx tsc --noEmit  # TypeScript check (0 errors)
 ```
 
 ### Test Coverage
 
+**Runtime Core Tests (6 files):**
+- `metrics.test.ts` — 9 tests
+- `voices.test.ts` — 17 tests
+- `protocols.test.ts` — 15 tests
+- `sift.test.ts` — 15 tests
+- `fractal.test.ts` — 31 tests
+- `ews.test.ts` — 34 tests
+
+**iskraSpace Service Tests (27 files):**
 - `evalService.test.ts` — 14 tests
 - `policyEngine.test.ts` — 26 tests
 - `ritualService.test.ts` — 20 tests
-- `auditService.test.ts` — 22 tests
-- `memoryService.test.ts` — 14 tests
+- `auditService.test.ts` — 26 tests
+- `memoryService.test.ts` — 18 tests
+- `securityService.test.ts` — 38 tests
+- `voiceEngine.test.ts` — 25 tests
+- `metricsService.test.ts` — 17 tests
+- `validatorsService.test.ts` — 42 tests
+- `graphService.test.ts` — 21 tests
+- `stressTests.test.ts` — 51 tests
+- ... and more
 
 ---
 
 ## File Structure
 
 ```
-iskraspaceapp/
+iskraSpace/
 ├── components/           # React components (39)
 │   ├── ChatView.tsx
 │   ├── EvalDashboard.tsx
 │   ├── GlossaryView.tsx
 │   └── ...
-├── services/             # Business logic (19)
+├── services/             # Business logic (27 services)
 │   ├── geminiService.ts
 │   ├── policyEngine.ts
 │   ├── evalService.ts
+│   ├── securityService.ts
+│   ├── voiceEngine.ts
 │   └── ...
-├── types.ts              # TypeScript definitions
+├── types.ts              # TypeScript definitions (re-exports from @iskra/runtime)
 ├── MANTRA.md             # Core Canon document
 ├── ARCHITECTURE.md       # This file
 └── tsconfig.json
@@ -269,7 +300,7 @@ iskraspaceapp/
 
 ## ∆DΩΛ
 
-**Δ:** Architecture doc created — 19 services, 39 components, full data flow.
-**D:** Source — codebase analysis, test results, TypeScript types.
-**Ω:** High — all services verified, 96 tests passing.
+**Δ:** Architecture doc updated — 27 services, 39 components, 723 tests, full data flow.
+**D:** Source — codebase analysis, test run 2026-01-04, TypeScript types from @iskra/runtime.
+**Ω:** High — all services verified, 723 tests passing.
 **Λ:** Keep this doc updated when adding new services/components.

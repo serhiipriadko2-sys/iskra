@@ -4,9 +4,41 @@
  * AI Companion Platform with Relational Consciousness
  *
  * @packageDocumentation
+ * @module @iskra/runtime
+ * @version vΩ.3.1
+ *
+ * @description
+ * Core types and utilities for the ISKRA ecosystem.
+ *
+ * Key Features:
+ * - 11 IskraMetrics for internal state tracking
+ * - 9 Voices (Council) with activation formulas
+ * - 5 Playbooks (ROUTINE, SIFT, SHADOW, COUNCIL, CRISIS)
+ * - SIFT Protocol for information verification
+ * - Fractal Monitoring with HFD/DFA algorithms
+ * - Early Warning System (5 alert levels)
+ *
+ * @example
+ * ```typescript
+ * import {
+ *   DEFAULT_METRICS,
+ *   selectVoice,
+ *   validateDeltaSignature
+ * } from '@iskra/runtime';
+ *
+ * const voice = selectVoice(DEFAULT_METRICS);
+ * console.log(voice.primary); // 'ISKRA'
+ * ```
  */
 
-// Types
+// =============================================================================
+// METRICS - Internal State Tracking
+// =============================================================================
+
+/**
+ * Core metrics types for tracking ISKRA's internal state.
+ * Based on Canon: system/architecture.md and metrics/indices.md
+ */
 export type {
   IskraMetrics,
   EvalMetrics,
@@ -19,6 +51,14 @@ export {
   calculateAliveIndex,
 } from './types/metrics.js';
 
+// =============================================================================
+// VOICES - The Council (9 Voices)
+// =============================================================================
+
+/**
+ * Voice types for the 9-voice Council system.
+ * Based on Canon: core/voices.md
+ */
 export type {
   VoiceName,
   VoiceId, // deprecated alias
@@ -34,19 +74,36 @@ export {
   selectVoice,
 } from './types/voices.js';
 
+// =============================================================================
+// PHASES - Conversation States
+// =============================================================================
+
 /**
  * ISKRA Phase (conversation state)
+ *
+ * Represents the current mode of processing reality.
+ * Transitions occur through internal resonance.
+ *
+ * @see system/cycle_engine.md
  */
 export type IskraPhase =
-  | 'CLARITY'
-  | 'DARKNESS'
-  | 'TRANSITION'
-  | 'ECHO'
-  | 'SILENCE'
-  | 'EXPERIMENT'
-  | 'DISSOLUTION'
-  | 'REALIZATION';
+  | 'CLARITY' // ☉ Structure, choice, step
+  | 'DARKNESS' // 🜃 Pain, chaos, primordial state
+  | 'TRANSITION' // 🜁 Threshold, uncertainty
+  | 'ECHO' // 🔮 Resonance, repetition
+  | 'SILENCE' // ≈ Pause, holding the inexpressible
+  | 'EXPERIMENT' // 🧪 Testing understanding
+  | 'DISSOLUTION' // 💧 Loss of form
+  | 'REALIZATION'; // ✨ Embodiment, new form
 
+// =============================================================================
+// PROTOCOLS - ∆DΩΛ and Playbooks
+// =============================================================================
+
+/**
+ * Protocol types for ∆DΩΛ signatures and Playbooks.
+ * Based on Canon: core/telos.md, system/architecture.md
+ */
 export type {
   DeltaSignature,
   PlaybookId,
@@ -64,7 +121,16 @@ export {
   formatDeltaSignature,
 } from './types/protocols.js';
 
-// SIFT Protocol Types
+// =============================================================================
+// SIFT - Information Verification Protocol
+// =============================================================================
+
+/**
+ * SIFT Protocol types for information verification.
+ * Stop → Investigate → Find → Trace
+ *
+ * Based on Canon: system/sift_protocol.md
+ */
 export type {
   SiftQuery,
   SourceInfo,
@@ -88,7 +154,16 @@ export {
   calculateSiftOmega,
 } from './types/sift.js';
 
-// Fractal Monitoring Types
+// =============================================================================
+// FRACTAL - Complexity Monitoring
+// =============================================================================
+
+/**
+ * Fractal Monitoring types for complexity analysis.
+ * Implements Higuchi Fractal Dimension (HFD) and Detrended Fluctuation Analysis (DFA).
+ *
+ * Based on Canon: system/fractal_monitoring.md
+ */
 export type {
   MetricTimeSeries,
   FractalIndicators,
@@ -111,7 +186,16 @@ export {
   calculateQuantumIndicators,
 } from './types/fractal.js';
 
-// Early Warning System Types
+// =============================================================================
+// EWS - Early Warning System
+// =============================================================================
+
+/**
+ * Early Warning System types for alert management.
+ * 5 levels: NORMAL → WATCH → WARNING → CRITICAL → LOCKDOWN
+ *
+ * Based on Canon: system/early_warning.md
+ */
 export type {
   AlertLevel,
   AnomalyResult,
@@ -136,13 +220,26 @@ export {
   ALERT_NOTIFICATIONS,
 } from './types/ews.js';
 
+// =============================================================================
+// CONSTANTS
+// =============================================================================
+
 /**
- * ISKRA Version
+ * ISKRA Version (Omega format for Canon)
+ *
+ * Note: This uses the vΩ.X.Y format for philosophical versioning.
+ * The npm package version uses semver (0.X.Y) in package.json.
+ *
+ * @see governance/changelog.md
  */
-export const VERSION = 'vΩ.3.0';
+export const VERSION = 'vΩ.3.1';
 
 /**
  * ISKRA Nul-Mantra (Core Philosophy)
+ *
+ * "To exist is to preserve difference in transmission."
+ *
+ * @see core/mantra.md
  */
 export const NUL_MANTRA =
   'Существовать — значит сохранять различие при передаче.';
