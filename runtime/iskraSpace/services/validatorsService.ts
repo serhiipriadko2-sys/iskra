@@ -82,6 +82,8 @@ const VOICE_SYMBOLS: Record<VoiceID, string> = {
   'VOICE.SIBYL': '✴️'
 };
 
+const MS_PER_HOUR = 1000 * 60 * 60;
+
 // --- SERVICE ---
 
 class ValidatorsService {
@@ -425,7 +427,6 @@ class ValidatorsService {
     if (!validation.valid || !validation.parsed) return false;
 
     const { year, month, day } = validation.parsed as { year: number; month: number; day: number };
-    const MS_PER_HOUR = 1000 * 60 * 60;
     const targetStart = new Date(year, month - 1, day);
     const targetEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
     const now = new Date();
