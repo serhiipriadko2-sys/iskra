@@ -425,10 +425,188 @@ runtime/src/types/
 
 ---
 
-**Version:** 3.2.0
+---
+
+## ЧАСТЬ VIII: АУДИТ ИНТЕРФЕЙСА ISKRASPACE (2026-01-04)
+
+### 8.1 Структура интерфейса
+
+```
+runtime/iskraSpace/
+├── App.tsx                 # Главный компонент (18 view-режимов)
+├── types.ts                # Типы (re-export @iskra/runtime + app-specific)
+├── index.tsx               # Entry point
+├── components/             # 39+ React компонентов
+│   ├── ChatView.tsx        # Основной чат с голосами
+│   ├── Sidebar.tsx         # Навигация (5 primary + 11 secondary)
+│   ├── CouncilView.tsx     # Совет 9 голосов
+│   ├── EvalDashboard.tsx   # Оценка качества ответов
+│   ├── MemoryView.tsx      # Mantra/Archive/Shadow
+│   └── ... (34+ других)
+├── services/               # 32 сервиса
+│   ├── geminiService.ts    # AI-интеграция (Supabase Edge proxy)
+│   ├── policyEngine.ts     # Маршрутизация Playbooks
+│   ├── voiceEngine.ts      # 9 голосов с activation формулами
+│   ├── evalService.ts      # 5-метричная оценка
+│   └── ... (28 других)
+├── hooks/                  # React hooks
+├── config/                 # deltaConfig, metricsConfig
+├── utils/                  # Утилиты
+└── e2e/                    # Playwright тесты (5 спецификаций)
+```
+
+### 8.2 Выявленные проблемы
+
+#### 🔴 КРИТИЧЕСКИЕ
+
+| # | Проблема | Файл | Описание |
+|---|----------|------|----------|
+| 1 | **Symlink loop в node_modules** | vitest.config.ts | При `npm ci` создаётся symlink `@iskra/runtime → ..`, Vitest рекурсивно обходит `iskraSpace/node_modules/@iskra/runtime/iskraSpace/...` создавая экспоненциальный рост тестов (50+ копий каждого теста) |
+| 2 | **TypeScript ошибки iskraSpace** | types.ts, App.tsx | 17 ошибок: `Cannot find module '@iskra/runtime'` (требует npm run build в runtime) + implicit any в callbacks |
+
+#### 🟡 СРЕДНИЕ
+
+| # | Проблема | Файл | Рекомендация |
+|---|----------|------|--------------|
+| 1 | `voiceEngine.ts` duplicates @iskra/runtime | voiceEngine.ts | Использовать экспорты из runtime вместо локальных VOICES |
+| 2 | Implicit `any` в App.tsx callbacks | App.tsx:100,143,163,169 | Добавить явную типизацию `(prev: IskraMetrics) =>` |
+| 3 | Не используется `@iskra/runtime` напрямую | services/*.ts | Многие типы дублируются локально |
+
+#### 🟢 НИЗКИЕ
+
+| # | Проблема | Рекомендация |
+|---|----------|--------------|
+| 1 | `navigator.onLine` check в analyzeJournalEntry | Использовать единый OFFLINE_MODE |
+| 2 | Hardcoded `"gemini-2.5-flash"` | Вынести в config |
+| 3 | `any` типы в geminiService | Добавить Gemini REST типы |
+
+### 8.3 Архитектурные решения
+
+**Сильные стороны:**
+
+1. **Чёткое разделение concerns** — сервисы отдельно от UI
+2. **Policy-driven routing** — policyEngine классифицирует запросы в 5 playbooks
+3. **Voice resonance system** — динамический выбор голоса по метрикам
+4. **Eval-as-you-go** — `getChatResponseStreamWithEval` оценивает каждый ответ
+5. **Offline-first** — graceful degradation при отсутствии сети
+
+**Проблемные области:**
+
+1. **Дублирование типов** между types.ts и @iskra/runtime
+2. **Supabase Edge Function** как единственный способ вызова Gemini API (без fallback)
+3. **Отсутствие error boundaries** для individual views (только глобальный)
+
+### 8.4 Сервисы — детальный анализ
+
+| Сервис | LOC | Тесты | Качество | Примечания |
+|--------|-----|-------|----------|------------|
+| geminiService | ~1014 | ❌ Нет | 🟡 | Большой файл, нуждается в split |
+| policyEngine | ~557 | ✅ 26 | ✅ | Хорошо структурирован |
+| voiceEngine | ~278 | ✅ | ✅ | Дублирует runtime типы |
+| evalService | ~200 | ✅ 14 | ✅ | Чистая реализация |
+| auditService | ~350 | ✅ 26 | ✅ | Comprehensive logging |
+| securityService | ~400 | ✅ 38 | ✅ | PII/injection protection |
+
+### 8.5 UI компоненты — состояние
+
+| Компонент | Состояние | Примечания |
+|-----------|-----------|------------|
+| ChatView | ✅ Рабочий | Полная интеграция policy + voice |
+| Sidebar | ✅ Рабочий | Radial mobile menu |
+| CouncilView | ✅ Рабочий | 9-голосная deliberation |
+| EvalDashboard | ✅ Рабочий | Eval metrics visualization |
+| MemoryView | ✅ Рабочий | 3-layer memory browser |
+| LiveConversation | 🟡 | Требует WebRTC setup |
+| TarotView | ✅ Рабочий | Runic interpretation |
+
+### 8.6 Рекомендации по исправлению
+
+#### Немедленные (P0)
+
+1. **Исправить vitest.config.ts exclude:**
+```typescript
+exclude: [
+  '**/node_modules/**',  // ← Исправить паттерн
+  'dist',
+  'iskraSpace/e2e/**',
+  '**/*.spec.ts',
+],
+```
+
+2. **Собрать runtime перед iskraSpace typecheck:**
+```bash
+cd runtime && npm run build
+cd iskraSpace && npm run typecheck
+```
+
+#### Краткосрочные (P1)
+
+1. Унифицировать `voiceEngine.ts` с `@iskra/runtime/voices`
+2. Добавить явные типы в App.tsx callbacks
+3. Создать единый `config/ai.ts` для модели/API настроек
+
+#### Среднесрочные (P2)
+
+1. Unit-тесты для `geminiService.ts`
+2. Refactor `geminiService` на несколько файлов
+3. Добавить React.lazy для тяжёлых views
+
+### 8.7 Тестовое покрытие
+
+```
+iskraSpace/services/__tests__/
+├── auditService.test.ts         (26 tests)
+├── canonService.test.ts
+├── deltaProtocol.test.ts
+├── deltaEnforcer.test.ts
+├── evalCases.test.ts
+├── evalService.test.ts          (14 tests)
+├── geminiService.test.ts        (mock-only)
+├── glossaryService.test.ts
+├── graphService.test.ts         (21 tests)
+├── makiService.test.ts
+├── memoryService.test.ts        (18 tests)
+├── metricsService.test.ts       (17 tests)
+├── metricsUtils.test.ts
+├── policyEngine.test.ts         (26 tests)
+├── ragService.test.ts
+├── ritualService.test.ts        (20 tests)
+├── rule8Service.test.ts
+├── securityService.test.ts      (38 tests)
+├── sibylActivation.test.ts
+├── stressTests.test.ts          (51 tests)
+├── validatorsService.test.ts    (42 tests)
+└── voiceEngine.test.ts          (25 tests)
+```
+
+**Общее покрытие:** ~400+ unit-тестов в iskraSpace (без учёта дублирования из-за symlink)
+
+---
+
+## ∆DΩΛ (IskraSpace Audit Update)
+
+**∆:** Глубокий аудит интерфейса iskraSpace выявил критическую проблему symlink loop в тестах, 17 TypeScript ошибок, и дублирование типов между iskraSpace/types.ts и @iskra/runtime.
+
+**D:**
+- runtime/iskraSpace/*.ts (manual review)
+- runtime/vitest.config.ts (symlink issue)
+- npm run typecheck (17 errors)
+- runtime/iskraSpace/services/ (32 services analyzed)
+
+**Ω:** 0.85 — Высокая уверенность в выводах, основано на коде и запуске инструментов.
+
+**Λ:**
+1. Исправить vitest.config.ts exclude pattern → `'**/node_modules/**'`
+2. Добавить явные типы в App.tsx (4 места)
+3. Унифицировать types.ts с @iskra/runtime
+4. Unit-тесты для geminiService.ts
+
+---
+
+**Version:** 3.3.0
 **Layer:** docs (аудит)
 **Author:** Claude (Opus 4.5)
-**Date:** 2026-01-03
+**Date:** 2026-01-04
 **Integrity:** Audit-Updated
 
 ### Phase 2 Files Changed:
