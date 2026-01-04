@@ -429,6 +429,7 @@ class ValidatorsService {
     const targetEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
     const now = new Date();
 
+    // Guardrail: the target day has already ended
     const hoursUntilEnd = (targetEnd.getTime() - now.getTime()) / (1000 * 60 * 60);
     if (hoursUntilEnd < 0) {
       return false;
