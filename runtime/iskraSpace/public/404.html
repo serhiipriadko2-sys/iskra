@@ -8,7 +8,12 @@
     // GitHub Pages SPA redirect handler
     // Captures the current URL and redirects to index.html with the path stored
     // This enables SPA routing on GitHub Pages
-    var pathSegmentsToKeep = 1; // For /iskra/ base path
+    // 
+    // pathSegmentsToKeep: Number of path segments in the base URL
+    // For /iskra/ base path, this is 1 (the "iskra" segment)
+    // For root deployment, set to 0
+    // Must match the VITE_BASE_PATH configuration
+    var pathSegmentsToKeep = 1;
     var l = window.location;
     l.replace(
       l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
