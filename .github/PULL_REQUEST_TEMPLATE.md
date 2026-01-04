@@ -43,6 +43,7 @@
 - [ ] `npm run typecheck` проходит
 - [ ] `npm run build` проходит
 - [ ] `npm run lint` проходит (или обоснована причина ошибок)
+- [ ] `npm run test:coverage` проходит (покрытие: core types > 90%)
 
 ## ∆DΩΛ
 
