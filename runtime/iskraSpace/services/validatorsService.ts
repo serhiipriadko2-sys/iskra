@@ -435,7 +435,7 @@ class ValidatorsService {
     // as long as its end has not passed.
     const hoursUntilStart = (targetStart.getTime() - now.getTime()) / MS_PER_HOUR;
     const hoursUntilEnd = hoursUntilStart + 24;
-    return hoursUntilEnd >= 0 && hoursUntilStart < 24;
+    return hoursUntilEnd >= 0 && hoursUntilStart <= 24;
   }
 
   /**
