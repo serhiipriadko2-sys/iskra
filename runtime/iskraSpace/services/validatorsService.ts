@@ -429,12 +429,15 @@ class ValidatorsService {
     const targetEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
     const now = new Date();
 
-    if (now.getTime() > targetEnd.getTime()) {
+    const hoursUntilEnd = (targetEnd.getTime() - now.getTime()) / (1000 * 60 * 60);
+    if (hoursUntilEnd < 0) {
       return false;
     }
 
-    const diffHours = (targetStart.getTime() - now.getTime()) / (1000 * 60 * 60);
-    return diffHours <= 24;
+    // Use start-of-day for horizon so date-only inputs like "tomorrow" stay within 24h
+    // even when the current time is past midday.
+    const hoursUntilStart = (targetStart.getTime() - now.getTime()) / (1000 * 60 * 60);
+    return hoursUntilStart <= 24;
   }
 
   /**
