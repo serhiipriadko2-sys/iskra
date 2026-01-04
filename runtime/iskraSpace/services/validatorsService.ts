@@ -428,19 +428,12 @@ class ValidatorsService {
 
     const { year, month, day } = validation.parsed as { year: number; month: number; day: number };
     const targetStart = new Date(year, month - 1, day);
-    const targetEnd = new Date(year, month - 1, day, 23, 59, 59, 999);
     const now = new Date();
 
-    // Reject if the target day has already ended
-    const hoursUntilEnd = (targetEnd.getTime() - now.getTime()) / MS_PER_HOUR;
-    if (hoursUntilEnd < 0) {
-      return false;
-    }
-
     // Use start-of-day for horizon so date-only inputs like "tomorrow" stay within 24h
-    // even when the current time is past midday.
+    // even when the current time is past midday. The window is exclusive of the 24h boundary.
     const hoursUntilStart = (targetStart.getTime() - now.getTime()) / MS_PER_HOUR;
-    return hoursUntilStart <= 24;
+    return hoursUntilStart > -24 && hoursUntilStart < 24;
   }
 
   /**
