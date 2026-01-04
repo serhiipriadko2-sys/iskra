@@ -430,12 +430,9 @@ class ValidatorsService {
     const targetStart = new Date(year, month - 1, day);
     const now = new Date();
 
-    // Use start-of-day for horizon so date-only inputs like "tomorrow" stay within 24h
-    // even when the current time is past midday. We allow the current day (start already in the past)
-    // as long as its end has not passed.
+    // Use start-of-day for horizon and require the target day to begin within the next 24 hours.
     const hoursUntilStart = (targetStart.getTime() - now.getTime()) / MS_PER_HOUR;
-    const hoursUntilEnd = hoursUntilStart + 24;
-    return hoursUntilEnd >= 0 && hoursUntilStart <= 24;
+    return hoursUntilStart >= 0 && hoursUntilStart <= 24;
   }
 
   /**
