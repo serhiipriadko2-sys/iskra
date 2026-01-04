@@ -22,13 +22,16 @@ ISKRA развивается по принципу **Canon First** — снач�
 
 ### Фаза 1 — Governance и SoT (3–5 дней, при изменениях core/)
 - Для любых изменений в core/: подготовить ADR (governance/adr.md или новый файл), согласовать.
-- После ADR: внести правки в core/, обновить ledger/sot.json через `python tools/update_ledger.py`, затем `python tools/verify_ledger.py`.
+- После ADR:
+  - внести правки в core/
+  - обновить ledger/sot.json через `python tools/update_ledger.py`, затем `python tools/verify_ledger.py`
 - При необходимости обновить system/ и metrics/ для фиксации договорённостей.
 
 ### Фаза 2 — Качество и стабильность runtime (5–10 дней)
 - CI baseline: `npm ci`, `npm run typecheck`, `npm run lint`, `npm run test`, `npm run build`.
 - Добавить минимальные проверки в PR-шаблоны (.github/) для дисциплины (lint, tests).
-- Покрыть критические типы и протоколы (runtime/src/types/*) тестами, убрать any/unknown в горячих путях.
+- Покрыть критические типы и протоколы (runtime/src/types/*) тестами.
+- Убрать any/unknown в горячих путях.
 - Задать E2E/интеграционные сценарии для ключевых протоколов (metrics, voices, sift/fractal/ews).
 
 ### Фаза 3 — Наблюдаемость и метрики (4–7 дней)
@@ -46,7 +49,7 @@ ISKRA развивается по принципу **Canon First** — снач�
 - appendix/: собирать идеи, отделять от SoT и помечать возможные противоречия.
 
 ### Тактические задачи
-- Прогнать `python tools/verify_ledger.py` и задокументировать состояние.
+- Повторять `python tools/verify_ledger.py` (см. Фаза 0) и фиксировать состояние.
 - Составить список ADR, требуемых для любых предстоящих core-изменений.
 - В runtime: baseline CI (lint/typecheck/test/build) и отчёт о результатах.
 - Покрытие тестами ключевых типов и протоколов (runtime/src/types/*), убрать any в критических местах.
