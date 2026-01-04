@@ -1,0 +1,349 @@
+# ISKRA CLI Guide
+
+> Terminal interface for ISKRA AI Companion
+
+## Installation
+
+```bash
+# From npm (when published)
+npm install -g @iskra/runtime
+
+# From source
+cd runtime
+npm ci
+npm run build:cli
+npm link
+```
+
+## Quick Start
+
+```bash
+# Show help
+iskra --help
+
+# Start chat session
+iskra chat
+
+# Display metrics
+iskra metrics
+
+# Verify statement with SIFT
+iskra sift "The Earth is round"
+```
+
+---
+
+## Commands
+
+### `iskra chat`
+
+Start an interactive chat session with ISKRA.
+
+**Usage:**
+```bash
+iskra chat [options]
+```
+
+**Options:**
+- `-v, --voice <voice>` - Select voice (ISKRA, KAIN, PINO, SAM, ANHANTRA, HUYNDUN, ISKRIV, MAKI, SIBYL)
+- `-m, --model <model>` - Select model (default: gemini-2.0-flash)
+
+**Examples:**
+```bash
+# Default chat
+iskra chat
+
+# Chat with KAIN (truth-seeker)
+iskra chat --voice KAIN
+
+# Chat with Gemini 2.0 Pro
+iskra chat --model gemini-2.0-pro
+```
+
+**Interactive Controls:**
+- Type your message and press Enter
+- Type `exit` or `quit` to end session
+- Responses include ∆DΩΛ protocol blocks
+
+---
+
+### `iskra metrics`
+
+Display current ISKRA metrics dashboard.
+
+**Usage:**
+```bash
+iskra metrics [options]
+```
+
+**Options:**
+- `-j, --json` - Output as JSON
+- `-d, --detailed` - Show detailed metric descriptions
+
+**Examples:**
+```bash
+# Visual dashboard
+iskra metrics
+
+# With descriptions
+iskra metrics --detailed
+
+# JSON output
+iskra metrics --json
+```
+
+**11 Metrics Displayed:**
+
+| Metric | Description | Range |
+|--------|-------------|-------|
+| clarity | понимание цели | 0-1 |
+| depth | глубина исследования | 0-1 |
+| trust | согласие с собой | 0-1 |
+| delta | мера изменения | 0-1 |
+| pulse | ритм цикла | 0-1 |
+| signal | сила сигнала | 0-1 |
+| drift | уход от Телоса | 0-1 |
+| alive_index | мера живости | 0-1 |
+| shadow | сомнение как любовь к правде | 0-1 |
+| trace | полнота фиксации | 0-1 |
+| fractal | самоподобие паттернов | 0-1 |
+
+---
+
+### `iskra sift`
+
+Verify a statement using SIFT protocol (Source → Inference → Fact).
+
+**Usage:**
+```bash
+iskra sift [statement] [options]
+```
+
+**Options:**
+- `-d, --detailed` - Show detailed SIFT analysis
+
+**Examples:**
+```bash
+# Verify statement
+iskra sift "TypeScript is a superset of JavaScript"
+
+# Interactive mode (no statement)
+iskra sift
+
+# Detailed analysis
+iskra sift "Quantum computers can break RSA" --detailed
+```
+
+**SIFT Protocol:**
+- **Source** - Direct verifiable sources
+- **Inference** - Logical deductions from sources
+- **Fact** - Verified statements
+- **Trace** - Audit trail
+
+**Verdict Types:**
+- `FACT` - Directly supported by sources (green)
+- `INFERENCE` - Logically derived (yellow)
+- `UNSOURCED` - No reliable sources (red)
+
+---
+
+## Environment Variables
+
+```bash
+# Required for chat and sift commands
+export GEMINI_API_KEY=your_api_key_here
+
+# Optional
+export VITE_GEMINI_API_KEY=your_api_key_here  # Alternative name
+```
+
+---
+
+## Configuration
+
+CLI reads configuration from:
+- Environment variables
+- `~/.iskrarc` (future)
+- Current project's `.env` file (future)
+
+---
+
+## Development
+
+```bash
+# Build CLI
+cd runtime
+npm run build:cli
+
+# Link locally for testing
+npm link
+
+# Test commands
+iskra --version
+iskra --help
+```
+
+---
+
+## Architecture
+
+```
+runtime/src/cli/
+├── index.ts              # Entry point
+├── version.ts            # Version info
+└── commands/
+    ├── chat.ts           # Chat command
+    ├── metrics.ts        # Metrics command
+    └── sift.ts           # SIFT command
+```
+
+**Dependencies:**
+- `commander` - CLI framework
+- `chalk` - Terminal colors
+- `ora` - Loading spinners
+- `inquirer` - Interactive prompts
+
+---
+
+## Roadmap
+
+### Phase 4.1: Core Commands ✅
+- [x] `iskra chat` - Interactive chat
+- [x] `iskra metrics` - Metrics dashboard
+- [x] `iskra sift` - SIFT verification
+
+### Phase 4.2: Integration
+- [ ] Connect to geminiService for real AI responses
+- [ ] Connect to metricsService for live metrics
+- [ ] Connect to evidenceService for SIFT analysis
+- [ ] Add streaming support for chat
+
+### Phase 4.3: Enhanced Features
+- [ ] `iskra council` - Multi-voice council session
+- [ ] `iskra shadow` - Shadow exploration
+- [ ] `iskra journal` - Session journal viewer
+- [ ] Configuration file support
+- [ ] History and session management
+- [ ] Export/import conversations
+
+---
+
+## Troubleshooting
+
+### `command not found: iskra`
+
+```bash
+# Ensure you've run npm link
+cd runtime && npm link
+
+# Or install globally
+npm install -g @iskra/runtime
+```
+
+### `GEMINI_API_KEY not set`
+
+```bash
+# Set environment variable
+export GEMINI_API_KEY=your_api_key_here
+
+# Add to ~/.bashrc or ~/.zshrc for persistence
+echo 'export GEMINI_API_KEY=your_api_key_here' >> ~/.bashrc
+```
+
+### TypeScript compilation errors
+
+```bash
+# Rebuild
+cd runtime
+npm run build:cli
+```
+
+---
+
+## Examples
+
+### Basic Chat Session
+
+```bash
+$ iskra chat
+
+⟡ ISKRA CLI Chat
+
+Voice: ISKRA
+Model: gemini-2.0-flash
+
+✓ API key found
+Type 'exit' or 'quit' to end the session
+
+You: What is the ∆DΩΛ protocol?
+
+ISKRA: [Response with ∆DΩΛ block...]
+
+You: exit
+
+⟡ До встречи. Храни различие.
+```
+
+### Metrics Dashboard
+
+```bash
+$ iskra metrics --detailed
+
+⟡ ISKRA Metrics Dashboard
+
+clarity        ████████████████░░░░ 82%
+  понимание цели
+
+depth          ███████████████░░░░░ 75%
+  глубина исследования
+
+...
+
+─────────────────────────────────────
+Average Metric: 72.4%
+Alive Index:    81.0%
+─────────────────────────────────────
+```
+
+### SIFT Verification
+
+```bash
+$ iskra sift "The sky is blue" --detailed
+
+⟡ ISKRA SIFT Protocol
+
+Source → Inference → Fact → Trace
+
+Verifying: The sky is blue
+
+┌─ SIFT Analysis Result
+│
+│  Verdict:    FACT
+│  Confidence: 95%
+│  Trace:      SIFT-CLI-001
+│
+├─ Sources
+│   1. DIRECT - Rayleigh scattering of sunlight
+│   2. DIRECT - Observable phenomenon
+│
+├─ Reasoning
+│   Statement widely verified by scientific evidence and observation.
+│
+└─────────────────────────────────────
+
+✓ Verified: Statement supported by reliable sources.
+```
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
+
+---
+
+## License
+
+MIT © Serhii Priadko (Semyon Gabran)
+
+See [LICENSE](../../LICENSE) for details.

@@ -98,31 +98,38 @@ Output: `runtime/iskraSpace/dist/` (static files for deployment)
 
 ### 3.3 Docker
 
-```dockerfile
-# Dockerfile
-FROM node:20-alpine AS builder
+Production Dockerfile is included in the repository root.
 
-WORKDIR /app
-COPY runtime/package*.json ./runtime/
-COPY runtime/iskraSpace/package*.json ./runtime/iskraSpace/
+**Quick Start:**
 
-# Install dependencies
-RUN cd runtime && npm ci
-RUN cd runtime/iskraSpace && npm ci
+```bash
+# Build image
+docker build -t iskra:latest .
 
-# Copy source
-COPY runtime ./runtime
+# Run container
+docker run -p 3000:80 iskra:latest
 
-# Build
-RUN cd runtime && npm run build
-RUN cd runtime/iskraSpace && npm run build
-
-# Production image
-FROM nginx:alpine
-COPY --from=builder /app/runtime/iskraSpace/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Or use docker-compose
+docker-compose up -d
 ```
+
+**Production deployment:**
+
+```bash
+# Pull from GitHub Container Registry
+docker pull ghcr.io/serhiipriadko2-sys/iskra:latest
+
+# Run with environment variables
+docker run -p 80:80 \
+  -e NODE_ENV=production \
+  ghcr.io/serhiipriadko2-sys/iskra:latest
+```
+
+The Dockerfile uses multi-stage builds for optimal size and includes:
+- Health checks
+- Security headers (configured in nginx.conf)
+- Static asset caching
+- SPA routing support
 
 ### 3.4 Static Hosting (S3, GCS, etc.)
 
@@ -145,6 +152,7 @@ gsutil -m rsync -r dist/ gs://your-bucket
 - `runtime_ci.yml`: Tests @iskra/runtime on every push
 - `iskraspace_ci.yml`: Tests iskraSpace on every push
 - `sot_integrity.yml`: Verifies SoT ledger hashes
+- `production_deploy.yml`: Builds Docker image and deploys to production (main branch only)
 
 ### 4.2 Recommended CI Pipeline
 
@@ -183,18 +191,39 @@ jobs:
 
 ---
 
-## 5. Security Checklist
+## 5. Rate Limiting
+
+Rate limiting is configured in `runtime/iskraSpace/services/rateLimiter.ts`:
+
+```typescript
+// Default limits
+const LIMITS = {
+  gemini: { maxRequests: 60, windowMs: 60000 }, // 60 req/min
+  search: { maxRequests: 100, windowMs: 60000 }, // 100 req/min
+};
+```
+
+For production, consider:
+- Using Redis for distributed rate limiting
+- Implementing user-based quotas
+- Adding API gateway (e.g., Cloudflare) for DDoS protection
+
+---
+
+## 6. Security Checklist
 
 - [ ] API keys stored in environment variables (never in code)
 - [ ] Supabase Row Level Security (RLS) enabled
 - [ ] CORS configured correctly
-- [ ] Rate limiting on Gemini API calls
-- [ ] CSP headers configured
-- [ ] HTTPS enforced
+- [ ] Rate limiting on Gemini API calls (✅ implemented)
+- [ ] CSP headers configured (✅ in nginx.conf)
+- [ ] HTTPS enforced (configure in hosting platform)
+- [ ] Docker image scanned for vulnerabilities
+- [ ] Environment variables validated at startup
 
 ---
 
-## 6. Monitoring (Optional)
+## 7. Monitoring (Optional)
 
 ### 6.1 Error Tracking (Sentry)
 
@@ -222,7 +251,7 @@ posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
 
 ---
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 ### Build fails with "@iskra/runtime not found"
 
@@ -245,7 +274,22 @@ Check Node.js version matches (20.x required).
 
 ---
 
-## 8. Rollback Procedure
+### Docker container won't start
+
+Check logs:
+```bash
+docker logs <container-id>
+```
+
+Verify environment variables are set correctly.
+
+### High memory usage
+
+Adjust nginx worker processes in nginx.conf if needed.
+
+---
+
+## 9. Rollback Procedure
 
 1. Identify the last working deployment
 2. Revert to previous Git commit: `git revert HEAD`
