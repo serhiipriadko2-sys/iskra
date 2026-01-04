@@ -83,7 +83,28 @@ Output: `runtime/iskraSpace/dist/` (static files for deployment)
 4. Output directory: `dist`
 5. Add environment variables in Vercel dashboard
 
-### 3.2 Netlify
+### 3.2 GitHub Pages
+
+GitHub Pages deployment is automated via the `github_pages.yml` workflow.
+
+**Setup:**
+
+1. Go to repository Settings → Pages
+2. Set Source to "GitHub Actions"
+3. Push to `main` branch or trigger manually via Actions tab
+
+**Manual build for GitHub Pages:**
+
+```bash
+cd runtime && npm ci && npm run build
+cd iskraSpace && VITE_BASE_PATH=/iskra/ npm run build
+```
+
+**URL:** `https://<username>.github.io/iskra/`
+
+**Note:** The `VITE_BASE_PATH` environment variable sets the base path for all assets. This is required because GitHub Pages serves from a subdirectory.
+
+### 3.3 Netlify
 
 ```toml
 # netlify.toml
@@ -96,7 +117,7 @@ Output: `runtime/iskraSpace/dist/` (static files for deployment)
   NODE_VERSION = "20"
 ```
 
-### 3.3 Docker
+### 3.4 Docker
 
 Production Dockerfile is included in the repository root.
 
@@ -131,7 +152,7 @@ The Dockerfile uses multi-stage builds for optimal size and includes:
 - Static asset caching
 - SPA routing support
 
-### 3.4 Static Hosting (S3, GCS, etc.)
+### 3.5 Static Hosting (S3, GCS, etc.)
 
 ```bash
 # Build
@@ -153,6 +174,7 @@ gsutil -m rsync -r dist/ gs://your-bucket
 - `iskraspace_ci.yml`: Tests iskraSpace on every push
 - `sot_integrity.yml`: Verifies SoT ledger hashes
 - `production_deploy.yml`: Builds Docker image and deploys to production (main branch only)
+- `github_pages.yml`: Deploys iskraSpace to GitHub Pages (main branch only)
 
 ### 4.2 Recommended CI Pipeline
 
