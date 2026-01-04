@@ -254,14 +254,20 @@ export const DEFAULT_EWS_CONFIG: EWSConfig = {
 export function determineAlertLevel(
   metrics: IskraMetrics,
   fractal: FractalIndicators,
-  config: EWSConfig = DEFAULT_EWS_CONFIG
+  config: EWSConfig = DEFAULT_EWS_CONFIG,
+  aliveIndex?: number
 ): AlertLevel {
   const { thresholds } = config;
+  const hasCriticalAliveIndex =
+    typeof aliveIndex === 'number' &&
+    !Number.isNaN(aliveIndex) &&
+    aliveIndex <= thresholds.critical.alive_index;
 
   // CRITICAL
   if (
     fractal.D_chaos >= thresholds.critical.D_chaos ||
     metrics.drift >= thresholds.critical.drift ||
+    hasCriticalAliveIndex ||
     metrics.interrupt > 0.7 ||
     fractal.edgeDistance < 0.1
   ) {
