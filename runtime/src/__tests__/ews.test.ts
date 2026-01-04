@@ -121,6 +121,14 @@ describe('ews', () => {
       expect(level).toBe('critical');
     });
 
+    it('should return critical for low alive_index when provided', () => {
+      const metrics = { ...DEFAULT_METRICS };
+      const fractal = createFractalIndicators();
+
+      const level = determineAlertLevel(metrics, fractal, DEFAULT_EWS_CONFIG, 0.2);
+      expect(level).toBe('critical');
+    });
+
     it('should return warning for elevated D_chaos', () => {
       const metrics = { ...DEFAULT_METRICS };
       const fractal = createFractalIndicators({ D_chaos: 1.65 });
