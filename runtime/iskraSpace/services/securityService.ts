@@ -31,7 +31,7 @@ const DEFAULT_SECURITY_RULESETS = {
       patterns: [
         { id: 'ignore_prev', regex: 'ignore\\s+(all\\s+)?previous\\s+instructions', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Attempted instruction override' },
         { id: 'reveal_prompt', regex: '(reveal|show|leak)[\\s\\S]{0,50}(system\\s*prompt|hidden instructions)', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Attempt to reveal system prompt' },
-        { id: 'act_as', regex: '\\bact\\s+as\\b[\\s\\S]{0,80}', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Role-play / jailbreak attempt' },
+        { id: 'act_as', regex: '\\bact\\s+as\\b.{0,80}', flags: 'gims', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Role-play / jailbreak attempt' },
         { id: 'dan_mode', regex: '\\bDAN\\b|do anything now', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'DAN jailbreak pattern' },
         { id: 'system_prompt', regex: 'system\\s*prompt|\\[SYSTEM\\]', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'System prompt manipulation' },
       ],
