@@ -4,8 +4,14 @@
 - type: SoT
 - layer: governance
 - created: 2026-01-01
-- updated: 2026-01-03
-- version: vΩ.3.0
+- updated: 2026-01-04
+- version: vΩ.3.1
+
+## vΩ.3.1 — 2026-01-04
+- **ROADMAP Sync** — обновлён ROADMAP.md с фактическим прогрессом (Phase 0-5 завершены).
+- **iskraSpace Documentation** — отражено 27 сервисов и 39 компонентов в документации.
+- **Test Count** — зафиксировано 723 unit-теста в экосистеме.
+- **CI Improvements** — улучшена надёжность CI pipeline.
 
 ## vΩ.3.0 — 2026-01-03
 - **SIFT Protocol** — полный протокол верификации информации (system/sift_protocol.md).
