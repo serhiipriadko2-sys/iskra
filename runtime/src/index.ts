@@ -225,7 +225,11 @@ export {
 // =============================================================================
 
 /**
- * ISKRA Version
+ * ISKRA Version (Omega format for Canon)
+ *
+ * Note: This uses the vΩ.X.Y format for philosophical versioning.
+ * The npm package version uses semver (0.X.Y) in package.json.
+ *
  * @see governance/changelog.md
  */
 export const VERSION = 'vΩ.3.1';

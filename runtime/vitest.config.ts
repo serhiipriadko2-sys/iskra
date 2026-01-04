@@ -16,7 +16,7 @@ export default defineConfig({
     exclude: [
       'node_modules',
       'dist',
-      'iskraSpace/e2e/**',
+      'iskraSpace/e2e/**', // Playwright e2e tests (run separately via npm run test:e2e)
       '**/*.spec.ts',
     ],
     globals: true,
@@ -29,7 +29,7 @@ export default defineConfig({
         '**/*.test.ts',
         '**/__tests__/**',
         '**/testSupport/**',
-        'iskraSpace/e2e/**',
+        'iskraSpace/e2e/**', // Playwright e2e tests
       ],
     },
   },
