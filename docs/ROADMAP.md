@@ -197,7 +197,7 @@ const response = await geminiService.getChatResponseStreamWithPolicy(...);
 
 ---
 
-### Phase 4: CLI Interface ⏳ PLANNED
+### Phase 4: CLI Interface ✅ COMPLETE
 
 **Цель:** Терминальный интерфейс
 
@@ -215,12 +215,18 @@ npx iskra sift "Проверь факт X"
 npx iskra metrics
 ```
 
-**Библиотеки:**
-- `commander` — CLI framework
-- `ink` — React для терминала
-- `chalk` — Цвета
+**Реализованные команды:**
+- `iskra chat` — Interactive chat with voice selection ✅
+- `iskra metrics` — Live metrics dashboard ✅
+- `iskra sift` — SIFT verification protocol ✅
 
-**Статус:** Планируется после стабилизации iskraSpace
+**Библиотеки:**
+- `commander` — CLI framework ✅
+- `chalk` — Цвета ✅
+- `ora` — Loading spinners ✅
+- `inquirer` — Interactive prompts ✅
+
+**Статус:** Базовый CLI готов. Требуется интеграция с geminiService для полной функциональности.
 
 ---
 
@@ -250,17 +256,33 @@ npx iskra metrics
 
 ---
 
-### Phase 6: Production ⏳ IN PROGRESS
+### Phase 6: Production ✅ COMPLETE (Infrastructure)
 
 **Цель:** Публичный релиз
 
-| Задача | Описание |
-|--------|----------|
-| Docker | Контейнеризация |
-| Vercel/Railway | Deployment |
-| Auth | Supabase Auth |
-| Rate Limiting | Защита API |
-| Monitoring | Sentry + analytics |
+| Задача | Описание | Статус |
+|--------|----------|--------|
+| Docker | Контейнеризация | ✅ Done |
+| Vercel | Deployment config | ✅ Done |
+| CI/CD | Production workflow | ✅ Done |
+| nginx | Security headers | ✅ Done |
+| Rate Limiting | Already implemented | ✅ Done |
+| Auth | Supabase Auth ready | ⏳ Configure |
+| Monitoring | Sentry/PostHog | ⏳ Configure |
+
+**Реализовано:**
+- Multi-stage Dockerfile для оптимальной сборки ✅
+- docker-compose.yml для локальной разработки ✅
+- vercel.json для Vercel deployment ✅
+- production_deploy.yml workflow (GitHub Actions) ✅
+- nginx.conf с security headers и CSP ✅
+- .dockerignore для оптимизации образов ✅
+- Обновлённая документация DEPLOYMENT.md ✅
+
+**Осталось:**
+- Настроить Vercel secrets (VERCEL_TOKEN, etc.)
+- Настроить мониторинг (Sentry DSN, PostHog key)
+- Протестировать Docker build в продакшене
 
 ---
 
@@ -274,9 +296,10 @@ vΩ.X.Y.Z
   └──────── Omega (философский сдвиг)
 ```
 
-**Текущая версия:** vΩ.3.1
+**Текущая версия:** vΩ.3.2
 
 ### История версий
+- vΩ.3.2 — Phase 4 CLI + Phase 6 Production infrastructure
 - vΩ.3.1 — Синхронизация ROADMAP с фактическим прогрессом
 - vΩ.3.0 — SIFT + Fractal + EWS интеграция
 - vΩ.2.1 — Deep Audit + TypeScript scaffold
@@ -317,15 +340,15 @@ vΩ.X.Y.Z
 
 ## ∆DΩΛ
 
-**∆:** ROADMAP обновлён — Phase 0-5 завершены, Phase 6 в работе. iskraSpace содержит 27 сервисов и 39 компонентов.
+**∆:** ROADMAP обновлён — Phase 4 CLI и Phase 6 Production infrastructure завершены. Добавлены Docker, Vercel config, CLI с 3 командами.
 
-**D:** Code audit → 723 tests passing → Service inventory → Documentation sync.
+**D:** Docker multi-stage build → nginx config → Vercel deploy → CLI implementation (commander/chalk/ora) → TypeScript build → Tests passed.
 
-**Ω:** 0.92 — все core сервисы реализованы, типы интегрированы, тесты проходят.
+**Ω:** 0.94 — Базовая инфраструктура для production готова, CLI функционален (требуется интеграция с сервисами).
 
-**Λ:** Продолжить полировку CI/CD → добавить coverage → подготовить production deployment.
+**Λ:** Протестировать Docker build → настроить Vercel secrets → интегрировать CLI с geminiService → добавить мониторинг.
 
 ---
 
-**Version:** vΩ.3.1
+**Version:** vΩ.3.2
 **Integrity:** Planning-Active
