@@ -562,7 +562,7 @@ export function createEntity(
 ): KnowledgeEntity {
   const now = new Date().toISOString();
   return {
-    id: `entity-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `entity-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     name,
     type,
     attributes,
@@ -584,7 +584,7 @@ export function createRelation(
   strength: number = 0.5
 ): SemanticRelation {
   return {
-    id: `rel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `rel-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     from,
     to,
     type,

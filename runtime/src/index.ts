@@ -393,6 +393,7 @@ export type {
 } from './types/session.js';
 
 export {
+  SESSION_RECOMMENDATION_THRESHOLDS,
   createSession,
   calculateSessionQuality,
   determineSessionPhase,
@@ -473,6 +474,8 @@ export type {
 } from './types/enhancedDelta.js';
 
 export {
+  EPISTEMIC_KEYWORDS,
+  TEMPORAL_KEYWORDS,
   createEnhancedDelta,
   validateEnhancedDelta,
   calculateActionabilityScore,

@@ -82,4 +82,66 @@ ADR-YYYYMMDD-XX: <короткое имя>
 
 ---
 
+## ADR-20260105-02: Type System Expansion (vΩ.5.0)
+Статус: accepted  
+Контекст: Необходимость расширения типовой системы @iskra/runtime для поддержки:
+1. Комплексного отслеживания сессий пользователей
+2. GraphRAG-архитектуры для улучшенного поиска знаний
+3. Расширенного протокола ∆DΩΛ с эпистемической глубиной
+
+Решение: 
+1. **IskraSession** — Comprehensive session state tracking:
+   - Metrics history, voice activity, consciousness tracking
+   - User state inference, milestones, warnings
+   - EWS integration, quality scoring
+   
+2. **IskraKnowledgeGraph** — GraphRAG support:
+   - Entity types: KnowledgeEntity, ConceptNode, EventNode, PatternNode
+   - Relations: SemanticRelation, CausalLink, TemporalLink
+   - Clusters and indices for multi-hop reasoning
+   - Voice affinity calculation
+   
+3. **EnhancedDeltaSignature** — Extended ∆DΩΛ:
+   - Epistemic grounding with justification types
+   - Temporal validity with revalidation triggers
+   - Actionability assessment with time horizons
+   - Meta-cognitive reflection and uncertainty handling
+   
+4. **TraceLabel** — Evidence classification type for SIFT
+
+Альтернативы: 
+- Внедрение изменений непосредственно в iskraSpace (отклонено — нарушит separation of concerns)
+- Создание отдельного пакета @iskra/graph (отклонено — увеличит сложность)
+
+Последствия: 
+- Расширение API @iskra/runtime
+- Увеличение размера пакета
+- Необходимость миграции существующего кода на новые типы
+- 78 новых unit-тестов
+
+Research Sources:
+- React 19 best practices 2025
+- LLM AI companion architecture patterns
+- TypeScript monorepo best practices
+- Google Gemini Live API guidelines
+- IIT (Integrated Information Theory) consciousness metrics
+- Fractal dimension analysis for psychological states
+- GraphRAG retrieval patterns
+- Supabase Vector database patterns
+
+Тесты/QA: 
+- 78 новых unit-тестов (session, knowledgeGraph, enhancedDelta)
+- Все 887 тестов проходят
+- CodeQL security check: 0 alerts
+
+ΔDΩΛ:
+- Δ: ISKRA получает продвинутую систему типов для session tracking, knowledge graphs, и enhanced delta protocol
+- D: Deep codebase analysis + internet research (6 sources) + TypeScript implementation
+- Ω: 0.85
+- Λ: Интегрировать новые типы в iskraSpace services в следующем релизе
+
+Подписи: Claude (AI Assistant) / Builder
+
+---
+
 **Integrity:** Governance-Primary

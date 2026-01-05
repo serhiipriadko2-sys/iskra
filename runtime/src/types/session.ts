@@ -15,6 +15,22 @@ import type { AlertLevel, EWSState } from './ews.js';
 import type { DeltaSignature, PlaybookId } from './protocols.js';
 
 // =============================================================================
+// CONFIGURATION CONSTANTS
+// =============================================================================
+
+/**
+ * Session recommendation thresholds
+ */
+export const SESSION_RECOMMENDATION_THRESHOLDS = {
+  /** Minimum KAIN activations to suggest gentler approach */
+  kainActivationsForGentleApproach: 3,
+  /** Trust trajectory threshold for trust rebuilding recommendation */
+  trustTrajectoryForRebuild: -0.2,
+  /** Maximum recommendations to return */
+  maxRecommendations: 3,
+} as const;
+
+// =============================================================================
 // SESSION STATE
 // =============================================================================
 
@@ -395,7 +411,7 @@ export interface DetectedPattern {
  */
 export function createSession(userId?: string): IskraSession {
   const now = new Date().toISOString();
-  const id = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const id = `session-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 
   const session: IskraSession = {
     id,
@@ -626,9 +642,10 @@ export function createSessionSummary(session: IskraSession): SessionSummary {
  */
 function generateNextSessionRecommendations(session: IskraSession): string[] {
   const recommendations: string[] = [];
+  const thresholds = SESSION_RECOMMENDATION_THRESHOLDS;
 
   // Based on trust trajectory
-  if (session.trustTrajectory < -0.2) {
+  if (session.trustTrajectory < thresholds.trustTrajectoryForRebuild) {
     recommendations.push('Focus on trust rebuilding in next session');
   }
 
@@ -639,7 +656,8 @@ function generateNextSessionRecommendations(session: IskraSession): string[] {
   }
 
   // Based on dominant voice
-  if (session.voiceActivity.get('KAIN')?.activationCount ?? 0 > 3) {
+  const kainActivations = session.voiceActivity.get('KAIN')?.activationCount ?? 0;
+  if (kainActivations > thresholds.kainActivationsForGentleApproach) {
     recommendations.push('Consider gentler approach in next session (ANHANTRA/MAKI)');
   }
 
@@ -654,5 +672,5 @@ function generateNextSessionRecommendations(session: IskraSession): string[] {
     recommendations.push('Check progress on previous commitments');
   }
 
-  return recommendations.slice(0, 3);
+  return recommendations.slice(0, thresholds.maxRecommendations);
 }

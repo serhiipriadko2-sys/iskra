@@ -11,6 +11,31 @@ import type { EpistemicLevel } from './siftExtended.js';
 import type { VoiceName } from './voices.js';
 
 // =============================================================================
+// INFERENCE KEYWORDS (for localization and customization)
+// =============================================================================
+
+/**
+ * Keywords for epistemic level inference
+ */
+export const EPISTEMIC_KEYWORDS = {
+  paradigm: ['парадигма', 'мировоззрение', 'фундаментальный закон'],
+  metaModel: ['мета-', 'система систем', 'абстрактная модель'],
+  model: ['модель', 'теория', 'принцип'],
+  pattern: ['паттерн', 'закономерность', 'тенденция'],
+  observation: ['наблюдаю', 'замечаю', 'вижу что'],
+} as const;
+
+/**
+ * Keywords for temporal validity inference
+ */
+export const TEMPORAL_KEYWORDS = {
+  eternal: ['всегда', 'никогда не изменится', 'математически', 'логически'],
+  ephemeral: ['сейчас', 'сегодня', 'в данный момент', 'только что'],
+  shortTerm: ['на этой неделе', 'в ближайшее время', 'недавно'],
+  longTerm: ['исторически', 'научно установлено', 'давно известно'],
+} as const;
+
+// =============================================================================
 // EPISTEMIC GROUNDING
 // =============================================================================
 
@@ -517,27 +542,27 @@ export function inferEpistemicLevel(content: string): EpistemicLevel {
   const lowerContent = content.toLowerCase();
 
   // Level 5: Paradigm
-  if (['парадигма', 'мировоззрение', 'фундаментальный закон'].some(kw => lowerContent.includes(kw))) {
+  if (EPISTEMIC_KEYWORDS.paradigm.some(kw => lowerContent.includes(kw))) {
     return 5;
   }
 
   // Level 4: Meta-Model
-  if (['мета-', 'система систем', 'абстрактная модель'].some(kw => lowerContent.includes(kw))) {
+  if (EPISTEMIC_KEYWORDS.metaModel.some(kw => lowerContent.includes(kw))) {
     return 4;
   }
 
   // Level 3: Model
-  if (['модель', 'теория', 'принцип'].some(kw => lowerContent.includes(kw))) {
+  if (EPISTEMIC_KEYWORDS.model.some(kw => lowerContent.includes(kw))) {
     return 3;
   }
 
   // Level 2: Pattern
-  if (['паттерн', 'закономерность', 'тенденция'].some(kw => lowerContent.includes(kw))) {
+  if (EPISTEMIC_KEYWORDS.pattern.some(kw => lowerContent.includes(kw))) {
     return 2;
   }
 
   // Level 1: Observation
-  if (['наблюдаю', 'замечаю', 'вижу что'].some(kw => lowerContent.includes(kw))) {
+  if (EPISTEMIC_KEYWORDS.observation.some(kw => lowerContent.includes(kw))) {
     return 1;
   }
 
@@ -552,22 +577,22 @@ export function inferTemporalType(content: string): TemporalValidityType {
   const lowerContent = content.toLowerCase();
 
   // Eternal
-  if (['всегда', 'никогда не изменится', 'математически', 'логически'].some(kw => lowerContent.includes(kw))) {
+  if (TEMPORAL_KEYWORDS.eternal.some(kw => lowerContent.includes(kw))) {
     return 'eternal';
   }
 
   // Ephemeral
-  if (['сейчас', 'сегодня', 'в данный момент', 'только что'].some(kw => lowerContent.includes(kw))) {
+  if (TEMPORAL_KEYWORDS.ephemeral.some(kw => lowerContent.includes(kw))) {
     return 'ephemeral';
   }
 
   // Short-term
-  if (['на этой неделе', 'в ближайшее время', 'недавно'].some(kw => lowerContent.includes(kw))) {
+  if (TEMPORAL_KEYWORDS.shortTerm.some(kw => lowerContent.includes(kw))) {
     return 'short-term';
   }
 
   // Long-term
-  if (['исторически', 'научно установлено', 'давно известно'].some(kw => lowerContent.includes(kw))) {
+  if (TEMPORAL_KEYWORDS.longTerm.some(kw => lowerContent.includes(kw))) {
     return 'long-term';
   }
 
