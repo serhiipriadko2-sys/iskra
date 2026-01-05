@@ -485,6 +485,122 @@ export {
 } from './types/enhancedDelta.js';
 
 // =============================================================================
+// COGNITIVE MEMORY - Memory Architecture (vΩ.5.1)
+// =============================================================================
+
+/**
+ * Cognitive Memory types for episodic, semantic, and procedural memory.
+ * Inspired by cognitive science and AI companion research 2025-2026.
+ *
+ * Based on Research: docs/research/ISKRA_GLOBAL_UPDATE_v2.md
+ */
+export type {
+  EmotionalStateContext,
+  EpisodicEvent,
+  TemporalIndex as EpisodicTemporalIndex,
+  EpisodicMemoryStore,
+  SourcePriority as CognitiveSourcePriority,
+  SemanticConcept,
+  SemanticRelation as CognitiveSemanticRelation,
+  VectorIndex as CognitiveVectorIndex,
+  SemanticMemoryStore,
+  ActionStep,
+  TriggerCondition,
+  SkillAdaptation,
+  ProceduralSkill,
+  SkillFeedback,
+  SkillExecutionResult,
+  ProceduralMemoryStore,
+  AssociativeLink,
+  CognitiveMemoryState,
+} from './types/cognitiveMemory.js';
+
+export {
+  createDefaultEmotionalState,
+  createEpisodicEvent,
+  createSemanticConcept,
+  createProceduralSkill,
+  createEmptyCognitiveMemoryState,
+  calculateSignificance,
+} from './types/cognitiveMemory.js';
+
+// =============================================================================
+// PREDICTIVE EWS - Predictive Early Warning System (vΩ.5.1)
+// =============================================================================
+
+/**
+ * Predictive EWS types for proactive intervention.
+ * Extends EWS with prediction, pattern matching, and calibration.
+ *
+ * Based on Research: docs/research/ISKRA_GLOBAL_UPDATE_v2.md
+ */
+export type {
+  PredictionFactor,
+  PreventiveAction,
+  PredictionResult,
+  PredictionBundle,
+  PatternMatch,
+  PatternFeature,
+  OutcomeDistribution,
+  CalibrationData,
+  SensitivityProfile,
+  PredictiveEWSState,
+  MetricTrend,
+  CompositeTrendAnalysis,
+  InterventionRecommendation,
+  InterventionHistoryEntry,
+} from './types/predictiveEws.js';
+
+export {
+  createDefaultCalibration,
+  createDefaultSensitivity,
+  createEmptyPrediction,
+  createPreventiveAction,
+  calculatePredictionConfidence,
+  calculateActionUrgency,
+  shouldIntervene,
+  selectBestAction,
+} from './types/predictiveEws.js';
+
+// =============================================================================
+// VOICE DIALECTIC - Structured Voice Debates (vΩ.5.1)
+// =============================================================================
+
+/**
+ * Voice Dialectic types for Thesis-Antithesis-Synthesis debates.
+ * Enables complex decision making through structured multi-voice discourse.
+ *
+ * Based on Research: docs/research/ISKRA_GLOBAL_UPDATE_v2.md
+ */
+export type {
+  DialecticStatus,
+  VoicePosition as DialecticVoicePosition,
+  DialecticTurn,
+  DialecticSynthesis,
+  VoiceAlliance,
+  DialecticConfig,
+  DialecticSession,
+  DialecticRules,
+  VoiceSelectionCriteria,
+  DialecticQuality,
+  DialecticLearning,
+} from './types/voiceDialectic.js';
+
+export {
+  DEFAULT_SELECTION_CRITERIA,
+  createDefaultDialecticConfig,
+  createDialecticSession,
+  createVoicePosition as createDialecticVoicePosition,
+  createDialecticTurn,
+  createDialecticSynthesis,
+  calculateConsensusLevel as calculateDialecticConsensus,
+  selectArbiter as selectDialecticArbiter,
+  shouldEscalate,
+  canResolve,
+  assessDialecticQuality,
+} from './types/voiceDialectic.js';
+
+// =============================================================================
 // CONSTANTS
 // =============================================================================
 
@@ -496,7 +612,7 @@ export {
  *
  * @see governance/changelog.md
  */
-export const VERSION = 'vΩ.5.0';
+export const VERSION = 'vΩ.5.1';
 
 /**
  * ISKRA Nul-Mantra (Core Philosophy)
@@ -515,6 +631,7 @@ export const NUL_MANTRA =
 /**
  * Version history for @iskra/runtime
  *
+ * vΩ.5.1 - Cognitive Memory, Predictive EWS, Voice Dialectic
  * vΩ.5.0 - Session tracking, Knowledge Graph, Enhanced Delta
  * vΩ.4.0 - SIFT-E, Coherence, Consciousness, Council
  * vΩ.3.0 - Fractal monitoring, EWS
