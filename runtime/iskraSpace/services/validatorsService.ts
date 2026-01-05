@@ -79,7 +79,7 @@ const VOICE_SYMBOLS: Record<VoiceID, string> = {
   'VOICE.ANHANTRA': '≈',
   'VOICE.SAM': '☉',
   'VOICE.MAKI': '🌸',
-  'VOICE.SIBYL': '✴️'
+  'VOICE.SIBYL': '🔮'  // Fixed: was '✴️', now matches @iskra/runtime
 };
 
 const MS_PER_HOUR = 1000 * 60 * 60;
