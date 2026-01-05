@@ -15,6 +15,12 @@ describe('voiceUtils', () => {
       expect(toVoiceID('KAIN')).toBe('VOICE.KAIN');
       expect(toVoiceID('SIBYL')).toBe('VOICE.SIBYL');
     });
+
+    it('throws error for invalid VoiceName', () => {
+      // Using type assertion to test runtime validation
+      expect(() => toVoiceID('INVALID' as never)).toThrow('Invalid VoiceName');
+      expect(() => toVoiceID('' as never)).toThrow('Invalid VoiceName');
+    });
   });
 
   describe('fromVoiceID', () => {
@@ -22,6 +28,12 @@ describe('voiceUtils', () => {
       expect(fromVoiceID('VOICE.ISKRA')).toBe('ISKRA');
       expect(fromVoiceID('VOICE.KAIN')).toBe('KAIN');
       expect(fromVoiceID('VOICE.SIBYL')).toBe('SIBYL');
+    });
+
+    it('throws error for invalid VoiceID', () => {
+      // Using type assertion to test runtime validation
+      expect(() => fromVoiceID('INVALID' as never)).toThrow('Invalid VoiceID');
+      expect(() => fromVoiceID('VOICE.UNKNOWN' as never)).toThrow('Invalid VoiceID');
     });
   });
 

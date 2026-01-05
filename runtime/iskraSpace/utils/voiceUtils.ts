@@ -48,11 +48,15 @@ const VALID_VOICE_NAMES: VoiceName[] = [
  *
  * @param name - Voice name from @iskra/runtime
  * @returns VoiceID with VOICE. prefix
+ * @throws Error if name is not a valid VoiceName
  *
  * @example
  * toVoiceID('ISKRA') // 'VOICE.ISKRA'
  */
 export function toVoiceID(name: VoiceName): VoiceIDPrefixed {
+  if (!isValidVoiceName(name)) {
+    throw new Error(`Invalid VoiceName: ${name}. Valid names: ${VALID_VOICE_NAMES.join(', ')}`);
+  }
   return `VOICE.${name}` as VoiceIDPrefixed;
 }
 
@@ -61,11 +65,15 @@ export function toVoiceID(name: VoiceName): VoiceIDPrefixed {
  *
  * @param id - Voice ID with VOICE. prefix
  * @returns VoiceName for @iskra/runtime
+ * @throws Error if id is not a valid VoiceIDPrefixed
  *
  * @example
  * fromVoiceID('VOICE.KAIN') // 'KAIN'
  */
 export function fromVoiceID(id: VoiceIDPrefixed): VoiceName {
+  if (!isValidVoiceID(id)) {
+    throw new Error(`Invalid VoiceID: ${id}. Expected format: VOICE.<NAME>`);
+  }
   return id.replace('VOICE.', '') as VoiceName;
 }
 
