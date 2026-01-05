@@ -20,6 +20,7 @@ import EvalDashboard from './components/EvalDashboard';
 import GlossaryView from './components/GlossaryView';
 import ShadowView from './components/ShadowView';
 import OnboardingTour, { TourStep } from './components/OnboardingTour';
+import MetricsDashboard from './components/MetricsDashboard';
 import Ambience from './components/Ambience';
 import ErrorBoundary from './components/ErrorBoundary';
 import { IskraMetrics, IskraPhase } from './types';
@@ -30,7 +31,7 @@ import { canonService } from './services/canonService';
 import { storageService } from './services/storageService';
 import { checkRitualTriggers, executePhoenix, executeShatter, getPhaseAfterRitual } from './services/ritualService';
 
-export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'LIVE' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
+export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'LIVE' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'DASHBOARD' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
 
 const TOUR_STEPS: TourStep[] = [
     {
@@ -218,6 +219,7 @@ export default function App() {
                         {view === 'RESEARCH' && <DeepResearchView metrics={metrics} />}
                         {view === 'MEMORY' && <MemoryView />}
                         {view === 'METRICS' && <IskraStateView metrics={metrics} phase={phase} onShatter={handleShatter} />}
+                        {view === 'DASHBOARD' && <MetricsDashboard metrics={metrics} />}
                         {view === 'COUNCIL' && <CouncilView onClose={() => setView('METRICS')} />}
                         {view === 'EVAL' && <EvalDashboard />}
                         {view === 'GLOSSARY' && <GlossaryView />}
