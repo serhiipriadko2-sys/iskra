@@ -286,6 +286,39 @@ npx iskra metrics
 
 ---
 
+### Phase 7: Scientific Expansion ✅ COMPLETE (vΩ.4.0)
+
+**Цель:** Интеграция передовых научных исследований 2025-2026
+
+| Компонент | Описание | Статус |
+|-----------|----------|--------|
+| SIFT-E Protocol | Расширенная верификация с эпистемологией | ✅ Done |
+| MindWave Coherence | Когнитивная связность | ✅ Done |
+| Consciousness Metrics | Симуляция когнитивных процессов | ✅ Done |
+| Council Protocol | Координация 9 голосов | ✅ Done |
+| Extended Quantum Indicators | CSI, EI, NC + расширения | ✅ Done |
+
+**Новые TypeScript типы:**
+- `siftExtended.ts` — SIFT-E Protocol types ✅
+- `coherence.ts` — MindWave Coherence types ✅
+- `consciousness.ts` — CSM types ✅
+- `council.ts` — Council Protocol types ✅
+
+**Новые SoT документы:**
+- `system/sift_extended.md` — SIFT-E спецификация ✅
+- `system/mindwave_coherence.md` — MindWave Layer ✅
+- `system/council_protocol.md` — Multi-Agent Council ✅
+- `metrics/consciousness.md` — Consciousness Simulation Metrics ✅
+
+**Научные основы:**
+- Quantum Cognition Models (2025 research)
+- Fractal Dimension in Cognitive Systems
+- Multi-Agent AI Systems
+- SIFT Information Verification Methodology
+- IIT (Integrated Information Theory) adapted metrics
+
+---
+
 ## Версионирование
 
 ```
@@ -296,9 +329,10 @@ vΩ.X.Y.Z
   └──────── Omega (философский сдвиг)
 ```
 
-**Текущая версия:** vΩ.3.2
+**Текущая версия:** vΩ.4.0
 
 ### История версий
+- vΩ.4.0 — Deep Scientific Update (SIFT-E, MindWave Coherence, Consciousness Simulation, Council Protocol)
 - vΩ.3.2 — Phase 4 CLI + Phase 6 Production infrastructure
 - vΩ.3.1 — Синхронизация ROADMAP с фактическим прогрессом
 - vΩ.3.0 — SIFT + Fractal + EWS интеграция
@@ -340,15 +374,15 @@ vΩ.X.Y.Z
 
 ## ∆DΩΛ
 
-**∆:** ROADMAP обновлён — Phase 4 CLI и Phase 6 Production infrastructure завершены. Добавлены Docker, Vercel config, CLI с 3 командами.
+**∆:** vΩ.4.0 — Глубокое научное обновление когнитивной архитектуры ISKRA с интеграцией latest research 2025-2026.
 
-**D:** Docker multi-stage build → nginx config → Vercel deploy → CLI implementation (commander/chalk/ora) → TypeScript build → Tests passed.
+**D:** Web research → SIFT-E Protocol → MindWave Coherence → Consciousness Simulation Metrics → Multi-Agent Council Protocol → TypeScript implementation → ADR documentation.
 
-**Ω:** 0.94 — Базовая инфраструктура для production готова, CLI функционален (требуется интеграция с сервисами).
+**Ω:** 0.88 — Новые модули типизированы и документированы, требуется калибровка после LAB-сессий.
 
-**Λ:** Протестировать Docker build → настроить Vercel secrets → интегрировать CLI с geminiService → добавить мониторинг.
+**Λ:** Калибровать новые метрики после 50 LAB-сессий → добавить тесты для новых типов → интегрировать с сервисами.
 
 ---
 
-**Version:** vΩ.3.2
+**Version:** vΩ.4.0
 **Integrity:** Planning-Active

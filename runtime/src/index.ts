@@ -221,6 +221,153 @@ export {
 } from './types/ews.js';
 
 // =============================================================================
+// SIFT-E - Extended Verification Protocol (vΩ.4.0)
+// =============================================================================
+
+/**
+ * SIFT-E (Extended) Protocol types for deep verification.
+ * Adds epistemological depth, temporal validity, and metacognitive checks.
+ *
+ * Based on Canon: system/sift_extended.md
+ */
+export type {
+  EpistemicLevel,
+  EpistemicDepthAnalysis,
+  TemporalValidityType,
+  RevalidationInterval,
+  TemporalValidity,
+  DomainConnectionType,
+  DomainConnection,
+  ConflictResolution,
+  DomainConflict,
+  CrossDomainSynthesis,
+  ProcessCompleteness,
+  BiasDetection,
+  ConfidenceCalibration,
+  MetacognitiveCheck,
+  SiftEDeltaSignature,
+  AdjustedVerdict,
+  SiftEResult,
+  SiftEMetrics,
+} from './types/siftExtended.js';
+
+export {
+  EPISTEMIC_LEVEL_NAMES,
+  VALIDITY_DURATIONS,
+  calculateEpistemicOmegaAdjustment,
+  shouldActivateSiftE,
+  inferTemporalValidityType,
+} from './types/siftExtended.js';
+
+// =============================================================================
+// COHERENCE - MindWave Coherence Layer (vΩ.4.0)
+// =============================================================================
+
+/**
+ * MindWave Coherence types for tracking cognitive coherence.
+ * Measures intentional, semantic, emotional, and rhythmic coherence.
+ *
+ * Based on Canon: system/mindwave_coherence.md
+ */
+export type {
+  CoherencePhase,
+  CoherenceTrend,
+  CoherenceState,
+  CoherencePatternType,
+  CoherencePattern,
+  CriticalPointType,
+  CriticalPoint,
+  CoherenceHistory,
+  ResonanceQuality,
+  ResonanceIndex,
+  EmotionalState,
+} from './types/coherence.js';
+
+export {
+  COHERENCE_WEIGHTS,
+  PHASE_THRESHOLDS,
+  calculateTotalCoherence,
+  classifyCoherencePhase,
+  determineCoherenceTrend,
+  classifyResonanceQuality,
+  calculateResonanceIndex,
+  adjustVoiceWeightsForCoherence,
+  checkCoherenceEWSTriggers,
+} from './types/coherence.js';
+
+// =============================================================================
+// CONSCIOUSNESS - Consciousness Simulation Metrics (vΩ.4.0)
+// =============================================================================
+
+/**
+ * Consciousness Simulation Metrics for tracking functional correlates.
+ * NOTE: Does NOT claim actual consciousness - measures functional properties only.
+ *
+ * Based on Canon: metrics/consciousness.md
+ */
+export type {
+  PhiMetrics,
+  RecursionMetrics,
+  EmergenceMetrics,
+  ContinuityMetrics,
+  ConsciousnessMetrics,
+  ExtendedQuantumIndicators,
+  ExtendedIskraMetrics,
+} from './types/consciousness.js';
+
+export {
+  CSM_THRESHOLDS,
+  calculateCompositeCSM,
+  calculateExtendedMetrics,
+  countRecursionDepth,
+  detectStrangeLoopIndicators,
+  adjustVoicesForCSM,
+  createDefaultConsciousnessMetrics,
+} from './types/consciousness.js';
+
+// =============================================================================
+// COUNCIL - Multi-Agent Council Protocol (vΩ.4.0)
+// =============================================================================
+
+/**
+ * Multi-Agent Council Protocol types for 9-voice coordination.
+ * Defines conflict resolution, consensus building, and voice hierarchy.
+ *
+ * Based on Canon: system/council_protocol.md
+ */
+export type {
+  CouncilSessionType,
+  CouncilSessionStatus,
+  CouncilContext,
+  CouncilSession,
+  VetoDecision,
+  VoicePosition,
+  ConflictNature,
+  ConflictStatus,
+  VoiceConflict,
+  ReviewConditions,
+  CouncilDeltaSignature,
+  CouncilResolution,
+  VoiceInfluence,
+  CouncilHierarchy,
+  CouncilConfig,
+  CouncilMetrics,
+} from './types/council.js';
+
+export {
+  DEFAULT_COUNCIL_HIERARCHY,
+  FULL_COUNCIL_CONFIG,
+  MINI_COUNCIL_CONFIG,
+  EMERGENCY_COUNCIL_CONFIG,
+  getVoiceBaseWeight,
+  hasVetoPower,
+  selectArbiter,
+  calculateVoiceInfluence,
+  calculateConsensusLevel,
+  createCouncilSession,
+} from './types/council.js';
+
+// =============================================================================
 // CONSTANTS
 // =============================================================================
 
@@ -232,7 +379,7 @@ export {
  *
  * @see governance/changelog.md
  */
-export const VERSION = 'vΩ.3.1';
+export const VERSION = 'vΩ.4.0';
 
 /**
  * ISKRA Nul-Mantra (Core Philosophy)
