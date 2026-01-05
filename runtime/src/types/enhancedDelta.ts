@@ -498,12 +498,17 @@ export function validateEnhancedDelta(
 }
 
 /**
- * Calculate actionability score
+ * Calculate actionability score (0-1 scale)
+ * Baseline is 0.5 for any actionable item, with bonuses for:
+ * - Time horizon (immediate: +0.2, near: +0.15, mid: +0.1, long: +0.05)
+ * - Specificity (high: +0.15, medium: +0.1, low: +0.05)
+ * - Feasibility (high: +0.15, medium: +0.1, low: +0.05)
  */
 export function calculateActionabilityScore(assessment: ActionabilityAssessment): number {
   if (!assessment.isActionable) return 0;
 
-  let score = 0.5; // Base score for being actionable
+  // Base score = 0.5 indicates that item is actionable but not yet evaluated for quality
+  let score = 0.5;
 
   // Time to action bonus
   const timeBonus: Record<ActionTimeHorizon, number> = {

@@ -627,12 +627,15 @@ export function isHigherPriority(a: SourcePriority, b: SourcePriority): boolean 
 }
 
 /**
- * Calculate graph density
+ * Calculate graph density (ratio of actual edges to maximum possible edges)
+ * Density = edgeCount / (nodeCount * (nodeCount - 1) / 2)
  */
 export function calculateGraphDensity(nodeCount: number, edgeCount: number): number {
   if (nodeCount <= 1) return 0;
   const maxEdges = nodeCount * (nodeCount - 1) / 2;
-  return edgeCount / maxEdges;
+  // Clamp edgeCount to maxEdges to ensure density <= 1
+  const clampedEdges = Math.min(edgeCount, maxEdges);
+  return clampedEdges / maxEdges;
 }
 
 /**
