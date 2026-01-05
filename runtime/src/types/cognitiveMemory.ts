@@ -422,17 +422,26 @@ export function createEpisodicEvent(
   content: string,
   options: Partial<Omit<EpisodicEvent, 'id' | 'timestamp' | 'recallCount'>> = {}
 ): EpisodicEvent {
-  return {
-    id: `ep_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  const baseEvent: EpisodicEvent = {
+    id: `ep_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
     timestamp: new Date().toISOString(),
     content,
-    summary: options.summary || content.slice(0, 100),
-    emotionalContext: options.emotionalContext || createDefaultEmotionalState(),
-    participants: options.participants || ['user', 'iskra'],
-    significance: options.significance ?? 0.5,
+    summary: content.slice(0, 100),
+    emotionalContext: createDefaultEmotionalState(),
+    participants: ['user', 'iskra'],
+    significance: 0.5,
     recallCount: 0,
-    tags: options.tags || [],
+    tags: [],
+  };
+  
+  // Merge options, but preserve generated id, timestamp, and recallCount
+  return {
+    ...baseEvent,
     ...options,
+    id: baseEvent.id,
+    timestamp: baseEvent.timestamp,
+    recallCount: baseEvent.recallCount,
+    content, // Preserve required content parameter
   };
 }
 
@@ -445,8 +454,8 @@ export function createSemanticConcept(
   options: Partial<Omit<SemanticConcept, 'id' | 'createdAt' | 'updatedAt'>> = {}
 ): SemanticConcept {
   const now = new Date().toISOString();
-  return {
-    id: `sem_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  const baseConcept: SemanticConcept = {
+    id: `sem_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
     name,
     definition,
     siftVerified: false,
@@ -456,7 +465,17 @@ export function createSemanticConcept(
     createdAt: now,
     updatedAt: now,
     confidence: 0.5,
+  };
+  
+  // Merge options, but preserve generated fields and required params
+  return {
+    ...baseConcept,
     ...options,
+    id: baseConcept.id,
+    createdAt: baseConcept.createdAt,
+    updatedAt: baseConcept.updatedAt,
+    name,
+    definition,
   };
 }
 
@@ -469,20 +488,32 @@ export function createProceduralSkill(
   steps: ActionStep[],
   options: Partial<Omit<ProceduralSkill, 'id' | 'createdAt' | 'executionCount' | 'successRate'>> = {}
 ): ProceduralSkill {
-  return {
-    id: `proc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  const baseSkill: ProceduralSkill = {
+    id: `proc_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
     name,
     description,
     steps,
-    triggerConditions: options.triggerConditions || [],
+    triggerConditions: [],
     successRate: 0.5,
     executionCount: 0,
     createdAt: new Date().toISOString(),
     adaptations: [],
-    preferredVoices: options.preferredVoices || [],
-    category: options.category || 'response',
+    preferredVoices: [],
+    category: 'response',
     isActive: true,
+  };
+  
+  // Merge options, but preserve generated fields and required params
+  return {
+    ...baseSkill,
     ...options,
+    id: baseSkill.id,
+    createdAt: baseSkill.createdAt,
+    executionCount: baseSkill.executionCount,
+    successRate: baseSkill.successRate,
+    name,
+    description,
+    steps,
   };
 }
 

@@ -340,7 +340,7 @@ export function createDialecticSession(
   options: Partial<DialecticConfig> = {}
 ): DialecticSession {
   return {
-    id: `dial_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: `dial_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
     question,
     context,
     status: 'initiating',
