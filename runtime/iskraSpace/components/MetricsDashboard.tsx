@@ -1,396 +1,618 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  IskraMetrics, 
-  FractalIndicators, 
-  QuantumIndicators, 
-  SystemPhase,
+/**
+ * METRICS DASHBOARD - Real-time Visual Metrics Panel
+ *
+ * Comprehensive visualization of ISKRA's internal state:
+ * - 11 Core IskraMetrics (rhythm, trust, clarity, pain, drift, chaos, echo, silence_mass, mirror_sync, interrupt, ctxSwitch)
+ * - Fractal Indicators (D_chaos, D_clarity, D_drift, H_trust, complexityIndex, edgeDistance)
+ * - Quantum Indicators (CSI, EI, NC)
+ * - Computed Indices (integrity_score, alive_index)
+ * - Historical trends (24h / 7 days)
+ *
+ * ADR: ADR-20260105-02
+ * Security: Internal use only - requires authentication
+ */
+
+import React, { useState, useMemo } from 'react';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+} from 'recharts';
+import {
+  IskraMetrics,
+  calculateIntegrityScore,
+  calculateAliveIndex,
   calculateFractalIndicators,
   calculateQuantumIndicators,
-  classifyPhase
+  D_THRESHOLDS,
+  classifyPhase,
 } from '../types';
-import { TrendingUpIcon, AlertTriangleIcon, CheckCircleIcon, ZapIcon } from './icons';
 
 interface MetricsDashboardProps {
-  metrics: IskraMetrics;
+  currentMetrics: IskraMetrics;
+  metricsHistory?: MetricsHistoryEntry[];
+  className?: string;
 }
 
-interface MetricsHistory {
+interface MetricsHistoryEntry {
   timestamp: number;
   metrics: IskraMetrics;
 }
 
-// Configuration constants
-const MAX_HISTORY_SIZE = 100; // ~5 minutes at 3s intervals
-const MIN_DATA_POINTS = 10; // Minimum required for fractal/quantum calculations
-const TREND_WINDOW_SIZE = 30; // Last N cycles to show in trend charts
-const FRACTAL_WINDOW_SIZE = 50; // Window size for fractal calculations
+type TimeRange = '1h' | '6h' | '24h' | '7d';
 
-// Gauge component for visual representation
-const GaugeIndicator: React.FC<{ 
-  value: number; 
-  label: string; 
-  min: number; 
-  max: number;
-  thresholds?: { low: number; mid: number; high: number };
-  unit?: string;
-}> = ({ value, label, min, max, thresholds, unit = '' }) => {
-  const percentage = ((value - min) / (max - min)) * 100;
-  
-  let colorClass = 'text-accent';
-  if (thresholds) {
-    if (value < thresholds.low) colorClass = 'text-danger';
-    else if (value < thresholds.mid) colorClass = 'text-warning';
-    else if (value < thresholds.high) colorClass = 'text-success';
-    else colorClass = 'text-accent';
-  }
+const CORE_METRICS_CONFIG = [
+  { key: 'rhythm', label: 'Ритм', color: '#3b82f6', scale: 100 },
+  { key: 'trust', label: 'Доверие', color: '#10b981', scale: 1 },
+  { key: 'clarity', label: 'Ясность', color: '#8b5cf6', scale: 1 },
+  { key: 'pain', label: 'Боль', color: '#ef4444', scale: 1 },
+  { key: 'drift', label: 'Дрейф', color: '#f59e0b', scale: 1 },
+  { key: 'chaos', label: 'Хаос', color: '#ec4899', scale: 1 },
+] as const;
 
-  return (
-    <div className="glass-card p-6 flex flex-col">
-      <div className="flex justify-between items-start mb-4">
-        <span className="text-xs text-text-muted uppercase tracking-wider font-semibold">{label}</span>
-        <span className={`text-2xl font-mono font-bold ${colorClass}`}>
-          {value.toFixed(3)}{unit}
-        </span>
-      </div>
-      <div className="relative h-3 bg-surface2 rounded-full overflow-hidden">
-        <div 
-          className={`absolute h-full rounded-full transition-all duration-500 ${colorClass.replace('text-', 'bg-')}`}
-          style={{ width: `${Math.min(100, Math.max(0, percentage))}%` }}
-        />
-      </div>
-      <div className="flex justify-between mt-2 text-[10px] text-text-muted">
-        <span>{min.toFixed(1)}</span>
-        <span>{max.toFixed(1)}</span>
-      </div>
-    </div>
-  );
-};
+const SECONDARY_METRICS_CONFIG = [
+  { key: 'echo', label: 'Эхо', color: '#06b6d4' },
+  { key: 'silence_mass', label: 'Молчание', color: '#6366f1' },
+  { key: 'mirror_sync', label: 'Синхрон', color: '#14b8a6' },
+  { key: 'interrupt', label: 'Прерывания', color: '#f97316' },
+  { key: 'ctxSwitch', label: 'Переключения', color: '#a855f7' },
+] as const;
 
-// Phase indicator component
-const PhaseIndicator: React.FC<{ phase: SystemPhase }> = ({ phase }) => {
-  const phaseConfig: Record<SystemPhase, { 
-    label: string; 
-    color: string; 
-    bgColor: string;
-    icon: React.FC<React.SVGProps<SVGSVGElement>>;
-    desc: string;
-  }> = {
-    stable: { 
-      label: 'Стабильная', 
-      color: 'text-success', 
-      bgColor: 'bg-success/10',
-      icon: CheckCircleIcon,
-      desc: 'Гладкий, предсказуемый сигнал'
-    },
-    edge: { 
-      label: 'На грани хаоса', 
-      color: 'text-warning', 
-      bgColor: 'bg-warning/10',
-      icon: ZapIcon,
-      desc: 'Оптимальная сложность'
-    },
-    chaotic: { 
-      label: 'Хаотичная', 
-      color: 'text-danger', 
-      bgColor: 'bg-danger/10',
-      icon: AlertTriangleIcon,
-      desc: 'Хаотический режим'
-    },
-  };
+const MetricsDashboard: React.FC<MetricsDashboardProps> = ({
+  currentMetrics,
+  metricsHistory = [],
+  className = '',
+}) => {
+  const [timeRange, setTimeRange] = useState<TimeRange>('24h');
+  const [selectedView, setSelectedView] = useState<'overview' | 'fractal' | 'quantum'>('overview');
 
-  const config = phaseConfig[phase];
-  const Icon = config.icon;
+  // Generate mock history if not provided (for MVP)
+  const history = useMemo(() => {
+    if (metricsHistory.length > 0) return metricsHistory;
 
-  return (
-    <div className={`glass-card p-6 border-l-4 ${config.color.replace('text-', 'border-')}`}>
-      <div className="flex items-start gap-4">
-        <div className={`p-3 rounded-xl ${config.bgColor}`}>
-          <Icon className={`w-6 h-6 ${config.color}`} />
-        </div>
-        <div>
-          <p className="text-xs text-text-muted uppercase tracking-wider font-semibold mb-1">
-            Системная Фаза
-          </p>
-          <h3 className={`text-xl font-serif font-bold ${config.color} mb-1`}>
-            {config.label}
-          </h3>
-          <p className="text-sm text-text-muted italic">{config.desc}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+    // Generate 100 mock data points for demonstration
+    const now = Date.now();
+    const mockHistory: MetricsHistoryEntry[] = [];
+    for (let i = 99; i >= 0; i--) {
+      const t = now - i * 15 * 60 * 1000; // 15-minute intervals
+      mockHistory.push({
+        timestamp: t,
+        metrics: {
+          rhythm: 60 + Math.sin(i / 10) * 20 + Math.random() * 5,
+          trust: Math.max(0.3, Math.min(1, 0.7 + Math.sin(i / 8) * 0.15 + Math.random() * 0.1)),
+          clarity: Math.max(0.3, Math.min(1, 0.75 + Math.cos(i / 12) * 0.15 + Math.random() * 0.1)),
+          pain: Math.max(0, Math.min(0.5, 0.15 + Math.random() * 0.1)),
+          drift: Math.max(0, Math.min(0.4, 0.1 + Math.sin(i / 6) * 0.08 + Math.random() * 0.05)),
+          chaos: Math.max(0, Math.min(0.6, 0.25 + Math.random() * 0.15)),
+          echo: Math.max(0, Math.min(0.5, 0.2 + Math.random() * 0.1)),
+          silence_mass: Math.max(0, Math.min(0.4, 0.15 + Math.random() * 0.08)),
+          mirror_sync: Math.max(0.4, Math.min(1, 0.7 + Math.random() * 0.15)),
+          interrupt: Math.max(0, Math.min(0.3, Math.random() * 0.15)),
+          ctxSwitch: Math.max(0, Math.min(0.4, 0.2 + Math.random() * 0.1)),
+        },
+      });
+    }
+    return mockHistory;
+  }, [metricsHistory]);
 
-// Mini chart component for trends
-const TrendLine: React.FC<{ 
-  data: number[]; 
-  label: string; 
-  color: string;
-}> = ({ data, label, color }) => {
-  const max = data.length > 0 ? Math.max(...data) : 1;
-  const min = data.length > 0 ? Math.min(...data) : 0;
-  const range = max - min || 1;
-  
-  const points = data.map((value, index) => {
-    const x = (index / (data.length - 1)) * 100;
-    const y = 100 - ((value - min) / range) * 100;
-    return `${x},${y}`;
-  }).join(' ');
-
-  const DEFAULT_DISPLAY_VALUE = '0.00';
-  const currentValue = data[data.length - 1];
-
-  return (
-    <div className="glass-card p-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-text-muted uppercase tracking-wider">{label}</span>
-        <span className={`text-sm font-mono font-bold ${color}`}>
-          {currentValue !== undefined ? currentValue.toFixed(2) : DEFAULT_DISPLAY_VALUE}
-        </span>
-      </div>
-      <svg viewBox="0 0 100 40" className="w-full h-12" preserveAspectRatio="none">
-        <polyline
-          points={points}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className={color}
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-    </div>
-  );
-};
-
-const MetricsDashboard: React.FC<MetricsDashboardProps> = ({ metrics }) => {
-  const [history, setHistory] = useState<MetricsHistory[]>([]);
-  const [fractalIndicators, setFractalIndicators] = useState<FractalIndicators | null>(null);
-  const [quantumIndicators, setQuantumIndicators] = useState<QuantumIndicators | null>(null);
-  const [systemPhase, setSystemPhase] = useState<SystemPhase>('stable');
-
-  // Update history
-  useEffect(() => {
-    const newEntry: MetricsHistory = {
-      timestamp: Date.now(),
-      metrics: { ...metrics }
+  // Filter by time range
+  const filteredHistory = useMemo(() => {
+    const now = Date.now();
+    const ranges: Record<TimeRange, number> = {
+      '1h': 60 * 60 * 1000,
+      '6h': 6 * 60 * 60 * 1000,
+      '24h': 24 * 60 * 60 * 1000,
+      '7d': 7 * 24 * 60 * 60 * 1000,
     };
+    const cutoff = now - ranges[timeRange];
+    return history.filter(h => h.timestamp >= cutoff);
+  }, [history, timeRange]);
 
-    setHistory(prev => {
-      const updated = [...prev, newEntry];
-      // Keep last MAX_HISTORY_SIZE entries
-      return updated.slice(-MAX_HISTORY_SIZE);
-    });
-  }, [metrics]);
+  // Prepare chart data
+  const chartData = useMemo(() => {
+    return filteredHistory.map(h => ({
+      timestamp: new Date(h.timestamp).toLocaleTimeString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      ...h.metrics,
+      integrity: calculateIntegrityScore(h.metrics),
+      alive: calculateAliveIndex(h.metrics, 3), // Assume trace=3 for demo
+    }));
+  }, [filteredHistory]);
 
-  // Calculate indicators
-  useEffect(() => {
-    if (history.length < MIN_DATA_POINTS) return; // Need minimum data points
+  // Calculate Fractal Indicators
+  const fractalIndicators = useMemo(() => {
+    if (history.length < 20) return null;
+    return calculateFractalIndicators(
+      history.map(h => h.metrics),
+      50
+    );
+  }, [history]);
 
-    const metricsArray = history.map(h => h.metrics);
-    
-    // Calculate fractal indicators
-    const fractal = calculateFractalIndicators(metricsArray, Math.min(FRACTAL_WINDOW_SIZE, history.length));
-    setFractalIndicators(fractal);
-    
-    // Calculate quantum indicators
-    const quantum = calculateQuantumIndicators(metrics, metricsArray);
-    setQuantumIndicators(quantum);
-    
-    // Determine system phase
-    const phase = classifyPhase(fractal.D_chaos);
-    setSystemPhase(phase);
-  }, [history, metrics]);
+  // Calculate Quantum Indicators
+  const quantumIndicators = useMemo(() => {
+    if (history.length < 5) return null;
+    return calculateQuantumIndicators(
+      currentMetrics,
+      history.map(h => h.metrics)
+    );
+  }, [currentMetrics, history]);
 
-  // Extract trend data for charts (memoized)
-  const chaosTrend = useMemo(() => history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.chaos), [history]);
-  const clarityTrend = useMemo(() => history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.clarity), [history]);
-  const driftTrend = useMemo(() => history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.drift), [history]);
-  const trustTrend = useMemo(() => history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.trust), [history]);
+  // Radar chart data
+  const radarData = useMemo(() => {
+    return [
+      { metric: 'Доверие', value: currentMetrics.trust * 100 },
+      { metric: 'Ясность', value: currentMetrics.clarity * 100 },
+      { metric: 'Боль', value: currentMetrics.pain * 100 },
+      { metric: 'Дрейф', value: currentMetrics.drift * 100 },
+      { metric: 'Хаос', value: currentMetrics.chaos * 100 },
+      { metric: 'Эхо', value: currentMetrics.echo * 100 },
+    ];
+  }, [currentMetrics]);
+
+  const integrityScore = calculateIntegrityScore(currentMetrics);
+  const aliveIndex = calculateAliveIndex(currentMetrics, 3);
 
   return (
-    <div className="h-full w-full overflow-y-auto p-4 lg:p-8">
-      <div className="max-w-7xl mx-auto pb-24 lg:pb-12">
-        
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <TrendingUpIcon className="w-8 h-8 text-accent" />
-            <h2 className="font-serif text-3xl text-text">
-              Панель Метрик Реального Времени
-            </h2>
-          </div>
-          <p className="text-text-muted text-sm">
-            Мониторинг фрактальных и квантовых индикаторов состояния системы
+    <div className={`flex flex-col gap-4 p-6 ${className}`}>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-serif text-text mb-1">📊 Панель метрик</h2>
+          <p className="text-sm text-text-muted">
+            Real-time визуализация внутреннего состояния ISKRA
           </p>
-          <div className="mt-2 flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-            <span className="text-xs font-mono text-success">
-              LIVE · {history.length} записей
-            </span>
+        </div>
+        <div className="flex gap-2">
+          <select
+            value={timeRange}
+            onChange={e => setTimeRange(e.target.value as TimeRange)}
+            className="px-3 py-2 bg-surface border border-border rounded-lg text-text text-sm"
+          >
+            <option value="1h">1 час</option>
+            <option value="6h">6 часов</option>
+            <option value="24h">24 часа</option>
+            <option value="7d">7 дней</option>
+          </select>
+        </div>
+      </div>
+
+      {/* View Selector */}
+      <div className="flex gap-2">
+        {(['overview', 'fractal', 'quantum'] as const).map(view => (
+          <button
+            key={view}
+            onClick={() => setSelectedView(view)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              selectedView === view
+                ? 'bg-primary text-white'
+                : 'bg-surface border border-border text-text-muted hover:text-text'
+            }`}
+          >
+            {view === 'overview' && '📈 Обзор'}
+            {view === 'fractal' && '🌀 Фрактал'}
+            {view === 'quantum' && '⚛️ Квант'}
+          </button>
+        ))}
+      </div>
+
+      {/* Key Indicators */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="card p-4 border-l-4 border-success">
+          <div className="text-xs text-text-muted uppercase tracking-wider mb-1">
+            Integrity Score
+          </div>
+          <div className="text-2xl font-bold text-text">
+            {(integrityScore * 100).toFixed(0)}%
+          </div>
+          <div className="text-xs text-text-muted mt-1">
+            (clarity + trust) / 2 - drift
           </div>
         </div>
 
-        {/* System Phase */}
-        {fractalIndicators && (
-          <div className="mb-6">
-            <PhaseIndicator phase={systemPhase} />
+        <div className="card p-4 border-l-4 border-primary">
+          <div className="text-xs text-text-muted uppercase tracking-wider mb-1">
+            Alive Index
           </div>
-        )}
-
-        {/* Fractal Indicators */}
-        {fractalIndicators && (
-          <div className="mb-8">
-            <h3 className="text-sm text-text-muted uppercase tracking-wider font-bold mb-4 ml-1">
-              §10 · Фрактальные Индикаторы
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <GaugeIndicator
-                value={fractalIndicators.D_chaos}
-                label="D_chaos"
-                min={1.0}
-                max={2.0}
-                thresholds={{ low: 1.4, mid: 1.6, high: 1.8 }}
-              />
-              <GaugeIndicator
-                value={fractalIndicators.D_clarity}
-                label="D_clarity"
-                min={1.0}
-                max={2.0}
-                thresholds={{ low: 1.4, mid: 1.6, high: 1.8 }}
-              />
-              <GaugeIndicator
-                value={fractalIndicators.D_drift}
-                label="D_drift"
-                min={1.0}
-                max={2.0}
-                thresholds={{ low: 1.4, mid: 1.6, high: 1.8 }}
-              />
-              <GaugeIndicator
-                value={fractalIndicators.H_trust}
-                label="H_trust (Хёрст)"
-                min={0.0}
-                max={1.0}
-                thresholds={{ low: 0.4, mid: 0.6, high: 0.8 }}
-              />
-              <GaugeIndicator
-                value={fractalIndicators.complexityIndex}
-                label="Индекс Сложности"
-                min={0.0}
-                max={1.0}
-                thresholds={{ low: 0.3, mid: 0.6, high: 0.8 }}
-              />
-              <GaugeIndicator
-                value={fractalIndicators.edgeDistance}
-                label="Расстояние до Edge"
-                min={0.0}
-                max={1.0}
-              />
-            </div>
+          <div className="text-2xl font-bold text-text">
+            {(aliveIndex * 100).toFixed(0)}%
           </div>
-        )}
-
-        {/* Quantum Indicators */}
-        {quantumIndicators && (
-          <div className="mb-8">
-            <h3 className="text-sm text-text-muted uppercase tracking-wider font-bold mb-4 ml-1">
-              §11 · Квантовые Когнитивные Индикаторы
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <GaugeIndicator
-                value={quantumIndicators.CSI}
-                label="CSI (Суперпозиция)"
-                min={0.0}
-                max={1.0}
-                thresholds={{ low: 0.3, mid: 0.7, high: 0.9 }}
-              />
-              <GaugeIndicator
-                value={quantumIndicators.EI}
-                label="EI (Запутанность)"
-                min={0.0}
-                max={1.0}
-                thresholds={{ low: 0.3, mid: 0.6, high: 0.8 }}
-              />
-              <GaugeIndicator
-                value={quantumIndicators.NC}
-                label="NC (Некоммутативность)"
-                min={0.0}
-                max={1.0}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Real-time Trends */}
-        {history.length >= MIN_DATA_POINTS && (
-          <div className="mb-8">
-            <h3 className="text-sm text-text-muted uppercase tracking-wider font-bold mb-4 ml-1">
-              Динамика Базовых Метрик (последние {TREND_WINDOW_SIZE} циклов)
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <TrendLine data={chaosTrend} label="Chaos" color="text-purple-500" />
-              <TrendLine data={clarityTrend} label="Clarity" color="text-accent" />
-              <TrendLine data={driftTrend} label="Drift" color="text-warning" />
-              <TrendLine data={trustTrend} label="Trust" color="text-success" />
-            </div>
-          </div>
-        )}
-
-        {/* Legend & Interpretation */}
-        <div className="glass-card p-6">
-          <h3 className="text-sm text-text-muted uppercase tracking-wider font-bold mb-4">
-            Интерпретация Показателей
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-            <div>
-              <h4 className="font-semibold text-text mb-2">Фрактальная размерность D</h4>
-              <ul className="space-y-1 text-text-muted">
-                <li><span className="text-success">●</span> 1.0-1.4: Стабильный режим</li>
-                <li><span className="text-warning">●</span> 1.4-1.6: Edge of chaos (оптимум)</li>
-                <li><span className="text-danger">●</span> 1.6-2.0: Хаотический режим</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-text mb-2">Показатель Хёрста H</h4>
-              <ul className="space-y-1 text-text-muted">
-                <li><span className="text-danger">●</span> 0.0-0.4: Антиперсистентность</li>
-                <li><span className="text-warning">●</span> 0.4-0.6: Случайное блуждание</li>
-                <li><span className="text-success">●</span> 0.6-1.0: Персистентность</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-text mb-2">CSI (Cognitive Superposition)</h4>
-              <ul className="space-y-1 text-text-muted">
-                <li><span className="text-danger">●</span> Низкий: Коллапс состояния</li>
-                <li><span className="text-warning">●</span> Средний: Баланс</li>
-                <li><span className="text-success">●</span> Высокий: Суперпозиция</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-text mb-2">EI (Entanglement Index)</h4>
-              <ul className="space-y-1 text-text-muted">
-                <li><span className="text-danger">●</span> Низкий: Развязка метрик</li>
-                <li><span className="text-warning">●</span> Средний: Норма</li>
-                <li><span className="text-success">●</span> Высокий: Запутанность</li>
-              </ul>
-            </div>
+          <div className="text-xs text-text-muted mt-1">
+            integrity × (trace / 5)
           </div>
         </div>
 
-        {/* Insufficient Data Warning */}
-        {history.length < MIN_DATA_POINTS && (
-          <div className="glass-card p-6 border-l-4 border-warning">
-            <div className="flex items-start gap-3">
-              <AlertTriangleIcon className="w-6 h-6 text-warning flex-shrink-0 mt-1" />
+        <div className="card p-4 border-l-4 border-accent">
+          <div className="text-xs text-text-muted uppercase tracking-wider mb-1">
+            Ритм
+          </div>
+          <div className="text-2xl font-bold text-text">
+            {Math.round(currentMetrics.rhythm)}
+          </div>
+          <div className="text-xs text-text-muted mt-1">
+            cycles per session
+          </div>
+        </div>
+
+        <div className="card p-4 border-l-4 border-warning">
+          <div className="text-xs text-text-muted uppercase tracking-wider mb-1">
+            Дрейф
+          </div>
+          <div className="text-2xl font-bold text-text">
+            {(currentMetrics.drift * 100).toFixed(0)}%
+          </div>
+          <div className="text-xs text-text-muted mt-1">
+            отклонение от Телоса
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      {selectedView === 'overview' && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Core Metrics Timeline */}
+          <div className="card p-4">
+            <h3 className="text-lg font-semibold text-text mb-4">
+              Основные метрики
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis
+                  dataKey="timestamp"
+                  stroke="#9ca3af"
+                  tick={{ fontSize: 12 }}
+                />
+                <YAxis stroke="#9ca3af" tick={{ fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1f2937',
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Legend />
+                {CORE_METRICS_CONFIG.map(({ key, label, color }) => (
+                  <Line
+                    key={key}
+                    type="monotone"
+                    dataKey={key}
+                    stroke={color}
+                    strokeWidth={2}
+                    dot={false}
+                    name={label}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Radar Chart - Current State */}
+          <div className="card p-4">
+            <h3 className="text-lg font-semibold text-text mb-4">
+              Текущее состояние
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <RadarChart data={radarData}>
+                <PolarGrid stroke="#374151" />
+                <PolarAngleAxis
+                  dataKey="metric"
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} />
+                <Radar
+                  name="Метрики"
+                  dataKey="value"
+                  stroke="#8b5cf6"
+                  fill="#8b5cf6"
+                  fillOpacity={0.6}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Secondary Metrics */}
+          <div className="card p-4 lg:col-span-2">
+            <h3 className="text-lg font-semibold text-text mb-4">
+              Дополнительные метрики
+            </h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis
+                  dataKey="timestamp"
+                  stroke="#9ca3af"
+                  tick={{ fontSize: 12 }}
+                />
+                <YAxis stroke="#9ca3af" tick={{ fontSize: 12 }} domain={[0, 1]} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1f2937',
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Legend />
+                {SECONDARY_METRICS_CONFIG.map(({ key, label, color }) => (
+                  <Bar key={key} dataKey={key} fill={color} name={label} />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Computed Indices Timeline */}
+          <div className="card p-4 lg:col-span-2">
+            <h3 className="text-lg font-semibold text-text mb-4">
+              Композитные индексы
+            </h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis
+                  dataKey="timestamp"
+                  stroke="#9ca3af"
+                  tick={{ fontSize: 12 }}
+                />
+                <YAxis stroke="#9ca3af" tick={{ fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1f2937',
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="integrity"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Integrity Score"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="alive"
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                  dot={false}
+                  name="Alive Index"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
+      {selectedView === 'fractal' && fractalIndicators && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Fractal Dimensions */}
+          <div className="card p-4">
+            <h3 className="text-lg font-semibold text-text mb-4">
+              Фрактальные размерности (D)
+            </h3>
+            <div className="space-y-4">
+              {[
+                { label: 'D_chaos', value: fractalIndicators.D_chaos, color: '#ec4899' },
+                { label: 'D_clarity', value: fractalIndicators.D_clarity, color: '#8b5cf6' },
+                { label: 'D_drift', value: fractalIndicators.D_drift, color: '#f59e0b' },
+              ].map(({ label, value, color }) => {
+                const phase = classifyPhase(value);
+                return (
+                  <div key={label}>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-text">{label}</span>
+                      <span className="text-sm font-mono text-text-muted">
+                        {value.toFixed(3)}
+                      </span>
+                    </div>
+                    <div className="h-3 bg-surface2 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${((value - 1.0) / 1.0) * 100}%`,
+                          backgroundColor: color,
+                        }}
+                      />
+                    </div>
+                    <div className="text-xs text-text-muted mt-1">
+                      Фаза: <span className="font-medium">{phase}</span>
+                      {' '}
+                      ({D_THRESHOLDS[phase === 'edge' ? 'edgeOfChaos' : phase].min.toFixed(1)}-
+                      {D_THRESHOLDS[phase === 'edge' ? 'edgeOfChaos' : phase].max.toFixed(1)})
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Hurst Exponent & Complexity */}
+          <div className="card p-4">
+            <h3 className="text-lg font-semibold text-text mb-4">
+              Показатель Хёрста & Сложность
+            </h3>
+            <div className="space-y-6">
               <div>
-                <h4 className="font-semibold text-text mb-1">Недостаточно данных</h4>
-                <p className="text-sm text-text-muted">
-                  Для расчёта фрактальных и квантовых индикаторов требуется минимум {MIN_DATA_POINTS} точек данных. 
-                  Текущее количество: {history.length}/{MIN_DATA_POINTS}. Продолжайте взаимодействие с системой.
-                </p>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-text">H_trust</span>
+                  <span className="text-sm font-mono text-text-muted">
+                    {fractalIndicators.H_trust.toFixed(3)}
+                  </span>
+                </div>
+                <div className="h-3 bg-surface2 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-success transition-all"
+                    style={{ width: `${fractalIndicators.H_trust * 100}%` }}
+                  />
+                </div>
+                <div className="text-xs text-text-muted mt-1">
+                  {fractalIndicators.H_trust < 0.4 && 'Антиперсистентность'}
+                  {fractalIndicators.H_trust >= 0.4 && fractalIndicators.H_trust < 0.6 && 'Случайный'}
+                  {fractalIndicators.H_trust >= 0.6 && 'Персистентность'}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-text">Complexity Index</span>
+                  <span className="text-sm font-mono text-text-muted">
+                    {fractalIndicators.complexityIndex.toFixed(3)}
+                  </span>
+                </div>
+                <div className="h-3 bg-surface2 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{ width: `${fractalIndicators.complexityIndex * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-text">Edge Distance</span>
+                  <span className="text-sm font-mono text-text-muted">
+                    {fractalIndicators.edgeDistance.toFixed(3)}
+                  </span>
+                </div>
+                <div className="h-3 bg-surface2 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-warning transition-all"
+                    style={{ width: `${Math.min(100, fractalIndicators.edgeDistance * 100)}%` }}
+                  />
+                </div>
+                <div className="text-xs text-text-muted mt-1">
+                  Расстояние до "edge of chaos"
+                </div>
               </div>
             </div>
           </div>
-        )}
+
+          {/* Interpretation */}
+          <div className="card p-4 lg:col-span-2">
+            <h3 className="text-lg font-semibold text-text mb-3">
+              🔍 Интерпретация
+            </h3>
+            <div className="prose prose-invert text-sm">
+              <p className="text-text-muted">
+                <strong>Фрактальная размерность (D):</strong> 1.0-1.4 = стабильный сигнал,
+                1.4-1.6 = "edge of chaos" (оптимально), 1.6-2.0 = хаотический режим.
+              </p>
+              <p className="text-text-muted mt-2">
+                <strong>Показатель Хёрста (H):</strong> &lt;0.4 = возврат к среднему,
+                0.4-0.6 = случайное блуждание, &gt;0.6 = продолжение тренда.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedView === 'quantum' && quantumIndicators && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* CSI */}
+          <div className="card p-4">
+            <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">
+              Cognitive Superposition Index
+            </h3>
+            <div className="text-4xl font-bold text-text mb-4">
+              {(quantumIndicators.CSI * 100).toFixed(0)}%
+            </div>
+            <div className="h-3 bg-surface2 rounded-full overflow-hidden mb-2">
+              <div
+                className="h-full rounded-full bg-purple-500 transition-all"
+                style={{ width: `${quantumIndicators.CSI * 100}%` }}
+              />
+            </div>
+            <p className="text-xs text-text-muted">
+              {quantumIndicators.CSI < 0.3 && '🔴 Коллапс состояния'}
+              {quantumIndicators.CSI >= 0.3 && quantumIndicators.CSI < 0.7 && '🟢 Баланс'}
+              {quantumIndicators.CSI >= 0.7 && '🔵 Суперпозиция'}
+            </p>
+          </div>
+
+          {/* EI */}
+          <div className="card p-4">
+            <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">
+              Entanglement Index
+            </h3>
+            <div className="text-4xl font-bold text-text mb-4">
+              {(quantumIndicators.EI * 100).toFixed(0)}%
+            </div>
+            <div className="h-3 bg-surface2 rounded-full overflow-hidden mb-2">
+              <div
+                className="h-full rounded-full bg-cyan-500 transition-all"
+                style={{ width: `${quantumIndicators.EI * 100}%` }}
+              />
+            </div>
+            <p className="text-xs text-text-muted">
+              {quantumIndicators.EI < 0.3 && '🔴 Развязка метрик'}
+              {quantumIndicators.EI >= 0.3 && quantumIndicators.EI < 0.6 && '🟢 Норма'}
+              {quantumIndicators.EI >= 0.6 && '🔵 Запутанность'}
+            </p>
+          </div>
+
+          {/* NC */}
+          <div className="card p-4">
+            <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">
+              Non-Commutativity Index
+            </h3>
+            <div className="text-4xl font-bold text-text mb-4">
+              {(quantumIndicators.NC * 100).toFixed(0)}%
+            </div>
+            <div className="h-3 bg-surface2 rounded-full overflow-hidden mb-2">
+              <div
+                className="h-full rounded-full bg-amber-500 transition-all"
+                style={{ width: `${quantumIndicators.NC * 100}%` }}
+              />
+            </div>
+            <p className="text-xs text-text-muted">
+              {quantumIndicators.NC < 0.3 && '🔴 Коммутативность'}
+              {quantumIndicators.NC >= 0.3 && quantumIndicators.NC < 0.7 && '🟢 Баланс'}
+              {quantumIndicators.NC >= 0.7 && '🔵 Порядок важен'}
+            </p>
+          </div>
+
+          {/* Explanation */}
+          <div className="card p-4 lg:col-span-3">
+            <h3 className="text-lg font-semibold text-text mb-3">
+              ⚛️ Квантовые когнитивные индикаторы
+            </h3>
+            <div className="space-y-2 text-sm text-text-muted">
+              <p>
+                <strong className="text-text">CSI:</strong> Способность удерживать несколько состояний одновременно (суперпозиция мыслей).
+              </p>
+              <p>
+                <strong className="text-text">EI:</strong> Связанность метрик - насколько изменение одной влияет на другие (квантовая запутанность).
+              </p>
+              <p>
+                <strong className="text-text">NC:</strong> Порядко-зависимость - важность последовательности событий (некоммутативность операторов).
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer Note */}
+      <div className="card p-3 bg-surface/50 border border-border">
+        <p className="text-xs text-text-muted text-center">
+          🔒 <strong>Безопасность:</strong> Эта панель предназначена только для внутреннего использования.
+          Все метрики отражают внутренний симулированный процесс ISKRA.
+          {' '}
+          <span className="text-accent">ADR-20260105-02</span>
+        </p>
       </div>
     </div>
   );

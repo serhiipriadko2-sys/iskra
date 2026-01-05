@@ -82,4 +82,46 @@ ADR-YYYYMMDD-XX: <короткое имя>
 
 ---
 
+## ADR-20260105-02: Visual Metrics Dashboard (vΩ.3.1)
+Статус: accepted  
+Контекст: Необходимость живой панели с графиками для улучшения наблюдаемости системы. Текущие компоненты (`IskraMetricsDisplay`, `MiniMetricsDisplay`) показывают только текущее состояние без трендов и истории.  
+Решение:
+1. Интеграция Recharts для real-time визуализации метрик
+2. Создание компонента `MetricsDashboard` с:
+   - Временными графиками для 11 IskraMetrics (rhythm, trust, clarity, pain, drift, chaos, echo, silence_mass, mirror_sync, interrupt, ctxSwitch)
+   - Визуализация Fractal Indicators (D_chaos, D_clarity, D_drift, H_trust, complexityIndex, edgeDistance)
+   - Отображение Quantum Indicators (CSI, EI, NC)
+   - Computed indices (integrity_score, alive_index)
+   - Исторические тренды (последние 24ч / 7 дней)
+3. Интеграция в навигацию App.tsx как view 'METRICS'
+4. Документация требований безопасности: dashboard только для внутреннего использования, требуется аутентификация
+5. Данные хранятся локально (localStorage) для MVP
+
+Альтернативы:
+- Grafana с отдельным сервером (отклонено — излишняя сложность для MVP)
+- D3.js (отклонено — требует больше кода для базовых графиков)
+- Chart.js (отклонено — менее React-friendly)
+
+Последствия:
+- Добавление зависимости recharts (~500KB)
+- Улучшенная наблюдаемость для раннего обнаружения drift/echo
+- Требуется механизм сбора исторических данных
+- Необходима документация по безопасности доступа
+
+Тесты/QA:
+- Unit-тесты для MetricsDashboard rendering
+- Проверка обновления графиков в real-time
+- Валидация отображения всех 11+ метрик
+- Тест интеграции с App.tsx
+
+ΔDΩΛ:
+- Δ: ISKRA получает real-time визуализацию внутреннего состояния
+- D: metrics/indices.md + existing components analysis + Recharts integration
+- Ω: 0.85
+- Λ: После MVP добавить alerts на критические пороги, экспорт данных
+
+Подписи: Claude Code Agent / Builder
+
+---
+
 **Integrity:** Governance-Primary
