@@ -19,8 +19,8 @@ import CouncilView from './components/CouncilView';
 import EvalDashboard from './components/EvalDashboard';
 import GlossaryView from './components/GlossaryView';
 import ShadowView from './components/ShadowView';
-import OnboardingTour, { TourStep } from './components/OnboardingTour';
 import MetricsDashboard from './components/MetricsDashboard';
+import OnboardingTour, { TourStep } from './components/OnboardingTour';
 import Ambience from './components/Ambience';
 import ErrorBoundary from './components/ErrorBoundary';
 import { IskraMetrics, IskraPhase } from './types';
@@ -219,7 +219,7 @@ export default function App() {
                         {view === 'RESEARCH' && <DeepResearchView metrics={metrics} />}
                         {view === 'MEMORY' && <MemoryView />}
                         {view === 'METRICS' && <IskraStateView metrics={metrics} phase={phase} onShatter={handleShatter} />}
-                        {view === 'DASHBOARD' && <MetricsDashboard metrics={metrics} />}
+                        {view === 'DASHBOARD' && <MetricsDashboard currentMetrics={metrics} />}
                         {view === 'COUNCIL' && <CouncilView onClose={() => setView('METRICS')} />}
                         {view === 'EVAL' && <EvalDashboard />}
                         {view === 'GLOSSARY' && <GlossaryView />}
