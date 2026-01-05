@@ -31,11 +31,14 @@ const BreathingIndicator: React.FC<BreathingIndicatorProps> = ({
 
     // Цикл дыхания: половина времени вдох, половина выдох
     const halfDuration = (duration / 2) * 1000;
-    let startTime = Date.now();
+    const startTime = Date.now();
     let currentPhase: BreathPhase = 'INHALE';
     let animationId: number;
+    let isActive = true;
 
     const animate = () => {
+      if (!isActive) return; // Stop if unmounted or visibility changed
+      
       const elapsed = Date.now() - startTime;
       const cyclePosition = elapsed % (halfDuration * 2);
       
@@ -60,6 +63,7 @@ const BreathingIndicator: React.FC<BreathingIndicatorProps> = ({
     animationId = requestAnimationFrame(animate);
 
     return () => {
+      isActive = false;
       if (animationId) {
         cancelAnimationFrame(animationId);
       }
@@ -75,10 +79,11 @@ const BreathingIndicator: React.FC<BreathingIndicatorProps> = ({
     <div className={`flex flex-col items-center ${className}`}>
       {/* Текст фазы */}
       <div 
-        className="relative text-center transition-all duration-500 ease-in-out"
+        className="relative text-center"
         style={{ 
           opacity,
-          transform: `translateY(${isInhale ? '-2px' : '2px'})`
+          transform: `translateY(${isInhale ? '-2px' : '2px'})`,
+          transition: 'opacity 100ms linear'
         }}
       >
         <p className={`text-sm font-mono uppercase tracking-[0.3em] transition-colors duration-1000 ${
