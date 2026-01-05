@@ -7,6 +7,7 @@ import { DailyAdvice, Task, RitualTag, Habit, IskraMetrics, IskraPhase, UserDail
 import { storageService } from '../services/storageService';
 import Loader from './Loader';
 import BreathingExercise from './BreathingExercise';
+import BreathingIndicator from './BreathingIndicator';
 import {
     LightbulbIcon, ClockIcon, ChevronRightIcon,
     FlameIcon, DropletsIcon, SunIcon, ScaleIcon, TriangleIcon
@@ -83,12 +84,38 @@ const MetricRing: React.FC<{
 
     return (
         <div className={`relative flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
-            {/* Organic CSS Keyframes */}
+            {/* Enhanced Organic Breathing Keyframes - Вдох/Выдох */}
             <style>{`
                 @keyframes iskra-breath {
-                    0% { transform: scale(1); opacity: 0.6; }
-                    50% { transform: scale(1.05); opacity: 1; filter: brightness(1.2); }
-                    100% { transform: scale(1); opacity: 0.6; }
+                    /* Вдох - Expansion */
+                    0% { 
+                        transform: scale(1); 
+                        opacity: 0.5; 
+                        filter: brightness(1) blur(0px);
+                    }
+                    /* Пик вдоха - Peak inhale */
+                    45% { 
+                        transform: scale(1.08); 
+                        opacity: 0.95; 
+                        filter: brightness(1.25) blur(1px);
+                    }
+                    /* Задержка - Hold */
+                    50% { 
+                        transform: scale(1.08); 
+                        opacity: 1; 
+                        filter: brightness(1.3) blur(1px);
+                    }
+                    /* Выдох - Release */
+                    95% { 
+                        transform: scale(0.98); 
+                        opacity: 0.45; 
+                        filter: brightness(0.95) blur(0px);
+                    }
+                    100% { 
+                        transform: scale(1); 
+                        opacity: 0.5; 
+                        filter: brightness(1) blur(0px);
+                    }
                 }
             `}</style>
 
@@ -270,6 +297,13 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
                             </div>
                         )}
                     </div>
+
+                    {/* Breathing Indicator - синхронизирован с анимацией кольца */}
+                    <BreathingIndicator 
+                        duration={parseFloat(getPulseDuration())} 
+                        visible={true}
+                        className="mt-4 lg:mt-6"
+                    />
 
                     {/* Mobile Satellites Row (4 Real User Metrics) */}
                     {isMobile && (
