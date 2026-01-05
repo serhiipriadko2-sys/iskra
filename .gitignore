@@ -75,6 +75,8 @@ htmlcov/
 # Testing
 coverage/
 .nyc_output/
+test-results/
+playwright-report/
 
 # Logs
 logs/
