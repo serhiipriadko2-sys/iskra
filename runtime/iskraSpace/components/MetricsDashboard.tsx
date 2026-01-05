@@ -19,6 +19,12 @@ interface MetricsHistory {
   metrics: IskraMetrics;
 }
 
+// Configuration constants
+const MAX_HISTORY_SIZE = 100; // ~5 minutes at 3s intervals
+const MIN_DATA_POINTS = 10; // Minimum required for fractal/quantum calculations
+const TREND_WINDOW_SIZE = 30; // Last N cycles to show in trend charts
+const FRACTAL_WINDOW_SIZE = 50; // Window size for fractal calculations
+
 // Gauge component for visual representation
 const GaugeIndicator: React.FC<{ 
   value: number; 
@@ -168,19 +174,19 @@ const MetricsDashboard: React.FC<MetricsDashboardProps> = ({ metrics }) => {
 
     setHistory(prev => {
       const updated = [...prev, newEntry];
-      // Keep last 100 entries (approximately 5 minutes at 3s intervals)
-      return updated.slice(-100);
+      // Keep last MAX_HISTORY_SIZE entries
+      return updated.slice(-MAX_HISTORY_SIZE);
     });
   }, [metrics]);
 
   // Calculate indicators
   useEffect(() => {
-    if (history.length < 10) return; // Need at least 10 data points
+    if (history.length < MIN_DATA_POINTS) return; // Need minimum data points
 
     const metricsArray = history.map(h => h.metrics);
     
     // Calculate fractal indicators
-    const fractal = calculateFractalIndicators(metricsArray, Math.min(50, history.length));
+    const fractal = calculateFractalIndicators(metricsArray, Math.min(FRACTAL_WINDOW_SIZE, history.length));
     setFractalIndicators(fractal);
     
     // Calculate quantum indicators
@@ -193,10 +199,10 @@ const MetricsDashboard: React.FC<MetricsDashboardProps> = ({ metrics }) => {
   }, [history, metrics]);
 
   // Extract trend data for charts
-  const chaosTrend = history.slice(-30).map(h => h.metrics.chaos);
-  const clarityTrend = history.slice(-30).map(h => h.metrics.clarity);
-  const driftTrend = history.slice(-30).map(h => h.metrics.drift);
-  const trustTrend = history.slice(-30).map(h => h.metrics.trust);
+  const chaosTrend = history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.chaos);
+  const clarityTrend = history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.clarity);
+  const driftTrend = history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.drift);
+  const trustTrend = history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.trust);
 
   return (
     <div className="h-full w-full overflow-y-auto p-4 lg:p-8">
@@ -312,10 +318,10 @@ const MetricsDashboard: React.FC<MetricsDashboardProps> = ({ metrics }) => {
         )}
 
         {/* Real-time Trends */}
-        {history.length >= 10 && (
+        {history.length >= MIN_DATA_POINTS && (
           <div className="mb-8">
             <h3 className="text-sm text-text-muted uppercase tracking-wider font-bold mb-4 ml-1">
-              Динамика Базовых Метрик (последние 30 циклов)
+              Динамика Базовых Метрик (последние {TREND_WINDOW_SIZE} циклов)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <TrendLine data={chaosTrend} label="Chaos" color="text-purple-500" />
@@ -368,15 +374,15 @@ const MetricsDashboard: React.FC<MetricsDashboardProps> = ({ metrics }) => {
         </div>
 
         {/* Insufficient Data Warning */}
-        {history.length < 10 && (
+        {history.length < MIN_DATA_POINTS && (
           <div className="glass-card p-6 border-l-4 border-warning">
             <div className="flex items-start gap-3">
               <AlertTriangleIcon className="w-6 h-6 text-warning flex-shrink-0 mt-1" />
               <div>
                 <h4 className="font-semibold text-text mb-1">Недостаточно данных</h4>
                 <p className="text-sm text-text-muted">
-                  Для расчёта фрактальных и квантовых индикаторов требуется минимум 10 точек данных. 
-                  Текущее количество: {history.length}/10. Продолжайте взаимодействие с системой.
+                  Для расчёта фрактальных и квантовых индикаторов требуется минимум {MIN_DATA_POINTS} точек данных. 
+                  Текущее количество: {history.length}/{MIN_DATA_POINTS}. Продолжайте взаимодействие с системой.
                 </p>
               </div>
             </div>
