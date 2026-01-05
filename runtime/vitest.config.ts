@@ -14,8 +14,8 @@ export default defineConfig({
   test: {
     include: ['src/**/*.test.ts', 'iskraSpace/**/*.test.ts'],
     exclude: [
-      'node_modules',
-      'dist',
+      '**/node_modules/**',
+      '**/dist/**',
       'iskraSpace/e2e/**', // Playwright e2e tests (run separately via npm run test:e2e)
       '**/*.spec.ts',
     ],
