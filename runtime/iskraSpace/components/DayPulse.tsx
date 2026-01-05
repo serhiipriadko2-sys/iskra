@@ -193,6 +193,7 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
     const [habits, setHabits] = useState<Habit[]>([]);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [showBreathing, setShowBreathing] = useState(false);
+    const [showBreathingIndicator, setShowBreathingIndicator] = useState(true);
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -299,11 +300,21 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
                     </div>
 
                     {/* Breathing Indicator - синхронизирован с анимацией кольца */}
-                    <BreathingIndicator 
-                        duration={parseFloat(getPulseDuration())} 
-                        visible={true}
-                        className="mt-4 lg:mt-6"
-                    />
+                    <div className="relative">
+                        <BreathingIndicator 
+                            duration={parseFloat(getPulseDuration())} 
+                            visible={showBreathingIndicator}
+                            className="mt-4 lg:mt-6"
+                        />
+                        {/* Toggle Button - subtle control */}
+                        <button
+                            onClick={() => setShowBreathingIndicator(!showBreathingIndicator)}
+                            className="absolute -right-8 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface border border-white/5 hover:border-white/10 flex items-center justify-center text-xs text-text-muted hover:text-text transition-all group"
+                            title={showBreathingIndicator ? 'Скрыть индикатор дыхания' : 'Показать индикатор дыхания'}
+                        >
+                            <span className="text-[10px]">{showBreathingIndicator ? '≈' : '○'}</span>
+                        </button>
+                    </div>
 
                     {/* Mobile Satellites Row (4 Real User Metrics) */}
                     {isMobile && (
