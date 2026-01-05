@@ -30,9 +30,10 @@ const BreathingIndicator: React.FC<BreathingIndicatorProps> = ({
     if (!visible) return;
 
     // Цикл дыхания: половина времени вдох, половина выдох
-    const halfDuration = (parseFloat(duration.toString()) / 2) * 1000;
+    const halfDuration = (duration / 2) * 1000;
     let startTime = Date.now();
     let currentPhase: BreathPhase = 'INHALE';
+    let animationId: number;
 
     const animate = () => {
       const elapsed = Date.now() - startTime;
@@ -53,12 +54,16 @@ const BreathingIndicator: React.FC<BreathingIndicatorProps> = ({
       
       setProgress(phaseProgress);
       
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
     };
 
-    const animationId = requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
 
-    return () => cancelAnimationFrame(animationId);
+    return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
   }, [duration, visible]);
 
   if (!visible) return null;

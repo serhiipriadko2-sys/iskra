@@ -233,13 +233,15 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
     const ringSize = isMobile ? 220 : 280;
 
     // Calculate breathing duration based on metrics (chaos/pain) if available
-    const getPulseDuration = () => {
-        if (!metrics) return '4s';
-        if (metrics.chaos > 0.6) return '1.5s'; // Erratic / Hyper
-        if (metrics.pain > 0.6) return '2s'; // Stressed
-        if (phase === 'SILENCE') return '8s'; // Deep meditation
-        return '5s'; // Organic resting breath
+    const getPulseDurationSeconds = (): number => {
+        if (!metrics) return 4;
+        if (metrics.chaos > 0.6) return 1.5; // Erratic / Hyper
+        if (metrics.pain > 0.6) return 2; // Stressed
+        if (phase === 'SILENCE') return 8; // Deep meditation
+        return 5; // Organic resting breath
     };
+
+    const getPulseDuration = () => `${getPulseDurationSeconds()}s`;
 
     return (
         <div className="h-full w-full overflow-y-auto p-4 sm:p-6">
@@ -302,7 +304,7 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
                     {/* Breathing Indicator - синхронизирован с анимацией кольца */}
                     <div className="relative">
                         <BreathingIndicator 
-                            duration={parseFloat(getPulseDuration())} 
+                            duration={getPulseDurationSeconds()} 
                             visible={showBreathingIndicator}
                             className="mt-4 lg:mt-6"
                         />

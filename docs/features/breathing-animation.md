@@ -164,5 +164,4 @@ const getPulseDuration = () => {
 ---
 
 **Версия**: vΩ.3.0  
-**Автор**: Claude (GitHub Copilot)  
 **Дата**: 2026-01-05
