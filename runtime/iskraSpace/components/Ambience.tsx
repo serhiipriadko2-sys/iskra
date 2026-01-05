@@ -60,6 +60,18 @@ const PHASE_CONFIG: Record<IskraPhase, {
     opacity: 1,
     coreColor: 'transparent',
     quantumIntensity: 'subtle'
+  },
+  ECHO: {
+    gradient: 'from-cyan-500/10 via-bg to-bg',
+    opacity: 0.7,
+    coreColor: '#06b6d4',
+    quantumIntensity: 'normal'
+  },
+  EXPERIMENT: {
+    gradient: 'from-green-500/15 via-bg to-bg',
+    opacity: 0.65,
+    coreColor: '#10b981',
+    quantumIntensity: 'intense'
   }
 };
 
