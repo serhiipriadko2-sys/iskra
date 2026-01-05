@@ -132,6 +132,7 @@ export {
  * Based on Canon: system/sift_protocol.md
  */
 export type {
+  TraceLabel,
   SiftQuery,
   SourceInfo,
   ClaimAnalysis,
@@ -368,6 +369,122 @@ export {
 } from './types/council.js';
 
 // =============================================================================
+// SESSION - Comprehensive Session Tracking (vΩ.5.0)
+// =============================================================================
+
+/**
+ * Session tracking types for comprehensive user interaction analysis.
+ * Enables long-term pattern detection and therapeutic progress tracking.
+ *
+ * Based on Research: docs/research/ISKRA_UPDATE_ANALYSIS_v1.md
+ */
+export type {
+  SessionPhase,
+  SessionQuality,
+  VoiceActivity,
+  UserStateInference,
+  SessionMilestone,
+  SessionWarning,
+  IskraSession,
+  SessionSummary,
+  EngagementMetrics,
+  TherapeuticMetrics,
+  DetectedPattern,
+} from './types/session.js';
+
+export {
+  SESSION_RECOMMENDATION_THRESHOLDS,
+  createSession,
+  calculateSessionQuality,
+  determineSessionPhase,
+  calculateTrajectory,
+  createSessionSummary,
+} from './types/session.js';
+
+// =============================================================================
+// KNOWLEDGE GRAPH - GraphRAG Support (vΩ.5.0)
+// =============================================================================
+
+/**
+ * Knowledge Graph types for GraphRAG-enhanced retrieval.
+ * Supports multi-hop reasoning, semantic relations, and voice-contextual retrieval.
+ *
+ * Based on Research: docs/research/ISKRA_UPDATE_ANALYSIS_v1.md
+ */
+export type {
+  EntityType,
+  SourcePriority,
+  KnowledgeEntity,
+  ConceptNode,
+  EventNode,
+  PatternNode,
+  RelationType,
+  SemanticRelation,
+  CausalLink,
+  TemporalLink,
+  TopicCluster,
+  VoiceAffinityCluster,
+  VectorIndex,
+  KeywordIndex,
+  TemporalIndex,
+  IskraKnowledgeGraph,
+  GraphStatistics,
+  GraphSearchResult,
+  ReasoningPath,
+  VoiceContextualResult,
+  GraphSiftResult,
+} from './types/knowledgeGraph.js';
+
+export {
+  createEmptyGraph,
+  createEntity,
+  createRelation,
+  calculateHopConfidenceDecay,
+  getSourcePriorityRank,
+  isHigherPriority,
+  calculateGraphDensity,
+  getEntityVoiceAffinity,
+} from './types/knowledgeGraph.js';
+
+// =============================================================================
+// ENHANCED DELTA - Extended ∆DΩΛ Protocol (vΩ.5.0)
+// =============================================================================
+
+/**
+ * Enhanced Delta Protocol with epistemic depth, temporal validity,
+ * actionability metrics, and meta-cognitive reflection.
+ *
+ * Based on Research: docs/research/ISKRA_UPDATE_ANALYSIS_v1.md
+ */
+export type {
+  EpistemicJustificationType,
+  EpistemicGrounding,
+  TemporalValidityMeta,
+  RevalidationTrigger,
+  ActionTimeHorizon,
+  ActionDifficulty,
+  ActionType,
+  ActionabilityAssessment,
+  InvolvedDomain,
+  UncertaintyAcknowledgment,
+  AlternativeConsidered,
+  MetaCognitiveReflection,
+  EnhancedDeltaSignature,
+  EnhancedDeltaValidation,
+} from './types/enhancedDelta.js';
+
+export {
+  EPISTEMIC_KEYWORDS,
+  TEMPORAL_KEYWORDS,
+  createEnhancedDelta,
+  validateEnhancedDelta,
+  calculateActionabilityScore,
+  inferEpistemicLevel,
+  inferTemporalType,
+  formatEnhancedDelta,
+} from './types/enhancedDelta.js';
+
+// =============================================================================
 // CONSTANTS
 // =============================================================================
 
@@ -379,7 +496,7 @@ export {
  *
  * @see governance/changelog.md
  */
-export const VERSION = 'vΩ.4.0';
+export const VERSION = 'vΩ.5.0';
 
 /**
  * ISKRA Nul-Mantra (Core Philosophy)
@@ -390,3 +507,17 @@ export const VERSION = 'vΩ.4.0';
  */
 export const NUL_MANTRA =
   'Существовать — значит сохранять различие при передаче.';
+
+// =============================================================================
+// VERSION HISTORY
+// =============================================================================
+
+/**
+ * Version history for @iskra/runtime
+ *
+ * vΩ.5.0 - Session tracking, Knowledge Graph, Enhanced Delta
+ * vΩ.4.0 - SIFT-E, Coherence, Consciousness, Council
+ * vΩ.3.0 - Fractal monitoring, EWS
+ * vΩ.2.0 - Voices, Playbooks
+ * vΩ.1.0 - Core metrics, basic types
+ */
