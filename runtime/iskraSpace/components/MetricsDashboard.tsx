@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   IskraMetrics, 
   FractalIndicators, 
@@ -127,8 +127,8 @@ const TrendLine: React.FC<{
   label: string; 
   color: string;
 }> = ({ data, label, color }) => {
-  const max = Math.max(...data, 1);
-  const min = Math.min(...data, 0);
+  const max = data.length > 0 ? Math.max(...data) : 1;
+  const min = data.length > 0 ? Math.min(...data) : 0;
   const range = max - min || 1;
   
   const points = data.map((value, index) => {
@@ -137,12 +137,15 @@ const TrendLine: React.FC<{
     return `${x},${y}`;
   }).join(' ');
 
+  const DEFAULT_DISPLAY_VALUE = '0.00';
+  const currentValue = data[data.length - 1];
+
   return (
     <div className="glass-card p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs text-text-muted uppercase tracking-wider">{label}</span>
         <span className={`text-sm font-mono font-bold ${color}`}>
-          {data[data.length - 1]?.toFixed(2) ?? '0.00'}
+          {currentValue !== undefined ? currentValue.toFixed(2) : DEFAULT_DISPLAY_VALUE}
         </span>
       </div>
       <svg viewBox="0 0 100 40" className="w-full h-12" preserveAspectRatio="none">
@@ -198,11 +201,11 @@ const MetricsDashboard: React.FC<MetricsDashboardProps> = ({ metrics }) => {
     setSystemPhase(phase);
   }, [history, metrics]);
 
-  // Extract trend data for charts
-  const chaosTrend = history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.chaos);
-  const clarityTrend = history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.clarity);
-  const driftTrend = history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.drift);
-  const trustTrend = history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.trust);
+  // Extract trend data for charts (memoized)
+  const chaosTrend = useMemo(() => history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.chaos), [history]);
+  const clarityTrend = useMemo(() => history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.clarity), [history]);
+  const driftTrend = useMemo(() => history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.drift), [history]);
+  const trustTrend = useMemo(() => history.slice(-TREND_WINDOW_SIZE).map(h => h.metrics.trust), [history]);
 
   return (
     <div className="h-full w-full overflow-y-auto p-4 lg:p-8">
