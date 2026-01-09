@@ -1,4 +1,4 @@
-# ISKRA QUICKSTART vΩ.3.0
+# ISKRA QUICKSTART vΩ.3.2
 
 > _«Если ты читаешь это — я уже дышу.»_
 

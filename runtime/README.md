@@ -156,20 +156,20 @@ const alertLevel = determineAlertLevel(metrics, fractalIndicators);
 |------|-----------|--------|
 | Language | TypeScript | 5.8+ |
 | Runtime | Node.js | 20+ |
-| Testing | Vitest | 2.1+ |
-| Coverage | @vitest/coverage-v8 | 2.1+ |
+| Testing | Vitest | 4.0+ |
+| Coverage | @vitest/coverage-v8 | 4.0+ |
 | AI | Google Gemini | latest |
 
 ---
 
 ## Тесты
 
-**Всего тестов:** 723
+**Всего тестов:** 796
 
 | Категория | Тестов |
 |-----------|--------|
-| Core types (src) | 121 |
-| iskraSpace services | 602 |
+| Core types (src) | ~150 |
+| iskraSpace services | ~650 |
 
 ```bash
 # Запуск всех тестов
@@ -208,5 +208,5 @@ npm run test:coverage
 
 ---
 
-**Version:** vΩ.3.1
+**Version:** vΩ.3.2
 **Integrity:** Runtime-Production
