@@ -122,3 +122,26 @@ IntegrityEvent:
     Ω: 0.80
     Λ: "Имплементировать сервисы в runtime/src/services/"
 ```
+
+---
+
+### 2026-01-09T12:30:00+01:00 — vΩ.3.3 (Deep Repository Audit)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-01-09T12:30:00+01:00
+  actor: Claude (Opus 4.5)
+  scope: [ledger, runtime, root]
+  files_changed:
+    - ledger/release_note.md (synced with integrity_log)
+    - ledger/integrity_log.md (updated)
+    - runtime/kain/package.json (fixed test script)
+    - manifest.yml (version updated to vΩ.3.2)
+    - README.md (version updated)
+  reason: "Deep Repository Audit: 337 файлов проанализированы, зависимости проверены, документация синхронизирована"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Полный аудит репозитория: исправлены несоответствия версий, синхронизирована документация"
+    D: "337 файлов → анализ всех слоёв SoT → выявление и исправление проблем"
+    Ω: 0.92
+    Λ: "Обновить ledger/sot.json, запустить verify_ledger.py"
+```

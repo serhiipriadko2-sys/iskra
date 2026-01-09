@@ -42,7 +42,53 @@
 - Подключить GitHub app в ChatGPT Business.
 
 
-## vΩ.1.2 (rev13-integrity) — 2026-01-06
+## vΩ.2.0 (Fullspark Integration) — 2026-01-02
+### Что сделано
+- Интеграция 4-уровневой когнитивной архитектуры Fullspark.
+- Переписан `system/architecture.md` с полным описанием 10-шагового pipeline.
+- Создан `system/playbooks.md` с 5 режимами работы (ROUTINE/SIFT/SHADOW/COUNCIL/CRISIS).
+- Обновлён `core/voices.md` с формулами активации голосов на основе метрик.
+- Расширен `metrics/indices.md` до 11 IskraMetrics.
+
+### Ω: 0.85
+### Λ: Калибровать после 20 LAB-сессий.
+
+---
+
+## vΩ.2.1 (Deep Audit & Setup) — 2026-01-02
+### Что сделано
+- Полный аудит репозитория и документирование.
+- Созданы: `docs/AUDIT_REPORT.md`, `docs/ROADMAP.md`, `docs/QUICKSTART.md`.
+- TypeScript scaffold: `runtime/src/types/` с metrics, voices, protocols.
+- Добавлены LICENSE (MIT + CC BY-SA 4.0), расширен `.gitignore`.
+
+### Ω: 0.88
+### Λ: Реализовать Phase 1 scaffolding → npm install → build.
+
+---
+
+## vΩ.3.0 (Research Integration) — 2026-01-03
+### Что сделано
+- Интеграция исследований: SIFT протокол, фрактальный мониторинг, EWS.
+- Создан `docs/research/sift_epistemology.md` — эпистемологический фреймворк.
+- Созданы: `system/sift_protocol.md`, `system/fractal_monitoring.md`, `system/early_warning.md`.
+- TypeScript типы: `sift.ts`, `fractal.ts`, `ews.ts` в runtime.
+- Обновлён `metrics/indices.md` с фрактальными индикаторами.
+
+### Ω: 0.80
+### Λ: Имплементировать сервисы в runtime/src/services/.
+
+---
+
+## vΩ.3.1 (iskraSpace Documentation) — 2026-01-04
+### Что сделано
+- Документация iskraSpace: ARCHITECTURE.md, SERVICES.md (27 сервисов, 42 компонента).
+- Синхронизация ROADMAP.md с текущим состоянием.
+- 723 unit-теста (Vitest), улучшения CI.
+
+---
+
+## vΩ.3.2 (Integrity Chain Sync) — 2026-01-06
 ### Что сделано
 - Приведена в соответствие цепочка целостности: обновлён `tools/update_ledger.py`, регенерирован `ledger/sot.json` (55 объектов) и `ledger/checksum.asc`.
 - Полировка безопасности: удалены LLM ключи из примеров Vite `.env*` для `iskraSpace`, добавлены явные указания использовать `GEMINI_API_KEY` только на сервере (Supabase Edge Function).
