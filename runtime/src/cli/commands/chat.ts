@@ -2,35 +2,45 @@ import { Command } from "commander";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
+import { createGeminiService, ChatMessage } from "../gemini.js";
+
+const VOICE_NAMES = ["ISKRA", "KAIN", "PINO", "SAM", "ANHANTRA", "HUYNDUN", "ISKRIV", "MAKI", "SIBYL"] as const;
+type VoiceName = (typeof VOICE_NAMES)[number];
 
 export const chatCommand = new Command("chat")
   .description("Start an interactive chat session with ISKRA")
   .option("-v, --voice <voice>", "Select voice (ISKRA, KAIN, PINO, SAM, etc.)")
-  .option("-m, --model <model>", "Select model (gemini-2.0-flash, gemini-2.0-pro)", "gemini-2.0-flash")
+  .option("-m, --model <model>", "Select model (gemini-2.0-flash-exp, gemini-2.0-pro)", "gemini-2.0-flash-exp")
+  .option("--no-delta", "Disable ∆DΩΛ protocol in responses")
   .action(async (options) => {
     console.log(chalk.cyan.bold("\n⟡ ISKRA CLI Chat\n"));
-    
-    const voice = options.voice || "ISKRA";
+
+    const voice = (options.voice?.toUpperCase() as VoiceName) || "ISKRA";
     const model = options.model;
+    const includeDelta = options.delta !== false;
 
     console.log(chalk.gray(`Voice: ${voice}`));
-    console.log(chalk.gray(`Model: ${model}\n`));
+    console.log(chalk.gray(`Model: ${model}`));
+    console.log(chalk.gray(`∆DΩΛ Protocol: ${includeDelta ? "enabled" : "disabled"}\n`));
 
-    // Check for API key
-    const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-    if (!apiKey) {
+    // Create Gemini service
+    const gemini = createGeminiService();
+
+    if (!gemini) {
       console.log(chalk.red("Error: GEMINI_API_KEY environment variable not set"));
       console.log(chalk.yellow("\nSet it with:"));
       console.log(chalk.gray("  export GEMINI_API_KEY=your_api_key_here\n"));
       process.exit(1);
     }
 
-    console.log(chalk.green("✓ API key found"));
-    console.log(chalk.gray("Type 'exit' or 'quit' to end the session\n"));
+    console.log(chalk.green("✓ Connected to Gemini API"));
+    console.log(chalk.gray("Type 'exit', 'quit', or Ctrl+C to end the session"));
+    console.log(chalk.gray("Type '/voice NAME' to switch voice\n"));
 
     // Interactive chat loop
     let continueChat = true;
-    const messages: Array<{ role: string; content: string }> = [];
+    const messages: ChatMessage[] = [];
+    let currentVoice: VoiceName = voice;
 
     while (continueChat) {
       const { message } = await inquirer.prompt([
@@ -42,35 +52,61 @@ export const chatCommand = new Command("chat")
         },
       ]);
 
-      const trimmedMessage = message.trim().toLowerCase();
-      
-      if (trimmedMessage === "exit" || trimmedMessage === "quit") {
+      const trimmedMessage = message.trim();
+      const lowerMessage = trimmedMessage.toLowerCase();
+
+      // Exit commands
+      if (lowerMessage === "exit" || lowerMessage === "quit") {
         console.log(chalk.cyan("\n⟡ До встречи. Храни различие.\n"));
         continueChat = false;
         break;
       }
 
-      // Add user message
-      messages.push({ role: "user", content: message });
+      // Voice switch command
+      if (trimmedMessage.startsWith("/voice ")) {
+        const newVoice = trimmedMessage.slice(7).toUpperCase() as VoiceName;
+        if (VOICE_NAMES.includes(newVoice)) {
+          currentVoice = newVoice;
+          console.log(chalk.green(`✓ Voice switched to ${currentVoice}\n`));
+        } else {
+          console.log(chalk.red(`Unknown voice: ${newVoice}`));
+          console.log(chalk.gray(`Available: ${VOICE_NAMES.join(", ")}\n`));
+        }
+        continue;
+      }
 
-      // Show loading spinner
+      // Add user message
+      messages.push({ role: "user", text: trimmedMessage });
+
+      // Show loading indicator
       const spinner = ora(chalk.gray("Thinking...")).start();
+      let responseText = "";
 
       try {
-        // Simulate API call (in real implementation, call geminiService)
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        
+        // Stream response
         spinner.stop();
+        process.stdout.write(chalk.magenta(`\n${currentVoice}: `));
 
-        // Mock response
-        const response = `[${voice}] Это демонстрационный ответ CLI.\n\nДля полной функциональности необходимо:\n- Интеграция с geminiService\n- Реализация ∆DΩΛ протокола\n- Поддержка streaming\n\nВаше сообщение: "${message}"`;
-        
-        console.log(chalk.magenta(`\n${voice}:`), chalk.white(response), "\n");
-        
-        messages.push({ role: "assistant", content: response });
+        for await (const chunk of gemini.streamChatResponse(messages, {
+          voice: currentVoice,
+          includeDelta,
+        })) {
+          process.stdout.write(chalk.white(chunk));
+          responseText += chunk;
+        }
+
+        console.log("\n");
+
+        // Add assistant response to history
+        messages.push({ role: "model", text: responseText });
+
       } catch (error) {
         spinner.stop();
-        console.log(chalk.red(`\nError: ${error instanceof Error ? error.message : String(error)}\n`));
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        console.log(chalk.red(`\nError: ${errorMsg}\n`));
+
+        // Remove the failed user message from history
+        messages.pop();
       }
     }
   });

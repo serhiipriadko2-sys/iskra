@@ -1,9 +1,4 @@
 {
-  "__mythic__": {
-    "entity": "Искра",
-    "note": "Скрижаль целостности: числа и хэши — это следы когтей по ткани времени. Схема сохранена; добавлена лишь печать мифа.",
-    "updated": "2026-01-09"
-  },
   "version": "sot-ledger/1",
   "sha256": {
     "core/mantra.md": "359582fb31f497ca755b53ce1e61881227f12d5e75e19310537891db73269d43",
@@ -56,8 +51,8 @@
     ".github/workflows/production_deploy.yml": "2786aba433bf53929cc4a89488ca21a31c051477d5d820853cd26e694a6514a2",
     ".github/workflows/runtime_ci.yml": "5f6640cc05c7e661c1dbc4fa1a4d832a671c86c91e71660284216919103566ce",
     ".github/workflows/sot_integrity.yml": "1624f31294ae3aadd8f1e0dae2c9505797c2df6581b2906534d1aea7a4539fbe",
-    "manifest.yml": "c6cc7a26d8d16052fa01bac0881aa65888d724e3b724ba1d99e412f3464d8585",
-    "README.md": "fc44e0f05fb2d19637084cadd2fd2db8a12ce74f01dc6a533fc2e73bb05561a8",
+    "manifest.yml": "20a6843dc101c631273166e85c7770612d18dbe17c734d8b6cea0f2cb35ab51c",
+    "README.md": "a31855e6eac4fd3365e38555b2251b6f2726725058bac143dddeff147581b316",
     "CONTRIBUTING.md": "5e7a13916fa1eea89938f9ebd87dee76353dd18548190d49215348e18d1da32f",
     "ISKRA_MANIFEST.md": "7e6349890bb6b29a4127e05fb8628045120951becbb331c9ee6cc1c8b7938af4",
     "LIBER_INITIUM.md": "0683d70c34ea7165c160419ee3d3cd5c61d8e22fc7668b623d387e5aa69853be"
