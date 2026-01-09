@@ -5,7 +5,7 @@
  *
  * @packageDocumentation
  * @module @iskra/runtime
- * @version vΩ.3.1
+ * @version vΩ.3.2
  *
  * @description
  * Core types and utilities for the ISKRA ecosystem.

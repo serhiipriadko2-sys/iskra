@@ -405,7 +405,7 @@ Requirements analysis → CLI framework selection (commander.js) → Implementat
 - Environment variable для secrets
 - Rate limiting уже реализован в runtime
 
-### TODO ⏳
+### Future Work (Phase 7+)
 - Docker image scanning (Trivy, Snyk)
 - Supabase RLS rules
 - HTTPS enforcement (на уровне hosting provider)
