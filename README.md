@@ -1,4 +1,4 @@
-# ISKRA · Livebuild (rev13-integrity)
+# ISKRA · Livebuild (vΩ.3.2)
 
 Этот репозиторий — **Source of Truth (SoT)** для Искры: канон, протоколы, метрики, безопасность и лабораторный workflow.
 
@@ -29,7 +29,7 @@
 
 ---
 
-**Build date:** 2026-01-06
+**Build date:** 2026-01-09
 
 ## Монорепо (SoT + runtime)
 - SoT живёт в корне (папки `core/`, `system/`, `ledger/`...).
