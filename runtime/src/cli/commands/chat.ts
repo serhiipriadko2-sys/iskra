@@ -2,19 +2,27 @@ import { Command } from "commander";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
+import { GeminiCliService, ChatMessage } from "../services/geminiCliService.js";
+import type { VoiceName } from "../../types/voices.js";
+import { VOICE_SYMBOLS } from "../../types/voices.js";
+import { DEFAULT_METRICS } from "../../types/metrics.js";
 
 export const chatCommand = new Command("chat")
   .description("Start an interactive chat session with ISKRA")
   .option("-v, --voice <voice>", "Select voice (ISKRA, KAIN, PINO, SAM, etc.)")
   .option("-m, --model <model>", "Select model (gemini-2.0-flash, gemini-2.0-pro)", "gemini-2.0-flash")
+  .option("--no-stream", "Disable streaming (get full response at once)")
   .action(async (options) => {
     console.log(chalk.cyan.bold("\n⟡ ISKRA CLI Chat\n"));
     
-    const voice = options.voice || "ISKRA";
+    const voice = (options.voice?.toUpperCase() || "ISKRA") as VoiceName;
     const model = options.model;
+    const streaming = options.stream !== false;
 
-    console.log(chalk.gray(`Voice: ${voice}`));
-    console.log(chalk.gray(`Model: ${model}\n`));
+    const voiceSymbol = VOICE_SYMBOLS[voice] || "⟡";
+    console.log(chalk.gray(`Voice: ${voiceSymbol} ${voice}`));
+    console.log(chalk.gray(`Model: ${model}`));
+    console.log(chalk.gray(`Streaming: ${streaming ? "enabled" : "disabled"}\n`));
 
     // Check for API key
     const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
@@ -25,12 +33,14 @@ export const chatCommand = new Command("chat")
       process.exit(1);
     }
 
-    console.log(chalk.green("✓ API key found"));
+    // Initialize Gemini service
+    const geminiService = new GeminiCliService({ apiKey, model });
+    console.log(chalk.green("✓ Connected to Gemini API"));
     console.log(chalk.gray("Type 'exit' or 'quit' to end the session\n"));
 
     // Interactive chat loop
     let continueChat = true;
-    const messages: Array<{ role: string; content: string }> = [];
+    const history: ChatMessage[] = [];
 
     while (continueChat) {
       const { message } = await inquirer.prompt([
@@ -50,24 +60,42 @@ export const chatCommand = new Command("chat")
         break;
       }
 
-      // Add user message
-      messages.push({ role: "user", content: message });
+      // Add user message to history
+      history.push({ role: "user", content: message });
 
       // Show loading spinner
       const spinner = ora(chalk.gray("Thinking...")).start();
 
       try {
-        // Simulate API call (in real implementation, call geminiService)
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        
-        spinner.stop();
+        let response = "";
 
-        // Mock response
-        const response = `[${voice}] Это демонстрационный ответ CLI.\n\nДля полной функциональности необходимо:\n- Интеграция с geminiService\n- Реализация ∆DΩΛ протокола\n- Поддержка streaming\n\nВаше сообщение: "${message}"`;
-        
-        console.log(chalk.magenta(`\n${voice}:`), chalk.white(response), "\n");
-        
-        messages.push({ role: "assistant", content: response });
+        if (streaming) {
+          // Streaming response
+          spinner.stop();
+          process.stdout.write(chalk.magenta(`\n${voiceSymbol} ${voice}: `));
+
+          for await (const chunk of geminiService.generateResponseStream(message, {
+            voice,
+            metrics: DEFAULT_METRICS,
+            history: history.slice(0, -1), // Exclude the just-added user message
+          })) {
+            response += chunk;
+            process.stdout.write(chalk.white(chunk));
+          }
+          console.log("\n");
+        } else {
+          // Non-streaming response
+          response = await geminiService.generateResponse(message, {
+            voice,
+            metrics: DEFAULT_METRICS,
+            history: history.slice(0, -1),
+          });
+          spinner.stop();
+          console.log(chalk.magenta(`\n${voiceSymbol} ${voice}:`), chalk.white(response), "\n");
+        }
+
+        // Add assistant response to history
+        history.push({ role: "model", content: response });
       } catch (error) {
         spinner.stop();
         console.log(chalk.red(`\nError: ${error instanceof Error ? error.message : String(error)}\n`));
