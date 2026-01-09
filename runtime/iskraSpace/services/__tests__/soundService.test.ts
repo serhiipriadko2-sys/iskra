@@ -34,11 +34,20 @@ const mockAudioContext = {
   resume: vi.fn(() => Promise.resolve()),
 };
 
-// Mock window.AudioContext
+// Mock window.AudioContext as a proper class
+class MockAudioContext {
+  state = mockAudioContext.state;
+  currentTime = mockAudioContext.currentTime;
+  destination = mockAudioContext.destination;
+  createOscillator = mockAudioContext.createOscillator;
+  createGain = mockAudioContext.createGain;
+  resume = mockAudioContext.resume;
+}
+
 Object.defineProperty(global, 'window', {
   value: {
-    AudioContext: vi.fn(() => mockAudioContext),
-    webkitAudioContext: vi.fn(() => mockAudioContext),
+    AudioContext: MockAudioContext,
+    webkitAudioContext: MockAudioContext,
   },
   writable: true,
 });
