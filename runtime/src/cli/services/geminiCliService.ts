@@ -290,9 +290,10 @@ T - Trace: Создай цепочку рассуждений
 
 /**
  * Create a GeminiCliService instance from environment
+ * Note: Only reads GEMINI_API_KEY for CLI security (no VITE_ variables)
  */
 export function createGeminiCliService(model?: string): GeminiCliService | null {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return null;
   }
