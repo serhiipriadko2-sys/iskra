@@ -2,6 +2,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
+import { GeminiCliService } from "../services/geminiCliService.js";
 
 export const siftCommand = new Command("sift")
   .description("Verify a statement using SIFT protocol (Source → Inference → Fact)")
@@ -37,35 +38,17 @@ export const siftCommand = new Command("sift")
       process.exit(1);
     }
 
+    // Initialize Gemini service
+    const geminiService = new GeminiCliService({ apiKey });
+
     // Show loading spinner
     const spinner = ora(chalk.gray("Analyzing with SIFT protocol...")).start();
 
     try {
-      // Simulate SIFT analysis (in real implementation, call evidenceService/geminiService)
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Real SIFT analysis using Gemini
+      const siftResult = await geminiService.siftVerify(statementToVerify);
       
       spinner.stop();
-
-      // Mock SIFT result
-      type Verdict = "FACT" | "INFERENCE" | "UNSOURCED";
-      const siftResult: {
-        statement: string;
-        verdict: Verdict;
-        confidence: number;
-        sources: Array<{ type: string; description: string; score: number }>;
-        reasoning: string;
-        trace: string;
-      } = {
-        statement: statementToVerify,
-        verdict: "INFERENCE",
-        confidence: 0.72,
-        sources: [
-          { type: "DIRECT", description: "No direct source found", score: 0 },
-          { type: "INFERRED", description: "Logical inference from context", score: 0.72 },
-        ],
-        reasoning: "Утверждение основано на логическом выводе, но требует дополнительной проверки источников.",
-        trace: "SIFT-CLI-DEMO-001",
-      };
 
       // Display results
       console.log(chalk.cyan("\n┌─ SIFT Analysis Result"));
@@ -81,16 +64,20 @@ export const siftCommand = new Command("sift")
       console.log(chalk.cyan("│"), chalk.white("Trace:     "), chalk.gray(siftResult.trace));
       console.log(chalk.cyan("│"));
 
-      if (options.detailed) {
+      if (options.detailed && siftResult.sources.length > 0) {
         console.log(chalk.cyan("├─ Sources"));
         siftResult.sources.forEach((source, idx) => {
-          console.log(chalk.cyan("│  "), chalk.white(`${idx + 1}.`), chalk.gray(source.type), "-", source.description);
+          console.log(chalk.cyan("│  "), chalk.white(`${idx + 1}.`), chalk.gray(source));
         });
         console.log(chalk.cyan("│"));
       }
 
       console.log(chalk.cyan("├─ Reasoning"));
-      console.log(chalk.cyan("│  "), chalk.white(siftResult.reasoning));
+      // Split reasoning into lines for better formatting
+      const reasoningLines = siftResult.reasoning.split("\n");
+      reasoningLines.forEach(line => {
+        console.log(chalk.cyan("│  "), chalk.white(line));
+      });
       console.log(chalk.cyan("│"));
       console.log(chalk.cyan("└─────────────────────────────────────\n"));
 
@@ -102,8 +89,6 @@ export const siftCommand = new Command("sift")
       } else {
         console.log(chalk.green("✓ Verified:"), "Statement supported by reliable sources.\n");
       }
-
-      console.log(chalk.gray("Note: This is a demonstration. Connect to evidenceService for full SIFT analysis.\n"));
 
     } catch (error) {
       spinner.stop();
