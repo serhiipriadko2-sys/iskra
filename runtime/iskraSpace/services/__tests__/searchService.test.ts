@@ -65,7 +65,7 @@ vi.mock('../memoryService', () => ({
   },
 }));
 
-// Mock geminiService
+// Mock geminiService - Vitest 4.x compatible class mock
 vi.mock('../geminiService', () => {
   return {
     IskraAIService: class MockIskraAIService {
