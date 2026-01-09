@@ -61,7 +61,9 @@ describe('Multi-Agent Council Protocol', () => {
 
     it('should return lower weight for tier4 voices', () => {
       expect(getVoiceBaseWeight('PINO')).toBeLessThan(getVoiceBaseWeight('ISKRA'));
-      expect(getVoiceBaseWeight('HUNDUN')).toBeLessThan(getVoiceBaseWeight('ISKRA'));
+      expect(getVoiceBaseWeight('HUYNDUN')).toBeLessThan(getVoiceBaseWeight('ISKRA'));
+      // Backwards-compatible alias
+      expect(getVoiceBaseWeight('HUNDUN')).toBe(getVoiceBaseWeight('HUYNDUN'));
     });
 
     it('should return consistent weights', () => {
@@ -82,6 +84,8 @@ describe('Multi-Agent Council Protocol', () => {
       expect(hasVetoPower('SAM')).toBe(false);
       expect(hasVetoPower('PINO')).toBe(false);
       expect(hasVetoPower('MAKI')).toBe(false);
+      expect(hasVetoPower('HUYNDUN')).toBe(false);
+      // Alias should behave the same
       expect(hasVetoPower('HUNDUN')).toBe(false);
     });
   });

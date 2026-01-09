@@ -160,12 +160,15 @@ function selectVoice(metrics: IskraMetrics): Voice {
 
   // Apply trigger conditions
   if (metrics.rhythm > 60 && metrics.trust > 0.7) return 'iskra';
-  if (metrics.pain >= 0.3) return 'kain';
+       // Приоритет Мaki: при высоком доверии и боли сначала выбирается MAKI
+       if (metrics.trust > 0.8 && metrics.pain > 0.3) return 'maki';
+
+       if (metrics.pain >= 0.3) return 'kain';
   if (metrics.drift >= 0.2) return 'iskriv';
   if (metrics.chaos >= 0.4) return 'huyndun';
   if (metrics.silence_mass > 0.5) return 'anhantra';
   if (metrics.clarity < 0.6) return 'sam';
-  if (metrics.trust > 0.8 && metrics.pain > 0.3) return 'maki';
+  // (duplicate MAKI check removed – приоритет уже проверяется выше)
   if (metrics.pain < 0.3 && metrics.chaos < 0.4) return 'pino';
 
   return maxScore(scores);

@@ -215,6 +215,7 @@ describe('ews', () => {
       PINO: 0.5,
       SAM: 0.5,
       ANHANTRA: 0.5,
+      HUYNDUN: 0.3,
       HUNDUN: 0.3,
       ISKRIV: 0.5,
       MAKI: 0.3,
@@ -260,6 +261,7 @@ describe('ews', () => {
       expect(adjusted.SAM).toBeGreaterThan(0);
       expect(adjusted.MAKI).toBeGreaterThan(0);
       expect(adjusted.ISKRA).toBe(0);
+      expect(adjusted.HUYNDUN).toBe(0);
       expect(adjusted.HUNDUN).toBe(0);
     });
 

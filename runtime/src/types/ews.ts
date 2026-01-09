@@ -374,7 +374,8 @@ export function adjustVoiceWeightsForAlert(
       adjusted.SAM = 1.5;
       adjusted.MAKI = 1.3;
       adjusted.PINO = 0;
-      adjusted.HUNDUN = 0.5;
+      adjusted.HUYNDUN = 0.5;
+      adjusted.HUNDUN = 0.5; // deprecated alias
       break;
 
     case 'lockdown':

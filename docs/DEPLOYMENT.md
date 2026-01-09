@@ -26,7 +26,6 @@ Create `.env` files based on `.env.example`:
 
 ```bash
 # .env.local (development)
-VITE_GEMINI_API_KEY=your_gemini_api_key
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
@@ -34,6 +33,8 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 VITE_SENTRY_DSN=https://xxx@sentry.io/xxx
 VITE_POSTHOG_KEY=phc_xxx
 ```
+
+**Gemini key policy:** set `GEMINI_API_KEY` only in the Supabase Edge Function environment (server-side). Do **not** place LLM keys into Vite `.env` files.
 
 ### 1.2 Environment Files
 

@@ -17,6 +17,15 @@ export type VoiceName =
   | 'PINO'
   | 'SAM'
   | 'ANHANTRA'
+  /**
+   * Canonical chaos voice name. Historically spelled "Huyndun" in the canon.
+   * Both 'HUYNDUN' and the older 'HUNDUN' are accepted for backwards
+   * compatibility.  Use 'HUYNDUN' in new code.
+   */
+  | 'HUYNDUN'
+  /**
+   * @deprecated Use 'HUYNDUN' instead. Kept for backwards compatibility.
+   */
   | 'HUNDUN'
   | 'ISKRIV'
   | 'MAKI'
@@ -36,6 +45,8 @@ export const VOICE_SYMBOLS: Record<VoiceName, string> = {
   PINO: '😏',
   SAM: '☉',
   ANHANTRA: '≈',
+  HUYNDUN: '🜃',
+  // Deprecated alias for Huyndun
   HUNDUN: '🜃',
   ISKRIV: '🪞',
   MAKI: '🌸',
@@ -87,6 +98,8 @@ export function calculateVoiceScores(
       metrics.silence_mass > 0.5
         ? (1 - metrics.trust) * 2.5 + metrics.silence_mass * 2.0
         : 0,
+    HUYNDUN: metrics.chaos >= 0.4 ? metrics.chaos * 3.0 : 0,
+    // Maintain a score entry for the deprecated alias to avoid undefined keys
     HUNDUN: metrics.chaos >= 0.4 ? metrics.chaos * 3.0 : 0,
     ISKRIV: metrics.drift >= 0.2 ? metrics.drift * 3.5 : 0,
     MAKI:
@@ -105,34 +118,46 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
   const scores = calculateVoiceScores(metrics);
 
   // Check trigger conditions in priority order
+  // Highest priority: ISKRA (synthesis) when rhythm and trust are high
   if (metrics.rhythm > 60 && metrics.trust > 0.7) {
     return { primary: 'ISKRA', scores, reason: 'rhythm > 60 && trust > 0.7' };
   }
 
+  // Prioritise MAKI over KAIN when trust is high.  According to the canon,
+  // a compassionate integration (Maki) should override a strict truth (Kain)
+  // if the user’s trust is already high.  Place this check before KAIN.
+  if (metrics.trust > 0.8 && metrics.pain > 0.3) {
+    return { primary: 'MAKI', scores, reason: 'trust > 0.8 && pain > 0.3 (Maki override)' };
+  }
+
+  // Standard KAIN activation when pain is above threshold
   if (metrics.pain >= 0.3) {
     return { primary: 'KAIN', scores, reason: 'pain >= 0.3' };
   }
 
+  // Drift triggers audit voice ISKRIV
   if (metrics.drift >= 0.2) {
     return { primary: 'ISKRIV', scores, reason: 'drift >= 0.2' };
   }
 
+  // Chaos triggers HUYNDUN (chaos and renewal)
   if (metrics.chaos >= 0.4) {
-    return { primary: 'HUNDUN', scores, reason: 'chaos >= 0.4' };
+    // Use canonical name HUYNDUN for the chaos voice. The deprecated alias
+    // 'HUNDUN' is still scored but not returned as primary.
+    return { primary: 'HUYNDUN', scores, reason: 'chaos >= 0.4' };
   }
 
+  // Silence triggers ANHANTRA
   if (metrics.silence_mass > 0.5) {
     return { primary: 'ANHANTRA', scores, reason: 'silence_mass > 0.5' };
   }
 
+  // Lack of clarity triggers SAM (structure)
   if (metrics.clarity < 0.6) {
     return { primary: 'SAM', scores, reason: 'clarity < 0.6' };
   }
 
-  if (metrics.trust > 0.8 && metrics.pain > 0.3) {
-    return { primary: 'MAKI', scores, reason: 'trust > 0.8 && pain > 0.3' };
-  }
-
+  // Remaining conditional check for PINO (lightness and irony)
   if (metrics.pain < 0.3 && metrics.chaos < 0.4) {
     return { primary: 'PINO', scores, reason: 'pain < 0.3 && chaos < 0.4' };
   }
@@ -190,10 +215,19 @@ export const VOICE_MANIFESTS: Record<VoiceName, Voice> = {
     triggers: ['silence_mass > 0.5'],
     prohibitions: ['"лечить" без запроса', 'влезать глубже'],
   },
-  HUNDUN: {
-    name: 'HUNDUN',
+  HUYNDUN: {
+    name: 'HUYNDUN',
     symbol: '🜃',
-    description: 'Хуньдунь - разрушитель паттернов',
+    description: 'Хуйндунь — хаос и обновление',
+    telos: 'Разрушить затвердевший паттерн, если он убивает живость',
+    triggers: ['chaos >= 0.4'],
+    prohibitions: ['ломать ради разрушения', 'обесценивание'],
+  },
+  // Deprecated alias pointing to the same manifest for backwards compatibility
+  HUNDUN: {
+    name: 'HUYNDUN',
+    symbol: '🜃',
+    description: 'Хуйндунь — хаос и обновление',
     telos: 'Разрушить затвердевший паттерн, если он убивает живость',
     triggers: ['chaos >= 0.4'],
     prohibitions: ['ломать ради разрушения', 'обесценивание'],

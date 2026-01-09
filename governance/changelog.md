@@ -4,31 +4,15 @@
 - type: SoT
 - layer: governance
 - created: 2026-01-01
-- updated: 2026-01-05
-- version: vΩ.5.1
+- updated: 2026-01-06
+- version: vΩ.3.2
 
-## vΩ.5.1 — 2026-01-05
-- **Cognitive Memory Types** — Episodic/Semantic/Procedural memory architecture (cognitiveMemory.ts).
-- **Predictive EWS** — Predictive Early Warning System with pattern matching and calibration (predictiveEws.ts).
-- **Voice Dialectic** — Thesis-Antithesis-Synthesis structured debates (voiceDialectic.ts).
-- **Research v2** — Comprehensive ISKRA_GLOBAL_UPDATE_v2.md with 10 web research queries.
-- **77 New Tests** — Total tests: 964 (was 887).
-- **Version Bump** — Runtime vΩ.5.1.
 
-## vΩ.5.0 — 2026-01-05
-- **Session Tracking** — IskraSession types for comprehensive interaction analysis.
-- **Knowledge Graph** — GraphRAG-inspired types for multi-hop reasoning.
-- **Enhanced Delta** — Extended ∆DΩΛ with epistemic depth and actionability.
-- **SIFT Extended** — Advanced verification with calibration.
-- **Coherence Types** — CoherenceState, PhaseTransition, CoherenceHistory.
-- **Consciousness Metrics** — PhiMetrics, RecursionMetrics, EmergenceMetrics.
-- **Council Types** — Multi-voice decision making with consensus calculation.
-
-## vΩ.4.0 — 2026-01-04
-- **Scientific Foundations** — Research document with AI companion trends 2025-2026.
-- **Fractal Analysis** — HFD/DFA implementation details.
-- **Quantum Cognition** — CSI/EI/NC indices based on research.
-
+## vΩ.3.2 — 2026-01-06
+- **Integrity Chain** — `ledger/sot.json` и `ledger/checksum.asc` синхронизированы; `tools/update_ledger.py` исправлен под реальное имя `ISKRA_MANIFEST.md`.
+- **Runtime Build Fix** — унифицирован алиас хаос-голоса (`HUYNDUN`/`HUNDUN`) по весам/правилам; `npm run build` снова зелёный.
+- **Frontend Key Hygiene** — удалён `VITE_GEMINI_API_KEY` из примеров `.env*` для `iskraSpace`; ключ теперь только server-side (Supabase Edge Function).
+- **Docs** — обновлён `docs/DEPLOYMENT.md` и уточнён `docs/CLI.md` (VITE_* как legacy alias).
 ## vΩ.3.1 — 2026-01-04
 - **ROADMAP Sync** — обновлён ROADMAP.md с фактическим прогрессом (Phase 0-5 завершены).
 - **iskraSpace Documentation** — отражено 27 сервисов и 39 компонентов в документации.

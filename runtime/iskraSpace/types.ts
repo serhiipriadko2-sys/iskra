@@ -93,7 +93,7 @@ export {
 } from '@iskra/runtime';
 
 // Import types for use in local interfaces
-import type { IskraMetrics, VoiceName, VoicePreferences, DeltaSignature } from '@iskra/runtime';
+import type { IskraMetrics, VoiceName, VoicePreferences, DeltaSignature, Voice as CanonVoice } from '@iskra/runtime';
 
 // =============================================================================
 // APP-SPECIFIC TYPES (iskraSpace only)
@@ -163,18 +163,20 @@ export interface DuoCanvasNote {
 
 // --- Voice Extension (App-specific) ---
 /**
- * Extended Voice interface for iskraSpace with activation function
+ * Extended Voice type for iskraSpace with activation function.
+ *
+ * We extend the canonical Voice type from @iskra/runtime by adding a required
+ * activation function. This avoids redefining the canonical fields and keeps
+ * the canonical Voice schema as the single source of truth. The activation
+ * function is used by the frontend to calculate resonance scores for each voice.
  */
-export interface Voice {
-  name: VoiceName;
-  symbol: string;
-  description: string;
+export type Voice = CanonVoice & {
   activation: (
     metrics: IskraMetrics,
     prefs?: VoicePreferences,
     currentVoiceName?: VoiceName
-  ) => number; // Returns resonance score
-}
+  ) => number;
+};
 
 // --- Message Types ---
 export interface Message {

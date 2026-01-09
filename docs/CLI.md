@@ -154,7 +154,7 @@ iskra sift "Quantum computers can break RSA" --detailed
 export GEMINI_API_KEY=your_api_key_here
 
 # Optional
-export VITE_GEMINI_API_KEY=your_api_key_here  # Alternative name
+export VITE_GEMINI_API_KEY=your_api_key_here  # Legacy alias (avoid using VITE_* in frontend env)
 ```
 
 ---

@@ -144,7 +144,7 @@ export interface VoicePosition {
  */
 export type ConflictNature =
   | 'value' // Конфликт ценностей (KAIN vs PINO)
-  | 'approach' // Конфликт подхода (SAM vs HUNDUN)
+  | 'approach' // Конфликт подхода (SAM vs HUYNDUN)
   | 'priority' // Конфликт приоритетов (KAIN vs ANHANTRA)
   | 'timing' // Конфликт времени (SIBYL vs MAKI)
   | 'intensity'; // Конфликт интенсивности
@@ -270,7 +270,7 @@ export const DEFAULT_COUNCIL_HIERARCHY: CouncilHierarchy = {
   tier1: ['ISKRA'],
   tier2: ['KAIN', 'ANHANTRA', 'ISKRIV'],
   tier3: ['SAM', 'SIBYL'],
-  tier4: ['PINO', 'MAKI', 'HUNDUN'],
+  tier4: ['PINO', 'MAKI', 'HUYNDUN'],
 };
 
 // =============================================================================
@@ -377,6 +377,8 @@ export function getVoiceBaseWeight(voice: VoiceName): number {
     SIBYL: 0.75,
     MAKI: 0.7,
     PINO: 0.65,
+    HUYNDUN: 0.6,
+    // Deprecated alias
     HUNDUN: 0.6,
   };
   return weights[voice];
@@ -456,7 +458,8 @@ function calculateMetricRelevance(voice: VoiceName, metrics: IskraMetrics): numb
       return metrics.pain >= 0.3 ? 1.5 : 0.8;
     case 'ANHANTRA':
       return metrics.silence_mass > 0.5 || metrics.trust < 0.5 ? 1.4 : 0.9;
-    case 'HUNDUN':
+    case 'HUYNDUN':
+    case 'HUNDUN': // deprecated alias
       return metrics.chaos >= 0.4 ? 1.4 : 0.7;
     case 'ISKRIV':
       return metrics.drift >= 0.2 ? 1.5 : 0.9;
@@ -483,7 +486,7 @@ function calculateContextFit(voice: VoiceName, context: CouncilContext): number 
     strategic: ['ISKRA', 'SIBYL', 'SAM'],
     crisis: ['KAIN', 'ANHANTRA', 'SAM'],
     ethical: ['KAIN', 'ISKRIV', 'ISKRA'],
-    creative: ['HUNDUN', 'PINO', 'ISKRA'],
+    creative: ['HUYNDUN', 'PINO', 'ISKRA'],
     repair: ['ANHANTRA', 'MAKI', 'ISKRIV'],
     calibration: ['SAM', 'ISKRIV', 'MAKI'],
   };

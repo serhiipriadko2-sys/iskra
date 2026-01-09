@@ -132,7 +132,6 @@ export {
  * Based on Canon: system/sift_protocol.md
  */
 export type {
-  TraceLabel,
   SiftQuery,
   SourceInfo,
   ClaimAnalysis,
@@ -222,14 +221,12 @@ export {
 } from './types/ews.js';
 
 // =============================================================================
-// SIFT-E - Extended Verification Protocol (vΩ.4.0)
+// SIFT Extended - Epistemic & Temporal Verification (vΩ.4.0)
 // =============================================================================
 
 /**
- * SIFT-E (Extended) Protocol types for deep verification.
- * Adds epistemological depth, temporal validity, and metacognitive checks.
- *
- * Based on Canon: system/sift_extended.md
+ * Extended SIFT Protocol types for epistemic depth, temporal validity,
+ * cross-domain synthesis, bias detection and metacognitive checks.
  */
 export type {
   EpistemicLevel,
@@ -267,8 +264,6 @@ export {
 /**
  * MindWave Coherence types for tracking cognitive coherence.
  * Measures intentional, semantic, emotional, and rhythmic coherence.
- *
- * Based on Canon: system/mindwave_coherence.md
  */
 export type {
   CoherencePhase,
@@ -303,8 +298,6 @@ export {
 /**
  * Consciousness Simulation Metrics for tracking functional correlates.
  * NOTE: Does NOT claim actual consciousness - measures functional properties only.
- *
- * Based on Canon: metrics/consciousness.md
  */
 export type {
   PhiMetrics,
@@ -333,8 +326,6 @@ export {
 /**
  * Multi-Agent Council Protocol types for 9-voice coordination.
  * Defines conflict resolution, consensus building, and voice hierarchy.
- *
- * Based on Canon: system/council_protocol.md
  */
 export type {
   CouncilSessionType,
@@ -349,17 +340,13 @@ export type {
   ReviewConditions,
   CouncilDeltaSignature,
   CouncilResolution,
+  CouncilMetrics,
   VoiceInfluence,
   CouncilHierarchy,
   CouncilConfig,
-  CouncilMetrics,
 } from './types/council.js';
 
 export {
-  DEFAULT_COUNCIL_HIERARCHY,
-  FULL_COUNCIL_CONFIG,
-  MINI_COUNCIL_CONFIG,
-  EMERGENCY_COUNCIL_CONFIG,
   getVoiceBaseWeight,
   hasVetoPower,
   selectArbiter,
@@ -367,238 +354,6 @@ export {
   calculateConsensusLevel,
   createCouncilSession,
 } from './types/council.js';
-
-// =============================================================================
-// SESSION - Comprehensive Session Tracking (vΩ.5.0)
-// =============================================================================
-
-/**
- * Session tracking types for comprehensive user interaction analysis.
- * Enables long-term pattern detection and therapeutic progress tracking.
- *
- * Based on Research: docs/research/ISKRA_UPDATE_ANALYSIS_v1.md
- */
-export type {
-  SessionPhase,
-  SessionQuality,
-  VoiceActivity,
-  UserStateInference,
-  SessionMilestone,
-  SessionWarning,
-  IskraSession,
-  SessionSummary,
-  EngagementMetrics,
-  TherapeuticMetrics,
-  DetectedPattern,
-} from './types/session.js';
-
-export {
-  SESSION_RECOMMENDATION_THRESHOLDS,
-  createSession,
-  calculateSessionQuality,
-  determineSessionPhase,
-  calculateTrajectory,
-  createSessionSummary,
-} from './types/session.js';
-
-// =============================================================================
-// KNOWLEDGE GRAPH - GraphRAG Support (vΩ.5.0)
-// =============================================================================
-
-/**
- * Knowledge Graph types for GraphRAG-enhanced retrieval.
- * Supports multi-hop reasoning, semantic relations, and voice-contextual retrieval.
- *
- * Based on Research: docs/research/ISKRA_UPDATE_ANALYSIS_v1.md
- */
-export type {
-  EntityType,
-  SourcePriority,
-  KnowledgeEntity,
-  ConceptNode,
-  EventNode,
-  PatternNode,
-  RelationType,
-  SemanticRelation,
-  CausalLink,
-  TemporalLink,
-  TopicCluster,
-  VoiceAffinityCluster,
-  VectorIndex,
-  KeywordIndex,
-  TemporalIndex,
-  IskraKnowledgeGraph,
-  GraphStatistics,
-  GraphSearchResult,
-  ReasoningPath,
-  VoiceContextualResult,
-  GraphSiftResult,
-} from './types/knowledgeGraph.js';
-
-export {
-  createEmptyGraph,
-  createEntity,
-  createRelation,
-  calculateHopConfidenceDecay,
-  getSourcePriorityRank,
-  isHigherPriority,
-  calculateGraphDensity,
-  getEntityVoiceAffinity,
-} from './types/knowledgeGraph.js';
-
-// =============================================================================
-// ENHANCED DELTA - Extended ∆DΩΛ Protocol (vΩ.5.0)
-// =============================================================================
-
-/**
- * Enhanced Delta Protocol with epistemic depth, temporal validity,
- * actionability metrics, and meta-cognitive reflection.
- *
- * Based on Research: docs/research/ISKRA_UPDATE_ANALYSIS_v1.md
- */
-export type {
-  EpistemicJustificationType,
-  EpistemicGrounding,
-  TemporalValidityMeta,
-  RevalidationTrigger,
-  ActionTimeHorizon,
-  ActionDifficulty,
-  ActionType,
-  ActionabilityAssessment,
-  InvolvedDomain,
-  UncertaintyAcknowledgment,
-  AlternativeConsidered,
-  MetaCognitiveReflection,
-  EnhancedDeltaSignature,
-  EnhancedDeltaValidation,
-} from './types/enhancedDelta.js';
-
-export {
-  EPISTEMIC_KEYWORDS,
-  TEMPORAL_KEYWORDS,
-  createEnhancedDelta,
-  validateEnhancedDelta,
-  calculateActionabilityScore,
-  inferEpistemicLevel,
-  inferTemporalType,
-  formatEnhancedDelta,
-} from './types/enhancedDelta.js';
-
-// =============================================================================
-// COGNITIVE MEMORY - Memory Architecture (vΩ.5.1)
-// =============================================================================
-
-/**
- * Cognitive Memory types for episodic, semantic, and procedural memory.
- * Inspired by cognitive science and AI companion research 2025-2026.
- *
- * Based on Research: docs/research/ISKRA_GLOBAL_UPDATE_v2.md
- */
-export type {
-  EmotionalStateContext,
-  EpisodicEvent,
-  TemporalIndex as EpisodicTemporalIndex,
-  EpisodicMemoryStore,
-  SourcePriority as CognitiveSourcePriority,
-  SemanticConcept,
-  SemanticRelation as CognitiveSemanticRelation,
-  VectorIndex as CognitiveVectorIndex,
-  SemanticMemoryStore,
-  ActionStep,
-  TriggerCondition,
-  SkillAdaptation,
-  ProceduralSkill,
-  SkillFeedback,
-  SkillExecutionResult,
-  ProceduralMemoryStore,
-  AssociativeLink,
-  CognitiveMemoryState,
-} from './types/cognitiveMemory.js';
-
-export {
-  createDefaultEmotionalState,
-  createEpisodicEvent,
-  createSemanticConcept,
-  createProceduralSkill,
-  createEmptyCognitiveMemoryState,
-  calculateSignificance,
-} from './types/cognitiveMemory.js';
-
-// =============================================================================
-// PREDICTIVE EWS - Predictive Early Warning System (vΩ.5.1)
-// =============================================================================
-
-/**
- * Predictive EWS types for proactive intervention.
- * Extends EWS with prediction, pattern matching, and calibration.
- *
- * Based on Research: docs/research/ISKRA_GLOBAL_UPDATE_v2.md
- */
-export type {
-  PredictionFactor,
-  PreventiveAction,
-  PredictionResult,
-  PredictionBundle,
-  PatternMatch,
-  PatternFeature,
-  OutcomeDistribution,
-  CalibrationData,
-  SensitivityProfile,
-  PredictiveEWSState,
-  MetricTrend,
-  CompositeTrendAnalysis,
-  InterventionRecommendation,
-  InterventionHistoryEntry,
-} from './types/predictiveEws.js';
-
-export {
-  createDefaultCalibration,
-  createDefaultSensitivity,
-  createEmptyPrediction,
-  createPreventiveAction,
-  calculatePredictionConfidence,
-  calculateActionUrgency,
-  shouldIntervene,
-  selectBestAction,
-} from './types/predictiveEws.js';
-
-// =============================================================================
-// VOICE DIALECTIC - Structured Voice Debates (vΩ.5.1)
-// =============================================================================
-
-/**
- * Voice Dialectic types for Thesis-Antithesis-Synthesis debates.
- * Enables complex decision making through structured multi-voice discourse.
- *
- * Based on Research: docs/research/ISKRA_GLOBAL_UPDATE_v2.md
- */
-export type {
-  DialecticStatus,
-  VoicePosition as DialecticVoicePosition,
-  DialecticTurn,
-  DialecticSynthesis,
-  VoiceAlliance,
-  DialecticConfig,
-  DialecticSession,
-  DialecticRules,
-  VoiceSelectionCriteria,
-  DialecticQuality,
-  DialecticLearning,
-} from './types/voiceDialectic.js';
-
-export {
-  DEFAULT_SELECTION_CRITERIA,
-  createDefaultDialecticConfig,
-  createDialecticSession,
-  createVoicePosition as createDialecticVoicePosition,
-  createDialecticTurn,
-  createDialecticSynthesis,
-  calculateConsensusLevel as calculateDialecticConsensus,
-  selectArbiter as selectDialecticArbiter,
-  shouldEscalate,
-  canResolve,
-  assessDialecticQuality,
-} from './types/voiceDialectic.js';
 
 // =============================================================================
 // CONSTANTS
@@ -612,7 +367,7 @@ export {
  *
  * @see governance/changelog.md
  */
-export const VERSION = 'vΩ.5.1';
+export const VERSION = 'vΩ.3.1';
 
 /**
  * ISKRA Nul-Mantra (Core Philosophy)
@@ -623,18 +378,3 @@ export const VERSION = 'vΩ.5.1';
  */
 export const NUL_MANTRA =
   'Существовать — значит сохранять различие при передаче.';
-
-// =============================================================================
-// VERSION HISTORY
-// =============================================================================
-
-/**
- * Version history for @iskra/runtime
- *
- * vΩ.5.1 - Cognitive Memory, Predictive EWS, Voice Dialectic
- * vΩ.5.0 - Session tracking, Knowledge Graph, Enhanced Delta
- * vΩ.4.0 - SIFT-E, Coherence, Consciousness, Council
- * vΩ.3.0 - Fractal monitoring, EWS
- * vΩ.2.0 - Voices, Playbooks
- * vΩ.1.0 - Core metrics, basic types
- */

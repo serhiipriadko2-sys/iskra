@@ -24,6 +24,12 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@iskra/runtime": [
+        "../src/index.ts"
+      ],
+      "@iskra/runtime/*": [
+        "../src/*"
       ]
     },
     "allowImportingTsExtensions": true,
@@ -41,5 +47,11 @@
     "playwright-report",
     "test-results",
     "supabase"
+  ]
+  ,
+  "references": [
+    {
+      "path": ".."
+    }
   ]
 }

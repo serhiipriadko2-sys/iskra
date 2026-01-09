@@ -29,7 +29,7 @@
 
 ### 1.2 Nine Voices (Council)
 - **Location**: `core/voices.md`, `runtime/src/types/voices.ts`
-- **Voices**: ISKRA, KAIN, PINO, SAM, ANHANTRA, HUNDUN, ISKRIV, MAKI, SIBYL
+- **Voices**: ISKRA, KAIN, PINO, SAM, ANHANTRA, HUYNDUN (deprecated alias: HUNDUN), ISKRIV, MAKI, SIBYL
 - **Selection Logic**: `runtime/iskraSpace/services/voiceEngine.ts`
 
 ### 1.3 Five Playbooks

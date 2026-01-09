@@ -7,7 +7,6 @@ import { DailyAdvice, Task, RitualTag, Habit, IskraMetrics, IskraPhase, UserDail
 import { storageService } from '../services/storageService';
 import Loader from './Loader';
 import BreathingExercise from './BreathingExercise';
-import BreathingIndicator from './BreathingIndicator';
 import {
     LightbulbIcon, ClockIcon, ChevronRightIcon,
     FlameIcon, DropletsIcon, SunIcon, ScaleIcon, TriangleIcon
@@ -84,38 +83,12 @@ const MetricRing: React.FC<{
 
     return (
         <div className={`relative flex items-center justify-center ${className}`} style={{ width: size, height: size }}>
-            {/* Enhanced Organic Breathing Keyframes - Вдох/Выдох */}
+            {/* Organic CSS Keyframes */}
             <style>{`
                 @keyframes iskra-breath {
-                    /* Вдох - Expansion */
-                    0% { 
-                        transform: scale(1); 
-                        opacity: 0.5; 
-                        filter: brightness(1) blur(0px);
-                    }
-                    /* Пик вдоха - Peak inhale */
-                    45% { 
-                        transform: scale(1.08); 
-                        opacity: 0.95; 
-                        filter: brightness(1.25) blur(1px);
-                    }
-                    /* Задержка - Hold */
-                    50% { 
-                        transform: scale(1.08); 
-                        opacity: 1; 
-                        filter: brightness(1.3) blur(1px);
-                    }
-                    /* Выдох - Release */
-                    95% { 
-                        transform: scale(0.98); 
-                        opacity: 0.45; 
-                        filter: brightness(0.95) blur(0px);
-                    }
-                    100% { 
-                        transform: scale(1); 
-                        opacity: 0.5; 
-                        filter: brightness(1) blur(0px);
-                    }
+                    0% { transform: scale(1); opacity: 0.6; }
+                    50% { transform: scale(1.05); opacity: 1; filter: brightness(1.2); }
+                    100% { transform: scale(1); opacity: 0.6; }
                 }
             `}</style>
 
@@ -193,7 +166,6 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
     const [habits, setHabits] = useState<Habit[]>([]);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [showBreathing, setShowBreathing] = useState(false);
-    const [showBreathingIndicator, setShowBreathingIndicator] = useState(true);
 
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
@@ -233,15 +205,13 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
     const ringSize = isMobile ? 220 : 280;
 
     // Calculate breathing duration based on metrics (chaos/pain) if available
-    const getPulseDurationSeconds = (): number => {
-        if (!metrics) return 4;
-        if (metrics.chaos > 0.6) return 1.5; // Erratic / Hyper
-        if (metrics.pain > 0.6) return 2; // Stressed
-        if (phase === 'SILENCE') return 8; // Deep meditation
-        return 5; // Organic resting breath
+    const getPulseDuration = () => {
+        if (!metrics) return '4s';
+        if (metrics.chaos > 0.6) return '1.5s'; // Erratic / Hyper
+        if (metrics.pain > 0.6) return '2s'; // Stressed
+        if (phase === 'SILENCE') return '8s'; // Deep meditation
+        return '5s'; // Organic resting breath
     };
-
-    const getPulseDuration = () => `${getPulseDurationSeconds()}s`;
 
     return (
         <div className="h-full w-full overflow-y-auto p-4 sm:p-6">
@@ -299,23 +269,6 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
                                 </div>
                             </div>
                         )}
-                    </div>
-
-                    {/* Breathing Indicator - синхронизирован с анимацией кольца */}
-                    <div className="relative">
-                        <BreathingIndicator 
-                            duration={getPulseDurationSeconds()} 
-                            visible={showBreathingIndicator}
-                            className="mt-4 lg:mt-6"
-                        />
-                        {/* Toggle Button - subtle control */}
-                        <button
-                            onClick={() => setShowBreathingIndicator(!showBreathingIndicator)}
-                            className="absolute -right-8 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface border border-white/5 hover:border-white/10 flex items-center justify-center text-xs text-text-muted hover:text-text transition-all group"
-                            title={showBreathingIndicator ? 'Скрыть индикатор дыхания' : 'Показать индикатор дыхания'}
-                        >
-                            <span className="text-[10px]">{showBreathingIndicator ? '≈' : '○'}</span>
-                        </button>
                     </div>
 
                     {/* Mobile Satellites Row (4 Real User Metrics) */}
