@@ -368,10 +368,14 @@ describe('ValidatorsService', () => {
 
   describe('Utility Methods', () => {
     it('isWithin24Hours() should detect dates within 24h', () => {
+      // Create a date that is definitely tomorrow (next calendar day)
+      // The function checks if the START of that day (00:00) is within 24 hours
       const tomorrow = new Date();
-      tomorrow.setHours(tomorrow.getHours() + 12);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0); // Midnight of next day
       const tomorrowISO = validatorsService.toISODate(tomorrow);
 
+      // The start of tomorrow is always <= 24 hours away (between 0-24h depending on current time)
       const isWithin = validatorsService.isWithin24Hours(tomorrowISO);
       expect(isWithin).toBe(true);
     });
