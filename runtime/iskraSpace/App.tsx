@@ -97,7 +97,7 @@ export default function App() {
     }, [phase]);
 
     const updateMetrics = useCallback((updates: MetricsUpdater) => {
-        setMetrics(prev => {
+        setMetrics((prev: IskraMetrics) => {
             const patch = typeof updates === 'function' ? updates(prev) : updates;
             const merged = { ...prev, ...patch };
 
@@ -140,7 +140,7 @@ export default function App() {
     useEffect(() => {
         // Simplified Rhythm Simulation - gently nudges chaos/drift to keep rhythm responsive
         const interval = setInterval(() => {
-            updateMetrics(prev => ({
+            updateMetrics((prev: IskraMetrics) => ({
                 chaos: clamp(prev.chaos + (Math.random() - 0.5) * 0.02, 0, 1),
                 drift: clamp(prev.drift + (Math.random() - 0.5) * 0.02, 0, 1),
             }));
@@ -160,13 +160,13 @@ export default function App() {
     };
 
     const handleShatter = () => {
-        updateMetrics(prev => executeShatter(prev));
+        updateMetrics((prev: IskraMetrics) => executeShatter(prev));
         setPhase(getPhaseAfterRitual('SHATTER'));
         setRitualAlert(null);
     };
 
     const handlePhoenix = () => {
-        updateMetrics(prev => executePhoenix(prev));
+        updateMetrics((prev: IskraMetrics) => executePhoenix(prev));
         setPhase(getPhaseAfterRitual('PHOENIX'));
         setRitualAlert(null);
     };

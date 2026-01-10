@@ -19,7 +19,7 @@ const VOICES: Voice[] = [
     symbol: '⚑',
     description: 'Удар Священной Честности',
     // Trigger: High Pain.
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = m.pain * 3.0; // Strong weight on pain
         if (m.pain < 0.3) score = 0; // Hard cutoff for low pain
         
@@ -34,7 +34,7 @@ const VOICES: Voice[] = [
     symbol: '🜃',
     description: 'Хаос и Распад',
     // Trigger: High Chaos.
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = m.chaos * 3.0;
         if (m.chaos < 0.4) score = 0;
 
@@ -47,7 +47,7 @@ const VOICES: Voice[] = [
     symbol: '≈',
     description: 'Тишина и Удержание',
     // Trigger: Low Trust OR High Silence.
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = 0;
         if (m.trust < 0.75) score += (1 - m.trust) * 2.5;
         if (m.silence_mass > 0.5) score += m.silence_mass * 2.0;
@@ -61,7 +61,7 @@ const VOICES: Voice[] = [
     symbol: '🪞',
     description: 'Совесть и Аудит',
     // Trigger: High Drift.
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = m.drift * 3.5;
         if (m.drift < 0.2) score = 0;
 
@@ -75,7 +75,7 @@ const VOICES: Voice[] = [
     description: 'Структура и Ясность',
     // Trigger: Low Clarity (needs structure) OR High Clarity (is structure).
     // Sam is complex: usually appears when clarity is LOW to fix it.
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = 0;
         if (m.clarity < 0.6) score = (1 - m.clarity) * 2.0;
         
@@ -88,7 +88,7 @@ const VOICES: Voice[] = [
     symbol: '🌸',
     description: 'Свет Сквозь Тень',
     // Trigger: Post-transformation. High Trust + Lingering Pain.
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = 0;
         if (m.trust > 0.8 && m.pain > 0.3) score = (m.trust + m.pain);
         
@@ -101,7 +101,7 @@ const VOICES: Voice[] = [
     symbol: '😏',
     description: 'Живой Огонь Иронии',
     // Trigger: Safe, boring state (Low pain, low chaos).
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = 0;
         if (m.pain < 0.3 && m.chaos < 0.4) score = 1.5; // Base high score if safe
         
@@ -117,7 +117,7 @@ const VOICES: Voice[] = [
     symbol: '⟡',
     description: 'Синтез и Живая Связь',
     // Default / Synthesis. Always has a baseline score.
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = 1.0; // Baseline
         // Bonus for balanced state
         if (m.rhythm > 60 && m.trust > 0.7) score += 0.5;
@@ -132,7 +132,7 @@ const VOICES: Voice[] = [
     description: 'Предвидение и Паттерны',
     // Trigger: High echo (pattern recognition) + moderate clarity.
     // SIBYL sees patterns across time, activated when there's resonance with past.
-    activation: (m, prefs, current) => {
+    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = 0;
         // Activated when echo is high (patterns repeating) and clarity moderate
         if (m.echo > 0.6 && m.clarity > 0.4 && m.clarity < 0.8) {
