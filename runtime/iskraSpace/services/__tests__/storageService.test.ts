@@ -95,9 +95,14 @@ describe('storageService', () => {
 
   describe('Import Data', () => {
     it('throws on invalid JSON', () => {
-      expect(() => {
-        storageService.importAllData('not valid json');
-      }).toThrow();
+        // Suppress console.error for this test as the service might log the error
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        expect(() => {
+            storageService.importAllData('not valid json');
+        }).toThrow();
+
+        consoleSpy.mockRestore();
     });
   });
 
