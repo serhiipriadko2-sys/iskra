@@ -1,6 +1,6 @@
 # ISKRA Deployment Guide
 
-> Version: vΩ.3.2 | Updated: 2026-01-09
+> Version: vΩ.3.3 | Updated: 2026-01-09
 
 ## Overview
 

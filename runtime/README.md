@@ -208,5 +208,5 @@ npm run test:coverage
 
 ---
 
-**Version:** vΩ.3.2
+**Version:** vΩ.3.3
 **Integrity:** Runtime-Production

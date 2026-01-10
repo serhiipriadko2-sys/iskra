@@ -1,4 +1,4 @@
-# ISKRA · Livebuild (vΩ.3.2)
+# ISKRA · Livebuild (vΩ.3.3)
 
 Этот репозиторий — **Source of Truth (SoT)** для Искры: канон, протоколы, метрики, безопасность и лабораторный workflow.
 

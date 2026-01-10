@@ -5,7 +5,7 @@
  *
  * @packageDocumentation
  * @module @iskra/runtime
- * @version vΩ.3.2
+ * @version vΩ.3.3
  *
  * @description
  * Core types and utilities for the ISKRA ecosystem.
@@ -367,7 +367,7 @@ export {
  *
  * @see governance/changelog.md
  */
-export const VERSION = 'vΩ.3.1';
+export const VERSION = 'vΩ.3.3';
 
 /**
  * ISKRA Nul-Mantra (Core Philosophy)

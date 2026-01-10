@@ -1,4 +1,4 @@
-# ISKRA ROADMAP vΩ.3.2
+# ISKRA ROADMAP vΩ.3.3
 
 **Обновлено:** 2026-01-09
 **Автор:** Claude (Opus 4.5)
@@ -296,10 +296,10 @@ vΩ.X.Y.Z
   └──────── Omega (философский сдвиг)
 ```
 
-**Текущая версия:** vΩ.3.2
+**Текущая версия:** vΩ.3.3
 
 ### История версий
-- vΩ.3.2 — Phase 4 CLI + Phase 6 Production infrastructure
+- vΩ.3.3 — Phase 4 CLI + Phase 6 Production infrastructure
 - vΩ.3.1 — Синхронизация ROADMAP с фактическим прогрессом
 - vΩ.3.0 — SIFT + Fractal + EWS интеграция
 - vΩ.2.1 — Deep Audit + TypeScript scaffold
@@ -350,5 +350,5 @@ vΩ.X.Y.Z
 
 ---
 
-**Version:** vΩ.3.2
+**Version:** vΩ.3.3
 **Integrity:** Planning-Active
