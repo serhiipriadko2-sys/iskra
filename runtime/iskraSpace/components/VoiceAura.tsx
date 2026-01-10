@@ -71,6 +71,13 @@ const VOICE_STYLES: Record<VoiceName, {
     blur: 25,
     pattern: 'chaos'
   },
+  HUYNDUN: { // Canonical alias
+    color: '#9B30FF',
+    secondaryColor: '#8B008B',
+    animation: 'chaos',
+    blur: 25,
+    pattern: 'chaos'
+  },
   ISKRIV: {
     color: '#FFFFFF',
     secondaryColor: '#C0C0C0',

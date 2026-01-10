@@ -60,9 +60,12 @@ export interface Voice {
   name: VoiceName;
   symbol: string;
   description: string;
-  telos: string;
-  triggers: string[];
-  prohibitions: string[];
+  /** Voice purpose (optional for simplified usage) */
+  telos?: string;
+  /** Trigger conditions (optional for simplified usage) */
+  triggers?: string[];
+  /** Prohibitions (optional for simplified usage) */
+  prohibitions?: string[];
   /** Activation function calculates resonance score */
   activation?: (metrics: IskraMetrics, prefs?: VoicePreferences, currentVoice?: VoiceName) => number;
 }
