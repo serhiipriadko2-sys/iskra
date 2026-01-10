@@ -154,7 +154,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
                 key={item.id}
                 id={domId}
                 onClick={() => handleItemClick(item.id as AppView)}
-                className={`flex flex-col items-center justify-center w-full h-full relative transition-all duration-300 active:scale-95 group ${
+                className={`flex flex-col items-center justify-center flex-1 h-full relative transition-all duration-300 active:scale-95 group ${
                     isActive ? 'text-primary' : 'text-text-muted/80'
                 }`}
             >
@@ -207,7 +207,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
                     soundService.playClick();
                     if (onOpenMenu) onOpenMenu();
                 }}
-                className={`flex flex-col items-center justify-center w-full h-full relative transition-all duration-300 active:scale-95 text-text-muted/80 group`}
+                className={`flex flex-col items-center justify-center flex-1 h-full relative transition-all duration-300 active:scale-95 text-text-muted/80 group`}
             >
                  <div className="p-2 rounded-full border border-white/10 group-hover:bg-white/5 transition-colors bg-surface2">
                     <MenuIcon className="h-5 w-5" />
