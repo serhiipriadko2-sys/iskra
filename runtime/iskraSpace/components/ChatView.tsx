@@ -38,6 +38,7 @@ const VOICE_COLORS: Record<VoiceName, string> = {
     'PINO': 'border-pink-400/30 shadow-glow-electric',
     'ANHANTRA': 'border-blue-300/20 shadow-glow-electric',
     'HUNDUN': 'border-purple-500/40 shadow-glow-electric',
+    'HUYNDUN': 'border-purple-500/40 shadow-glow-electric', // Canonical alias
     'ISKRIV': 'border-white/20 shadow-soft',
     'MAKI': 'border-green-300/30 shadow-glow-electric',
     'SIBYL': 'border-violet-400/30 shadow-glow-electric',

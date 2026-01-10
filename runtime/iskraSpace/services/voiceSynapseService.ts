@@ -131,6 +131,7 @@ const VOICE_SYMBOLS: Record<VoiceName, string> = {
   SAM: '☉',
   ANHANTRA: '≈',
   HUNDUN: '🜃',
+  HUYNDUN: '🜃', // Canonical alias
   ISKRIV: '🪞',
   MAKI: '🌸',
   SIBYL: '🔮',
