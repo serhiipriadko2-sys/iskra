@@ -6,7 +6,7 @@
 
 > AI companion app built on the Iskra Canon v7 — principles of honesty, usefulness, and authentic relationship.
 
-**Version:** 4.0.0 | **Canon:** revL | **Status:** Production-Ready
+**Version:** 4.0.1 | **Canon:** revL | **Status:** Production-Ready
 
 ---
 

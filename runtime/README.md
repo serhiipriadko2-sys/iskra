@@ -164,7 +164,7 @@ const alertLevel = determineAlertLevel(metrics, fractalIndicators);
 
 ## Тесты
 
-**Всего тестов:** 796
+**Всего тестов:** 820
 
 | Категория | Тестов |
 |-----------|--------|
@@ -208,5 +208,5 @@ npm run test:coverage
 
 ---
 
-**Version:** vΩ.3.3
+**Version:** vΩ.3.4
 **Integrity:** Runtime-Production

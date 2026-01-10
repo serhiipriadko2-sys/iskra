@@ -193,7 +193,7 @@ export default function App() {
 
     return (
         <ErrorBoundary>
-            <div className="flex h-screen w-full bg-bg text-text overflow-hidden font-sans selection:bg-primary/30 relative">
+            <div className="flex h-[100dvh] w-full bg-bg text-text overflow-hidden font-sans selection:bg-primary/30 relative">
                 
                 {/* Global Ambience Layer - The "Soul" of Iskra */}
                 <Ambience phase={phase} metrics={metrics} />
@@ -206,7 +206,7 @@ export default function App() {
                 )}
 
                 <main className="flex-grow flex flex-col h-full relative overflow-hidden z-10">
-                    <div className="flex-grow overflow-hidden relative z-0">
+                    <div className={`flex-grow overflow-hidden relative z-0 ${view !== 'FOCUS' ? 'lg:mb-0 mb-[80px]' : ''}`}>
                         {view === 'PULSE' && <DayPulse metrics={metrics} phase={phase} onStartFocus={() => setView('FOCUS')} />}
                         {view === 'PLANNER' && <Planner />}
                         {view === 'JOURNAL' && <Journal />}
