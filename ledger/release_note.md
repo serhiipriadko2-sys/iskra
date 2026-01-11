@@ -102,3 +102,36 @@
 ### Риски
 - Наличие двух имён голоса хаоса может порождать дубли в интеграциях.
   Λ: нормализовывать ввод (`HUNDUN` → `HUYNDUN`) на границе API/интерфейсов.
+
+---
+
+## vΩ.3.3 (PWA & Council Enhancement) — 2026-01-10
+### Что сделано
+- Council параллелизация: запросы ко всем 9 голосам теперь выполняются через `Promise.allSettled`, сокращая время ~9x → ~1x.
+- Council UI: добавлены VOICE_TELOS с описанием роли каждого голоса, улучшенные карточки (увеличенный аватар, тег "Синтез" для Искры).
+- PWA: обновлён `manifest.json` (ярлыки, русские названия), создан `service-worker.js` (cache-first стратегия).
+- Исправлены TypeScript-ошибки в тестах (`ragServiceExtended.test.ts`, `geminiService.test.ts`).
+
+### Проверки
+- `npm run typecheck` → OK.
+- `npm run test` → OK.
+
+### Ω: 0.88
+### Λ: Добавить notification API для PWA push-уведомлений.
+
+---
+
+## vΩ.3.4 (UX Improvements) — 2026-01-11
+### Что сделано
+- ∆DΩΛ Tooltips: создан `Tooltip.tsx` с предустановленными тултипами для символов протокола.
+- DeltaReport обновлён для использования Tooltip-компонентов.
+- Response Mode: добавлен переключатель режима ответа (Simple/Deep/Debate) в настройках.
+- MoodTracker: создан виджет быстрого чек-ина настроения с историей.
+- storageService: расширен для хранения ResponseMode и экспорта/импорта.
+- types.ts: добавлен тип `ResponseMode`.
+
+### Проверки
+- `npm run typecheck` → OK.
+
+### Ω: 0.85
+### Λ: Интегрировать ResponseMode в логику ответов geminiService.
