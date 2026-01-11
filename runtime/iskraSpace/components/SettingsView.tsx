@@ -2,8 +2,8 @@
 import React, { useState, useRef } from 'react';
 import { storageService } from '../services/storageService';
 import { memoryService } from '../services/memoryService';
-import { PowerIcon, DatabaseIcon, FilePlus2Icon, TrashIcon, LayersIcon, FileSearchIcon, TriangleIcon, SparkleIcon, ScaleIcon } from './icons';
-import { IntegrityReport } from '../types';
+import { PowerIcon, DatabaseIcon, FilePlus2Icon, TrashIcon, LayersIcon, FileSearchIcon, TriangleIcon, SparkleIcon, ScaleIcon, MessageSquareIcon } from './icons';
+import { IntegrityReport, ResponseMode } from '../types';
 
 const SettingsView: React.FC = () => {
     const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -15,6 +15,19 @@ const SettingsView: React.FC = () => {
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateStatus, setUpdateStatus] = useState<string | null>(null);
+
+    const [responseMode, setResponseMode] = useState<ResponseMode>(storageService.getResponseMode());
+
+    const handleResponseModeChange = (mode: ResponseMode) => {
+        setResponseMode(mode);
+        storageService.saveResponseMode(mode);
+    };
+
+    const RESPONSE_MODES: { mode: ResponseMode; label: string; description: string; icon: string }[] = [
+        { mode: 'simple', label: 'Просто', description: 'Краткие, быстрые ответы', icon: '⚡' },
+        { mode: 'deep', label: 'Глубоко', description: 'Развёрнутый анализ с ∆DΩΛ', icon: '🔬' },
+        { mode: 'debate', label: 'Совет', description: 'Многоголосие Совета Граней', icon: '👥' },
+    ];
 
     const handleExport = () => {
         const json = storageService.exportAllData();
@@ -155,6 +168,40 @@ const SettingsView: React.FC = () => {
                             {showResetConfirm && (
                                 <p className="text-xs text-danger mt-2 text-right">Нажмите еще раз для подтверждения. Приложение перезагрузится.</p>
                             )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Response Mode Section */}
+                <div className="card">
+                    <div className="flex items-center gap-3 mb-6 border-b border-border pb-4">
+                        <MessageSquareIcon className="w-6 h-6 text-success" />
+                        <h3 className="font-serif text-xl text-text">Режим Ответа</h3>
+                    </div>
+                    <div className="space-y-3">
+                        <p className="text-sm text-text-muted mb-4">
+                            Выберите глубину ответов Искры. Влияет на стиль и детальность взаимодействия.
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            {RESPONSE_MODES.map(({ mode, label, description, icon }) => (
+                                <button
+                                    key={mode}
+                                    onClick={() => handleResponseModeChange(mode)}
+                                    className={`p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+                                        responseMode === mode
+                                            ? 'border-primary bg-primary/10'
+                                            : 'border-white/10 bg-surface2 hover:border-white/20'
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-xl">{icon}</span>
+                                        <span className={`font-medium ${responseMode === mode ? 'text-primary' : 'text-text'}`}>
+                                            {label}
+                                        </span>
+                                    </div>
+                                    <p className="text-xs text-text-muted">{description}</p>
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>

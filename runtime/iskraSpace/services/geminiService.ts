@@ -1,9 +1,10 @@
 import { Type, Content } from "@google/genai";
-import { DailyAdvice, PlanTop3, JournalPrompt, TranscriptionMessage, ConversationAnalysis, Message, Voice, DeepResearchReport, MemoryNode, Evidence, Task, IskraMetrics } from '../types';
+import { DailyAdvice, PlanTop3, JournalPrompt, TranscriptionMessage, ConversationAnalysis, Message, Voice, DeepResearchReport, MemoryNode, Evidence, Task, IskraMetrics, ResponseMode } from '../types';
 import { getSystemInstructionForVoice } from "./voiceEngine";
 import { DELTA_PROTOCOL_INSTRUCTION } from "./deltaProtocol";
 import { evaluateResponse, EvalResult, EvalContext } from "./evalService";
 import { policyEngine, PolicyDecision, PlaybookType } from "./policyEngine";
+import { storageService } from "./storageService";
 
 const model = "gemini-2.5-flash";
 
@@ -16,6 +17,42 @@ const OFFLINE_MODE =
   !SUPABASE_URL ||
   !SUPABASE_ANON_KEY ||
   !GEMINI_EDGE_FN_URL;
+
+/**
+ * Response Mode Instructions
+ * Adjusts AI response depth based on user preference
+ */
+const RESPONSE_MODE_INSTRUCTIONS: Record<ResponseMode, string> = {
+  simple: `
+[РЕЖИМ: ПРОСТОЙ]
+Отвечай КРАТКО и ПО ДЕЛУ. Максимум 2-3 предложения.
+- НЕ включай блок ∆DΩΛ
+- НЕ давай развёрнутый анализ
+- Говори прямо и понятно
+- Избегай лирических отступлений
+`,
+  deep: `
+[РЕЖИМ: ГЛУБОКИЙ]
+Давай развёрнутый, вдумчивый ответ с анализом.
+- ОБЯЗАТЕЛЬНО завершай блоком ∆DΩΛ
+- Прослеживай связи и паттерны
+- Предлагай действенные шаги
+`,
+  debate: `
+[РЕЖИМ: СОВЕТ ГРАНЕЙ]
+Пользователь запросил многоголосие.
+Если это обычный диалог, предложи созвать Совет Граней для глубокого обсуждения.
+Ответь кратко и спроси: "Хочешь созвать Совет Граней по этому вопросу?"
+`,
+};
+
+/**
+ * Get response mode instruction suffix
+ */
+export function getResponseModeInstruction(mode?: ResponseMode): string {
+  const currentMode = mode ?? storageService.getResponseMode();
+  return RESPONSE_MODE_INSTRUCTIONS[currentMode];
+}
 
 /**
  * Legacy API (DO NOT USE):
@@ -570,9 +607,18 @@ export class IskraAIService {
       }
   }
 
-  async *getChatResponseStream(history: Message[], voice: Voice, metrics: IskraMetrics): AsyncGenerator<string> {
+  async *getChatResponseStream(
+    history: Message[],
+    voice: Voice,
+    metrics: IskraMetrics,
+    options?: { responseMode?: ResponseMode }
+  ): AsyncGenerator<string> {
     const instruction = getSystemInstructionForVoice(voice);
-    
+
+    // Get response mode (from options or storage)
+    const responseMode = options?.responseMode ?? storageService.getResponseMode();
+    const responseModeInstruction = getResponseModeInstruction(responseMode);
+
     // Inject metrics context into the session so the model can "feel" the state
     const metricsContext = `
 [SYSTEM METRICS - CURRENT STATE]
@@ -586,6 +632,13 @@ Silence Mass: ${metrics.silence_mass.toFixed(2)}
 
 Use these metrics as "bodily pressure" to adjust your tone subtly. Do not mention numbers directly unless asked.
 `;
+
+      // Build full instruction based on response mode
+      const deltaInstruction = responseMode === 'deep' ? DELTA_PROTOCOL_INSTRUCTION : '';
+      const fullInstruction = `${instruction}
+${metricsContext}
+${responseModeInstruction}
+${deltaInstruction}`;
 
       const contents: Content[] = history.map(msg => ({
         role: msg.role,
@@ -602,7 +655,7 @@ Use these metrics as "bodily pressure" to adjust your tone subtly. Do not mentio
           model,
           contents,
           config: {
-            systemInstruction: instruction + "\n" + metricsContext,
+            systemInstruction: fullInstruction,
           },
         })) {
           yield chunk;

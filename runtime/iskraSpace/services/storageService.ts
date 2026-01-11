@@ -1,5 +1,5 @@
 
-import { Task, JournalEntry, DuoSharePrefs, DuoCanvasNote, Habit, VoicePreferences, VoiceName } from '../types';
+import { Task, JournalEntry, DuoSharePrefs, DuoCanvasNote, Habit, VoicePreferences, VoiceName, ResponseMode } from '../types';
 import { memoryService } from './memoryService';
 
 const TASKS_KEY = 'iskra-space-tasks';
@@ -13,6 +13,7 @@ const TUTORIAL_KEY = 'iskra-tutorial-seen';
 const USER_NAME_KEY = 'iskra-user-name';
 const VOICE_PREFS_KEY = 'iskra-voice-preferences';
 const LAST_VOICE_STATE_KEY = 'iskra-last-voice-state';
+const RESPONSE_MODE_KEY = 'iskra-response-mode';
 
 export const storageService = {
   // Tasks
@@ -190,6 +191,19 @@ export const storageService = {
       localStorage.setItem(LAST_VOICE_STATE_KEY, JSON.stringify({ mode, lastVoice }));
   },
 
+  // Response Mode (Simple / Deep / Debate)
+  getResponseMode(): ResponseMode {
+      const raw = localStorage.getItem(RESPONSE_MODE_KEY);
+      if (raw === 'simple' || raw === 'deep' || raw === 'debate') {
+          return raw;
+      }
+      return 'deep'; // Default to deep mode
+  },
+
+  saveResponseMode(mode: ResponseMode): void {
+      localStorage.setItem(RESPONSE_MODE_KEY, mode);
+  },
+
   // Data Management (Privacy & Sovereignty)
   exportAllData(): string {
     const data = {
@@ -210,7 +224,8 @@ export const storageService = {
         voice: {
             prefs: this.getVoicePreferences(),
             state: this.getLastVoiceState()
-        }
+        },
+        responseMode: this.getResponseMode()
     };
     return JSON.stringify(data, null, 2);
   },
@@ -235,6 +250,9 @@ export const storageService = {
           }
           if (data.memory) {
               memoryService.importMemory(data.memory);
+          }
+          if (data.responseMode) {
+              this.saveResponseMode(data.responseMode);
           }
 
           // Force refresh to reload state

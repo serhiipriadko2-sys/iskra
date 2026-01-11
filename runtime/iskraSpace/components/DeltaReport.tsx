@@ -1,20 +1,36 @@
 
 import React from 'react';
 import { DeltaReportData } from '../types';
+import { DeltaTooltip, DepthTooltip, OmegaTooltip, LambdaTooltip } from './Tooltip';
 
 interface DeltaReportProps {
   data: DeltaReportData;
 }
 
-const Section: React.FC<{ symbol: string; title: string; children: React.ReactNode }> = ({ symbol, title, children }) => (
-    <div>
-        <h4 className="flex items-center font-serif text-xl text-accent mb-2">
-            <span className="text-2xl mr-3">{symbol}</span>
-            {title}
-        </h4>
-        <p className="text-text-muted text-base ml-9">{children}</p>
-    </div>
-);
+type TooltipComponent = React.FC<{ children: React.ReactNode }>;
+
+const SYMBOL_TOOLTIPS: Record<string, TooltipComponent> = {
+  '∆': DeltaTooltip,
+  'D': DepthTooltip,
+  'Ω': OmegaTooltip,
+  'Λ': LambdaTooltip,
+};
+
+const Section: React.FC<{ symbol: string; title: string; children: React.ReactNode }> = ({ symbol, title, children }) => {
+    const TooltipWrapper = SYMBOL_TOOLTIPS[symbol] || (({ children }: { children: React.ReactNode }) => <>{children}</>);
+
+    return (
+        <div>
+            <h4 className="flex items-center font-serif text-xl text-accent mb-2">
+                <TooltipWrapper>
+                    <span className="text-2xl mr-3 cursor-help">{symbol}</span>
+                </TooltipWrapper>
+                {title}
+            </h4>
+            <p className="text-text-muted text-base ml-9">{children}</p>
+        </div>
+    );
+};
 
 const DeltaReport: React.FC<DeltaReportProps> = ({ data }) => {
   return (

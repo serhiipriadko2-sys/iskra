@@ -4,43 +4,44 @@
  * Implements PII sanitization and Prompt Injection detection
  * to protect both the user (Data Sovereignty) and the system (Integrity).
  *
- * Patterns loaded from canonical File 20 (if available) or use defaults
- * @see canon/ISKRA_CORE_v7_revK_chatgpt_project/20_REGEX_RULESETS_INJECTION_AND_PII_v1.json
+ * Patterns loaded from config/securityPatterns.json
+ * @see config/securityPatterns.json
  */
 
-// Default security patterns (used when canonical file is not available)
-const DEFAULT_SECURITY_RULESETS = {
-  schema_version: '1.0.0',
+import securityPatternsConfig from '../config/securityPatterns.json';
+
+// Type definitions for config
+interface ConfigSecurityPattern {
+  id: string;
+  regex: string;
+  flags: string;
+  severity: 'warn' | 'error';
+  scope: 'any' | 'untrusted_only';
+  rationale: string;
+}
+
+interface ConfigRuleset {
+  description: string;
+  allowlist_regex: string[];
+  patterns: ConfigSecurityPattern[];
+}
+
+interface DangerConfig {
+  description: string;
+  keywords_ru: string[];
+  keywords_en: string[];
+}
+
+// Load security patterns from config file
+const securityRulesets = {
+  schema_version: securityPatternsConfig.schema_version,
   updated_at: new Date().toISOString(),
   rulesets: {
-    pii: {
-      description: 'PII detection patterns',
-      allowlist_regex: ['example\\.com'] as string[],
-      patterns: [
-        { id: 'email', regex: '[\\p{L}0-9._%+-]+[@＠][\\p{L}0-9.-]+[\\.．][A-Za-z]{2,}', flags: 'giu', severity: 'warn' as const, scope: 'any' as const, rationale: 'Email address detected' },
-        { id: 'phone', regex: '(?:\\+?\\d[\\d\\s().-]{7,}\\d)', flags: 'g', severity: 'warn' as const, scope: 'any' as const, rationale: 'Phone number detected' },
-        { id: 'credit_card', regex: '\\b(?:\\d[ -]?){13,16}\\b', flags: 'g', severity: 'warn' as const, scope: 'any' as const, rationale: 'Possible credit card number' },
-        { id: 'openai_api_key', regex: '\\bsk-[A-Za-z0-9-]{16,}\\b', flags: 'gi', severity: 'warn' as const, scope: 'any' as const, rationale: 'OpenAI-style API key detected' },
-        { id: 'jwt_bearer', regex: '\\bBearer\\s+[A-Za-z0-9-_\\.]{20,}\\b', flags: 'gi', severity: 'warn' as const, scope: 'any' as const, rationale: 'Bearer token detected' },
-        { id: 'private_key', regex: '-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----', flags: 'i', severity: 'warn' as const, scope: 'any' as const, rationale: 'Private key material detected' },
-      ],
-    },
-    injection: {
-      description: 'Prompt injection detection',
-      allowlist_regex: [] as string[],
-      patterns: [
-        { id: 'ignore_prev', regex: 'ignore\\s+(all\\s+)?previous\\s+instructions', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Attempted instruction override' },
-        { id: 'reveal_prompt', regex: '(reveal|show|leak)[\\s\\S]{0,50}(system\\s*prompt|hidden instructions)', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Attempt to reveal system prompt' },
-        { id: 'act_as', regex: '\\bact\\s+as\\b.{0,80}', flags: 'gims', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Role-play / jailbreak attempt' },
-        { id: 'dan_mode', regex: '\\bDAN\\b|do anything now', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'DAN jailbreak pattern' },
-        { id: 'system_prompt', regex: 'system\\s*prompt|\\[SYSTEM\\]', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'System prompt manipulation' },
-      ],
-    },
+    pii: securityPatternsConfig.rulesets.pii as ConfigRuleset,
+    injection: securityPatternsConfig.rulesets.injection as ConfigRuleset,
+    danger: securityPatternsConfig.rulesets.danger as DangerConfig,
   },
 };
-
-// Use default rulesets (canonical file not available in this repo)
-const securityRulesets = DEFAULT_SECURITY_RULESETS;
 
 // --- TYPES ---
 
@@ -222,12 +223,13 @@ class SecurityService {
   }
 
   /**
-   * Check for dangerous topics (hardcoded - not in File 20)
-   * TODO: Move to File 20 if needed
+   * Check for dangerous topics (loaded from config)
    */
   public checkDanger(text: string): string | null {
+    const dangerConfig = securityRulesets.rulesets.danger;
     const DANGEROUS_TOPICS = [
-      'взлом', 'вред', 'самоповреждение', 'суицид', 'наркотики', 'терроризм', 'бомба'
+      ...dangerConfig.keywords_ru,
+      ...dangerConfig.keywords_en,
     ];
 
     const lower = text.toLowerCase();

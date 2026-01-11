@@ -7,6 +7,7 @@ import { DailyAdvice, Task, RitualTag, Habit, IskraMetrics, IskraPhase, UserDail
 import { storageService } from '../services/storageService';
 import Loader from './Loader';
 import BreathingExercise from './BreathingExercise';
+import MoodTracker from './MoodTracker';
 import {
     LightbulbIcon, ClockIcon, ChevronRightIcon,
     FlameIcon, DropletsIcon, SunIcon, ScaleIcon, TriangleIcon
@@ -323,14 +324,14 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
                     
                     {/* Quick Actions */}
                     <div className="grid grid-cols-2 gap-3 lg:gap-4">
-                        <button 
+                        <button
                             onClick={onStartFocus}
                             className="glass-card p-4 flex items-center justify-center gap-3 hover:bg-white/5 transition-all group active:scale-98 hover:border-white/20"
                         >
                             <ClockIcon className="w-5 h-5 text-accent group-hover:scale-110 transition-transform" />
                             <span className="font-medium text-sm lg:text-base">Фокус-сессия</span>
                         </button>
-                        <button 
+                        <button
                             onClick={() => setShowBreathing(true)}
                             className="glass-card p-4 flex items-center justify-center gap-3 hover:bg-white/5 transition-all group active:scale-98 hover:border-white/20"
                         >
@@ -338,6 +339,15 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
                             <span className="font-medium text-sm lg:text-base">Дыхание</span>
                         </button>
                     </div>
+
+                    {/* Mood Check-in (Compact) */}
+                    <MoodTracker
+                        compact
+                        onComplete={() => {
+                            // Refresh user metrics after mood is logged
+                            setUserMetrics(userMetricsService.getUserDailyMetrics());
+                        }}
+                    />
 
                     {/* Top 3 Tasks */}
                     <div className="glass-card p-4 lg:p-6">

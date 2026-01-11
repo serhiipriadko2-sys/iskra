@@ -403,6 +403,16 @@ export interface DeltaReportData {
 // --- Search Service ---
 export type SearchableDocType = 'journal' | 'task' | 'memory';
 
+// --- Response Mode ---
+/**
+ * ResponseMode — режим глубины ответа Искры
+ *
+ * - 'simple': Краткие, быстрые ответы
+ * - 'deep': Развёрнутые ответы с анализом и ∆DΩΛ
+ * - 'debate': Задействует Совет Граней для многоголосия
+ */
+export type ResponseMode = 'simple' | 'deep' | 'debate';
+
 export type SearchFilters = {
   type?: SearchableDocType[];
   tags?: string[];
