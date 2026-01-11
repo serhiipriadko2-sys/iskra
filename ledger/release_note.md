@@ -150,3 +150,19 @@
 
 ### Ω: 0.88
 ### Λ: Добавить визуальный индикатор текущего режима в ChatView.
+
+---
+
+## vΩ.3.6 (Security Config Extraction) — 2026-01-11
+### Что сделано
+- Создан `config/securityPatterns.json` с паттернами PII, injection, danger
+- securityService: загрузка паттернов из JSON-конфига вместо hardcoded
+- Добавлены новые паттерны: google_api_key, password_field, forget_instructions, pretend_to_be, developer_mode
+- Расширены dangerous topics: EN keywords добавлены к RU
+
+### Проверки
+- `npm run typecheck` → OK
+- `npm run test -- securityService` → 38 tests passed
+
+### Ω: 0.90
+### Λ: Добавить возможность hot-reload паттернов без перезапуска.
