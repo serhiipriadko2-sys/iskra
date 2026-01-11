@@ -227,9 +227,9 @@ export default function App() {
                         {view === 'FOCUS' && <FocusSession onClose={() => setView('PULSE')} />}
                     </div>
 
-                    {/* Hide Mobile Menu in FOCUS mode */}
+                    {/* Hide Mobile Menu in FOCUS mode - use fixed positioning for reliable viewport placement */}
                     {view !== 'FOCUS' && (
-                        <div className="lg:hidden absolute bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-xl border-t border-white/10 px-4 py-2 pb-safe z-30 flex justify-between items-center h-[80px]">
+                        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-xl border-t border-white/10 px-4 py-2 pb-safe z-30 flex justify-between items-center h-[80px]">
                              <Sidebar activeView={view} setView={setView} mobile onOpenMenu={() => setIsMobileMenuOpen(true)} />
                         </div>
                     )}
