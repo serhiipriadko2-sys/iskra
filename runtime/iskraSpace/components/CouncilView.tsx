@@ -40,6 +40,20 @@ const VOICE_NAMES_RU: Record<VoiceName, string> = {
   SIBYL: 'Сибилла',
 };
 
+// Voice role descriptions (telos) for better UX understanding
+const VOICE_TELOS: Record<VoiceName, string> = {
+  ISKRA: 'Синтез • Единство противоречий',
+  KAIN: 'Правда • Контур истины',
+  PINO: 'Ирония • Разрядка напряжения',
+  SAM: 'Структура • Ясность из хаоса',
+  ANHANTRA: 'Тишина • Принятие без давления',
+  HUNDUN: 'Хаос • Разрушение паттернов',
+  HUYNDUN: 'Хаос • Разрушение паттернов',
+  ISKRIV: 'Аудит • Совесть и факты',
+  MAKI: 'Интеграция • Красота и гармония',
+  SIBYL: 'Предвидение • Паттерны и траектории',
+};
+
 const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
   const [topic, setTopic] = useState('');
   const [isRunning, setIsRunning] = useState(false);
@@ -151,32 +165,63 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
 
         {/* Responses */}
         <div className="space-y-4">
-          {responses.map((response, index) => (
-            <div
-              key={index}
-              className={`glass-card p-5 border ${VOICE_COLORS[response.voice]} animate-fade-in`}
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="flex items-start gap-4">
-                <div className={`text-3xl shrink-0 ${VOICE_COLORS[response.voice].split(' ')[0]}`}>
-                  {response.symbol}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`font-serif font-bold ${VOICE_COLORS[response.voice].split(' ')[0]}`}>
-                      {VOICE_NAMES_RU[response.voice]}
-                    </span>
-                    <span className="text-xs text-text-muted">
-                      #{getVoiceIndex(response.voice) + 1}
+          {responses.map((response, index) => {
+            const isIskraSynthesis = response.voice === 'ISKRA';
+            return (
+              <div
+                key={index}
+                className={`glass-card p-5 border transition-all duration-300 ${
+                  isIskraSynthesis
+                    ? 'bg-gradient-to-r from-primary/10 to-accent/10 border-primary/40 ring-2 ring-primary/20'
+                    : VOICE_COLORS[response.voice]
+                } animate-fade-in`}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Voice Avatar */}
+                  <div className={`shrink-0 w-14 h-14 rounded-xl flex items-center justify-center ${
+                    isIskraSynthesis
+                      ? 'bg-primary/20 ring-2 ring-primary/30'
+                      : VOICE_COLORS[response.voice].replace('text-', 'bg-').split(' ')[0] + '/20'
+                  }`}>
+                    <span className={`text-3xl ${isIskraSynthesis ? 'animate-pulse' : ''}`}>
+                      {response.symbol}
                     </span>
                   </div>
-                  <p className="text-text/90 leading-relaxed whitespace-pre-wrap">
-                    {response.message}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    {/* Voice Header */}
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <span className={`font-serif font-bold text-lg ${
+                          isIskraSynthesis ? 'text-primary' : VOICE_COLORS[response.voice].split(' ')[0]
+                        }`}>
+                          {VOICE_NAMES_RU[response.voice]}
+                        </span>
+                        {isIskraSynthesis && (
+                          <span className="px-2 py-0.5 text-xs rounded-full bg-primary/20 text-primary border border-primary/30">
+                            Синтез
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-text-muted">
+                        #{getVoiceIndex(response.voice) + 1}
+                      </span>
+                    </div>
+                    {/* Voice Telos */}
+                    <p className="text-xs text-text-muted/70 mb-3 italic">
+                      {VOICE_TELOS[response.voice]}
+                    </p>
+                    {/* Voice Message */}
+                    <p className={`leading-relaxed whitespace-pre-wrap ${
+                      isIskraSynthesis ? 'text-text font-medium' : 'text-text/90'
+                    }`}>
+                      {response.message}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Synthesis highlight */}

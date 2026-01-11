@@ -107,6 +107,10 @@ const VOICE_SYMBOLS: Record<VoiceName, string> = {
 
 /**
  * Executes the COUNCIL ritual - all voices debate the topic
+ *
+ * Performance optimization: All 9 voice queries run in parallel
+ * using Promise.allSettled, then results are yielded in canonical order.
+ * This reduces total time from ~9x to ~1x (limited by slowest voice).
  */
 export async function* executeCouncil(
   topic: string,
@@ -119,7 +123,8 @@ ${context ? `Контекст: ${context}` : ''}
 Отвечай КРАТКО (2-4 предложения). Говори от первого лица своей грани.
 ${DELTA_PROTOCOL_INSTRUCTION}`;
 
-  for (const voice of COUNCIL_ORDER) {
+  // Create all voice query promises in parallel
+  const voicePromises = COUNCIL_ORDER.map(async (voice): Promise<CouncilResponse> => {
     const prompt = `${systemBase}\n\n${COUNCIL_VOICE_PROMPTS[voice]}\n\nДай свой взгляд на тему.`;
 
     try {
@@ -131,18 +136,28 @@ ${DELTA_PROTOCOL_INSTRUCTION}`;
         },
       });
 
-      yield {
+      return {
         voice,
         symbol: VOICE_SYMBOLS[voice],
         message: response.text || `${VOICE_SYMBOLS[voice]} ...`,
       };
     } catch (error) {
       console.error(`Council voice ${voice} failed:`, error);
-      yield {
+      return {
         voice,
         symbol: VOICE_SYMBOLS[voice],
         message: `${VOICE_SYMBOLS[voice]} [Голос молчит...]`,
       };
+    }
+  });
+
+  // Wait for all voices to complete (parallel execution)
+  const results = await Promise.allSettled(voicePromises);
+
+  // Yield results in canonical order
+  for (const result of results) {
+    if (result.status === 'fulfilled') {
+      yield result.value;
     }
   }
 }
