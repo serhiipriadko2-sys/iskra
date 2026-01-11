@@ -3,12 +3,17 @@
  *
  * Displays the COUNCIL ritual where all voices debate a topic.
  * Order per Canon: Сэм → Кайн → Пино → Искрив → Анхантра → Хуньдун → Искра
+ *
+ * UX Improvements:
+ * - Two-column layout (Voices | Synthesis)
+ * - Tooltips for ∆DΩΛ protocol
+ * - Visual distinction
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { VoiceName } from '../types';
 import { executeCouncil, CouncilResponse, COUNCIL_ORDER, RITUAL_INFO } from '../services/ritualService';
-import { SparkleIcon, UsersIcon } from './icons';
+import { SparkleIcon, UsersIcon, InfoIcon } from './icons';
 
 interface CouncilViewProps {
   onClose?: () => void;
@@ -21,7 +26,7 @@ const VOICE_COLORS: Record<VoiceName, string> = {
   SAM: 'text-accent border-accent/30 bg-accent/5',
   ANHANTRA: 'text-info border-info/30 bg-info/5',
   HUNDUN: 'text-purple-400 border-purple-400/30 bg-purple-400/5',
-  HUYNDUN: 'text-purple-400 border-purple-400/30 bg-purple-400/5', // Canonical alias
+  HUYNDUN: 'text-purple-400 border-purple-400/30 bg-purple-400/5',
   ISKRIV: 'text-slate-300 border-slate-300/30 bg-slate-300/5',
   MAKI: 'text-pink-400 border-pink-400/30 bg-pink-400/5',
   SIBYL: 'text-violet-400 border-violet-400/30 bg-violet-400/5',
@@ -34,11 +39,22 @@ const VOICE_NAMES_RU: Record<VoiceName, string> = {
   SAM: 'Сэм',
   ANHANTRA: 'Анхантра',
   HUNDUN: 'Хуньдун',
-  HUYNDUN: 'Хуньдун', // Canonical alias
+  HUYNDUN: 'Хуньдун',
   ISKRIV: 'Искрив',
   MAKI: 'Маки',
   SIBYL: 'Сибилла',
 };
+
+// Protocol Tooltip Component
+const ProtocolTooltip: React.FC<{ symbol: string; title: string; desc: string }> = ({ symbol, title, desc }) => (
+  <div className="group relative inline-flex items-center cursor-help">
+    <span className="font-mono text-primary font-bold mr-1">{symbol}</span>
+    <span className="text-xs text-text-muted border-b border-dotted border-text-muted">{title}</span>
+    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-surface border border-white/10 rounded-lg text-xs text-text shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+      {desc}
+    </div>
+  </div>
+);
 
 const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
   const [topic, setTopic] = useState('');
@@ -46,6 +62,7 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
   const [responses, setResponses] = useState<CouncilResponse[]>([]);
   const [currentVoice, setCurrentVoice] = useState<VoiceName | null>(null);
   const [isComplete, setIsComplete] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const startCouncil = useCallback(async () => {
     if (!topic.trim()) return;
@@ -58,8 +75,9 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
       for await (const response of executeCouncil(topic)) {
         setCurrentVoice(response.voice);
         setResponses(prev => [...prev, response]);
-        // Small delay between voices for dramatic effect
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Auto-scroll
+        setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+        await new Promise(resolve => setTimeout(resolve, 800)); // Delay for readability
       }
       setIsComplete(true);
     } catch (error) {
@@ -72,136 +90,172 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
 
   const getVoiceIndex = (voice: VoiceName) => COUNCIL_ORDER.indexOf(voice);
 
+  // Filter ISKRA response for the right column (Synthesis)
+  const synthesisResponse = responses.find(r => r.voice === 'ISKRA');
+  const debateResponses = responses.filter(r => r.voice !== 'ISKRA');
+
   return (
-    <div className="h-full w-full overflow-y-auto p-4 lg:p-8">
-      <div className="max-w-4xl mx-auto pb-24 lg:pb-12">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-primary/10 border border-primary/20">
-              <UsersIcon className="w-8 h-8 text-primary" />
-            </div>
-            <div>
-              <h1 className="font-serif text-3xl text-text">Совет Граней</h1>
-              <p className="text-text-muted text-sm">{RITUAL_INFO['COUNCIL'].description}</p>
-            </div>
+    <div className="h-full w-full overflow-hidden flex flex-col bg-bg">
+      {/* Header */}
+      <header className="shrink-0 p-4 lg:p-6 border-b border-white/5 bg-surface/50 backdrop-blur-sm flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="p-2 rounded-xl bg-primary/10 border border-primary/20">
+            <UsersIcon className="w-6 h-6 text-primary" />
           </div>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="p-2 rounded-lg hover:bg-surface2 transition-colors text-text-muted"
-            >
-              ✕
-            </button>
+          <div>
+            <h1 className="font-serif text-2xl text-text">Совет Граней</h1>
+            <p className="text-text-muted text-xs hidden sm:block">{RITUAL_INFO['COUNCIL'].description}</p>
+          </div>
+        </div>
+        {onClose && (
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-white/5 transition-colors text-text-muted">
+            ✕
+          </button>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-hidden flex flex-col lg:flex-row">
+
+        {/* Left Column: Input & Debate */}
+        <div className="flex-1 flex flex-col border-r border-white/5 min-w-0">
+
+          {/* Input Area */}
+          {!isRunning && responses.length === 0 && (
+            <div className="p-6 m-auto max-w-lg w-full">
+              <div className="glass-card p-6">
+                <label className="block text-sm text-text-muted mb-2">Тема Совета</label>
+                <textarea
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  placeholder="Что требует решения?"
+                  className="w-full bg-surface2 border border-white/10 rounded-xl p-4 text-text resize-none focus:border-primary/50 outline-none transition-colors"
+                  rows={3}
+                />
+                <button
+                  onClick={startCouncil}
+                  disabled={!topic.trim()}
+                  className="mt-4 w-full py-3 rounded-xl bg-primary text-white font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                >
+                  <SparkleIcon className="w-5 h-5" />
+                  Начать Ритуал
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Active Debate List */}
+          {(isRunning || responses.length > 0) && (
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
+              {/* Progress Bar */}
+              <div className="flex gap-1 mb-4 px-2 sticky top-0 bg-bg/95 py-2 z-10 backdrop-blur">
+                {COUNCIL_ORDER.filter(v => v !== 'ISKRA').map((voice) => {
+                  const isActive = currentVoice === voice;
+                  const isDone = responses.some(r => r.voice === voice);
+                  return (
+                    <div
+                      key={voice}
+                      className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
+                        isDone ? VOICE_COLORS[voice].replace('text-', 'bg-').split(' ')[0]
+                        : isActive ? 'bg-white animate-pulse' : 'bg-surface2'
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+
+              {debateResponses.map((response, index) => (
+                <div
+                  key={index}
+                  className={`relative p-4 rounded-xl border bg-surface/30 backdrop-blur-sm animate-slide-in-left ${VOICE_COLORS[response.voice]}`}
+                >
+                  <div className="flex gap-3">
+                    <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-black/20 text-2xl">
+                      {response.symbol}
+                    </div>
+                    <div>
+                      <div className="flex items-baseline gap-2 mb-1">
+                        <span className="font-serif font-bold">{VOICE_NAMES_RU[response.voice]}</span>
+                        <span className="text-[10px] opacity-60 uppercase tracking-widest">
+                          Грань #{getVoiceIndex(response.voice) + 1}
+                        </span>
+                      </div>
+                      <p className="text-sm leading-relaxed text-text/90">{response.message}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
           )}
         </div>
 
-        {/* Topic Input */}
-        {!isRunning && responses.length === 0 && (
-          <div className="glass-card p-6 mb-8">
-            <label className="block text-sm text-text-muted mb-2">
-              Тема для обсуждения
-            </label>
-            <textarea
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              placeholder="Введите вопрос или тему для Совета Граней..."
-              className="w-full bg-surface2 border border-white/10 rounded-xl p-4 text-text resize-none focus:outline-none focus:border-primary/50 transition-colors"
-              rows={3}
-            />
-            <button
-              onClick={startCouncil}
-              disabled={!topic.trim()}
-              className="mt-4 w-full py-3 px-6 rounded-xl bg-primary text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-            >
-              <SparkleIcon className="w-5 h-5" />
-              Созвать Совет
-            </button>
+        {/* Right Column: Synthesis (ISKRA) */}
+        <div className="lg:w-[400px] shrink-0 bg-surface/30 flex flex-col border-t lg:border-t-0 border-white/5">
+          <div className="p-4 border-b border-white/5 bg-surface/50">
+            <h2 className="font-serif text-lg flex items-center gap-2">
+              <SparkleIcon className="w-4 h-4 text-primary" />
+              Синтез Искры
+            </h2>
           </div>
-        )}
 
-        {/* Council Progress */}
-        {(isRunning || responses.length > 0) && (
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-4">
-              {COUNCIL_ORDER.map((voice, _index) => {
-                const isActive = currentVoice === voice;
-                const isComplete = responses.some(r => r.voice === voice);
-                return (
-                  <div
-                    key={voice}
-                    className={`flex-1 h-2 rounded-full transition-all duration-500 ${
-                      isComplete
-                        ? VOICE_COLORS[voice].replace('text-', 'bg-').split(' ')[0]
-                        : isActive
-                        ? 'bg-white/50 animate-pulse'
-                        : 'bg-surface2'
-                    }`}
-                  />
-                );
-              })}
-            </div>
-            {currentVoice && (
-              <p className="text-center text-sm text-text-muted animate-pulse">
-                Говорит {VOICE_NAMES_RU[currentVoice]}...
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Responses */}
-        <div className="space-y-4">
-          {responses.map((response, index) => (
-            <div
-              key={index}
-              className={`glass-card p-5 border ${VOICE_COLORS[response.voice]} animate-fade-in`}
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="flex items-start gap-4">
-                <div className={`text-3xl shrink-0 ${VOICE_COLORS[response.voice].split(' ')[0]}`}>
-                  {response.symbol}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`font-serif font-bold ${VOICE_COLORS[response.voice].split(' ')[0]}`}>
-                      {VOICE_NAMES_RU[response.voice]}
-                    </span>
-                    <span className="text-xs text-text-muted">
-                      #{getVoiceIndex(response.voice) + 1}
-                    </span>
+          <div className="flex-1 p-6 flex flex-col justify-center">
+            {synthesisResponse ? (
+              <div className="animate-fade-in space-y-6">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center mb-4 shadow-glow-primary">
+                    <span className="text-4xl">⟡</span>
                   </div>
-                  <p className="text-text/90 leading-relaxed whitespace-pre-wrap">
-                    {response.message}
+                  <h3 className="text-xl font-serif font-bold text-primary mb-2">Вердикт Совета</h3>
+                  <p className="text-sm text-text-muted italic">
+                    "В единстве рождается полнота."
                   </p>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
 
-        {/* Synthesis highlight */}
-        {isComplete && responses.length > 0 && (
-          <div className="mt-8 p-6 rounded-xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
-            <div className="flex items-center gap-2 mb-3">
-              <SparkleIcon className="w-5 h-5 text-primary" />
-              <span className="font-serif font-bold text-primary">Совет завершён</span>
-            </div>
-            <p className="text-text-muted text-sm">
-              Все грани высказались. Финальный синтез от Искры выше.
-              Используйте эти перспективы для принятия решения.
-            </p>
-            <button
-              onClick={() => {
-                setResponses([]);
-                setTopic('');
-                setIsComplete(false);
-              }}
-              className="mt-4 py-2 px-4 rounded-lg border border-white/10 text-text-muted hover:text-text hover:border-white/20 transition-colors"
-            >
-              Новый Совет
-            </button>
+                <div className="bg-surface2/50 rounded-xl p-5 border border-primary/20 text-sm leading-relaxed">
+                  {synthesisResponse.message}
+                </div>
+
+                {/* Protocol Block */}
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                  <div className="p-3 bg-surface rounded-lg border border-white/5 text-center">
+                    <ProtocolTooltip symbol="∆" title="Дельта" desc="Что изменилось в понимании ситуации" />
+                    <div className="text-xs text-text-muted mt-1">Инсайт</div>
+                  </div>
+                  <div className="p-3 bg-surface rounded-lg border border-white/5 text-center">
+                    <ProtocolTooltip symbol="Ω" title="Омега" desc="Уровень уверенности в решении (0-100%)" />
+                    <div className="text-xs text-text-muted mt-1">85%</div>
+                  </div>
+                  <div className="p-3 bg-surface rounded-lg border border-white/5 text-center">
+                    <ProtocolTooltip symbol="Λ" title="Лямбда" desc="Условие пересмотра решения (Review Condition)" />
+                    <div className="text-xs text-text-muted mt-1">Шаг</div>
+                  </div>
+                </div>
+
+                {isComplete && (
+                  <button
+                    onClick={() => {
+                      setResponses([]);
+                      setTopic('');
+                      setIsComplete(false);
+                    }}
+                    className="w-full mt-6 py-3 border border-white/10 rounded-xl hover:bg-white/5 transition-colors text-sm"
+                  >
+                    Начать новый Совет
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="text-center text-text-muted opacity-50">
+                <div className="w-12 h-12 mx-auto border-2 border-dashed border-text-muted rounded-full flex items-center justify-center mb-4">
+                  <InfoIcon className="w-5 h-5" />
+                </div>
+                <p className="text-sm">Ожидание синтеза...</p>
+                <p className="text-xs mt-2">Сначала должны высказаться все грани</p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

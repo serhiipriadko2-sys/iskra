@@ -9,22 +9,50 @@ interface IskraMetricsDisplayProps {
   className?: string;
 }
 
-const MetricBar: React.FC<{ label: string; value: number; colorClass: string }> = ({ label, value, colorClass }) => {
+const MetricBar: React.FC<{ label: string; value: number; colorClass: string; description: string }> = ({ label, value, colorClass, description }) => {
     const width = `${Math.round(value * 100)}%`;
     return (
-        <div>
+        <div className="group relative">
             <div className="flex justify-between items-baseline mb-1">
-                <span className="text-sm font-semibold text-text-muted uppercase tracking-wider">{label}</span>
-                <span className={`font-mono text-sm ${colorClass.replace('bg-', 'text-')}`}>{value.toFixed(2)}</span>
+                <span className="text-xs font-bold text-text-muted uppercase tracking-wider">{label}</span>
+                <span className={`font-mono text-xs ${colorClass.replace('bg-', 'text-')}`}>{value.toFixed(2)}</span>
             </div>
-            <div className="h-2 rounded-pill bg-surface2 border border-border overflow-hidden">
+            <div className="h-1.5 rounded-full bg-surface2 overflow-hidden mb-1">
                 <div 
-                    className={`h-full rounded-pill ${colorClass} transition-all duration-500 ease-out`}
+                    className={`h-full rounded-full ${colorClass} transition-all duration-500 ease-out`}
                     style={{ width: width }}
                 />
             </div>
+            {/* Contextual Description */}
+            <p className="text-[10px] text-text-muted/70 truncate group-hover:text-text-muted transition-colors">
+                {getDescriptionForValue(value, description)}
+            </p>
         </div>
     );
+};
+
+// Helper to get text explanation based on value
+const getDescriptionForValue = (value: number, type: string) => {
+    if (type === 'chaos') {
+        if (value > 0.6) return '⚠️ Высокая энтропия (нужна структура)';
+        if (value > 0.3) return 'Активный поиск';
+        return 'Стабильность';
+    }
+    if (type === 'trust') {
+        if (value > 0.8) return 'Глубокий резонанс';
+        if (value < 0.4) return '⚠️ Барьер недоверия';
+        return 'Установление связи';
+    }
+    if (type === 'pain') {
+        if (value > 0.5) return '⚠️ Острая фаза';
+        if (value > 0.2) return 'Фоновое напряжение';
+        return 'Спокойствие';
+    }
+    if (type === 'drift') {
+        if (value > 0.4) return 'Потеря контекста';
+        return 'В русле диалога';
+    }
+    return '';
 };
 
 const getStatusClasses = (status: SessionStatus) => {
@@ -40,57 +68,67 @@ const IskraMetricsDisplay: React.FC<IskraMetricsDisplayProps> = ({ metrics, stat
     const { rhythm, trust, clarity, pain, drift, chaos } = metrics;
     const rhythmScore = Math.round(rhythm);
 
-    const circumference = 2 * Math.PI * 52; // 2 * pi * r
+    const circumference = 2 * Math.PI * 40; // Reduced size
     const strokeDashoffset = circumference - (rhythmScore / 100) * circumference;
     
     const statusClasses = getStatusClasses(status);
 
     return (
-        <div className={`card flex flex-col p-4 animate-fade-in border-t-4 ${statusClasses.border} transition-colors duration-500 ${className}`}>
-            <h3 className="font-serif text-xl text-center text-text mb-4">Состояние Искры ⟡</h3>
+        <div className={`flex flex-col h-full bg-surface/30 backdrop-blur-md border-l border-white/5 p-4 transition-colors duration-500 ${className}`}>
+            <h3 className="font-serif text-sm font-bold text-text-muted uppercase tracking-widest mb-6 text-center">
+                Состояние Системы
+            </h3>
 
-            <div className="relative flex items-center justify-center w-40 h-40 mx-auto mb-6 shrink-0">
-                <svg className="w-full h-full" viewBox="0 0 120 120">
+            {/* Rhythm Circle */}
+            <div className="relative flex items-center justify-center w-32 h-32 mx-auto mb-8 shrink-0">
+                {/* Background Track */}
+                <svg className="w-full h-full rotate-[-90deg]" viewBox="0 0 100 100">
                     <circle
-                        className="text-border"
-                        strokeWidth="6"
+                        className="text-surface2"
+                        strokeWidth="8"
                         stroke="currentColor"
                         fill="transparent"
-                        r="52"
-                        cx="60"
-                        cy="60"
+                        r="40"
+                        cx="50"
+                        cy="50"
                     />
+                    {/* Progress */}
                     <circle
                         className={`${statusClasses.text} ${statusClasses.glow}`}
-                        strokeWidth="6"
+                        strokeWidth="8"
                         strokeDasharray={circumference}
                         strokeDashoffset={strokeDashoffset}
                         strokeLinecap="round"
                         stroke="currentColor"
                         fill="transparent"
-                        r="52"
-                        cx="60"
-                        cy="60"
-                        style={{ transform: 'rotate(-90deg)', transformOrigin: 'center', transition: 'stroke-dashoffset 1s ease-out, color 0.5s' }}
+                        r="40"
+                        cx="50"
+                        cy="50"
+                        style={{ transition: 'stroke-dashoffset 1s ease-out' }}
                     />
                 </svg>
-                <div className="absolute flex flex-col items-center">
-                    <span className="font-serif text-4xl font-bold text-text">{rhythmScore}</span>
-                    <span className={`text-sm font-semibold uppercase tracking-wider ${statusClasses.text} transition-colors`}>∆-Ритм</span>
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="font-serif text-3xl font-bold text-text">{rhythmScore}</span>
+                    <span className="text-[10px] uppercase text-text-muted mt-1">∆-Ритм</span>
                 </div>
             </div>
 
-            <div className="flex-grow space-y-4">
-                <MetricBar label="Доверие" value={trust} colorClass="bg-success" />
-                <MetricBar label="Ясность" value={clarity} colorClass="bg-accent" />
-                <MetricBar label="Боль" value={pain} colorClass="bg-danger" />
-                <MetricBar label="Дрейф" value={drift} colorClass="bg-warning" />
-                <MetricBar label="Хаос" value={chaos} colorClass="bg-purple-500" />
+            {/* Metrics List */}
+            <div className="space-y-5 flex-1 overflow-y-auto px-1">
+                <MetricBar label="Доверие" value={trust} colorClass="bg-success" description="trust" />
+                <MetricBar label="Ясность" value={clarity} colorClass="bg-accent" description="clarity" />
+                <MetricBar label="Боль" value={pain} colorClass="bg-danger" description="pain" />
+                <MetricBar label="Дрейф" value={drift} colorClass="bg-warning" description="drift" />
+                <MetricBar label="Хаос" value={chaos} colorClass="bg-purple-500" description="chaos" />
             </div>
             
-            <p className="text-xs text-center text-text-muted mt-4 italic shrink-0">
-                Метрики отражают внутренний, симулированный процесс Искры в реальном времени.
-            </p>
+            {/* Status Footer */}
+            <div className="mt-6 pt-4 border-t border-white/5 text-center">
+                <span className={`text-xs font-mono ${statusClasses.text}`}>
+                    ● {status === 'IDLE' ? 'ОЖИДАНИЕ' : status}
+                </span>
+            </div>
         </div>
     );
 };
