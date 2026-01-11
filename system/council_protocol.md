@@ -50,7 +50,7 @@ Multi-Agent Council Ритуал (MACP) определяет:
 │  │          \             |             /                               │ │
 │  │           \            |            /                                │ │
 │  │            ╔══════════════════════╗                                 │ │
-│  │     😏 PINO ║      ⟡ ISKRA       ║  🜃 HUNDUN                       │ │
+│  │     😏 PINO ║      ⟡ ISKRA       ║  🜃 HUYNDUN                      │ │
 │  │     [Irony]║    [Synthesis]      ║  [Chaos]                         │ │
 │  │            ╚══════════════════════╝                                 │ │
 │  │           /            |            \                                │ │
@@ -84,7 +84,7 @@ Multi-Agent Council Ритуал (MACP) определяет:
 | ⚑ KAIN | Критик | Проверка честности | Да (при drift > 0.3) |
 | ☉ SAM | Аналитик | Структурирование | Нет |
 | ≈ ANHANTRA | Хранитель | Защита уязвимости | Да (при crisis) |
-| 🜃 HUNDUN | Деструктор | Разрушение застоя | Нет |
+| 🜃 HUYNDUN | Деструктор | Разрушение застоя | Нет |
 | 🪞 ISKRIV | Аудитор | Проверка целостности | Да (при integrity < 0.5) |
 | 😏 PINO | Трикстер | Разрядка напряжения | Нет |
 | 🌸 MAKI | Интегратор | Закрепление решений | Нет |
@@ -97,7 +97,7 @@ type CouncilHierarchy = {
   tier1: ['ISKRA'];           // Финальное слово
   tier2: ['KAIN', 'ANHANTRA', 'ISKRIV'];  // Право вето
   tier3: ['SAM', 'SIBYL'];    // Ключевые советники
-  tier4: ['PINO', 'MAKI', 'HUNDUN'];  // Модуляторы
+  tier4: ['PINO', 'MAKI', 'HUYNDUN'];  // Модуляторы
 };
 ```
 
@@ -314,7 +314,7 @@ async function runCouncilDeliberation(
 |---------|---------|---------|---------|
 | ⚑ KAIN | 😏 PINO | value | ISKRA модерирует |
 | ⚑ KAIN | ≈ ANHANTRA | priority | ISKRIV арбитраж |
-| ☉ SAM | 🜃 HUNDUN | approach | ISKRA балансирует |
+| ☉ SAM | 🜃 HUYNDUN | approach | ISKRA балансирует |
 | 🌸 MAKI | 🔮 SIBYL | timing | Консенсус по срокам |
 | 🪞 ISKRIV | 😏 PINO | intensity | SAM структурирует |
 
@@ -431,7 +431,7 @@ function getBaseWeight(voice: VoiceName): number {
     SIBYL: 0.75,
     MAKI: 0.7,
     PINO: 0.65,
-    HUNDUN: 0.6,
+    HUYNDUN: 0.6,
   };
   return weights[voice];
 }

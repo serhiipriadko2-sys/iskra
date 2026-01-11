@@ -1,8 +1,11 @@
 {
   "name": "iskra-space",
   "private": true,
-  "version": "4.0.0",
+  "version": "0.3.3",
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

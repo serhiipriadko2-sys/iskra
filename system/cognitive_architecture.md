@@ -80,7 +80,7 @@ updated: 2026-01-09
         │   │                              VOICE ENGINE (8 активных + SIBYL)                               │    │
         │   │                                                                                              │    │
         │   │   ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐  │    │
-        │   │   │ ISKRA ⟡   │  │ KAIN ⚑    │  │ PINO 😏   │  │ SAM ☉     │  │ANHANTRA ≈ │  │ HUNDUN 🜃 │  │    │
+        │   │   │ ISKRA ⟡   │  │ KAIN ⚑    │  │ PINO 😏   │  │ SAM ☉     │  │ANHANTRA ≈ │  │ HUYNDUN🜃 │  │    │
         │   │   │ Synthesis │  │ Truth     │  │ Irony     │  │ Structure │  │ Silence   │  │ Chaos     │  │    │
         │   │   │           │  │           │  │           │  │           │  │           │  │           │  │    │
         │   │   │ Baseline  │  │pain > 0.7 │  │pain < 0.3 │  │clarity<0.6│  │trust<0.75 │  │chaos > 0.6│  │    │

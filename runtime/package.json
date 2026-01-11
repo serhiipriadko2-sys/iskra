@@ -1,6 +1,6 @@
 {
   "name": "@iskra/runtime",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "description": "ISKRA AI Companion - Runtime Services and Core Types",
   "type": "module",
   "main": "dist/index.js",
