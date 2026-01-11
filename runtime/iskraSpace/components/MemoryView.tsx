@@ -1,9 +1,20 @@
+/**
+ * MEMORY VIEW - Archive and Shadow Visualization
+ *
+ * Provides interaction with the ISKRA Memory System.
+ *
+ * Features:
+ * - List and Graph views
+ * - Search and Filtering by Type
+ * - Create, Edit, Delete Nodes (CRUD)
+ * - File Upload for new nodes
+ */
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { memoryService } from '../services/memoryService';
 import { searchService } from '../services/searchService';
 import { MemoryNode, MemoryNodeType, SearchResult } from '../types';
-import { XIcon, LayersIcon, DatabaseIcon, PlusIcon, FilePlus2Icon } from './icons';
+import { XIcon, LayersIcon, DatabaseIcon, PlusIcon, FilePlus2Icon, TrashIcon, BookTextIcon } from './icons';
 import Loader from './Loader';
 import MemoryGraph from './MemoryGraph';
 
@@ -25,8 +36,9 @@ const MemoryView: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [selectedType, setSelectedType] = useState<MemoryNodeType | 'all'>('all');
 
-  // Create Node State
-  const [isCreating, setIsCreating] = useState(false);
+  // Create/Edit Node State
+  const [isEditing, setIsEditing] = useState(false);
+  const [editNodeId, setEditNodeId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState('');
   const [newContent, setNewContent] = useState('');
   const [newType, setNewType] = useState<MemoryNodeType>('event');
@@ -94,35 +106,74 @@ const MemoryView: React.FC = () => {
       e.target.value = '';
   };
 
-  const handleCreateNode = () => {
+  const openCreateModal = () => {
+      setEditNodeId(null);
+      setNewTitle('');
+      setNewContent('');
+      setNewType('event');
+      setNewLayer('shadow');
+      setIsEditing(true);
+  }
+
+  const openEditModal = (node: MemoryNode) => {
+      setEditNodeId(node.id);
+      setNewTitle(node.title);
+      setNewContent(typeof node.content === 'string' ? node.content : JSON.stringify(node.content, null, 2));
+      setNewType(node.type as MemoryNodeType);
+      setNewLayer(node.layer as 'archive' | 'shadow');
+      setIsEditing(true);
+      // Close detail modal if open
+      setSelectedNode(null);
+  }
+
+  const handleSaveNode = () => {
       if (!newTitle.trim() || !newContent.trim()) return;
       
-      const partialNode: Partial<MemoryNode> = {
-          title: newTitle,
-          type: newType,
-          content: newContent,
-          evidence: [{
-              source: 'Manual Entry (User)',
-              inference: 'Direct input from Memory View.',
-              fact: 'true',
-              trace: `Created at ${new Date().toLocaleTimeString()}`
-          }]
-      };
-
-      if (newLayer === 'archive') {
-          memoryService.addArchiveEntry(partialNode);
+      if (editNodeId) {
+          // Update existing
+          memoryService.updateNode(editNodeId, newLayer, {
+              title: newTitle,
+              content: newContent,
+              type: newType
+          });
       } else {
-          memoryService.addShadowEntry(partialNode);
+          // Create new
+          const partialNode: Partial<MemoryNode> = {
+              title: newTitle,
+              type: newType,
+              content: newContent,
+              evidence: [{
+                  source: 'Manual Entry (User)',
+                  inference: 'Direct input from Memory View.',
+                  fact: 'true',
+                  trace: `Created at ${new Date().toLocaleTimeString()}`
+              }]
+          };
+
+          if (newLayer === 'archive') {
+              memoryService.addArchiveEntry(partialNode);
+          } else {
+              memoryService.addShadowEntry(partialNode);
+          }
       }
 
       // Reset and Reload
-      setIsCreating(false);
+      setIsEditing(false);
+      setEditNodeId(null);
       setNewTitle('');
       setNewContent('');
       setNewType('event');
       setFileError(null);
       loadMemory();
   };
+
+  const handleDeleteNode = (node: MemoryNode) => {
+      if (confirm(`Вы уверены, что хотите удалить узел "${node.title}"? Это действие необратимо.`)) {
+          memoryService.deleteNode(node.id, node.layer as 'archive' | 'shadow');
+          setSelectedNode(null);
+          loadMemory();
+      }
+  }
 
   const filteredArchive = useMemo(() => {
     if (selectedType === 'all') return archive;
@@ -145,16 +196,22 @@ const MemoryView: React.FC = () => {
   const NodeCard: React.FC<{ node: MemoryNode }> = ({ node }) => (
     <button
       onClick={() => setSelectedNode(node)}
-      className="w-full text-left p-4 bg-surface rounded-lg hover:bg-surface2 transition-colors border border-border animate-fade-in"
+      className="w-full text-left p-4 bg-surface rounded-lg hover:bg-surface2 transition-colors border border-border animate-fade-in group relative"
     >
       <div className="flex justify-between items-start">
-        <p className="font-semibold text-text text-lg font-serif">{node.title}</p>
+        <p className="font-semibold text-text text-lg font-serif pr-6">{node.title}</p>
         <span className={`px-2 py-0.5 text-xs rounded-pill font-mono ${node.layer === 'archive' ? 'bg-accent/20 text-accent' : 'bg-purple-500/20 text-purple-400'}`}>
           {node.layer}
         </span>
       </div>
       <p className="text-sm text-text-muted mt-1">{node.type}</p>
       <p className="text-xs text-text-muted mt-2">{formatDate(node.timestamp)}</p>
+
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+          <div className="p-1 rounded bg-black/50 text-text-muted hover:text-white" onClick={(e) => { e.stopPropagation(); openEditModal(node); }}>
+              <BookTextIcon className="w-4 h-4" />
+          </div>
+      </div>
     </button>
   );
 
@@ -167,7 +224,10 @@ const MemoryView: React.FC = () => {
             return (
                 <div className="mt-4 space-y-3">
                     {searchResults.map(r => (
-                        <div key={r.id} className="rounded-lg border border-border bg-surface p-3 animate-fade-in">
+                        <div key={r.id} className="rounded-lg border border-border bg-surface p-3 animate-fade-in cursor-pointer hover:bg-surface2" onClick={() => {
+                            const node = archive.find(n => n.id === r.id) || shadow.find(n => n.id === r.id);
+                            if (node) setSelectedNode(node);
+                        }}>
                             <div className="flex justify-between items-center text-xs opacity-70">
                                 <span>{r.type}{r.layer ? `/${r.layer}` : ''}</span>
                                 <span className="font-mono">Score: {r.score.toFixed(2)}</span>
@@ -186,7 +246,7 @@ const MemoryView: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow overflow-hidden mt-4">
           <div className="flex flex-col h-full">
             <h3 className="font-serif text-xl text-accent mb-4 text-center md:text-left">Архив (Проверенные узлы)</h3>
-            <div className="flex-grow overflow-y-auto pr-2 -mr-2 space-y-3 pb-24 lg:pb-0">
+            <div className="flex-grow overflow-y-auto pr-2 -mr-2 space-y-3 pb-24 lg:pb-0 scrollbar-thin">
               {filteredArchive.length > 0 ? (
                 filteredArchive.map(node => <NodeCard key={node.id} node={node} />)
               ) : (
@@ -196,7 +256,7 @@ const MemoryView: React.FC = () => {
           </div>
           <div className="flex flex-col h-full">
             <h3 className="font-serif text-xl text-purple-400 mb-4 text-center md:text-left">Тень (Гипотезы и паттерны)</h3>
-            <div className="flex-grow overflow-y-auto pr-2 -mr-2 space-y-3 pb-24 lg:pb-0">
+            <div className="flex-grow overflow-y-auto pr-2 -mr-2 space-y-3 pb-24 lg:pb-0 scrollbar-thin">
               {filteredShadow.length > 0 ? (
                  filteredShadow.map(node => <NodeCard key={node.id} node={node} />)
               ) : (
@@ -209,13 +269,13 @@ const MemoryView: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 sm:p-6 overflow-hidden">
+    <div className="flex flex-col h-full p-4 sm:p-6 overflow-hidden bg-bg">
       <header className="shrink-0 text-center mb-6">
         <div className="flex items-center justify-between mb-4">
             <h2 className="font-serif text-2xl md:text-3xl text-text">Память Искры</h2>
             <div className="flex gap-2">
                 <button
-                    onClick={() => setIsCreating(true)}
+                    onClick={openCreateModal}
                     className="p-2 rounded-md bg-primary text-black hover:bg-primary/90 transition-colors shadow-glow-primary"
                     title="Добавить узел"
                 >
@@ -280,13 +340,13 @@ const MemoryView: React.FC = () => {
         </div>
       )}
 
-      {/* Create Node Modal */}
-      {isCreating && (
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in" onClick={() => setIsCreating(false)}>
+      {/* Create/Edit Node Modal */}
+      {isEditing && (
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in" onClick={() => setIsEditing(false)}>
               <div className="w-full max-w-xl bg-surface2 border border-border rounded-2xl shadow-deep p-6 m-4" onClick={e => e.stopPropagation()}>
                   <div className="flex justify-between items-center mb-6">
-                      <h3 className="font-serif text-2xl text-text">Новый Узел Памяти</h3>
-                      <button onClick={() => setIsCreating(false)}><XIcon className="w-6 h-6 text-text-muted hover:text-text" /></button>
+                      <h3 className="font-serif text-2xl text-text">{editNodeId ? 'Редактировать Узел' : 'Новый Узел Памяти'}</h3>
+                      <button onClick={() => setIsEditing(false)}><XIcon className="w-6 h-6 text-text-muted hover:text-text" /></button>
                   </div>
                   
                   <div className="space-y-4">
@@ -309,7 +369,12 @@ const MemoryView: React.FC = () => {
                           </div>
                           <div>
                               <label className="block text-xs text-text-muted uppercase mb-1">Слой</label>
-                              <select value={newLayer} onChange={e => setNewLayer(e.target.value as any)} className="w-full bg-bg border border-white/10 rounded p-2 text-text">
+                              <select
+                                value={newLayer}
+                                onChange={e => setNewLayer(e.target.value as any)}
+                                className="w-full bg-bg border border-white/10 rounded p-2 text-text"
+                                disabled={!!editNodeId} // Cannot change layer during edit
+                              >
                                   <option value="shadow">Shadow (Гипотеза)</option>
                                   <option value="archive">Archive (Факт)</option>
                               </select>
@@ -342,8 +407,22 @@ const MemoryView: React.FC = () => {
                           />
                       </div>
                       
-                      <div className="pt-4 flex justify-end">
-                          <button onClick={handleCreateNode} className="button-primary px-6">Создать</button>
+                      <div className="pt-4 flex justify-end gap-3">
+                          {editNodeId && (
+                              <button
+                                onClick={() => {
+                                    if(confirm('Удалить этот узел?')) {
+                                        memoryService.deleteNode(editNodeId, newLayer);
+                                        setIsEditing(false);
+                                        loadMemory();
+                                    }
+                                }}
+                                className="px-4 py-2 text-danger hover:bg-danger/10 rounded border border-transparent hover:border-danger/30 transition-colors"
+                              >
+                                Удалить
+                              </button>
+                          )}
+                          <button onClick={handleSaveNode} className="button-primary px-6">{editNodeId ? 'Сохранить' : 'Создать'}</button>
                       </div>
                   </div>
               </div>
@@ -366,14 +445,22 @@ const MemoryView: React.FC = () => {
                         </div>
                         <p className="text-xs text-text-muted mt-2">{formatDate(selectedNode.timestamp)}</p>
                     </div>
-                     <button onClick={() => setSelectedNode(null)} className="text-text-muted hover:text-text">
-                        <XIcon className="w-6 h-6" />
-                    </button>
+                    <div className="flex gap-2">
+                        <button onClick={() => openEditModal(selectedNode)} className="p-2 text-text-muted hover:text-white rounded hover:bg-white/10" title="Редактировать">
+                            <BookTextIcon className="w-5 h-5" />
+                        </button>
+                        <button onClick={() => handleDeleteNode(selectedNode)} className="p-2 text-text-muted hover:text-danger rounded hover:bg-danger/10" title="Удалить">
+                            <TrashIcon className="w-5 h-5" />
+                        </button>
+                        <button onClick={() => setSelectedNode(null)} className="p-2 text-text-muted hover:text-text rounded hover:bg-white/10">
+                            <XIcon className="w-6 h-6" />
+                        </button>
+                    </div>
                 </div>
                 <div className="flex-grow overflow-y-auto pr-4 -mr-4 text-text-muted space-y-4">
                    <div>
                        <h4 className="font-semibold text-text-muted uppercase text-xs tracking-wider mb-2">Содержимое</h4>
-                       <pre className="text-sm bg-bg p-3 rounded-md whitespace-pre-wrap font-mono overflow-x-auto">{JSON.stringify(selectedNode.content, null, 2)}</pre>
+                       <pre className="text-sm bg-bg p-3 rounded-md whitespace-pre-wrap font-mono overflow-x-auto">{typeof selectedNode.content === 'string' ? selectedNode.content : JSON.stringify(selectedNode.content, null, 2)}</pre>
                    </div>
                     {selectedNode.metrics && (
                         <div>

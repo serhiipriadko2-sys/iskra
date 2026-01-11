@@ -154,9 +154,14 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
     const [advice, setAdvice] = useState<DailyAdvice | null>(null);
     const [isAdviceLoading, setIsAdviceLoading] = useState<boolean>(true);
     // Реальные метрики пользователя (НЕ рандомные!)
-    const [userMetrics, setUserMetrics] = useState<UserDailyMetrics>(() =>
-        userMetricsService.getUserDailyMetrics()
-    );
+    // Инициализируем нулями, данные подгрузятся асинхронно
+    const [userMetrics, setUserMetrics] = useState<UserDailyMetrics>({
+        focus: 0,
+        sleep: 0,
+        energy: 0,
+        habits: 0,
+        deltaScore: 0
+    });
     const [topTasks] = useState<Task[]>(() => {
       try {
         const allTasks = storageService.getTasks();
@@ -175,8 +180,13 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
 
     useEffect(() => {
         setHabits(storageService.getHabits());
+
         // Обновляем пользовательские метрики при загрузке
-        setUserMetrics(userMetricsService.getUserDailyMetrics());
+        const loadMetrics = async () => {
+            const metrics = await userMetricsService.getUserDailyMetrics();
+            setUserMetrics(metrics);
+        };
+        loadMetrics();
 
         const fetchAdvice = async () => {
             try {
@@ -191,12 +201,13 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
         fetchAdvice();
     }, []); // eslint-disable-line
 
-    const handleToggleHabit = (id: string) => {
+    const handleToggleHabit = async (id: string) => {
         const updated = habits.map(h => h.id === id ? { ...h, completedToday: !h.completedToday, streak: !h.completedToday ? h.streak + 1 : Math.max(0, h.streak - 1) } : h);
         setHabits(updated);
         storageService.saveHabits(updated);
         // Обновляем метрики после изменения привычек
-        setUserMetrics(userMetricsService.getUserDailyMetrics());
+        const metrics = await userMetricsService.getUserDailyMetrics();
+        setUserMetrics(metrics);
     };
 
     // Используем реальный ∆-Ритм из userMetrics

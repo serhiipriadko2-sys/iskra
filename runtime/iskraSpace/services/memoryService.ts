@@ -334,6 +334,51 @@ export const memoryService = {
     }
   },
 
+  // --- GENERIC NODE OPERATIONS (New in Sprint) ---
+
+  updateNode(nodeId: string, layer: 'archive' | 'shadow', updates: Partial<MemoryNode>): MemoryNode | null {
+      const key = layer === 'archive' ? ARCHIVE_KEY : SHADOW_KEY;
+      try {
+          const raw = localStorage.getItem(key);
+          const nodes: MemoryNode[] = raw ? JSON.parse(raw) : [];
+
+          const index = nodes.findIndex(n => n.id === nodeId);
+          if (index === -1) return null;
+
+          const updatedNode = { ...nodes[index], ...updates, id: nodeId, layer }; // Ensure ID/Layer don't change
+
+          // Re-validate
+          if (!validateMemoryNode(updatedNode, layer)) {
+              console.warn("Update resulted in invalid node, rejecting", updatedNode);
+              return null;
+          }
+
+          nodes[index] = updatedNode;
+          localStorage.setItem(key, JSON.stringify(nodes));
+          return updatedNode;
+      } catch (error) {
+          console.error(`Error updating node ${nodeId} in ${layer}`, error);
+          return null;
+      }
+  },
+
+  deleteNode(nodeId: string, layer: 'archive' | 'shadow'): boolean {
+      const key = layer === 'archive' ? ARCHIVE_KEY : SHADOW_KEY;
+      try {
+          const raw = localStorage.getItem(key);
+          const nodes: MemoryNode[] = raw ? JSON.parse(raw) : [];
+
+          const filtered = nodes.filter(n => n.id !== nodeId);
+          if (filtered.length === nodes.length) return false; // Not found
+
+          localStorage.setItem(key, JSON.stringify(filtered));
+          return true;
+      } catch (error) {
+          console.error(`Error deleting node ${nodeId} in ${layer}`, error);
+          return false;
+      }
+  },
+
   // Basic sanitization to prevent simple injection attacks from memory content
   sanitize(content: any): string {
     if (typeof content === 'string') {

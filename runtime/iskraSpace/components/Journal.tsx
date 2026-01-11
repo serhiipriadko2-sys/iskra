@@ -37,6 +37,10 @@ const Journal: React.FC = () => {
     const [isPromptLoading, setIsPromptLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     
+    // User Note Editing
+    const [userNote, setUserNote] = useState('');
+    const [isAddingNote, setIsAddingNote] = useState(false);
+
     // User Metrics State
     const [mood, setMood] = useState(50);
     const [energy, setEnergy] = useState(50);
@@ -109,6 +113,34 @@ const Journal: React.FC = () => {
         setEntryText('');
         setMood(50);
         setEnergy(50);
+    };
+
+    const handleAddUserNote = () => {
+        if (!viewingEntry || !userNote.trim()) return;
+
+        const updatedEntry = {
+            ...viewingEntry,
+            userNotes: [...(viewingEntry.userNotes || []), {
+                timestamp: new Date().toISOString(),
+                text: userNote
+            }]
+        };
+
+        // Persist update (assuming storageService supports updating via overwrite or we implement updateEntry)
+        // Since storageService uses simple list, we can just replace.
+        // Actually, storageService currently lacks updateJournalEntry. We should probably add it or do manual replace.
+        // Manual replace for now:
+        const allEntries = storageService.getJournalEntries();
+        const idx = allEntries.findIndex(e => e.id === viewingEntry.id);
+        if (idx !== -1) {
+            allEntries[idx] = updatedEntry;
+            localStorage.setItem('iskra_journal_entries', JSON.stringify(allEntries));
+            setSavedEntries(allEntries);
+            setViewingEntry(updatedEntry);
+        }
+
+        setUserNote('');
+        setIsAddingNote(false);
     };
     
     const formatDate = (isoString: string) => {
@@ -290,6 +322,41 @@ const Journal: React.FC = () => {
                                    </div>
                                </div>
                            )}
+
+                           {/* User Notes Section */}
+                           <div className="mt-8 border-t border-white/5 pt-6">
+                               <h4 className="text-sm font-bold uppercase tracking-wider text-text-muted mb-4">Ваши заметки</h4>
+
+                               {viewingEntry.userNotes && viewingEntry.userNotes.map((note, idx) => (
+                                   <div key={idx} className="bg-black/20 p-3 rounded-lg mb-3 text-sm text-text/80">
+                                       <div className="text-[10px] text-text-muted mb-1">{formatDate(note.timestamp)}</div>
+                                       {note.text}
+                                   </div>
+                               ))}
+
+                               {isAddingNote ? (
+                                   <div className="mt-4 animate-fade-in">
+                                       <textarea
+                                           value={userNote}
+                                           onChange={e => setUserNote(e.target.value)}
+                                           placeholder="Добавить размышление..."
+                                           className="w-full bg-surface p-3 rounded-lg border border-white/10 text-sm text-text focus:border-primary/50 outline-none"
+                                           rows={3}
+                                       />
+                                       <div className="flex justify-end gap-2 mt-2">
+                                           <button onClick={() => setIsAddingNote(false)} className="text-xs px-3 py-1 text-text-muted hover:text-text">Отмена</button>
+                                           <button onClick={handleAddUserNote} className="text-xs px-3 py-1 bg-primary text-black rounded font-medium hover:bg-primary/90">Добавить</button>
+                                       </div>
+                                   </div>
+                               ) : (
+                                   <button
+                                       onClick={() => setIsAddingNote(true)}
+                                       className="mt-2 text-xs text-primary hover:text-primary/80 flex items-center gap-1"
+                                   >
+                                       + Добавить заметку
+                                   </button>
+                               )}
+                           </div>
                         </div>
                     </div>
                 </div>

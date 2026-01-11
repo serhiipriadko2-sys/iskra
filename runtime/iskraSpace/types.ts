@@ -137,6 +137,10 @@ export interface JournalEntry {
     mood: number; // 0-100
     energy: number; // 0-100
   };
+  userNotes?: {
+    timestamp: string;
+    text: string;
+  }[];
 }
 
 // --- Duo Link Types ---

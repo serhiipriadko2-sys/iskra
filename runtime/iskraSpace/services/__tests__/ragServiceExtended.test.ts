@@ -42,7 +42,7 @@ describe('ragService', () => {
         layer: 'mantra',
         // @ts-ignore - Mocking partial MemoryNode for test
         embedding: [],
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
         tags: []
       });
 

@@ -11,30 +11,50 @@ interface IskraMetricsDisplayProps {
 
 const MetricBar: React.FC<{ label: string; value: number; colorClass: string; description: string }> = ({ label, value, colorClass, description }) => {
     const width = `${Math.round(value * 100)}%`;
+    // Determine dynamic color based on thresholds
+    const dynamicColor = getColorForValue(value, description, colorClass);
+
     return (
         <div className="group relative">
             <div className="flex justify-between items-baseline mb-1">
                 <span className="text-xs font-bold text-text-muted uppercase tracking-wider">{label}</span>
-                <span className={`font-mono text-xs ${colorClass.replace('bg-', 'text-')}`}>{value.toFixed(2)}</span>
+                <span className={`font-mono text-xs ${dynamicColor.replace('bg-', 'text-').split(' ')[0]}`}>{value.toFixed(2)}</span>
             </div>
             <div className="h-1.5 rounded-full bg-surface2 overflow-hidden mb-1">
                 <div 
-                    className={`h-full rounded-full ${colorClass} transition-all duration-500 ease-out`}
+                    className={`h-full rounded-full ${dynamicColor} transition-all duration-500 ease-out`}
                     style={{ width: width }}
                 />
             </div>
             {/* Contextual Description */}
-            <p className="text-[10px] text-text-muted/70 truncate group-hover:text-text-muted transition-colors">
+            <p className={`text-[10px] truncate transition-colors ${dynamicColor.includes('danger') ? 'text-danger font-medium' : 'text-text-muted/70 group-hover:text-text-muted'}`}>
                 {getDescriptionForValue(value, description)}
             </p>
         </div>
     );
 };
 
+const getColorForValue = (value: number, type: string, defaultColor: string) => {
+    if (type === 'chaos') {
+        if (value > 0.8) return 'bg-danger animate-pulse';
+        if (value > 0.6) return 'bg-warning';
+    }
+    if (type === 'pain') {
+        if (value > 0.6) return 'bg-danger animate-pulse';
+        if (value > 0.4) return 'bg-warning';
+    }
+    if (type === 'trust') {
+        if (value < 0.3) return 'bg-danger';
+        if (value < 0.5) return 'bg-warning';
+    }
+    return defaultColor;
+};
+
 // Helper to get text explanation based on value
 const getDescriptionForValue = (value: number, type: string) => {
     if (type === 'chaos') {
-        if (value > 0.6) return '⚠️ Высокая энтропия (нужна структура)';
+        if (value > 0.8) return '⚠️ КРИТИЧЕСКИЙ ХАОС';
+        if (value > 0.6) return '⚠️ Высокая энтропия';
         if (value > 0.3) return 'Активный поиск';
         return 'Стабильность';
     }

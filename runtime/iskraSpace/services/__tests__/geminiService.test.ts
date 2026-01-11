@@ -1,7 +1,6 @@
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IskraAIService } from '../geminiService';
-import { Task } from '../../types';
 
 // Mock fetch globally
 const globalFetch = vi.fn();

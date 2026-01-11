@@ -66,7 +66,7 @@ export const MobileMenu: React.FC<{
         const arcIndex = isInner ? index : index - 4;
         const arcTotal = isInner ? 4 : total - 4;
         
-        const radius = isInner ? 130 : 240;
+        const radius = isInner ? 140 : 260;
         
         // Sweep from ~10 to ~100 degrees (from bottom right up)
         const startAngle = 5; 
@@ -93,14 +93,14 @@ export const MobileMenu: React.FC<{
                 style={{
                     right: `${rightVal}px`,
                     bottom: `${bottomVal}px`,
-                    width: '60px',
-                    height: '60px',
+                    width: '70px',
+                    height: '70px',
                     transitionDelay: `${delay}ms`,
                     zIndex: 60 - index
                 }}
             >
-                <item.icon className="h-5 w-5 mb-1" />
-                <span className="text-[8px] font-medium leading-none truncate w-full text-center tracking-wide">{item.name}</span>
+                <item.icon className="h-6 w-6 mb-1" />
+                <span className="text-[10px] font-medium leading-none truncate w-full text-center tracking-wide">{item.name}</span>
             </button>
         );
     };

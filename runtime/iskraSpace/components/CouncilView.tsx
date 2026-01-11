@@ -56,6 +56,19 @@ const ProtocolTooltip: React.FC<{ symbol: string; title: string; desc: string }>
   </div>
 );
 
+const VOICE_DESCRIPTIONS: Record<VoiceName, string> = {
+    ISKRA: "Синтез всех граней. Баланс.",
+    KAIN: "Критический анализ. Поиск ошибок. (Truth)",
+    PINO: "Творческое переосмысление. Парадокс. (Chaos)",
+    SAM: "Структура и порядок. План действий. (Order)",
+    ANHANTRA: "Тишина и наблюдение. Эмпатия. (Void)",
+    HUNDUN: "Спонтанность и хаос. (Chaos)",
+    HUYNDUN: "Спонтанность и хаос. (Chaos)",
+    ISKRIV: "Аудит и проверка фактов. (Audit)",
+    MAKI: "Интеграция опыта. Память. (Growth)",
+    SIBYL: "Предвидение и прогноз. (Foresight)",
+};
+
 const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
   const [topic, setTopic] = useState('');
   const [isRunning, setIsRunning] = useState(false);
@@ -155,6 +168,7 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
                   return (
                     <div
                       key={voice}
+                      title={VOICE_NAMES_RU[voice]}
                       className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${
                         isDone ? VOICE_COLORS[voice].replace('text-', 'bg-').split(' ')[0]
                         : isActive ? 'bg-white animate-pulse' : 'bg-surface2'
@@ -170,8 +184,13 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
                   className={`relative p-4 rounded-xl border bg-surface/30 backdrop-blur-sm animate-slide-in-left ${VOICE_COLORS[response.voice]}`}
                 >
                   <div className="flex gap-3">
-                    <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-black/20 text-2xl">
+                    <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-black/20 text-2xl group cursor-help relative">
                       {response.symbol}
+                      {/* Voice Role Tooltip */}
+                      <div className="absolute left-full top-0 ml-2 w-48 p-2 bg-surface/90 border border-white/10 rounded-lg text-xs text-text shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 backdrop-blur-md">
+                        <div className="font-bold mb-1">{VOICE_NAMES_RU[response.voice]}</div>
+                        {VOICE_DESCRIPTIONS[response.voice]}
+                      </div>
                     </div>
                     <div>
                       <div className="flex items-baseline gap-2 mb-1">
