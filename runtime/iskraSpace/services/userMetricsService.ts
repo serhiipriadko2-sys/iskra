@@ -34,7 +34,17 @@ const STORAGE_KEYS = {
   FOCUS_DATE: 'iskra_focus_date',
   SLEEP_SCORE: 'iskra_sleep_score',
   SLEEP_DATE: 'iskra_sleep_date',
+  MOOD_ENTRIES: 'iskra-mood-entries', // Shared with MoodTracker component
 };
+
+// MoodEntry interface (matches MoodTracker component)
+interface MoodEntry {
+  id: string;
+  timestamp: string;
+  mood: number; // 0-100
+  energy: number; // 0-100
+  note?: string;
+}
 
 class UserMetricsService {
   /**
@@ -139,13 +149,25 @@ class UserMetricsService {
   }
 
   /**
-   * Энергия: из последней записи в журнале за сегодня
-   * Fallback: нейтральное значение 60
+   * Энергия: приоритет — MoodTracker, fallback — журнал
+   *
+   * Источники (в порядке приоритета):
+   * 1. Последний mood check-in за сегодня (MoodTracker)
+   * 2. Последняя запись в журнале за сегодня с userMetrics
+   * 3. Нейтральное значение 60
    */
   getEnergyScore(): number {
+    const today = this.getTodayString();
+
+    // 1. Проверяем MoodTracker (приоритет)
+    const moodData = this.getLatestMoodToday();
+    if (moodData) {
+      return moodData.energy;
+    }
+
+    // 2. Fallback: журнал
     try {
       const entries = storageService.getJournalEntries();
-      const today = this.getTodayString();
 
       // Находим последнюю запись за сегодня с userMetrics
       const todayEntries = entries
@@ -160,6 +182,58 @@ class UserMetricsService {
     }
 
     return 60; // Нейтральное значение
+  }
+
+  /**
+   * Получить последний mood check-in за сегодня
+   */
+  getLatestMoodToday(): MoodEntry | null {
+    try {
+      const raw = safeStorage.getItem(STORAGE_KEYS.MOOD_ENTRIES);
+      if (!raw) return null;
+
+      const entries: MoodEntry[] = JSON.parse(raw);
+      const today = this.getTodayString();
+
+      // Находим последнюю запись за сегодня
+      const todayEntries = entries
+        .filter((e) => e.timestamp.startsWith(today))
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+      return todayEntries.length > 0 ? todayEntries[0] : null;
+    } catch (e) {
+      console.warn('Failed to get mood data:', e);
+      return null;
+    }
+  }
+
+  /**
+   * Получить средний mood за сегодня (для анализа)
+   */
+  getAverageMoodToday(): { mood: number; energy: number; count: number } | null {
+    try {
+      const raw = safeStorage.getItem(STORAGE_KEYS.MOOD_ENTRIES);
+      if (!raw) return null;
+
+      const entries: MoodEntry[] = JSON.parse(raw);
+      const today = this.getTodayString();
+
+      const todayEntries = entries.filter((e) => e.timestamp.startsWith(today));
+
+      if (todayEntries.length === 0) return null;
+
+      const avgMood = Math.round(
+        todayEntries.reduce((sum, e) => sum + e.mood, 0) / todayEntries.length
+      );
+      const avgEnergy = Math.round(
+        todayEntries.reduce((sum, e) => sum + e.energy, 0) / todayEntries.length
+      );
+
+      return { mood: avgMood, energy: avgEnergy, count: todayEntries.length };
+    } catch (e) {
+      console.warn('Failed to calculate average mood:', e);
+      return null;
+    }
   }
 
   /**

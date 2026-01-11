@@ -65,6 +65,15 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   // Response Mode State
   const [responseMode, setResponseMode] = useState<ResponseMode>(() => storageService.getResponseMode());
 
+  // Cycle through response modes: simple → deep → debate → simple
+  const cycleResponseMode = () => {
+    const modes: ResponseMode[] = ['simple', 'deep', 'debate'];
+    const currentIndex = modes.indexOf(responseMode);
+    const nextMode = modes[(currentIndex + 1) % modes.length];
+    setResponseMode(nextMode);
+    storageService.saveResponseMode(nextMode);
+  };
+
   const outputAudioContextRef = useRef<AudioContext | null>(null);
   const nextStartTimeRef = useRef(0);
   const audioSourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
@@ -326,11 +335,15 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
                         Активен: {currentVoice.name}
                     </span>
                 )}
-                {/* Response Mode Indicator */}
-                <span className={`px-2 py-0.5 rounded-full text-xs border ${RESPONSE_MODE_DISPLAY[responseMode].color} bg-white/5 border-current/20 flex items-center gap-1`}>
+                {/* Response Mode Switcher */}
+                <button
+                    onClick={cycleResponseMode}
+                    className={`px-2 py-0.5 rounded-full text-xs border ${RESPONSE_MODE_DISPLAY[responseMode].color} bg-white/5 border-current/20 flex items-center gap-1 hover:bg-white/10 transition-colors cursor-pointer`}
+                    title="Переключить режим ответа (клик для смены)"
+                >
                     <span>{RESPONSE_MODE_DISPLAY[responseMode].icon}</span>
                     <span>{RESPONSE_MODE_DISPLAY[responseMode].label}</span>
-                </span>
+                </button>
             </div>
          </div>
          

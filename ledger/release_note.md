@@ -180,3 +180,18 @@
 
 ### Ω: 0.88
 ### Λ: Реализовать переключение режима прямо из ChatView.
+
+---
+
+## vΩ.3.8 (Mood & Mode Integration) — 2026-01-11
+### Что сделано
+- ChatView: добавлен кликабельный switcher режима ответа (циклическое переключение Simple→Deep→Debate)
+- userMetricsService: интеграция MoodTracker данных как приоритетного источника энергии
+- Новые методы: `getLatestMoodToday()`, `getAverageMoodToday()` для анализа настроения
+- Energy теперь читается из MoodTracker → Journal → fallback (60)
+
+### Проверки
+- `npm run typecheck` → OK
+
+### Ω: 0.90
+### Λ: Добавить визуализацию mood trends в DayPulse.
