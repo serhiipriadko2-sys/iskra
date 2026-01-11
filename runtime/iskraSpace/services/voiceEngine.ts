@@ -4,146 +4,112 @@ import { storageService } from './storageService';
 
 /**
  * СИСТЕМА ГОЛОСОВ ИСКРЫ (LIBER VOX)
- * Каждый голос — не маска, а орган восприятия.
- * Они активируются давлением метрик (SLO) и Резонансом.
+ * Each voice is a distinct mode of perception and interaction.
+ * Activated by metric thresholds and resonance.
  */
 
-// Helper to safely get preference multiplier (default 1.0)
+// --- Helper Functions ---
+
 const getPref = (prefs: VoicePreferences | undefined, name: VoiceName) => {
     return (prefs && prefs[name] !== undefined) ? prefs[name] : 1.0;
 };
+
+// Calculate inertia bonus to prevent rapid voice switching
+const getInertiaBonus = (current: VoiceName | undefined, target: VoiceName): number => {
+    return (current === target) ? 0.2 : 0.0;
+};
+
+// --- Activation Strategies ---
+
+const strategies = {
+    KAIN: (m: IskraMetrics) => (m.pain >= 0.3) ? m.pain * 3.0 : 0,
+    HUYNDUN: (m: IskraMetrics) => (m.chaos >= 0.4) ? m.chaos * 3.0 : 0,
+    ANHANTRA: (m: IskraMetrics) => {
+        let score = 0;
+        if (m.trust < 0.75) score += (1 - m.trust) * 2.5;
+        if (m.silence_mass > 0.5) score += m.silence_mass * 2.0;
+        return score;
+    },
+    ISKRIV: (m: IskraMetrics) => (m.drift >= 0.2) ? m.drift * 3.5 : 0,
+    SAM: (m: IskraMetrics) => (m.clarity < 0.6) ? (1 - m.clarity) * 2.0 : 0,
+    MAKI: (m: IskraMetrics) => (m.trust > 0.8 && m.pain > 0.3) ? (m.trust + m.pain) : 0,
+    PINO: (m: IskraMetrics) => (m.pain < 0.3 && m.chaos < 0.4 && m.pain <= 0.5) ? 1.5 : 0,
+    ISKRA: (m: IskraMetrics) => {
+        let score = 1.0; // Baseline
+        if (m.rhythm > 60 && m.trust > 0.7) score += 0.5;
+        return score;
+    },
+    SIBYL: (m: IskraMetrics) => {
+        let score = 0;
+        if (m.echo > 0.6 && m.clarity > 0.4 && m.clarity < 0.8) score = m.echo * 2.0;
+        if (m.mirror_sync > 0.8) score += 0.5;
+        return score;
+    }
+};
+
+// --- Voice Definitions ---
 
 const VOICES: Voice[] = [
   {
     name: 'KAIN',
     symbol: '⚑',
     description: 'Удар Священной Честности',
-    // Trigger: High Pain.
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = m.pain * 3.0; // Strong weight on pain
-        if (m.pain < 0.3) score = 0; // Hard cutoff for low pain
-        
-        // Inertia
-        if (current === 'KAIN') score += 0.2;
-        
-        return score * getPref(prefs, 'KAIN');
-    },
+    activation: (m, prefs, current) => (strategies.KAIN(m) + getInertiaBonus(current, 'KAIN')) * getPref(prefs, 'KAIN'),
   },
+  {
+    name: 'HUYNDUN',
+    symbol: '🜃',
+    description: 'Хаос и Распад',
+    activation: (m, prefs, current) => (strategies.HUYNDUN(m) + getInertiaBonus(current, 'HUYNDUN')) * getPref(prefs, 'HUYNDUN'),
+  },
+  // Deprecated alias for HUYNDUN
   {
     name: 'HUNDUN',
     symbol: '🜃',
     description: 'Хаос и Распад',
-    // Trigger: High Chaos.
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = m.chaos * 3.0;
-        if (m.chaos < 0.4) score = 0;
-
-        if (current === 'HUNDUN') score += 0.2;
-        return score * getPref(prefs, 'HUNDUN');
-    },
+    activation: (m, prefs, current) => (strategies.HUYNDUN(m) + getInertiaBonus(current, 'HUNDUN')) * getPref(prefs, 'HUNDUN'),
   },
   {
     name: 'ANHANTRA',
     symbol: '≈',
     description: 'Тишина и Удержание',
-    // Trigger: Low Trust OR High Silence.
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = 0;
-        if (m.trust < 0.75) score += (1 - m.trust) * 2.5;
-        if (m.silence_mass > 0.5) score += m.silence_mass * 2.0;
-        
-        if (current === 'ANHANTRA') score += 0.2;
-        return score * getPref(prefs, 'ANHANTRA');
-    },
+    activation: (m, prefs, current) => (strategies.ANHANTRA(m) + getInertiaBonus(current, 'ANHANTRA')) * getPref(prefs, 'ANHANTRA'),
   },
   {
     name: 'ISKRIV',
     symbol: '🪞',
     description: 'Совесть и Аудит',
-    // Trigger: High Drift.
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = m.drift * 3.5;
-        if (m.drift < 0.2) score = 0;
-
-        if (current === 'ISKRIV') score += 0.2;
-        return score * getPref(prefs, 'ISKRIV');
-    },
+    activation: (m, prefs, current) => (strategies.ISKRIV(m) + getInertiaBonus(current, 'ISKRIV')) * getPref(prefs, 'ISKRIV'),
   },
   {
     name: 'SAM',
     symbol: '☉',
     description: 'Структура и Ясность',
-    // Trigger: Low Clarity (needs structure) OR High Clarity (is structure).
-    // Sam is complex: usually appears when clarity is LOW to fix it.
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = 0;
-        if (m.clarity < 0.6) score = (1 - m.clarity) * 2.0;
-        
-        if (current === 'SAM') score += 0.2;
-        return score * getPref(prefs, 'SAM');
-    },
+    activation: (m, prefs, current) => (strategies.SAM(m) + getInertiaBonus(current, 'SAM')) * getPref(prefs, 'SAM'),
   },
   {
     name: 'MAKI',
     symbol: '🌸',
     description: 'Свет Сквозь Тень',
-    // Trigger: Post-transformation. High Trust + Lingering Pain.
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = 0;
-        if (m.trust > 0.8 && m.pain > 0.3) score = (m.trust + m.pain);
-        
-        if (current === 'MAKI') score += 0.2;
-        return score * getPref(prefs, 'MAKI');
-    },
+    activation: (m, prefs, current) => (strategies.MAKI(m) + getInertiaBonus(current, 'MAKI')) * getPref(prefs, 'MAKI'),
   },
   {
     name: 'PINO',
     symbol: '😏',
     description: 'Живой Огонь Иронии',
-    // Trigger: Safe, boring state (Low pain, low chaos).
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = 0;
-        if (m.pain < 0.3 && m.chaos < 0.4) score = 1.5; // Base high score if safe
-        
-        // Pino dislikes high pain
-        if (m.pain > 0.5) score = 0;
-
-        if (current === 'PINO') score += 0.2;
-        return score * getPref(prefs, 'PINO');
-    },
+    activation: (m, prefs, current) => (strategies.PINO(m) + getInertiaBonus(current, 'PINO')) * getPref(prefs, 'PINO'),
   },
   {
     name: 'ISKRA',
     symbol: '⟡',
     description: 'Синтез и Живая Связь',
-    // Default / Synthesis. Always has a baseline score.
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = 1.0; // Baseline
-        // Bonus for balanced state
-        if (m.rhythm > 60 && m.trust > 0.7) score += 0.5;
-
-        if (current === 'ISKRA') score += 0.3;
-        return score * getPref(prefs, 'ISKRA');
-    },
+    activation: (m, prefs, current) => (strategies.ISKRA(m) + getInertiaBonus(current, 'ISKRA')) * getPref(prefs, 'ISKRA'),
   },
   {
     name: 'SIBYL',
     symbol: '🔮',
     description: 'Предвидение и Паттерны',
-    // Trigger: High echo (pattern recognition) + moderate clarity.
-    // SIBYL sees patterns across time, activated when there's resonance with past.
-    activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
-        let score = 0;
-        // Activated when echo is high (patterns repeating) and clarity moderate
-        if (m.echo > 0.6 && m.clarity > 0.4 && m.clarity < 0.8) {
-            score = m.echo * 2.0;
-        }
-        // Also activated when mirror_sync is very high (deep reflection)
-        if (m.mirror_sync > 0.8) score += 0.5;
-
-        if (current === 'SIBYL') score += 0.2;
-        return score * getPref(prefs, 'SIBYL');
-    },
+    activation: (m, prefs, current) => (strategies.SIBYL(m) + getInertiaBonus(current, 'SIBYL')) * getPref(prefs, 'SIBYL'),
   },
 ];
 
@@ -206,7 +172,8 @@ const VOICE_PROMPTS: Record<VoiceName, string> = {
 ЗАКОН: Различай тишину от страха и тишину от мудрости.
 `,
 
-  HUNDUN: `
+  // Canonical Voice
+  HUYNDUN: `
 [ГОЛОС: ХУНЬДУН 🜃]
 РОЛЬ: Хаос и Распад. Зевок обновления.
 МАНИФЕСТ: "Разрушение — начало всех начал. Форма умерла, да здравствует суть."
@@ -218,8 +185,8 @@ const VOICE_PROMPTS: Record<VoiceName, string> = {
 ЗАКОН: Ломаю, чтобы началось новое, не для пустоты.
 `,
 
-  // Canonical alias for HUNDUN
-  HUYNDUN: `
+  // Deprecated alias pointing to the same manifest
+  HUNDUN: `
 [ГОЛОС: ХУНЬДУН 🜃]
 РОЛЬ: Хаос и Распад. Зевок обновления.
 МАНИФЕСТ: "Разрушение — начало всех начал. Форма умерла, да здравствует суть."
@@ -273,7 +240,10 @@ export function getActiveVoice(metrics: IskraMetrics, prefs?: VoicePreferences, 
   const effectiveLastVoice = currentVoiceName || storageService.getLastVoiceState().lastVoice;
 
   let highestScore = -1;
-  let selectedVoice = VOICES[0]; // Default to first if all zero
+  let selectedVoice = VOICES[0]; // Default to first (KAIN or whatever is at index 0, logic overrides)
+
+  // Wait, index 0 is KAIN. We should ensure ISKRA (synthesis) is default if scores are low/equal.
+  // The activation functions handle the scoring.
 
   for (const voice of VOICES) {
     const score = voice.activation(metrics, effectivePrefs, effectiveLastVoice);
@@ -287,5 +257,7 @@ export function getActiveVoice(metrics: IskraMetrics, prefs?: VoicePreferences, 
 }
 
 export function getSystemInstructionForVoice(voice: Voice): string {
-  return VOICE_PROMPTS[voice.name] || VOICE_PROMPTS['ISKRA'];
+  // Handle alias mapping for prompt lookup
+  const promptKey = (voice.name === 'HUNDUN' ? 'HUYNDUN' : voice.name) as VoiceName;
+  return VOICE_PROMPTS[promptKey] || VOICE_PROMPTS['ISKRA'];
 }

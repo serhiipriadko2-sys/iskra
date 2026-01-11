@@ -54,7 +54,7 @@ const createMessage = (content: string, role: 'user' | 'model' = 'user'): Messag
   text: content,
 });
 
-const ALL_VOICE_NAMES: VoiceName[] = ['ISKRA', 'KAIN', 'PINO', 'SAM', 'ANHANTRA', 'HUNDUN', 'ISKRIV', 'MAKI', 'SIBYL'];
+const ALL_VOICE_NAMES: VoiceName[] = ['ISKRA', 'KAIN', 'PINO', 'SAM', 'ANHANTRA', 'HUYNDUN', 'ISKRIV', 'MAKI', 'SIBYL'];
 
 // ============================================================
 // 1. VOICE ENGINE STRESS TESTS

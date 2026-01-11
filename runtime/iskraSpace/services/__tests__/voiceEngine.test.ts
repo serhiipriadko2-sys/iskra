@@ -46,11 +46,11 @@ describe('voiceEngine', () => {
       expect(voice.name).not.toBe('KAIN');
     });
 
-    it('should return HUNDUN for high chaos', () => {
+    it('should return HUYNDUN for high chaos', () => {
       const metrics = createMetrics({ chaos: 0.7, pain: 0.1 });
       const voice = getActiveVoice(metrics);
 
-      expect(voice.name).toBe('HUNDUN');
+      expect(voice.name).toBe('HUYNDUN');
       expect(voice.symbol).toBe('🜃');
     });
 
