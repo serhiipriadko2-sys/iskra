@@ -319,7 +319,7 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
                 </div>
 
                 {/* Right Column: Action & Context */}
-                <div className="lg:col-span-7 flex flex-col gap-4 lg:gap-6 pb-24 lg:pb-4">
+                <div className="lg:col-span-7 flex flex-col gap-4 lg:gap-6 lg:pb-4">
                     
                     {/* Quick Actions */}
                     <div className="grid grid-cols-2 gap-3 lg:gap-4">
