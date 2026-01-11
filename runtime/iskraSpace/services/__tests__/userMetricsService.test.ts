@@ -51,8 +51,8 @@ describe('userMetricsService', () => {
   });
 
   describe('getUserDailyMetrics', () => {
-    it('returns all 5 metric components', () => {
-      const metrics = userMetricsService.getUserDailyMetrics();
+    it('returns all 5 metric components', async () => {
+      const metrics = await userMetricsService.getUserDailyMetrics();
 
       expect(metrics).toHaveProperty('focus');
       expect(metrics).toHaveProperty('sleep');
@@ -61,8 +61,8 @@ describe('userMetricsService', () => {
       expect(metrics).toHaveProperty('deltaScore');
     });
 
-    it('all metrics are in 0-100 range', () => {
-      const metrics = userMetricsService.getUserDailyMetrics();
+    it('all metrics are in 0-100 range', async () => {
+      const metrics = await userMetricsService.getUserDailyMetrics();
 
       expect(metrics.focus).toBeGreaterThanOrEqual(0);
       expect(metrics.focus).toBeLessThanOrEqual(100);
@@ -76,8 +76,8 @@ describe('userMetricsService', () => {
       expect(metrics.deltaScore).toBeLessThanOrEqual(100);
     });
 
-    it('returns default values when no data exists', () => {
-      const metrics = userMetricsService.getUserDailyMetrics();
+    it('returns default values when no data exists', async () => {
+      const metrics = await userMetricsService.getUserDailyMetrics();
 
       // Focus: 0 (no focus sessions today)
       expect(metrics.focus).toBe(0);
@@ -269,7 +269,7 @@ describe('userMetricsService', () => {
   });
 
   describe('Delta Score Calculation', () => {
-    it('calculates weighted average correctly', () => {
+    it('calculates weighted average correctly', async () => {
       // Set up explicit known values
       userMetricsService.addFocusMinutes(45); // 50% = 50
       userMetricsService.setSleepScore(80);   // 80
@@ -291,24 +291,24 @@ describe('userMetricsService', () => {
       // deltaScore = 50*0.25 + 80*0.30 + 70*0.20 + 100*0.25
       // = 12.5 + 24 + 14 + 25 = 75.5 ≈ 76
 
-      const metrics = userMetricsService.getUserDailyMetrics();
+      const metrics = await userMetricsService.getUserDailyMetrics();
       expect(metrics.deltaScore).toBe(76);
     });
 
-    it('weights sleep highest at 30%', () => {
+    it('weights sleep highest at 30%', async () => {
       // Perfect sleep, explicit mocks for all sources
       userMetricsService.setSleepScore(100);
       vi.mocked(storageService.getHabits).mockReturnValue([]);
       vi.mocked(storageService.getJournalEntries).mockReturnValue([]);
 
-      const metrics = userMetricsService.getUserDailyMetrics();
+      const metrics = await userMetricsService.getUserDailyMetrics();
 
       // deltaScore = 0*0.25 + 100*0.30 + 60*0.20 + 75*0.25
       // = 0 + 30 + 12 + 18.75 = 60.75 ≈ 61
       expect(metrics.deltaScore).toBe(61);
     });
 
-    it('reaches 100 when all metrics are 100', () => {
+    it('reaches 100 when all metrics are 100', async () => {
       // Focus: 90 minutes = 100%
       userMetricsService.addFocusMinutes(90);
 
@@ -330,14 +330,14 @@ describe('userMetricsService', () => {
         { id: '1', title: 'H1', streak: 1, completedToday: true, ritualTag: 'FIRE' as const },
       ]);
 
-      const metrics = userMetricsService.getUserDailyMetrics();
+      const metrics = await userMetricsService.getUserDailyMetrics();
       expect(metrics.deltaScore).toBe(100);
     });
   });
 
   describe('Metrics Separation', () => {
-    it('UserDailyMetrics structure is distinct from IskraMetrics', () => {
-      const metrics = userMetricsService.getUserDailyMetrics();
+    it('UserDailyMetrics structure is distinct from IskraMetrics', async () => {
+      const metrics = await userMetricsService.getUserDailyMetrics();
 
       // UserDailyMetrics has these 5 properties
       expect(Object.keys(metrics).sort()).toEqual([

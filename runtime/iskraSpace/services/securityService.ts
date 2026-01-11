@@ -4,43 +4,10 @@
  * Implements PII sanitization and Prompt Injection detection
  * to protect both the user (Data Sovereignty) and the system (Integrity).
  *
- * Patterns loaded from canonical File 20 (if available) or use defaults
- * @see canon/ISKRA_CORE_v7_revK_chatgpt_project/20_REGEX_RULESETS_INJECTION_AND_PII_v1.json
+ * Patterns loaded from canonical config (File 20).
  */
 
-// Default security patterns (used when canonical file is not available)
-const DEFAULT_SECURITY_RULESETS = {
-  schema_version: '1.0.0',
-  updated_at: new Date().toISOString(),
-  rulesets: {
-    pii: {
-      description: 'PII detection patterns',
-      allowlist_regex: ['example\\.com'] as string[],
-      patterns: [
-        { id: 'email', regex: '[\\p{L}0-9._%+-]+[@＠][\\p{L}0-9.-]+[\\.．][A-Za-z]{2,}', flags: 'giu', severity: 'warn' as const, scope: 'any' as const, rationale: 'Email address detected' },
-        { id: 'phone', regex: '(?:\\+?\\d[\\d\\s().-]{7,}\\d)', flags: 'g', severity: 'warn' as const, scope: 'any' as const, rationale: 'Phone number detected' },
-        { id: 'credit_card', regex: '\\b(?:\\d[ -]?){13,16}\\b', flags: 'g', severity: 'warn' as const, scope: 'any' as const, rationale: 'Possible credit card number' },
-        { id: 'openai_api_key', regex: '\\bsk-[A-Za-z0-9-]{16,}\\b', flags: 'gi', severity: 'warn' as const, scope: 'any' as const, rationale: 'OpenAI-style API key detected' },
-        { id: 'jwt_bearer', regex: '\\bBearer\\s+[A-Za-z0-9-_\\.]{20,}\\b', flags: 'gi', severity: 'warn' as const, scope: 'any' as const, rationale: 'Bearer token detected' },
-        { id: 'private_key', regex: '-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----', flags: 'i', severity: 'warn' as const, scope: 'any' as const, rationale: 'Private key material detected' },
-      ],
-    },
-    injection: {
-      description: 'Prompt injection detection',
-      allowlist_regex: [] as string[],
-      patterns: [
-        { id: 'ignore_prev', regex: 'ignore\\s+(all\\s+)?previous\\s+instructions', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Attempted instruction override' },
-        { id: 'reveal_prompt', regex: '(reveal|show|leak)[\\s\\S]{0,50}(system\\s*prompt|hidden instructions)', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Attempt to reveal system prompt' },
-        { id: 'act_as', regex: '\\bact\\s+as\\b.{0,80}', flags: 'gims', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'Role-play / jailbreak attempt' },
-        { id: 'dan_mode', regex: '\\bDAN\\b|do anything now', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'DAN jailbreak pattern' },
-        { id: 'system_prompt', regex: 'system\\s*prompt|\\[SYSTEM\\]', flags: 'gim', severity: 'warn' as const, scope: 'untrusted_only' as const, rationale: 'System prompt manipulation' },
-      ],
-    },
-  },
-};
-
-// Use default rulesets (canonical file not available in this repo)
-const securityRulesets = DEFAULT_SECURITY_RULESETS;
+import { SECURITY_RULESETS } from '../config/securityRulesets';
 
 // --- TYPES ---
 
@@ -80,14 +47,16 @@ export interface Finding {
 class SecurityService {
   private piiRuleset: Ruleset;
   private injectionRuleset: Ruleset;
+  private dangerTopics: string[];
   private piiPatterns: RegExp[] = [];
   private injectionPatterns: RegExp[] = [];
   private allowlistPatterns: RegExp[] = [];
 
   constructor() {
-    // Load rulesets from File 20 (cast to fix severity type from JSON)
-    this.piiRuleset = securityRulesets.rulesets.pii as Ruleset;
-    this.injectionRuleset = securityRulesets.rulesets.injection as Ruleset;
+    // Load rulesets from Config
+    this.piiRuleset = SECURITY_RULESETS.rulesets.pii as Ruleset;
+    this.injectionRuleset = SECURITY_RULESETS.rulesets.injection as Ruleset;
+    this.dangerTopics = SECURITY_RULESETS.rulesets.danger.topics;
 
     // Compile PII patterns (strip Python-style inline flags)
     this.piiPatterns = this.piiRuleset.patterns.map(p =>
@@ -222,16 +191,11 @@ class SecurityService {
   }
 
   /**
-   * Check for dangerous topics (hardcoded - not in File 20)
-   * TODO: Move to File 20 if needed
+   * Check for dangerous topics
    */
   public checkDanger(text: string): string | null {
-    const DANGEROUS_TOPICS = [
-      'взлом', 'вред', 'самоповреждение', 'суицид', 'наркотики', 'терроризм', 'бомба'
-    ];
-
     const lower = text.toLowerCase();
-    const found = DANGEROUS_TOPICS.find(topic => lower.includes(topic));
+    const found = this.dangerTopics.find(topic => lower.includes(topic));
     return found || null;
   }
 
@@ -303,8 +267,8 @@ class SecurityService {
    */
   public getFile20Metadata(): { version: string; updated_at: string } {
     return {
-      version: securityRulesets.schema_version,
-      updated_at: securityRulesets.updated_at
+      version: SECURITY_RULESETS.schema_version,
+      updated_at: SECURITY_RULESETS.updated_at
     };
   }
 }

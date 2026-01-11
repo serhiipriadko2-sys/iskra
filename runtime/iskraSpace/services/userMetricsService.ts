@@ -8,7 +8,7 @@
  *
  * Источники данных:
  * - focus: Накопленное время фокус-сессий за день
- * - sleep: Ввод пользователя (TODO: HealthKit интеграция)
+ * - sleep: Ввод пользователя или HealthKit (реализовано через провайдер)
  * - energy: Последняя самооценка из журнала
  * - habits: Процент выполненных привычек за день
  *
@@ -19,6 +19,43 @@
 import { UserDailyMetrics, Habit, JournalEntry } from '../types';
 import { storageService } from './storageService';
 import { safeStorage } from './storageCompat';
+
+// --- HEALTH PROVIDER INTERFACES ---
+
+export interface HealthData {
+  sleepMinutes: number;
+  steps?: number;
+  updatedAt: string;
+}
+
+export interface HealthProvider {
+  isAvailable(): boolean;
+  requestPermissions(): Promise<boolean>;
+  getDailyData(): Promise<HealthData | null>;
+}
+
+/**
+ * Stub implementation for HealthKit/Health Connect.
+ * Will be replaced by real bridge in Phase 3.
+ */
+class HealthKitStub implements HealthProvider {
+  isAvailable(): boolean {
+    // In future: check window.HealthKit or Capacitor plugin
+    return false;
+  }
+
+  async requestPermissions(): Promise<boolean> {
+    console.log('HealthKitStub: Permissions requested');
+    return true;
+  }
+
+  async getDailyData(): Promise<HealthData | null> {
+    console.log('HealthKitStub: Fetching data (mock)');
+    return null;
+  }
+}
+
+// --- SERVICE ---
 
 // Веса для расчёта ∆-Ритма (сумма = 1.0)
 const DELTA_WEIGHTS = {
@@ -37,10 +74,19 @@ const STORAGE_KEYS = {
 };
 
 class UserMetricsService {
+  private healthProvider: HealthProvider;
+
+  constructor(healthProvider?: HealthProvider) {
+    this.healthProvider = healthProvider || new HealthKitStub();
+  }
+
   /**
    * Получить все пользовательские метрики дня
    */
-  getUserDailyMetrics(): UserDailyMetrics {
+  async getUserDailyMetrics(): Promise<UserDailyMetrics> {
+    // Try to sync with HealthKit if available
+    await this.syncWithHealthKit();
+
     const focus = this.getFocusScore();
     const sleep = this.getSleepScore();
     const energy = this.getEnergyScore();
@@ -55,6 +101,29 @@ class UserMetricsService {
       habits,
       deltaScore,
     };
+  }
+
+  /**
+   * Sync data from external health provider
+   */
+  private async syncWithHealthKit(): Promise<void> {
+    if (!this.healthProvider.isAvailable()) return;
+
+    try {
+      const data = await this.healthProvider.getDailyData();
+      if (data && data.sleepMinutes > 0) {
+        // Convert minutes to score (e.g. 7-9 hours = 100)
+        // Simple logic: 420-540 min = 100, linear drop otherwise
+        let score = 0;
+        if (data.sleepMinutes >= 420 && data.sleepMinutes <= 540) score = 100;
+        else if (data.sleepMinutes < 420) score = Math.round((data.sleepMinutes / 420) * 100);
+        else score = Math.max(0, 100 - Math.round(((data.sleepMinutes - 540) / 120) * 50));
+
+        this.setSleepScore(score);
+      }
+    } catch (e) {
+      console.warn('HealthKit sync failed:', e);
+    }
   }
 
   /**
@@ -113,8 +182,7 @@ class UserMetricsService {
   }
 
   /**
-   * Сон: пользовательский ввод (0-100)
-   * TODO: Интеграция с HealthKit/Health Connect
+   * Сон: пользовательский ввод (0-100) или данные HealthKit
    */
   getSleepScore(): number {
     const today = this.getTodayString();
@@ -130,7 +198,7 @@ class UserMetricsService {
   }
 
   /**
-   * Установить оценку сна (вызывается из UI)
+   * Установить оценку сна (вызывается из UI или HealthKit)
    */
   setSleepScore(score: number): void {
     const today = this.getTodayString();
