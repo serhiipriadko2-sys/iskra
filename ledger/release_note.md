@@ -134,4 +134,19 @@
 - `npm run typecheck` → OK.
 
 ### Ω: 0.85
-### Λ: Интегрировать ResponseMode в логику ответов geminiService.
+### Λ: Подключить MoodTracker в DayPulse view.
+
+---
+
+## vΩ.3.5 (ResponseMode Integration) — 2026-01-11
+### Что сделано
+- geminiService: интеграция ResponseMode в `getChatResponseStream`
+- Добавлены инструкции для трёх режимов (simple/deep/debate)
+- В режиме 'simple' отключается блок ∆DΩΛ для кратких ответов
+- Экспортирована функция `getResponseModeInstruction()` для внешнего использования
+
+### Проверки
+- `npm run typecheck` → OK
+
+### Ω: 0.88
+### Λ: Добавить визуальный индикатор текущего режима в ChatView.
