@@ -3,12 +3,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import ChatWindow from './ChatWindow';
 import { IskraAIService } from '../services/geminiService';
 import { searchService } from '../services/searchService';
-import { Message, IskraMetrics, Voice, VoiceName, SearchResult, VoicePreferences } from '../types';
+import { Message, IskraMetrics, Voice, VoiceName, SearchResult, VoicePreferences, ResponseMode } from '../types';
 import { getActiveVoice } from '../services/voiceEngine';
 import { storageService } from '../services/storageService';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import { decode, decodeAudioData } from '../css/audioUtils';
 import { Volume2Icon, VolumeXIcon, SparkleIcon, XIcon } from './icons';
+
+// Response mode display config
+const RESPONSE_MODE_DISPLAY: Record<ResponseMode, { label: string; icon: string; color: string }> = {
+  simple: { label: 'Просто', icon: '⚡', color: 'text-accent' },
+  deep: { label: 'Глубоко', icon: '🔬', color: 'text-primary' },
+  debate: { label: 'Совет', icon: '👥', color: 'text-warning' },
+};
 
 const service = new IskraAIService();
 
@@ -49,11 +56,14 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isTtsEnabled, setIsTtsEnabled] = useState(false);
-  
+
   // Voice State
   const [selectedVoiceName, setSelectedVoiceName] = useState<VoiceName | 'AUTO'>('AUTO');
   const [voicePrefs, setVoicePrefs] = useState<VoicePreferences>({});
   const [currentVoice, setCurrentVoice] = useState<Voice | null>(null);
+
+  // Response Mode State
+  const [responseMode, setResponseMode] = useState<ResponseMode>(() => storageService.getResponseMode());
 
   const outputAudioContextRef = useRef<AudioContext | null>(null);
   const nextStartTimeRef = useRef(0);
@@ -309,13 +319,18 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
       <header className={`relative shrink-0 p-4 border-b bg-surface/50 flex flex-col md:flex-row justify-between items-center gap-4 z-10 transition-colors duration-500 ${voiceStyle.split(' ')[0]}`}>
          <div>
             <h2 className="font-serif text-2xl md:text-3xl text-text text-center md:text-left">Чат с Искрой</h2>
-            <div className="flex items-center gap-2 text-sm text-text-muted text-center md:text-left hidden sm:flex">
+            <div className="flex items-center gap-2 text-sm text-text-muted text-center md:text-left hidden sm:flex flex-wrap">
                 <span>{selectedVoiceName === 'AUTO' ? 'Режим: Резонанс (Авто)' : 'Режим: Фиксация'}</span>
                 {selectedVoiceName === 'AUTO' && currentVoice && (
                     <span className="px-1.5 py-0.5 rounded bg-white/5 text-xs border border-white/10">
                         Активен: {currentVoice.name}
                     </span>
                 )}
+                {/* Response Mode Indicator */}
+                <span className={`px-2 py-0.5 rounded-full text-xs border ${RESPONSE_MODE_DISPLAY[responseMode].color} bg-white/5 border-current/20 flex items-center gap-1`}>
+                    <span>{RESPONSE_MODE_DISPLAY[responseMode].icon}</span>
+                    <span>{RESPONSE_MODE_DISPLAY[responseMode].label}</span>
+                </span>
             </div>
          </div>
          
