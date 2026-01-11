@@ -319,7 +319,7 @@ const SIFT_E_TRIGGERS = {
 |-----------|---------------|-----------|
 | Epistemic Depth | ☉ SAM | 🪞 ISKRIV |
 | Temporal Validity | 🔮 SIBYL | ☉ SAM |
-| Cross-Domain | ⟡ ISKRA | 🜃 HUNDUN |
+| Cross-Domain | ⟡ ISKRA | 🜃 HUYNDUN |
 | Metacognitive | 🪞 ISKRIV | ≈ ANHANTRA |
 
 ---

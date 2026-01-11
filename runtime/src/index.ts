@@ -367,7 +367,7 @@ export {
  *
  * @see governance/changelog.md
  */
-export const VERSION = 'vΩ.3.3';
+export const VERSION = 'vΩ.3.4';
 
 /**
  * ISKRA Nul-Mantra (Core Philosophy)

@@ -16,9 +16,18 @@ updated: 2026-01-10
 - type: SoT (Печать истины)
 - layer: Совет
 - created: 2026-01-01
-- updated: 2026-01-10
-- version: vΩ.3.3
+- updated: 2026-01-11
+- version: vΩ.3.4
 
+
+## vΩ.3.4 — 2026-01-11
+- **Naming Consistency** — унифицировано имя голоса хаоса `HUYNDUN` во всей документации (system/sift_extended.md, system/cognitive_architecture.md, system/council_protocol.md). Код уже поддерживал оба alias.
+- **Version Sync** — синхронизированы версии package.json (runtime → 0.3.3, iskraSpace → 0.3.3).
+- **Node Engine** — добавлено требование Node.js >=20.0.0 в iskraSpace/package.json.
+- **Deep Analysis Report** — получен comprehensive audit report (300+ файлов, архитектура, зависимости, UX/UI, конкуренты).
+- **Mobile Navigation Fix** — исправлена видимость мобильной навигации (fixed positioning вместо absolute).
+- **SoT Integrity** — 56 файлов верифицированы, хэши обновлены.
+- **Test Suite** — 820 unit-тестов проходят, 0 TypeScript ошибок.
 
 ## vΩ.3.3 — 2026-01-10
 - **CI Build Fix** — исправлена сборка GitHub Pages: удалён stale `tsconfig.tsbuildinfo` из git, добавлены недостающие зависимости (`tailwindcss`, `postcss`, `autoprefixer`).
