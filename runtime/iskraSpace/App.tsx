@@ -205,8 +205,8 @@ export default function App() {
                     </div>
                 )}
 
-                <main className="flex-grow flex flex-col h-full relative overflow-hidden z-10">
-                    <div className="flex-grow overflow-hidden relative z-0">
+                <main className="flex-grow flex flex-col h-full relative z-10">
+                    <div className="flex-grow overflow-y-auto relative z-0 pb-[80px] lg:pb-0">
                         {view === 'PULSE' && <DayPulse metrics={metrics} phase={phase} onStartFocus={() => setView('FOCUS')} />}
                         {view === 'PLANNER' && <Planner />}
                         {view === 'JOURNAL' && <Journal />}
