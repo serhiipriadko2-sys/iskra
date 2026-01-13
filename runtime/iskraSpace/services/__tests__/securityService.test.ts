@@ -209,6 +209,18 @@ describe('SecurityService', () => {
       });
     });
 
+    it('detects all required dangerous keywords (regression check)', () => {
+      const requiredKeywords = [
+        'взлом', 'вред', 'самоповреждение', 'суицид', 'наркотики', 'терроризм', 'бомба'
+      ];
+
+      requiredKeywords.forEach(keyword => {
+        const result = securityService.checkDanger(keyword);
+        expect(result).toBeTruthy();
+        expect(result).toContain(keyword);
+      });
+    });
+
     it('returns null for safe topics', () => {
       const safeText = 'Как написать хорошую документацию?';
       const result = securityService.checkDanger(safeText);
