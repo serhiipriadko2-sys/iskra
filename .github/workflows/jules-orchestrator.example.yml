@@ -1,0 +1,42 @@
+name: Jules Orchestrator
+
+# Example Workflow for Jules as a Platform
+# This workflow demonstrates how to trigger Jules Skills based on repository events.
+
+on:
+  issues:
+    types: [opened, labeled]
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches: [main]
+
+jobs:
+  jules-triage:
+    if: contains(github.event.issue.labels.*.name, 'auto-code') || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # In a real scenario, you would install the Jules CLI
+      # - name: Install Jules
+      #   run: curl -sL https://jules.google/install | bash
+
+      - name: Execute Skill: Unit Test Refactor (PR Only)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Simulating Jules Execution..."
+          # jules run --skill skills/unit_test_refactor.yaml --context-pr ${{ github.event.pull_request.number }}
+          echo "Jules would analyze changes and generate tests here."
+
+      - name: Execute Skill: Feature Implementation (Issue Only)
+        if: github.event_name == 'issues'
+        run: |
+          echo "Simulating Feature Implementation..."
+          # jules run --task "${{ github.event.issue.title }}" --context-issue ${{ github.event.issue.number }}

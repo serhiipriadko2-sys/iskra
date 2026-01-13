@@ -28,6 +28,11 @@
 - `ledger/` — целостность/релизы
 - `appendix/` — практики/ритуалы
 - `runtime/` — код React/Vite приложения и сервисов (см. отдельный README)
+- `skills/` — библиотека инженерных навыков (Jules as a Platform)
+
+## Архитектура Jules Platform (JaaP)
+Проект реализует концепцию **Jules as a Platform** — экосистемы автономных навыков и CI/CD оркестрации.
+Подробности: `system/jules_platform.md`.
 
 ## Статус
 - **Версия:** vΩ.3.4 (Visual Audit Update)

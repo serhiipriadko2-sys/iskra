@@ -1,0 +1,28 @@
+skill: "unit_test_refactor"
+description: "Automatically generates and verifies unit tests for new or modified functions."
+trigger: "pr_opened"
+filters:
+  files: ["**/*.ts", "**/*.tsx"]
+  exclude: ["**/*.test.ts", "**/types/*.ts"]
+
+rules:
+  coverage_target: 85
+  test_framework: "vitest"
+  naming_convention: "{filename}.test.ts"
+  assertion_style: "expect"
+  mocking_strategy: "shallow"
+
+actions:
+  - type: "analyze_changes"
+    description: "Identify modified functions without test coverage"
+
+  - type: "generate_tests"
+    params:
+      model: "gemini-pro-experimental"
+      context_window: 8192
+
+  - type: "run_verification"
+    command: "npm run test"
+
+  - type: "report_results"
+    output: "pr_comment"
