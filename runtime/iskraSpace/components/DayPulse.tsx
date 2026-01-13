@@ -176,7 +176,13 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
 
     useEffect(() => {
         setHabits(storageService.getHabits());
-        // Обновляем пользовательские метрики при загрузке
+
+        // Попытка синхронизации сна (если доступно) и затем обновление метрик
+        userMetricsService.syncSleepData()
+            .then(() => setUserMetrics(userMetricsService.getUserDailyMetrics()))
+            .catch(e => console.warn('Sleep sync failed', e));
+
+        // Сразу показываем текущие (возможно кэшированные) данные
         setUserMetrics(userMetricsService.getUserDailyMetrics());
 
         const fetchAdvice = async () => {

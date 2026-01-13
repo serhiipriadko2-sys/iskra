@@ -31,6 +31,7 @@ export default defineConfig(() => {
     },
     test: {
       exclude: ['node_modules', 'e2e', 'playwright-report', 'test-results'],
+      environment: 'jsdom',
     },
   };
 });
