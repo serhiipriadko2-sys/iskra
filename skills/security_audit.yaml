@@ -1,0 +1,16 @@
+skill: "security_audit"
+description: "Автоматическая проверка уязвимостей и безопасности"
+trigger: "scheduled"
+rules:
+  audit_level: "high"
+  check_dependencies: true
+  scan_secrets: true
+actions:
+  - type: "npm_audit"
+    path: "runtime"
+  - type: "npm_audit"
+    path: "runtime/iskraSpace"
+  - type: "secret_scan"
+    exclude:
+      - ".env.example"
+      - "**/*.test.ts"

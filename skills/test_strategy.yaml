@@ -1,0 +1,11 @@
+skill: "unit_test_refactor"
+description: "Автоматическое покрытие новых функций тестами"
+trigger: "new_function"
+rules:
+  coverage_target: 85
+  test_framework: "vitest"
+  assert_style: "BDD"
+actions:
+  - type: "generate_tests"
+  - type: "run_tests"
+  - type: "evaluate_coverage"

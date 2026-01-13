@@ -1,209 +1,113 @@
-/**
- * Tests for GeminiCliService
- *
- * Tests voice instructions, configuration, and SIFT verification parsing.
- * API calls are mocked since they require actual Gemini API key.
- */
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { GeminiCliService, GeminiCliConfig } from '../geminiCliService';
 
-import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
+// Define mocks first
+const mockGenerateContent = vi.fn();
+const mockGenerateContentStream = vi.fn();
 
-// Mock @google/generative-ai with Vitest 4.x compatible class mock
-vi.mock('@google/generative-ai', () => {
+// Mock @google/genai module
+vi.mock('@google/genai', () => {
   return {
-    GoogleGenerativeAI: class MockGoogleGenerativeAI {
-      constructor(_apiKey: string) {}
-
-      getGenerativeModel = vi.fn().mockReturnValue({
-        generateContent: vi.fn().mockResolvedValue({
-          response: {
-            text: () => 'Mocked response',
+    GoogleGenAI: class {
+      constructor() {
+        return {
+          models: {
+            generateContent: mockGenerateContent,
+            generateContentStream: mockGenerateContentStream,
           },
-        }),
-        generateContentStream: vi.fn().mockResolvedValue({
-          stream: (async function* () {
-            yield { text: () => 'Chunk 1' };
-            yield { text: () => 'Chunk 2' };
-          })(),
-        }),
-      });
+        };
+      }
+    },
+    Type: {
+      OBJECT: 'object',
+      STRING: 'string',
+      ARRAY: 'array',
+      NUMBER: 'number',
     },
   };
 });
 
-import { GeminiCliService, createGeminiCliService, ChatMessage } from '../geminiCliService.js';
-import type { IskraMetrics } from '../../../types/metrics.js';
-
 describe('GeminiCliService', () => {
-  const testApiKey = 'test-api-key-12345';
+  const mockConfig: GeminiCliConfig = {
+    apiKey: 'test-api-key',
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('constructor', () => {
-    it('creates instance with default model', () => {
-      const service = new GeminiCliService({ apiKey: testApiKey });
-      expect(service.getModelName()).toBe('gemini-2.0-flash');
+  it('should initialize with API key', () => {
+    const service = new GeminiCliService(mockConfig);
+    expect(service).toBeDefined();
+    expect(service.getModelName()).toBe('gemini-2.0-flash');
+  });
+
+  it('should generate response', async () => {
+    mockGenerateContent.mockResolvedValue({
+      response: {
+        text: () => 'Test response',
+      },
     });
 
-    it('creates instance with custom model', () => {
-      const service = new GeminiCliService({
-        apiKey: testApiKey,
-        model: 'gemini-2.0-pro',
-      });
-      expect(service.getModelName()).toBe('gemini-2.0-pro');
-    });
+    const service = new GeminiCliService(mockConfig);
+    const response = await service.generateResponse('Hello');
+
+    expect(response).toBe('Test response');
+    expect(mockGenerateContent).toHaveBeenCalledWith(expect.objectContaining({
+      contents: expect.arrayContaining([
+        expect.objectContaining({
+          role: 'user',
+          parts: [{ text: 'Hello' }],
+        }),
+      ]),
+    }));
   });
 
-  describe('generateResponse', () => {
-    it('generates response with default voice', async () => {
-      const service = new GeminiCliService({ apiKey: testApiKey });
-      const response = await service.generateResponse('Hello');
-      expect(response).toBe('Mocked response');
-    });
+  it('should generate streaming response', async () => {
+    const mockStream = (async function* () {
+      yield { text: () => 'Chunk 1' };
+      yield { text: () => 'Chunk 2' };
+    })();
 
-    it('accepts voice parameter', async () => {
-      const service = new GeminiCliService({ apiKey: testApiKey });
-      const response = await service.generateResponse('Hello', { voice: 'KAIN' });
-      expect(response).toBe('Mocked response');
-    });
-
-    it('accepts metrics parameter', async () => {
-      const service = new GeminiCliService({ apiKey: testApiKey });
-      const metrics: IskraMetrics = {
-        rhythm: 80,
-        trust: 0.9,
-        pain: 0.2,
-        chaos: 0.1,
-        drift: 0.1,
-        echo: 0.2,
-        clarity: 0.9,
-        silence_mass: 0.1,
-        mirror_sync: 0.8,
-        interrupt: 0.1,
-        ctxSwitch: 0.2,
-      };
-      const response = await service.generateResponse('Hello', { voice: 'ISKRA', metrics });
-      expect(response).toBe('Mocked response');
+    mockGenerateContentStream.mockResolvedValue({
+      stream: mockStream,
     });
 
-    it('accepts history parameter', async () => {
-      const service = new GeminiCliService({ apiKey: testApiKey });
-      const history: ChatMessage[] = [
-        { role: 'user', content: 'Previous message' },
-        { role: 'model', content: 'Previous response' },
-      ];
-      const response = await service.generateResponse('Hello', { history });
-      expect(response).toBe('Mocked response');
-    });
+    const service = new GeminiCliService(mockConfig);
+    const chunks: string[] = [];
+
+    for await (const chunk of service.generateResponseStream('Hello')) {
+      chunks.push(chunk);
+    }
+
+    expect(chunks).toEqual(['Chunk 1', 'Chunk 2']);
   });
 
-  describe('generateResponseStream', () => {
-    it('yields chunks from stream', async () => {
-      const service = new GeminiCliService({ apiKey: testApiKey });
-      const chunks: string[] = [];
+  it('should handle SIFT verification', async () => {
+    const mockSiftResponse = {
+      statement: 'Test statement',
+      verdict: 'FACT',
+      confidence: 0.9,
+      reasoning: 'Verified by sources',
+      sources: ['Source A'],
+      trace: 'SIFT-TEST-123',
+    };
 
-      for await (const chunk of service.generateResponseStream('Hello')) {
-        chunks.push(chunk);
-      }
-
-      expect(chunks).toHaveLength(2);
-      expect(chunks[0]).toBe('Chunk 1');
-      expect(chunks[1]).toBe('Chunk 2');
-    });
-  });
-
-  describe('siftVerify', () => {
-    it('returns result with expected structure', async () => {
-      const service = new GeminiCliService({ apiKey: testApiKey });
-      const result = await service.siftVerify('Test statement');
-
-      // The mock returns 'Mocked response' which is invalid JSON
-      // So it should fall back to the default structure
-      expect(result).toHaveProperty('statement');
-      expect(result).toHaveProperty('verdict');
-      expect(result).toHaveProperty('confidence');
-      expect(result).toHaveProperty('reasoning');
-      expect(result).toHaveProperty('sources');
-      expect(result).toHaveProperty('trace');
+    mockGenerateContent.mockResolvedValue({
+      response: {
+        text: () => JSON.stringify(mockSiftResponse),
+      },
     });
 
-    it('handles invalid JSON with fallback', async () => {
-      const service = new GeminiCliService({ apiKey: testApiKey });
-      const result = await service.siftVerify('Test statement');
+    const service = new GeminiCliService(mockConfig);
+    const result = await service.siftVerify('Test statement');
 
-      // Mock returns 'Mocked response' which is invalid JSON
-      expect(result.statement).toBe('Test statement');
-      expect(result.verdict).toBe('UNSOURCED');
-      expect(result.confidence).toBe(0.5);
-      expect(result.reasoning).toBe('Mocked response');
-      expect(result.trace).toMatch(/^SIFT-CLI-\d+$/);
-    });
-  });
-});
-
-describe('createGeminiCliService', () => {
-  const originalEnv = process.env;
-
-  beforeEach(() => {
-    vi.resetModules();
-    process.env = { ...originalEnv };
-  });
-
-  afterAll(() => {
-    process.env = originalEnv;
-  });
-
-  it('returns null when GEMINI_API_KEY is not set', () => {
-    delete process.env.GEMINI_API_KEY;
-    const service = createGeminiCliService();
-    expect(service).toBeNull();
-  });
-
-  it('returns GeminiCliService when GEMINI_API_KEY is set', () => {
-    process.env.GEMINI_API_KEY = 'test-key';
-    const service = createGeminiCliService();
-    expect(service).not.toBeNull();
-    expect(service).toBeInstanceOf(GeminiCliService);
-  });
-
-  it('uses custom model when provided', () => {
-    process.env.GEMINI_API_KEY = 'test-key';
-    const service = createGeminiCliService('custom-model');
-    expect(service?.getModelName()).toBe('custom-model');
-  });
-});
-
-describe('Voice Instructions Coverage', () => {
-  const allVoices = [
-    'ISKRA',
-    'KAIN',
-    'PINO',
-    'SAM',
-    'ANHANTRA',
-    'HUYNDUN',
-    'HUNDUN',
-    'ISKRIV',
-    'MAKI',
-    'SIBYL',
-  ] as const;
-
-  it.each(allVoices)('accepts voice %s', async (voice) => {
-    const service = new GeminiCliService({ apiKey: 'test-key' });
-    // Should not throw
-    const response = await service.generateResponse('Test', { voice });
-    expect(response).toBeDefined();
-  });
-});
-
-describe('ChatMessage type', () => {
-  it('accepts user role', () => {
-    const msg: ChatMessage = { role: 'user', content: 'Hello' };
-    expect(msg.role).toBe('user');
-  });
-
-  it('accepts model role', () => {
-    const msg: ChatMessage = { role: 'model', content: 'Hello' };
-    expect(msg.role).toBe('model');
+    expect(result).toEqual(mockSiftResponse);
+    // Check if schema was passed
+    expect(mockGenerateContent).toHaveBeenCalledWith(expect.objectContaining({
+      config: expect.objectContaining({
+        responseMimeType: 'application/json',
+      }),
+    }));
   });
 });

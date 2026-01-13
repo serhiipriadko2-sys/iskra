@@ -272,7 +272,7 @@ D: [D-SIFT — источники, верификация]
 | Выковка | Vite | 6.x |
 | Unit Tests | Vitest | 2.x |
 | E2E Tests | Playwright | 1.x |
-| AI | Google Gemini | latest |
+| AI | Google GenAI SDK | 0.x / 1.x |
 | Database | Supabase | latest |
 
 ---

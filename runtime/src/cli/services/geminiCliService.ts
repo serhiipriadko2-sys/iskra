@@ -2,11 +2,10 @@
  * ISKRA CLI Gemini Service
  *
  * Direct integration with Google Gemini API for CLI usage.
- * Unlike iskraSpace/services/geminiService.ts which uses Supabase Edge Functions,
- * this service uses the Google Generative AI SDK directly with an API key.
+ * Uses the new @google/genai SDK to match iskraSpace implementation.
  */
 
-import { GoogleGenerativeAI, Content } from "@google/generative-ai";
+import { GoogleGenAI, Type } from "@google/genai";
 import type { IskraMetrics } from "../../types/metrics.js";
 import type { VoiceName } from "../../types/voices.js";
 
@@ -118,11 +117,11 @@ export interface GeminiCliConfig {
  * CLI Gemini Service
  */
 export class GeminiCliService {
-  private genAI: GoogleGenerativeAI;
+  private client: GoogleGenAI;
   private modelName: string;
 
   constructor(config: GeminiCliConfig) {
-    this.genAI = new GoogleGenerativeAI(config.apiKey);
+    this.client = new GoogleGenAI({ apiKey: config.apiKey });
     this.modelName = config.model || DEFAULT_MODEL;
   }
 
@@ -159,7 +158,7 @@ ${DELTA_PROTOCOL}
   /**
    * Convert chat history to Gemini format
    */
-  private toGeminiContents(history: ChatMessage[]): Content[] {
+  private toGeminiContents(history: ChatMessage[]) {
     return history.map((msg) => ({
       role: msg.role,
       parts: [{ text: msg.content }],
@@ -180,18 +179,17 @@ ${DELTA_PROTOCOL}
     const voice = options.voice || "ISKRA";
     const systemInstruction = this.buildSystemInstruction(voice, options.metrics);
 
-    const model = this.genAI.getGenerativeModel({
-      model: this.modelName,
-      systemInstruction,
-    });
-
     const contents = options.history
       ? [...this.toGeminiContents(options.history), { role: "user" as const, parts: [{ text: message }] }]
       : [{ role: "user" as const, parts: [{ text: message }] }];
 
-    const result = await model.generateContent({ contents });
-    const response = result.response;
-    return response.text();
+    const result = await this.client.models.generateContent({
+      model: this.modelName,
+      config: { systemInstruction },
+      contents,
+    });
+
+    return result.response.text();
   }
 
   /**
@@ -208,16 +206,15 @@ ${DELTA_PROTOCOL}
     const voice = options.voice || "ISKRA";
     const systemInstruction = this.buildSystemInstruction(voice, options.metrics);
 
-    const model = this.genAI.getGenerativeModel({
-      model: this.modelName,
-      systemInstruction,
-    });
-
     const contents = options.history
       ? [...this.toGeminiContents(options.history), { role: "user" as const, parts: [{ text: message }] }]
       : [{ role: "user" as const, parts: [{ text: message }] }];
 
-    const result = await model.generateContentStream({ contents });
+    const result = await this.client.models.generateContentStream({
+      model: this.modelName,
+      config: { systemInstruction },
+      contents,
+    });
 
     for await (const chunk of result.stream) {
       const text = chunk.text();
@@ -254,15 +251,30 @@ T - Trace: Создай цепочку рассуждений
   "trace": "SIFT-YYYY-XXX"
 }`;
 
-    const model = this.genAI.getGenerativeModel({
-      model: this.modelName,
-      systemInstruction,
-      generationConfig: {
-        responseMimeType: "application/json",
+    // Schema definition for SIFT output
+    const siftSchema = {
+      type: Type.OBJECT,
+      properties: {
+        statement: { type: Type.STRING },
+        verdict: { type: Type.STRING, enum: ["FACT", "INFERENCE", "UNSOURCED"] },
+        confidence: { type: Type.NUMBER },
+        reasoning: { type: Type.STRING },
+        sources: { type: Type.ARRAY, items: { type: Type.STRING } },
+        trace: { type: Type.STRING },
       },
+      required: ["statement", "verdict", "confidence", "reasoning", "sources", "trace"],
+    };
+
+    const result = await this.client.models.generateContent({
+      model: this.modelName,
+      config: {
+        systemInstruction,
+        responseMimeType: "application/json",
+        responseSchema: siftSchema,
+      },
+      contents: [{ role: "user", parts: [{ text: `Проверь утверждение: "${statement}"` }] }],
     });
 
-    const result = await model.generateContent(`Проверь утверждение: "${statement}"`);
     const text = result.response.text();
 
     try {
@@ -273,7 +285,7 @@ T - Trace: Создай цепочку рассуждений
         statement,
         verdict: "UNSOURCED",
         confidence: 0.5,
-        reasoning: text,
+        reasoning: text || "Parsing failed",
         sources: [],
         trace: `SIFT-CLI-${Date.now()}`,
       };
