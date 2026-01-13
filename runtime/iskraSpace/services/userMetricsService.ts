@@ -19,6 +19,7 @@
 import { UserDailyMetrics, Habit, JournalEntry } from '../types';
 import { storageService } from './storageService';
 import { safeStorage } from './storageCompat';
+import { healthService } from './healthService';
 
 // Веса для расчёта ∆-Ритма (сумма = 1.0)
 const DELTA_WEIGHTS = {
@@ -123,8 +124,7 @@ class UserMetricsService {
   }
 
   /**
-   * Сон: пользовательский ввод (0-100)
-   * TODO: Интеграция с HealthKit/Health Connect
+   * Сон: пользовательский ввод (0-100) или HealthKit/Health Connect
    */
   getSleepScore(): number {
     const today = this.getTodayString();
@@ -137,6 +137,37 @@ class UserMetricsService {
 
     const score = parseInt(safeStorage.getItem(STORAGE_KEYS.SLEEP_SCORE) || '70', 10);
     return Math.min(100, Math.max(0, score));
+  }
+
+  /**
+   * Синхронизация данных сна с HealthKit/Health Connect
+   */
+  async syncSleepData(): Promise<void> {
+    if (!healthService.isAvailable()) {
+      return;
+    }
+
+    try {
+      const today = this.getTodayString();
+      const hasPermission = await healthService.requestPermissions();
+
+      if (!hasPermission) {
+        return;
+      }
+
+      const sleepData = await healthService.getSleepData(today);
+      if (sleepData) {
+        // Цель: 8 часов (480 минут) = 100%
+        // Максимум 100
+        const TARGET_MINUTES = 480;
+        const score = Math.min(100, Math.round((sleepData.minutes / TARGET_MINUTES) * 100));
+
+        console.log(`[UserMetricsService] Synced sleep data: ${sleepData.minutes} mins -> score ${score}`);
+        this.setSleepScore(score);
+      }
+    } catch (e) {
+      console.warn('[UserMetricsService] Failed to sync sleep data:', e);
+    }
   }
 
   /**
