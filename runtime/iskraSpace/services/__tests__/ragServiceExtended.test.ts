@@ -51,10 +51,8 @@ describe('ragService', () => {
 
     it('filters results by score', async () => {
       vi.mocked(searchService.searchHybrid).mockResolvedValue([
-        // @ts-ignore - partial mock is enough
-        { id: '1', score: 0.9, snippet: 'high', type: 'archive' },
-        // @ts-ignore
-        { id: '2', score: 0.1, snippet: 'low', type: 'archive' },
+        { id: '1', score: 0.9, snippet: 'high', type: 'archive', layer: 'archive', timestamp: new Date().toISOString() },
+        { id: '2', score: 0.1, snippet: 'low', type: 'archive', layer: 'archive', timestamp: new Date().toISOString() },
       ]);
 
       const context = await ragService.buildRAGContext('test', { minScore: 0.5 });
@@ -67,10 +65,8 @@ describe('ragService', () => {
   describe('Conflict Detection (SIFT)', () => {
     it('detects direct contradictions', async () => {
       vi.mocked(searchService.searchHybrid).mockResolvedValue([
-        // @ts-ignore
-        { id: '1', score: 0.9, snippet: 'Sky is blue (true)', type: 'archive', layer: 'archive' },
-        // @ts-ignore
-        { id: '2', score: 0.8, snippet: 'Sky is green (false)', type: 'shadow', layer: 'shadow' },
+        { id: '1', score: 0.9, snippet: 'Sky is blue (true)', type: 'archive', layer: 'archive', timestamp: new Date().toISOString() },
+        { id: '2', score: 0.8, snippet: 'Sky is green (false)', type: 'shadow', layer: 'shadow', timestamp: new Date().toISOString() },
       ]);
 
       const context = await ragService.buildRAGContext('sky color');
@@ -82,8 +78,7 @@ describe('ragService', () => {
 
     it('identifies source priority correctly', async () => {
        vi.mocked(searchService.searchHybrid).mockResolvedValue([
-        // @ts-ignore
-        { id: '1', score: 0.9, snippet: 'Canon truth', type: 'canon', layer: 'mantra' },
+        { id: '1', score: 0.9, snippet: 'Canon truth', type: 'canon', layer: 'mantra', timestamp: new Date().toISOString() },
       ]);
 
       const context = await ragService.buildRAGContext('truth');
@@ -96,15 +91,12 @@ describe('ragService', () => {
           // 1st call: Returns conflicting info
           vi.mocked(searchService.searchHybrid)
             .mockResolvedValueOnce([
-                // @ts-ignore
-                { id: '1', score: 0.9, snippet: 'A is true', type: 'shadow' },
-                // @ts-ignore
-                { id: '2', score: 0.9, snippet: 'A is false', type: 'shadow' },
+                { id: '1', score: 0.9, snippet: 'A is true', type: 'shadow', layer: 'shadow', timestamp: new Date().toISOString() },
+                { id: '2', score: 0.9, snippet: 'A is false', type: 'shadow', layer: 'shadow', timestamp: new Date().toISOString() },
             ])
             // 2nd call (verification): Returns decisive canon info
             .mockResolvedValueOnce([
-                // @ts-ignore
-                { id: '3', score: 0.99, snippet: 'A is definitely true', type: 'canon', layer: 'mantra' }
+                { id: '3', score: 0.99, snippet: 'A is definitely true', type: 'canon', layer: 'mantra', timestamp: new Date().toISOString() }
             ]);
 
           const context = await ragService.buildRAGContextWithSIFT('Is A true?');
@@ -120,10 +112,8 @@ describe('ragService', () => {
       it('stops if no new sources found', async () => {
            vi.mocked(searchService.searchHybrid)
             .mockResolvedValueOnce([
-                // @ts-ignore
-                { id: '1', score: 0.9, snippet: 'A is true', type: 'shadow' },
-                // @ts-ignore
-                { id: '2', score: 0.9, snippet: 'A is false', type: 'shadow' },
+                { id: '1', score: 0.9, snippet: 'A is true', type: 'shadow', layer: 'shadow', timestamp: new Date().toISOString() },
+                { id: '2', score: 0.9, snippet: 'A is false', type: 'shadow', layer: 'shadow', timestamp: new Date().toISOString() },
             ])
             .mockResolvedValueOnce([]); // No new info
 
