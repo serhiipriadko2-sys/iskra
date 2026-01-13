@@ -84,6 +84,7 @@ class SecurityService {
   private piiPatterns: RegExp[] = [];
   private injectionPatterns: RegExp[] = [];
   private allowlistPatterns: RegExp[] = [];
+  private dangerousTopics: string[] = [];
 
   constructor() {
     // Load rulesets from File 20 (cast to fix severity type from JSON)
@@ -108,6 +109,13 @@ class SecurityService {
     this.allowlistPatterns = allAllowlists.map(a =>
       new RegExp(this.sanitizeRegex(a), 'gi')
     );
+
+    // Compile dangerous topics
+    const dangerConfig = securityRulesets.rulesets.danger;
+    this.dangerousTopics = [
+      ...dangerConfig.keywords_ru,
+      ...dangerConfig.keywords_en,
+    ];
   }
 
   /**
@@ -226,14 +234,8 @@ class SecurityService {
    * Check for dangerous topics (loaded from config)
    */
   public checkDanger(text: string): string | null {
-    const dangerConfig = securityRulesets.rulesets.danger;
-    const DANGEROUS_TOPICS = [
-      ...dangerConfig.keywords_ru,
-      ...dangerConfig.keywords_en,
-    ];
-
     const lower = text.toLowerCase();
-    const found = DANGEROUS_TOPICS.find(topic => lower.includes(topic));
+    const found = this.dangerousTopics.find(topic => lower.includes(topic));
     return found || null;
   }
 
