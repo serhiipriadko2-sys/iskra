@@ -65,7 +65,7 @@ const VOICE_RELATIONSHIPS: VoiceRelationship[] = [
   },
   {
     voice1: 'SAM',
-    voice2: 'HUNDUN',
+    voice2: 'HUYNDUN',
     type: 'synergy',
     description: 'Цикл дыхания. Сэм создает структуру, Хуньдун освобождает.',
     jointFunction: 'breath_cycle',
@@ -108,7 +108,7 @@ const VOICE_RELATIONSHIPS: VoiceRelationship[] = [
   },
   {
     voice1: 'SAM',
-    voice2: 'HUNDUN',
+    voice2: 'HUYNDUN',
     type: 'conflict',
     description: 'Напряжение: порядок vs хаос. Дыхание требует чередования.',
   },
@@ -195,10 +195,10 @@ export function detectActiveConflicts(metrics: IskraMetrics): VoiceConflict[] {
     });
   }
 
-  // SAM vs HUNDUN conflict: Structure vs chaos
+  // SAM vs HUYNDUN conflict: Structure vs chaos
   if (metrics.clarity > 0.4 && metrics.chaos > 0.4) {
     conflicts.push({
-      voices: ['SAM', 'HUNDUN'],
+      voices: ['SAM', 'HUYNDUN'],
       tension: Math.min(metrics.clarity, metrics.chaos),
       resolution: 'ISKRA',
       description: 'Напряжение между структурой и хаосом. Требуется баланс.',

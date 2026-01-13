@@ -38,12 +38,9 @@ describe('ragService', () => {
         id: 'mantra-1',
         text: 'Core Mantra Text',
         isActive: true,
-        type: 'mantra',
         layer: 'mantra',
-        // @ts-ignore - Mocking partial MemoryNode for test
-        embedding: [],
+        version: '1.0',
         timestamp: new Date().toISOString(),
-        tags: []
       });
 
       const context = await ragService.buildRAGContext('mantra');

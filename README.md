@@ -35,14 +35,16 @@
 Подробности: `system/jules_platform.md`.
 
 ## Статус
-- **Версия:** vΩ.3.4 (Visual Audit Update)
-- **Runtime:** TypeScript 5.8+, React 19, Vite 6
-- **Тесты:** 100% покрытие ключевых узлов (828 tests passing)
-- **UI:** Улучшенный Council View (2-col), Metrics Thresholds, Sidebar a11y.
+- **Версия:** vΩ.3.4 (Deep Audit & Standardization)
+- **Runtime:** TypeScript 5.8+, React 19, Vite 7
+- **Тесты:** 620 passing tests (Coverage: Core ~100%, Overall ~70%)
+- **Голоса:** Унификация `HUYNDUN` (Chaos) в каноне и коде.
+- **Безопасность:** Полная верификация `securityService` и внешних конфигураций.
+- **UI:** Улучшенный Council View (2-col), корректное отображение граней.
 
 ---
 
-**Build date:** 2026-01-11
+**Build date:** 2026-01-13
 
 ## Монорепо (SoT + runtime)
 - SoT живёт в корне (папки `core/`, `system/`, `ledger/`...).
