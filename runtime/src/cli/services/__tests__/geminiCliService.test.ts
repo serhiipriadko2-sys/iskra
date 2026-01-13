@@ -44,9 +44,7 @@ describe('GeminiCliService', () => {
 
   it('should generate response', async () => {
     mockGenerateContent.mockResolvedValue({
-      response: {
-        text: () => 'Test response',
-      },
+      text: 'Test response',
     });
 
     const service = new GeminiCliService(mockConfig);
@@ -65,13 +63,11 @@ describe('GeminiCliService', () => {
 
   it('should generate streaming response', async () => {
     const mockStream = (async function* () {
-      yield { text: () => 'Chunk 1' };
-      yield { text: () => 'Chunk 2' };
+      yield { text: 'Chunk 1' };
+      yield { text: 'Chunk 2' };
     })();
 
-    mockGenerateContentStream.mockResolvedValue({
-      stream: mockStream,
-    });
+    mockGenerateContentStream.mockResolvedValue(mockStream);
 
     const service = new GeminiCliService(mockConfig);
     const chunks: string[] = [];
@@ -94,9 +90,7 @@ describe('GeminiCliService', () => {
     };
 
     mockGenerateContent.mockResolvedValue({
-      response: {
-        text: () => JSON.stringify(mockSiftResponse),
-      },
+      text: JSON.stringify(mockSiftResponse),
     });
 
     const service = new GeminiCliService(mockConfig);

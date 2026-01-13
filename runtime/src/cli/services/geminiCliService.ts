@@ -189,7 +189,7 @@ ${DELTA_PROTOCOL}
       contents,
     });
 
-    return result.response.text();
+    return result.text || "";
   }
 
   /**
@@ -216,8 +216,8 @@ ${DELTA_PROTOCOL}
       contents,
     });
 
-    for await (const chunk of result.stream) {
-      const text = chunk.text();
+    for await (const chunk of result) {
+      const text = chunk.text;
       if (text) {
         yield text;
       }
@@ -275,10 +275,10 @@ T - Trace: Создай цепочку рассуждений
       contents: [{ role: "user", parts: [{ text: `Проверь утверждение: "${statement}"` }] }],
     });
 
-    const text = result.response.text();
+    const text = result.text;
 
     try {
-      return JSON.parse(text);
+      return JSON.parse(text || "{}");
     } catch {
       // Fallback if JSON parsing fails
       return {
