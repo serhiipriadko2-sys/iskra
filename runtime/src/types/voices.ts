@@ -123,7 +123,12 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
   // a compassionate integration (Maki) should override a strict truth (Kain)
   // if the user’s trust is already high.  Place this check before KAIN.
   if (metrics.trust > 0.8 && metrics.pain > 0.3) {
-    return { primary: 'MAKI', scores, reason: 'trust > 0.8 && pain > 0.3 (Maki override)' };
+    return {
+      primary: 'MAKI',
+      secondary: 'KAIN', // KAIN обязан выдать Truth-Spike
+      scores,
+      reason: 'trust > 0.8 && pain > 0.3 (Maki wrapper, Kain payload)',
+    };
   }
 
   // Standard KAIN activation when pain is above threshold
@@ -165,6 +170,16 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
   )?.[0] ?? 'ISKRA') as VoiceName;
 
   return { primary, scores, reason: 'max score fallback' };
+}
+
+/**
+ * Detect False Harmony pattern
+ * clarity high + pain low + drift low → risk of self-deception
+ * Triggers ISKRIV intervention
+ */
+export function detectFalseHarmony(metrics: IskraMetrics): boolean {
+  const tooSmooth = metrics.clarity >= 0.85 && metrics.pain <= 0.15 && metrics.drift <= 0.1;
+  return tooSmooth;
 }
 
 /**
