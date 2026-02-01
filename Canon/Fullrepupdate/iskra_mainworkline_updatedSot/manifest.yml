@@ -1,0 +1,17 @@
+version: vΩ.3.2
+build_date: 2026-01-09
+author: SEMEN-GABRAN-REVΩ
+structure:
+  # Repo-wide counts (includes runtime/)
+  total_dirs: 50
+  total_files: 344
+  layers: ['core', 'mind', 'system', 'metrics', 'governance', 'appendix', 'ledger']
+description: >
+  Canonical rebirth of ISKRA. Hierarchical knowledge system with 7 layers.
+  Each layer is a Source of Truth module. This build includes the monorepo
+  runtime scaffold and an integrity chain (ledger/sot.json + checksum.asc).
+
+monorepo:
+  includes: ['SoT', 'runtime']
+  runtime_dir: runtime
+  tools_dir: tools

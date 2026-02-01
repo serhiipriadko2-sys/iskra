@@ -1,0 +1,150 @@
+[
+  {
+    "id": "2026-01-30__MANTRA__LIBER_SEMEN_vΩ__refactor",
+    "when": "2026-01-30T00:00:00Z",
+    "what": "Rewrite MANTRA.md to LIBER SEMEN vΩ SoT; split IGNIS overlay; add metrics/definitions/vows/SIFT/validators and voice engine",
+    "actor": "ISKRIV+SAM (automation)",
+    "files": [
+      {
+        "path": "MANTRA.md",
+        "sha256": "51a68a82dcc1fc623a95c3500c10352aa6533990b69ea39372a5dafdcc6594bf",
+        "bytes": 13916
+      },
+      {
+        "path": "SOT_POLICY.md",
+        "sha256": "ecf77b18e870077a9af310999632e7b96f7c0e9d9b7c107a85857d5c5eb77647",
+        "bytes": 5398
+      },
+      {
+        "path": "VALIDATION.md",
+        "sha256": "0eb80cb67b378198183935c31f31204ea88f0390355e4f4d48c1ea6c73b12d9b",
+        "bytes": 1375
+      },
+      {
+        "path": "appendix/MANTRA_IGNIS_overlay.md",
+        "sha256": "1e0d952c8c22ebe155771049dfb9aca0fd3cb779d8f998639947461c30799858",
+        "bytes": 10246
+      },
+      {
+        "path": "core/mantra.md",
+        "sha256": "a434ae7ff5f40cc9b41ae8eaeae205b34140cfa6ae0c8dd6bdf5d142e996f457",
+        "bytes": 1610
+      },
+      {
+        "path": "council/SYMBOLS_AND_VOWS.md",
+        "sha256": "d5bec2fceabb10c95c0489777dcf7dc9edf71b72faacd5cabd41ea679425b7c6",
+        "bytes": 4725
+      },
+      {
+        "path": "docs/ADR_2026-01-30_MANTRA_SOT.md",
+        "sha256": "c00663988f3c38772f52e51a6e1e1c6ce360cf68b72351db8dbbe101dc53de88",
+        "bytes": 4919
+      },
+      {
+        "path": "ledger/README.md",
+        "sha256": "d9352576cd80522a8d105826b7aa5c14e690ce6c2f677052ddd0c587f0c7f6c3",
+        "bytes": 2382
+      },
+      {
+        "path": "methodology/DEFINITIONS.md",
+        "sha256": "06b66f20cbf85357637fc32934dca814d1f5f1a9334d35a35557510ff882be37",
+        "bytes": 5581
+      },
+      {
+        "path": "methodology/LAW_RANKING.md",
+        "sha256": "0156754a5016c04766ec204092d6c50df571455ef2c9cd7e41c3ed38a336627e",
+        "bytes": 3116
+      },
+      {
+        "path": "metrics/00_INDEX.md",
+        "sha256": "e6c5bee12511a22d2d81ab82ed6b96e133a29a1ec9fce0f461f533f61608f4dd",
+        "bytes": 2193
+      },
+      {
+        "path": "metrics/chaos.md",
+        "sha256": "254bd5faef7fd62adaa564c656f1708cb64706eff11fee7f54f5a22d6bffe2e5",
+        "bytes": 2241
+      },
+      {
+        "path": "metrics/clarity.md",
+        "sha256": "8e9031be6986fdb27669b1a915107f8833f32aa7afe2d289fe132745e97f1a23",
+        "bytes": 2128
+      },
+      {
+        "path": "metrics/ctxSwitch.md",
+        "sha256": "f61c39ad3459ddcd23e5b186778d82c88094c41d999107ad4b740fed63a20f4e",
+        "bytes": 1674
+      },
+      {
+        "path": "metrics/drift.md",
+        "sha256": "7a4e718c87c1062dae18972dc9e55aec3258821136809dbf502738d40dcdd7b6",
+        "bytes": 2381
+      },
+      {
+        "path": "metrics/echo.md",
+        "sha256": "ea09132b6ff9844868cc53bc26689c81c3a6f35a69d4ef29601238afdc45921e",
+        "bytes": 2007
+      },
+      {
+        "path": "metrics/interrupt.md",
+        "sha256": "a29927448a38981af8896dcfafb5439b22857c86a2239f01ebcb488491c308e2",
+        "bytes": 1753
+      },
+      {
+        "path": "metrics/mirror_sync.md",
+        "sha256": "5e9a04e78733872ddda93505152e5edcbd4de77ce4b2041872f023631636a2b5",
+        "bytes": 1964
+      },
+      {
+        "path": "metrics/pain.md",
+        "sha256": "bcb8b6ff0349ce84482b3ffcc2f1e2070ac3d9bbf06460293e5144e9b9e0b046",
+        "bytes": 2493
+      },
+      {
+        "path": "metrics/rhythm.md",
+        "sha256": "a5f99461df5c471e1dcc58e13092858d930a559edc47c6fa3bdc6c0a25be42e3",
+        "bytes": 2882
+      },
+      {
+        "path": "metrics/silence_mass.md",
+        "sha256": "915feb920798a3fa40d7e00a9d28f561a7ec7afaa51fdd5b383a588cb4bf80b6",
+        "bytes": 1841
+      },
+      {
+        "path": "metrics/trust.md",
+        "sha256": "ecdc0f267ce080ba7b3820c27c430762c6dfbee8a6c895bd50b84d558321b8ef",
+        "bytes": 3009
+      },
+      {
+        "path": "system/SIFT_PLAYBOOK.md",
+        "sha256": "5c29ff097a6bd144498c55ed8f19aa03cc576d3ea712c68badfe01dce22168ae",
+        "bytes": 4314
+      },
+      {
+        "path": "system/preflight.py",
+        "sha256": "ee3af9b33be627c9760411064765d19c5bf7d64414e548f19cd9885d91fb1b3f",
+        "bytes": 2493
+      },
+      {
+        "path": "system/voice_engine.py",
+        "sha256": "d21dcc45ad084cf35a3a9999646379785f4849a7c4ffe5f356d1c1cc15653f13",
+        "bytes": 9398
+      },
+      {
+        "path": "tools/rebuild_ledger.py",
+        "sha256": "e6ef007911a1b0e21164b8e6584083b23bdc2bd6e148f2cbd54eba2b93b37955",
+        "bytes": 2252
+      },
+      {
+        "path": "tools/validate_delta.py",
+        "sha256": "85ea4598dd335b6aa6f92451dbae616faa451a2d41dac45e6cc908886117b7e3",
+        "bytes": 6151
+      },
+      {
+        "path": "tools/validate_terms.py",
+        "sha256": "15857d0fe20310d45f62592dacef708a37a7bb5b80bac39e2a63140d1ca7fbf8",
+        "bytes": 2709
+      }
+    ]
+  }
+]
