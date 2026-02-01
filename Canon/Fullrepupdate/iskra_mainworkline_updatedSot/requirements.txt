@@ -1,7 +1,0 @@
-# ISKRA Python Dependencies
-# Python 3.9+ required
-#
-# Note: The current tools (update_ledger.py, verify_ledger.py)
-# use only standard library modules. No external dependencies needed.
-#
-# Future tools may add dependencies here.
