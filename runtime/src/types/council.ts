@@ -378,8 +378,6 @@ export function getVoiceBaseWeight(voice: VoiceName): number {
     MAKI: 0.7,
     PINO: 0.65,
     HUYNDUN: 0.6,
-    // Deprecated alias
-    HUYNDUN: 0.6,
   };
   return weights[voice];
 }
