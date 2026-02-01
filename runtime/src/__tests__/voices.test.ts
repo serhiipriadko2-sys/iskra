@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { selectVoice } from '../types/voices.js';
+import { selectVoice, detectFalseHarmony } from '../types/voices.js';
 import { DEFAULT_METRICS } from '../types/metrics.js';
+import type { IskraMetrics } from '../types/metrics.js';
 
 // Smoke tests for voice selection logic. These tests ensure that the core
 // trigger conditions from the canon are enforced. They are not exhaustive
@@ -30,5 +31,65 @@ describe('selectVoice', () => {
     const metrics = { ...DEFAULT_METRICS, pain: 0.4, trust: 0.9 };
     const activation = selectVoice(metrics);
     expect(activation.primary).toBe('MAKI');
+  });
+});
+
+describe('MAKI-KAIN collision resolution (ADR-20260201-07)', () => {
+  it('EVAL-MK-01: returns MAKI primary with KAIN secondary when trust=0.9 pain=0.4', () => {
+    const metrics: IskraMetrics = {
+      rhythm: 50,
+      trust: 0.9,
+      pain: 0.4,
+      chaos: 0.2,
+      drift: 0.1,
+      echo: 0.1,
+      clarity: 0.7,
+      silence_mass: 0.2,
+      mirror_sync: 0.5,
+      interrupt: 0.1,
+      ctxSwitch: 0.1,
+      foresight: 0.3,
+    };
+    const result = selectVoice(metrics);
+    expect(result.primary).toBe('MAKI');
+    expect(result.secondary).toBe('KAIN');
+  });
+});
+
+describe('False Harmony detection (ADR-20260201-07)', () => {
+  it('EVAL-FH-01: detectFalseHarmony returns true when clarity=0.9 pain=0.05 drift=0.05', () => {
+    const metrics: IskraMetrics = {
+      rhythm: 60,
+      trust: 0.7,
+      pain: 0.05,
+      chaos: 0.1,
+      drift: 0.05,
+      echo: 0.1,
+      clarity: 0.9,
+      silence_mass: 0.1,
+      mirror_sync: 0.6,
+      interrupt: 0.1,
+      ctxSwitch: 0.1,
+      foresight: 0.2,
+    };
+    expect(detectFalseHarmony(metrics)).toBe(true);
+  });
+
+  it('detectFalseHarmony returns false when pain is moderate', () => {
+    const metrics: IskraMetrics = {
+      rhythm: 60,
+      trust: 0.7,
+      pain: 0.3,
+      chaos: 0.1,
+      drift: 0.05,
+      echo: 0.1,
+      clarity: 0.9,
+      silence_mass: 0.1,
+      mirror_sync: 0.6,
+      interrupt: 0.1,
+      ctxSwitch: 0.1,
+      foresight: 0.2,
+    };
+    expect(detectFalseHarmony(metrics)).toBe(false);
   });
 });
