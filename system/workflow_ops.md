@@ -32,6 +32,26 @@ updated: 2026-01-09
 
 **Правило:** проект создаём сразу с **project-only memory** (и оно автоматически включается при шаринге проекта).
 
+### A1) Projects Stack (STACK_39) — build artifact
+Иногда удобнее загружать в Святилище (Project) не весь репозиторий, а компактный набор файлов **STACK_39** (верхние папки `CANON_FULL/ CORE/ SYSTEM/ METRICS/ GOVERNANCE/ MIND/ PROJECTS/`).
+
+**Важно:** STACK_39 — **артефакт сборки**, а не “источник истины”. Истина живёт в `core/`, `system/`, `metrics/`, `governance/`, `canon/` и защищена `ledger/sot.json`.
+
+**Как собрать STACK_39 из main:**
+1) Проверить целостность SoT:
+   - `python tools/verify_ledger.py`
+2) Собрать каталог артефакта:
+   - `python tools/build_projects_stack.py`  
+     (по умолчанию кладёт в `dist/ISKRA_PROJECTS_STACK_39`)
+3) Заархивировать `dist/ISKRA_PROJECTS_STACK_39/` и загрузить ZIP в Project.
+
+**Что именно “склеивается” при сборке:**
+- `SYSTEM/SIFT_PROTOCOL.md` = `system/sift_protocol.md` + `system/sift_extended.md`
+- `METRICS/METRICS_BUNDLE.md` = `metrics/indices.md` + `metrics/evals.md` + `metrics/qa_playbook.md`
+- `PROJECTS/ROUTER.md` и прочие файлы Projects берутся из `tools/projects_stack_templates/` (чтобы ссылки всегда были правильными).
+
+---
+
 ### B) GitHub (если подключаем)
 GitHub нужен для:
 - версионирования SoT (Печать истины) и кода,
@@ -58,15 +78,15 @@ GitHub нужен для:
 1) Предложение изменения → в чате как “ADR-черновик”.  
 2) Создаём/обновляем `Совет/adr.md` (новая запись).  
 3) Меняем файлы SoT (Печать истины).  
-4) Обновляем `скрижаль/sot.json`, `скрижаль/checksum.asc`, `скрижаль/integrity_log.md`.  
+4) Обновляем `ledger/sot.json` (через `python tools/update_ledger.py`) и проверяем `python tools/verify_ledger.py`.  
 5) Прогоняем QA (см. меры/qa_playbook.md).  
-6) Релиз: `скрижаль/release_note.md` + запись в changelog.
+6) Релиз: `ledger/release_note.md` + запись в changelog.
 
 ---
 
 ## §4 · CI (когда будет GitHub)
 Минимум 2 проверки:
-- **hash-check:** пересчитать sha256 и сравнить с `скрижаль/sot.json`.  
+- **hash-check:** пересчитать sha256 и сравнить с `ledger/sot.json`.  
 - **lint:** формат markdown + запрет “пустых заглушек”.
 
 ---

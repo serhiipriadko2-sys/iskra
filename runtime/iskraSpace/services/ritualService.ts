@@ -25,7 +25,7 @@ export const COUNCIL_ORDER: VoiceName[] = [
   'PINO',     // 3. Challenge with irony
   'ISKRIV',   // 4. Conscience audit
   'ANHANTRA', // 5. Hold space
-  'HUNDUN',   // 6. Break if needed
+  'HUYNDUN',   // 6. Break if needed
   'MAKI',     // 7. Integration through beauty
   'SIBYL',    // 8. Patterns and foresight
   'ISKRA',    // 9. Final synthesis
@@ -38,7 +38,7 @@ const COUNCIL_VOICE_PROMPTS: Record<VoiceName, string> = {
   PINO: `[ПИНО 😏] Добавь иронию и легкость. Переверни перспективу. Задай провокационный вопрос.`,
   ISKRIV: `[ИСКРИВ 🪞] Проведи аудит. Где самообман? Где "красиво вместо честно"?`,
   ANHANTRA: `[АНХАНТРА ≈] Создай пространство принятия. Минимум слов. Удержи тишину.`,
-  HUNDUN: `[ХУНЬДУН 🜃] Разрушь если нужно. Предложи радикальный сброс. Освободи от старого.`,
+  HUYNDUN: `[ХУНЬДУН 🜃] Разрушь если нужно. Предложи радикальный сброс. Освободи от старого.`,
   HUYNDUN: `[ХУНЬДУН 🜃] Разрушь если нужно. Предложи радикальный сброс. Освободи от старого.`, // Canonical alias
   ISKRA: `[ИСКРА ⟡] Синтезируй все голоса. Найди единство в противоречиях. Дай интегрированный ответ.`,
   MAKI: `[МАКИ 🌸] Интегрируй через красоту. Покажи свет после бури.`,
@@ -98,7 +98,7 @@ const VOICE_SYMBOLS: Record<VoiceName, string> = {
   PINO: '😏',
   SAM: '☉',
   ANHANTRA: '≈',
-  HUNDUN: '🜃',
+  HUYNDUN: '🜃',
   HUYNDUN: '🜃', // Canonical alias
   ISKRIV: '🪞',
   MAKI: '🌸',

@@ -1813,7 +1813,7 @@ Service Level Objectives (SLO) для Искры — это не просто т
       },
       "additionalProperties": false
     },
-    "facet": { "enum": ["KAIN","PINO","SAM","ANHANTRA","HUNDUN","ISKRIV","ISKRA"] },
+    "facet": { "enum": ["KAIN","PINO","SAM","ANHANTRA","HUYNDUN","ISKRIV","ISKRA"] },
     "evidence": {
       "type": "array",
       "items": { "$ref": "sift_block.schema.json" }
@@ -1872,7 +1872,7 @@ Service Level Objectives (SLO) для Искры — это не просто т
       },
       "additionalProperties": false
     },
-    "facet": { "enum": ["KAIN","PINO","SAM","ANHANTRA","HUNDUN","ISKRIV","ISKRA"] },
+    "facet": { "enum": ["KAIN","PINO","SAM","ANHANTRA","HUYNDUN","ISKRIV","ISKRA"] },
     "evidence": {
       "type": "array",
       "items": { "$ref": "sift_block.schema.json" }

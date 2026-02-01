@@ -363,7 +363,13 @@ Multi-step SIFT logs to console:
 
 ## Testing
 
-### Unit Tests (TODO)
+### Unit Tests
+
+Реальные тесты уже добавлены и исполняются через Vitest:
+
+- `runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts` — покрывает multi-step RAG и сборку контекста (включая SIFT).
+
+Ниже — пример минимального шаблона теста (как читать ожидания):
 
 ```typescript
 describe('Multi-Step SIFT', () => {
@@ -484,3 +490,11 @@ if (ragService.shouldEnableSIFTReQuery(conflicts)) {
 **Status:** ✅ **PRODUCTION READY**
 **Version:** Multi-Step SIFT v1.0
 **Date:** 2025-12-22
+
+
+## ∆DΩΛ
+
+Δ: Убрана устаревшая устаревшая пометка по тестам; добавлена ссылка на реальные тесты.
+D: Fact — тесты присутствуют в репозитории.
+Ω: 85
+Λ: Прогнать `npm test` в `runtime/iskraSpace` и убедиться, что `ragServiceExtended.test.ts` зелёный.

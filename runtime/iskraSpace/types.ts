@@ -263,7 +263,7 @@ export type VoiceID =
   | 'VOICE.ISKRIV'
   | 'VOICE.KAIN'
   | 'VOICE.PINO'
-  | 'VOICE.HUNDUN'
+  | 'VOICE.HUYNDUN'
   | 'VOICE.ANHANTRA'
   | 'VOICE.SAM'
   | 'VOICE.MAKI'

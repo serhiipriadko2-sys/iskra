@@ -216,7 +216,7 @@ describe('ews', () => {
       SAM: 0.5,
       ANHANTRA: 0.5,
       HUYNDUN: 0.3,
-      HUNDUN: 0.3,
+      HUYNDUN: 0.3,
       ISKRIV: 0.5,
       MAKI: 0.3,
       SIBYL: 0.2,
@@ -262,7 +262,7 @@ describe('ews', () => {
       expect(adjusted.MAKI).toBeGreaterThan(0);
       expect(adjusted.ISKRA).toBe(0);
       expect(adjusted.HUYNDUN).toBe(0);
-      expect(adjusted.HUNDUN).toBe(0);
+      expect(adjusted.HUYNDUN).toBe(0);
     });
 
     it('should return normalized weights (sum ~= 1)', () => {

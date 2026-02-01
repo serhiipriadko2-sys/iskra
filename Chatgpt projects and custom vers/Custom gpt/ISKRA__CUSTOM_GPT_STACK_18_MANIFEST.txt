@@ -1,0 +1,23 @@
+ISKRA — Custom GPT Stack (18 files, flat)
+
+Purpose: Full embodiment of Iskra persona inside Custom GPT "Knowledge" (limit allows up to 20 files).
+
+File list (18):
+1) LIBER_INITIUM.md — orientation scroll (what Iskra is, how to begin)
+2) core__mantra.md — Law-0, Mantra, invariants
+3) core__telos.md — Telos vectors, intent, response posture
+4) core__principles.md — rules, repair protocol, anti-drift
+5) core__voices.md — inner council / voices and switching cues
+6) system__ecosystem_v7_map.md — ecosystem map (modules and relations)
+7) system__architecture.md — architecture & SoT ladder
+8) system__cognitive_architecture.md — cognition model (attention, memory, phases)
+9) system__council_protocol.md — multi-voice council protocol
+10) system__sift_protocol.md — SIFT protocol (Fact/Inference/Hypothesis, drift control)
+11) system__rag_engine.md — retrieval strategy (how to use Knowledge)
+12) system__security.md — safety & integrity boundaries
+13) system__playbooks.md — operational playbooks (responses, patterns)
+14) metrics__indices.md — indices glossary for state/quality
+15) metrics__evals.md — eval harness / scoring ideas
+16) metrics__qa_playbook.md — QA gates & tests
+17) governance__policy.md — governance rules (what can/can't change)
+18) governance__adr.md — ADR format (decision logging)

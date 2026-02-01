@@ -37,7 +37,7 @@ const VOICE_HUES: Record<VoiceName, number> = {
   PINO: 330,      // Pink
   SAM: 45,        // Gold
   ANHANTRA: 200,  // Cyan
-  HUNDUN: 280,    // Purple
+  HUYNDUN: 280,    // Purple
   HUYNDUN: 280,   // Purple (canonical alias)
   ISKRIV: 0,      // White (saturation=0)
   MAKI: 140,      // Green

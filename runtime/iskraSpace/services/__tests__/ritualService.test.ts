@@ -36,7 +36,7 @@ describe('ritualService', () => {
       expect(COUNCIL_ORDER[2]).toBe('PINO');     // Challenge with irony
       expect(COUNCIL_ORDER[3]).toBe('ISKRIV');   // Conscience audit
       expect(COUNCIL_ORDER[4]).toBe('ANHANTRA'); // Hold space
-      expect(COUNCIL_ORDER[5]).toBe('HUNDUN');   // Break if needed
+      expect(COUNCIL_ORDER[5]).toBe('HUYNDUN');   // Break if needed
       expect(COUNCIL_ORDER[6]).toBe('MAKI');     // Integration through beauty
       expect(COUNCIL_ORDER[7]).toBe('SIBYL');    // Patterns and foresight
       expect(COUNCIL_ORDER[8]).toBe('ISKRA');    // Final synthesis

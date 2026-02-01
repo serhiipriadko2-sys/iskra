@@ -5,7 +5,7 @@
  *
  * MAKI activates after deep transformations:
  * - After KAIN work (pain processing)
- * - After HUNDUN destruction + reconstruction
+ * - After HUYNDUN destruction + reconstruction
  * - After 8-phase cycle completion
  * - After exhaustion detection (recovery from high pain/chaos)
  *
@@ -126,7 +126,7 @@ export function checkMakiActivation(metrics: IskraMetrics): MakiActivationResult
   const postKain = checkPostKainActivation(metrics);
   if (postKain.shouldActivate) return postKain;
 
-  // Check for post-HUNDUN activation
+  // Check for post-HUYNDUN activation
   const postHuyndun = checkPostHuyndunActivation(metrics);
   if (postHuyndun.shouldActivate) return postHuyndun;
 
@@ -184,12 +184,12 @@ function checkPostKainActivation(metrics: IskraMetrics): MakiActivationResult {
 }
 
 /**
- * Check for post-HUNDUN activation
+ * Check for post-HUYNDUN activation
  * MAKI flowers after Huyndun's destruction when new structure emerges
  */
 function checkPostHuyndunActivation(metrics: IskraMetrics): MakiActivationResult {
   const recentHuyndun = recentVoices.filter(
-    v => v.voice === 'HUNDUN' &&
+    v => v.voice === 'HUYNDUN' &&
     Date.now() - new Date(v.timestamp).getTime() < 30 * 60 * 1000
   );
 

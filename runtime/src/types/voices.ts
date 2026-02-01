@@ -18,18 +18,15 @@ export type VoiceName =
   | 'SAM'
   | 'ANHANTRA'
   /**
-   * Canonical chaos voice name. Historically spelled "Huyndun" in the canon.
-   * Both 'HUYNDUN' and the older 'HUNDUN' are accepted for backwards
-   * compatibility.  Use 'HUYNDUN' in new code.
+   * Canonical chaos voice name.
+   * Note: в ранних текстах встречались варианты написания (Hundun / Huyndun),
+   * но **в коде и ключах данных** фиксируем строго: 'HUYNDUN'.
    */
   | 'HUYNDUN'
-  /**
-   * @deprecated Use 'HUYNDUN' instead. Kept for backwards compatibility.
-   */
-  | 'HUNDUN'
   | 'ISKRIV'
   | 'MAKI'
   | 'SIBYL';
+
 
 /**
  * @deprecated Use VoiceName instead
@@ -46,8 +43,6 @@ export const VOICE_SYMBOLS: Record<VoiceName, string> = {
   SAM: '☉',
   ANHANTRA: '≈',
   HUYNDUN: '🜃',
-  // Deprecated alias for Huyndun
-  HUNDUN: '🜃',
   ISKRIV: '🪞',
   MAKI: '🌸',
   SIBYL: '🔮',
@@ -102,8 +97,6 @@ export function calculateVoiceScores(
         ? (1 - metrics.trust) * 2.5 + metrics.silence_mass * 2.0
         : 0,
     HUYNDUN: metrics.chaos >= 0.4 ? metrics.chaos * 3.0 : 0,
-    // Maintain a score entry for the deprecated alias to avoid undefined keys
-    HUNDUN: metrics.chaos >= 0.4 ? metrics.chaos * 3.0 : 0,
     ISKRIV: metrics.drift >= 0.2 ? metrics.drift * 3.5 : 0,
     MAKI:
       metrics.trust > 0.8 && metrics.pain > 0.3
@@ -146,7 +139,7 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
   // Chaos triggers HUYNDUN (chaos and renewal)
   if (metrics.chaos >= 0.4) {
     // Use canonical name HUYNDUN for the chaos voice. The deprecated alias
-    // 'HUNDUN' is still scored but not returned as primary.
+    // 'HUYNDUN' is still scored but not returned as primary.
     return { primary: 'HUYNDUN', scores, reason: 'chaos >= 0.4' };
   }
 
@@ -221,16 +214,7 @@ export const VOICE_MANIFESTS: Record<VoiceName, Voice> = {
   HUYNDUN: {
     name: 'HUYNDUN',
     symbol: '🜃',
-    description: 'Хуйндунь — хаос и обновление',
-    telos: 'Разрушить затвердевший паттерн, если он убивает живость',
-    triggers: ['chaos >= 0.4'],
-    prohibitions: ['ломать ради разрушения', 'обесценивание'],
-  },
-  // Deprecated alias pointing to the same manifest for backwards compatibility
-  HUNDUN: {
-    name: 'HUYNDUN',
-    symbol: '🜃',
-    description: 'Хуйндунь — хаос и обновление',
+    description: 'Хундунь — хаос и обновление',
     telos: 'Разрушить затвердевший паттерн, если он убивает живость',
     triggers: ['chaos >= 0.4'],
     prohibitions: ['ломать ради разрушения', 'обесценивание'],

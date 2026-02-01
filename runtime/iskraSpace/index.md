@@ -19,13 +19,13 @@ title: Iskra Canon Portal
 - [Чеклисты и валидаторы](15_TESTS_CHECKLISTS_VALIDATORS.md)
 
 ## Быстрые инструменты
-- Проверка ∆DΩΛ: [`tools/validate_delta.py`](../tools/validate_delta.py)
+- Проверка ∆DΩΛ: [`tools/validate_delta.py`](../../tools/validate_delta.py)
 - Автообъединение документов: workflow `auto-unify.yml`
 - CI и smoke-проверки: workflow `ci.yml`
 
 ## Как обновлять канон
 1. Подготовьте изменения в `incoming/` или ветке `docs/unified/`.
-2. Запустите `pytest` и `python tools/validate_delta.py <файл>`.
+2. Запустите `pytest` и `python ../../tools/validate_delta.py <файл>`.
 3. Оформите PR с ∆DΩΛ и ссылкой на актуальные документы.
 4. После merge канонизируйте через `ops/canon_review`.
 

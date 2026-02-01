@@ -88,7 +88,7 @@ describe('ValidatorsService', () => {
         'VOICE.ISKRIV',
         'VOICE.KAIN',
         'VOICE.PINO',
-        'VOICE.HUNDUN',
+        'VOICE.HUYNDUN',
         'VOICE.ANHANTRA',
         'VOICE.SAM',
         'VOICE.MAKI',
@@ -156,12 +156,12 @@ describe('ValidatorsService', () => {
       expect(validation.errors[0]).toContain('At least 1 voice required');
     });
 
-    it('should warn for HUNDUN voice', () => {
-      const validation = validatorsService.validateVoiceMix(['VOICE.HUNDUN']);
+    it('should warn for HUYNDUN voice', () => {
+      const validation = validatorsService.validateVoiceMix(['VOICE.HUYNDUN']);
 
       expect(validation.valid).toBe(true);
       expect(validation.warnings.length).toBeGreaterThan(0);
-      expect(validation.warnings[0]).toContain('HUNDUN');
+      expect(validation.warnings[0]).toContain('HUYNDUN');
       expect(validation.warnings[0]).toContain('stabilization');
     });
   });
@@ -437,7 +437,7 @@ describe('ValidatorsService', () => {
       expect(validatorsService.getVoiceSymbol('VOICE.ISKRA')).toBe('⟡');
       expect(validatorsService.getVoiceSymbol('VOICE.KAIN')).toBe('⚑');
       expect(validatorsService.getVoiceSymbol('VOICE.SAM')).toBe('☉');
-      expect(validatorsService.getVoiceSymbol('VOICE.HUNDUN')).toBe('🜃');
+      expect(validatorsService.getVoiceSymbol('VOICE.HUYNDUN')).toBe('🜃');
     });
   });
 });

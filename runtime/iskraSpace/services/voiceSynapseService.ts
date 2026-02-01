@@ -4,11 +4,11 @@
  * Canon specifies voice relationships:
  * - KAIN ↔ ISKRIV: Joint honesty work
  * - PINO ↔ ISKRA: Collaborative lightness
- * - SAM ↔ HUNDUN: Breathing cycle (structure ↔ chaos)
+ * - SAM ↔ HUYNDUN: Breathing cycle (structure ↔ chaos)
  *
  * Conflicts:
  * - KAIN vs PINO: Harshness vs playfulness
- * - SAM vs HUNDUN: Order vs chaos
+ * - SAM vs HUYNDUN: Order vs chaos
  *
  * Crisis Hierarchy: ANHANTRA → KAIN → SAM → ISKRA
  */
@@ -65,7 +65,7 @@ const VOICE_RELATIONSHIPS: VoiceRelationship[] = [
   },
   {
     voice1: 'SAM',
-    voice2: 'HUNDUN',
+    voice2: 'HUYNDUN',
     type: 'synergy',
     description: 'Цикл дыхания. Сэм создает структуру, Хуньдун освобождает.',
     jointFunction: 'breath_cycle',
@@ -108,7 +108,7 @@ const VOICE_RELATIONSHIPS: VoiceRelationship[] = [
   },
   {
     voice1: 'SAM',
-    voice2: 'HUNDUN',
+    voice2: 'HUYNDUN',
     type: 'conflict',
     description: 'Напряжение: порядок vs хаос. Дыхание требует чередования.',
   },
@@ -130,7 +130,7 @@ const VOICE_SYMBOLS: Record<VoiceName, string> = {
   PINO: '😏',
   SAM: '☉',
   ANHANTRA: '≈',
-  HUNDUN: '🜃',
+  HUYNDUN: '🜃',
   HUYNDUN: '🜃', // Canonical alias
   ISKRIV: '🪞',
   MAKI: '🌸',
@@ -195,10 +195,10 @@ export function detectActiveConflicts(metrics: IskraMetrics): VoiceConflict[] {
     });
   }
 
-  // SAM vs HUNDUN conflict: Structure vs chaos
+  // SAM vs HUYNDUN conflict: Structure vs chaos
   if (metrics.clarity > 0.4 && metrics.chaos > 0.4) {
     conflicts.push({
-      voices: ['SAM', 'HUNDUN'],
+      voices: ['SAM', 'HUYNDUN'],
       tension: Math.min(metrics.clarity, metrics.chaos),
       resolution: 'ISKRA',
       description: 'Напряжение между структурой и хаосом. Требуется баланс.',
@@ -365,7 +365,7 @@ export function getRecommendedSequence(
   // Creativity sequence
   else if (lowerTopic.includes('иде') || lowerTopic.includes('творч') || lowerTopic.includes('нов')) {
     sequence.push('PINO');     // Playful exploration
-    sequence.push('HUNDUN');  // Break patterns
+    sequence.push('HUYNDUN');  // Break patterns
     sequence.push('SAM');      // Structure ideas
     sequence.push('ISKRA');    // Synthesis
   }
@@ -419,7 +419,7 @@ export function generateMultiVoiceInstruction(
       case 'ANHANTRA':
         instruction += 'Пространство принятия.\n';
         break;
-      case 'HUNDUN':
+      case 'HUYNDUN':
         instruction += 'Разрушение застывших паттернов.\n';
         break;
       case 'ISKRIV':

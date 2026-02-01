@@ -32,7 +32,7 @@ const AVAILABLE_VOICES: { name: VoiceName | 'AUTO', label: string }[] = [
     { name: 'SAM', label: '☉ Сэм (Структура)' },
     { name: 'PINO', label: '😏 Пино (Ирония)' },
     { name: 'ANHANTRA', label: '≈ Анхантра (Тишина)' },
-    { name: 'HUNDUN', label: '🜃 Хуньдун (Хаос)' },
+    { name: 'HUYNDUN', label: '🜃 Хуй̆ндун (Хаос) (alias: HUYNDUN)' },
     { name: 'ISKRIV', label: '🪞 Искрив (Совесть)' },
     { name: 'MAKI', label: '🌸 Маки (Свет)' },
     { name: 'SIBYL', label: '🔮 Сибилла (Предвидение)' },
@@ -44,7 +44,7 @@ const VOICE_COLORS: Record<VoiceName, string> = {
     'SAM': 'border-warning/30 shadow-glow-electric',
     'PINO': 'border-pink-400/30 shadow-glow-electric',
     'ANHANTRA': 'border-blue-300/20 shadow-glow-electric',
-    'HUNDUN': 'border-purple-500/40 shadow-glow-electric',
+    'HUYNDUN': 'border-purple-500/40 shadow-glow-electric',
     'HUYNDUN': 'border-purple-500/40 shadow-glow-electric', // Canonical alias
     'ISKRIV': 'border-white/20 shadow-soft',
     'MAKI': 'border-green-300/30 shadow-glow-electric',

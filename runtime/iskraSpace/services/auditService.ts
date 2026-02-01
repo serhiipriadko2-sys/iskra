@@ -392,7 +392,7 @@ class AuditService {
       affected.push('SAM'); // Need Sam for structure
     }
     if (driftLevel > 0.6) {
-      affected.push('HUNDUN'); // Need Huyndun to break patterns
+      affected.push('HUYNDUN'); // Need Huyndun to break patterns
     }
 
     return affected;

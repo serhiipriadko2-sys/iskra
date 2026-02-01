@@ -311,7 +311,7 @@ VALUES
     'canon_voices',
     'mantra',
     'CANON',
-    '9 Canonical Voices: ISKRA, ISKRIV, KAIN, PINO, HUNDUN, ANHANTRA, SAM, MAKI, SIBYL',
+    '9 Canonical Voices: ISKRA, ISKRIV, KAIN, PINO, HUYNDUN, ANHANTRA, SAM, MAKI, SIBYL',
     1.0,
     '{"source": "canon:04#4.1", "immutable": true}'::JSONB
   )

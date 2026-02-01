@@ -103,7 +103,7 @@ class SoundService {
           'SAM': 660,
           'ANHANTRA': 110,
           'PINO': 880,
-          'HUNDUN': 80,
+          'HUYNDUN': 80,
           'ISKRIV': 700,
           'ISKRA': 440,
           'MAKI': 520,
