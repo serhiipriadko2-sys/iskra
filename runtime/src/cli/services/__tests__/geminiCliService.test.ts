@@ -182,7 +182,7 @@ describe('Voice Instructions Coverage', () => {
     'SAM',
     'ANHANTRA',
     'HUYNDUN',
-    'HUNDUN',
+    'HUYNDUN',
     'ISKRIV',
     'MAKI',
     'SIBYL',

@@ -4,7 +4,7 @@
  * Анимированное свечение вокруг элементов, отражающее характер голоса:
  * - KAIN: Острые, пульсирующие красные искры
  * - ANHANTRA: Мягкие волны синего
- * - HUNDUN: Хаотичные фиолетовые вспышки
+ * - HUYNDUN: Хаотичные фиолетовые вспышки
  * - ISKRA: Тёплое янтарное сияние
  * и т.д.
  */
@@ -64,7 +64,7 @@ const VOICE_STYLES: Record<VoiceName, {
     blur: 50,
     pattern: 'wave'
   },
-  HUNDUN: {
+  HUYNDUN: {
     color: '#9B30FF',
     secondaryColor: '#8B008B',
     animation: 'chaos',

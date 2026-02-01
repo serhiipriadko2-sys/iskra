@@ -334,9 +334,17 @@ SELECT * FROM graph_get_node_with_edges('decision_001');
 
 ## Testing
 
-### Unit Tests (TODO)
+### Unit Tests
+
+Юнит-тесты добавлены (Vitest):
+
+- `runtime/iskraSpace/__tests__/services/graphServiceSupabase.test.ts`
+
+Запуск:
+
 ```bash
-npm test graphServiceSupabase.test.ts
+cd runtime/iskraSpace
+npm run test:run -- __tests__/services/graphServiceSupabase.test.ts
 ```
 
 ### Manual Testing
@@ -381,12 +389,19 @@ DROP FUNCTION IF EXISTS update_graph_nodes_updated_at;
 2. ⏳ Integrate with chat handler (call `graphServiceSupabase.addNode()` on decisions)
 3. ⏳ Add UI for graph visualization
 4. ⏳ Implement graph-based memory retrieval in RAG
-5. ⏳ Add unit tests for Supabase integration
+5. ⏳ Добавить интеграционные тесты (реальный Supabase) и нагрузочные замеры
 
 ---
 
 ## Support
 
 **Issues:** Create issue with tag `graphrag` in GitHub repo
-**Documentation:** See `canon/03_ARCHITECTURE_SYSTEM_AND_MEMORY_DESIGN.md`
+**Documentation:** See `system/architecture.md`
 **Reference:** `legacy/IskraSAprototype/iskra_engine.ts` (original implementation)
+
+## ∆DΩΛ
+
+Δ: Раздел Unit Tests нормализован: пометка убрана, тест добавлен.
+D: Fact — добавлен `graphServiceSupabase.test.ts` и обновлён гайд.
+Ω: 85
+Λ: Запусти `npm test` в `runtime/iskraSpace/` и проверь, что новый тест проходит.

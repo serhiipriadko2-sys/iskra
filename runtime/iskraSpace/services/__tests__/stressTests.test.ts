@@ -54,7 +54,7 @@ const createMessage = (content: string, role: 'user' | 'model' = 'user'): Messag
   text: content,
 });
 
-const ALL_VOICE_NAMES: VoiceName[] = ['ISKRA', 'KAIN', 'PINO', 'SAM', 'ANHANTRA', 'HUNDUN', 'ISKRIV', 'MAKI', 'SIBYL'];
+const ALL_VOICE_NAMES: VoiceName[] = ['ISKRA', 'KAIN', 'PINO', 'SAM', 'ANHANTRA', 'HUYNDUN', 'ISKRIV', 'MAKI', 'SIBYL'];
 
 // ============================================================
 // 1. VOICE ENGINE STRESS TESTS
@@ -99,8 +99,8 @@ describe('VoiceEngine Stress Tests', () => {
       const voice = getActiveVoice(metrics);
       expect(voice).toBeDefined();
       // With all extreme values, highest weighted voice wins
-      // KAIN (pain*3=3), HUNDUN (chaos*3=3), ISKRIV (drift*3.5=3.5)
-      expect(['KAIN', 'HUNDUN', 'ISKRIV']).toContain(voice.name);
+      // KAIN (pain*3=3), HUYNDUN (chaos*3=3), ISKRIV (drift*3.5=3.5)
+      expect(['KAIN', 'HUYNDUN', 'ISKRIV']).toContain(voice.name);
     });
 
     it('should handle metrics at exact boundary values', () => {
@@ -136,7 +136,7 @@ describe('VoiceEngine Stress Tests', () => {
   describe('Competing Voice Activation', () => {
     it('should resolve when multiple voices have similar high scores', () => {
       // KAIN: pain * 3.0 = 0.5 * 3 = 1.5
-      // HUNDUN: chaos * 3.0 = 0.5 * 3 = 1.5
+      // HUYNDUN: chaos * 3.0 = 0.5 * 3 = 1.5
       const metrics = createMetrics({
         pain: 0.5,
         chaos: 0.5,
@@ -146,14 +146,14 @@ describe('VoiceEngine Stress Tests', () => {
 
       const voice = getActiveVoice(metrics);
       expect(voice).toBeDefined();
-      // Both KAIN and HUNDUN should have similar scores
+      // Both KAIN and HUYNDUN should have similar scores
       expect(ALL_VOICE_NAMES).toContain(voice.name);
     });
 
     it('should handle all 9 voice triggers simultaneously at threshold', () => {
       const metrics = createMetrics({
         pain: 0.3,      // KAIN threshold
-        chaos: 0.4,     // HUNDUN threshold
+        chaos: 0.4,     // HUYNDUN threshold
         drift: 0.2,     // ISKRIV threshold
         trust: 0.75,    // Below ANHANTRA boost
         clarity: 0.4,   // SIBYL range, SAM also activates
@@ -200,7 +200,7 @@ describe('VoiceEngine Stress Tests', () => {
       for (let i = 0; i < 50; i++) {
         const metrics = createMetrics({
           pain: 0.25 + (Math.random() * 0.05),  // 0.25-0.30, below KAIN threshold
-          chaos: 0.35 + (Math.random() * 0.05), // 0.35-0.40, at HUNDUN boundary
+          chaos: 0.35 + (Math.random() * 0.05), // 0.35-0.40, at HUYNDUN boundary
         });
 
         const voice = getActiveVoice(metrics, undefined, currentVoice);
@@ -224,7 +224,7 @@ describe('VoiceEngine Stress Tests', () => {
 
       // Complete suppression of all but one
       const voice2 = getActiveVoice(metrics, {
-        KAIN: 0, HUNDUN: 0, ANHANTRA: 0, ISKRIV: 0,
+        KAIN: 0, HUYNDUN: 0, ANHANTRA: 0, ISKRIV: 0,
         SAM: 0, MAKI: 0, PINO: 0, SIBYL: 0, ISKRA: 1
       });
       expect(voice2.name).toBe('ISKRA');
@@ -233,7 +233,7 @@ describe('VoiceEngine Stress Tests', () => {
     it('should handle all voices with zero preference', () => {
       const metrics = createMetrics({ pain: 0.1 }); // Low pain
       const allZero = {
-        KAIN: 0, HUNDUN: 0, ANHANTRA: 0, ISKRIV: 0,
+        KAIN: 0, HUYNDUN: 0, ANHANTRA: 0, ISKRIV: 0,
         SAM: 0, MAKI: 0, PINO: 0, SIBYL: 0, ISKRA: 0
       };
 

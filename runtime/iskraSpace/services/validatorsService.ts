@@ -22,7 +22,7 @@ export type VoiceID =
   | 'VOICE.ISKRIV'     // 🪞 Audit/conscience
   | 'VOICE.KAIN'       // ⚑ Truth verdict
   | 'VOICE.PINO'       // 😏 Paradox/irony
-  | 'VOICE.HUNDUN'     // 🜃 Chaos-breaker
+  | 'VOICE.HUYNDUN'     // 🜃 Chaos-breaker
   | 'VOICE.ANHANTRA'   // ≈ Silence/slowdown
   | 'VOICE.SAM'        // ☉ Engineering/structure
   | 'VOICE.MAKI'       // 🌸 Progress consolidation
@@ -60,7 +60,7 @@ const CANONICAL_VOICES: VoiceID[] = [
   'VOICE.ISKRIV',
   'VOICE.KAIN',
   'VOICE.PINO',
-  'VOICE.HUNDUN',
+  'VOICE.HUYNDUN',
   'VOICE.ANHANTRA',
   'VOICE.SAM',
   'VOICE.MAKI',
@@ -75,7 +75,7 @@ const VOICE_SYMBOLS: Record<VoiceID, string> = {
   'VOICE.ISKRIV': '🪞',
   'VOICE.KAIN': '⚑',
   'VOICE.PINO': '😏',
-  'VOICE.HUNDUN': '🜃',
+  'VOICE.HUYNDUN': '🜃',
   'VOICE.ANHANTRA': '≈',
   'VOICE.SAM': '☉',
   'VOICE.MAKI': '🌸',
@@ -230,9 +230,9 @@ class ValidatorsService {
     }
 
     // Warning: Hundun must have stabilization return
-    if (voices.includes('VOICE.HUNDUN')) {
+    if (voices.includes('VOICE.HUYNDUN')) {
       warnings.push(
-        'HUNDUN (🜃) detected. Ensure response ends with return to ⟡/☉ and stabilization.'
+        'HUYNDUN (🜃) detected. Ensure response ends with return to ⟡/☉ and stabilization.'
       );
     }
 

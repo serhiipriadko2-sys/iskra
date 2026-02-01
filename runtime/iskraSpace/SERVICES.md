@@ -169,7 +169,7 @@ validateAgainstCanon(response: string): CanonValidation
 7 voices of Iskra — selected by metric pressure.
 
 ```typescript
-type VoiceName = 'KAYIN' | 'PINO' | 'SAM' | 'ANHANTRA' | 'HUNDUN' | 'ISKRIV' | 'ISKRA';
+type VoiceName = 'KAIN' | 'PINO' | 'SAM' | 'ANHANTRA' | 'HUYNDUN' | 'ISKRIV' | 'ISKRA';
 
 // Select voice based on metrics
 selectVoice(metrics: IskraMetrics): Voice

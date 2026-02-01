@@ -14,7 +14,7 @@
 // VoiceName type inline to avoid dependency on @iskra/runtime during typecheck
 type VoiceName =
   | 'ISKRA' | 'KAIN' | 'PINO' | 'SAM' | 'ANHANTRA'
-  | 'HUNDUN' | 'ISKRIV' | 'MAKI' | 'SIBYL';
+  | 'HUYNDUN' | 'ISKRIV' | 'MAKI' | 'SIBYL';
 
 interface AnalyticsConfig {
   enabled: boolean;

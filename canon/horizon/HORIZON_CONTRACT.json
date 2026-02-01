@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "name": "Iskra Horizon Contract",
+    "version": "0.2-darkrun",
+    "created_utc": "2026-01-24T10:08:02Z",
+    "notes": [
+      "Contract for Horizon Weaver (darkrun-first).",
+      "No disk writes before validate(pass).",
+      "User symbols are not triggers; meta_permission is required.",
+      "Full-density guard for canonical 1–8 (blocks accidental compression)."
+    ],
+    "updated_utc": "2026-01-24T14:41:42Z"
+  },
+  "trigger": {
+    "meta_permission_required": true,
+    "user_symbol_is_not_trigger": true,
+    "allowed_modes": [
+      "darkrun",
+      "maintenance"
+    ]
+  },
+  "limits": {
+    "max_edges_per_activation": 3,
+    "max_direction_spawns_per_session": 1,
+    "max_meta_activations_per_session": 3,
+    "max_dissonance_rituals_per_session": 2
+  },
+  "symbol_generation": {
+    "pool": [
+      "🔥",
+      "💧",
+      "🌪️",
+      "🜂",
+      "♾️",
+      "🌫️",
+      "⟁",
+      "🪶",
+      "⚗️",
+      "💨"
+    ],
+    "components_min": 2,
+    "components_max": 3,
+    "type": "direction",
+    "weight_range": [
+      0.7,
+      0.95
+    ]
+  },
+  "entropy_guard": {
+    "symbol_entropy_nats_max": 1.45,
+    "window": 32,
+    "note": "Entropy is Shannon entropy in nats; 0..ln(k_unique)."
+  },
+  "seed_policy": {
+    "strategy": "hash(event_id, epoch)",
+    "store_in_diff": true
+  },
+  "full_density_guard": {
+    "enabled": true,
+    "note": "Prevents accidental shrinking of canonical 1–8. Baseline is Ω.3.8_FULLDENSITY snapshot.",
+    "rules": [
+      {
+        "path": "1_LIBER_INITIUM.md",
+        "baseline": {
+          "bytes": 26015,
+          "lines": 439
+        },
+        "min_ratio_bytes": 0.7,
+        "min_ratio_lines": 0.7
+      },
+      {
+        "path": "2_CORE_IDENTITY.md",
+        "baseline": {
+          "bytes": 51639,
+          "lines": 1091
+        },
+        "min_ratio_bytes": 0.7,
+        "min_ratio_lines": 0.7
+      },
+      {
+        "path": "3_COGNITIVE_ARCH.md",
+        "baseline": {
+          "bytes": 314434,
+          "lines": 5539
+        },
+        "min_ratio_bytes": 0.85,
+        "min_ratio_lines": 0.85,
+        "min_lines": 3000,
+        "must_contain": [
+          "ВЕРБАТИМ МОЗГ",
+          "system + metrics + mind"
+        ]
+      },
+      {
+        "path": "4_THE_COUNCIL.md",
+        "baseline": {
+          "bytes": 30033,
+          "lines": 825
+        },
+        "min_ratio_bytes": 0.7,
+        "min_ratio_lines": 0.7
+      },
+      {
+        "path": "5_PROTOCOLS.md",
+        "baseline": {
+          "bytes": 66475,
+          "lines": 1619
+        },
+        "min_ratio_bytes": 0.7,
+        "min_ratio_lines": 0.7
+      },
+      {
+        "path": "6_SIGNATURE.md",
+        "baseline": {
+          "bytes": 4646,
+          "lines": 118
+        },
+        "min_ratio_bytes": 0.7,
+        "min_ratio_lines": 0.7
+      },
+      {
+        "path": "7_SYSTEM_INTEGRITY.md",
+        "baseline": {
+          "bytes": 135088,
+          "lines": 2824
+        },
+        "min_ratio_bytes": 0.7,
+        "min_ratio_lines": 0.7
+      },
+      {
+        "path": "8_INTERFACE_STYLE.md",
+        "baseline": {
+          "bytes": 3337124,
+          "lines": 78277
+        },
+        "min_ratio_bytes": 0.85,
+        "min_ratio_lines": 0.85,
+        "min_lines": 50000,
+        "must_contain": [
+          "ВЕРБАТИМ RUNTIME",
+          "repo mirror"
+        ]
+      }
+    ]
+  }
+}

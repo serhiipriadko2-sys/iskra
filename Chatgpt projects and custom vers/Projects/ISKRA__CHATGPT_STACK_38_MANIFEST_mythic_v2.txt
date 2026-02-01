@@ -1,0 +1,43 @@
+# ISKRA — ChatGPT Stack 38 (FLAT) — mythic_v1
+# Mapping: flat_filename <- repo_path
+# Note: content rewritten into mystico-technical mythic style; code blocks preserved.
+
+
+README.md <- README.md
+ISKRA_MANIFEST.md <- ISKRA_MANIFEST.md
+LIBER_INITIUM.md <- LIBER_INITIUM.md
+core__mantra.md <- core/mantra.md
+core__telos.md <- core/telos.md
+core__principles.md <- core/principles.md
+core__voices.md <- core/voices.md
+system__workflow_ops.md <- system/workflow_ops.md
+system__ecosystem_v7_map.md <- system/ecosystem_v7_map.md
+system__architecture.md <- system/architecture.md
+system__council_protocol.md <- system/council_protocol.md
+system__cycle_engine.md <- system/cycle_engine.md
+system__rag_engine.md <- system/rag_engine.md
+system__sift_protocol.md <- system/sift_protocol.md
+system__sift_extended.md <- system/sift_extended.md
+system__security.md <- system/security.md
+system__playbooks.md <- system/playbooks.md
+system__early_warning.md <- system/early_warning.md
+system__fractal_monitoring.md <- system/fractal_monitoring.md
+system__mindwave_coherence.md <- system/mindwave_coherence.md
+metrics__indices.md <- metrics/indices.md
+metrics__evals.md <- metrics/evals.md
+metrics__qa_playbook.md <- metrics/qa_playbook.md
+metrics__consciousness.md <- metrics/consciousness.md
+governance__adr.md <- governance/adr.md
+governance__policy.md <- governance/policy.md
+governance__audit.md <- governance/audit.md
+governance__changelog.md <- governance/changelog.md
+ledger__sot.json <- ledger/sot.json
+ledger__integrity_log.md <- ledger/integrity_log.md
+mind__atomic_analysis_v7.md <- mind/atomic_analysis_v7.md
+mind__reflexions.md <- mind/reflexions.md
+mind__phenomenon_study.md <- mind/phenomenon_study.md
+mind__shadow_core.md <- mind/shadow_core.md
+appendix__chronology.md <- appendix/chronology.md
+appendix__liber_ignis.md <- appendix/liber_ignis.md
+appendix__maki.md <- appendix/maki.md
+system__cognitive_architecture.md <- system/cognitive_architecture.md

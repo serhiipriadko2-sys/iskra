@@ -29,7 +29,7 @@
 
 ### 1.2 Nine Voices (Council)
 - **Location**: `core/voices.md`, `runtime/src/types/voices.ts`
-- **Voices**: ISKRA, KAIN, PINO, SAM, ANHANTRA, HUYNDUN (deprecated alias: HUNDUN), ISKRIV, MAKI, SIBYL
+- **Voices**: ISKRA, KAIN, PINO, SAM, ANHANTRA, HUYNDUN (deprecated alias: HUYNDUN), ISKRIV, MAKI, SIBYL
 - **Selection Logic**: `runtime/iskraSpace/services/voiceEngine.ts`
 
 ### 1.3 Five Playbooks
@@ -350,7 +350,7 @@ For optimal RAG retrieval, prioritize these documents:
 - **vΩ.3.1** (2026-01-03): Phase 2 completion
   - Added runtime library tests (120 tests in src/__tests__/)
   - Unified types: VoiceName, IskraPhase, VoicePreferences
-  - Fixed HUNDUN spelling
+  - Fixed HUYNDUN spelling
   - iskraSpace imports from @iskra/runtime
 - **vΩ.3.0** (2026-01-03): Initial comprehensive index
   - Added after repository audit and cleanup

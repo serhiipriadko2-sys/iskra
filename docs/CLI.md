@@ -346,4 +346,4 @@ See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 MIT © Serhii Priadko (Semyon Gabran)
 
-See [LICENSE](../../LICENSE) for details.
+See [LICENSE](../LICENSE) for details.

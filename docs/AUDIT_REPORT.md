@@ -383,7 +383,7 @@ runtime/src/types/
   - fractal.test.ts (31 tests)
 - [x] Унификация типов runtime ↔ iskraSpace
   - VoiceId → VoiceName (uppercase)
-  - HUNDUN spelling fix
+  - HUYNDUN spelling fix
   - IskraPhase, VoicePreferences exports
 - [x] iskraSpace → импорт из @iskra/runtime
 - [x] TypeScript ^5.7 → ^5.8 alignment

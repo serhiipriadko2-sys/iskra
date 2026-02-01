@@ -379,7 +379,7 @@ export function getVoiceBaseWeight(voice: VoiceName): number {
     PINO: 0.65,
     HUYNDUN: 0.6,
     // Deprecated alias
-    HUNDUN: 0.6,
+    HUYNDUN: 0.6,
   };
   return weights[voice];
 }
@@ -459,7 +459,7 @@ function calculateMetricRelevance(voice: VoiceName, metrics: IskraMetrics): numb
     case 'ANHANTRA':
       return metrics.silence_mass > 0.5 || metrics.trust < 0.5 ? 1.4 : 0.9;
     case 'HUYNDUN':
-    case 'HUNDUN': // deprecated alias
+    case 'HUYNDUN': // deprecated alias
       return metrics.chaos >= 0.4 ? 1.4 : 0.7;
     case 'ISKRIV':
       return metrics.drift >= 0.2 ? 1.5 : 0.9;

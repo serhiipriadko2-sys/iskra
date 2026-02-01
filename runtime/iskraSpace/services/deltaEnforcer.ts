@@ -67,7 +67,7 @@ function inferDeltaContext(text: string, context: ResponseContext): {
       nextStep = 'Побыть в тишине 5 минут';
       source = 'silence_signal';
       break;
-    case 'HUNDUN':
+    case 'HUYNDUN':
       delta = themes[0] || 'Форма разрушена';
       confidence = 0.7;
       nextStep = 'Начать с чистого листа';

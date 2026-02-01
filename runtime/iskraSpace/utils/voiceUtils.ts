@@ -23,7 +23,7 @@ export type VoiceIDPrefixed =
   | 'VOICE.PINO'
   | 'VOICE.SAM'
   | 'VOICE.ANHANTRA'
-  | 'VOICE.HUNDUN'
+  | 'VOICE.HUYNDUN'
   | 'VOICE.ISKRIV'
   | 'VOICE.MAKI'
   | 'VOICE.SIBYL';
@@ -37,7 +37,7 @@ const VALID_VOICE_NAMES: VoiceName[] = [
   'PINO',
   'SAM',
   'ANHANTRA',
-  'HUNDUN',
+  'HUYNDUN',
   'ISKRIV',
   'MAKI',
   'SIBYL',

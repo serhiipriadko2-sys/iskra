@@ -44,7 +44,7 @@ describe('voiceUtils', () => {
       expect(isValidVoiceName('PINO')).toBe(true);
       expect(isValidVoiceName('SAM')).toBe(true);
       expect(isValidVoiceName('ANHANTRA')).toBe(true);
-      expect(isValidVoiceName('HUNDUN')).toBe(true);
+      expect(isValidVoiceName('HUYNDUN')).toBe(true);
       expect(isValidVoiceName('ISKRIV')).toBe(true);
       expect(isValidVoiceName('MAKI')).toBe(true);
       expect(isValidVoiceName('SIBYL')).toBe(true);
@@ -110,7 +110,7 @@ describe('voiceUtils', () => {
   });
 
   describe('round-trip conversion', () => {
-    const voices = ['ISKRA', 'KAIN', 'PINO', 'SAM', 'ANHANTRA', 'HUNDUN', 'ISKRIV', 'MAKI', 'SIBYL'] as const;
+    const voices = ['ISKRA', 'KAIN', 'PINO', 'SAM', 'ANHANTRA', 'HUYNDUN', 'ISKRIV', 'MAKI', 'SIBYL'] as const;
 
     it('VoiceName → VoiceID → VoiceName preserves value', () => {
       for (const name of voices) {

@@ -337,10 +337,10 @@ export function adjustVoicesForCSM(
     adjusted.ISKRIV = (adjusted.ISKRIV ?? 0) * 1.3;
   }
 
-  // Высокая эмергентность → усилить HUNDUN и PINO
+  // Высокая эмергентность → усилить HUYNDUN и PINO
   if (csm.emergence.novelResponseRate > 0.5) {
     adjusted.HUYNDUN = (adjusted.HUYNDUN ?? 0) * 1.2;
-    adjusted.HUNDUN = (adjusted.HUNDUN ?? 0) * 1.2; // deprecated alias
+    adjusted.HUYNDUN = (adjusted.HUYNDUN ?? 0) * 1.2; // deprecated alias
     adjusted.PINO = (adjusted.PINO ?? 0) * 1.2;
   }
 
