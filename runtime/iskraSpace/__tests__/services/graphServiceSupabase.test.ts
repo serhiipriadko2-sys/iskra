@@ -1,17 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GraphServiceSupabase } from '../../services/graphServiceSupabase';
 
+// Create mock function using vi.hoisted
+const mockSupabase = vi.hoisted(() => ({
+  from: vi.fn(),
+}));
+
 // We mock the Supabase client module that the service imports.
 // Path is relative to this test file.
 vi.mock('../../services/supabaseClient', () => {
-  const mock = {
-    from: vi.fn(),
-  };
-  return { supabase: mock };
+  return { supabase: mockSupabase };
 });
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { supabase } = require('../../services/supabaseClient');
 
 function makeInsertChain(result: any) {
   const single = vi.fn().mockResolvedValue(result);
@@ -46,7 +45,7 @@ describe('GraphServiceSupabase', () => {
     };
 
     const chain = makeInsertChain({ data: row, error: null });
-    supabase.from.mockReturnValue(chain);
+    mockSupabase.from.mockReturnValue(chain);
 
     const node = await svc.addNode(
       {
@@ -63,7 +62,7 @@ describe('GraphServiceSupabase', () => {
     );
 
     // DB insert payload should use lowercased layer
-    expect(supabase.from).toHaveBeenCalledWith('graph_nodes');
+    expect(mockSupabase.from).toHaveBeenCalledWith('graph_nodes');
     expect(chain.insert).toHaveBeenCalled();
     const payload = chain.insert.mock.calls[0][0];
     expect(payload.user_id).toBe('user-1');
@@ -81,7 +80,7 @@ describe('GraphServiceSupabase', () => {
     const svc = new GraphServiceSupabase();
 
     const chain = makeInsertChain({ data: null, error: { message: 'boom' } });
-    supabase.from.mockReturnValue(chain);
+    mockSupabase.from.mockReturnValue(chain);
 
     await expect(
       svc.addNode(
