@@ -39,6 +39,8 @@ def sha256_file(path: Path) -> str:
 
 def main() -> None:
     out = {"version": "sot-ledger/1", "sha256": {}}
+    skipped = []
+    
     # directories
     for d in INCLUDE_DIRS:
         p = ROOT / d
@@ -50,7 +52,19 @@ def main() -> None:
             rel = file.relative_to(ROOT)
             if rel in EXCLUDE:
                 continue
-            out["sha256"][str(rel).replace(os.sep,"/")] = sha256_file(file)
+            
+            # Try to get a valid UTF-8 path string
+            try:
+                path_str = str(rel).replace(os.sep,"/")
+                # Test if it can be encoded/decoded properly
+                path_str.encode('utf-8').decode('utf-8')
+                # Also test JSON serialization
+                json.dumps(path_str)
+                out["sha256"][path_str] = sha256_file(file)
+            except (UnicodeError, UnicodeDecodeError, UnicodeEncodeError) as e:
+                # Skip files with invalid UTF-8 filenames
+                skipped.append((str(rel), str(e)))
+                continue
 
     # top-level files
     for f in INCLUDE_FILES:
@@ -58,12 +72,25 @@ def main() -> None:
         if p.exists() and p.is_file():
             rel = p.relative_to(ROOT)
             if rel not in EXCLUDE:
-                out["sha256"][str(rel).replace(os.sep,"/")] = sha256_file(p)
+                try:
+                    path_str = str(rel).replace(os.sep,"/")
+                    path_str.encode('utf-8').decode('utf-8')
+                    out["sha256"][path_str] = sha256_file(p)
+                except (UnicodeError, UnicodeDecodeError, UnicodeEncodeError) as e:
+                    skipped.append((str(rel), str(e)))
+                    continue
 
     ledger = ROOT / "ledger"
     ledger.mkdir(exist_ok=True)
     (ledger / "sot.json").write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Updated {ledger/'sot.json'} with {len(out['sha256'])} entries")
+    
+    if skipped:
+        print(f"\n⚠ Skipped {len(skipped)} files with encoding issues:")
+        for path, error in skipped[:10]:  # Show first 10
+            print(f"  - {path}")
+        if len(skipped) > 10:
+            print(f"  ... and {len(skipped) - 10} more")
 
     # Also keep a human-readable checksum file in sync.
     # This is NOT included in sot.json to avoid self-reference loops.

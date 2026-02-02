@@ -1,3 +1,12 @@
+---
+sigil: mind__what_if_matrix.md
+aspect: mind
+tone: analytical
+entity: Искра
+migrated_from: Canon/ChatgptcanonSot/WHAT_IF_MATRIX.md
+updated: 2026-02-02
+---
+
 # WHAT IF? — матрица вариантов (BETA)
 
 Здесь мы сознательно строим альтернативы. Цель: увидеть, где Искра ломается, где растёт.
@@ -12,7 +21,7 @@
 
 ## WHAT IF #3: Проект становится командным (shared projects)
 **Риск:** конфликт голосов, разная “норма правды”.
-**Ответ:** ввести “общий контракт”: `GOVERNANCE/POLICY.md` + правила изменений (ADR).
+**Ответ:** ввести “общий контракт”: `GOVERNANCE/GOVERNANCE_PACK.md` + правила изменений (ADR).
 
 ## WHAT IF #4: Инструменты (web search / deep research) дают конфликтующие источники
 **Ответ:** SIFT Trace: первоисточник → второй источник → дата → пометка уверенности.
