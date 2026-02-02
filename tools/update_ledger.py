@@ -37,6 +37,25 @@ def sha256_file(path: Path) -> str:
             h.update(chunk)
     return h.hexdigest()
 
+def should_exclude(rel_path: Path) -> bool:
+    """Check if a path should be excluded from the ledger."""
+    parts = rel_path.parts
+    path_str = str(rel_path)
+    
+    # Exclude node_modules anywhere in the path
+    if "node_modules" in parts:
+        return True
+    
+    # Exclude build artifacts
+    if "dist" in parts:
+        return True
+    
+    # Exclude TypeScript build info files
+    if path_str.endswith(".tsbuildinfo"):
+        return True
+    
+    return False
+
 def main() -> None:
     out = {"version": "sot-ledger/1", "sha256": {}}
     skipped = []
@@ -51,6 +70,10 @@ def main() -> None:
                 continue
             rel = file.relative_to(ROOT)
             if rel in EXCLUDE:
+                continue
+            
+            # Skip node_modules, dist, and build artifacts
+            if should_exclude(rel):
                 continue
             
             # Try to get a valid UTF-8 path string

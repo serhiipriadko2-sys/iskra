@@ -216,7 +216,6 @@ describe('ews', () => {
       SAM: 0.5,
       ANHANTRA: 0.5,
       HUYNDUN: 0.3,
-      HUYNDUN: 0.3,
       ISKRIV: 0.5,
       MAKI: 0.3,
       SIBYL: 0.2,

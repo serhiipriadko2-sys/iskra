@@ -340,7 +340,6 @@ export function adjustVoicesForCSM(
   // Высокая эмергентность → усилить HUYNDUN и PINO
   if (csm.emergence.novelResponseRate > 0.5) {
     adjusted.HUYNDUN = (adjusted.HUYNDUN ?? 0) * 1.2;
-    adjusted.HUYNDUN = (adjusted.HUYNDUN ?? 0) * 1.2; // deprecated alias
     adjusted.PINO = (adjusted.PINO ?? 0) * 1.2;
   }
 
