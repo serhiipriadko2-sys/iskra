@@ -5,6 +5,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IskraMetrics, Voice } from '../../types';
 
+// Mock browser globals
+vi.stubGlobal('navigator', {
+  userAgent: 'test',
+  onLine: true
+});
+
 // =============================================================================
 // PART 1: Mocked API Tests (with API_KEY set, VITEST overridden)
 // =============================================================================

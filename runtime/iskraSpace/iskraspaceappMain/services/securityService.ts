@@ -4,12 +4,11 @@
  * Implements PII sanitization and Prompt Injection detection
  * to protect both the user (Data Sovereignty) and the system (Integrity).
  *
- * Patterns loaded from canonical File 20 (not hardcoded)
- * @see canon/ISKRA_CORE_v7_revK_chatgpt_project/20_REGEX_RULESETS_INJECTION_AND_PII_v1.json
+ * Patterns loaded from config/securityPatterns.json
  */
 
-// Load File 20 - Security Rulesets
-import securityRulesets from '../../../canon/ISKRA_CORE_v7_revK_chatgpt_project/20_REGEX_RULESETS_INJECTION_AND_PII_v1.json';
+// Load Security Rulesets
+import securityRulesets from '../../config/securityPatterns.json';
 
 // --- TYPES ---
 
@@ -268,9 +267,9 @@ class SecurityService {
   }
 
   /**
-   * Get File 20 metadata
+   * Get config metadata
    */
-  public getFile20Metadata(): { version: string; updated_at: string } {
+  public getConfigMetadata(): { version: string; updated_at?: string } {
     return {
       version: securityRulesets.schema_version,
       updated_at: securityRulesets.updated_at

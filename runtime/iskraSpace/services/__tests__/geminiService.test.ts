@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IskraAIService } from '../geminiService';
 
+// Mock browser globals
+vi.stubGlobal('navigator', {
+  userAgent: 'test',
+  onLine: true
+});
+
 // Mock fetch globally
 const globalFetch = vi.fn();
 global.fetch = globalFetch;

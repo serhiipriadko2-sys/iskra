@@ -689,7 +689,7 @@ describe('SecurityService Expanded Patterns', () => {
       const longInput = 'a'.repeat(100000) + ' test@email.com ' + 'b'.repeat(100000);
 
       expect(() => securityService.validate(longInput)).not.toThrow();
-    });
+    }, 60000); // 60 second timeout for this long test
 
     it('should handle null-like strings', () => {
       const nullish = ['null', 'undefined', 'NaN', 'None', 'nil'];

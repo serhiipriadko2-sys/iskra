@@ -48,7 +48,7 @@ interface GraphEdgeRow {
 
 // --- SERVICE ---
 
-class GraphServiceSupabase {
+export class GraphServiceSupabase {
   /**
    * Add node to Supabase
    */
