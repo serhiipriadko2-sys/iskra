@@ -35,7 +35,7 @@ interface DangerConfig {
 // Load security patterns from config file
 const securityRulesets = {
   schema_version: securityPatternsConfig.schema_version,
-  updated_at: new Date().toISOString(),
+  updated_at: securityPatternsConfig.updated_at || securityPatternsConfig.schema_version,
   rulesets: {
     pii: securityPatternsConfig.rulesets.pii as ConfigRuleset,
     injection: securityPatternsConfig.rulesets.injection as ConfigRuleset,

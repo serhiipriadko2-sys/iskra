@@ -23,6 +23,19 @@ export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKe
   },
 });
 
+// Helper to generate UUID (fallback for environments without crypto.randomUUID)
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback UUID v4 generator for environments without crypto.randomUUID
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 // Helper to get current user ID (anonymous or authenticated)
 export async function getUserId(): Promise<string> {
   const { data: { session } } = await supabase.auth.getSession();
@@ -34,7 +47,7 @@ export async function getUserId(): Promise<string> {
   // For anonymous users, use a device-based ID stored in localStorage
   let deviceId = safeStorage.getItem('iskra_device_id');
   if (!deviceId) {
-    deviceId = crypto.randomUUID();
+    deviceId = generateUUID();
     safeStorage.setItem('iskra_device_id', deviceId);
   }
   return deviceId;
