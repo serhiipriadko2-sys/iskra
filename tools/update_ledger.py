@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-INCLUDE_DIRS = ["core","system","governance","metrics","mind","appendix","canon","runtime","tools",".github"]
+INCLUDE_DIRS = ["core","system","governance","metrics","mind","appendix","canon","runtime","tools",".github","docs"]
 INCLUDE_FILES = ["manifest.yml","README.md","CONTRIBUTING.md","ISKRA_MANIFEST.md","LIBER_INITIUM.md"]
 
 EXCLUDE = {
