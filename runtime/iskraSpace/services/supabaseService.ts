@@ -102,10 +102,19 @@ export async function getTasks(): Promise<Task[]> {
 
   if (error) {
     console.error('Failed to get tasks:', error);
+    // Fallback to localStorage
+    const cached = safeStorage.getItem(`tasks_${userId}`);
+    if (cached) {
+      try {
+        return JSON.parse(cached) as Task[];
+      } catch {
+        return [];
+      }
+    }
     return [];
   }
 
-  return (data || []).map((row: Record<string, unknown>) => ({
+  const tasks = (data || []).map((row: Record<string, unknown>) => ({
     id: row.id as string,
     title: row.title as string,
     ritualTag: row.ritual_tag as Task['ritualTag'],
@@ -114,10 +123,17 @@ export async function getTasks(): Promise<Task[]> {
     priority: (row.priority as Task['priority']) || undefined,
     duration: (row.duration as number) || undefined,
   }));
+
+  // Cache for offline use
+  safeStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
+  return tasks;
 }
 
 export async function saveTasks(tasks: Task[]): Promise<void> {
   const userId = await getUserId();
+
+  // Cache locally first
+  safeStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
 
   // Delete existing tasks and insert new ones (simple sync strategy)
   await supabase.from('tasks').delete().eq('user_id', userId);
@@ -204,20 +220,36 @@ export async function getHabits(): Promise<Habit[]> {
 
   if (error) {
     console.error('Failed to get habits:', error);
+    // Fallback to localStorage
+    const cached = safeStorage.getItem(`habits_${userId}`);
+    if (cached) {
+      try {
+        return JSON.parse(cached) as Habit[];
+      } catch {
+        return [];
+      }
+    }
     return [];
   }
 
-  return (data || []).map((row: Record<string, unknown>) => ({
+  const habits = (data || []).map((row: Record<string, unknown>) => ({
     id: row.id as string,
     title: row.title as string,
     ritualTag: row.ritual_tag as Habit['ritualTag'],
     streak: row.streak as number,
     completedToday: row.completed_today as boolean,
   }));
+
+  // Cache for offline use
+  safeStorage.setItem(`habits_${userId}`, JSON.stringify(habits));
+  return habits;
 }
 
 export async function saveHabits(habits: Habit[]): Promise<void> {
   const userId = await getUserId();
+
+  // Cache locally first
+  safeStorage.setItem(`habits_${userId}`, JSON.stringify(habits));
 
   await supabase.from('habits').delete().eq('user_id', userId);
 
@@ -250,10 +282,19 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
 
   if (error) {
     console.error('Failed to get journal entries:', error);
+    // Fallback to localStorage
+    const cached = safeStorage.getItem(`journal_${userId}`);
+    if (cached) {
+      try {
+        return JSON.parse(cached) as JournalEntry[];
+      } catch {
+        return [];
+      }
+    }
     return [];
   }
 
-  return (data || []).map((row: Record<string, unknown>) => ({
+  const entries = (data || []).map((row: Record<string, unknown>) => ({
     id: row.id as string,
     timestamp: row.created_at as string,
     text: row.text as string,
@@ -271,6 +312,10 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
       energy: (row.user_energy as number) || 50,
     } : undefined,
   }));
+
+  // Cache for offline use
+  safeStorage.setItem(`journal_${userId}`, JSON.stringify(entries));
+  return entries;
 }
 
 export async function addJournalEntry(entry: Omit<JournalEntry, 'id'>): Promise<JournalEntry> {
@@ -311,6 +356,11 @@ export async function addJournalEntry(entry: Omit<JournalEntry, 'id'>): Promise<
 
 export async function saveMetricsSnapshot(metrics: IskraMetrics, phase: IskraPhase): Promise<void> {
   const userId = await getUserId();
+  
+  // Cache locally first (matching the return type structure)
+  const snapshot = { metrics, phase };
+  safeStorage.setItem(`metrics_latest_${userId}`, JSON.stringify(snapshot));
+
   const { error } = await supabase.from('metrics_snapshots').insert({
     user_id: userId,
     rhythm: metrics.rhythm,
@@ -340,10 +390,22 @@ export async function getLatestMetrics(): Promise<{ metrics: IskraMetrics; phase
     .limit(1)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+    // Fallback to localStorage
+    const cached = safeStorage.getItem(`metrics_latest_${userId}`);
+    if (cached) {
+      try {
+        const snapshot = JSON.parse(cached) as { metrics: IskraMetrics; phase: IskraPhase };
+        return snapshot;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
 
   const row = data as Record<string, unknown>;
-  return {
+  const result = {
     metrics: {
       rhythm: row.rhythm as number,
       trust: row.trust as number,
@@ -359,6 +421,10 @@ export async function getLatestMetrics(): Promise<{ metrics: IskraMetrics; phase
     },
     phase: row.phase as IskraPhase,
   };
+
+  // Cache for offline use
+  safeStorage.setItem(`metrics_latest_${userId}`, JSON.stringify(result));
+  return result;
 }
 
 // =============================================================================
@@ -416,18 +482,32 @@ export async function getChatHistory(limit = 50): Promise<Message[]> {
 
   if (error) {
     console.error('Failed to get chat history:', error);
+    // Fallback to localStorage
+    const cached = safeStorage.getItem(`chat_history_${userId}`);
+    if (cached) {
+      try {
+        return JSON.parse(cached) as Message[];
+      } catch {
+        return [];
+      }
+    }
     return [];
   }
 
-  return (data || []).map((row: Record<string, unknown>) => ({
+  const messages = (data || []).map((row: Record<string, unknown>) => ({
     role: row.role as Message['role'],
     text: row.text as string,
     deltaSignature: row.delta_signature as Message['deltaSignature'],
   }));
+
+  // Cache for offline use
+  safeStorage.setItem(`chat_history_${userId}`, JSON.stringify(messages));
+  return messages;
 }
 
 export async function addChatMessage(message: Message): Promise<void> {
   const userId = await getUserId();
+
   const { error } = await supabase.from('chat_history').insert({
     user_id: userId,
     role: message.role,
@@ -436,7 +516,21 @@ export async function addChatMessage(message: Message): Promise<void> {
     delta_signature: message.deltaSignature,
   });
 
-  if (error) console.error('Failed to add chat message:', error);
+  if (error) {
+    console.error('Failed to add chat message:', error);
+    // On error, append to cache as fallback
+    const cached = safeStorage.getItem(`chat_history_${userId}`);
+    let messages: Message[] = [];
+    if (cached) {
+      try {
+        messages = JSON.parse(cached) as Message[];
+      } catch {
+        messages = [];
+      }
+    }
+    messages.push(message);
+    safeStorage.setItem(`chat_history_${userId}`, JSON.stringify(messages));
+  }
 }
 
 export async function clearChatHistory(): Promise<void> {
@@ -465,10 +559,20 @@ export async function getMemoryNodes(layer?: MemoryNode['layer']): Promise<Memor
 
   if (error) {
     console.error('Failed to get memory nodes:', error);
+    // Fallback to localStorage
+    const cacheKey = layer ? `memory_${layer}_${userId}` : `memory_all_${userId}`;
+    const cached = safeStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        return JSON.parse(cached) as MemoryNode[];
+      } catch {
+        return [];
+      }
+    }
     return [];
   }
 
-  return (data || []).map((row: Record<string, unknown>) => ({
+  const nodes = (data || []).map((row: Record<string, unknown>) => ({
     id: row.id as string,
     type: row.type as MemoryNode['type'],
     layer: row.layer as MemoryNode['layer'],
@@ -482,6 +586,11 @@ export async function getMemoryNodes(layer?: MemoryNode['layer']): Promise<Memor
     facet: row.facet as VoiceName | undefined,
     evidence: (row.evidence as MemoryNode['evidence']) || [],
   }));
+
+  // Cache for offline use
+  const cacheKey = layer ? `memory_${layer}_${userId}` : `memory_all_${userId}`;
+  safeStorage.setItem(cacheKey, JSON.stringify(nodes));
+  return nodes;
 }
 
 export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>): Promise<MemoryNode> {
