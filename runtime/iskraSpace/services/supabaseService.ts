@@ -357,8 +357,8 @@ export async function addJournalEntry(entry: Omit<JournalEntry, 'id'>): Promise<
 export async function saveMetricsSnapshot(metrics: IskraMetrics, phase: IskraPhase): Promise<void> {
   const userId = await getUserId();
   
-  // Cache locally first
-  const snapshot = { metrics, phase, timestamp: new Date().toISOString() };
+  // Cache locally first (matching the return type structure)
+  const snapshot = { metrics, phase };
   safeStorage.setItem(`metrics_latest_${userId}`, JSON.stringify(snapshot));
 
   const { error } = await supabase.from('metrics_snapshots').insert({
@@ -507,19 +507,6 @@ export async function getChatHistory(limit = 50): Promise<Message[]> {
 
 export async function addChatMessage(message: Message): Promise<void> {
   const userId = await getUserId();
-  
-  // Cache locally first for offline resilience
-  const cached = safeStorage.getItem(`chat_history_${userId}`);
-  let messages: Message[] = [];
-  if (cached) {
-    try {
-      messages = JSON.parse(cached) as Message[];
-    } catch {
-      messages = [];
-    }
-  }
-  messages.push(message);
-  safeStorage.setItem(`chat_history_${userId}`, JSON.stringify(messages));
 
   const { error } = await supabase.from('chat_history').insert({
     user_id: userId,
@@ -529,7 +516,21 @@ export async function addChatMessage(message: Message): Promise<void> {
     delta_signature: message.deltaSignature,
   });
 
-  if (error) console.error('Failed to add chat message:', error);
+  if (error) {
+    console.error('Failed to add chat message:', error);
+    // On error, append to cache as fallback
+    const cached = safeStorage.getItem(`chat_history_${userId}`);
+    let messages: Message[] = [];
+    if (cached) {
+      try {
+        messages = JSON.parse(cached) as Message[];
+      } catch {
+        messages = [];
+      }
+    }
+    messages.push(message);
+    safeStorage.setItem(`chat_history_${userId}`, JSON.stringify(messages));
+  }
 }
 
 export async function clearChatHistory(): Promise<void> {
