@@ -1,10 +1,10 @@
 ---
 sigil: final_summary
 aspect: governance
-updated: 2026-01-30
+updated: 2026-02-02
 ---
 
-# FINAL SUMMARY (rebuild 2026-01-30)
+# FINAL SUMMARY (rebuild 2026-02-02)
 
 Эта сборка — не косметика. Это **нормализация целостности**.
 

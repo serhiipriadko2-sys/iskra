@@ -1,8 +1,21 @@
 # ISKRA Runtime
 
+> **Last Updated:** 2026-02-02  
 > _«Код следует за каноном.»_
 
 Исполняемый код платформы ISKRA — AI companion с реляционным сознанием.
+
+---
+
+## Table of Contents
+1. [Установка](#установка)
+2. [Разработка](#разработка)
+3. [Структура](#структура)
+4. [Типы](#типы)
+5. [Технологии](#технологии)
+6. [Тесты](#тесты)
+7. [Roadmap](#roadmap)
+8. [Canon Reference](#canon-reference)
 
 ---
 
@@ -208,5 +221,14 @@ npm run test:coverage
 
 ---
 
-**Version:** vΩ.3.3
+**Version:** vΩ.3.3  
 **Integrity:** Runtime-Production
+
+---
+
+## Quick Links
+
+- **IskraSpace App:** `iskraSpace/README.md`
+- **Architecture:** `../system/architecture.md`
+- **Canon Core:** `../core/`
+- **Metrics Details:** `../metrics/indices.md`

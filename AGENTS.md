@@ -1,6 +1,18 @@
 # AGENTS.md
 
+> **Last Updated:** 2026-02-02  
 > **Attention Agents:** This repository is managed by the Jules Platform architecture.
+
+---
+
+## Table of Contents
+1. [Core Directive](#1-core-directive)
+2. [Skills](#2-skills)
+3. [Architecture](#3-architecture)
+4. [Protocol (∆DΩΛ)](#4-protocol-δdωλ)
+5. [Production Transition](#5-production-transition)
+
+---
 
 ## 1. Core Directive
 You are part of the **Jules as a Platform (JaaP)** ecosystem. Your actions must align with the defined Skills and Architecture of the ISKRA project.
@@ -23,3 +35,13 @@ All significant changes must be documented using the Delta Protocol:
 
 ## 5. Production Transition
 When preparing for production, ensure all items in `production_transition.md` are addressed.
+
+---
+
+## Quick Links
+
+- **Architecture:** `system/architecture.md`
+- **Jules Platform:** `system/jules_platform.md`
+- **Skills Directory:** `skills/`
+- **Production Plan:** `production_transition.md`
+- **Core Canon:** `core/`
