@@ -10,6 +10,20 @@
 
 ---
 
+## Table of Contents
+1. [Quick Start](#quick-start)
+2. [Architecture Overview](#architecture-overview)
+3. [Core Systems](#core-systems)
+4. [Services Reference](#services-reference)
+5. [Documentation](#documentation)
+6. [Development](#development)
+7. [Metrics System](#metrics-system)
+8. [Canon Reference](#canon-reference)
+9. [Security](#security)
+10. [Contributing](#contributing)
+
+---
+
 ## Quick Start
 
 ```bash
@@ -255,14 +269,18 @@ Location: `canon/ISKRA_CORE_v7_revK_chatgpt_project/`
 3. Commit with ∆DΩΛ signature
 4. Push and create Pull Request
 
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed guidelines.
+
 ---
 
 ## Links
 
 - **View in AI Studio:** [ai.studio/apps](https://ai.studio/apps/drive/1-G54VUsMobMrjmPy0b5i49TxmnAYR56o)
 - **Canon Documentation:** `/canon/IskraCanonDocumentation/`
+- **Parent README:** [../README.md](../README.md)
+- **Root README:** [../../README.md](../../README.md)
 
 ---
 
-**Last Updated:** 2025-12-26
+**Last Updated:** 2026-02-02  
 **Canonical Compliance:** 100% (revL)

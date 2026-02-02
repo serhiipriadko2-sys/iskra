@@ -1,6 +1,20 @@
 # Production Transition Plan
 
+> **Last Updated:** 2026-02-02
+
 This document outlines the tasks required to transition the ISKRA project to a production-ready state, based on the Jules Platform audit.
+
+---
+
+## Table of Contents
+1. [Immediate Actions (Completed)](#1-immediate-actions-completed)
+2. [Infrastructure & Environment](#2-infrastructure--environment)
+3. [Documentation & Knowledge](#3-documentation--knowledge)
+4. [Quality Assurance](#4-quality-assurance)
+5. [Features to Finalize](#5-features-to-finalize)
+6. [Final Review](#6-final-review)
+
+---
 
 ## 1. Immediate Actions (Completed)
 - [x] **Deep Audit:** Full repository analysis and file enumeration.
@@ -34,3 +48,12 @@ This document outlines the tasks required to transition the ISKRA project to a p
 ## 6. Final Review
 - [ ] **Canon Verification:** Ensure `core/` remains the immutable source of truth.
 - [ ] **Code Freeze:** Lock dependencies before final build.
+
+---
+
+## Additional Resources
+
+- **Architecture:** See `system/architecture.md`
+- **Jules Platform:** See `system/jules_platform.md`
+- **Agent Instructions:** See `AGENTS.md`
+- **Skills:** Check `skills/` directory for engineering practices
