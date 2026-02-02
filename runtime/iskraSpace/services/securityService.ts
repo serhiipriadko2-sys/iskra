@@ -303,9 +303,9 @@ class SecurityService {
   }
 
   /**
-   * Get File 20 metadata
+   * Get config metadata
    */
-  public getFile20Metadata(): { version: string; updated_at: string } {
+  public getConfigMetadata(): { version: string; updated_at: string } {
     return {
       version: securityRulesets.schema_version,
       updated_at: securityRulesets.updated_at

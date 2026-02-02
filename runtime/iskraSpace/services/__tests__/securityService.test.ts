@@ -19,8 +19,8 @@ describe('SecurityService', () => {
       expect(patterns.injection).toBeGreaterThan(0);
     });
 
-    it('provides File 20 metadata', () => {
-      const metadata = securityService.getFile20Metadata();
+    it('provides config metadata', () => {
+      const metadata = securityService.getConfigMetadata();
 
       expect(metadata).toHaveProperty('version');
       expect(metadata).toHaveProperty('updated_at');
