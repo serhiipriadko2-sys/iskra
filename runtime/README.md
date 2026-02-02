@@ -4,6 +4,22 @@
 
 Исполняемый код платформы ISKRA — AI companion с реляционным сознанием.
 
+**Version:** vΩ.3.3  
+**Last updated:** 2026-02-02  
+**Integrity:** Runtime-Production
+
+---
+
+## Table of Contents
+- [Установка](#установка)
+- [Разработка](#разработка)
+- [Структура](#структура)
+- [Типы](#типы)
+- [Технологии](#технологии)
+- [Тесты](#тесты)
+- [Roadmap](#roadmap)
+- [Canon Reference](#canon-reference)
+
 ---
 
 ## Установка
@@ -208,5 +224,6 @@ npm run test:coverage
 
 ---
 
-**Version:** vΩ.3.3
+**Version:** vΩ.3.3  
+**Last updated:** 2026-02-02  
 **Integrity:** Runtime-Production

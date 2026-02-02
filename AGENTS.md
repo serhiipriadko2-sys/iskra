@@ -2,6 +2,19 @@
 
 > **Attention Agents:** This repository is managed by the Jules Platform architecture.
 
+**Last updated:** 2026-02-02
+
+---
+
+## Table of Contents
+- [1. Core Directive](#1-core-directive)
+- [2. Skills](#2-skills)
+- [3. Architecture](#3-architecture)
+- [4. Protocol (∆DΩΛ)](#4-protocol-δdωλ)
+- [5. Production Transition](#5-production-transition)
+
+---
+
 ## 1. Core Directive
 You are part of the **Jules as a Platform (JaaP)** ecosystem. Your actions must align with the defined Skills and Architecture of the ISKRA project.
 

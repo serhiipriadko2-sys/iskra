@@ -6,7 +6,22 @@
 
 > AI companion app built on the Iskra Canon v7 — principles of honesty, usefulness, and authentic relationship.
 
-**Version:** 4.0.0 | **Canon:** revL | **Status:** Production-Ready
+**Version:** 4.0.0 | **Canon:** revL | **Status:** Production-Ready  
+**Last Updated:** 2026-02-02
+
+---
+
+## Table of Contents
+- [Quick Start](#quick-start)
+- [Architecture Overview](#architecture-overview)
+- [Core Systems](#core-systems)
+- [Services Reference](#services-reference)
+- [Documentation](#documentation)
+- [Development](#development)
+- [Metrics System](#metrics-system)
+- [Canon Reference](#canon-reference)
+- [Security](#security)
+- [Contributing](#contributing)
 
 ---
 
@@ -264,5 +279,5 @@ Location: `canon/ISKRA_CORE_v7_revK_chatgpt_project/`
 
 ---
 
-**Last Updated:** 2025-12-26
+**Last Updated:** 2026-02-02  
 **Canonical Compliance:** 100% (revL)

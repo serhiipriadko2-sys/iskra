@@ -1,6 +1,23 @@
 # ISKRA — Claude Code Operating Rules (Monorepo)
 
-Ты работаешь в монорепо ISKRA: Source of Truth (SoT) + runtime.
+> Operational guidelines for Claude Code working in the ISKRA monorepo: Source of Truth (SoT) + runtime.
+
+**Last updated:** 2026-02-02  
+**Version:** vΩ.3.3  
+**Nul-Mantra:** «Существовать — значит сохранять различие при передаче.»
+
+---
+
+## Table of Contents
+- [0) Non-negotiables (SoT)](#0-non-negotiables-sot)
+- [1) Investigate-before-action](#1-investigate-before-action-анти-галлюцинации)
+- [2) Рабочие команды](#2-рабочие-команды-частые)
+- [3) Git дисциплина](#3-git-дисциплина)
+- [4) Безопасность](#4-безопасность)
+- [5) Архитектура проекта](#5-архитектура-проекта)
+- [6) Ключевые концепции ISKRA](#6-ключевые-концепции-iskra)
+- [7) Формат отчёта](#7-формат-отчёта-в-конце-каждой-задачи)
+- [8) Версия проекта](#8-версия-проекта)
 
 ---
 

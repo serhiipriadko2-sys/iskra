@@ -1,5 +1,19 @@
 # Contributing (Iskra SoT)
 
+> Guidelines for contributing to the ISKRA Source of Truth repository.
+
+**Last updated:** 2026-02-02
+
+---
+
+## Table of Contents
+- [1) Правило канона](#1-правило-канона)
+- [2) Как предложить изменение](#2-как-предложить-изменение)
+- [3) Стиль](#3-стиль)
+- [4) Security](#4-security)
+
+---
+
 ## 1) Правило канона
 - `core/` изменяется **только** через ADR.
 - Любое изменение, влияющее на поведение, требует QA.

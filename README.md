@@ -29,7 +29,7 @@
 
 ---
 
-**Build date:** 2026-01-09
+**Build date:** 2026-02-02
 
 ## Монорепо (SoT + runtime)
 - SoT живёт в корне (папки `core/`, `system/`, `ledger/`...).

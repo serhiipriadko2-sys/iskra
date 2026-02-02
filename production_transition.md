@@ -1,6 +1,20 @@
 # Production Transition Plan
 
-This document outlines the tasks required to transition the ISKRA project to a production-ready state, based on the Jules Platform audit.
+> This document outlines the tasks required to transition the ISKRA project to a production-ready state, based on the Jules Platform audit.
+
+**Last updated:** 2026-02-02
+
+---
+
+## Table of Contents
+- [1. Immediate Actions (Completed)](#1-immediate-actions-completed)
+- [2. Infrastructure & Environment](#2-infrastructure--environment)
+- [3. Documentation & Knowledge](#3-documentation--knowledge)
+- [4. Quality Assurance](#4-quality-assurance)
+- [5. Features to Finalize](#5-features-to-finalize)
+- [6. Final Review](#6-final-review)
+
+---
 
 ## 1. Immediate Actions (Completed)
 - [x] **Deep Audit:** Full repository analysis and file enumeration.

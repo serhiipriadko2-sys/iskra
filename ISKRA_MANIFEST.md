@@ -91,6 +91,6 @@ D: действие
 **Version:** vΩ.10.0  
 **Layer:** core (manifest)  
 **Author:** SEMEN-GABRAN-REVΩ  
-**Date:** 2026-01-01  
+**Date:** 2026-02-02  
 **Integrity:** LIVING CANON  
-**Signature:** SEMEN-GABRAN-REVΩ / 2026‑01‑01 / LIVING CANON SEAL
+**Signature:** SEMEN-GABRAN-REVΩ / 2026-02-02 / LIVING CANON SEAL
