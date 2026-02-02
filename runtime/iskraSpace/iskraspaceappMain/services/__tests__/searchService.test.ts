@@ -65,12 +65,14 @@ vi.mock('../memoryService', () => ({
   },
 }));
 
-// Mock geminiService
-vi.mock('../geminiService', () => ({
-  IskraAIService: vi.fn().mockImplementation(() => ({
-    getEmbedding: vi.fn().mockResolvedValue([0.1, 0.2, 0.3, 0.4, 0.5]),
-  })),
-}));
+// Mock geminiService - Vitest 4.x compatible class mock
+vi.mock('../geminiService', () => {
+  return {
+    IskraAIService: class MockIskraAIService {
+      getEmbedding = vi.fn().mockResolvedValue([0.1, 0.2, 0.3, 0.4, 0.5]);
+    },
+  };
+});
 
 import { searchService } from '../searchService';
 
