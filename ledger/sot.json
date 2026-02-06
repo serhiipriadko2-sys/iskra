@@ -201,7 +201,7 @@
     "canon/stack_10/workflow_ops.md": "00fc2c4f99206ef572ca07204eb4c489ce6e860b542b0c97be11e09bdbe0c07e",
     "runtime/.env.example": "a6f223b4c8e7eb288c324b16c278aca19a001de2d3f9bee18f89e4202726119a",
     "runtime/.prettierrc": "e92eab946b365fccd557d5f2a93b40160516a64950d7994acf1a2d3f4b98f79a",
-    "runtime/README.md": "3e57347731d72fea1120d1a08383845295d76e4e81c0b035d4a6c271ee3725a4",
+    "runtime/README.md": "cec263be1f25c38f0d7f69a442c634ed00410ffddf9ed4cf4cd85df9559411db",
     "runtime/eslint.config.js": "286d75f81dd3b996c744255d64a5bbc140609644f91cb2290f1e65a0f560aca1",
     "runtime/iskraSpace/.env.example": "637549b6cfdc41706de2bc5a42ccb2781fa6e9e74abfc26cd519e42900719a4e",
     "runtime/iskraSpace/.env.production.example": "255ee237f83528494405cf4c74a0be30a7450354f2cd2a4e625c6884805f2289",
@@ -219,7 +219,7 @@
     "runtime/iskraSpace/App.tsx": "7c43542db3ed0d4c4a1c3f603983dc7ca608582bae4ce1a54b1240a8873df8f2",
     "runtime/iskraSpace/GRAPHRAG_SUPABASE_SETUP.md": "aafd465c2e5fd9f7a20121194e5934ce11e8c7d0f53d22739b98a574d7bd1020",
     "runtime/iskraSpace/MANTRA.md": "381f984172258e972e2c9231e2b3603e3937d1ed641778a330bfb6de963bca93",
-    "runtime/iskraSpace/README.md": "ddb05f4d2725435ff72ab64013d6ef493f7ec9f8938b4fc0473a65d379b5412f",
+    "runtime/iskraSpace/README.md": "eff5e98c9a695ae459643a4e75771d374e51e4d7aa3f928f225f6bb423ffaded",
     "runtime/iskraSpace/SERVICES.md": "5a887e09971e63f40e563e748320e9cd9989adb306b53162c8a9356a5cc1b26b",
     "runtime/iskraSpace/SIFT_MULTI_STEP_GUIDE.md": "d9c1b85818eb50c06418390872679ff1c20d0f2703d7eed64fdac384466ccc1b",
     "runtime/iskraSpace/__tests__/services/evidenceService.test.ts": "da241764beb9d027f5fb08c71bbbc9a3679cdef313b8fc3d636bb21584bc525f",
@@ -453,9 +453,9 @@
     "docs/research/sift_epistemology.md": "8f1c0b8d8d9e033f4fdbdf9d28120788aa7ae37247a60f5e377887898b803262",
     "docs/upload_sets.md": "270d546489b6b44cf1327f68a22658478aee51b5d153fbd513d65cd45f130cda",
     "manifest.yml": "20a6843dc101c631273166e85c7770612d18dbe17c734d8b6cea0f2cb35ab51c",
-    "README.md": "45e2dd2f7d9176ba830c81ccae8f6ac9992a6da9edc52d0c7d961a5b346872f6",
-    "CONTRIBUTING.md": "5e7a13916fa1eea89938f9ebd87dee76353dd18548190d49215348e18d1da32f",
-    "ISKRA_MANIFEST.md": "7e6349890bb6b29a4127e05fb8628045120951becbb331c9ee6cc1c8b7938af4",
-    "LIBER_INITIUM.md": "0683d70c34ea7165c160419ee3d3cd5c61d8e22fc7668b623d387e5aa69853be"
+    "README.md": "42bdcd39288446f69dd4935547591cd51ed3df8de5762d5ef52f47a436bc850c",
+    "CONTRIBUTING.md": "1ba910a7fac6bd600fa7eb20ef0b0e906c23e735b2e49dfe555b18d812636688",
+    "ISKRA_MANIFEST.md": "23858f22bb3385949603c633950eeb28797cc6b0d802b31b2f6d7c0a576a0771",
+    "LIBER_INITIUM.md": "db1cceebff3162aa68ac33bbc58b3b18ded8bb307408e9a51eed12b6c5598bc6"
   }
 }
