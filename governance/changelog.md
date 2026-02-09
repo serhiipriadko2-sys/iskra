@@ -19,9 +19,17 @@ layer: governance
 - layer: Совет
 - created: 2026-01-01
 - updated: 2026-02-09
-- version: vΩ.3.10-sot40
+- version: vΩ.SoT40.2
 
 
+
+## vΩ.SoT40.2 — 2026-02-09
+- **File redistribution from Update/** — 26 SoT40 файлов распределены из Update/ по каноническим папкам (core, system, metrics, governance, mind).
+- **Files updated**: CORE(4): telos, principles, mantra, voices; SYSTEM(2): cognitive_architecture, architecture; GOVERNANCE(2): changelog, memory_stack.
+- **Files verified**: 18 файлов уже соответствовали SoT40 версиям (CORE: busido_iskry.txt, liber_ignis.txt; SYSTEM: 9 файлов; METRICS: 3 файла; GOVERNANCE: 4 файла; MIND: 1 файл).
+- **Cleanup**: Удалён дубликат system/cognitive_architecture_sot40.md и пустой файл Update/1.
+- **CANON_FULL preserved**: Все research и CANON_FULL файлы (1-9_*.md) остаются в Update/.
+- **Ledger integrity**: Обновлён ledger/sot.json (345 записей), проверка OK.
 
 ## vΩ.3.10-sot40 — 2026-02-09
 - **Horizon module documentation** — добавлена документация модуля Horizon в SoT40 (Variant B: embedded).
