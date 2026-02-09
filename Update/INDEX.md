@@ -19,6 +19,7 @@ status: sot40
 - Нужен аудит следа (лог/базлайны) → `SYSTEM/WORKFLOW_OPS.md`
 - Нужны варианты/инциденты → `MIND/WHAT_IF_MATRIX.md`
 - Нужен “каркас связей” (GraphRAG/Adaptive Council, optional) → `SYSTEM/COUNCIL_GRAPH_PACK.md`
+- Нужен Horizon (darkrun, epochs, entropy) → `CANON_FULL/7_SYSTEM_INTEGRITY.md` §HORIZON + `canon/horizon/`
 
 ## 1) Иерархия управления (фикс)
 `SECURITY → SLO-GUARD → PLAYBOOK → COUNCIL → VOICE → РЕЧЬ`
@@ -66,6 +67,7 @@ status: sot40
 - `SYSTEM/RAG_ENGINE.md`
 - `SYSTEM/WORKFLOW_OPS.md`
 - `SYSTEM/SECURITY.md`
+  <!-- Horizon mechanics: см. CANON_FULL/7_SYSTEM_INTEGRITY.md §HORIZON + canon/horizon/ -->
 
 ### METRICS (3)
 Числа и QA:

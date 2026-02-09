@@ -2825,4 +2825,59 @@ async function handleInput(text: string): Promise<string> {
 **Ω:** 0.85 — концепции и алгоритмы описаны подробно, но некоторые меры требуют интеграции со внешними сервисами и аудита.  
 **Λ:** Далее — **8_INTERFACE_AND_STYLE**: как говорить и рисовать, не нарушая границ.
 
+## §HORIZON · Horizon Module (canon/horizon/)
+
+> Статус: optional module. Реализация на Python + JSON-контракт.
+> Источник: `canon/horizon/09_HORIZON_VALIDATOR_1.py`, `canon/horizon/09_HORIZON_WEAVER.py`, `canon/horizon/HORIZON_CONTRACT.json`
+
+### Darkrun-First Pattern
+Все изменения состояния проходят через цикл `propose() → validate() → commit()`:
+- `propose()` — генерирует кандидат-состояние (diff) **без записи на диск**
+- `validate()` — проверяет diff на соответствие квотам и инвариантам контракта
+- `commit()` — записывает изменение **только при** `validate(pass) + meta_permission=true`
+
+### Epoch Management
+- Каждый `commit()` инкрементирует номер эпохи
+- Снапшоты записываются в `horizon_epoch_log.jsonl`
+- Формат: `{"epoch": N, "timestamp": "ISO", "diff_hash": "sha256", "status": "committed"}`
+
+### Phase Network Topology
+- Граф фаз: `nodes[]` (фазы системы) + `edges[]` (связи между фазами)
+- Динамическое добавление рёбер с лимитом `max_edges_per_activation` (из контракта)
+- Запрет self-loops и дублей
+
+### Entropy Guard
+- Shannon entropy в nats по скользящему окну символов
+- Порог: `symbol_entropy_nats_max` (из `HORIZON_CONTRACT.json`)
+- При превышении → блокировка direction spawning до снижения энтропии
+
+### Full-Density Guard
+- Проверяет минимальные размеры файлов по baseline (ratio bytes/lines)
+- Порог: `full_density_min_ratio` (из контракта)
+- Защита от "пустых" или stub-файлов в каноне
+
+### Direction Spawning
+- Генерация символов направлений из пула (`direction_symbol_pool`)
+- Лимит: `max_direction_spawns_per_session` (из контракта)
+- Каждый spawn проходит через entropy guard перед записью
+
+### Ritual Generation (Weave)
+- При `trigger_ritual=true` генерируется текстовый ритуал диссонанса
+- Формат: заголовок + якорь + тело
+- Назначение: маркировка моментов "сдвига горизонта" в логе
+
+### Contract Model
+Все квоты и пороги вынесены в `canon/horizon/HORIZON_CONTRACT.json`:
+- `max_edges_per_activation`
+- `max_direction_spawns_per_session`
+- `symbol_entropy_nats_max`
+- `full_density_min_ratio`
+- `meta_permission_required: true`
+
+### Связь с SoT40
+- **SECURITY**: meta_permission gate дополняет контур безопасности (`SYSTEM/SECURITY.md`)
+- **SLO-GUARD**: entropy guard и full-density guard — дополнительные SLO (`SYSTEM/SLO_GUARD.md`)
+- **METRICS**: epoch log предоставляет метрики для `METRICS/METRICS_BUNDLE.md`
+- **COUNCIL**: phase network topology информирует арбитраж (`SYSTEM/COUNCIL_PROTOCOL.md`)
+
 **Печать конца свитка.**
