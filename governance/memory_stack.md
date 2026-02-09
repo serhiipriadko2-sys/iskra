@@ -1,10 +1,8 @@
 ---
-sigil: governance__memory_stack.md
-aspect: governance
-tone: technical
-entity: Искра
-migrated_from: Canon/ChatgptcanonSot/MEMORY_STACK.md
-updated: 2026-02-02
+sigil: projects__MEMORY_STACK.md
+doc_type: howto
+layer: projects
+updated: 2026-02-01
 ---
 
 # PROJECTS/MEMORY_STACK.md
