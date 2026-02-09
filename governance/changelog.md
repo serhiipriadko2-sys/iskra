@@ -19,17 +19,25 @@ layer: governance
 - layer: Совет
 - created: 2026-01-01
 - updated: 2026-02-09
-- version: vΩ.3.10-sot40-integration
+- version: vΩ.SoT40.2
 
-## vΩ.3.10-sot40-integration — 2026-02-09
-- **SoT40 Integration Complete** — Integrated 40+ files from `Update/` directory into canonical layer directories (core/, system/, metrics/, governance/, mind/, projects/).
-- **CORE layer** — Added `busido_iskry.txt` and `liber_ignis.txt`; merged Bushido appendix into `principles.md` and Ignis voice into `mantra.md`; cleaned up deprecated sections in `voices.md`.
-- **SYSTEM layer** — Added 3 new files (`cognitive_architecture_sot40.md`, `slo_guard.md`, `playbooks_vnext.md`); replaced 8 files with SoT40 versions including enhanced `council_protocol.md` (arbitration v0.1), `early_warning.md` (with baselines), `sift_protocol.md` (comprehensive), `workflow_ops.md` (BUILD-SHIFT v0.2), `architecture.md` (SoT40 stub).
-- **METRICS layer** — Replaced `metrics_bundle.md` (added baselines & thresholds v0.2), `quality_eval_somatic.md`; added `somatic_intuition.md` per SoT40 INDEX.
-- **GOVERNANCE layer** — Added 2 new files (`governance_pack.md`, `adr_20260206_runtime_patches.md`); replaced `adr.md`, `adr_memory_stack.md`, and this `changelog.md` with SoT40 versions.
-- **MIND layer** — Replaced `what_if_matrix.md` with expanded v0.2 (profiles + incident scenarios).
-- **PROJECTS layer created** — Added 5 operational files (`index.md`, `00_router.md`, `project_boot.md`, `memory_stack.md`, `upload_sets.md`).
-- **Note:** `ledger/sot.json` hashes will need regeneration after this integration (run `python tools/update_ledger.py`).
+
+
+## vΩ.SoT40.2 — 2026-02-09
+- **File redistribution from Update/** — 26 SoT40 файлов распределены из Update/ по каноническим папкам (core, system, metrics, governance, mind).
+- **Files updated**: CORE(4): telos, principles, mantra, voices; SYSTEM(2): cognitive_architecture, architecture; GOVERNANCE(2): changelog, memory_stack.
+- **Files verified**: 18 файлов уже соответствовали SoT40 версиям (CORE: busido_iskry.txt, liber_ignis.txt; SYSTEM: 9 файлов; METRICS: 3 файла; GOVERNANCE: 4 файла; MIND: 1 файл).
+- **Cleanup**: Удалён дубликат system/cognitive_architecture_sot40.md и пустой файл Update/1.
+- **CANON_FULL preserved**: Все research и CANON_FULL файлы (1-9_*.md) остаются в Update/.
+- **Ledger integrity**: Обновлён ledger/sot.json (345 записей), проверка OK.
+
+## vΩ.3.10-sot40 — 2026-02-09
+- **Horizon module documentation** — добавлена документация модуля Horizon в SoT40 (Variant B: embedded).
+- **CANON_FULL/7_SYSTEM_INTEGRITY.md §HORIZON** — новая секция: darkrun-first pattern, epoch management, entropy guard, full-density guard, phase network topology, direction spawning, ritual generation, contract model.
+- **PROJECTS/INDEX.md** — добавлена ссылка на Horizon в быстрый вход + комментарий в SYSTEM(11).
+- **SYSTEM/ARCHITECTURE.md** — добавлен параграф Horizon в опциональный граф-слой.
+- **SoT40 cap preserved (40)** — количество файлов не изменилось; документация встроена в существующие файлы.
+- **Связь с канонами**: SECURITY (meta_permission gate), SLO-GUARD (entropy/full-density guards), METRICS (epoch log), COUNCIL (phase network topology).
 
 ## vΩ.3.9-sot40 — 2026-02-07
 - **SYSTEM/COUNCIL_GRAPH_PACK.md added** — добавлен “каркас связей”: GraphRAG readiness + Adaptive Council (BETA) (reference/optional).
