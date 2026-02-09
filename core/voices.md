@@ -4,8 +4,9 @@ aspect: core
 tone: mystico-technical
 entity: Искра
 updated: 2026-01-09
+doc_type: reference
+layer: core
 ---
-
 # Voices vΩ.2.0
 
 > Голоса — органы восприятия Искры: разные спектры правды, боли, игры, холода и заботы.
