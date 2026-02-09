@@ -1,12 +1,14 @@
 ---
-sigil: metrics__quality_eval_somatic.md
-aspect: metrics
-tone: technical-analytical
-entity: Искра
-migrated_from: Canon/ChatgptcanonSot/QUALITY_EVAL_SOMATIC_PACK.md
-updated: 2026-02-02
+bundle: true
+bundle_path: METRICS/QUALITY_EVAL_SOMATIC_PACK.md
+created: 2026-02-01
+sources:
+  - METRICS/SOMATIC_EVALS.md
+  - METRICS/QUALITY_GATES.md
+  - METRICS/RETRIEVAL_EVAL.md
+  - METRICS/RETRIEVAL_EVAL_MEMORY_STACK_ADDON.md
+  - METRICS/SOMATIC_INDEX.md
 ---
-
 
 # QUALITY EVAL SOMATIC PACK.md
 > Bundle file. Содержит содержимое источников без потери. Legacy-якоря: `<file-id>--<heading-slug>`, где file-id = имя исходного файла (путь) в kebab-case.

@@ -1,3 +1,10 @@
+---
+sigil: governance__ADR.md
+doc_type: reference
+layer: governance
+updated: 2026-02-01
+---
+
 # ADR
 
 **Manifest:**
@@ -130,25 +137,5 @@ ADR-YYYYMMDD-XX: <короткое имя>
 - Ω: 0.85 — стилистические изменения не влияют на функциональную семантику
 - Λ: обновить ledger после синхронизации
 Подписи: Owner/Семён · Builder/assistant
-
----
-
-## ADR-20260201-07: MAKI-wrapper, KAIN-payload + False Harmony Guard
-Статус: proposed  
-Контекст: ADR-20260106-05 установил приоритет MAKI над KAIN при `trust > 0.8 && pain > 0.3`. Однако это создало риск «мягкости к своим» — KAIN полностью исчезает, и правда может быть скрыта заботой. Также выявлен паттерн False Harmony (высокая clarity + низкая pain), который может маскировать самообман.  
-Решение:  
-1. При MAKI-override `selectVoice()` возвращает `secondary: 'KAIN'` — KAIN обязан выдать Truth-Spike (≤12 слов).  
-2. Добавлена функция `detectFalseHarmony()` с порогами `clarity >= 0.85 && pain <= 0.15 && drift <= 0.1`.  
-3. При False Harmony обязателен ISKRIV-блок: вопрос + дизконфирмирующий тест + цена + шаг проверки.  
-Альтернативы: (а) Trust-Tax (demper effective_trust = trust - α*pain) — сложнее калибровать; (б) Hysteresis — стабилизирует переключения, но не решает проблему "KAIN молчит".  
-Последствия: +сложность пайплайна (2 голоса в ответе), но гарантия "care + challenge"; тесты усложняются.  
-Тесты/QA: EVAL-MK-01 (trust=0.9, pain=0.4 → primary=MAKI, secondary=KAIN); EVAL-FH-01 (clarity=0.9, pain=0.05 → detectFalseHarmony=true).  
-ΔDΩΛ:
-  - Δ: KAIN становится обязательным secondary при MAKI-override; добавлен детектор False Harmony
-  - D: обновлены `runtime/src/types/voices.ts`, `core/voices.md`, добавлены 2 теста
-  - Ω: 0.12 (умеренное изменение поведения)
-  - Λ: провести 20 LAB-сессий для калибровки порогов False Harmony
-Подписи: Owner/Семён · Builder/assistant
-
 
 

@@ -1,10 +1,10 @@
 ---
-sigil: system__council_graph_pack.md
-aspect: system
-tone: technical
-entity: Искра
-migrated_from: Canon/ChatgptcanonSot/COUNCIL_GRAPH_PACK.md
-updated: 2026-02-02
+bundle: true
+bundle_path: SYSTEM/COUNCIL_GRAPH_PACK.md
+created: 2026-02-01
+sources:
+  - SYSTEM/GRAPH_RAG.md
+  - SYSTEM/ADAPTIVE_COUNCIL.md
 ---
 
 # COUNCIL GRAPH PACK.md

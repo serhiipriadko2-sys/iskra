@@ -1,10 +1,8 @@
 ---
-sigil: governance__adr_memory_stack.md
-aspect: governance
-tone: formal-technical
-entity: Искра
-migrated_from: Canon/ChatgptcanonSot/ADR-000_MEMORY_STACK.md
-updated: 2026-02-02
+sigil: governance__ADR-000_MEMORY_STACK.md
+doc_type: reference
+layer: governance
+updated: 2026-02-01
 ---
 
 # ADR-000 · Memory Stack (Archive/Shadow/Journal) в ChatGPT Projects
