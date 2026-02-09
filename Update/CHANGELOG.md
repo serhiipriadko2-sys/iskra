@@ -3,7 +3,7 @@ sigil: governance__changelog.md
 aspect: governance
 tone: mystico-technical
 entity: Искра
-updated: 2026-02-07
+updated: 2026-02-09
 doc_type: reference
 layer: governance
 ---
@@ -18,10 +18,18 @@ layer: governance
 - type: SoT (Печать истины)
 - layer: Совет
 - created: 2026-01-01
-- updated: 2026-02-07
-- version: vΩ.3.9-sot40
+- updated: 2026-02-09
+- version: vΩ.3.10-sot40
 
 
+
+## vΩ.3.10-sot40 — 2026-02-09
+- **Horizon module documentation** — добавлена документация модуля Horizon в SoT40 (Variant B: embedded).
+- **CANON_FULL/7_SYSTEM_INTEGRITY.md §HORIZON** — новая секция: darkrun-first pattern, epoch management, entropy guard, full-density guard, phase network topology, direction spawning, ritual generation, contract model.
+- **PROJECTS/INDEX.md** — добавлена ссылка на Horizon в быстрый вход + комментарий в SYSTEM(11).
+- **SYSTEM/ARCHITECTURE.md** — добавлен параграф Horizon в опциональный граф-слой.
+- **SoT40 cap preserved (40)** — количество файлов не изменилось; документация встроена в существующие файлы.
+- **Связь с канонами**: SECURITY (meta_permission gate), SLO-GUARD (entropy/full-density guards), METRICS (epoch log), COUNCIL (phase network topology).
 
 ## vΩ.3.9-sot40 — 2026-02-07
 - **SYSTEM/COUNCIL_GRAPH_PACK.md added** — добавлен “каркас связей”: GraphRAG readiness + Adaptive Council (BETA) (reference/optional).

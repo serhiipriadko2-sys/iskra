@@ -39,6 +39,23 @@ updated: 2026-02-07
 
 Статус: *optional*. По умолчанию не включается.
 
+### Horizon (Darkrun-First Validation)
+
+Для защиты канона от "тихих регрессий" и контроля сдвига метапространства:
+- **Darkrun-first pattern**: propose → validate → commit (без записи до проверки)
+- **Epoch management**: каждый commit инкрементирует эпоху; снапшоты в JSONL
+- **Entropy guard**: Shannon entropy по символам; блокировка при превышении порога
+- **Full-density guard**: проверка baseline размеров файлов канона (ratio bytes/lines)
+- **Phase network topology**: граф фаз + динамические связи с квотами
+- **Direction spawning**: генерация символов направлений из пула с лимитами
+- **Ritual generation**: маркировка моментов "сдвига горизонта"
+
+**Contract model**: все квоты/пороги вынесены в `canon/horizon/HORIZON_CONTRACT.json` (meta_permission_required, max_edges, entropy_nats_max, full_density_min_ratio).
+
+**SoT40 связь**: см. `CANON_FULL/7_SYSTEM_INTEGRITY.md` §HORIZON для детальной интеграции с SECURITY/SLO-GUARD/METRICS/COUNCIL.
+
+Статус: *optional module*. Реализация на Python.
+
 ---
 
 **Правило SoT40:** этот файл не раздуваем — это навигационный якорь и минимальный каркас.
