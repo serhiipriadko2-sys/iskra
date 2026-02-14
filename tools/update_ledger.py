@@ -47,6 +47,10 @@ def should_exclude(rel_path: Path) -> bool:
         return True
     
     # Exclude build artifacts
+    # Exclude coverage reports
+    if "coverage" in parts:
+        return True
+
     if "dist" in parts:
         return True
     
