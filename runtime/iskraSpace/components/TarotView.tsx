@@ -66,7 +66,7 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
         for (const source of audioSourcesRef.current.values()) {
             try {
               source.stop();
-            } catch(e) {
+            } catch(_e) {
                 // Ignore errors from stopping already-stopped sources
             }
         }

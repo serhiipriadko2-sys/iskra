@@ -107,7 +107,7 @@ export function useLiveAudio() {
 
   const stopAllAudioSources = useCallback(() => {
     for (const source of audioSourcesRef.current.values()) {
-      try { source.stop(); } catch (e) {}
+      try { source.stop(); } catch (_e) { /* intentionally empty */ }
     }
     audioSourcesRef.current.clear();
     nextStartTimeRef.current = 0;

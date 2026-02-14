@@ -318,7 +318,7 @@ const Planner: React.FC = () => {
     }
 
     const getFilteredAndSortedTasks = () => {
-        let filtered = tasks.filter(t => filterTag === 'ALL' || t.ritualTag === filterTag);
+        const filtered = tasks.filter(t => filterTag === 'ALL' || t.ritualTag === filterTag);
         
         if (sortBy === 'DATE') {
             filtered.sort((a, b) => {

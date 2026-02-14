@@ -111,7 +111,7 @@ const LiveConversation: React.FC<LiveConversationProps> = ({ metrics }) => {
     outputAudioContextRef.current?.close();
 
     for (const source of audioSourcesRef.current.values()) {
-      try { source.stop(); } catch (e) {}
+      try { source.stop(); } catch (_e) { /* intentionally empty */ }
     }
     audioSourcesRef.current.clear();
 
@@ -196,7 +196,7 @@ const LiveConversation: React.FC<LiveConversationProps> = ({ metrics }) => {
 
       await resumeInputPromise;
       await resumeOutputPromise;
-    } catch (e) {
+    } catch (_e) {
       setError("Ошибка аудио-драйвера.");
       setStatus('ERROR');
       return;
@@ -265,7 +265,7 @@ const LiveConversation: React.FC<LiveConversationProps> = ({ metrics }) => {
 
             if (message.serverContent?.interrupted) {
               for (const source of audioSourcesRef.current.values()) {
-                try { source.stop(); } catch (e) {}
+                try { source.stop(); } catch (_e) { /* intentionally empty */ }
               }
               audioSourcesRef.current.clear();
               nextStartTimeRef.current = 0;

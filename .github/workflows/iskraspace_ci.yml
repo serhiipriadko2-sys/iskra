@@ -41,6 +41,10 @@ jobs:
         working-directory: runtime/iskraSpace
         run: npm run typecheck
 
+      - name: Lint
+        working-directory: runtime/iskraSpace
+        run: npm run lint
+
       - name: Run unit tests
         working-directory: runtime/iskraSpace
         run: npm run test:run
