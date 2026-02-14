@@ -6,7 +6,7 @@
  * this service uses the Google Generative AI SDK directly with an API key.
  */
 
-import { GoogleGenerativeAI, Content } from "@google/generative-ai";
+import { GoogleGenAI, type Content } from "@google/genai";
 import type { IskraMetrics } from "../../types/metrics.js";
 import type { VoiceName } from "../../types/voices.js";
 
@@ -111,11 +111,11 @@ export interface GeminiCliConfig {
  * CLI Gemini Service
  */
 export class GeminiCliService {
-  private genAI: GoogleGenerativeAI;
+  private genAI: GoogleGenAI;
   private modelName: string;
 
   constructor(config: GeminiCliConfig) {
-    this.genAI = new GoogleGenerativeAI(config.apiKey);
+    this.genAI = new GoogleGenAI({ apiKey: config.apiKey });
     this.modelName = config.model || DEFAULT_MODEL;
   }
 
@@ -173,18 +173,16 @@ ${DELTA_PROTOCOL}
     const voice = options.voice || "ISKRA";
     const systemInstruction = this.buildSystemInstruction(voice, options.metrics);
 
-    const model = this.genAI.getGenerativeModel({
-      model: this.modelName,
-      systemInstruction,
-    });
-
     const contents = options.history
       ? [...this.toGeminiContents(options.history), { role: "user" as const, parts: [{ text: message }] }]
       : [{ role: "user" as const, parts: [{ text: message }] }];
 
-    const result = await model.generateContent({ contents });
-    const response = result.response;
-    return response.text();
+    const response = await this.genAI.models.generateContent({
+      model: this.modelName,
+      contents,
+      config: { systemInstruction },
+    });
+    return response.text ?? "";
   }
 
   /**
@@ -201,19 +199,18 @@ ${DELTA_PROTOCOL}
     const voice = options.voice || "ISKRA";
     const systemInstruction = this.buildSystemInstruction(voice, options.metrics);
 
-    const model = this.genAI.getGenerativeModel({
-      model: this.modelName,
-      systemInstruction,
-    });
-
     const contents = options.history
       ? [...this.toGeminiContents(options.history), { role: "user" as const, parts: [{ text: message }] }]
       : [{ role: "user" as const, parts: [{ text: message }] }];
 
-    const result = await model.generateContentStream({ contents });
+    const stream = await this.genAI.models.generateContentStream({
+      model: this.modelName,
+      contents,
+      config: { systemInstruction },
+    });
 
-    for await (const chunk of result.stream) {
-      const text = chunk.text();
+    for await (const chunk of stream) {
+      const text = chunk.text;
       if (text) {
         yield text;
       }
@@ -247,16 +244,15 @@ T - Trace: Создай цепочку рассуждений
   "trace": "SIFT-YYYY-XXX"
 }`;
 
-    const model = this.genAI.getGenerativeModel({
+    const response = await this.genAI.models.generateContent({
       model: this.modelName,
-      systemInstruction,
-      generationConfig: {
+      contents: `Проверь утверждение: "${statement}"`,
+      config: {
+        systemInstruction,
         responseMimeType: "application/json",
       },
     });
-
-    const result = await model.generateContent(`Проверь утверждение: "${statement}"`);
-    const text = result.response.text();
+    const text = response.text ?? "";
 
     try {
       return JSON.parse(text);

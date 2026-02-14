@@ -29,4 +29,13 @@ export enum Modality {
   BLOB = 'blob',
 }
 
+export class GoogleGenAI {
+  models = {
+    generateContent: async () => ({ text: '' }),
+    generateContentStream: async function* () {
+      yield { text: '' };
+    },
+  };
+}
+
 export default {};
