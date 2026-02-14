@@ -21,7 +21,6 @@ const VOICE_COLORS: Record<VoiceName, string> = {
   SAM: 'text-accent border-accent/30 bg-accent/5',
   ANHANTRA: 'text-info border-info/30 bg-info/5',
   HUYNDUN: 'text-purple-400 border-purple-400/30 bg-purple-400/5',
-  HUYNDUN: 'text-purple-400 border-purple-400/30 bg-purple-400/5', // Canonical alias
   ISKRIV: 'text-slate-300 border-slate-300/30 bg-slate-300/5',
   MAKI: 'text-pink-400 border-pink-400/30 bg-pink-400/5',
   SIBYL: 'text-violet-400 border-violet-400/30 bg-violet-400/5',
@@ -34,7 +33,6 @@ const VOICE_NAMES_RU: Record<VoiceName, string> = {
   SAM: 'Сэм',
   ANHANTRA: 'Анхантра',
   HUYNDUN: 'Хуньдун',
-  HUYNDUN: 'Хуньдун', // Canonical alias
   ISKRIV: 'Искрив',
   MAKI: 'Маки',
   SIBYL: 'Сибилла',
@@ -47,7 +45,6 @@ const VOICE_TELOS: Record<VoiceName, string> = {
   PINO: 'Ирония • Разрядка напряжения',
   SAM: 'Структура • Ясность из хаоса',
   ANHANTRA: 'Тишина • Принятие без давления',
-  HUYNDUN: 'Хаос • Разрушение паттернов',
   HUYNDUN: 'Хаос • Разрушение паттернов',
   ISKRIV: 'Аудит • Совесть и факты',
   MAKI: 'Интеграция • Красота и гармония',
