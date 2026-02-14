@@ -134,7 +134,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
     for (const source of audioSourcesRef.current.values()) {
         try {
           source.stop();
-        } catch(e) { /* Ignore errors */ }
+        } catch(_e) { /* Ignore errors */ }
     }
     audioSourcesRef.current.clear();
     nextStartTimeRef.current = 0;

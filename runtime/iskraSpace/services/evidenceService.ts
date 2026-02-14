@@ -239,7 +239,7 @@ class EvidenceService {
     const warnings: string[] = [];
 
     // Find all [FACT] labels
-    const factMatches = text.matchAll(/\[FACT\]([^\[]*?)(?=\[|$)/gs);
+    const factMatches = text.matchAll(/\[FACT\]([^[]*?)(?=\[|$)/gs);
 
     for (const match of factMatches) {
       const factBlock = match[1];

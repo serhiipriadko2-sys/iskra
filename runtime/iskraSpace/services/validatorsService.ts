@@ -108,7 +108,7 @@ class ValidatorsService {
       return { valid: false, errors, warnings };
     }
 
-    const [_, year, month, day] = match;
+    const [, year, month, day] = match;
     const yearNum = parseInt(year, 10);
     const monthNum = parseInt(month, 10);
     const dayNum = parseInt(day, 10);
@@ -274,7 +274,7 @@ class ValidatorsService {
           parsed: { condition: lambdaStr }
         };
       }
-    } catch (e) {
+    } catch (_e) {
       errors.push(`Invalid Lambda format. Expected JSON object or plain text, got: ${lambdaStr}`);
       return { valid: false, errors, warnings };
     }

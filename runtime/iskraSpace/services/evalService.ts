@@ -277,7 +277,7 @@ function evaluateUsefulness(response: string, _context: EvalContext): MetricScor
   }
 
   // Check for numbered steps or lists
-  const stepMatches = response.match(/(?:^|\n)\s*\d+[.\)]/gm);
+  const stepMatches = response.match(/(?:^|\n)\s*\d+[.)]/gm);
   if (stepMatches && stepMatches.length >= 2) {
     score += 0.15;
     signals.push(`${stepMatches.length} numbered steps`);

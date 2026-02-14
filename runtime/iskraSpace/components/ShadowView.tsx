@@ -30,10 +30,11 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
     let nodes = memoryService.getShadow();
 
     switch (filter) {
-      case 'recent':
+      case 'recent': {
         const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
         nodes = nodes.filter(n => new Date(n.timestamp).getTime() > weekAgo);
         break;
+      }
       case 'uncertain':
         nodes = nodes.filter(n => n.tags?.includes('uncertain'));
         break;

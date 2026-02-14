@@ -169,7 +169,7 @@ export const storageService = {
       try {
           const raw = localStorage.getItem(VOICE_PREFS_KEY);
           return raw ? JSON.parse(raw) : {};
-      } catch (e) {
+      } catch (_e) {
           return {};
       }
   },
@@ -183,7 +183,7 @@ export const storageService = {
       try {
           const raw = localStorage.getItem(LAST_VOICE_STATE_KEY);
           if (raw) return JSON.parse(raw);
-      } catch (e) { }
+      } catch (_e) { /* intentionally empty */ }
       return { mode: 'AUTO', lastVoice: 'ISKRA' };
   },
 

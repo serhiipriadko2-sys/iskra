@@ -7,25 +7,21 @@
 
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 
-// Mock @google/generative-ai with Vitest 4.x compatible class mock
-vi.mock('@google/generative-ai', () => {
+// Mock @google/genai with Vitest 4.x compatible class mock
+vi.mock('@google/genai', () => {
   return {
-    GoogleGenerativeAI: class MockGoogleGenerativeAI {
-      constructor(_apiKey: string) {}
-
-      getGenerativeModel = vi.fn().mockReturnValue({
+    GoogleGenAI: class MockGoogleGenAI {
+      models = {
         generateContent: vi.fn().mockResolvedValue({
-          response: {
-            text: () => 'Mocked response',
-          },
+          text: 'Mocked response',
         }),
-        generateContentStream: vi.fn().mockResolvedValue({
-          stream: (async function* () {
-            yield { text: () => 'Chunk 1' };
-            yield { text: () => 'Chunk 2' };
-          })(),
-        }),
-      });
+        generateContentStream: vi.fn().mockResolvedValue(
+          (async function* () {
+            yield { text: 'Chunk 1' };
+            yield { text: 'Chunk 2' };
+          })()
+        ),
+      };
     },
   };
 });

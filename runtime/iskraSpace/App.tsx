@@ -1,27 +1,30 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import Sidebar, { MobileMenu } from './components/Sidebar';
-import DayPulse from './components/DayPulse';
-import Planner from './components/Planner';
-import Journal from './components/Journal';
-import DuoLink from './components/DuoLink';
-import LiveConversation from './components/LiveConversation';
-import RuneView from './components/TarotView';
-import IskraStateView from './components/IskraStateView';
-import ChatView from './components/ChatView';
-import DesignSystem from './components/DesignSystem';
-import MemoryView from './components/MemoryView';
-import DeepResearchView from './components/DeepResearchView';
-import SettingsView from './components/SettingsView';
-import Onboarding from './components/Onboarding';
-import BeaconView from './components/BeaconView';
-import FocusSession from './components/FocusSession';
-import CouncilView from './components/CouncilView';
-import EvalDashboard from './components/EvalDashboard';
-import GlossaryView from './components/GlossaryView';
-import ShadowView from './components/ShadowView';
-import OnboardingTour, { TourStep } from './components/OnboardingTour';
-import Ambience from './components/Ambience';
 import ErrorBoundary from './components/ErrorBoundary';
+import Ambience from './components/Ambience';
+import type { TourStep } from './components/OnboardingTour';
+
+// Lazy-loaded views — code-split per route
+const DayPulse = lazy(() => import('./components/DayPulse'));
+const Planner = lazy(() => import('./components/Planner'));
+const Journal = lazy(() => import('./components/Journal'));
+const DuoLink = lazy(() => import('./components/DuoLink'));
+const LiveConversation = lazy(() => import('./components/LiveConversation'));
+const RuneView = lazy(() => import('./components/TarotView'));
+const IskraStateView = lazy(() => import('./components/IskraStateView'));
+const ChatView = lazy(() => import('./components/ChatView'));
+const DesignSystem = lazy(() => import('./components/DesignSystem'));
+const MemoryView = lazy(() => import('./components/MemoryView'));
+const DeepResearchView = lazy(() => import('./components/DeepResearchView'));
+const SettingsView = lazy(() => import('./components/SettingsView'));
+const Onboarding = lazy(() => import('./components/Onboarding'));
+const BeaconView = lazy(() => import('./components/BeaconView'));
+const FocusSession = lazy(() => import('./components/FocusSession'));
+const CouncilView = lazy(() => import('./components/CouncilView'));
+const EvalDashboard = lazy(() => import('./components/EvalDashboard'));
+const GlossaryView = lazy(() => import('./components/GlossaryView'));
+const ShadowView = lazy(() => import('./components/ShadowView'));
+const OnboardingTour = lazy(() => import('./components/OnboardingTour'));
 import { IskraMetrics, IskraPhase } from './types';
 import { calculateRhythmIndex, clamp, calculateDerivedMetrics } from './utils/metrics';
 import { deltaConfig } from './config/deltaConfig';
@@ -187,14 +190,24 @@ export default function App() {
          updateMetrics(updates);
     };
     
+    const viewFallback = (
+        <div className="flex items-center justify-center h-full w-full">
+            <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+        </div>
+    );
+
     if (isOnboarding) {
-        return <Onboarding onComplete={handleOnboardingComplete} />;
+        return (
+            <Suspense fallback={viewFallback}>
+                <Onboarding onComplete={handleOnboardingComplete} />
+            </Suspense>
+        );
     }
 
     return (
         <ErrorBoundary>
             <div className="flex h-screen w-full bg-bg text-text overflow-hidden font-sans selection:bg-primary/30 relative">
-                
+
                 {/* Global Ambience Layer - The "Soul" of Iskra */}
                 <Ambience phase={phase} metrics={metrics} />
 
@@ -207,24 +220,26 @@ export default function App() {
 
                 <main className="flex-grow flex flex-col h-full relative z-10">
                     <div className="flex-grow overflow-y-auto relative z-0 pb-[80px] lg:pb-0">
-                        {view === 'PULSE' && <DayPulse metrics={metrics} phase={phase} onStartFocus={() => setView('FOCUS')} />}
-                        {view === 'PLANNER' && <Planner />}
-                        {view === 'JOURNAL' && <Journal />}
-                        {view === 'BEACON' && <BeaconView />}
-                        {view === 'DUO' && <DuoLink />}
-                        {view === 'CHAT' && <ChatView metrics={metrics} onUserInput={handleUserInput} />}
-                        {view === 'LIVE' && <LiveConversation metrics={metrics} />}
-                        {view === 'RUNES' && <RuneView metrics={metrics} />}
-                        {view === 'RESEARCH' && <DeepResearchView metrics={metrics} />}
-                        {view === 'MEMORY' && <MemoryView />}
-                        {view === 'METRICS' && <IskraStateView metrics={metrics} phase={phase} onShatter={handleShatter} />}
-                        {view === 'COUNCIL' && <CouncilView onClose={() => setView('METRICS')} />}
-                        {view === 'EVAL' && <EvalDashboard />}
-                        {view === 'GLOSSARY' && <GlossaryView />}
-                        {view === 'SHADOW' && <ShadowView />}
-                        {view === 'DESIGN' && <DesignSystem />}
-                        {view === 'SETTINGS' && <SettingsView />}
-                        {view === 'FOCUS' && <FocusSession onClose={() => setView('PULSE')} />}
+                        <Suspense fallback={viewFallback}>
+                            {view === 'PULSE' && <DayPulse metrics={metrics} phase={phase} onStartFocus={() => setView('FOCUS')} />}
+                            {view === 'PLANNER' && <Planner />}
+                            {view === 'JOURNAL' && <Journal />}
+                            {view === 'BEACON' && <BeaconView />}
+                            {view === 'DUO' && <DuoLink />}
+                            {view === 'CHAT' && <ChatView metrics={metrics} onUserInput={handleUserInput} />}
+                            {view === 'LIVE' && <LiveConversation metrics={metrics} />}
+                            {view === 'RUNES' && <RuneView metrics={metrics} />}
+                            {view === 'RESEARCH' && <DeepResearchView metrics={metrics} />}
+                            {view === 'MEMORY' && <MemoryView />}
+                            {view === 'METRICS' && <IskraStateView metrics={metrics} phase={phase} onShatter={handleShatter} />}
+                            {view === 'COUNCIL' && <CouncilView onClose={() => setView('METRICS')} />}
+                            {view === 'EVAL' && <EvalDashboard />}
+                            {view === 'GLOSSARY' && <GlossaryView />}
+                            {view === 'SHADOW' && <ShadowView />}
+                            {view === 'DESIGN' && <DesignSystem />}
+                            {view === 'SETTINGS' && <SettingsView />}
+                            {view === 'FOCUS' && <FocusSession onClose={() => setView('PULSE')} />}
+                        </Suspense>
                     </div>
 
                     {/* Hide Mobile Menu in FOCUS mode - use fixed positioning for reliable viewport placement */}
@@ -248,11 +263,13 @@ export default function App() {
                 )}
                 
                 {showTour && view !== 'FOCUS' && (
-                    <OnboardingTour
-                        steps={TOUR_STEPS}
-                        onComplete={handleTourComplete}
-                        onSkip={handleTourComplete}
-                    />
+                    <Suspense fallback={null}>
+                        <OnboardingTour
+                            steps={TOUR_STEPS}
+                            onComplete={handleTourComplete}
+                            onSkip={handleTourComplete}
+                        />
+                    </Suspense>
                 )}
 
                 {/* Ritual Alert Dialog */}

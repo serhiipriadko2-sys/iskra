@@ -106,7 +106,7 @@ class SearchService {
     const useSemantic = queryVector.length > 0;
 
     // 1. Filter
-    let pool = docs.filter(d => {
+    const pool = docs.filter(d => {
       if (filters.type && !filters.type.includes(d.type)) return false;
       if (filters.layer && d.type === 'memory' && !filters.layer.includes(d.layer!)) return false;
       if (filters.after && d.ts && d.ts < +new Date(filters.after)) return false;

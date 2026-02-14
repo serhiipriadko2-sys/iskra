@@ -23,7 +23,7 @@ interface AnalyticsConfig {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let posthog: any = null;
-let config: AnalyticsConfig = {
+const config: AnalyticsConfig = {
   enabled: false,
   optedOut: false,
 };
