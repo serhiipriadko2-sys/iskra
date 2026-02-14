@@ -207,7 +207,7 @@ export default function App() {
 
                 <main className="flex-grow flex flex-col h-full relative z-10">
                     <div className="flex-grow overflow-y-auto relative z-0 pb-[80px] lg:pb-0">
-                        {view === 'PULSE' && <DayPulse metrics={metrics} phase={phase} onStartFocus={() => setView('FOCUS')} />}
+                        {view === "PULSE" && <div className="animate-fade-in h-full"><DayPulse metrics={metrics} phase={phase} onStartFocus={() => setView("FOCUS")} /></div>}
                         {view === 'PLANNER' && <Planner />}
                         {view === 'JOURNAL' && <Journal />}
                         {view === 'BEACON' && <BeaconView />}

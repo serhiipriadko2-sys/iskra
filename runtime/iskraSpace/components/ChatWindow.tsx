@@ -149,7 +149,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ history, isLoading, onQuery }) 
                 : { content: msg.text, signature: null, kainSlice: null, iLoop: null, validation: { isValid: true, missing: [] } };
            
            return (
-            <div key={index} className={`flex gap-4 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in group`}>
+            <div key={index} className={`flex gap-4 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up group`}>
                 
                 {!isUser && (
                     <div className="flex flex-col items-center space-y-2 mt-1 shrink-0">
@@ -196,7 +196,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ history, isLoading, onQuery }) 
                         <div className={`whitespace-pre-wrap ${!isUser && 'font-serif text-lg text-text'}`}>
                             {isUser ? content : renderMarkdown(content)}
                             {isLoading && msg.role === 'model' && isLast && (
-                                <span className="ml-1 inline-block w-1.5 h-4 bg-accent animate-pulse align-middle" />
+                                <span className="ml-1 inline-block w-2 h-5 bg-accent animate-breathing rounded-full shadow-glow-primary align-middle" />
                             )}
                         </div>
                     </div>

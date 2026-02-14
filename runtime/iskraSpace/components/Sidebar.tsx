@@ -180,7 +180,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
             title={compact ? item.name : undefined}
         >
             {isActive && (
-                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[0_0_10px_#FF7A00]" />
+                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[0_0_10px_#FF7A00] animate-pulse-glow" />
             )}
             <item.icon className={`h-5 w-5 shrink-0 transition-transform duration-300 ${isActive ? 'scale-110 drop-shadow-glow-primary' : 'group-hover:scale-110'}`} style={compact ? { margin: '0 auto' } : { marginRight: '12px' }} />
             
@@ -222,7 +222,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
         <div className="flex-grow py-6 px-3">
             {!compact && (
                 <div className="px-4 mb-8 animate-fade-in">
-                    <IskraLogo className="w-full h-12 text-primary" />
+                    <IskraLogo className="w-full h-12 text-primary hover:animate-glitch cursor-pointer" />
                 </div>
             )}
 

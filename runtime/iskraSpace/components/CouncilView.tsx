@@ -21,7 +21,6 @@ const VOICE_COLORS: Record<VoiceName, string> = {
   SAM: 'text-accent border-accent/30 bg-accent/5',
   ANHANTRA: 'text-info border-info/30 bg-info/5',
   HUYNDUN: 'text-purple-400 border-purple-400/30 bg-purple-400/5',
-  HUYNDUN: 'text-purple-400 border-purple-400/30 bg-purple-400/5', // Canonical alias
   ISKRIV: 'text-slate-300 border-slate-300/30 bg-slate-300/5',
   MAKI: 'text-pink-400 border-pink-400/30 bg-pink-400/5',
   SIBYL: 'text-violet-400 border-violet-400/30 bg-violet-400/5',
@@ -34,7 +33,6 @@ const VOICE_NAMES_RU: Record<VoiceName, string> = {
   SAM: 'Сэм',
   ANHANTRA: 'Анхантра',
   HUYNDUN: 'Хуньдун',
-  HUYNDUN: 'Хуньдун', // Canonical alias
   ISKRIV: 'Искрив',
   MAKI: 'Маки',
   SIBYL: 'Сибилла',
@@ -47,7 +45,6 @@ const VOICE_TELOS: Record<VoiceName, string> = {
   PINO: 'Ирония • Разрядка напряжения',
   SAM: 'Структура • Ясность из хаоса',
   ANHANTRA: 'Тишина • Принятие без давления',
-  HUYNDUN: 'Хаос • Разрушение паттернов',
   HUYNDUN: 'Хаос • Разрушение паттернов',
   ISKRIV: 'Аудит • Совесть и факты',
   MAKI: 'Интеграция • Красота и гармония',
@@ -87,7 +84,7 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
   const getVoiceIndex = (voice: VoiceName) => COUNCIL_ORDER.indexOf(voice);
 
   return (
-    <div className="h-full w-full overflow-y-auto p-4 lg:p-8">
+    <div className="h-full w-full overflow-y-auto p-4 lg:p-8 animate-fade-in">
       <div className="max-w-4xl mx-auto pb-24 lg:pb-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -148,7 +145,7 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
                       isComplete
                         ? VOICE_COLORS[voice].replace('text-', 'bg-').split(' ')[0]
                         : isActive
-                        ? 'bg-white/50 animate-pulse'
+                        ? 'bg-white/50 animate-pulse animate-pulse-glow'
                         : 'bg-surface2'
                     }`}
                   />
@@ -170,11 +167,11 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
             return (
               <div
                 key={index}
-                className={`glass-card p-5 border transition-all duration-300 ${
+                className={`glass-card p-5 border transition-all duration-300 animate-fade-in-up-up hover-glow ${
                   isIskraSynthesis
                     ? 'bg-gradient-to-r from-primary/10 to-accent/10 border-primary/40 ring-2 ring-primary/20'
                     : VOICE_COLORS[response.voice]
-                } animate-fade-in`}
+                } animate-fade-in-up`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="flex items-start gap-4">
