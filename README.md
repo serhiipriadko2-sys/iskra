@@ -94,3 +94,33 @@ cd runtime/iskraSpace
 npm install
 npm run dev
 ```
+
+## 🧪 Scientific Turn (vΩ.5.0)
+
+Iskra has transitioned to a modular monorepo architecture grounded in fractal mathematics and quantum probability.
+
+### Architecture
+- **@iskra/core**: Type definitions, Manifests (Logos).
+- **@iskra/math**: Pure mathematical functions (Fractals, Entropy, Quantum).
+- **@iskra/engine**: Stateful runtime logic (Voices, Metrics, Memory).
+- **apps/iskra-web**: Holographic UI (React, Canvas, Haptics).
+
+### Running the System
+1. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+2. Run the simulation test:
+   ```bash
+   npx vitest run tools/simulate_cycle.test.ts
+   ```
+3. Start the Web UI (Development):
+   ```bash
+   cd apps/iskra-web
+   npm run start:dev
+   ```
+
+### Key Features
+- **Fractal Memory:** Memories are retrieved based on emotional resonance with the current system state.
+- **Quantum Voices:** Voices exist in superposition; the dominant voice emerges via wave function collapse.
+- **Somatic Reflex:** The system "feels" keywords (Pain, Chaos) immediately, bypassing deep processing for rapid feedback.

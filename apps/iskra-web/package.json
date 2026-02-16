@@ -1,6 +1,11 @@
 {
   "name": "iskra-web",
   "version": "0.1.0",
+  "scripts": {
+    "start:dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

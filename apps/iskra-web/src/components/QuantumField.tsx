@@ -48,7 +48,9 @@ export const QuantumField: React.FC<QuantumFieldProps> = ({
 
       // Global chaos factor affects everything
       const chaos = metrics.chaos || 0;
-      const jitter = chaos * 5;
+      // Smooth "breathing" factor
+      const breath = (Math.sin(t * 0.5) + 1) * 0.1 + 1.0;
+      const jitter = chaos * 5 * breath;
 
       // If no superposition data, fallback to single wave (Trust)
       const waves = superposition.length > 0
@@ -63,26 +65,28 @@ export const QuantumField: React.FC<QuantumFieldProps> = ({
         const prob = voice.prob;
 
         // Amplitude based on probability
-        const amplitude = prob * (height / 3);
+        const amplitude = prob * (height / 3) * breath;
 
         // Frequency varies slightly per voice to create interference look
         const freq = 0.05 + (i * 0.01);
 
-        // Phase shift based on index
-        const phase = i * (Math.PI / 4);
+        // Phase shift based on index + drift
+        const phase = i * (Math.PI / 4) + (metrics.drift || 0) * t * 0.1;
 
         ctx.strokeStyle = color;
         ctx.lineWidth = 2 * prob + 0.5; // Thicker lines for dominant voices
-        ctx.globalAlpha = Math.min(1, prob * 2); // Fade out weak voices
+        ctx.globalAlpha = Math.min(1, prob * 3); // Fade out weak voices smoothly
 
         ctx.moveTo(0, height / 2);
 
         for (let x = 0; x < width; x++) {
           // Wave equation: Base sine + Chaos noise
+          // Add secondary sine for harmonic complexity
           const noise = (Math.random() - 0.5) * jitter;
 
           const y = height / 2 +
             Math.sin((x * freq) + t + phase) * amplitude +
+            Math.sin((x * freq * 2.5) - t) * (amplitude * 0.2) + // Harmonic
             noise;
 
           ctx.lineTo(x, y);
