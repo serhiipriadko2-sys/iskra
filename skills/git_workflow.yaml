@@ -1,0 +1,30 @@
+skill: "git_workflow"
+description: "Git Workflow for Iskra Monorepo (vΩ.5.0)"
+branches:
+  main: "Stable release (Source of Truth)"
+  develop: "Active development"
+  features: "feat/<name>"
+  fixes: "fix/<issue>"
+  refactor: "refactor/<component>"
+  chore: "chore/<task>"
+
+commits:
+  standard: "Conventional Commits"
+  types:
+    feat: "New feature"
+    fix: "Bug fix"
+    docs: "Documentation only"
+    style: "Formatting, missing semi colons, etc; no code change"
+    refactor: "Refactoring production code"
+    test: "Adding missing tests, refactoring tests; no production code change"
+    chore: "Updating grunt tasks etc; no production code change"
+  format: "<type>(<scope>): <subject>"
+
+pull_requests:
+  template: "Please include a summary of the change and which issue is fixed."
+  reviewers: "Required"
+  checks: "CI/CD must pass"
+
+versioning:
+  strategy: "Semantic Versioning (SemVer)"
+  tags: "vX.Y.Z"

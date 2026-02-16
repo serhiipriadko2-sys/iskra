@@ -1,0 +1,28 @@
+skill: "supabase_ops"
+description: "Supabase Operations for Iskra Space (vΩ.5.0)"
+project_id: "typcvaszcfdpkzbjzuur"
+
+tools:
+  inspect:
+    - "supabase_list_tables"
+    - "supabase_list_edge_functions"
+  execute:
+    - "supabase_execute_sql"
+    - "supabase_deploy_edge_function"
+
+rules:
+  schema:
+    - "Do not guess table names. Use `supabase_list_tables` first."
+    - "Always check `rls_enabled` status for security."
+
+  functions:
+    - "Deploy functions using `supabase_deploy_edge_function`."
+    - "Use `verify_jwt: true` unless explicitly public."
+
+  migrations:
+    - "Use migration files for schema changes."
+    - "Do not run DDL (CREATE/ALTER) via raw SQL in production unless necessary for quick fixes."
+
+  data:
+    - "Treat user data as sensitive."
+    - "Use strict typing for database responses (generate types)."
