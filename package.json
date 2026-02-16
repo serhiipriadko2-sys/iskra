@@ -1,0 +1,21 @@
+{
+  "name": "iskra-monorepo",
+  "private": true,
+  "description": "Iskra vΩ.5.0: The Scientific Turn",
+  "scripts": {
+    "test": "pnpm -r test",
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "lint": "pnpm -r lint"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "runtime/*"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
