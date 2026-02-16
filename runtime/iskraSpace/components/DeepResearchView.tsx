@@ -30,7 +30,7 @@ const NeuralScanner: React.FC<{ nodes: MemoryNode[]; mode: ResearchMode }> = ({ 
                      {nodes.slice(0, 24).map((_node, i) => (
                          <div 
                             key={i} 
-                            className={`w-2 h-2 rounded-full animate-pulse ${colorClass} ${glowClass}`}
+                            className={`w-2 h-2 rounded-full animate-pulse-glow ${colorClass} ${glowClass}`}
                             style={{ 
                                 animationDelay: `${i * 0.1}s`,
                                 opacity: 0.3 + Math.random() * 0.7
@@ -62,7 +62,7 @@ const ReportDisplay: React.FC<{ report: DeepResearchReport; onSave: () => void; 
         : { text: 'text-primary', border: 'border-primary/30', bg: 'bg-primary/5', accent: 'text-accent' };
 
     return (
-        <div className="w-full max-w-4xl mx-auto space-y-8 animate-fade-in">
+        <div className="w-full max-w-4xl mx-auto space-y-8 animate-fade-in-up">
             <header className="text-center relative overflow-hidden p-6 rounded-2xl border border-white/5">
                 <div className={`absolute inset-0 ${theme.bg} blur-3xl opacity-20`} />
                 <span className={`relative z-10 text-xs font-mono uppercase tracking-widest ${theme.text} border ${theme.border} px-2 py-1 rounded-md mb-4 inline-block`}>
@@ -71,13 +71,13 @@ const ReportDisplay: React.FC<{ report: DeepResearchReport; onSave: () => void; 
                 <h3 className={`relative z-10 font-serif text-3xl md:text-4xl text-text mt-2`}>{report.title}</h3>
             </header>
             
-            <div className={`card ${mode === 'audit' ? 'border-l-4 border-l-danger' : ''}`}>
+            <div className={`glass-card ${mode === 'audit' ? 'border-l-4 border-l-danger' : ''}`}>
                 <h4 className={`font-serif text-xl ${theme.text} mb-4`}>{mode === 'audit' ? 'Вскрытие Реальности' : 'Синтез Ядра'}</h4>
                 <p className="font-serif text-lg text-text/90 leading-relaxed whitespace-pre-wrap">{report.synthesis}</p>
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
-                <div className="card">
+                <div className="glass-card">
                     <h4 className={`font-serif text-xl ${theme.accent} mb-4`}>Паттерны</h4>
                     <ul className="list-none space-y-3">
                         {report.keyPatterns.map((item, i) => (
@@ -88,7 +88,7 @@ const ReportDisplay: React.FC<{ report: DeepResearchReport; onSave: () => void; 
                         ))}
                     </ul>
                 </div>
-                 <div className="card">
+                 <div className="glass-card">
                     <h4 className="font-serif text-xl text-danger mb-4">Точки Напряжения</h4>
                     <ul className="list-none space-y-3">
                         {report.tensionPoints.map((item, i) => (
@@ -101,7 +101,7 @@ const ReportDisplay: React.FC<{ report: DeepResearchReport; onSave: () => void; 
                 </div>
             </div>
 
-            <div className="card">
+            <div className="glass-card">
                 <h4 className="font-serif text-xl text-purple-400 mb-4">Невидимые Связи</h4>
                 <ul className="list-none space-y-2">
                     {report.unseenConnections.map((item, i) => <li key={i} className="flex items-start"><span className="mr-2 mt-1 text-purple-400">≈</span><span className="text-text-muted">{item}</span></li>)}
@@ -290,7 +290,7 @@ const DeepResearchView: React.FC<DeepResearchViewProps> = ({ metrics }) => {
 
         {/* Input Phase */}
         {(status === 'IDLE' || status === 'DONE' || status === 'ERROR') && (
-            <div className="w-full max-w-3xl mb-8 animate-fade-in">
+            <div className="w-full max-w-3xl mb-8 animate-fade-in-up">
                 
                 {/* Mode Toggle */}
                 <div className="flex justify-center mb-8">

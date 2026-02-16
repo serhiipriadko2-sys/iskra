@@ -85,7 +85,7 @@ export const MobileMenu: React.FC<{
             <button
                 key={item.id}
                 onClick={() => handleNavigate(item.id as AppView)}
-                className={`absolute flex flex-col items-center justify-center rounded-2xl border shadow-lg transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1) ${
+                className={`absolute flex flex-col items-center justify-center rounded-2xl border shadow-lg transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1) hover-glow ${
                     activeView === item.id 
                     ? 'bg-primary/20 border-primary text-primary shadow-glow-ember' 
                     : 'bg-surface/95 backdrop-blur-xl border-white/10 text-text-muted hover:text-text hover:bg-surface2 hover:border-white/20'

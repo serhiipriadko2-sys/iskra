@@ -224,7 +224,7 @@ const FocusSession: React.FC<FocusSessionProps> = ({ onClose }) => {
             <div className="absolute inset-0 bg-radial-gradient from-transparent to-bg z-0 pointer-events-none" />
 
             {status === 'COMPLETED' && artifact ? (
-                <div className="relative z-10 max-w-lg w-full p-8 bg-surface/90 backdrop-blur-xl border border-primary/30 rounded-2xl shadow-glow-ember animate-fade-in text-center">
+                <div className="relative z-10 max-w-lg w-full p-8 glass-panel border-primary/30 rounded-2xl shadow-glow-ember animate-fade-in-up text-center">
                     <div className="text-6xl mb-6 animate-pulse">{artifact.rune}</div>
                     <h2 className="font-serif text-3xl text-primary mb-2">{artifact.title}</h2>
                     <p className="text-text-muted italic mb-6 border-b border-white/10 pb-4">
@@ -243,7 +243,7 @@ const FocusSession: React.FC<FocusSessionProps> = ({ onClose }) => {
             ) : (
                 <div className="relative z-10 flex flex-col items-center">
                     {/* Central Orb */}
-                    <div className={`relative w-64 h-64 flex items-center justify-center rounded-full border-2 border-white/10 backdrop-blur-sm transition-all duration-1000 ${isPaused ? 'scale-95 opacity-50 grayscale' : 'scale-100 opacity-100'}`}>
+                    <div className={`relative w-64 h-64 flex items-center justify-center rounded-full border-2 border-white/10 backdrop-blur-sm transition-all duration-1000 ${isPaused ? 'scale-95 opacity-50 grayscale' : 'scale-100 opacity-100 animate-breathing'}`}>
                         <div className="absolute inset-0 bg-primary/5 rounded-full animate-pulse" style={{ animationDuration: isPaused ? '0s' : '4s' }} />
                         <div className="text-center">
                             <div className="text-6xl font-mono font-bold tracking-tighter text-text">
