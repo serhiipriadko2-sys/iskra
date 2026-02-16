@@ -43,7 +43,7 @@ export class GraphServiceSupabase {
     const node: Database['public']['Tables']['graph_nodes']['Insert'] = {
       id: nodeId,
       layer: layer.toLowerCase(),
-      type: type.toLowerCase(),
+      type: type.toUpperCase(),
       content,
       timestamp: new Date().toISOString(), // Use ISO string for Supabase
       metrics_snapshot: metrics as unknown as Database['public']['Tables']['graph_nodes']['Insert']['metrics_snapshot'],
@@ -231,7 +231,7 @@ export class GraphServiceSupabase {
     const { data, error } = await supabaseClient
       .from('graph_nodes')
       .select('*')
-      .eq('type', type.toLowerCase())
+      .eq('type', type.toUpperCase())
       .order('timestamp', { ascending: false });
 
     if (error) {
@@ -323,7 +323,7 @@ export class GraphServiceSupabase {
     const { data: candidates, error: candidatesError } = await supabaseClient
       .from('graph_nodes')
       .select('*')
-      .or(`layer.eq.${node.layer},type.eq.${node.type}`)
+      .or(`layer.eq.${node.layer},type.eq.${node.type.toUpperCase()}`)
       .neq('id', nodeId)
       .limit(20);
 
@@ -430,8 +430,8 @@ export class GraphServiceSupabase {
   private rowToNode(row: GraphNodeRow): MemoryNode {
     return {
       id: row.id,
-      layer: row.layer.toUpperCase() as MemoryLayer,
-      type: row.type as MemoryNodeType,
+      layer: row.layer.toLowerCase() as MemoryLayer,
+      type: row.type.toLowerCase() as MemoryNodeType,
       content: row.content,
       timestamp: row.timestamp || new Date().toISOString(),
       metrics_snapshot: row.metrics_snapshot as unknown as IskraMetrics | undefined,

@@ -60,7 +60,7 @@ describe('GraphServiceSupabase', () => {
     expect(chain.insert).toHaveBeenCalled();
     const payload = chain.insert.mock.calls[0][0];
     expect(payload.layer).toBe('core');
-    expect(payload.type).toBe('fact');
+    expect(payload.type).toBe('FACT');
     expect(payload.content).toBe('C');
 
     // Check user_id directly if it's already resolved in the payload
