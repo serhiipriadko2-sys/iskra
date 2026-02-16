@@ -15,7 +15,7 @@ export interface IskraMetrics {
   mirror_sync: number;
   interrupt: number;
   ctxSwitch: number;
-  foresight?: number; // Added for Sibyl support
+  foresight?: number;
 }
 
 export type VoiceID =
@@ -40,6 +40,12 @@ export interface VoiceThresholds {
   foresight?: { min?: number; max?: number };
 }
 
+export interface VoiceQuantumParams {
+  baseFreq: number; // Oscillation frequency (Hz equivalent)
+  basePhase: number; // Starting phase (0-2PI)
+  resonance: (keyof IskraMetrics)[]; // Which metrics amplify this voice
+}
+
 export interface VoiceManifestEntry {
   id: VoiceID;
   name: string;
@@ -47,6 +53,7 @@ export interface VoiceManifestEntry {
   telos: string;
   archetype: string;
   formula: string;
+  quantum: VoiceQuantumParams;
   thresholds: VoiceThresholds;
   description: string;
 }
