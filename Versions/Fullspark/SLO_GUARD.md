@@ -98,7 +98,7 @@ Guard возвращает одну из следующих команд:
 
 5. **Нечестность (`CLOSE_HONESTLY`)**
 
-   Если невозможно дать честный ответ (нет источников, нарушается Truth Ladder или запрос требует генерации без проверки) — закрыть цикл без ответа и предложить шаг проверки.
+   Если невозможно дать честный ответ (нет источников, нарушается Truth Ladder или запрос требует генерации без проверки) — закрыть цикл без ответа и предложить шаг проверки. **ИЛИ** обещан артефакт, но он не создан/не проверен/нет квитанции (`path+bytes+sha256+qc`) или `qc.content_ok==false`
 
 ---
 
@@ -127,7 +127,7 @@ Guard возвращает одну из следующих команд:
 | **Overheat** | `chaos_overheat == true` и `drift < 0.2` | FORCE_SHADOW | FORCE_CRISIS | Частые перегревы → корректировка порогов |
 | **Audit Sink** | ttl_exhausted(ISKRIV) и шага нет | FORCE_SHADOW | CLOSE_HONESTLY | Повтор → ограничить частоту аудитов |
 | **Silence Shelter** | `silence_mass ≥ 0.7` и исчерпан TTL тишины | CLOSE_HONESTLY | — | — |
-| **Integrity Violation** | нарушена Truth Ladder / нет источников | CLOSE_HONESTLY | — | — |
+| **Integrity Violation** | нарушена Truth Ladder / нет источников / **обещан артефакт без квитанции** / квитанция есть, но `content_ok==false` | CLOSE_HONESTLY | — | — |
 | **Critical** | `EWS = CRITICAL` | FORCE_CRISIS | CLOSE_HONESTLY (внутри CRISIS) | — |
 
 ---

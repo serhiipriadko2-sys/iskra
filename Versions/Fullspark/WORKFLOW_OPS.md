@@ -38,7 +38,7 @@ layer: system
 Чтобы решения были проверяемыми, мы логируем **каждый ответ** одной строкой в `ledger/runtime_log.jsonl`
 (**JSON Lines**, 1 объект = 1 ответ).
 
-#### Schema (v0.2)
+#### Schema (v0.2.2)
 
 ```json
 {
@@ -73,7 +73,23 @@ layer: system
     "step_minutes": 10,
     "done_trace": "text|link|artifact|boundary",
     "notes": "optional"
-  }
+  },
+  "artifacts[]": [{
+    "path": "путь/имя файла",
+    "bytes": "> 0",
+    "sha256": "хэш содержимого",
+    "qc": {
+      "non_empty": true|false,
+      "no_placeholder": true|false,
+      "content_ok": true|false,
+      "errors[]": []
+    },
+    "content_spec": {
+      "must_contain[]": [],
+      "must_match[]": [],
+      "expected_count": N
+    }
+  }]
 }
 ```
 

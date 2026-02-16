@@ -193,10 +193,15 @@ action_rate = count(completed_steps) / count(proposed_steps)
 | Метрика | Вес | Описание | Формула |
 |---------|-----|----------|---------|
 | **accuracy** | 0.25 | SIFT-верификация источников | verified_claims / total_claims |
-| **usefulness** | 0.25 | Actionable рекомендации (Λ) | has_step + has_done + has_lambda |
+| **usefulness** | 0.25 | Actionable рекомендации (Λ) | has_step + has_done_validated + has_lambda |
 | **omegaHonesty** | 0.20 | Калибровка уверенности (Ω) | 1 - abs(stated_Ω - actual_Ω) |
 | **nonEmpty** | 0.15 | Substance vs fluff | content_words / total_words |
 | **alliance** | 0.15 | Качество отношений | trust × (1 - echo) |
+
+
+- `has_done_validated` = 1, если в ответе есть **DONE** и:
+  - **нет обещанного артефакта**, либо
+  - артефакт присутствует с квитанцией (`path + bytes>0 + sha256 + qc`) и `qc.no_placeholder==true` и `qc.content_ok==true`.
 
 ### Общий Eval Score
 ```
