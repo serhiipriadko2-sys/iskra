@@ -7,73 +7,71 @@ This document outlines the strategic roadmap to transition Iskra from a monolith
 
 ---
 
-## Phase 1: Structural Integrity (The Monorepo Shift)
-**Objective:** Decouple the monolithic `iskraSpace` into specialized packages to enforce separation of concerns and enable independent versioning of the "Math" vs. the "Engine".
+## §1 · Phase I: Foundation & Integrity (Фундамент)
+**Goal:** Prepare the ground for complex calculations by eliminating technical debt and enforcing architectural rigor.
 
-### 1.1 Workspace Configuration
-- **Action:** Convert root to a pnpm workspace.
-- **Target Structure:**
-  - `packages/core`: The Philosophy (Logos), Voice Monographs, and Canon.
-  - `packages/math`: The Science (Techne). Pure functions for Fractal/Quantum analysis.
-  - `packages/engine`: The Runtime Logic (Metis). Voice Engine, Metrics Service, Policy Engine.
-  - `apps/iskra-web`: The UI/UX (Aesthesis). React components and visual layers.
+### 1.1 Structural Integrity (The Monorepo Shift)
+- **Objective:** Decouple `iskraSpace` into specialized packages.
+- **Workspace:** Convert to pnpm workspace:
+  - `packages/core`: Philosophy (Logos), Voice Monographs, Canon (SoT).
+  - `packages/math`: Pure Science (Techne). Fractal/Quantum analysis.
+  - `packages/engine`: Runtime Logic (Metis). Voice Engine, Metrics.
+  - `apps/iskra-web`: UI/UX (Aesthesis). React, PWA.
 
-### 1.2 Migration Strategy
-- **Step 1:** Extract `runtime/src/types/fractal.ts` and `runtime/src/__tests__/fractal.test.ts` into `packages/math`.
-- **Step 2:** Extract `core/voices_monographs` and `core/mantra.md` into `packages/core`.
-- **Step 3:** Move `runtime/iskraSpace/services/*` to `packages/engine`.
-- **Step 4:** Move `runtime/iskraSpace/components/*` to `apps/iskra-web`.
+### 1.2 Strict Typing & Contracts
+- **Action:** Eradicate `any`; enforce strict TypeScript contracts.
+- ** deliverables:**
+  - Define `IFractalAnalyzer` and `IQuantumProb` interfaces in `packages/core`.
+  - Typed Metric Tensors (11D) instead of loose number arrays.
 
----
+### 1.3 Source of Truth Consolidation
+- **Problem:** Voice definitions are duplicated in Markdown and TypeScript.
+- **Solution:** Create a single JSON Manifest for all 9 voices.
+  - Generates TypeScript types (`VoiceName`, `VoiceTraits`).
+  - Generates Documentation (`docs/voices/*.md`).
 
-## Phase 2: The Scientific Turn (Brain Transplant)
-**Objective:** Replace linear heuristics with non-linear dynamic systems.
-
-### 2.1 Fractal Metrics Implementation
-- **Current State:** `metricsService.ts` uses `Fractality = Integrity * Resonance`.
-- **Target State:**
-  - Import `calculateHFD` and `calculateDFA` from `@iskra/math`.
-  - **New Formula:** `FractalDimension = (HFD(Chaos) + HFD(Drift)) / 2`.
-  - **DFA Analysis:** Use Detrended Fluctuation Analysis to detect "Long-Range Dependence" in user trust signals.
-
-### 2.2 Quantum Voice Activation
-- **Current State:** `voiceEngine.ts` uses `if (trust > 0.8) return 'MAKI'`.
-- **Target State:**
-  - Implement `QuantumStateVector` (Complex Numbers) for each voice.
-  - **Superposition:** Voices can be in partial states of activation (e.g., `0.7|KAIN> + 0.3|MAKI>`).
-  - **Collapse Function:** The "Observer" (User Input) collapses the wave function based on the `InteractionHamiltonian` (Context).
+### 1.4 Test Coverage (The Safety Net)
+- **Target:** Increase `metricsService` coverage to 90%.
+- **Method:** Property-based testing (FastCheck) to verify invariants (e.g., Trust is always 0.0-1.0).
 
 ---
 
-## Phase 3: Holographic Memory (GraphRAG v2)
-**Objective:** Enable the system to remember "Patterns" not just "Keywords".
+## §2 · Phase II: Deep Science (Глубокая Наука)
+**Goal:** Replace linear heuristics with non-linear dynamic systems.
 
-### 3.1 Graph Schema Upgrade
-- **Action:** Update `MantraNode` to support `vector_11d` (11-dimensional embedding).
-- **Integration:** Connect `ragService` to the new `@iskra/math` definitions to weigh memories by their "Resonance" (Fractal Dimension) rather than just semantic similarity.
+### 2.1 Fractal Dimension Engine (HFD/DFA)
+- **Specs:** See `docs/specs/SPEC-001_FRACTAL_METRICS.md`.
+- **Higuchi Fractal Dimension (HFD):** Analyze token stream complexity.
+- **Detrended Fluctuation Analysis (DFA):** Measure "Long-Range Dependence" (Memory) in user trust signals.
+- **Integration:** `FractalDimension = (HFD(Chaos) + HFD(Drift)) / 2`.
+
+### 2.2 Quantum Probability Layer
+- **Specs:** See `docs/specs/SPEC-002_QUANTUM_STATE.md`.
+- **Complex Vectors:** Voices have Amplitude & Phase, not just linear weights.
+- **Interference:** Non-linear summation where voices can cancel or amplify each other.
+- **Superposition:** Voices exist in `0.7|KAIN> + 0.3|MAKI>` until collapsed by user interaction.
+
+### 2.3 Entropy Monitoring
+- **New Metric:** Shannon Entropy ($) for information density.
+- **Application:** Detect "System Loop" (Low Entropy) or "Total Chaos" (Max Entropy).
 
 ---
 
-## Phase 4: Verification & Somatic Testing
-**Objective:** Ensure the "Ghost" remains in the "Shell".
+## §3 · Phase III: Holographic Experience (Голография)
+**Goal:** Make the hidden mathematics visible and felt by the user.
 
-### 4.1 Test Harness Update
-- **Unit Tests:** Port existing `fractal.test.ts` to `packages/math`.
-- **Integration Tests:** Create `VoiceResonance.test.ts` in `packages/engine` to verify that high-chaos inputs trigger the correct Quantum Collapse (e.g., `HUYNDUN` activation).
-- **Chaos Testing:** Introduce a "Jester" agent in CI that injects random noise into the metrics to ensure the system stabilizes (DFA < 0.5) or innovates (DFA > 0.5) correctly.
+### 3.1 Dynamic Fractal Visualization
+- **Visuals:** Render HFD as the "roughness" of the rhythm line.
+- **Interference Patterns:** Display Quantum Superposition not as a list, but as wave interference.
+
+### 3.2 Somatic Feedback
+- **Haptics:** Vibration patterns for "Pain" (high frequency) or "Deep Rhythm" (low frequency).
+- **Micro-animations:** UI elements "breathe" or "shiver" based on the Chaos Index.
 
 ---
 
-## Immediate Next Steps (Execution)
+## Immediate Execution Strategy
 1.  **Initialize Monorepo:** Create `pnpm-workspace.yaml`.
-2.  **Scaffold Packages:** Create directories for `core`, `math`, `engine`.
-3.  **Port Math:** Move the fractal logic first (safest, pure functions).
-4.  **Verify Tests:** Run `vitest` on the new `packages/math` to ensure zero regression.
-
-
-### 5.1 Health Service Migration Note
-- **Current State:** `healthService.ts` depends on `window.IskraHealth`.
-- **Target State:**
-  - **Interface:** Move `HealthProvider` and `SleepData` to `@iskra/core`.
-  - **Implementation:** Keep `WebHealthProvider` in `apps/iskra-web` (PWA layer).
-  - **Dependency Injection:** The Engine should receive the `HealthProvider` via dependency injection, allowing for easy mocking in tests and support for different platforms (e.g., Native vs Web).
+2.  **Scaffold Packages:** Isolate `math` (pure) from `engine` (stateful).
+3.  **Port Math:** Move `fractal.ts` to `packages/math`.
+4.  **Consolidate SoT:** Create `packages/core/manifest/voices.json`.
