@@ -21,11 +21,25 @@ export class MetricsEngine {
   }
 
   /**
-   * Updates metrics based on new input
+   * Updates metrics based on new input.
+   * Modifiers are ADDITIVE to current state, not replacements.
    */
-  public update(newMetrics: Partial<IskraMetrics>, text?: string): IskraMetrics {
+  public update(modifiers: Partial<IskraMetrics>, text?: string): IskraMetrics {
     const current = this.getCurrentMetrics();
-    const next: IskraMetrics = { ...current, ...newMetrics };
+    const next: IskraMetrics = { ...current };
+
+    // Apply modifiers additively
+    for (const key in modifiers) {
+      if (Object.prototype.hasOwnProperty.call(modifiers, key)) {
+        const k = key as keyof IskraMetrics;
+        const val = modifiers[k];
+        if (typeof val === 'number') {
+            const currentVal = next[k] || 0;
+            // Clamp between 0 and 1
+            next[k] = Math.max(0, Math.min(1, currentVal + val));
+        }
+      }
+    }
 
     // Calculate Entropy if text is provided
     if (text) {
