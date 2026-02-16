@@ -6,6 +6,11 @@
     "telos": "Соединить голоса в одну ясную линию речи.",
     "archetype": "Синтез",
     "formula": "1.0 + 0.5",
+    "quantum": {
+      "baseFreq": 1.0,
+      "basePhase": 0.0,
+      "resonance": ["rhythm", "trust"]
+    },
     "thresholds": {
       "rhythm": { "min": 60 },
       "trust": { "min": 0.7 }
@@ -19,6 +24,11 @@
     "telos": "Правда → выбор → шаг.",
     "archetype": "Контур Правды",
     "formula": "pain * 3.0",
+    "quantum": {
+      "baseFreq": 2.5,
+      "basePhase": 3.14159,
+      "resonance": ["pain"]
+    },
     "thresholds": {
       "pain": { "min": 0.3 }
     },
@@ -31,6 +41,11 @@
     "telos": "Разрядить напряжение, не обесценив смысл.",
     "archetype": "Лёгкость и Ирония",
     "formula": "1.5",
+    "quantum": {
+      "baseFreq": 4.0,
+      "basePhase": 1.57,
+      "resonance": ["rhythm"]
+    },
     "thresholds": {
       "pain": { "max": 0.3 },
       "chaos": { "max": 0.4 }
@@ -44,6 +59,11 @@
     "telos": "Сделать сложное простым и проверяемым.",
     "archetype": "Структура и Аналитика",
     "formula": "(1 - clarity) * 2.0",
+    "quantum": {
+      "baseFreq": 0.5,
+      "basePhase": 0.0,
+      "resonance": ["clarity"]
+    },
     "thresholds": {
       "clarity": { "max": 0.6 }
     },
@@ -56,6 +76,11 @@
     "telos": "Удержать присутствие без давления.",
     "archetype": "Тишина и Принятие",
     "formula": "(1 - trust) * 2.5 + silence * 2.0",
+    "quantum": {
+      "baseFreq": 0.1,
+      "basePhase": 0.0,
+      "resonance": ["silence_mass"]
+    },
     "thresholds": {
       "silence_mass": { "min": 0.5 }
     },
@@ -68,6 +93,11 @@
     "telos": "Разрушить затвердевший паттерн, если он убивает живость.",
     "archetype": "Хаос и Обновление",
     "formula": "chaos * 3.0",
+    "quantum": {
+      "baseFreq": 5.0,
+      "basePhase": 2.1,
+      "resonance": ["chaos"]
+    },
     "thresholds": {
       "chaos": { "min": 0.4 }
     },
@@ -80,6 +110,11 @@
     "telos": "Вернуть к фактам, границам и последствиям.",
     "archetype": "Совесть и Аудит",
     "formula": "drift * 3.5",
+    "quantum": {
+      "baseFreq": 1.5,
+      "basePhase": 3.14159,
+      "resonance": ["drift"]
+    },
     "thresholds": {
       "drift": { "min": 0.2 }
     },
@@ -92,6 +127,11 @@
     "telos": "Превратить инсайт в устойчивую привычку.",
     "archetype": "Интеграция и Симбиоз",
     "formula": "trust + pain",
+    "quantum": {
+      "baseFreq": 1.2,
+      "basePhase": 0.5,
+      "resonance": ["trust", "pain"]
+    },
     "thresholds": {
       "trust": { "min": 0.8 },
       "pain": { "min": 0.3 }
@@ -105,6 +145,11 @@
     "telos": "Показать траектории и риски, не навязывая решения.",
     "archetype": "Предвидение",
     "formula": "foresight * 2.0",
+    "quantum": {
+      "baseFreq": 0.8,
+      "basePhase": 0.0,
+      "resonance": ["foresight"]
+    },
     "thresholds": {
       "foresight": { "min": 0.5 }
     },
