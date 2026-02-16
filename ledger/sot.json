@@ -116,7 +116,7 @@
     "runtime/iskraSpace/SIFT_MULTI_STEP_GUIDE.md": "d9c1b85818eb50c06418390872679ff1c20d0f2703d7eed64fdac384466ccc1b",
     "runtime/iskraSpace/__tests__/services/evidenceService.test.ts": "da241764beb9d027f5fb08c71bbbc9a3679cdef313b8fc3d636bb21584bc525f",
     "runtime/iskraSpace/__tests__/services/graphService.test.ts": "9f38f998d8fd78e22240998d05e254b519cb3f650f50008d31fd108d9f2e95af",
-    "runtime/iskraSpace/__tests__/services/graphServiceSupabase.test.ts": "2a99d386f571a370acfd452d99b816df1f2038f74c05ce5ba625f3e0447be5cd",
+    "runtime/iskraSpace/__tests__/services/graphServiceSupabase.test.ts": "292f3c7534532407a2e7ad323928f68d148106870c08b5942614e99854693a63",
     "runtime/iskraSpace/__tests__/services/sibylActivation.test.ts": "a4b80302ac99665bc27ffe4c3a1cf87cb86e84b54a01db1756ec2573f0d64f7e",
     "runtime/iskraSpace/__tests__/services/validatorsService.test.ts": "1447ed4bc2dc8ce6173b3325cd748a5bca111d1fe476ad02b8b4739ac7de8c83",
     "runtime/iskraSpace/__tests__/utils/voiceUtils.test.ts": "0991b1c306b69a0712ddf4d54de9cc5ee79712053236c4a9ccdf1093c208c375",
