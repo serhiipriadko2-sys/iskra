@@ -354,13 +354,18 @@ export interface MemoryNodeMetrics {
 export type MemoryNodeType = 'event' | 'feedback' | 'decision' | 'insight' | 'artifact';
 export type MemoryNodeLayer = 'mantra' | 'archive' | 'shadow';
 export type DocType = 'canon' | 'draft' | 'code' | 'log' | 'personal';
+export type MemoryLayer = MemoryNodeLayer; // Export alias for compatibility
+export type EdgeType = 'SIMILARITY' | 'RELATED_TO' | 'RESONANCE'; // Define missing EdgeType
 
 export interface MemoryNode {
   id: string;
   type: MemoryNodeType;
   layer: MemoryNodeLayer;
   timestamp: string;
-  metrics?: MemoryNodeMetrics;
+  metrics_snapshot?: IskraMetrics; // Updated to match graphService usage
+  metrics?: MemoryNodeMetrics; // Keep for compatibility if needed, or deprecate
+  relatedIds?: string[]; // Added for graph
+  resonance_score?: number; // Added for graph
   facet?: VoiceName;
   evidence: SIFTBlock[];
   content: unknown;
@@ -370,6 +375,16 @@ export interface MemoryNode {
   tags?: string[];
   section?: string;
   sift?: SIFTBlock;
+  metadata?: Record<string, unknown>; // Added for graph
+}
+
+export interface MemoryEdge {
+  id: string;
+  source: string;
+  target: string;
+  type: EdgeType;
+  weight: number;
+  metadata?: Record<string, unknown>;
 }
 
 export interface MantraNode {

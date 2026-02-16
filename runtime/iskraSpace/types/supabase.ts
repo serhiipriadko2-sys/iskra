@@ -14,6 +14,101 @@ export type Database = {
   }
   public: {
     Tables: {
+      graph_nodes: {
+        Row: {
+          id: string
+          layer: string
+          type: string
+          content: string
+          timestamp: string | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          metadata: Json | null
+          created_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          layer: string
+          type: string
+          content: string
+          timestamp?: string | null
+          metrics_snapshot?: Json | null
+          related_ids?: string[] | null
+          resonance_score?: number | null
+          metadata?: Json | null
+          created_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          layer?: string
+          type?: string
+          content?: string
+          timestamp?: string | null
+          metrics_snapshot?: Json | null
+          related_ids?: string[] | null
+          resonance_score?: number | null
+          metadata?: Json | null
+          created_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+           {
+            foreignKeyName: "graph_nodes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      graph_edges: {
+        Row: {
+          id: string
+          source: string
+          target: string
+          type: string
+          weight: number
+          metadata: Json | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          source: string
+          target: string
+          type: string
+          weight?: number
+          metadata?: Json | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          source?: string
+          target?: string
+          type?: string
+          weight?: number
+          metadata?: Json | null
+          created_at?: string | null
+        }
+        Relationships: [
+           {
+            foreignKeyName: "graph_edges_source_fkey"
+            columns: ["source"]
+            isOneToOne: false
+            referencedRelation: "graph_nodes"
+            referencedColumns: ["id"]
+          },
+           {
+            foreignKeyName: "graph_edges_target_fkey"
+            columns: ["target"]
+            isOneToOne: false
+            referencedRelation: "graph_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           action: string
@@ -410,7 +505,75 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      graph_bfs_traversal: {
+        Args: {
+          start_id: string
+          max_depth?: number
+          min_weight?: number
+        }
+        Returns: {
+          node_id: string
+          depth: number
+          path: string[]
+        }[]
+      }
+      graph_find_resonant: {
+        Args: {
+          min_resonance?: number
+          limit_count?: number
+        }
+        Returns: {
+          id: string
+          layer: string
+          type: string
+          content: string
+          timestamp: string
+          metrics_snapshot: Json
+          related_ids: string[]
+          resonance_score: number
+          metadata: Json
+          created_at: string
+          user_id: string
+        }[]
+      }
+      graph_get_node_with_edges: {
+        Args: {
+          node_id: string
+        }
+        Returns: {
+          node: {
+            id: string
+            layer: string
+            type: string
+            content: string
+            timestamp: string
+            metrics_snapshot: Json
+            related_ids: string[]
+            resonance_score: number
+            metadata: Json
+            created_at: string
+            user_id: string
+          }
+          outgoing_edges: {
+            id: string
+            source: string
+            target: string
+            type: string
+            weight: number
+            metadata: Json
+            created_at: string
+          }[]
+          incoming_edges: {
+            id: string
+            source: string
+            target: string
+            type: string
+            weight: number
+            metadata: Json
+            created_at: string
+          }[]
+        }
+      }
     }
     Enums: {
       [_ in never]: never
