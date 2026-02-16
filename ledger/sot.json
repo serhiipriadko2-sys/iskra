@@ -269,7 +269,7 @@
     "runtime/iskraSpace/testSupport/googleGenAIMock.ts": "d5f3fd8c1a30e6b72741f0329e121f0f5f46870229ae7dd581f2c62fa0b0b7f6",
     "runtime/iskraSpace/tsconfig.json": "58d3e699f849fd234879b19681e14c0673d1734f7dd00bf1ee20547fab7b3727",
     "runtime/iskraSpace/types.ts": "25dabe5268b29dda16c4ff3c26b8df7dec47cb9a326c7fcef613806b88092d68",
-    "runtime/iskraSpace/types/supabase.ts": "b4f339802cdc69079d48eda30c96236ecefc0b242a026ea1e8642ba8fe978dc0",
+    "runtime/iskraSpace/types/supabase.ts": "99062e222109ae2a86abe13c171fdb84f77d7b60ea9b74d136eefe02a2d53718",
     "runtime/iskraSpace/utils/deltaValidator.ts": "f627b1b06ef755d1aafad26a32205a7ac20552230ae65a6e90eb80f402abdc4f",
     "runtime/iskraSpace/utils/metrics.ts": "8c1e6785748ca2ad9a44b5bdacaf21927330c152bfa3d197e42458800ccd1c07",
     "runtime/iskraSpace/utils/tarot.ts": "34ea78f519a554100b193e373c7ccc3cb67377f64be5d4c1722f3b1a64fc682f",
