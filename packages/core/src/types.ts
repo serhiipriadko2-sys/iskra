@@ -76,3 +76,22 @@ export const DEFAULT_METRICS: IskraMetrics = {
   ctxSwitch: 0.2,
   foresight: 0.0
 };
+
+export interface FractalMetadata {
+  fractalDimension: number;
+  entropy: number;
+  dominantVoice: VoiceID;
+  quantumState: {
+    amplitude: number;
+    phase: number;
+  };
+}
+
+export interface MantraNode {
+  id: string;
+  content: string;
+  embedding: number[];
+  timestamp: string;
+  layer: 'core' | 'memory' | 'dream';
+  fractal?: FractalMetadata;
+}

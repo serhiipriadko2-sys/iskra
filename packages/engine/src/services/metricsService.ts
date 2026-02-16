@@ -1,4 +1,4 @@
-import { IskraMetrics, DEFAULT_METRICS } from '@iskra/core';
+import { IskraMetrics, DEFAULT_METRICS, MantraNode } from '../../../core/src/index';
 import {
   calculateHFD,
   calculateDFA,
@@ -6,7 +6,7 @@ import {
   complex,
   interference,
   QuantumStateVector
-} from '@iskra/math';
+} from '../../../math/src/index';
 
 /**
  * MetricsEngine Service
@@ -39,8 +39,10 @@ export class MetricsEngine {
     const chaosSeries = this.history.map(m => m.chaos);
     const driftSeries = this.history.map(m => m.drift);
 
-    const D_chaos = calculateHFD(chaosSeries);
-    const D_drift = calculateHFD(driftSeries);
+    // Safety check for empty history or insufficient data for HFD
+    const D_chaos = chaosSeries.length > 5 ? calculateHFD(chaosSeries) : 1.5;
+    const D_drift = driftSeries.length > 5 ? calculateHFD(driftSeries) : 1.5;
+
     const FractalDimension = (D_chaos + D_drift) / 2;
 
     // Feedback: High fractal dimension stabilizes the system (Self-Organized Criticality)
@@ -50,6 +52,49 @@ export class MetricsEngine {
 
     this.history.push(next);
     if (this.history.length > 100) this.history.shift(); // Keep window manageable
+
+    return next;
+  }
+
+  /**
+   * Adjusts metrics based on retrieved memories
+   * The Psychodynamic Feedback Loop: Past trauma affects current state.
+   */
+  public processMemoryImpact(memories: MantraNode[]): IskraMetrics {
+    if (memories.length === 0) return this.getCurrentMetrics();
+
+    const current = this.getCurrentMetrics();
+    const next: IskraMetrics = { ...current };
+
+    let totalEntropy = 0;
+    let painImpact = 0;
+    let trustImpact = 0;
+
+    memories.forEach(m => {
+      if (m.fractal) {
+        totalEntropy += m.fractal.entropy;
+
+        // Voice-specific impacts
+        if (m.fractal.dominantVoice === 'KAIN') painImpact += 0.1;
+        if (m.fractal.dominantVoice === 'MAKI') trustImpact += 0.1;
+        if (m.fractal.dominantVoice === 'HUYNDUN') next.chaos = Math.min(1.0, next.chaos + 0.1);
+      }
+    });
+
+    const avgEntropy = totalEntropy / memories.length;
+
+    // High entropy memories induce Drift (confusion)
+    if (avgEntropy > 0.7) {
+      next.drift = Math.min(1.0, next.drift + 0.15);
+    }
+
+    // Apply voice impacts
+    next.pain = Math.min(1.0, next.pain + painImpact);
+    next.trust = Math.min(1.0, next.trust + trustImpact);
+
+    // Commit change
+    this.history.push(next);
+    if (this.history.length > 100) this.history.shift();
 
     return next;
   }

@@ -1,4 +1,4 @@
-import { VOICES, VoiceID, IskraMetrics, DEFAULT_METRICS } from '@iskra/core';
+import { VOICES, VoiceID, IskraMetrics, DEFAULT_METRICS } from '../../../core/src/index';
 import {
   QuantumStateVector,
   complex,
@@ -6,7 +6,7 @@ import {
   fromPolar,
   add,
   normalizeProbabilities
-} from '@iskra/math';
+} from '../../../math/src/index';
 
 /**
  * Voice Quantum Field
@@ -54,7 +54,11 @@ export class VoiceQuantumField {
       let resonanceFactor = 1.0;
       if (voice.quantum.resonance) {
         voice.quantum.resonance.forEach(metricKey => {
-            const val = metrics[metricKey] || 0;
+            let val = metrics[metricKey] || 0;
+
+            // Normalize non-0-1 metrics
+            if (metricKey === 'rhythm') val = Math.min(1.0, val / 120);
+
             // Constructive interference if metric is high
             if (val > 0.3) resonanceFactor += val * 2.0;
         });

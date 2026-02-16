@@ -84,3 +84,23 @@ export function normalizeProbabilities(probs: number[]): number[] {
   if (sum === 0) return probs.map(() => 0);
   return probs.map(p => p / sum);
 }
+
+/**
+ * Calculates emotional resonance between current state and a memory
+ * Resonance = 1 / (1 + |StatePhase - MemoryPhase|) * AmplitudeSimilarity
+ */
+export function calculateResonance(
+  currentPhase: number,
+  currentAmp: number,
+  memoryPhase: number,
+  memoryAmp: number
+): number {
+  const phaseDiff = Math.abs(currentPhase - memoryPhase) % (2 * Math.PI);
+  // Normalize phase diff to 0-1 (0 is perfect resonance)
+  const phaseFactor = 1 - (phaseDiff / Math.PI);
+
+  const ampDiff = Math.abs(currentAmp - memoryAmp);
+  const ampFactor = 1 / (1 + ampDiff);
+
+  return (phaseFactor + ampFactor) / 2;
+}
