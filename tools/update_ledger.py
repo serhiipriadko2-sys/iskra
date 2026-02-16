@@ -109,7 +109,7 @@ def main() -> None:
 
     ledger = ROOT / "ledger"
     ledger.mkdir(exist_ok=True)
-    (ledger / "sot.json").write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (ledger / "sot.json").write_text(json.dumps(out, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"Updated {ledger/'sot.json'} with {len(out['sha256'])} entries")
     
     if skipped:
