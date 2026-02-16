@@ -1,0 +1,71 @@
+/**
+ * ISKRA Core Types
+ * The Logos (Source of Truth)
+ */
+
+export interface IskraMetrics {
+  rhythm: number;
+  trust: number;
+  pain: number;
+  chaos: number;
+  drift: number;
+  echo: number;
+  clarity: number;
+  silence_mass: number;
+  mirror_sync: number;
+  interrupt: number;
+  ctxSwitch: number;
+  foresight?: number; // Added for Sibyl support
+}
+
+export type VoiceID =
+  | 'ISKRA'
+  | 'KAIN'
+  | 'PINO'
+  | 'SAM'
+  | 'ANHANTRA'
+  | 'HUYNDUN'
+  | 'ISKRIV'
+  | 'MAKI'
+  | 'SIBYL';
+
+export interface VoiceThresholds {
+  rhythm?: { min?: number; max?: number };
+  trust?: { min?: number; max?: number };
+  pain?: { min?: number; max?: number };
+  chaos?: { min?: number; max?: number };
+  drift?: { min?: number; max?: number };
+  clarity?: { min?: number; max?: number };
+  silence_mass?: { min?: number; max?: number };
+  foresight?: { min?: number; max?: number };
+}
+
+export interface VoiceManifestEntry {
+  id: VoiceID;
+  name: string;
+  symbol: string;
+  telos: string;
+  archetype: string;
+  formula: string;
+  thresholds: VoiceThresholds;
+  description: string;
+}
+
+// Re-export manifest data
+import voicesData from '../manifest/voices.json';
+export const VOICES: VoiceManifestEntry[] = voicesData as unknown as VoiceManifestEntry[];
+
+export const DEFAULT_METRICS: IskraMetrics = {
+  rhythm: 60,
+  trust: 0.7,
+  pain: 0.1,
+  chaos: 0.2,
+  drift: 0.1,
+  echo: 0.1,
+  clarity: 0.8,
+  silence_mass: 0.1,
+  mirror_sync: 0.7,
+  interrupt: 0.1,
+  ctxSwitch: 0.2,
+  foresight: 0.0
+};
