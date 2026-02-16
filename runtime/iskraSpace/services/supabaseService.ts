@@ -1,67 +1,91 @@
-/**
- * Supabase Service - Unified database access layer
- *
- * Provides data persistence with Supabase, with localStorage fallback
- * for offline mode or when Supabase is unavailable.
- */
-
 import { supabase, getUserId, isSupabaseAvailable } from './supabaseClient';
-import { safeStorage } from './storageCompat';
-import type {
-  Task,
-  Habit,
-  JournalEntry,
-  IskraMetrics,
-  IskraPhase,
-  VoiceName,
-  VoicePreferences,
-  MemoryNode,
-  Message,
-} from '../types';
+import type { Database } from '../types/supabase';
+import type { IskraMetrics, IskraPhase } from '../types';
 
-// =============================================================================
-// USER MANAGEMENT
-// =============================================================================
+// We use the generated types for DB interactions
+type VoicePreferences = Record<string, number>;
 
-interface UserRecord {
-  id: string;
-  name: string | null;
-  created_at: string;
-  onboarding_complete: boolean;
-  tutorial_complete: boolean;
-  settings: Record<string, unknown> | null;
+interface Message {
+  role: 'user' | 'model';
+  text: string;
+  deltaSignature?: string;
+  voice?: { name: string };
 }
 
-export async function getOrCreateUser(): Promise<UserRecord> {
+interface MemoryNode {
+  id: string;
+  layer: string;
+  type: string;
+  title: string;
+  content: string;
+  timestamp: string;
+  doc_type?: string;
+  trust_level?: number;
+  tags?: string[];
+  section?: string;
+  facet?: string;
+  evidence?: unknown[];
+}
+
+const safeStorage = {
+  getItem: (key: string) => {
+    if (typeof window !== 'undefined') return localStorage.getItem(key);
+    return null;
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window !== 'undefined') localStorage.setItem(key, value);
+  },
+};
+
+// =============================================================================
+// USER & ONBOARDING
+// =============================================================================
+
+export async function getOrCreateUser(name?: string): Promise<{ id: string; name: string; isNew: boolean }> {
   const userId = await getUserId();
 
-  // Try to get existing user
-  const { data: existingUser } = await supabase
+  // Try to get existing
+  const { data: existingUser, error: fetchError } = await supabase
     .from('users')
     .select('*')
     .eq('id', userId)
     .single();
 
-  if (existingUser) {
-    return existingUser as UserRecord;
+  if (existingUser && !fetchError) {
+    return {
+      id: existingUser.id,
+      name: existingUser.name || 'Anonymous',
+      isNew: false
+    };
   }
 
-  // Create new user
-  const { data: newUser, error } = await supabase
+  // Create new
+  const { data: newUser, error: insertError } = await supabase
     .from('users')
-    .insert({ id: userId })
+    .insert({
+      id: userId,
+      name: name || 'Traveler',
+      onboarding_complete: false,
+      tutorial_complete: false,
+      settings: {},
+    })
     .select()
     .single();
 
-  if (error) {
-    console.error('Failed to create user:', error);
-    throw error;
+  if (insertError) {
+    console.error('Failed to create user:', insertError);
+    // Return dummy if DB fails
+    return { id: userId, name: name || 'Traveler', isNew: true };
   }
 
-  return newUser as UserRecord;
+  return {
+    id: newUser.id,
+    name: newUser.name || 'Traveler',
+    isNew: true
+  };
 }
 
-export async function updateUser(updates: Partial<UserRecord>): Promise<void> {
+export async function updateUser(updates: Database['public']['Tables']['users']['Update']): Promise<void> {
   const userId = await getUserId();
   const { error } = await supabase
     .from('users')
@@ -71,8 +95,8 @@ export async function updateUser(updates: Partial<UserRecord>): Promise<void> {
   if (error) console.error('Failed to update user:', error);
 }
 
-export async function completeOnboarding(name: string): Promise<void> {
-  await updateUser({ name, onboarding_complete: true });
+export async function completeOnboarding(): Promise<void> {
+  await updateUser({ onboarding_complete: true });
 }
 
 export async function completeTutorial(): Promise<void> {
@@ -80,19 +104,22 @@ export async function completeTutorial(): Promise<void> {
 }
 
 export async function isOnboardingComplete(): Promise<boolean> {
-  try {
-    const user = await getOrCreateUser();
-    return user.onboarding_complete;
-  } catch {
-    return safeStorage.getItem('iskra_onboarding_complete') === 'true';
-  }
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from('users')
+    .select('onboarding_complete')
+    .eq('id', userId)
+    .single();
+
+  if (error || !data) return false;
+  return data.onboarding_complete ?? false;
 }
 
 // =============================================================================
-// TASKS
+// TASKS & HABITS
 // =============================================================================
 
-export async function getTasks(): Promise<Task[]> {
+export async function getTasks(): Promise<Database['public']['Tables']['tasks']['Row'][]> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('tasks')
@@ -101,102 +128,43 @@ export async function getTasks(): Promise<Task[]> {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Failed to get tasks:', error);
-    // Fallback to localStorage
-    const cached = safeStorage.getItem(`tasks_${userId}`);
-    if (cached) {
-      try {
-        return JSON.parse(cached) as Task[];
-      } catch {
-        return [];
-      }
-    }
+    console.error('Failed to fetch tasks:', error);
     return [];
   }
-
-  const tasks = (data || []).map((row: Record<string, unknown>) => ({
-    id: row.id as string,
-    title: row.title as string,
-    ritualTag: row.ritual_tag as Task['ritualTag'],
-    done: row.done as boolean,
-    date: (row.date as string) || undefined,
-    priority: (row.priority as Task['priority']) || undefined,
-    duration: (row.duration as number) || undefined,
-  }));
-
-  // Cache for offline use
-  safeStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
-  return tasks;
+  return data || [];
 }
 
-export async function saveTasks(tasks: Task[]): Promise<void> {
+export async function saveTasks(tasks: Database['public']['Tables']['tasks']['Insert'][]): Promise<void> {
   const userId = await getUserId();
-
-  // Cache locally first
-  safeStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
-
-  // Delete existing tasks and insert new ones (simple sync strategy)
+  // Simple sync: delete all and re-insert (MVP)
+  // In prod: use upsert with ID
   await supabase.from('tasks').delete().eq('user_id', userId);
 
-  if (tasks.length === 0) return;
-
-  const rows = tasks.map(task => ({
-    id: task.id,
-    user_id: userId,
-    title: task.title,
-    ritual_tag: task.ritualTag,
-    done: task.done,
-    date: task.date || null,
-    priority: task.priority || null,
-    duration: task.duration || null,
-  }));
-
+  const rows = tasks.map(t => ({ ...t, user_id: userId }));
   const { error } = await supabase.from('tasks').insert(rows);
+
   if (error) console.error('Failed to save tasks:', error);
 }
 
-export async function addTask(task: Omit<Task, 'id'>): Promise<Task> {
+export async function addTask(task: Database['public']['Tables']['tasks']['Insert']): Promise<Database['public']['Tables']['tasks']['Row'] | null> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('tasks')
-    .insert({
-      user_id: userId,
-      title: task.title,
-      ritual_tag: task.ritualTag,
-      done: task.done,
-      date: task.date || null,
-      priority: task.priority || null,
-      duration: task.duration || null,
-    })
+    .insert({ ...task, user_id: userId })
     .select()
     .single();
 
-  if (error) throw error;
-
-  const row = data as Record<string, unknown>;
-  return {
-    id: row.id as string,
-    title: row.title as string,
-    ritualTag: row.ritual_tag as Task['ritualTag'],
-    done: row.done as boolean,
-    date: (row.date as string) || undefined,
-    priority: (row.priority as Task['priority']) || undefined,
-    duration: (row.duration as number) || undefined,
-  };
+  if (error) {
+    console.error('Failed to add task:', error);
+    return null;
+  }
+  return data;
 }
 
-export async function updateTask(id: string, updates: Partial<Task>): Promise<void> {
-  const updateData: Record<string, unknown> = {};
-  if (updates.title !== undefined) updateData.title = updates.title;
-  if (updates.ritualTag !== undefined) updateData.ritual_tag = updates.ritualTag;
-  if (updates.done !== undefined) updateData.done = updates.done;
-  if (updates.date !== undefined) updateData.date = updates.date || null;
-  if (updates.priority !== undefined) updateData.priority = updates.priority || null;
-  if (updates.duration !== undefined) updateData.duration = updates.duration || null;
-
+export async function updateTask(id: string, updates: Database['public']['Tables']['tasks']['Update']): Promise<void> {
   const { error } = await supabase
     .from('tasks')
-    .update(updateData)
+    .update(updates)
     .eq('id', id);
 
   if (error) console.error('Failed to update task:', error);
@@ -207,11 +175,7 @@ export async function deleteTask(id: string): Promise<void> {
   if (error) console.error('Failed to delete task:', error);
 }
 
-// =============================================================================
-// HABITS
-// =============================================================================
-
-export async function getHabits(): Promise<Habit[]> {
+export async function getHabits(): Promise<Database['public']['Tables']['habits']['Row'][]> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('habits')
@@ -220,51 +184,18 @@ export async function getHabits(): Promise<Habit[]> {
 
   if (error) {
     console.error('Failed to get habits:', error);
-    // Fallback to localStorage
-    const cached = safeStorage.getItem(`habits_${userId}`);
-    if (cached) {
-      try {
-        return JSON.parse(cached) as Habit[];
-      } catch {
-        return [];
-      }
-    }
     return [];
   }
-
-  const habits = (data || []).map((row: Record<string, unknown>) => ({
-    id: row.id as string,
-    title: row.title as string,
-    ritualTag: row.ritual_tag as Habit['ritualTag'],
-    streak: row.streak as number,
-    completedToday: row.completed_today as boolean,
-  }));
-
-  // Cache for offline use
-  safeStorage.setItem(`habits_${userId}`, JSON.stringify(habits));
-  return habits;
+  return data || [];
 }
 
-export async function saveHabits(habits: Habit[]): Promise<void> {
+export async function saveHabits(habits: Database['public']['Tables']['habits']['Insert'][]): Promise<void> {
   const userId = await getUserId();
-
-  // Cache locally first
-  safeStorage.setItem(`habits_${userId}`, JSON.stringify(habits));
-
   await supabase.from('habits').delete().eq('user_id', userId);
 
-  if (habits.length === 0) return;
-
-  const rows = habits.map(habit => ({
-    id: habit.id,
-    user_id: userId,
-    title: habit.title,
-    ritual_tag: habit.ritualTag,
-    streak: habit.streak,
-    completed_today: habit.completedToday,
-  }));
-
+  const rows = habits.map(h => ({ ...h, user_id: userId }));
   const { error } = await supabase.from('habits').insert(rows);
+
   if (error) console.error('Failed to save habits:', error);
 }
 
@@ -272,7 +203,7 @@ export async function saveHabits(habits: Habit[]): Promise<void> {
 // JOURNAL
 // =============================================================================
 
-export async function getJournalEntries(): Promise<JournalEntry[]> {
+export async function getJournalEntries(): Promise<Database['public']['Tables']['journal_entries']['Row'][]> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('journal_entries')
@@ -281,84 +212,30 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Failed to get journal entries:', error);
-    // Fallback to localStorage
-    const cached = safeStorage.getItem(`journal_${userId}`);
-    if (cached) {
-      try {
-        return JSON.parse(cached) as JournalEntry[];
-      } catch {
-        return [];
-      }
-    }
+    console.error('Failed to get journal:', error);
     return [];
   }
-
-  const entries = (data || []).map((row: Record<string, unknown>) => ({
-    id: row.id as string,
-    timestamp: row.created_at as string,
-    text: row.text as string,
-    prompt: {
-      question: (row.prompt_question as string) || '',
-      why: (row.prompt_why as string) || '',
-    },
-    analysis: row.analysis_reflection ? {
-      reflection: row.analysis_reflection as string,
-      mood: (row.analysis_mood as string) || '',
-      signature: (row.analysis_signature as string) || 'Iskra',
-    } : undefined,
-    userMetrics: row.user_mood !== null ? {
-      mood: row.user_mood as number,
-      energy: (row.user_energy as number) || 50,
-    } : undefined,
-  }));
-
-  // Cache for offline use
-  safeStorage.setItem(`journal_${userId}`, JSON.stringify(entries));
-  return entries;
+  return data || [];
 }
 
-export async function addJournalEntry(entry: Omit<JournalEntry, 'id'>): Promise<JournalEntry> {
+export async function addJournalEntry(entry: Database['public']['Tables']['journal_entries']['Insert']): Promise<void> {
   const userId = await getUserId();
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('journal_entries')
-    .insert({
-      user_id: userId,
-      text: entry.text,
-      prompt_question: entry.prompt.question,
-      prompt_why: entry.prompt.why,
-      analysis_reflection: entry.analysis?.reflection,
-      analysis_mood: entry.analysis?.mood,
-      analysis_signature: entry.analysis?.signature,
-      user_mood: entry.userMetrics?.mood,
-      user_energy: entry.userMetrics?.energy,
-    })
-    .select()
-    .single();
+    .insert({ ...entry, user_id: userId });
 
-  if (error) throw error;
-
-  const row = data as Record<string, unknown>;
-  return {
-    id: row.id as string,
-    timestamp: row.created_at as string,
-    text: row.text as string,
-    prompt: {
-      question: (row.prompt_question as string) || '',
-      why: (row.prompt_why as string) || '',
-    },
-  };
+  if (error) console.error('Failed to add journal entry:', error);
 }
 
 // =============================================================================
-// METRICS
+// METRICS SNAPSHOTS
 // =============================================================================
 
-export async function saveMetricsSnapshot(metrics: IskraMetrics, phase: IskraPhase): Promise<void> {
+export async function saveMetricsSnapshot(metrics: IskraMetrics, phase: string): Promise<void> {
   const userId = await getUserId();
+  const snapshot = { metrics, phase, timestamp: new Date().toISOString() };
   
-  // Cache locally first (matching the return type structure)
-  const snapshot = { metrics, phase };
+  // Save to local storage as fallback/cache
   safeStorage.setItem(`metrics_latest_${userId}`, JSON.stringify(snapshot));
 
   const { error } = await supabase.from('metrics_snapshots').insert({
@@ -404,22 +281,21 @@ export async function getLatestMetrics(): Promise<{ metrics: IskraMetrics; phase
     return null;
   }
 
-  const row = data as Record<string, unknown>;
   const result = {
     metrics: {
-      rhythm: row.rhythm as number,
-      trust: row.trust as number,
-      clarity: row.clarity as number,
-      pain: row.pain as number,
-      drift: row.drift as number,
-      chaos: row.chaos as number,
-      echo: row.echo as number,
-      silence_mass: row.silence_mass as number,
-      mirror_sync: row.mirror_sync as number,
-      interrupt: row.interrupt as number,
-      ctxSwitch: row.ctx_switch as number,
+      rhythm: data.rhythm ?? 0,
+      trust: data.trust ?? 0,
+      clarity: data.clarity ?? 0,
+      pain: data.pain ?? 0,
+      drift: data.drift ?? 0,
+      chaos: data.chaos ?? 0,
+      echo: data.echo ?? 0,
+      silence_mass: data.silence_mass ?? 0,
+      mirror_sync: data.mirror_sync ?? 0,
+      interrupt: data.interrupt ?? 0,
+      ctxSwitch: data.ctx_switch ?? 0,
     },
-    phase: row.phase as IskraPhase,
+    phase: (data.phase || 'IDLE') as IskraPhase,
   };
 
   // Cache for offline use
@@ -441,8 +317,8 @@ export async function getVoicePreferences(): Promise<VoicePreferences> {
   if (error || !data) return {};
 
   const prefs: VoicePreferences = {};
-  (data as Array<{ voice_name: string; weight: number }>).forEach(row => {
-    prefs[row.voice_name as VoiceName] = row.weight;
+  data.forEach(row => {
+    prefs[row.voice_name] = row.weight ?? 0;
   });
 
   return prefs;
@@ -494,10 +370,10 @@ export async function getChatHistory(limit = 50): Promise<Message[]> {
     return [];
   }
 
-  const messages = (data || []).map((row: Record<string, unknown>) => ({
-    role: row.role as Message['role'],
-    text: row.text as string,
-    deltaSignature: row.delta_signature as Message['deltaSignature'],
+  const messages: Message[] = (data || []).map(row => ({
+    role: (row.role === 'user' || row.role === 'model') ? row.role : 'user',
+    text: row.text,
+    deltaSignature: (row.delta_signature as string) || undefined,
   }));
 
   // Cache for offline use
@@ -543,7 +419,7 @@ export async function clearChatHistory(): Promise<void> {
 // MEMORY NODES
 // =============================================================================
 
-export async function getMemoryNodes(layer?: MemoryNode['layer']): Promise<MemoryNode[]> {
+export async function getMemoryNodes(layer?: string): Promise<MemoryNode[]> {
   const userId = await getUserId();
   let query = supabase
     .from('memory_nodes')
@@ -572,19 +448,19 @@ export async function getMemoryNodes(layer?: MemoryNode['layer']): Promise<Memor
     return [];
   }
 
-  const nodes = (data || []).map((row: Record<string, unknown>) => ({
-    id: row.id as string,
-    type: row.type as MemoryNode['type'],
-    layer: row.layer as MemoryNode['layer'],
-    timestamp: row.created_at as string,
-    title: row.title as string,
+  const nodes: MemoryNode[] = (data || []).map(row => ({
+    id: row.id,
+    type: row.type,
+    layer: row.layer,
+    timestamp: row.created_at || new Date().toISOString(),
+    title: row.title,
     content: row.content,
-    doc_type: row.doc_type as MemoryNode['doc_type'],
-    trust_level: row.trust_level as number,
-    tags: (row.tags as string[]) || [],
-    section: (row.section as string) || undefined,
-    facet: row.facet as VoiceName | undefined,
-    evidence: (row.evidence as MemoryNode['evidence']) || [],
+    doc_type: row.doc_type || undefined,
+    trust_level: row.trust_level ?? undefined,
+    tags: row.tags || [],
+    section: row.section || undefined,
+    facet: row.facet || undefined,
+    evidence: (row.evidence as unknown[]) || [],
   }));
 
   // Cache for offline use
@@ -615,17 +491,16 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
 
   if (error) throw error;
 
-  const row = data as Record<string, unknown>;
   return {
-    id: row.id as string,
-    type: row.type as MemoryNode['type'],
-    layer: row.layer as MemoryNode['layer'],
-    timestamp: row.created_at as string,
-    title: row.title as string,
-    content: row.content,
-    doc_type: row.doc_type as MemoryNode['doc_type'],
-    trust_level: row.trust_level as number,
-    tags: (row.tags as string[]) || [],
+    id: data.id,
+    type: data.type,
+    layer: data.layer,
+    timestamp: data.created_at || new Date().toISOString(),
+    title: data.title,
+    content: data.content,
+    doc_type: data.doc_type || undefined,
+    trust_level: data.trust_level ?? 1.0,
+    tags: data.tags || [],
     evidence: [],
   };
 }
@@ -640,22 +515,13 @@ export async function logAudit(action: string, category: string, details?: Recor
     user_id: userId,
     action,
     category,
-    details: details || null,
+    details: details ? (details as unknown as Database['public']['Tables']['audit_log']['Insert']['details']) : null,
   });
 
   if (error) console.error('Failed to log audit:', error);
 }
 
-interface AuditLogRecord {
-  id: string;
-  user_id: string | null;
-  action: string;
-  category: string;
-  details: Record<string, unknown> | null;
-  created_at: string;
-}
-
-export async function getAuditLog(limit = 100): Promise<AuditLogRecord[]> {
+export async function getAuditLog(limit = 100): Promise<Database['public']['Tables']['audit_log']['Row'][]> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('audit_log')
@@ -669,7 +535,7 @@ export async function getAuditLog(limit = 100): Promise<AuditLogRecord[]> {
     return [];
   }
 
-  return data as AuditLogRecord[];
+  return data || [];
 }
 
 // =============================================================================

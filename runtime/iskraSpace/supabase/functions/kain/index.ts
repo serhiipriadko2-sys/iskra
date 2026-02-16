@@ -18,12 +18,25 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+interface Metrics {
+  pain: number;
+  drift: number;
+  echo: number;
+  chaos: number;
+  [key: string]: number | undefined;
+}
+
+interface RepairResult {
+  repairNeeded: boolean;
+  reason?: string;
+}
+
 /**
  * Simple heuristic for repair: if any of the key metrics exceed
  * thresholds, a repair is recommended. Thresholds mirror those in
  * the KAIN voice activation function.
  */
-function checkRepair(metrics: any) {
+function checkRepair(metrics: Partial<Metrics>): RepairResult {
   const { pain = 0, drift = 0, echo = 0, chaos = 0 } = metrics || {};
   let reason: string | undefined;
   if (pain >= 0.3) {
@@ -49,7 +62,8 @@ serve(async (req: Request) => {
 
   try {
     const body = await req.json();
-    const metrics = body?.metrics;
+    const metrics = body?.metrics as Partial<Metrics> | undefined;
+
     if (!metrics) {
       throw new Error('Missing metrics');
     }
