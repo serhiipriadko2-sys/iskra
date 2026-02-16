@@ -165,7 +165,7 @@ export interface SIFTEvidence {
 }
 
 // --- Validator Types ---
-export type VoiceID =
+export type AppVoiceID =
   | 'VOICE.ISKRA'
   | 'VOICE.ISKRIV'
   | 'VOICE.KAIN'
@@ -296,11 +296,14 @@ export interface MemoryEdge {
 
 export interface MantraNode {
   id: string;
-  layer: 'mantra';
-  text: string;
-  version: string;
-  isActive: boolean;
+  layer: 'mantra' | 'core' | 'memory' | 'dream';
+  text?: string;
+  content: string;
+  version?: string;
+  isActive?: boolean;
   timestamp: string;
+  embedding?: number[];
+  fractal?: import("./fractal.js").FractalMetadata;
 }
 
 export interface IntegrityReport {

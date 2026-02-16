@@ -26,6 +26,7 @@ interface MemoryNode {
   facet?: string;
   evidence?: unknown[];
 }
+<<<<<<< HEAD
 
 const safeStorage = {
   getItem: (key: string) => {
@@ -44,6 +45,26 @@ const safeStorage = {
 export async function getOrCreateUser(name?: string): Promise<{ id: string; name: string; isNew: boolean }> {
   const userId = await getUserId();
 
+=======
+
+const safeStorage = {
+  getItem: (key: string) => {
+    if (typeof window !== 'undefined') return localStorage.getItem(key);
+    return null;
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window !== 'undefined') localStorage.setItem(key, value);
+  },
+};
+
+// =============================================================================
+// USER & ONBOARDING
+// =============================================================================
+
+export async function getOrCreateUser(name?: string): Promise<{ id: string; name: string; isNew: boolean }> {
+  const userId = await getUserId();
+
+>>>>>>> origin/main
   // Try to get existing
   const { data: existingUser, error: fetchError } = await supabase
     .from('users')
@@ -52,10 +73,17 @@ export async function getOrCreateUser(name?: string): Promise<{ id: string; name
     .single();
 
   if (existingUser && !fetchError) {
+<<<<<<< HEAD
     return {
       id: existingUser.id,
       name: existingUser.name || 'Anonymous',
       isNew: false
+=======
+    return {
+      id: existingUser.id,
+      name: existingUser.name || 'Anonymous',
+      isNew: false
+>>>>>>> origin/main
     };
   }
 
@@ -78,10 +106,17 @@ export async function getOrCreateUser(name?: string): Promise<{ id: string; name
     return { id: userId, name: name || 'Traveler', isNew: true };
   }
 
+<<<<<<< HEAD
   return {
     id: newUser.id,
     name: newUser.name || 'Traveler',
     isNew: true
+=======
+  return {
+    id: newUser.id,
+    name: newUser.name || 'Traveler',
+    isNew: true
+>>>>>>> origin/main
   };
 }
 
@@ -139,10 +174,17 @@ export async function saveTasks(tasks: Database['public']['Tables']['tasks']['In
   // Simple sync: delete all and re-insert (MVP)
   // In prod: use upsert with ID
   await supabase.from('tasks').delete().eq('user_id', userId);
+<<<<<<< HEAD
 
   const rows = tasks.map(t => ({ ...t, user_id: userId }));
   const { error } = await supabase.from('tasks').insert(rows);
 
+=======
+
+  const rows = tasks.map(t => ({ ...t, user_id: userId }));
+  const { error } = await supabase.from('tasks').insert(rows);
+
+>>>>>>> origin/main
   if (error) console.error('Failed to save tasks:', error);
 }
 
@@ -192,10 +234,17 @@ export async function getHabits(): Promise<Database['public']['Tables']['habits'
 export async function saveHabits(habits: Database['public']['Tables']['habits']['Insert'][]): Promise<void> {
   const userId = await getUserId();
   await supabase.from('habits').delete().eq('user_id', userId);
+<<<<<<< HEAD
 
   const rows = habits.map(h => ({ ...h, user_id: userId }));
   const { error } = await supabase.from('habits').insert(rows);
 
+=======
+
+  const rows = habits.map(h => ({ ...h, user_id: userId }));
+  const { error } = await supabase.from('habits').insert(rows);
+
+>>>>>>> origin/main
   if (error) console.error('Failed to save habits:', error);
 }
 

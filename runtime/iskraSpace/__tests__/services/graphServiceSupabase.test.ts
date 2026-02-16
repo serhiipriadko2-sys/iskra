@@ -70,6 +70,13 @@ describe('GraphServiceSupabase', () => {
       expect(payload.user_id).toBe('test-user-id');
     }
 
+    // Check user_id directly if it's already resolved in the payload
+    if (payload.user_id instanceof Promise) {
+      await expect(payload.user_id).resolves.toBe('test-user-id');
+    } else {
+      expect(payload.user_id).toBe('test-user-id');
+    }
+
     // Result should normalize layer casing back to enum-like form
     expect(node.id).toBe('node-1');
     expect(node.layer).toBe('CORE');

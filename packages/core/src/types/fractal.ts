@@ -49,3 +49,13 @@ export const QUANTUM_THRESHOLDS = {
     entangled: { min: 0.6, max: 1.0 },
   },
 } as const;
+
+export interface FractalMetadata {
+  fractalDimension: number;
+  entropy: number;
+  dominantVoice: import('./voices.js').VoiceName;
+  quantumState: {
+    amplitude: number;
+    phase: number;
+  };
+}

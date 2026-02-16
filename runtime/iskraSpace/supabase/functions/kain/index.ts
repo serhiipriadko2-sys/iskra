@@ -63,7 +63,11 @@ serve(async (req: Request) => {
   try {
     const body = await req.json();
     const metrics = body?.metrics as Partial<Metrics> | undefined;
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> origin/main
     if (!metrics) {
       throw new Error('Missing metrics');
     }

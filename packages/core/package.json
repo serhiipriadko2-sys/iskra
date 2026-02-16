@@ -1,14 +1,16 @@
 {
   "name": "@iskra/core",
   "version": "0.5.0",
+  "type": "module",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
     "lint": "eslint ."
   },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^5.4.0",
     "vitest": "^1.4.0",

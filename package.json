@@ -2,6 +2,11 @@
   "name": "iskra-monorepo",
   "private": true,
   "description": "Iskra vΩ.5.0: The Scientific Turn",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "test": "pnpm -r test",
     "build": "pnpm -r build",
@@ -11,11 +16,11 @@
   "workspaces": [
     "packages/*",
     "apps/*",
-    "runtime/*"
+    "runtime/*",
+    "core/*"
   ],
-  "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
-  },
-  "packageManager": "pnpm@9.0.0"
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
 }

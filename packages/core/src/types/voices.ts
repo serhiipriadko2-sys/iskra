@@ -263,3 +263,37 @@ export const VOICE_MANIFESTS: Record<VoiceName, Voice> = {
     ],
   },
 };
+
+// Re-export manifest data as VOICES
+import voicesData from '../../manifest/voices.json' with { type: 'json' };
+export const VOICES = (voicesData as unknown) as VoiceManifestEntry[];
+
+export interface VoiceThresholds {
+  rhythm?: { min?: number; max?: number };
+  trust?: { min?: number; max?: number };
+  pain?: { min?: number; max?: number };
+  chaos?: { min?: number; max?: number };
+  drift?: { min?: number; max?: number };
+  clarity?: { min?: number; max?: number };
+  silence_mass?: { min?: number; max?: number };
+  foresight?: { min?: number; max?: number };
+}
+
+export interface VoiceQuantumParams {
+  baseFreq: number; // Oscillation frequency (Hz equivalent)
+  basePhase: number; // Starting phase (0-2PI)
+  resonance: (keyof import("./metrics.js").IskraMetrics)[]; // Which metrics amplify this voice
+}
+
+export interface VoiceManifestEntry {
+  id: VoiceName;
+  name: string;
+  symbol: string;
+  telos: string;
+  archetype: string;
+  formula: string;
+  quantum: VoiceQuantumParams;
+  thresholds: VoiceThresholds;
+  description: string;
+}
+export type VoiceID = VoiceName;

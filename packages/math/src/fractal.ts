@@ -77,7 +77,6 @@ export function calculateNC(history: IskraMetrics[]): number {
 
   const recent = history.slice(-10);
   const forward = calculateTrend(recent.map(m => m.trust));
-  // Reverse logic: create a new array to avoid mutating
   const backward = calculateTrend([...recent].reverse().map(m => m.trust));
 
   return 1 - Math.abs(forward - backward) / 2;

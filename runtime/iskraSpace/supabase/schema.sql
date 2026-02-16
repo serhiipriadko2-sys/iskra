@@ -253,6 +253,7 @@ ON CONFLICT DO NOTHING;
 -- =============================================================================
 -- Schema created successfully.
 -- Next: Run the Edge Function setup for Gemini API proxy.
+<<<<<<< HEAD
 -- ============================================
 -- GraphRAG Integration - Supabase Migration
 -- ============================================
@@ -589,3 +590,48 @@ ON CONFLICT (id) DO NOTHING;
 -- - 3 RPC functions
 -- - 2 RLS policies
 -- - 8 canonical seed nodes
+=======
+
+-- =============================================================================
+-- GRAPH LAYER - Nodes and Edges
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS graph_nodes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    layer TEXT NOT NULL,
+    type TEXT NOT NULL,
+    content TEXT NOT NULL,
+    timestamp TIMESTAMPTZ,
+    metrics_snapshot JSONB DEFAULT '{}'::jsonb,
+    related_ids TEXT[] DEFAULT '{}',
+    resonance_score FLOAT8 DEFAULT 0,
+    metadata JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_graph_nodes_user_id ON graph_nodes(user_id);
+CREATE INDEX idx_graph_nodes_layer ON graph_nodes(layer);
+
+CREATE TABLE IF NOT EXISTS graph_edges (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    source UUID NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,
+    target UUID NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    weight FLOAT8 DEFAULT 1.0,
+    metadata JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_graph_edges_user_id ON graph_edges(user_id);
+CREATE INDEX idx_graph_edges_source ON graph_edges(source);
+CREATE INDEX idx_graph_edges_target ON graph_edges(target);
+
+-- RLS for Graph Tables
+ALTER TABLE graph_nodes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE graph_edges ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow all for graph_nodes" ON graph_nodes FOR ALL USING (true);
+CREATE POLICY "Allow all for graph_edges" ON graph_edges FOR ALL USING (true);
+>>>>>>> origin/main
