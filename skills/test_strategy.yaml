@@ -1,26 +1,56 @@
 skill: "test_strategy"
-description: "Стратегия тестирования ISKRA (vΩ.5.0)"
+description: "Testing Strategy for ISKRA (vΩ.5.1 Scientific Turn)"
+updated: "2026-02-17"
 framework: "vitest"
+
 principles:
   - "Test Driven Development (Red -> Green -> Refactor)"
   - "Property-based testing for mathematical invariants"
-  - "Integration tests for Supabase interactions"
+  - "Integration tests for state transitions and Supabase interactions"
+  - "Every mathematical function must have edge case tests"
+  - "Tests are documentation: name tests as specifications"
 
 layers:
   math:
     type: "unit"
-    focus: "Pure functions, edge cases, mathematical correctness"
+    focus: "Pure functions, edge cases, mathematical correctness, numerical stability"
     tools: ["vitest", "fast-check"]
+    requirements:
+      - "Test all boundary values (0, 1, -1, Infinity, NaN)"
+      - "Test phase classification thresholds (1.4, 1.6, 1.8)"
+      - "Test entropy interpretation boundaries (2.0, 5.0)"
+      - "Verify quantum probabilities sum to 1.0"
+      - "Test complex number arithmetic precision"
 
   engine:
     type: "integration"
-    focus: "State transitions, memory retrieval, Supabase IO"
+    focus: "State transitions, memory retrieval, metric updates, voice selection"
     tools: ["vitest", "msw"]
+    requirements:
+      - "Test CoreEngine 6-step pipeline end-to-end"
+      - "Test metric clamping (0-1 range)"
+      - "Test entropy feedback loop (low entropy → drift, high entropy → chaos)"
+      - "Test self-organized criticality effects"
+      - "Test VoiceQuantumField probability normalization"
+      - "Test MemoryService semantic + resonance retrieval"
+      - "Mock Supabase for IO tests"
 
   ui:
     type: "component"
-    focus: "Rendering, user interaction, holographic effects"
+    focus: "Rendering, user interaction, hook behavior, somatic feedback"
     tools: ["vitest", "react-testing-library"]
+    requirements:
+      - "Test useEngine hook state management"
+      - "Test ChatInterface message flow"
+      - "Test QuantumField canvas rendering"
+      - "Test somatic feedback triggers"
+
+  e2e:
+    type: "end-to-end"
+    focus: "Full user flows, browser interactions"
+    tools: ["playwright"]
+    location: "runtime/iskraSpace"
+    command: "npm run test:e2e"
 
 commands:
   all: "pnpm test"

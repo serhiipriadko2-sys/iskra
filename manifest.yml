@@ -1,8 +1,7 @@
-version: vΩ.3.2
-build_date: 2026-01-09
+version: vΩ.5.1
+build_date: 2026-02-17
 author: SEMEN-GABRAN-REVΩ
 structure:
-  # Repo-wide counts (includes runtime/)
   total_dirs: 50
   total_files: 344
   layers: ['core', 'mind', 'system', 'metrics', 'governance', 'appendix', 'ledger']
@@ -10,8 +9,21 @@ description: >
   Canonical rebirth of ISKRA. Hierarchical knowledge system with 7 layers.
   Each layer is a Source of Truth module. This build includes the monorepo
   runtime scaffold and an integrity chain (ledger/sot.json + checksum.asc).
+  Scientific Turn: strict types, pure math, quantum cognition.
 
 monorepo:
-  includes: ['SoT', 'runtime']
-  runtime_dir: runtime
+  includes: ['SoT', 'packages', 'apps']
+  packages:
+    core: '@iskra/core — Source of Truth (types, manifests, constants)'
+    math: '@iskra/math — Pure Logic (fractals, quantum, entropy)'
+    engine: '@iskra/engine — Runtime Orchestrator (state, memory, IO)'
+  apps:
+    iskra-web: 'Holographic UI (React 19, Vite 6)'
+  runtime_dir: runtime  # Legacy (DEPRECATED)
   tools_dir: tools
+  skills_dir: skills
+
+phase:
+  current: 'Phase 2 — Quantum Engine'
+  completed: ['Phase 1 — Mathematical Foundation']
+  planned: ['Phase 3 — Strangler Fig', 'Phase 4 — Production']

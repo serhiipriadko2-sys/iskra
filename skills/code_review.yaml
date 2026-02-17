@@ -1,0 +1,67 @@
+skill: "code_review"
+description: "Code Review Checklist for ISKRA (vΩ.5.1)"
+updated: "2026-02-17"
+
+checklist:
+  types:
+    - "No `any` types anywhere"
+    - "No `as unknown as T` casts"
+    - "All exported functions have explicit return types"
+    - "All types imported from @iskra/core"
+    - "Interfaces preferred over type aliases"
+
+  architecture:
+    - "Layer boundaries respected (core → math → engine → apps)"
+    - "No circular dependencies between packages"
+    - "No business logic in UI components"
+    - "No side effects in @iskra/math"
+    - "State mutations only in @iskra/engine"
+    - "No new code added to runtime/ (deprecated)"
+
+  quality:
+    - "Tests written for new functionality"
+    - "Tests pass: pnpm test"
+    - "Type check passes: pnpm typecheck"
+    - "Lint passes: pnpm lint"
+    - "Coverage maintained or improved"
+
+  security:
+    - "No secrets in code (.env, API keys, tokens)"
+    - "No dangerouslySetInnerHTML usage"
+    - "Input validation for user-facing endpoints"
+    - "Supabase RLS considerations addressed"
+
+  style:
+    - "Conventional Commit message format"
+    - "Import order: external → core → math → engine → internal"
+    - "File naming: kebab-case"
+    - "Component naming: PascalCase"
+    - "Max 300 lines per file"
+    - "No magic numbers (use constants)"
+
+  math_specific:
+    - "Pure functions (no side effects)"
+    - "Edge cases tested (0, NaN, Infinity)"
+    - "Numerical stability verified"
+    - "Phase thresholds documented"
+    - "Quantum probabilities sum to 1.0"
+
+  engine_specific:
+    - "Metrics clamped to [0, 1] range"
+    - "Entropy feedback loop considered"
+    - "Memory retrieval weights correct (semantic 70%, resonance 30%)"
+    - "Voice selection respects manifest thresholds"
+
+process:
+  before_review:
+    - "Author runs pnpm test locally"
+    - "Author runs pnpm typecheck locally"
+    - "Author writes descriptive PR summary"
+  during_review:
+    - "Reviewer checks all items in checklist"
+    - "Reviewer runs tests on their machine"
+    - "Reviewer verifies no layer boundary violations"
+  after_review:
+    - "Address all feedback before merge"
+    - "Squash or rebase if requested"
+    - "Update changelog if significant change"

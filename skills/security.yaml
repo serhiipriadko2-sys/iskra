@@ -1,0 +1,61 @@
+skill: "security"
+description: "Security Policy for ISKRA (vΩ.5.1)"
+updated: "2026-02-17"
+
+secrets:
+  rules:
+    - "Never commit secrets (.env, API keys, credentials, tokens)"
+    - "Use environment variables for all sensitive configuration"
+    - "Store secrets in platform env (Vercel, Netlify) for production"
+    - "Add .env to .gitignore"
+  variables:
+    frontend:
+      - "VITE_SUPABASE_URL — Supabase project URL"
+      - "VITE_SUPABASE_ANON_KEY — Supabase anonymous key (public, safe for frontend)"
+    server_only:
+      - "GEMINI_API_KEY — Google AI API key (Edge Functions only)"
+      - "SUPABASE_SERVICE_ROLE_KEY — Supabase admin key (never expose)"
+
+dependencies:
+  audit: "npm audit --audit-level=high"
+  frequency: "Run before each release and weekly in CI"
+  actions:
+    - "Address all high and critical vulnerabilities"
+    - "Document accepted risks for medium vulnerabilities"
+    - "Pin dependency versions for production"
+
+supabase:
+  rls:
+    - "Enable RLS on all tables"
+    - "Define explicit policies (no open access)"
+    - "Test policies with different user roles"
+  edge_functions:
+    - "Use verify_jwt: true by default"
+    - "Validate input parameters"
+    - "Rate limit public endpoints"
+  data:
+    - "Encrypt sensitive data at rest"
+    - "Use parameterized queries (prevent SQL injection)"
+    - "Sanitize user input"
+
+frontend:
+  xss:
+    - "React auto-escapes JSX — do not use dangerouslySetInnerHTML"
+    - "Sanitize any user-generated content before rendering"
+  csp:
+    - "Configure Content-Security-Policy headers"
+    - "Restrict script sources"
+  headers:
+    - "X-Frame-Options: DENY"
+    - "X-Content-Type-Options: nosniff"
+    - "X-XSS-Protection: 1; mode=block"
+    - "Referrer-Policy: strict-origin-when-cross-origin"
+
+incidents:
+  log: "ledger/integrity_log.md"
+  process:
+    - "1. Detect and document the incident"
+    - "2. Assess impact and scope"
+    - "3. Apply fix and verify"
+    - "4. Record in ledger/integrity_log.md"
+    - "5. Update security policies if needed"
