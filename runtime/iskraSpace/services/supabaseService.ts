@@ -454,7 +454,7 @@ export async function getMemoryNodes(layer?: string): Promise<MemoryNode[]> {
     layer: row.layer,
     timestamp: row.created_at || new Date().toISOString(),
     title: row.title,
-    content: row.content,
+    content: typeof row.content === 'string' ? row.content : JSON.stringify(row.content),
     doc_type: row.doc_type || undefined,
     trust_level: row.trust_level ?? undefined,
     tags: row.tags || [],
@@ -485,7 +485,7 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
       section: node.section || null,
       facet: node.facet || null,
       evidence: node.evidence || [],
-    })
+    } as any)
     .select()
     .single();
 

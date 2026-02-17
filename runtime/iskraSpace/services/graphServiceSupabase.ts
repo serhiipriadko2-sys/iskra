@@ -437,7 +437,9 @@ export class GraphServiceSupabase {
       metrics_snapshot: row.metrics_snapshot as unknown as IskraMetrics | undefined,
       relatedIds: row.related_ids || [],
       resonance_score: row.resonance_score || undefined,
-      metadata: (row.metadata as Record<string, unknown>) || {}
+      metadata: (row.metadata as Record<string, unknown>) || {},
+      title: row.type, // Default title from type
+      evidence: [] // Default empty evidence
     };
   }
 
