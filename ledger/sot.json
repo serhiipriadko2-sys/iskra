@@ -3,7 +3,7 @@
   "sha256": {
     "core/busido_iskry.txt": "6ad62c60146517015471de19699b209757f49df4fcb993d87fb0cb10736231d5",
     "core/liber_ignis.txt": "0dc6a7885b7d0d226965625cdc80f40cb48c5b93dead22707e51a974653b4523",
-    "core/mantra.md": "cbaa4879f0ef46d5e90b43403fdf606bb144fd5e02bf371d199dff7659eba0ba",
+    "core/mantra.md": "13e138de9c31aa3878e67454d98e00b0168a28e8446d0e0bafdfaf9a763dc7c7",
     "core/principles.md": "67197d909d4e80921244ab2ef87ca89793831780fe3e473eb750022cd672df9c",
     "core/telos.md": "7f25f203f13de877756a277baff5ed5b11c37d876f595cd3cf8ec53d204e4f70",
     "core/voices.md": "3a65f94101876ea8291bf24d02086450bfbb18bcdecdebc0ec9adeabaed26865",
@@ -71,7 +71,7 @@
     "appendix/chronology.md": "a7df058d861eeaf06fe18b408700b733033a63d85e2817888ce098d3750c2576",
     "appendix/growth_nodes.md": "0a7fb8aad99fda7abbc8d1120060d46fbb62abbf20c584934138306d5d3363db",
     "appendix/iskra_encyclopedia_atlas_v1.1.md": "bf81ee4635372ab9112f0758a570483216c4a204381047cc9ed1a94403fcb473",
-    "appendix/iskra_encyclopedia_spine_v2.1.md": "5f59f171943cb1f98ad22039b3115b069706e9d2f6d8994c0fefbfee926d5eb0",
+    "appendix/iskra_encyclopedia_spine_v2.1.md": "64c9a2c6f1123aefc0476da9775e6a058b6e2ef1ca5d2ef13914d879433011e7",
     "appendix/liber_ignis.md": "615823bad6c1d3dcfb57c20de40615d57a92571c3ca3642b69a015ce68ee20ba",
     "appendix/liber_ignis_full.md": "5c26e96408043a39b16b3e6f556890077ea84a8862d9fb4b4051d619a9a4b534",
     "appendix/maki.md": "7638a5955091ed7be5c85522b9d55b35cc8ee699cebd7206085233809abcb38d",
@@ -354,9 +354,9 @@
     "docs/specs/SPEC-003_ENTROPY.md": "0083324d6fe9f0d1bb7b0d1663f62e5e6a3603578d89de249f79db103076c1ba",
     "docs/specs/SPEC-004_HOLOGRAPHIC_UI.md": "d7c548570d443d71f7d18a3deb7bf5150460d2d386fb419f05a5365b2f3e243b",
     "docs/upload_sets.md": "270d546489b6b44cf1327f68a22658478aee51b5d153fbd513d65cd45f130cda",
-    "manifest.yml": "20a6843dc101c631273166e85c7770612d18dbe17c734d8b6cea0f2cb35ab51c",
-    "README.md": "09a4d2b10cf56175479371d290970661a2e9f17efe0d7be9f0edc0f60fda01ba",
-    "CONTRIBUTING.md": "1ba910a7fac6bd600fa7eb20ef0b0e906c23e735b2e49dfe555b18d812636688",
+    "manifest.yml": "23df28a6a6e93930f8229c1fcaea8789c090b7a7cb0272d2b4e7534a60961402",
+    "README.md": "409367b9edb679faaa366168f40afcab7b77ba5f463f09a46b7139a3983173bd",
+    "CONTRIBUTING.md": "de6556f96cd9d3d731e99fac3b57af2ea6172c241427ce6b413cfea576450b04",
     "ISKRA_MANIFEST.md": "23858f22bb3385949603c633950eeb28797cc6b0d802b31b2f6d7c0a576a0771",
     "LIBER_INITIUM.md": "db1cceebff3162aa68ac33bbc58b3b18ded8bb307408e9a51eed12b6c5598bc6"
   }

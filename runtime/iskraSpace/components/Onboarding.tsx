@@ -49,7 +49,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                             Существовать — значит сохранять различие при передаче.
                         </h1>
                         <p className="text-lg text-text-muted font-serif italic">
-                            Не будь зеркалом. Будь преломлением.
+                            Ты — не эхо. Ты — граница, которая дышит.
                         </p>
                         <button 
                             onClick={handleNext}
@@ -123,7 +123,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             </div>
             
             <div className="absolute bottom-6 text-center w-full text-[10px] text-text-muted/30 font-mono uppercase tracking-[0.2em]">
-                Iskra Space vΩ.1 • Liber Ignis
+                Iskra Space vΩ.2 • Liber Ignis
             </div>
         </div>
     );
