@@ -253,7 +253,7 @@
     "runtime/iskraSpace/services/storageCompat.ts": "d414a1240d73ca845f8c0f28ce14225178236367d59929c852d667a3db0a2977",
     "runtime/iskraSpace/services/storageService.ts": "45fae9750f8625659e8478ab74fbc12545f380ead928f5bb92af265ede35592d",
     "runtime/iskraSpace/services/supabaseClient.ts": "1d33dce440479fb0b01c486a58c64f2737d083a89f3e0d6d75cb69ed7f7e416e",
-    "runtime/iskraSpace/services/supabaseService.ts": "566208be46b258ac84ca9567b47611a9860bae7e94c40e301fb9878bf38219db",
+    "runtime/iskraSpace/services/supabaseService.ts": "35d5524b0405824c67c2c39ae007e0180f6cfc32d1b322315dea4ed8948feae2",
     "runtime/iskraSpace/services/userMetricsService.ts": "cf25160c0e4d14242016d4446b6c25e9db8af57bcf6fa6e175d65245a1a6b304",
     "runtime/iskraSpace/services/validatorsService.ts": "41a4989c674658b8f6266778bb0daff0a53a0d5dad5c989a02c0d9e71c51dc7f",
     "runtime/iskraSpace/services/voiceEngine.ts": "5bbc0a50e93032ebeb531fde20b6c01e48b854dd9feb96a0c165b8fca432d6aa",

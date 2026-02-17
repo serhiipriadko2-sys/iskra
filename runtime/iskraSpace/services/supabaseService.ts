@@ -497,7 +497,7 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
     layer: data.layer,
     timestamp: data.created_at || new Date().toISOString(),
     title: data.title,
-    content: data.content,
+    content: typeof data.content === 'string' ? data.content : JSON.stringify(data.content),
     doc_type: data.doc_type || undefined,
     trust_level: data.trust_level ?? 1.0,
     tags: data.tags || [],
