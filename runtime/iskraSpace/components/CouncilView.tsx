@@ -167,7 +167,7 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
             return (
               <div
                 key={index}
-                className={`glass-card p-5 border transition-all duration-300 animate-fade-in-up-up hover-glow ${
+                className={`glass-card p-5 border transition-all duration-300 animate-fade-in-up hover-glow ${
                   isIskraSynthesis
                     ? 'bg-gradient-to-r from-primary/10 to-accent/10 border-primary/40 ring-2 ring-primary/20'
                     : VOICE_COLORS[response.voice]

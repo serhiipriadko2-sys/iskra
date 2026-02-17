@@ -123,7 +123,7 @@
     "runtime/iskraSpace/components/BreathingIndicator.tsx": "161fd76501be6101e30ecf934de78d033a06a74a87be7b7affbe74254640c890",
     "runtime/iskraSpace/components/ChatView.tsx": "c117b42a499d678eced77ddd06c07b4fb226c8f15a280ba3e6289a1644c85d6e",
     "runtime/iskraSpace/components/ChatWindow.tsx": "38e29d991f69e67a084ce9f66be750a5a4c32eda811f8b9b313679a39689f8e2",
-    "runtime/iskraSpace/components/CouncilView.tsx": "39b292959d9c82d4fb80c7acb847887267d2b3226d836b3b6d33b781c413a48d",
+    "runtime/iskraSpace/components/CouncilView.tsx": "b91a6a1a7018d6c54d2e652070aee3163b6a3075f8960aae18c47008067c0f2e",
     "runtime/iskraSpace/components/DayPulse.tsx": "0bfd237f4f3c824c822e1c07e0a90bb303a4d28e455588f35a76a33da21eab54",
     "runtime/iskraSpace/components/DeepResearchView.tsx": "d403d625ed084c22eef763bdbda826437a30330b22bebe41bfb6b58b676f80c0",
     "runtime/iskraSpace/components/DeltaReport.tsx": "6d3823c29828039af8965296f95498df39298231a5b2d9da57672c058654b29b",
