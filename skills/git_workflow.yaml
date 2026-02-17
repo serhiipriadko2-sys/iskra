@@ -1,11 +1,14 @@
 skill: "git_workflow"
-description: "Git Workflow for Iskra Monorepo (vΩ.5.0)"
+description: "Git Workflow for Iskra Monorepo (vΩ.5.1)"
+updated: "2026-02-17"
+
 branches:
   main: "Stable release (Source of Truth)"
   develop: "Active development"
   features: "feat/<name>"
   fixes: "fix/<issue>"
   refactor: "refactor/<component>"
+  docs: "docs/<topic>"
   chore: "chore/<task>"
 
 commits:
@@ -18,13 +21,33 @@ commits:
     refactor: "Refactoring production code"
     test: "Adding missing tests, refactoring tests; no production code change"
     chore: "Updating grunt tasks etc; no production code change"
+    perf: "Performance improvements"
   format: "<type>(<scope>): <subject>"
+  scopes:
+    - "core"
+    - "math"
+    - "engine"
+    - "web"
+    - "runtime"
+    - "skills"
+    - "docs"
+
+pre_commit:
+  - "pnpm test"
+  - "pnpm typecheck"
 
 pull_requests:
-  template: "Please include a summary of the change and which issue is fixed."
+  template: "Include summary of changes, scope, and related issue."
   reviewers: "Required"
-  checks: "CI/CD must pass"
+  checks: "CI/CD must pass (tests, types, lint)"
+  checklist:
+    - "Tests pass"
+    - "Type check passes"
+    - "No secrets committed"
+    - "Layer boundaries respected"
+    - "Conventional Commit messages"
 
 versioning:
   strategy: "Semantic Versioning (SemVer)"
   tags: "vX.Y.Z"
+  changelog: "governance/changelog.md"

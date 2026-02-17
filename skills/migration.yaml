@@ -1,0 +1,70 @@
+skill: "migration"
+description: "Runtime to Packages Migration Protocol (vΩ.5.1)"
+updated: "2026-02-17"
+
+strategy: "Strangler Fig Pattern"
+goal: "Gradually replace runtime/ logic with packages/ imports until runtime can be archived"
+
+current_state:
+  migrated:
+    - "Voice selection logic → packages/engine/src/services/voiceSystem.ts"
+    - "Metrics calculation → packages/engine/src/services/metricsService.ts"
+    - "Memory retrieval → packages/engine/src/services/memory.ts"
+    - "Fractal analysis → packages/math/src/fractal.ts"
+    - "Quantum logic → packages/math/src/quantum.ts"
+    - "Entropy analysis → packages/math/src/entropy.ts"
+    - "Type definitions → packages/core/src/types.ts"
+    - "Voice manifest → packages/core/manifest/voices.json"
+  pending:
+    - "GraphService → needs migration to @iskra/engine"
+    - "RAG Service → needs migration to @iskra/engine"
+    - "Gemini LLM integration → needs migration to @iskra/engine"
+    - "Eval cases → needs migration to metrics/"
+    - "Evidence service → needs migration to @iskra/engine"
+
+mapping:
+  - source: "runtime/iskraSpace/services/voiceEngine.ts"
+    target: "packages/engine/src/services/voiceSystem.ts"
+    status: "migrated"
+  - source: "runtime/iskraSpace/services/metricsService.ts"
+    target: "packages/engine/src/services/metricsService.ts"
+    status: "migrated"
+  - source: "runtime/iskraSpace/services/graphService.ts"
+    target: "packages/engine/src/services/graphService.ts"
+    status: "pending"
+  - source: "runtime/iskraSpace/services/graphServiceSupabase.ts"
+    target: "packages/engine/src/services/graphService.ts"
+    status: "pending"
+  - source: "runtime/iskraSpace/services/geminiService.ts"
+    target: "packages/engine/src/services/llmService.ts"
+    status: "pending"
+
+process:
+  steps:
+    - "1. Identify the runtime service to migrate"
+    - "2. Analyze dependencies and interfaces"
+    - "3. Create corresponding module in packages/"
+    - "4. Port logic with strict typing (no any)"
+    - "5. Write tests for the new module"
+    - "6. Update imports in consumers to use packages/"
+    - "7. Verify all tests pass"
+    - "8. Mark runtime service as deprecated (do not delete yet)"
+    - "9. After all consumers migrated, archive the runtime service"
+
+  constraints:
+    - "Maintain backward compatibility during transition"
+    - "Never break existing tests"
+    - "New code must use @iskra/core types"
+    - "No new features in runtime/ — new code goes to packages/"
+    - "Test coverage must be maintained or improved"
+
+phases:
+  phase_2: "Migrate GraphService, add Supabase to engine"
+  phase_3: "Replace all runtime imports, deprecate voiceEngine.ts"
+  phase_4: "Archive runtime/, iskra-web becomes sole frontend"
+
+completion_criteria:
+  - "runtime/ directory is archived or deleted"
+  - "All logic resides in packages/"
+  - "All tests pass"
+  - "No import references to runtime/ from packages/ or apps/"

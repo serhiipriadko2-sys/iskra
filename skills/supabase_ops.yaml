@@ -1,5 +1,6 @@
 skill: "supabase_ops"
-description: "Supabase Operations for Iskra Space (vΩ.5.0)"
+description: "Supabase Operations for ISKRA (vΩ.5.1)"
+updated: "2026-02-17"
 project_id: "typcvaszcfdpkzbjzuur"
 
 tools:
@@ -14,15 +15,30 @@ rules:
   schema:
     - "Do not guess table names. Use `supabase_list_tables` first."
     - "Always check `rls_enabled` status for security."
+    - "Use strict TypeScript types for database responses."
 
   functions:
     - "Deploy functions using `supabase_deploy_edge_function`."
     - "Use `verify_jwt: true` unless explicitly public."
+    - "Never expose API keys in frontend code."
 
   migrations:
     - "Use migration files for schema changes."
-    - "Do not run DDL (CREATE/ALTER) via raw SQL in production unless necessary for quick fixes."
+    - "Do not run DDL (CREATE/ALTER) via raw SQL in production."
+    - "Test migrations in development environment first."
 
   data:
     - "Treat user data as sensitive."
     - "Use strict typing for database responses (generate types)."
+    - "Always use parameterized queries to prevent SQL injection."
+
+  environment:
+    - "Store VITE_SUPABASE_URL in .env"
+    - "Store VITE_SUPABASE_ANON_KEY in .env"
+    - "Store GEMINI_API_KEY in server-side env only (Edge Functions)"
+    - "Never commit .env files"
+
+  pgvector:
+    - "Use pgvector for embedding storage"
+    - "Index embeddings with ivfflat or hnsw for performance"
+    - "Embedding dimensions must match provider output"

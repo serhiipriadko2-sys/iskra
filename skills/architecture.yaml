@@ -1,35 +1,77 @@
 skill: "architecture"
-description: "Iskra Monorepo Architecture (vΩ.5.0 Scientific Turn)"
+description: "Iskra Monorepo Architecture (vΩ.5.1 Scientific Turn)"
+updated: "2026-02-17"
+
 layers:
   core:
     path: "packages/core"
     role: "Source of Truth"
-    contents: "Types, Constants, Manifests"
+    contents: "Types, Constants, Manifests (voices.json)"
     dependencies: "None"
+    key_types:
+      - "IskraMetrics (11 dimensions)"
+      - "VoiceID (9 voices)"
+      - "VoiceManifestEntry"
+      - "MantraNode"
+      - "FractalMetadata"
+      - "DEFAULT_METRICS"
 
   math:
     path: "packages/math"
     role: "Pure Logic"
-    contents: "Fractals, Quantum, Entropy"
-    dependencies: "None (or math libraries)"
-    constraints: "Pure functions only. No side effects."
+    contents: "Fractals (HFD, DFA), Quantum (interference, resonance), Entropy (Shannon)"
+    dependencies: "None"
+    constraints: "Pure functions only. No side effects. No state."
+    key_functions:
+      - "calculateHFD() — Higuchi Fractal Dimension"
+      - "calculateDFA() — Detrended Fluctuation Analysis"
+      - "calculateShannonEntropy() — Shannon Entropy"
+      - "interference() — Quantum superposition"
+      - "calculateResonance() — Phase-amplitude matching"
+      - "calculateCSI() — Collapse State Index"
+      - "calculateEI() — Entanglement Index"
+      - "calculateNC() — Nonlocality/Causality"
 
   engine:
     path: "packages/engine"
     role: "Runtime Orchestrator"
-    contents: "State, Memory, IO, Supabase"
-    dependencies: ["core", "math", "supabase-js"]
-    constraints: "Handles all state mutations."
+    contents: "CoreEngine, MemoryService, MetricsEngine, VoiceQuantumField"
+    dependencies: ["@iskra/core", "@iskra/math"]
+    constraints: "Handles all state mutations. Only package with side effects."
+    pipeline:
+      - "1. Somatic Reflex Analysis"
+      - "2. Entropy Feedback"
+      - "3. Fractal Memory Retrieval"
+      - "4. Memory Impact on State"
+      - "5. Quantum Voice Field Update"
+      - "6. Wave Function Collapse → Voice Selection"
 
   apps:
     path: "apps/iskra-web"
     role: "Holographic Projection"
-    contents: "UI Components, React, Vite"
-    dependencies: ["core", "engine"]
-    constraints: "View layer only. No business logic."
+    contents: "ChatInterface, QuantumField, useEngine hook, somatic feedback"
+    dependencies: ["@iskra/core", "@iskra/engine"]
+    constraints: "View layer only. No business logic. No direct math calls."
+
+  runtime:
+    path: "runtime/"
+    role: "Legacy (DEPRECATED)"
+    status: "Being migrated to packages via Strangler Fig pattern"
+    constraints: "Frozen for new features. Do not add new code here."
+
+dependency_graph: |
+  @iskra/core (zero deps)
+      |
+  @iskra/math (depends: core)
+      |
+  @iskra/engine (depends: core, math)
+      |
+  apps/iskra-web (depends: core, engine)
 
 principles:
-  - "Strict Typing: No `any`."
+  - "Strict Typing: No `any`. All types from @iskra/core."
   - "Pure Math: Isolate complexity in `math` package."
   - "State Isolation: Centralize state in `engine`."
   - "Testing: Verify behavior at the appropriate layer."
+  - "No circular dependencies between packages."
+  - "Import direction: always top-down (core → math → engine → apps)."

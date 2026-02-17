@@ -1,33 +1,45 @@
 skill: "code_style"
-description: "Стандарты кодирования ISKRA (vΩ.5.0 Scientific Turn)"
+description: "Coding Standards for ISKRA (vΩ.5.1 Scientific Turn)"
+updated: "2026-02-17"
+
 rules:
   typescript:
     strict: true
     no_any: true
+    no_as_unknown: true
     interfaces: "PascalCase"
     types: "PascalCase"
     constants: "UPPER_SNAKE_CASE"
+    enums: "PascalCase with PascalCase members"
 
   structure:
     packages:
-      core: "Zero dependencies. Types and constants only."
-      math: "Pure functions. No side effects. No state."
-      engine: "State management. Supabase IO. Business logic."
-      apps: "UI projection only. No business logic."
+      core: "Zero dependencies. Types and constants only. No logic."
+      math: "Pure functions. No side effects. No state. No imports beyond core."
+      engine: "State management. Supabase IO. Business logic. Side effects allowed."
+      apps: "UI projection only. No business logic. No direct math calls."
 
   imports:
     order:
-      - "external"
+      - "external (react, vite, supabase, etc.)"
       - "@iskra/core"
       - "@iskra/math"
       - "@iskra/engine"
-      - "internal"
+      - "internal (relative paths)"
+    rules:
+      - "No circular imports between packages"
+      - "Import direction: always top-down"
+      - "Prefer named exports over default exports"
 
   naming:
     variables: "camelCase"
     functions: "camelCase"
     components: "PascalCase"
-    files: "kebab-case"
+    hooks: "useCamelCase"
+    files: "kebab-case.ts"
+    test_files: "kebab-case.test.ts"
+    constants: "UPPER_SNAKE_CASE"
+    interfaces: "PascalCase (no I-prefix)"
 
   formatting:
     indent: 2
@@ -35,3 +47,19 @@ rules:
     semi: false
     trailing_comma: "all"
     max_lines: 300
+    line_width: 100
+
+  patterns:
+    prefer:
+      - "Pure functions over classes (in @iskra/math)"
+      - "Interfaces over type aliases (for extensibility)"
+      - "Explicit return types on exported functions"
+      - "Destructuring for object parameters"
+      - "Array methods (map, filter, reduce) over loops"
+    avoid:
+      - "any type"
+      - "as unknown as T"
+      - "Side effects in @iskra/math"
+      - "Business logic in UI components"
+      - "Magic numbers (use constants from @iskra/core)"
+      - "Nested ternaries (use if/else or early returns)"
