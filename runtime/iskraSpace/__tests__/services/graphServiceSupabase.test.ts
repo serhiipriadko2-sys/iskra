@@ -4,12 +4,16 @@ import { GraphServiceSupabase } from '../../services/graphServiceSupabase';
 // Create mock function using vi.hoisted
 const mockSupabase = vi.hoisted(() => ({
   from: vi.fn(),
+  rpc: vi.fn(),
 }));
 
-// We mock the Supabase client module that the service imports.
-// Path is relative to this test file.
+// Mock Supabase client and getUserId
 vi.mock('../../services/supabaseClient', () => {
-  return { supabase: mockSupabase };
+  return {
+    supabase: mockSupabase,
+    getUserId: vi.fn().mockResolvedValue('test-user-id'),
+    isSupabaseAvailable: vi.fn().mockResolvedValue(true)
+  };
 });
 
 function makeInsertChain(result: any) {
@@ -32,22 +36,23 @@ describe('GraphServiceSupabase', () => {
       layer: 'core',
       type: 'fact',
       content: 'C',
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
       resonance_score: 0.77,
       metadata: {},
       created_at: new Date('2026-01-01T00:00:00Z').toISOString(),
       updated_at: new Date('2026-01-02T00:00:00Z').toISOString(),
+      metrics_snapshot: null,
+      related_ids: []
     };
 
     const chain = makeInsertChain({ data: row, error: null });
     mockSupabase.from.mockReturnValue(chain);
 
     const node = await svc.addNode(
-      'CORE' as any, // layer
-      'FACT' as any, // type
+      'CORE', // layer
+      'FACT', // type
       'C', // content
-      undefined, // metrics
-      'node-1' // id
+      undefined // metrics
     );
 
     // DB insert payload should use lowercased layer
@@ -58,10 +63,17 @@ describe('GraphServiceSupabase', () => {
     expect(payload.type).toBe('fact');
     expect(payload.content).toBe('C');
 
+    // Check user_id directly if it's already resolved in the payload
+    if (payload.user_id instanceof Promise) {
+      await expect(payload.user_id).resolves.toBe('test-user-id');
+    } else {
+      expect(payload.user_id).toBe('test-user-id');
+    }
+
     // Result should normalize layer casing back to enum-like form
     expect(node.id).toBe('node-1');
     expect(node.layer).toBe('CORE');
-    expect(node.type).toBe('fact'); // Type is not normalized to uppercase
+    expect(node.type).toBe('fact');
   });
 
   it('addNode(): throws on Supabase error', async () => {
@@ -72,11 +84,10 @@ describe('GraphServiceSupabase', () => {
 
     await expect(
       svc.addNode(
-        'CORE' as any, // layer
-        'FACT' as any, // type
-        'C', // content
-        undefined, // metrics
-        'node-err' // id
+        'CORE',
+        'FACT',
+        'C',
+        undefined
       )
     ).rejects.toThrow(/Failed to add node/i);
   });

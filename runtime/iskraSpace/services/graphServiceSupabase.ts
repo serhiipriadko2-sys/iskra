@@ -1,80 +1,56 @@
 /**
- * GraphRAG Service - Supabase Integration
+ * Graph Service Implementation for Supabase
  *
- * Extends in-memory graphService with Supabase persistence
- * Uses graph_nodes and graph_edges tables from migration
+ * Stores nodes and edges in Supabase tables:
+ * - graph_nodes
+ * - graph_edges
  *
- * @see services/graphService.ts (in-memory implementation)
- * @see supabase_graphrag_migration.sql (database schema)
+ * Uses RPC functions for graph traversal.
  */
 
 import { supabase as supabaseClient } from './supabaseClient';
-import type { IskraMetrics } from '../types';
 import type {
+  MemoryNode,
+  MemoryEdge,
   MemoryLayer,
   MemoryNodeType,
-  EdgeType,
-  MemoryNode,
-  MemoryEdge
-} from './graphService';
+  IskraMetrics,
+  EdgeType
+} from '../types';
+import type { Database } from '../types/supabase';
 
-// --- TYPES ---
-
-interface GraphNodeRow {
-  id: string;
-  layer: string;
-  type: string;
-  content: string;
-  timestamp: number;
-  metrics_snapshot?: any;
-  related_ids?: string[];
-  resonance_score?: number;
-  metadata?: any;
-  created_at?: string;
-  updated_at?: string;
-  user_id?: string;
-}
-
-interface GraphEdgeRow {
-  id: string;
-  source: string;
-  target: string;
-  type: string;
-  weight: number;
-  metadata?: any;
-  created_at?: string;
-  user_id?: string;
-}
-
-// --- SERVICE ---
+// Use strict types from generated Supabase definitions
+type GraphNodeRow = Database['public']['Tables']['graph_nodes']['Row'];
+type GraphEdgeRow = Database['public']['Tables']['graph_edges']['Row'];
 
 export class GraphServiceSupabase {
   /**
    * Add node to Supabase
    */
   public async addNode(
-    layer: MemoryLayer,
-    type: MemoryNodeType,
+    layer: string,
+    type: string,
     content: string,
-    metrics?: IskraMetrics,
-    id?: string
+    metrics?: IskraMetrics
   ): Promise<MemoryNode> {
-    const nodeId = id || `node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const nodeId = crypto.randomUUID();
 
     // Calculate resonance score if metrics provided
     const resonance_score = metrics
       ? this.calculateResonance(metrics)
       : undefined;
 
-    const node: GraphNodeRow = {
+    const node: Database['public']['Tables']['graph_nodes']['Insert'] = {
       id: nodeId,
       layer: layer.toLowerCase(),
       type: type.toLowerCase(),
       content,
-      timestamp: Date.now(),
-      metrics_snapshot: metrics,
+      timestamp: new Date().toISOString(), // Use ISO string for Supabase
+      metrics_snapshot: metrics as unknown as Database['public']['Tables']['graph_nodes']['Insert']['metrics_snapshot'],
       resonance_score,
-      metadata: {}
+      metadata: {},
+      related_ids: [],
+      user_id: await import('./supabaseClient').then(m => m.getUserId())
     };
 
     const { data, error } = await supabaseClient
@@ -84,7 +60,6 @@ export class GraphServiceSupabase {
       .single();
 
     if (error) {
-      console.error('Failed to insert graph node:', error);
       throw new Error(`GraphService: Failed to add node - ${error.message}`);
     }
 
@@ -102,7 +77,7 @@ export class GraphServiceSupabase {
   ): Promise<MemoryEdge> {
     const edgeId = `edge_${source}_${target}_${type}`;
 
-    const edge: GraphEdgeRow = {
+    const edge: Database['public']['Tables']['graph_edges']['Insert'] = {
       id: edgeId,
       source,
       target,
@@ -167,7 +142,7 @@ export class GraphServiceSupabase {
     }
 
     // Get full node data for each node_id
-    const nodeIds = data.map((row: any) => row.node_id);
+    const nodeIds = data.map((row: { node_id: string }) => row.node_id);
     const { data: nodes, error: nodesError } = await supabaseClient
       .from('graph_nodes')
       .select('*')
@@ -178,7 +153,7 @@ export class GraphServiceSupabase {
       return [];
     }
 
-    return nodes.map(this.rowToNode);
+    return (nodes || []).map(this.rowToNode);
   }
 
   /**
@@ -317,7 +292,7 @@ export class GraphServiceSupabase {
       .from('graph_nodes')
       .update({
         resonance_score,
-        metrics_snapshot: metrics
+        metrics_snapshot: metrics as unknown as Database['public']['Tables']['graph_nodes']['Update']['metrics_snapshot']
       })
       .eq('id', nodeId);
 
@@ -458,11 +433,11 @@ export class GraphServiceSupabase {
       layer: row.layer.toUpperCase() as MemoryLayer,
       type: row.type as MemoryNodeType,
       content: row.content,
-      timestamp: row.timestamp,
-      metrics_snapshot: row.metrics_snapshot,
-      relatedIds: row.related_ids,
-      resonance_score: row.resonance_score,
-      metadata: row.metadata || {}
+      timestamp: row.timestamp || new Date().toISOString(),
+      metrics_snapshot: row.metrics_snapshot as unknown as IskraMetrics | undefined,
+      relatedIds: row.related_ids || [],
+      resonance_score: row.resonance_score || undefined,
+      metadata: (row.metadata as Record<string, unknown>) || {}
     };
   }
 
@@ -476,7 +451,7 @@ export class GraphServiceSupabase {
       target: row.target,
       type: row.type as EdgeType,
       weight: row.weight,
-      metadata: row.metadata || {}
+      metadata: (row.metadata as Record<string, unknown>) || {}
     };
   }
 }

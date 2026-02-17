@@ -47,7 +47,7 @@ class WebHealthProvider implements HealthProvider {
 
 // Stub implementation for dev/testing when no bridge exists
 // @ts-ignore - unused but kept for reference or future fallback
-class StubHealthProvider implements HealthProvider {
+class _StubHealthProvider implements HealthProvider {
   isAvailable(): boolean {
     return false;
   }

@@ -162,7 +162,7 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
       try {
         const allTasks = storageService.getTasks();
         return allTasks.filter(t => !t.done).slice(0, 3);
-      } catch (e) { return []; }
+      } catch (_e) { return []; }
     });
     const [habits, setHabits] = useState<Habit[]>([]);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -196,7 +196,7 @@ const DayPulse: React.FC<DayPulseProps> = ({ metrics, phase, onStartFocus }) => 
             }
         };
         fetchAdvice();
-    }, []); // eslint-disable-line
+    }, []);
 
     const handleToggleHabit = (id: string) => {
         const updated = habits.map(h => h.id === id ? { ...h, completedToday: !h.completedToday, streak: !h.completedToday ? h.streak + 1 : Math.max(0, h.streak - 1) } : h);

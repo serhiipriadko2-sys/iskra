@@ -29,7 +29,7 @@ export const parseIskraResponse = (text: string): ResponseParseResult => {
   }
 
   // 2. Extract KAIN-Slice (Priority Warning)
-  const kainMatch = content.match(/[⚑🚩]\s*KAIN-Slice:\s*(.*?)(?:\n\n|$)/i);
+  const kainMatch = content.match(/[⚑🚩]\s*KAIN-Slice:\s*(.*?)(?:\n\n|$)/iu);
   if (kainMatch) {
     kainSlice = kainMatch[1].trim();
     content = content.replace(kainMatch[0], '').trim();
@@ -40,7 +40,7 @@ export const parseIskraResponse = (text: string): ResponseParseResult => {
   // ∆ (Дельта): ...
   // **∆**: ...
   // ∆: ...
-  const deltaRegex = /[\*]*∆[\*]*\s*\(?Дельта\)?\s*:?\s*(.*?)\n+[\*]*D[\*]*\s*\(?(?:Depth|SIFT)\)?\s*:?\s*(.*?)\n+[\*]*Ω[\*]*\s*\(?Омега\)?\s*:?\s*(.*?)\n+[\*]*Λ[\*]*\s*\(?(?:Lambda|Лямбда|Latch)\)?\s*:?\s*(.*)/si;
+  const deltaRegex = /[*]*∆[*]*\s*\(?Дельта\)?\s*:?\s*(.*?)\n+[*]*D[*]*\s*\(?(?:Depth|SIFT)\)?\s*:?\s*(.*?)\n+[*]*Ω[*]*\s*\(?Омега\)?\s*:?\s*(.*?)\n+[*]*Λ[*]*\s*\(?(?:Lambda|Лямбда|Latch)\)?\s*:?\s*(.*)/si;
   
   const deltaMatch = content.match(deltaRegex);
 

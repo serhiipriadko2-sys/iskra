@@ -51,7 +51,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ steps, onComplete, onSk
                 return;
             }
 
-            let target = document.getElementById(targetId);
+            const target = document.getElementById(targetId);
             if (!target && currentStep.position !== 'center') {
                 centerFallback();
                 return;
@@ -62,7 +62,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ steps, onComplete, onSk
                 return;
             }
 
-            // @ts-ignore
+            // @ts-expect-error — getBoundingClientRect may return null
             const targetRect = target.getBoundingClientRect();
             const tooltipRect = tooltipRef.current.getBoundingClientRect();
             

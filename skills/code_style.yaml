@@ -1,18 +1,37 @@
 skill: "code_style"
-description: "Стандарты кодирования ISKRA"
+description: "Стандарты кодирования ISKRA (vΩ.5.0 Scientific Turn)"
 rules:
-  indent: 2
-  quotes: "single"
-  semi: true
+  typescript:
+    strict: true
+    no_any: true
+    interfaces: "PascalCase"
+    types: "PascalCase"
+    constants: "UPPER_SNAKE_CASE"
+
+  structure:
+    packages:
+      core: "Zero dependencies. Types and constants only."
+      math: "Pure functions. No side effects. No state."
+      engine: "State management. Supabase IO. Business logic."
+      apps: "UI projection only. No business logic."
+
+  imports:
+    order:
+      - "external"
+      - "@iskra/core"
+      - "@iskra/math"
+      - "@iskra/engine"
+      - "internal"
+
   naming:
     variables: "camelCase"
+    functions: "camelCase"
     components: "PascalCase"
-    constants: "UPPER_SNAKE_CASE"
-  files:
+    files: "kebab-case"
+
+  formatting:
+    indent: 2
+    quotes: "single"
+    semi: false
+    trailing_comma: "all"
     max_lines: 300
-    component_structure:
-      - "Imports"
-      - "Types"
-      - "Component"
-      - "Hooks"
-      - "Render"

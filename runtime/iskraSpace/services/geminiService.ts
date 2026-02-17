@@ -404,7 +404,7 @@ function cleanAndParseJSON<T>(text: string): T {
         }
 
         return JSON.parse(cleaned) as T;
-    } catch (e) {
+    } catch (_e) {
         console.error("JSON Parsing Failed. Raw text:", text);
         throw new Error("Failed to parse AI response as JSON.");
     }

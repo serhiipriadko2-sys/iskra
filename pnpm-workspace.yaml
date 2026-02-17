@@ -1,0 +1,5 @@
+packages:
+  - 'packages/*'
+  - 'apps/*'
+  - 'runtime/*'  # Legacy location
+  - 'core/*'     # Legacy location

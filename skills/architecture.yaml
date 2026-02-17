@@ -1,0 +1,35 @@
+skill: "architecture"
+description: "Iskra Monorepo Architecture (vΩ.5.0 Scientific Turn)"
+layers:
+  core:
+    path: "packages/core"
+    role: "Source of Truth"
+    contents: "Types, Constants, Manifests"
+    dependencies: "None"
+
+  math:
+    path: "packages/math"
+    role: "Pure Logic"
+    contents: "Fractals, Quantum, Entropy"
+    dependencies: "None (or math libraries)"
+    constraints: "Pure functions only. No side effects."
+
+  engine:
+    path: "packages/engine"
+    role: "Runtime Orchestrator"
+    contents: "State, Memory, IO, Supabase"
+    dependencies: ["core", "math", "supabase-js"]
+    constraints: "Handles all state mutations."
+
+  apps:
+    path: "apps/iskra-web"
+    role: "Holographic Projection"
+    contents: "UI Components, React, Vite"
+    dependencies: ["core", "engine"]
+    constraints: "View layer only. No business logic."
+
+principles:
+  - "Strict Typing: No `any`."
+  - "Pure Math: Isolate complexity in `math` package."
+  - "State Isolation: Centralize state in `engine`."
+  - "Testing: Verify behavior at the appropriate layer."

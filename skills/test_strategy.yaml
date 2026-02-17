@@ -1,11 +1,35 @@
-skill: "unit_test_refactor"
-description: "Автоматическое покрытие новых функций тестами"
-trigger: "new_function"
-rules:
-  coverage_target: 85
-  test_framework: "vitest"
-  assert_style: "BDD"
-actions:
-  - type: "generate_tests"
-  - type: "run_tests"
-  - type: "evaluate_coverage"
+skill: "test_strategy"
+description: "Стратегия тестирования ISKRA (vΩ.5.0)"
+framework: "vitest"
+principles:
+  - "Test Driven Development (Red -> Green -> Refactor)"
+  - "Property-based testing for mathematical invariants"
+  - "Integration tests for Supabase interactions"
+
+layers:
+  math:
+    type: "unit"
+    focus: "Pure functions, edge cases, mathematical correctness"
+    tools: ["vitest", "fast-check"]
+
+  engine:
+    type: "integration"
+    focus: "State transitions, memory retrieval, Supabase IO"
+    tools: ["vitest", "msw"]
+
+  ui:
+    type: "component"
+    focus: "Rendering, user interaction, holographic effects"
+    tools: ["vitest", "react-testing-library"]
+
+commands:
+  all: "pnpm test"
+  package: "pnpm --filter <package_name> test"
+  watch: "pnpm test --watch"
+  coverage: "pnpm test --coverage"
+
+coverage_target:
+  statements: 90
+  branches: 85
+  functions: 90
+  lines: 90
