@@ -20,7 +20,7 @@ layers:
     path: "packages/math"
     role: "Pure Logic"
     contents: "Fractals (HFD, DFA), Quantum (interference, resonance), Entropy (Shannon)"
-    dependencies: "None"
+    dependencies: ["@iskra/core"]
     constraints: "Pure functions only. No side effects. No state."
     key_functions:
       - "calculateHFD() — Higuchi Fractal Dimension"
