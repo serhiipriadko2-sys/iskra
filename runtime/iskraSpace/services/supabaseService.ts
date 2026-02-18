@@ -1,6 +1,6 @@
 import { supabase, getUserId, isSupabaseAvailable } from './supabaseClient';
 import type { Database } from '../types/supabase';
-import type { IskraMetrics, IskraPhase } from '../types';
+import type { IskraMetrics, IskraPhase, MemoryNode, SIFTBlock } from '../types';
 
 // We use the generated types for DB interactions
 type VoicePreferences = Record<string, number>;
@@ -12,20 +12,6 @@ interface Message {
   voice?: { name: string };
 }
 
-interface MemoryNode {
-  id: string;
-  layer: string;
-  type: string;
-  title: string;
-  content: string;
-  timestamp: string;
-  doc_type?: string;
-  trust_level?: number;
-  tags?: string[];
-  section?: string;
-  facet?: string;
-  evidence?: unknown[];
-}
 
 const safeStorage = {
   getItem: (key: string) => {
@@ -450,17 +436,17 @@ export async function getMemoryNodes(layer?: string): Promise<MemoryNode[]> {
 
   const nodes: MemoryNode[] = (data || []).map(row => ({
     id: row.id,
-    type: row.type,
-    layer: row.layer,
+    type: row.type as any,
+    layer: row.layer as any,
     timestamp: row.created_at || new Date().toISOString(),
     title: row.title,
     content: row.content,
-    doc_type: row.doc_type || undefined,
+    doc_type: row.doc_type as any || undefined,
     trust_level: row.trust_level ?? undefined,
     tags: row.tags || [],
     section: row.section || undefined,
-    facet: row.facet || undefined,
-    evidence: (row.evidence as unknown[]) || [],
+    facet: row.facet as any || undefined,
+    evidence: (row.evidence as unknown as SIFTBlock[]) || [],
   }));
 
   // Cache for offline use
@@ -478,13 +464,13 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
       layer: node.layer,
       type: node.type,
       title: node.title,
-      content: node.content,
+      content: node.content as any,
       doc_type: node.doc_type || null,
       trust_level: node.trust_level || 1.0,
       tags: node.tags || [],
       section: node.section || null,
       facet: node.facet || null,
-      evidence: node.evidence || [],
+      evidence: node.evidence as any || [],
     })
     .select()
     .single();
@@ -493,12 +479,12 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
 
   return {
     id: data.id,
-    type: data.type,
-    layer: data.layer,
+    type: data.type as any,
+    layer: data.layer as any,
     timestamp: data.created_at || new Date().toISOString(),
     title: data.title,
     content: data.content,
-    doc_type: data.doc_type || undefined,
+    doc_type: data.doc_type as any || undefined,
     trust_level: data.trust_level ?? 1.0,
     tags: data.tags || [],
     evidence: [],
