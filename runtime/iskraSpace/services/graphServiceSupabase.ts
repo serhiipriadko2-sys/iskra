@@ -192,14 +192,20 @@ export class GraphServiceSupabase {
 
     if (error) {
       console.error('Get node with edges failed:', error);
-      return { node: null, outgoing: [], incoming: [] };
+      return {
+
+       node: null, outgoing: [], incoming: [] };
     }
 
     if (!data || !data.node) {
-      return { node: null, outgoing: [], incoming: [] };
+      return {
+
+       node: null, outgoing: [], incoming: [] };
     }
 
     return {
+
+
       node: this.rowToNode(data.node),
       outgoing: (data.outgoing_edges || []).map(this.rowToEdge),
       incoming: (data.incoming_edges || []).map(this.rowToEdge)
@@ -428,7 +434,10 @@ export class GraphServiceSupabase {
    * Convert database row to MemoryNode
    */
   private rowToNode(row: GraphNodeRow): MemoryNode {
+    const metadata = (row.metadata as Record<string, unknown>) || {};
     return {
+      evidence: [],
+      title: (metadata.title as string) || "Untitled",
       id: row.id,
       layer: row.layer.toUpperCase() as MemoryLayer,
       type: row.type as MemoryNodeType,
@@ -437,7 +446,7 @@ export class GraphServiceSupabase {
       metrics_snapshot: row.metrics_snapshot as unknown as IskraMetrics | undefined,
       relatedIds: row.related_ids || [],
       resonance_score: row.resonance_score || undefined,
-      metadata: (row.metadata as Record<string, unknown>) || {}
+      metadata: metadata
     };
   }
 
@@ -446,6 +455,8 @@ export class GraphServiceSupabase {
    */
   private rowToEdge(row: GraphEdgeRow): MemoryEdge {
     return {
+
+
       id: row.id,
       source: row.source,
       target: row.target,
