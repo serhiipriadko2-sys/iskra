@@ -58,9 +58,33 @@ export interface VoiceManifestEntry {
   description: string;
 }
 
+export interface VoiceWeights {
+  resonanceBoostMultiplier: number;
+  thresholdBaseFactor: number;
+  thresholdPenaltyFactor: number;
+  minActivationMetric: number;
+}
+
+export interface VoicePriorityRule {
+  winner: VoiceID;
+  loser: VoiceID;
+  winnerMultiplier: number;
+  loserMultiplier: number;
+  conditions: VoiceThresholds;
+}
+
+export interface VoiceRuntimeConfig {
+  weights: VoiceWeights;
+  priorityRules: VoicePriorityRule[];
+}
+
 // Re-export manifest data
 import voicesData from '../manifest/voices.json';
+import voiceRuntimeData from '../manifest/voice-runtime.json';
+
 export const VOICES: VoiceManifestEntry[] = voicesData as unknown as VoiceManifestEntry[];
+export const VOICE_RUNTIME_CONFIG: VoiceRuntimeConfig =
+  voiceRuntimeData as unknown as VoiceRuntimeConfig;
 
 export const DEFAULT_METRICS: IskraMetrics = {
   rhythm: 60,
