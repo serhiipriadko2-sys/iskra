@@ -12,7 +12,7 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['src/**/*.test.ts', 'iskraSpace/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'iskraSpace/**/*.test.ts', 'kain/**/*.test.ts', '**/__tests__/**/*.test.ts'],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
