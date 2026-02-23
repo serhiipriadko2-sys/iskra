@@ -1,5 +1,12 @@
-import { VOICES, VOICE_RUNTIME_CONFIG, VoiceID, IskraMetrics, VoiceThresholds } from '../../../core/src/index'
-import { QuantumStateVector, modulus, fromPolar } from '../../../math/src/index'
+import {
+  VOICES,
+  VOICE_RUNTIME_CONFIG,
+  VoiceComputationTrace,
+  VoiceID,
+  IskraMetrics,
+  VoiceThresholds,
+} from '@iskra/core'
+import { QuantumStateVector, modulus, fromPolar } from '@iskra/math'
 
 const RHYTHM_NORMALIZATION_MAX = 120
 
@@ -72,6 +79,7 @@ const getPriorityMultipliers = (metrics: IskraMetrics): Record<VoiceID, number> 
 export class VoiceQuantumField {
   private states: Map<VoiceID, QuantumStateVector> = new Map()
   private time: number = 0
+  private lastTrace: VoiceComputationTrace | null = null
 
   constructor() {
     this.initializeStates()
@@ -93,6 +101,7 @@ export class VoiceQuantumField {
   public update(metrics: IskraMetrics) {
     this.time += 0.1
     const priorityMultipliers = getPriorityMultipliers(metrics)
+    const traces: VoiceComputationTrace['voices'] = []
 
     VOICES.forEach((voice) => {
       const previousState =
@@ -111,13 +120,20 @@ export class VoiceQuantumField {
       } = VOICE_RUNTIME_CONFIG.weights
 
       let resonanceFactor = thresholdMatched ? thresholdBaseFactor : thresholdPenaltyFactor
+      const resonanceContributions: VoiceComputationTrace['voices'][number]['resonanceContributions'] = []
 
       if (thresholdMatched && voice.quantum.resonance) {
         voice.quantum.resonance.forEach((metricKey) => {
           const metricValue = normalizeMetric(metricKey, metrics[metricKey])
 
           if (metricValue > minActivationMetric) {
-            resonanceFactor += metricValue * resonanceBoostMultiplier
+            const contribution = metricValue * resonanceBoostMultiplier
+            resonanceFactor += contribution
+            resonanceContributions.push({
+              metric: metricKey,
+              normalizedValue: metricValue,
+              contribution,
+            })
           }
         })
       }
@@ -135,9 +151,33 @@ export class VoiceQuantumField {
         phase: newPhase,
         probability: modulus(newAmplitude) ** 2,
       })
+
+      traces.push({
+        id: voice.id,
+        thresholdMatched,
+        priorityMultiplier: priorityMultipliers[voice.id],
+        resonanceContributions,
+        resonanceFactor,
+        phase: newPhase,
+        probabilityBeforeNormalization: modulus(newAmplitude) ** 2,
+      })
     })
 
     this.normalize()
+
+    this.lastTrace = {
+      time: this.time,
+      metrics,
+      priorityMultipliers,
+      voices: traces.map((trace) => ({
+        ...trace,
+        probabilityAfterNormalization: this.states.get(trace.id)?.probability ?? 0,
+      })),
+    }
+  }
+
+  public getLastTrace(): VoiceComputationTrace | null {
+    return this.lastTrace
   }
 
   /**

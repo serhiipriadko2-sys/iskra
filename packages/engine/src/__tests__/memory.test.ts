@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { MemoryService, EmbeddingProvider } from '../services/memory';
-import { IskraMetrics } from '../../../core/src/index';
+import { IskraMetrics } from '@iskra/core';
 
 // Mock Embedding Provider
 class MockEmbeddingProvider implements EmbeddingProvider {

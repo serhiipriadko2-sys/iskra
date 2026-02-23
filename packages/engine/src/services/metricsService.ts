@@ -1,4 +1,4 @@
-import { IskraMetrics, DEFAULT_METRICS, MantraNode } from '../../../core/src/index';
+import { IskraMetrics, DEFAULT_METRICS, MantraNode } from '@iskra/core';
 import {
   calculateHFD,
   calculateDFA,
@@ -6,7 +6,7 @@ import {
   complex,
   interference,
   QuantumStateVector
-} from '../../../math/src/index';
+} from '@iskra/math';
 
 /**
  * MetricsEngine Service

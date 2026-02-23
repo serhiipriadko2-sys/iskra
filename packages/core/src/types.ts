@@ -78,6 +78,26 @@ export interface VoiceRuntimeConfig {
   priorityRules: VoicePriorityRule[];
 }
 
+export interface VoiceComputationTrace {
+  time: number;
+  metrics: IskraMetrics;
+  priorityMultipliers: Record<VoiceID, number>;
+  voices: Array<{
+    id: VoiceID;
+    thresholdMatched: boolean;
+    priorityMultiplier: number;
+    resonanceContributions: Array<{
+      metric: keyof IskraMetrics;
+      normalizedValue: number;
+      contribution: number;
+    }>;
+    resonanceFactor: number;
+    phase: number;
+    probabilityBeforeNormalization: number;
+    probabilityAfterNormalization: number;
+  }>;
+}
+
 // Re-export manifest data
 import voicesData from '../manifest/voices.json';
 import voiceRuntimeData from '../manifest/voice-runtime.json';

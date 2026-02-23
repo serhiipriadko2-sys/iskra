@@ -47,6 +47,63 @@ describe('VoiceQuantumField', () => {
     expect(top.id).toBe('KAIN')
   })
 
+  it('should expose typed computation trace for explainability', () => {
+    const metrics: IskraMetrics = {
+      ...DEFAULT_METRICS,
+      trust: 0.9,
+      pain: 0.8,
+      chaos: 0.1,
+      drift: 0.1,
+    }
+
+    vs.update(metrics)
+
+    const trace = vs.getLastTrace()
+    expect(trace).not.toBeNull()
+
+    expect(trace).toEqual(
+      expect.objectContaining({
+        time: 0.1,
+        metrics,
+        priorityMultipliers: expect.objectContaining({
+          MAKI: 1.6,
+          KAIN: 0.6,
+        }),
+      }),
+    )
+
+    const compact = trace!.voices
+      .filter((voice) => voice.id === 'MAKI' || voice.id === 'KAIN')
+      .map((voice) => ({
+        id: voice.id,
+        thresholdMatched: voice.thresholdMatched,
+        priorityMultiplier: voice.priorityMultiplier,
+        resonanceContributionCount: voice.resonanceContributions.length,
+        probabilityAfterNormalization: Number(voice.probabilityAfterNormalization.toFixed(6)),
+      }))
+      .sort((a, b) => a.id.localeCompare(b.id))
+
+    expect(compact).toMatchInlineSnapshot(`
+      [
+        {
+          "id": "KAIN",
+          "priorityMultiplier": 0.6,
+          "probabilityAfterNormalization": 0.030842,
+          "resonanceContributionCount": 1,
+          "thresholdMatched": true,
+        },
+        {
+          "id": "MAKI",
+          "priorityMultiplier": 1.6,
+          "probabilityAfterNormalization": 0.756434,
+          "resonanceContributionCount": 2,
+          "thresholdMatched": true,
+        },
+      ]
+    `)
+  })
+
+
   it('should amplify MAKI when trust and pain thresholds are met', () => {
     const metrics: IskraMetrics = {
       ...DEFAULT_METRICS,

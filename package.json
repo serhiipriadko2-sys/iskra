@@ -10,7 +10,10 @@
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm run build:runtime && pnpm -r --if-present typecheck",
-    "build:runtime": "pnpm --dir runtime build"
+    "build:runtime": "pnpm --dir runtime build",
+    "check:imports": "python tools/check_no_src_imports.py",
+    "sot40:build": "python tools/build_sot40_artifact.py --out-dir dist/sot40",
+    "sot40:verify": "python tools/verify_sot40_receipt.py --receipt dist/sot40/receipt.json"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
