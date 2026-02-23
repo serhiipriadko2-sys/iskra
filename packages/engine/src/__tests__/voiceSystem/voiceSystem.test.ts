@@ -17,7 +17,7 @@ describe('VoiceQuantumField', () => {
 
   it('should amplify KAIN when pain is high', () => {
     // KAIN resonates with 'pain'
-    const metrics: IskraMetrics = { ...DEFAULT_METRICS, pain: 0.9, chaos: 0.1, drift: 0.1 };
+    const metrics: IskraMetrics = { ...DEFAULT_METRICS, trust: 0.1, clarity: 0.1, pain: 0.9, chaos: 0.1, drift: 0.1 };
 
     // We update multiple times to let phase/resonance stabilize if needed,
     // though current logic is instant for amplitude.
@@ -29,7 +29,7 @@ describe('VoiceQuantumField', () => {
 
   it('should amplify HUYNDUN when chaos is high', () => {
     // HUYNDUN resonates with 'chaos'
-    const metrics: IskraMetrics = { ...DEFAULT_METRICS, chaos: 0.9, pain: 0.1, drift: 0.1 };
+    const metrics: IskraMetrics = { ...DEFAULT_METRICS, trust: 0.1, clarity: 0.1, chaos: 0.9, pain: 0.1, drift: 0.1 };
     vs.update(metrics);
 
     const top = vs.getSuperposition(1)[0];
@@ -38,7 +38,7 @@ describe('VoiceQuantumField', () => {
 
   it('should amplify ISKRIV when drift is high', () => {
     // ISKRIV resonates with 'drift'
-    const metrics: IskraMetrics = { ...DEFAULT_METRICS, drift: 0.9, pain: 0.1, chaos: 0.1 };
+    const metrics: IskraMetrics = { ...DEFAULT_METRICS, trust: 0.1, clarity: 0.1, drift: 0.9, pain: 0.1, chaos: 0.1 };
     vs.update(metrics);
 
     const top = vs.getSuperposition(1)[0];
