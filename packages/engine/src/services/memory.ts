@@ -1,5 +1,5 @@
-import { MantraNode, FractalMetadata, IskraMetrics } from '../../../core/src/index';
-import { calculateResonance } from '../../../math/src/index';
+import { MantraNode, FractalMetadata, IskraMetrics } from '@iskra/core';
+import { calculateResonance } from '@iskra/math';
 
 export interface EmbeddingProvider {
   embed(text: string): Promise<number[]>;

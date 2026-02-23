@@ -1,7 +1,7 @@
 import { MetricsEngine, metricsEngine as defaultMetrics } from './services/metricsService.js';
 import { VoiceQuantumField, voiceSystem as defaultVoices } from './services/voiceSystem.js';
 import { MemoryService } from './services/memory.js';
-import { IskraMetrics, VoiceID, MantraNode } from '../../core/src/index';
+import { IskraMetrics, VoiceID, MantraNode } from '@iskra/core';
 
 export interface EngineResponse {
   voice: VoiceID;

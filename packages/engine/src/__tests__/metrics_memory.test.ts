@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { MetricsEngine } from '../services/metricsService';
-import { MantraNode, DEFAULT_METRICS } from '../../../core/src/index';
+import { MantraNode, DEFAULT_METRICS } from '@iskra/core';
 
 describe('MetricsEngine Memory Integration', () => {
   it('should increase drift when retrieving high entropy memories', () => {
