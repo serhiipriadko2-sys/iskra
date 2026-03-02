@@ -49,7 +49,7 @@ describe('SecurityService', () => {
 
     it('detects OpenAI API keys', () => {
       // Pattern: \bsk-[A-Za-z0-9]{10,}\b
-      const text = 'My key is sk-abcdefghij1234567890';
+      const text = 'My key is sk-proj-abc1234567890';
       const findings = securityService.scanPII(text);
 
       expect(findings.length).toBeGreaterThan(0);
@@ -153,7 +153,7 @@ describe('SecurityService', () => {
     });
 
     it('redacts API keys', () => {
-      const text = 'API key: sk-abcdefghij1234567890';
+      const text = 'API key: sk-proj-abc1234567890';
       const sanitized = securityService.sanitizeInput(text);
 
       expect(sanitized).toContain('[REDACTED]');
@@ -167,7 +167,7 @@ describe('SecurityService', () => {
     });
 
     it('handles multiple PII in one text', () => {
-      const text = 'Email: a@b.com, Key: sk-proj-abc123456789012345678';
+      const text = 'Email: a@b.com, Key: sk-proj-abc1234567890';
       const sanitized = securityService.sanitizeInput(text);
 
       // Should have at least one REDACTED

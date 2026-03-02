@@ -193,10 +193,16 @@ action_rate = count(completed_steps) / count(proposed_steps)
 | Метрика | Вес | Описание | Формула |
 |---------|-----|----------|---------|
 | **accuracy** | 0.25 | SIFT-верификация источников | verified_claims / total_claims |
-| **usefulness** | 0.25 | Actionable рекомендации (Λ) | has_step + has_done + has_lambda |
+| **usefulness** | 0.25 | Actionable рекомендации (Λ) | has_step + has_done_validated + has_lambda |
 | **omegaHonesty** | 0.20 | Калибровка уверенности (Ω) | 1 - abs(stated_Ω - actual_Ω) |
 | **nonEmpty** | 0.15 | Substance vs fluff | content_words / total_words |
 | **alliance** | 0.15 | Качество отношений | trust × (1 - echo) |
+
+**Определение фич:**
+- `has_done_validated` = 1, если в ответе есть **DONE** и:
+  - **нет обещанного артефакта**, либо
+  - артефакт присутствует с квитанцией (`path + bytes>0 + sha256 + qc`) и `qc.no_placeholder==true` и `qc.content_ok==true`.
+
 
 ### Общий Eval Score
 ```
@@ -461,3 +467,57 @@ QA гарантирует, что Искра:
 ---
 
 **Печать конца свитка.**
+
+---
+
+## Appendix: Projects View (SoT40)
+
+### Source: SoT40 view block
+*(extracted from Versions/Fullspark)*
+
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+EARLY_WARNING.md
+QUALITY_EVAL_SOMATIC_PACK.md
+WORKFLOW_OPS.md
+Входящие (этот файл упоминается в):
+
+7_SYSTEM_INTEGRITY.md
+8_INTERFACE_STYLE.md
+ADR-20260206-RUNTIME_PATCHES.md
+ARCHITECTURE.md
+INDEX.md
+UPLOAD_SETS.md
+WORKFLOW_OPS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Метрики: сигналы качества, формулы, оценка полезности.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_metrics_bundle (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+EARLY_WARNING.md
+QUALITY_EVAL_SOMATIC_PACK.md
+WORKFLOW_OPS.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-METRICS_BUNDLE.md-presence (файл доступен, читается, парсится)
+T-METRICS_BUNDLE.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: METRICS_BUNDLE.md
+
+Mapping anchors (code paths):
+
+(явных code-якорей не найдено)
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

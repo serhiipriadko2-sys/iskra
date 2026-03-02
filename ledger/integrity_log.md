@@ -145,3 +145,105 @@ IntegrityEvent:
     Ω: 0.92
     Λ: "Обновить ledger/sot.json, запустить verify_ledger.py"
 ```
+
+---
+
+### 2026-02-22T00:00:00+01:00 — vΩ.5.3 (Synthesis: Integrity v0.2 + XCode pilots + Ops gates)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-02-22T00:00:00+01:00
+  actor: Assistant (GPT-5.2)
+  scope: [system, tools, runtime, versions, governance, ledger]
+  files_changed:
+    - system/workflow_ops.md (updated: added §0.4 PatchBatch→Checkpoint)
+    - system/xcode_explainable_code.md (added)
+    - tools/build_projects_stack.py (updated: --zip + denylist gate + canon_full fallbacks)
+    - tools/check_zip_denylist.py (added)
+    - runtime/src/types/metrics.ts (updated: calculateIntegrityScoreX/calculateAliveIndexX)
+    - runtime/src/types/sift.ts (updated: calculateSiftOmegaX)
+    - runtime/src/types/voices.ts (updated: selectVoiceX)
+    - runtime/src/index.ts (updated: export X pilots)
+    - runtime/src/__tests__/xcode_gate.test.ts (added)
+    - Versions/Fullspark/* (updated to SoT40 v1.1.0)
+    - Versions/Fullspark/releases/SoT40-canonSOTprojects-v1.1.0.zip (added)
+    - governance/adr.md (updated: ADR-20260221-01 XCode)
+    - governance/changelog.md (updated: vΩ.5.3 entry)
+    - ledger/sot.json (regenerated)
+    - ledger/checksum.asc (regenerated)
+  reason: "Synthesis checkpoint: merge Integrity v0.2 guard/ui + XCode explainable pilots + operational gates"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Собран единый слой: Integrity v0.2 + XCode пилоты + denylist/Checkpoint режим"
+    D: "integrity_v02_guard_ui snapshot + SoT40 v1.1.0 + ops gates + XCode pilots"
+    Ω: 0.88
+    Λ: "Patch #2 нового батча: расширить guard правилами EWS/anti_dryness/leader_flaps и добавить XCode trace"
+```
+
+### 2026-02-23T00:00:00+01:00 — Patch (Guard full rules + XCode stability gate)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-02-23T00:00:00+01:00
+  actor: Assistant (GPT-5.2)
+  scope: [runtime, system]
+  files_changed:
+    - runtime/src/types/guard.ts (updated: full rule coverage + decideSloGuard legacy + non-empty how)
+    - runtime/src/index.ts (updated: export decideSloGuard)
+    - runtime/src/__tests__/xcode_gate.test.ts (updated: guard cases for EWS/dryness/flaps/overheat)
+    - ledger/sot.json (regenerated)
+    - ledger/checksum.asc (regenerated)
+    - ledger/integrity_log.md (this entry)
+  reason: "Expand SLO-Guard to cover EWS/anti_dryness/leader_flaps/chaos_overheat and enforce XCode stability"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Guard теперь объясним по полному набору ключевых правил + имеет legacy-сравнение"
+    D: "system/slo_guard.md §3/§5 + runtime/src/types/guard.ts + xcode_gate"
+    Ω: 0.87
+    Λ: "Следующий шаг: интегрировать baseline_chaos (ledger/baselines.json) и поднять chaos_overheat derivation до канона"
+```
+
+### 2026-02-23T00:30:00+01:00 — Patch (Baseline chaos + strict chaos_overheat derivation)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-02-23T00:30:00+01:00
+  actor: Assistant (GPT-5.2)
+  scope: [runtime, ledger]
+  files_changed:
+    - ledger/baselines.json (added: baseline_chaos, baseline_alive_index)
+    - runtime/src/types/guard.ts (updated: strict chaos_overheat = chaos>=max(0.70, baseline_chaos+0.20))
+    - runtime/src/__tests__/xcode_gate.test.ts (updated: guard overheat case uses derived threshold)
+    - ledger/sot.json (regenerated)
+    - ledger/checksum.asc (regenerated)
+    - ledger/integrity_log.md (this entry)
+  reason: "Make chaos_overheat derivation canon-strict by introducing ledger baselines and removing proxy assumption"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "chaos_overheat теперь считается строго по канону (baseline+0.20), без прокси '0.7'"
+    D: "system/slo_guard.md §1 + ledger/baselines.json + runtime guard"
+    Ω: 0.88
+    Λ: "Patch #4: baseline_alive_index usage + changelog Unreleased→release gate + checkpoint"
+```
+
+### 2026-02-23T00:55:00+01:00 — Patch (baseline_alive_index + release gate for checkpoint)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-02-23T00:55:00+01:00
+  actor: Assistant (GPT-5.2)
+  scope: [runtime, tools, governance, ledger]
+  files_changed:
+    - runtime/src/types/guard.ts (updated: alive_delta_derived in XCode trace)
+    - runtime/src/__tests__/xcode_gate.test.ts (updated: alive_delta test)
+    - ledger/baselines.json (updated: sample_n + baseline_alive_index)
+    - tools/check_unreleased_gate.py (added: Unreleased→release gate)
+    - tools/build_checkpoint.py (added: checkpoint builder with release+denylist gates)
+    - governance/changelog.md (updated: [Unreleased] discipline + vΩ.5.4 entry)
+    - ledger/sot.json (regenerated)
+    - ledger/checksum.asc (regenerated)
+    - ledger/integrity_log.md (this entry)
+  reason: "Wire baseline_alive_index into explainable guard and enforce changelog promotion before checkpoint"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Guard теперь фиксирует alive_delta по baseline; релизы защищены gate'ом Unreleased→release"
+    D: "ledger/baselines.json + runtime guard trace + tools/check_unreleased_gate.py"
+    Ω: 0.86
+    Λ: "Собрать checkpoint через tools/build_checkpoint.py и зафиксировать квитанцию"
+```

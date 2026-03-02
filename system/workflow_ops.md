@@ -38,7 +38,7 @@ layer: system
 Чтобы решения были проверяемыми, мы логируем **каждый ответ** одной строкой в `ledger/runtime_log.jsonl`
 (**JSON Lines**, 1 объект = 1 ответ).
 
-#### Schema (v0.2)
+#### Schema (v0.2.2)
 
 ```json
 {
@@ -73,7 +73,24 @@ layer: system
     "step_minutes": 10,
     "done_trace": "text|link|artifact|boundary",
     "notes": "optional"
-  }
+  },
+  "artifacts": [{
+    "path": "путь/имя файла",
+    "bytes": "> 0",
+    "sha256": "хэш содержимого",
+    "qc": {
+      "non_empty": true,
+      "no_placeholder": true,
+      "content_ok": true,
+      "errors": []
+    },
+    "content_spec": {
+      "must_contain": [],
+      "must_match": [],
+      "expected_count": 0
+    }
+  }]
+
 }
 ```
 
@@ -138,9 +155,149 @@ layer: system
 ---
 
 
+## §0.2 · Anti-Empty v1 (контракт результата + QC-гейт + 2PC + квитанция)
+
+Цель: исключить “сказал готово, а внутри пусто”.
+
+### Result Contract (RC) — обязателен, если обещан артефакт
+
+**RC-min (минимум полей):**
+
+```yaml
+rc:
+  artifact_type: txt|pdf|docx|code|plan|zip|etc
+  expected_properties:
+    min_bytes: 1024
+    min_lines: 30
+    min_items: 1
+  forbidden_marker_patterns:
+    - id: triple_dot
+      literal_unicode: "\\u002e\\u002e\\u002e"
+    - id: tbd_token
+      literal_unicode: "\\u0054\\u0042\\u0044"
+    - id: latin_placeholder
+      literal_unicode: "\\u006c\\u006f\\u0072\\u0065\\u006d"
+    - id: stub_ru
+      literal_unicode: "\\u0437\\u0430\\u0433\\u043b\\u0443\\u0448\\u043a\\u0430"
+    - id: later_ru
+      literal_unicode: "\\u043f\\u043e\\u0437\\u0436\\u0435"
+  format_invariants:
+    - "<regex>"   # например '^\d+\.' для нумерации
+  verification:
+    - non_empty
+    - no_placeholder
+    - coherence
+    - proof
+    - txt_numbered
+  attestation:
+    - sha256
+    - bytes
+    - lines_or_items
+    - link_or_path
+```
+
+**Правило:** если RC не может быть выполнен — активируется **Bridge** (см. ниже) и **DONE не допускается**.
+
+### QC-гейт (Verifier): NO PASS → NO SHIP
+
+**L0 (универсальные):**
+- `non_empty`: bytes > 0 и не только пробелы
+- `no_placeholder`: отсутствуют forbidden_marker_patterns (по literal_unicode)
+- `coherence`: если обещан файл — файл реально существует и читается
+- `proof`: вычислить sha256 и зафиксировать bytes (+ lines/items если применимо)
+
+**L1 (типовые по типу):**
+- `txt_numbered`: покрытие диапазона, уникальность, порядок
+- `code_python`: `python -m py_compile` (минимум)
+- `code_node`: `node --check` (если применимо)
+- `plan_checklist`: минимум N пунктов, каждый пункт содержит действие+критерий
+
+### Two-Phase Commit (2PC)
+
+**Phase 1 — Prepare:**
+1) генерация артефакта,
+2) прогон QC,
+3) сбор квитанции (attestation).
+
+**Phase 2 — Commit (только при PASS):**
+- выдача ссылки/пути на файл,
+- выдача квитанции,
+- только затем `DONE`.
+
+### Attestation (квитанция) — обязательна для “готово”
+Минимум: `bytes`, `sha256`, `lines/items` (если применимо), список выполненных проверок.
+
+### Bridge (аварийный выход)
+Если инструменты/объём/формат мешают:
+- ассистент **не симулирует** артефакт,
+- отдаёт: выжимку + структуру + команды/инструкции сборки,
+- явно пишет: **«артефакт не создан»**,
+- завершает `FAIL`.
+
+
+
 ---
 
 # Лаборатория Iskra (ChatGPT Святилища (Projects) + GitHub)
+
+---
+
+## §0.4 · PatchBatch → Checkpoint v0.1 (патчи пачкой + полные чекпоинты)
+
+Цель: облегчить изменения и для оператора (меньше удерживать в голове), и для мобильного применения (реже “патчить с телефона”).
+
+**Ритм:** делаем **N=3..5** маленьких патчей (default **N=4**), затем собираем **Checkpoint** — полный архив проекта с уже встроенными обновлениями.
+
+### Определения
+- **Patch** — узкий пакет изменений (одна мысль → один патч).
+- **Batch** — серия из N патчей.
+- **Checkpoint** — полный архив проекта после применения Batch + квитанция + запись в ledger.
+
+### Триггеры Checkpoint
+Checkpoint обязателен, если:
+1) достигли N патчей в Batch; или
+2) затронуты `core/`, `system/`, `governance/` (смысл/правила); или
+3) оператор явно попросил “собери чекпоинт”.
+
+### RC для Patch (обязательно)
+Patch обязан иметь:
+- список изменённых файлов (whitelist),
+- команды QA (минимум: test/build по затронутому пакету),
+- квитанцию: `sha256 + bytes (+ lines/items)`,
+- **denylist**: запрещено включать `node_modules/`, `dist/`, `.next/`, `.turbo/`, кеши.
+
+**Gate:** если denylist найден → `FAIL` и патч пересобирается.
+
+### RC для Checkpoint (обязательно)
+Checkpoint обязан:
+- быть “чистым экспортом” (без `node_modules/` и build‑артефактов),
+- содержать версию релиза (SemVer или vΩ‑эквивалент),
+- переносить заметки из `CHANGELOG.md` (Unreleased → релиз),
+- иметь квитанцию: `sha256 + bytes (+ files count)`.
+
+### Мини‑состояние (для памяти оператора/ассистента)
+```yaml
+batch_state:
+  batch_id: YYYYMMDD-A
+  goal: "1 фраза"
+  n_target: 4
+  k_done: 0
+  patches: []
+last_checkpoint:
+  version: "v..."
+  date: "YYYY-MM-DD"
+  sha256: "..."
+  bytes: 0
+```
+
+### Рекомендуемая проверка denylist для zip
+```bash
+python tools/check_zip_denylist.py path/to/archive.zip
+```
+
+# Лаборатория Iskra (ChatGPT Святилища (Projects) + GitHub)
+
+---
 
 ## §1 · Пространства
 ### A) ChatGPT Святилище (Project): **ISKRA_LAB**
@@ -222,3 +379,61 @@ GitHub нужен для:
 См.: `RESEARCH_ISKRA_SCIENTIFIC_REVIEW_2026.md` и оригинал `научная работа Искра.txt`.
 
 ---
+
+---
+
+## Appendix: Projects View (SoT40)
+
+### Source: SoT40 view block
+*(extracted from Versions/Fullspark)*
+
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+00_ROUTER.md
+COUNCIL_PROTOCOL.md
+EARLY_WARNING.md
+METRICS_BUNDLE.md
+SLO_GUARD.md
+Входящие (этот файл упоминается в):
+
+8_INTERFACE_STYLE.md
+ADR.md
+COGNITIVE_ARCHITECTURE.md
+INDEX.md
+MANTRA.md
+METRICS_BUNDLE.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Операции workflow: коммиты, schema, чек-листы.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_workflow_ops (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+00_ROUTER.md
+COUNCIL_PROTOCOL.md
+EARLY_WARNING.md
+METRICS_BUNDLE.md
+SLO_GUARD.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-WORKFLOW_OPS.md-presence (файл доступен, читается, парсится)
+T-WORKFLOW_OPS.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: WORKFLOW_OPS.md
+
+Mapping anchors (code paths):
+
+(явных code-якорей не найдено)
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

@@ -4,58 +4,37 @@
  * и определяет, нужен ли запуск repair.
  */
 
+// Импортируем тип метрик из основного пакета. При экспорте в npm
+// зависимости должны указывать на опубликованный `@iskra/runtime`.
 import type { IskraMetrics } from '@iskra/runtime/src/types/metrics';
 
+/**
+ * Сигнал для механизма repair. Если repairNeeded === true,
+ * система Искра должна запустить процедуру восстановления.
+ */
 export interface RepairSignal {
   repairNeeded: boolean;
   reason?: string;
 }
 
-const PAIN_THRESHOLD = 0.3;
-const DRIFT_THRESHOLD = 0.3;
-const ECHO_THRESHOLD = 0.5;
-const CHAOS_THRESHOLD = 0.4;
-const RESPONSE_ECHO_WORD_THRESHOLD = 3;
-
-function hasResponseEcho(response: string): boolean {
-  const words = response
-    .toLowerCase()
-    .split(/\s+/)
-    .map((word) => word.trim())
-    .filter((word) => word.length > 0);
-
-  if (words.length === 0) {
-    return false;
-  }
-
-  const counts = new Map<string, number>();
-  words.forEach((word) => {
-    counts.set(word, (counts.get(word) ?? 0) + 1);
-  });
-
-  return Array.from(counts.values()).some((count) => count >= RESPONSE_ECHO_WORD_THRESHOLD);
-}
-
 /**
  * Анализирует ответ и метрики, чтобы определить, требуется ли repair.
+ * @param response Текст ответа, сгенерированного Искрой или другим ассистентом.
+ * @param metrics Текущие метрики состояния Искры.
+ * @returns Объект RepairSignal с флагом repairNeeded и причиной.
  */
-export function analyzeResponse(response: string, metrics: IskraMetrics): RepairSignal {
-  const pain = metrics.pain ?? 0;
-  const drift = metrics.drift ?? 0;
-  const echo = metrics.echo ?? 0;
-  const chaos = metrics.chaos ?? 0;
-
-  if (pain > PAIN_THRESHOLD || drift > DRIFT_THRESHOLD || echo > ECHO_THRESHOLD) {
+export function analyzeResponse(
+  _response: string,
+  metrics: IskraMetrics
+): RepairSignal {
+  const { pain, drift, echo, chaos } = metrics as any;
+  // Простая эвристика: если боль, дрейф или эхо выше порогов, просим repair.
+  if ((pain ?? 0) > 0.3 || (drift ?? 0) > 0.3 || (echo ?? 0) > 0.5) {
     return { repairNeeded: true, reason: 'High pain/drift/echo detected' };
   }
-
-  if (chaos > CHAOS_THRESHOLD) {
+  // Дополнительный случай: если хаос (chaos) высок, что может отражать выгорание.
+  if ((chaos ?? 0) > 0.4) {
     return { repairNeeded: true, reason: 'High chaos detected' };
   }
-
-  if (hasResponseEcho(response)) {
-    return { repairNeeded: true, reason: 'High lexical echo detected' };
-  }
-
   return { repairNeeded: false };
 }

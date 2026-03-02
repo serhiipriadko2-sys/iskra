@@ -92,6 +92,6 @@ export interface MantraNode {
   content: string;
   embedding: number[];
   timestamp: string;
-  layer: 'core' | 'memory' | 'dream' | 'shadow';
+  layer: 'core' | 'memory' | 'dream';
   fractal?: FractalMetadata;
 }
