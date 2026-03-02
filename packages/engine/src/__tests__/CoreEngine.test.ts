@@ -3,7 +3,7 @@ import { CoreEngine } from '../CoreEngine';
 import { MemoryService, EmbeddingProvider } from '../services/memory';
 import { MetricsEngine } from '../services/metricsService';
 import { VoiceQuantumField } from '../services/voiceSystem';
-import { IskraMetrics } from '../../../core/src/index';
+import { IskraMetrics } from '@iskra/core';
 
 class MockEmbeddingProvider implements EmbeddingProvider {
   async embed(text: string) {

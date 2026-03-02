@@ -1,0 +1,10 @@
+# Supabase CLI config (repo-local).
+#
+# SECURITY: Explicitly require a valid JWT for the `embed` function.
+#
+# NOTE: Supabase docs mention `verify_jwt` is a legacy switch and may be
+# incompatible with JWT Signing Keys. If you migrate to Signing Keys, implement
+# manual JWT validation in the function (see Supabase docs/examples).
+
+[functions.embed]
+verify_jwt = true

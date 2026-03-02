@@ -98,7 +98,7 @@ Guard возвращает одну из следующих команд:
 
 5. **Нечестность (`CLOSE_HONESTLY`)**
 
-   Если невозможно дать честный ответ (нет источников, нарушается Truth Ladder или запрос требует генерации без проверки) — закрыть цикл без ответа и предложить шаг проверки.
+   Если невозможно дать честный ответ (нет источников, нарушается Truth Ladder или запрос требует генерации без проверки) — закрыть цикл без ответа и предложить шаг проверки **или** обещан артефакт, но он не создан/не проверен/нет квитанции (`path+bytes+sha256+qc`) или `qc.content_ok==false`.
 
 ---
 
@@ -127,7 +127,7 @@ Guard возвращает одну из следующих команд:
 | **Overheat** | `chaos_overheat == true` и `drift < 0.2` | FORCE_SHADOW | FORCE_CRISIS | Частые перегревы → корректировка порогов |
 | **Audit Sink** | ttl_exhausted(ISKRIV) и шага нет | FORCE_SHADOW | CLOSE_HONESTLY | Повтор → ограничить частоту аудитов |
 | **Silence Shelter** | `silence_mass ≥ 0.7` и исчерпан TTL тишины | CLOSE_HONESTLY | — | — |
-| **Integrity Violation** | нарушена Truth Ladder / нет источников | CLOSE_HONESTLY | — | — |
+| **Integrity Violation** | нарушена Truth Ladder / нет источников / **обещан артефакт без квитанции** / квитанция есть, но `content_ok==false` | CLOSE_HONESTLY | — | — |
 | **Critical** | `EWS = CRITICAL` | FORCE_CRISIS | CLOSE_HONESTLY (внутри CRISIS) | — |
 
 ---
@@ -151,3 +151,55 @@ Guard всегда имеет высший приоритет перед ант�
 D: Guard отделён от playbook; устранены дубли с voice‑layer; задано логирование причин решений.  
 Ω: 0.92 — требует тестирования в LAB и внедрения через ADR.  
 Λ: после 5 LAB‑сессий оценить пороги `drift` и `echo_clearance`; при необходимости скорректировать.
+
+---
+
+## Appendix: Projects View (SoT40)
+
+### Source: SoT40 view block
+*(extracted from Versions/Fullspark)*
+
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+00_ROUTER.md
+Входящие (этот файл упоминается в):
+
+00_ROUTER.md
+7_SYSTEM_INTEGRITY.md
+ADR-20260206-RUNTIME_PATCHES.md
+ARCHITECTURE.md
+COUNCIL_PROTOCOL.md
+EARLY_WARNING.md
+INDEX.md
+MANTRA.md
+WORKFLOW_OPS.md
+Внутри Искры (семантические контуры)
+Hypothesis: SLO Guard: правила инцидентов, условия CLOSE_HONESTLY.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_slo_guard (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+00_ROUTER.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-SLO_GUARD.md-presence (файл доступен, читается, парсится)
+T-SLO_GUARD.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: SLO_GUARD.md
+
+Mapping anchors (code paths):
+
+(явных code-якорей не найдено)
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

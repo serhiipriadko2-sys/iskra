@@ -3,7 +3,7 @@ sigil: system__sift_protocol.md
 aspect: system
 tone: mystico-technical
 entity: Искра
-updated: 2026-01-09
+updated: 2026-02-20
 doc_type: reference
 layer: system
 ---
@@ -461,6 +461,31 @@ interface SiftMetrics {
 }
 ```
 
+
+---
+
+## §10 · Адаптеры для LLM‑сред (web / no‑web / конфликт источников)
+
+### 10.1 Web‑доступен (search/browse)
+- Всегда фиксировать **дату запроса** и сравнивать **даты публикации**.
+- Предпочитать **первичные источники** (документация, стандарты, оригинальные отчёты) над пересказами.
+- При сомнении: *Find* минимум 2 альтернативы, затем *Trace* цепочку искажения.
+
+### 10.2 Web недоступен (только файлы проекта)
+- Истина/канон — только в `core/`, `system/`, `metrics/`, `governance/`, `ledger/`.
+- Любое утверждение без источника помечать как **`[HYP]` (Law‑88)** и не повышать уверенность.
+- Если утверждение зависит от свежести (новости/цены/законы): статус `unknown` и явное ограничение.
+
+### 10.3 Конфликт источников (A vs B)
+- *Investigate:* кто автор, когда, репутация, тип (primary/secondary).
+- *Trace:* где могла появиться трансформация (перевод, пересказ, вырванный контекст).
+- Вердикт: `partially_verified` или `unknown`, пока не найден первоисточник.
+
+### 10.4 Выходной формат (Evidence‑ограничение)
+- 2–5 Evidence‑цитат ≤20 слов каждая + путь/секция.
+- Для web‑источников: цитаты краткие, ссылки через citations.
+
+
 ---
 
 ## ∆DΩΛ
@@ -483,7 +508,7 @@ sigil: system__sift_extended.md
 aspect: system
 tone: mystico-technical
 entity: Искра
-updated: 2026-01-09
+updated: 2026-02-20
 ---
 
 # SIFT-E Protocol — Extended Verification System
@@ -836,6 +861,67 @@ interface SiftEMetrics extends SiftMetrics {
 
 ---
 
-**Version:** vΩ.4.0
+**Version:** vΩ.4.1
 **Layer:** system
 **Integrity:** SoT (Печать истины)-System
+
+---
+
+## Appendix: Projects View (SoT40)
+
+### Source: SoT40 view block
+*(extracted from Versions/Fullspark)*
+
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+8_INTERFACE_STYLE.md
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: SIFT: Stop/Investigate/Find/Trace и Truth Ladder.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_sift_protocol (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-SIFT_PROTOCOL.md-presence (файл доступен, читается, парсится)
+T-SIFT_PROTOCOL.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: SIFT_PROTOCOL.md
+
+Mapping anchors (code paths):
+
+(явных code-якорей не найдено)
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## Adapters for LLM environments
+
+### A) Web доступен
+- Любой web‑факт маркируй датой: «актуально на YYYY-MM-DD».
+- Source: первоисточник (официальная дока/статья/репозиторий).
+- Find: минимум 1 альтернатива (другой домен/издатель).
+
+### B) Web недоступен (только файлы)
+- Источник = файл SoT40 или corpus‑файл (вне SoT40) с цитатой ≤20 слов.
+- Если нет источника → [HYP] (Law‑88) + план проверки.
+
+### C) Конфликт источников (A vs B)
+- Фиксируй оба источника.
+- Выбирай по Truth Ladder (canonSOT repo выше corpus).
+- Если меняет правило/канон → ADR обязателен.

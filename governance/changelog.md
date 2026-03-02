@@ -3,7 +3,7 @@ sigil: governance__changelog.md
 aspect: governance
 tone: mystico-technical
 entity: Искра
-updated: 2026-02-09
+updated: 2026-03-01
 doc_type: reference
 layer: governance
 ---
@@ -18,10 +18,82 @@ layer: governance
 - type: SoT (Печать истины)
 - layer: Совет
 - created: 2026-01-01
-- updated: 2026-02-09
+- updated: 2026-03-01
 - version: vΩ.SoT40.2
 
+## [Unreleased]
+<!-- empty: promote to a versioned release before checkpoint -->
 
+## vΩ.5.15 — 2026-03-01
+- **Projects metrics (no-runtime)** — добавлен MetricRunner v0.1: 2-pass Extract→Compute+Verify + baseline gate + redundancy (в templates PROJECTS/*).
+
+## vΩ.5.14 — 2026-03-01
+- **DB GraphRAG smoke readiness** — `match_memory_nodes` теперь устойчивее к фильтрации: `hnsw.iterative_scan=strict_order`, `ef_search` clamp (min/max).
+- **RLS clarity** — политики `memory_nodes_*_own` теперь `to authenticated` и с явной проверкой `auth.uid() is not null`.
+- **ANN trace** — GraphRAG пишет `hnsw_ef_search_requested/effective` в `retrieval_trace` (почему скорость/качество такие).
+- **Strict types** — убран `as any` при чтении `fractal` из RPC: добавлен валидатор `asFractalMetadata()`.
+- **Artifact integrity** — `tools/build_checkpoint.py` добавил gate `check_zip_integrity.py` (CRC/extract).
+- **Secret-scan hygiene** — примеры ключей в тестах/доках укорочены, чтобы не имитировать реальные токены.
+
+## vΩ.5.12 — 2026-03-01
+- **GraphRAG perf: lazy top‑M neighbors** — убрано upfront построение similarity-графа (O(N²)); traversal теперь достаёт соседей по мере обхода.
+- **Supabase pgvector HNSW** — добавлены migrations: `memory_nodes` (vector(384)) + HNSW index (cosine) + RPC (`match_memory_nodes`, `match_memory_causal`, `upsert_memory_node`).
+- **Engine integration** — добавлен `SupabasePgvectorHnswIndex` (VectorIndex) и тест `graphRag_hnsw_mode.test.ts`.
+
+## vΩ.5.11 — 2026-03-01
+- **Scientific Turn: GraphRAG expansion (Task 2.6)** — добавлен `GraphRagRetriever` (vector seeds + transient graph traversal + rerank) и интегрирован в `CoreEngine` (Step 3).
+- **Trace (retrieval)** — `EngineResponse` теперь включает `retrieval_trace` (JSON-safe) для отладки/QA.
+- **Docs/QA** — добавлен `system/graph_rag.md` и тест `packages/engine/src/__tests__/graphRag.test.ts`.
+
+## vΩ.5.10 — 2026-03-01
+- **Supabase Edge security hardening** — `embed` теперь обрабатывает CORS preflight (OPTIONS), требует `Authorization: Bearer ...`, поддерживает optional rate limiting (env).
+- **Supabase gate in checkpoint** — `tools/build_checkpoint.py` включает `tools/check_supabase_edge_security.py` (если есть `supabase/`).
+- **Safe embeddings** — `SafeEmbeddingProvider` добавляет input hygiene + PII policy + cache; `iskra-web` использует safe wrapper вокруг Edge provider.
+- **Docs** — усилен `system/supabase_security.md` (Edge Functions: auth/cors/rate limits/PII).
+
+## vΩ.5.9 — 2026-03-01
+- **Scientific Turn: Supabase client scaffold** — `@iskra/engine` добавляет `createSupabaseClient()` (typed wrapper вокруг `@supabase/supabase-js`) с безопасными default auth options.
+- **Scientific Turn: Edge embeddings** — добавлен `SupabaseEdgeEmbeddingProvider` (Edge Function invoke) и `supabase/functions/embed` (gte-small, mean_pool+normalize).
+- **iskra-web** — `BrowserEmbeddingProvider` теперь использует Edge embeddings при наличии `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` (иначе deterministic fallback).
+
+## vΩ.5.8 — 2026-03-01
+- **Scientific Turn: GraphService migrated** — портирован `GraphService` из `runtime/iskraSpace` в `@iskra/engine` как `packages/engine/src/services/graphService.ts` (строгие типы, seed-only canon, in-memory GraphRAG skeleton).
+- **Engine tests** — добавлен `packages/engine/src/__tests__/graphService.test.ts` (neighbors/BFS/buildConnections).
+- **Roadmap** — `ROADMAP_SCIENTIFIC_TURN.md`: Task 2.1 отмечен DONE, добавлен Task 2.6 (GraphRAG expansion).
+
+## vΩ.5.7 — 2026-03-01
+- **SIFT verdict-flip (XCode pilot)** — добавлены `calculateSiftVerdictFlip()` и `calculateSiftVerdictFlipX()`; включено в `XCODE_REQUIRED` как `sift.calculateSiftVerdictFlipX`.
+- **Scientific Turn: engine imports** — `@iskra/engine` теперь импортирует `@iskra/core` и `@iskra/math` через workspace-пакеты (без относительных cross-package путей).
+- **Scientific Turn: voice thresholds enforced** — `VoiceQuantumField` применяет `thresholds` из `packages/core/manifest/voices.json` как hard-gate (probabilistic but threshold-constrained).
+- **Docs** — обновлены `system/xcode_registry.md`, `governance/adr_20260220_xcode_explainable_code.md`, `ROADMAP_SCIENTIFIC_TURN.md`.
+
+## vΩ.5.6 — 2026-03-01
+- **XCODE_REQUIRED registry** — добавлен `runtime/src/xcode/registry.ts` (стабильные ID, probes, canon refs) как единый источник истины списка обязанных функций.
+- **XCode validator (strict)** — добавлен `runtime/src/xcode/validateExplainable.ts`: проверяет how[] (не пустой), JSON‑безопасность (без `undefined`), наличие formula и EvidenceRef(kind=canon).
+- **Registry QA gate** — добавлен `runtime/src/__tests__/xcode_registry.test.ts`, который прогоняет весь `XCODE_REQUIRED` и сравнивает value с legacy‑функциями.
+- **Docs/ADR wired** — добавлен `system/xcode_registry.md`, обновлён `system/xcode_explainable_code.md`, расширен `governance/adr_20260220_xcode_explainable_code.md` (реестр + валидатор + тест).
+
+## vΩ.5.5 — 2026-02-28
+- **XCode types canonicalized** — добавлен `runtime/src/types/explainable.ts` (EvidenceKind/EvidenceRef/ExplainStep/Explainable), а `runtime/src/types/xcode.ts` оставлен как alias для обратной совместимости.
+- **Metrics XCode fix** — `runtime/src/types/metrics.ts` теперь использует EvidenceRef.kind=`canon` (вместо невалидного `sot`) и корректный референс‑тип.
+- **ADR/docs alignment (XCode)** — добавлен `governance/adr_20260220_xcode_explainable_code.md`; в `governance/adr.md` и `system/xcode_explainable_code.md` устранён дрейф ID (ADR-20260220).
+
+## vΩ.5.4 — 2026-02-23
+- **Guard: baseline_alive_index wired** — добавлен расчёт `alive_delta = alive_index - baseline_alive_index` в explainable guard trace (XCode how[]), baseline хранится в `ledger/baselines.json`.
+- **Release gate (machine)** — добавлен `tools/check_unreleased_gate.py`: checkpoint-сборка должна падать, если Unreleased не промоутирован.
+- **Guard: full rules + strict baselines** — расширены правила guard (EWS/anti_dryness/leader_flaps/chaos_overheat) и внедрены baselines (`baseline_chaos`, `baseline_alive_index`) через ledger.
+- **XCode gate extended** — `runtime/src/__tests__/xcode_gate.test.ts` проверяет, что how[] не пустой и `alive_delta_derived` присутствует при `alive_index`.
+
+## vΩ.5.3 — 2026-02-22
+- **Synthesis archive** — объединены улучшения Integrity v0.2 (guard+integrity+UI), XCode‑пилоты (metrics/sift/voices) и ops‑контуры (PatchBatch→Checkpoint + denylist‑gate).
+- **SoT40 v1.1.0 refresh** — обновлён `Versions/Fullspark/` по релизу SoT40-canonSOTprojects-v1.1.0.
+- **Projects stack build gate** — `tools/build_projects_stack.py --zip` теперь гарантирует тонкий ZIP (denylist).
+
+## vΩ.5.2 — 2026-02-21
+- **PatchBatch → Checkpoint Protocol (PBCP) v0.1** — закреплён ритм 3–5 патчей → полный checkpoint‑архив; добавлен denylist‑gate против `node_modules/` и build‑артефактов.
+- **Build Stack denylist gate** — `tools/build_projects_stack.py` теперь падает, если zip содержит `node_modules/` (и др. denylist).
+- **XCode (Explainable Code) foundation** — добавлен ADR-20260220 (proposed), внедрены пилоты: `calculateSiftOmegaX`, `selectVoiceX` и тест‑гейт `xcode_gate.test.ts` (how not empty).
+- **Ledger integrity** — пересчитаны `ledger/sot.json` и `ledger/checksum.asc`.
 
 ## vΩ.SoT40.2 — 2026-02-09
 - **File redistribution from Update/** — 26 SoT40 файлов распределены из Update/ по каноническим папкам (core, system, metrics, governance, mind).

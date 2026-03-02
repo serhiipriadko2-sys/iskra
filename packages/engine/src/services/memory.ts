@@ -1,34 +1,151 @@
-import { MantraNode, FractalMetadata, IskraMetrics } from '../../../core/src/index';
-import { calculateResonance } from '../../../math/src/index';
-
-const SEMANTIC_WEIGHT = 0.7;
-const RESONANCE_WEIGHT = 0.3;
-const SHADOW_RESONANCE_BONUS = 0.15;
-const SHADOW_PRESSURE_THRESHOLD = 0.55;
-
-type MemoryLayer = 'core' | 'memory' | 'dream' | 'shadow';
+import { MantraNode, FractalMetadata, IskraMetrics } from '@iskra/core';
+import { calculateResonance } from '@iskra/math';
 
 export interface EmbeddingProvider {
   embed(text: string): Promise<number[]>;
 }
 
+export interface VectorSearchOptions {
+  limit: number;
+  /** Optional layer filter. */
+  layer?: MantraNode['layer'];
+  /** Optional node id to exclude (e.g. self). */
+  excludeId?: string;
+  /** Optional minimum similarity threshold. */
+  minSimilarity?: number;
+  /** Query-time HNSW tuning (if supported). */
+  efSearch?: number;
+  /** Optional preselect size for DB rerank (if supported). */
+  rerankK?: number;
+}
+
+export interface VectorSearchHit {
+  node: MantraNode;
+  /** Cosine similarity in [-1..1] (for normalized vectors). */
+  similarity: number;
+}
+
+export interface CausalNeighborsOptions {
+  centerTs: string;
+  limit: number;
+  layer?: MantraNode['layer'];
+  excludeId?: string;
+  windowMs?: number;
+}
+
+export interface CausalNeighborHit {
+  node: MantraNode;
+  /** Weight in [0..1] (closer in time -> higher). */
+  weight: number;
+}
+
+/** Optional DB-backed vector index for scaling GraphRAG. */
+export interface VectorIndex {
+  searchByEmbedding(queryEmbedding: number[], options: VectorSearchOptions): Promise<VectorSearchHit[]>;
+  causalNeighbors?(options: CausalNeighborsOptions): Promise<CausalNeighborHit[]>;
+  upsert?(node: MantraNode): Promise<void>;
+}
+
+export interface MemoryServiceOptions {
+  /** If a VectorIndex is provided, you may choose strict or best-effort persistence on addMemory(). */
+  persistence?: 'best_effort' | 'strict';
+}
+
 export class MemoryService {
   private nodes: MantraNode[] = [];
   private embeddingProvider: EmbeddingProvider;
+  private vectorIndex?: VectorIndex;
+  private options: Required<MemoryServiceOptions>;
 
-  constructor(embeddingProvider: EmbeddingProvider) {
+  constructor(embeddingProvider: EmbeddingProvider, vectorIndex?: VectorIndex, options?: MemoryServiceOptions) {
     this.embeddingProvider = embeddingProvider;
+    this.vectorIndex = vectorIndex;
+    this.options = {
+      persistence: options?.persistence ?? 'best_effort',
+    };
   }
 
-  async addMemory(
-    content: string,
-    fractal: FractalMetadata,
-    layer: MemoryLayer = 'memory',
-  ): Promise<MantraNode> {
+  /**
+   * Expose embeddings for downstream retrievers (GraphRAG).
+   * SECURITY: This does not expose keys; it only delegates to the provider.
+   */
+  async embed(text: string): Promise<number[]> {
+    return this.embeddingProvider.embed(text);
+  }
+
+  /**
+   * Read-only snapshot of all memory nodes.
+   * Used by GraphRAG to build a transient graph index.
+   */
+  getAllNodes(): MantraNode[] {
+    return this.nodes.slice();
+  }
+
+  /**
+   * Vector search (cosine similarity). Uses DB index if provided, otherwise scans in-memory.
+   */
+  async vectorSearchByEmbedding(queryEmbedding: number[], options: VectorSearchOptions): Promise<VectorSearchHit[]> {
+    if (this.vectorIndex) {
+      return this.vectorIndex.searchByEmbedding(queryEmbedding, options);
+    }
+
+    const limit = Math.max(1, options.limit);
+    const layer = options.layer;
+    const excludeId = options.excludeId;
+    const minSim = options.minSimilarity;
+
+    const hits = this.nodes
+      .filter((n) => (layer ? n.layer === layer : true))
+      .filter((n) => (excludeId ? n.id !== excludeId : true))
+      .map((node) => {
+        const similarity = this.cosineSimilarity(queryEmbedding, node.embedding);
+        return { node, similarity };
+      })
+      .filter((h) => (minSim === undefined ? true : h.similarity >= minSim))
+      .sort((a, b) => b.similarity - a.similarity)
+      .slice(0, limit);
+
+    return hits;
+  }
+
+  /**
+   * Causal neighbors: same layer, within a time window.
+   * Uses VectorIndex implementation if available.
+   */
+  async causalNeighbors(options: CausalNeighborsOptions): Promise<CausalNeighborHit[]> {
+    if (this.vectorIndex?.causalNeighbors) {
+      return this.vectorIndex.causalNeighbors(options);
+    }
+
+    const centerMs = Date.parse(options.centerTs);
+    if (!Number.isFinite(centerMs)) return [];
+    const limit = Math.max(1, options.limit);
+    const layer = options.layer;
+    const excludeId = options.excludeId;
+    const windowMs = options.windowMs ?? 3_600_000;
+
+    const hits = this.nodes
+      .filter((n) => (layer ? n.layer === layer : true))
+      .filter((n) => (excludeId ? n.id !== excludeId : true))
+      .map((node) => {
+        const t = Date.parse(node.timestamp);
+        if (!Number.isFinite(t)) return null;
+        const diff = Math.abs(t - centerMs);
+        if (diff > windowMs) return null;
+        const weight = 1 - diff / windowMs;
+        return { node, weight };
+      })
+      .filter(Boolean)
+      .sort((a, b) => (b!.weight - a!.weight))
+      .slice(0, limit) as CausalNeighborHit[];
+
+    return hits;
+  }
+
+  async addMemory(content: string, fractal: FractalMetadata, layer: 'core' | 'memory' | 'dream' = 'memory'): Promise<MantraNode> {
     const embedding = await this.embeddingProvider.embed(content);
-    const id = typeof crypto !== 'undefined' && crypto.randomUUID
-      ? crypto.randomUUID()
-      : Math.random().toString(36).substring(2);
+    // Use Math.random for ID if crypto is not available, or assume it is available
+    const id = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2);
 
     const node: MantraNode = {
       id,
@@ -36,48 +153,59 @@ export class MemoryService {
       embedding,
       timestamp: new Date().toISOString(),
       layer,
-      fractal,
+      fractal
     };
+
+    // Optional persistence (DB). Default: best-effort.
+    if (this.vectorIndex?.upsert) {
+      try {
+        await this.vectorIndex.upsert(node);
+      } catch (err) {
+        if (this.options.persistence === 'strict') {
+          throw err;
+        }
+      }
+    }
 
     this.nodes.push(node);
     return node;
   }
 
-  async addShadowMemory(content: string, fractal: FractalMetadata): Promise<MantraNode> {
-    return this.addMemory(content, fractal, 'shadow');
-  }
-
   async retrieve(query: string, metrics: IskraMetrics, limit: number = 5): Promise<MantraNode[]> {
     const queryEmbedding = await this.embeddingProvider.embed(query);
 
+    // Calculate current system state for resonance
+    // We map metrics to quantum state (amplitude/phase)
+    // High trust -> High amplitude
+    // High chaos -> High phase variance (simplified as phase)
     const currentAmp = metrics.trust;
     const currentPhase = metrics.chaos * Math.PI * 2;
 
     return this.nodes
-      .map((node) => {
+      .map(node => {
+        // 1. Semantic Similarity (Cosine)
         const semantic = this.cosineSimilarity(queryEmbedding, node.embedding);
 
+        // 2. Fractal Resonance (if fractal data exists)
         let resonance = 0;
         if (node.fractal) {
-          resonance = calculateResonance(
-            currentPhase,
-            currentAmp,
-            node.fractal.quantumState.phase,
-            node.fractal.quantumState.amplitude,
-          );
+           resonance = calculateResonance(
+             currentPhase,
+             currentAmp,
+             node.fractal.quantumState.phase,
+             node.fractal.quantumState.amplitude
+           );
         }
 
-        const weightedResonance = node.layer === 'shadow'
-          ? Math.min(1, resonance + this.calculateShadowBonus(metrics))
-          : resonance;
-
-        const score = (semantic * SEMANTIC_WEIGHT) + (weightedResonance * RESONANCE_WEIGHT);
+        // Weighted Score: 70% Semantic, 30% Resonance
+        // This is the "Fractal" part - state dependent retrieval
+        const score = (semantic * 0.7) + (resonance * 0.3);
 
         return { node, score };
       })
       .sort((a, b) => b.score - a.score)
       .slice(0, limit)
-      .map((item) => item.node);
+      .map(item => item.node);
   }
 
   private cosineSimilarity(vecA: number[], vecB: number[]): number {
@@ -85,21 +213,5 @@ export class MemoryService {
     const magA = Math.sqrt(vecA.reduce((acc, val) => acc + val * val, 0));
     const magB = Math.sqrt(vecB.reduce((acc, val) => acc + val * val, 0));
     return (magA && magB) ? dotProduct / (magA * magB) : 0;
-  }
-
-  private calculateShadowBonus(metrics: IskraMetrics): number {
-    const pressureSignal = this.calculatePressureSignal(metrics);
-    if (pressureSignal < SHADOW_PRESSURE_THRESHOLD) {
-      return 0;
-    }
-
-    const normalizedPressure =
-      (pressureSignal - SHADOW_PRESSURE_THRESHOLD) / (1 - SHADOW_PRESSURE_THRESHOLD);
-
-    return normalizedPressure * SHADOW_RESONANCE_BONUS;
-  }
-
-  private calculatePressureSignal(metrics: IskraMetrics): number {
-    return (metrics.pain + metrics.chaos + metrics.drift) / 3;
   }
 }

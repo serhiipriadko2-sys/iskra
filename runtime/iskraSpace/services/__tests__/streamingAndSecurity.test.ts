@@ -502,7 +502,7 @@ describe('SecurityService Expanded Patterns', () => {
 
     it('should detect API keys and secrets', () => {
       const secrets = [
-        'sk-1234567890abcdefghijklmnop', // OpenAI style
+        'sk-1234567890abcde', // OpenAI style
         'Bearer eyJhbGciOiJIUzI1NiIs', // JWT token start
         '-----BEGIN RSA PRIVATE KEY-----',
         '-----BEGIN OPENSSH PRIVATE KEY-----',

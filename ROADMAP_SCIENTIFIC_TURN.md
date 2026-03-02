@@ -2,7 +2,7 @@
 
 > **Goal:** Complete the transition from "Heuristic Chatbot" to "Quantum Cognitive Architecture".
 > **Strategy:** Strangler Fig Pattern (gradually replace `runtime` with `packages`).
-> **Updated:** 2026-02-17
+> **Updated:** 2026-03-01
 
 ---
 
@@ -30,17 +30,37 @@
 - [x] **iskra-web** — ChatInterface, QuantumField visualization, useEngine hook, somatic feedback
 
 ### In Progress
-- [ ] **Task 2.1:** Move `GraphService` from `runtime` to `@iskra/engine`
-  - *Dependency:* Port Supabase types to `packages/engine`
-- [ ] **Task 2.2:** Enforce voice thresholds from `voices.json` manifest in VoiceQuantumField
+- [x] **Task 2.1:** Move `GraphService` from `runtime` to `@iskra/engine`
+  - *Result:* `packages/engine/src/services/graphService.ts` (in-memory GraphRAG skeleton, strict types)
+  - *Note:* Supabase persistence stays a separate layer (Task 2.3) to avoid secrets in code.
+- [x] **Task 2.2:** Enforce voice thresholds from `voices.json` manifest in VoiceQuantumField
   - *Goal:* Voice selection must respect metric thresholds (not just quantum probabilities)
-- [ ] **Task 2.3:** Add Supabase client to `@iskra/engine`
+- [x] **Task 2.3:** Add Supabase client to `@iskra/engine` (DONE)
   - *Goal:* Persistent memory storage, real embeddings via Edge Functions
 - [ ] **Task 2.4:** Connect `apps/iskra-web` to live `CoreEngine` data
   - *Goal:* Real-time quantum field visualization with actual state
-- [ ] **Task 2.5:** Replace mock embeddings with Supabase Edge Function
-  - *Current:* `BrowserEmbeddingProvider` uses hash-based 2D vectors
+- [x] **Task 2.5:** Replace mock embeddings with Supabase Edge Function (DONE)
+  - *Current:* Fallback remains for local dev.
   - *Target:* Real vector embeddings via pgvector
+
+### Completed (2026-03-01)
+- [x] **Task 2.3:** Add Supabase client to `@iskra/engine`
+  - *Result:* `createSupabaseClient()` in `packages/engine/src/infra/supabaseClient.ts`.
+  - *Security:* anon-key only in browser; service-role is forbidden in frontend.
+- [x] **Task 2.5:** Replace mock embeddings with Supabase Edge Function
+  - *Result:* `SupabaseEdgeEmbeddingProvider` + `supabase/functions/embed` Edge Function; web uses Edge call when env is configured.
+
+- [x] **Task 2.7:** Harden Edge embeddings (security + cost)
+  - *Result:* CORS preflight + Authorization required + optional rate limiting in `embed`.
+  - *Result:* `SafeEmbeddingProvider` adds input hygiene + PII policy + cache.
+
+- [x] **Task 2.6:** GraphRAG expansion — graph-enhanced retrieval in `@iskra/engine` (vector seeds + transient graph traversal + rerank)
+  - *Goal:* After semantic+resonance top-K, expand via BFS over `GraphService` edges.
+  - *Constraint:* Must remain deterministic + testable (no hidden heuristics).
+
+- [x] **Task 2.8:** Supabase pgvector HNSW index for GraphRAG (seeds + neighbors)
+  - *Goal:* Remove O(N²) similarity graph; use DB ANN index: `topK(query_embedding)` and `topM(node_embedding)`.
+  - *Result:* `supabase/migrations/*_pgvector_hnsw.sql` + engine `SupabasePgvectorHnswIndex` + GraphRAG lazy top‑M traversal.
 
 ---
 

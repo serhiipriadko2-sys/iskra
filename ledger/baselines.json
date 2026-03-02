@@ -1,0 +1,11 @@
+{
+  "version": "0.1",
+  "updated": "2026-02-23",
+  "sample_n": 0,
+  "baseline_chaos": 0.6,
+  "baseline_alive_index": 0.6,
+  "notes": [
+    "Defaults for local/dev. Override per deployment after measurement.",
+    "Used by system/slo_guard.md §1 derived metrics (chaos_overheat, alive_delta)."
+  ]
+}

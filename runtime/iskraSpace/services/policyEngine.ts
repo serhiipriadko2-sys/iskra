@@ -15,6 +15,24 @@
 
 import { IskraMetrics, VoiceName, Message } from '../types';
 import { auditService } from './auditService';
+// Guard and integrity imports
+import { decideSloGuardExplainable, GuardOutcome, IntegrityState } from '../../src/types/guard.js';
+import {
+  deriveGuardIntegrity,
+  getStoredIntegrity,
+  clearIntegrityState,
+  getLastPlaybook,
+  saveLastPlaybook,
+  getGuardCounters,
+} from './integrityService';
+
+function alertLevelProxy(metrics: IskraMetrics): 'normal' | 'watch' | 'warning' | 'critical' {
+  // Best-effort proxy when full EWS (fractal indicators) is unavailable.
+  if (metrics.drift >= 0.7 || metrics.interrupt > 0.7 || metrics.pain >= 0.9) return 'critical';
+  if (metrics.drift >= 0.4 || metrics.pain > 0.5 || metrics.trust < 0.4) return 'warning';
+  if (metrics.drift >= 0.25 || metrics.chaos > 0.6) return 'watch';
+  return 'normal';
+}
 
 // ============================================
 // TYPES
@@ -35,7 +53,12 @@ export interface RequestClassification {
 export interface ClassificationSignal {
   type: string;
   weight: number;
-  source: 'content' | 'metrics' | 'history' | 'pattern';
+  /**
+   * Origin of the signal. In addition to the canonical sources (content,
+   * metrics, history, pattern), the guard may inject override signals to
+   * explain why it changed the playbook.
+   */
+  source: 'content' | 'metrics' | 'history' | 'pattern' | 'guard';
   description: string;
 }
 
@@ -54,6 +77,17 @@ export interface PolicyDecision {
   classification: RequestClassification;
   config: PlaybookConfig;
   preActions: PreAction[];
+  /**
+   * Integrity state that was used as an input to the guard on this turn.
+   * This typically refers to the previous assistant response (post-check).
+   */
+  integrityState?: IntegrityState;
+  /**
+   * Optional guard outcome from SLO‑Guard. If present, the playbook may
+   * have been overridden based on the guard’s decision. UI consumers
+   * can display this for observability.
+   */
+  guardOutcome?: GuardOutcome;
   timestamp: number;
 }
 
@@ -397,6 +431,62 @@ export function makeDecision(
   history?: Message[]
 ): PolicyDecision {
   const classification = classifyRequest(message, metrics, history);
+  // ======== SLO GUARD INTEGRATION ========
+  // Determine last playbook (defaults to ROUTINE) and fetch any stored
+  // integrity state from the previous turn. If stored integrity is
+  // present, clear it so it is only used once. Otherwise derive
+  // integrity from the history and last playbook. Then evaluate the
+  // guard and override the playbook if necessary.
+  const lastPlaybook = getLastPlaybook() ?? 'ROUTINE';
+  let integrity = getStoredIntegrity();
+  if (integrity) {
+    clearIntegrityState();
+  } else {
+    integrity = deriveGuardIntegrity(history ?? [], lastPlaybook);
+  }
+  const counters = (integrity && integrity.counters)
+    ? integrity.counters
+    : getGuardCounters();
+
+  const guardExplainable = decideSloGuardExplainable({
+    metrics,
+    integrity,
+    anti_dryness_hits: counters.anti_dryness_hits,
+    leader_flaps: counters.leader_flaps,
+    chaos_overheat: metrics.chaos >= 0.7,
+    alertLevel: alertLevelProxy(metrics),
+    currentPlaybook: lastPlaybook,
+  });
+  const guardOutcome = guardExplainable.value;
+  // By default, use the classification playbook
+  let finalPlaybook: PlaybookType = classification.playbook;
+  if (guardOutcome.decision !== 'PROCEED') {
+    switch (guardOutcome.decision) {
+      case 'FORCE_CRISIS':
+        finalPlaybook = 'CRISIS';
+        break;
+      case 'FORCE_SHADOW':
+        finalPlaybook = 'SHADOW';
+        break;
+      case 'FORCE_ISKRIV_1':
+      case 'CLOSE_HONESTLY':
+        finalPlaybook = 'SIFT';
+        break;
+      default:
+        finalPlaybook = classification.playbook;
+    }
+    // Add a signal describing the override
+    classification.signals.push({
+      type: 'guard_override',
+      weight: 1.0,
+      source: 'guard',
+      description: `SLO Guard decided ${guardOutcome.decision}: ${guardOutcome.why}`,
+    });
+    classification.playbook = finalPlaybook;
+  }
+  // Persist the chosen playbook for next turn
+  saveLastPlaybook(classification.playbook);
+  // Determine config after potential override
   const config = PLAYBOOK_CONFIGS[classification.playbook];
   const preActions: PreAction[] = [];
 
@@ -443,6 +533,8 @@ export function makeDecision(
     classification,
     config,
     preActions,
+    integrityState: integrity ?? undefined,
+    guardOutcome,
     timestamp: Date.now(),
   };
 }

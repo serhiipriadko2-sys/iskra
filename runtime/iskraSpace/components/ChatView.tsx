@@ -64,6 +64,10 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   // Response Mode State
   const [responseMode, setResponseMode] = useState<ResponseMode>(() => storageService.getResponseMode());
 
+  // Policy / Integrity observability (last turn)
+  const [lastPolicyDecision, setLastPolicyDecision] = useState<any | null>(null);
+  const [lastPostIntegrity, setLastPostIntegrity] = useState<any | null>(null);
+
   // Cycle through response modes: simple → deep → debate → simple
   const cycleResponseMode = () => {
     const modes: ResponseMode[] = ['simple', 'deep', 'debate'];
@@ -290,6 +294,10 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
       }
       if (streamResult?.policy) {
         console.debug('[Policy]', streamResult.policy.classification.playbook);
+        setLastPolicyDecision(streamResult.policy);
+      }
+      if (streamResult?.integrity) {
+        setLastPostIntegrity(streamResult.integrity);
       }
 
       if (isTtsEnabled && fullResponse.trim().length > 0) {
@@ -343,6 +351,36 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
                     <span>{RESPONSE_MODE_DISPLAY[responseMode].icon}</span>
                     <span>{RESPONSE_MODE_DISPLAY[responseMode].label}</span>
                 </button>
+
+                {/* Policy / Guard / Integrity badges (observability) */}
+                {lastPolicyDecision && (
+                    <div className="flex items-center gap-2 text-xs flex-wrap">
+                        <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10">
+                            Playbook: {lastPolicyDecision?.classification?.playbook}
+                        </span>
+                        {lastPolicyDecision?.guardOutcome && (
+                            <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10" title={lastPolicyDecision.guardOutcome?.why}>
+                                Guard: {lastPolicyDecision.guardOutcome?.decision}
+                            </span>
+                        )}
+                        {lastPolicyDecision?.integrityState && (
+                            <span
+                                className="px-2 py-0.5 rounded bg-white/5 border border-white/10"
+                                title={(lastPolicyDecision.integrityState?.reasons || []).join(' | ')}
+                            >
+                                Integrity(prev): {String(lastPolicyDecision.integrityState?.overall || (lastPolicyDecision.integrityState?.ok ? 'ok' : 'fail')).toUpperCase()}
+                            </span>
+                        )}
+                        {lastPostIntegrity && (
+                            <span
+                                className="px-2 py-0.5 rounded bg-white/5 border border-white/10"
+                                title={(lastPostIntegrity?.reasons || []).join(' | ')}
+                            >
+                                Integrity(this): {String(lastPostIntegrity?.overall || (lastPostIntegrity?.ok ? 'ok' : 'fail')).toUpperCase()}
+                            </span>
+                        )}
+                    </div>
+                )}
             </div>
          </div>
          

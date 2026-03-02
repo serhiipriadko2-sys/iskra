@@ -4,6 +4,10 @@ import { getSystemInstructionForVoice } from "./voiceEngine";
 import { DELTA_PROTOCOL_INSTRUCTION } from "./deltaProtocol";
 import { evaluateResponse, EvalResult, EvalContext } from "./evalService";
 import { policyEngine, PolicyDecision, PlaybookType } from "./policyEngine";
+import {
+  computeIntegrityStateV02,
+  saveIntegrityState,
+} from './integrityService';
 import { storageService } from "./storageService";
 
 const model = "gemini-2.5-flash";
@@ -783,18 +787,51 @@ SIFT Depth: ${config.siftDepth}
         yield chunk;
       }
 
+      const responseId = `policy_${classification.playbook}_${Date.now()}`;
+
       // Evaluate the complete response
       const evalResult = evaluateResponse(fullResponse, {
         userQuery: lastUserMessage,
         logToAudit: true,
-        responseId: `policy_${classification.playbook}_${Date.now()}`,
+        responseId,
       });
 
-      return { eval: evalResult, policy: policyDecision };
+      // === Persist integrity for the next turn (IntegrityState v0.2) ===
+      let integrity: any = null;
+      try {
+        const evalFlags = Array.isArray(evalResult?.flags)
+          ? evalResult.flags.map(f => f.code)
+          : [];
+        integrity = computeIntegrityStateV02({
+          responseText: fullResponse,
+          playbook: policyDecision.classification.playbook as PlaybookType,
+          responseId,
+          voiceName: (effectiveVoice as any)?.name,
+          evalFlags,
+        });
+        saveIntegrityState(integrity);
+      } catch (_e) {
+        // Best effort: ignore errors in integrity persistence
+      }
+
+      return { eval: evalResult, policy: policyDecision, integrity };
     } catch (error) {
       console.error("Error in policy-routed chat stream:", error);
       yield "⚑ Произошел разрыв в потоке. ≈";
-      return { eval: null, policy: policyDecision };
+      try {
+        // Even on error, attempt to compute integrity from the partial response
+        const integrity = computeIntegrityStateV02({
+          responseText: fullResponse || '',
+          playbook: policyDecision.classification.playbook as PlaybookType,
+          responseId: `policy_${classification.playbook}_${Date.now()}`,
+          voiceName: (effectiveVoice as any)?.name,
+          evalFlags: [],
+        });
+        saveIntegrityState(integrity);
+      } catch (_e) {
+        // ignore
+      }
+      return { eval: null, policy: policyDecision, integrity: null };
     }
   }
 

@@ -7,7 +7,8 @@
   },
   "dependencies": {
     "@iskra/core": "workspace:*",
-    "@iskra/math": "workspace:*"
+    "@iskra/math": "workspace:*",
+    "@supabase/supabase-js": "^2.95.3"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
