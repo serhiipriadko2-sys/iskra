@@ -30,7 +30,8 @@ export class SupabaseEdgeEmbeddingProvider implements EmbeddingProvider {
   private readonly functionName: string;
   private readonly timeoutMs?: number;
 
-  constructor(private readonly supabase: SupabaseClient, options: SupabaseEdgeEmbeddingProviderOptions = {}) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Accept any SupabaseClient generic variant
+  constructor(private readonly supabase: SupabaseClient<any, any, any>, options: SupabaseEdgeEmbeddingProviderOptions = {}) {
     this.functionName = options.functionName ?? 'embed';
     this.timeoutMs = options.timeoutMs;
   }

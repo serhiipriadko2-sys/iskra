@@ -270,7 +270,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
       // Use policy-routed stream with eval
       const stream = service.getChatResponseStreamWithPolicy(currentHistory, responseVoice, metrics);
       let fullResponse = '';
-      let streamResult: { eval: any; policy: any } | null = null;
+      let streamResult: { eval: any; policy: any; integrity?: any } | null = null;
 
       // Iterate manually to capture return value
       while (true) {

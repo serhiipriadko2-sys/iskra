@@ -1,4 +1,4 @@
-import type { IskraMetrics } from './types.js';
+import type { IskraMetrics } from '@iskra/core';
 
 export interface MetricTimeSeries {
   metric: keyof IskraMetrics;

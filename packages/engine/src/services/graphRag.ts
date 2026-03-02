@@ -2,10 +2,7 @@ import type { IskraMetrics, MantraNode } from '@iskra/core';
 import { calculateResonance } from '@iskra/math';
 
 import type { MemoryService } from './memory.js';
-
-export type JsonPrimitive = string | number | boolean | null;
-export type JsonValue = JsonPrimitive | JsonValue[] | { [k: string]: JsonValue };
-export type JsonRecord = { [k: string]: JsonValue };
+import type { JsonRecord } from './graphService.js';
 
 export type GraphEdgeType = 'SIMILARITY' | 'CAUSAL';
 

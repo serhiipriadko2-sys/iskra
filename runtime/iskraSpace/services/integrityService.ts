@@ -229,7 +229,7 @@ export function deriveGuardIntegrity(
   lastPlaybook: PlaybookType
 ): IntegrityState {
   // Find last assistant message
-  const lastAssistant = [...history].reverse().find(m => m.role === 'assistant');
+  const lastAssistant = [...history].reverse().find(m => m.role === 'model');
   const text = lastAssistant?.text || '';
   const state: IntegrityState = {
     ok: true,
