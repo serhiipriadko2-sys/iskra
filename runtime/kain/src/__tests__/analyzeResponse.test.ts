@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { analyzeResponse } from '../src/index';
+import { analyzeResponse } from '../index';
 
 describe('analyzeResponse (kain plugin)', () => {
   it('triggers repair when pain is high', () => {
