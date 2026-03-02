@@ -8,6 +8,7 @@ import {
   computeIntegrityStateV02,
   saveIntegrityState,
 } from './integrityService';
+import type { IntegrityState } from '../../src/types/guard.js';
 import { storageService } from "./storageService";
 
 const model = "gemini-2.5-flash";
@@ -721,7 +722,7 @@ ${deltaInstruction}`;
     history: Message[],
     voice: Voice,
     metrics: IskraMetrics
-  ): AsyncGenerator<string, { eval: EvalResult | null; policy: PolicyDecision }> {
+  ): AsyncGenerator<string, { eval: EvalResult | null; policy: PolicyDecision; integrity: IntegrityState | null }> {
     // Get the last user message for classification
     const lastUserMessage = history.filter(m => m.role === 'user').pop()?.text || '';
 
@@ -774,7 +775,7 @@ SIFT Depth: ${config.siftDepth}
     if (OFFLINE_MODE) {
       // Offline mode still produces policy decision; response is a single deterministic chunk.
       yield "⚑ Оффлайн-режим: политика рассчитана локально, генерация недоступна.";
-      return { eval: null, policy: policyDecision };
+      return { eval: null, policy: policyDecision, integrity: null };
     }
 
     try {
