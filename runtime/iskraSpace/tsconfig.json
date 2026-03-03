@@ -48,10 +48,4 @@
     "test-results",
     "supabase"
   ]
-  ,
-  "references": [
-    {
-      "path": ".."
-    }
-  ]
 }
