@@ -1,0 +1,32 @@
+{
+  "kind": "ledger_entry",
+  "phase": "baseline_ingest_phase1_shard1",
+  "source_archive": "Versions/baseline.zip",
+  "views": [
+    {
+      "path": "ingest/baseline_coverage_manifest.json",
+      "sha256": "4c571097015a5c49572c08221ce37d17778cf4c259beab1bf56a49ff1e8f40b6",
+      "bytes": 308328
+    },
+    {
+      "path": "ingest/security_scan_report.json",
+      "sha256": "7ef3f04a104be583d92d52d7e66134d4b34343525c6e718edb358c711b0bee7d",
+      "bytes": 725
+    },
+    {
+      "path": "ingest/rename_map.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "ingest/phase1_classification.json",
+      "sha256": "fa927a9c1a7dcac968fbd64282b5f7a55996a39d998f7007ee71e71309984dff",
+      "bytes": 6979
+    },
+    {
+      "path": "ingest/shard1_import_manifest.json",
+      "sha256": "93beb1db703f4355fd2e9ba0297578c0430c804f0d98a916146b0350e8a71d93",
+      "bytes": 9659
+    }
+  ]
+}

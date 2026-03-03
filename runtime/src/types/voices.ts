@@ -307,3 +307,4 @@ export function selectVoiceX(metrics: IskraMetrics): Explainable<VoiceActivation
 
   return { value, how, contracts_checked, evidence: refs };
 }
+

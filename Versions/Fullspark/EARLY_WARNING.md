@@ -565,3 +565,55 @@ const EWS_CONFIG = {
 **Version:** vΩ.3.0
 **Layer:** system
 **Integrity:** SoT (Печать истины)-System
+
+Зависимости и взаимодействия
+core__early_warning.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+COUNCIL_PROTOCOL.md
+SLO_GUARD.md
+Входящие (этот файл упоминается в):
+
+ADR-20260206-RUNTIME_PATCHES.md
+INDEX.md
+METRICS_BUNDLE.md
+UPLOAD_SETS.md
+WHAT_IF_MATRIX.md
+WORKFLOW_OPS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Ранние предупреждения: триггеры деградации и сигналы.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_early_warning (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+COUNCIL_PROTOCOL.md
+SLO_GUARD.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-EARLY_WARNING.md-presence (файл доступен, читается, парсится)
+T-EARLY_WARNING.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: EARLY_WARNING.md
+
+Mapping anchors (code paths):
+
+- `tools/horizon_validator.py`
+- `tools/horizon_weaver.py`
+- `runtime/iskraSpace/services/deltaProtocol.ts`
+- `tools/validate_delta.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

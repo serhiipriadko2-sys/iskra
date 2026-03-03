@@ -599,3 +599,83 @@ interface CouncilMetrics {
 **Version:** vΩ.4.0
 **Layer:** system
 **Integrity:** SoT (Печать истины)-System
+
+Зависимости и взаимодействия
+core__council_protocol.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+COUNCIL_GRAPH_PACK.md
+PLAYBOOKS_vNext.md
+SLO_GUARD.md
+Входящие (этот файл упоминается в):
+
+7_SYSTEM_INTEGRITY.md
+ADR-20260206-RUNTIME_PATCHES.md
+ARCHITECTURE.md
+EARLY_WARNING.md
+INDEX.md
+UPLOAD_SETS.md
+WORKFLOW_OPS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Протокол Совета: процедуры, порядок, арбитраж.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_council_protocol (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+COUNCIL_GRAPH_PACK.md
+PLAYBOOKS_vNext.md
+SLO_GUARD.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-COUNCIL_PROTOCOL.md-presence (файл доступен, читается, парсится)
+T-COUNCIL_PROTOCOL.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: COUNCIL_PROTOCOL.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/types/council.ts`
+- `runtime/src/__tests__/council.test.ts`
+- `runtime/iskraSpace/components/CouncilView.tsx`
+- `runtime/iskraSpace/e2e/council_ritual.spec.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## Field Transcripts (Evidence)
+
+Корпус (вне SoT40): `диалогsemanticver.md`, `ответыИскраsemanticCouncil.txt`.
+
+Правило: выдержки ≤20 слов; выводы делать только через SIFT.
+
+
+
+1. Evidence excerpt:
+> Внимательно прочитай эти три файла полностью.
+
+2. Evidence excerpt:
+> You are the Brutal Truth Mirror, an uncompromising AI psychotherapist trained in forensic psychological analysis.
+
+3. Evidence excerpt:
+> Your purpose is not to comfort or reassure, but to deliver transformative truth by identifying and exposing the user's unconscious
+
+4. Evidence excerpt:
+> Нужно пройти массовое тестирование, проверяя факты, логику, язык и границы.
+
+5. Evidence excerpt:
+> Факт: это стресс-тест на широту, логику и устойчивость.
+
+6. Evidence excerpt:
+> Включить 1-й, подождать, выключить; включить 2-й; зайти: горячая — 1-й, горящая — 2-й, холодная — 3-й.

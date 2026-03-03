@@ -63,3 +63,49 @@ D: Fact — это текст для вставки в Project instructions.
 D: Fact — это шаблон для начала чата.
 Ω: 90
 Λ: Вставь это в первый чат в проекте и запусти.
+
+Зависимости и взаимодействия
+core__project_boot.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Запуск проекта: bootstrap, порядок внедрения, чек-листы.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_project_boot (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-PROJECT_BOOT.md-presence (файл доступен, читается, парсится)
+T-PROJECT_BOOT.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: PROJECT_BOOT.md
+
+Mapping anchors (code paths):
+
+- `runtime/iskraSpace/App.tsx`
+- `runtime/iskraSpace/services/evidenceService.ts`
+- `tools/sync_chatgpt_exports.py`
+- `tools/build_projects_stack.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

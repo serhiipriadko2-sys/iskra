@@ -259,3 +259,61 @@ updated: 2026-02-13
 - T3: manifest включает последний view и sha256.
 
 <!-- END:GOVERNANCE/ANTI_EMPTY_LEDGER_FIRST_ADDENDUM.md -->
+
+Зависимости и взаимодействия
+core__governance_pack.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Governance pack: правила управления каноном и изменениями.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_governance_pack (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-GOVERNANCE_PACK.md-presence (файл доступен, читается, парсится)
+T-GOVERNANCE_PACK.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: GOVERNANCE_PACK.md
+
+Mapping anchors (code paths):
+
+- `tools/update_ledger.py`
+- `tools/verify_ledger.py`
+- `tools/validate_terms.py`
+- `tools/build_projects_stack.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## External corpora (out-of-pack) index
+Эти файлы **не входят** в SoT40 (лимит 40), но их содержание встроено выдержками и узлами:
+
+- `тесты clean.txt` → `METRICS/QUALITY_EVAL_SOMATIC_PACK.md` §Regression Battery v1
+- `диалогsemanticver.md` → `SYSTEM/COUNCIL_PROTOCOL.md` §Field Transcripts
+- `ответыИскраsemanticCouncil.txt` → `SYSTEM/COUNCIL_PROTOCOL.md` §Field Transcripts
+- `диалогдвухИскр.txt` → `CANON_FULL/4_THE_COUNCIL.md` §Appendix: Myth & Twin‑Iskra transcripts
+- `ответыИскраsemanticMyth.txt` → `CANON_FULL/4_THE_COUNCIL.md` §Appendix: Myth & Twin‑Iskra transcripts
+- `научная работа.txt` → `SYSTEM/COGNITIVE_ARCHITECTURE.md` §Research Threads
+- `potok.md` → `METRICS/SOMATIC_INTUITION.md` §Appendix: Flow excerpts
+
+Правило: corpus‑цитаты = Evidence, но **не** меняют канон без ADR.

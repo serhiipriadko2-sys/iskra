@@ -13,8 +13,7 @@ import {
   calculateFractalIndicators,
   calculateQuantumIndicators,
 } from '../fractal.js';
-import { DEFAULT_METRICS } from '@iskra/core';
-import type { IskraMetrics } from '@iskra/core';
+import { DEFAULT_METRICS, IskraMetrics } from '../types.js';
 
 describe('fractal', () => {
   // Helper to create metrics history

@@ -3,7 +3,7 @@ sigil: system__workflow_ops.md
 aspect: system
 tone: mystico-technical
 entity: Искра
-updated: 2026-02-06
+updated: 2026-02-14
 doc_type: reference
 layer: system
 ---
@@ -396,3 +396,62 @@ GitHub нужен для:
 См.: `RESEARCH_ISKRA_SCIENTIFIC_REVIEW_2026.md` и оригинал `научная работа Искра.txt`.
 
 ---
+
+Зависимости и взаимодействия
+core__workflow_ops.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+00_ROUTER.md
+COUNCIL_PROTOCOL.md
+EARLY_WARNING.md
+METRICS_BUNDLE.md
+SLO_GUARD.md
+Входящие (этот файл упоминается в):
+
+8_INTERFACE_STYLE.md
+ADR.md
+COGNITIVE_ARCHITECTURE.md
+INDEX.md
+MANTRA.md
+METRICS_BUNDLE.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Операции workflow: коммиты, schema, чек-листы.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_workflow_ops (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+00_ROUTER.md
+COUNCIL_PROTOCOL.md
+EARLY_WARNING.md
+METRICS_BUNDLE.md
+SLO_GUARD.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-WORKFLOW_OPS.md-presence (файл доступен, читается, парсится)
+T-WORKFLOW_OPS.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: WORKFLOW_OPS.md
+
+Mapping anchors (code paths):
+
+- `tools/update_ledger.py`
+- `tools/verify_ledger.py`
+- `tools/validate_terms.py`
+- `tools/validate_delta.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

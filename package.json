@@ -9,7 +9,11 @@
     "test": "pnpm -r test",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r run typecheck",
+    "verify": "npm run typecheck && pnpm test && python tools/verify_ledger.py",
+    "ingest:phase1": "python tools/build_phase1_classification.py",
+    "check:adr-gate": "python tools/check_core_adr_gate.py",
+    "import:shard1": "python tools/import_phase1_shard1.py"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

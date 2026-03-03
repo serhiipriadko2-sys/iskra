@@ -16,18 +16,17 @@ export interface SupabaseClientConfig {
   options?: Parameters<typeof createClient>[2];
 }
 
-export function createSupabaseClient(cfg: SupabaseClientConfig) {
+export function createSupabaseClient(cfg: SupabaseClientConfig): SupabaseClient {
   if (!cfg.url || !cfg.anonKey) {
     throw new Error('SupabaseClientConfig requires url and anonKey');
   }
 
+  const authHeader = cfg.accessToken ? { Authorization: `Bearer ${cfg.accessToken}` } : {};
   const mergedHeaders: Record<string, string> = {
+    ...authHeader,
     ...(cfg.options?.global?.headers ?? {}),
-    ...(cfg.headers ?? {}),
+    ...(cfg.headers ?? {})
   };
-  if (cfg.accessToken) {
-    mergedHeaders['Authorization'] = `Bearer ${cfg.accessToken}`;
-  }
 
   // Default safe auth options for a library layer.
   const defaultAuth = {

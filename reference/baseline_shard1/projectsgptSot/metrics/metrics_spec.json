@@ -1,0 +1,92 @@
+{
+  "version": "1.0",
+  "rounding": {
+    "digits": 4
+  },
+  "ranges": {
+    "score": [
+      0.0,
+      1.0
+    ],
+    "trace_count": [
+      0,
+      5
+    ]
+  },
+  "profiles": {
+    "canon": {
+      "max_findings": 0,
+      "require_baseline": true
+    },
+    "lab": {
+      "max_findings": 2,
+      "require_baseline": false
+    }
+  },
+  "metrics": {
+    "clarity": {
+      "range": [
+        0.0,
+        1.0
+      ]
+    },
+    "trust": {
+      "range": [
+        0.0,
+        1.0
+      ]
+    },
+    "drift": {
+      "range": [
+        0.0,
+        1.0
+      ]
+    },
+    "echo_clearance": {
+      "range": [
+        0.0,
+        1.0
+      ]
+    },
+    "protocol": {
+      "range": [
+        0.0,
+        1.0
+      ]
+    },
+    "trace_count": {
+      "range": [
+        0,
+        5
+      ]
+    }
+  },
+  "derived": {
+    "trace_factor": {
+      "type": "linear",
+      "numerator": "trace_count",
+      "denominator": 5,
+      "range": [
+        0.0,
+        1.0
+      ]
+    },
+    "alive_index": {
+      "type": "expr",
+      "expr": "((clarity + trust)/2 - drift) * trace_factor"
+    },
+    "eval_score": {
+      "type": "weighted_sum",
+      "weights": {
+        "clarity": 0.25,
+        "trust": 0.25,
+        "echo_clearance": 0.25,
+        "protocol": 0.25
+      }
+    },
+    "alive_delta": {
+      "type": "diff",
+      "expr": "alive_index - baseline_alive_index"
+    }
+  }
+}

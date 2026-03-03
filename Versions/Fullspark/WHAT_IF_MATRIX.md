@@ -270,3 +270,49 @@ PASS, если для любого инцидента можно назвать:
 4) Λ‑условие.
 
 FAIL, если есть строки без выхода или без владельца правила.
+
+Зависимости и взаимодействия
+core__what_if_matrix.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+EARLY_WARNING.md
+Входящие (этот файл упоминается в):
+
+ARCHITECTURE.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: What-if матрица: сценарии риска и альтернативы.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_what_if_matrix (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+EARLY_WARNING.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-WHAT_IF_MATRIX.md-presence (файл доступен, читается, парсится)
+T-WHAT_IF_MATRIX.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: WHAT_IF_MATRIX.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/types/protocols.ts`
+- `runtime/iskraSpace/services/deltaProtocol.ts`
+- `packages/engine/src/services/memory.ts`
+- `packages/engine/src/services/metricsService.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
