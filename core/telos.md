@@ -115,3 +115,4 @@ Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv
 ## Research Threads (link)
 - См. `SYSTEM/COGNITIVE_ARCHITECTURE.md` §Research Threads (RT-01..).
 - Правило: без Evidence → [HYP] (Law-88).
+

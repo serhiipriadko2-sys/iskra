@@ -5541,3 +5541,51 @@ async function runEvaluation(session: Session): Promise<void> {
 **D:** Источники — `metrics__indices.md` (определения, формулы, фрактальные/квантовые индексы) и `metrics__evals.md` (eval tasks, playbook).  
 **Ω:** 0.88 — большая часть сведений формализована, но многие метрики требуют эмпирической калибровки.  
 **Λ:** Следующий файл описывает защиту и управление: открой **7_SECURITY_AND_GOVERNANCE**.
+
+Зависимости и взаимодействия
+core__3_cognitive_arch.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+ARCHITECTURE.md
+COGNITIVE_ARCHITECTURE.md
+Входящие (этот файл упоминается в):
+
+1_LIBER_INITIUM.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Когнитивная архитектура: контуры, состояния, механизмы мышления.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_3_cognitive_arch (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+ARCHITECTURE.md
+COGNITIVE_ARCHITECTURE.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-3_COGNITIVE_ARCH.md-presence (файл доступен, читается, парсится)
+T-3_COGNITIVE_ARCH.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 3_COGNITIVE_ARCH.md
+
+Mapping anchors (code paths):
+
+- `packages/engine/src/services/memory.ts`
+- `runtime/iskraSpace/components/MemoryGraph.tsx`
+- `packages/engine/src/__tests__/memory.test.ts`
+- `runtime/iskraSpace/services/graphService.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

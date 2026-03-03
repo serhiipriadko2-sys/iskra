@@ -70,3 +70,51 @@ RAG Engine определяет, **какие источники считать 
 ---
 
 **Integrity:** SoT (Печать истины)-System · Retrieval
+
+Зависимости и взаимодействия
+core__rag_engine.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+COUNCIL_GRAPH_PACK.md
+Входящие (этот файл упоминается в):
+
+ARCHITECTURE.md
+COGNITIVE_ARCHITECTURE.md
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: RAG-движок: retrieval, groundedness, источники, формат Evidence.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_rag_engine (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+COUNCIL_GRAPH_PACK.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-RAG_ENGINE.md-presence (файл доступен, читается, парсится)
+T-RAG_ENGINE.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: RAG_ENGINE.md
+
+Mapping anchors (code paths):
+
+- `runtime/iskraSpace/services/ragService.ts`
+- `runtime/iskraSpace/services/__tests__/ragService.test.ts`
+- `runtime/iskraSpace/services/storageCompat.ts`
+- `packages/engine/src/services/memory.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
