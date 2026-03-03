@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import ChatWindow from './ChatWindow';
-import { IskraAIService } from '../services/geminiService';
+import { IskraAIService, type PolicyStreamResult } from '../services/geminiService';
 import { searchService } from '../services/searchService';
 import { Message, IskraMetrics, Voice, VoiceName, SearchResult, VoicePreferences, ResponseMode } from '../types';
 import { getActiveVoice } from '../services/voiceEngine';
@@ -270,7 +270,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
       // Use policy-routed stream with eval
       const stream = service.getChatResponseStreamWithPolicy(currentHistory, responseVoice, metrics);
       let fullResponse = '';
-      let streamResult: { eval: any; policy: any; integrity?: unknown | null } | null = null;
+      let streamResult: PolicyStreamResult | null = null;
 
       // Iterate manually to capture return value
       while (true) {

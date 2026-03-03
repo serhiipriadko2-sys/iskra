@@ -1,0 +1,7 @@
+# Quote / citation corpora (quote-only)
+BUSIDO_ISKRY.txt
+Liber_Ignis.txt
+
+# Generated or scratch outputs
+**/evals/_out/**
+**/evals/_tmp/**

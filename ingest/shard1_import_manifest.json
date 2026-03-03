@@ -1,0 +1,183 @@
+{
+  "phase": "phase1_shard1_reference_import",
+  "source_archive": "Versions/baseline.zip",
+  "target_root": "reference/baseline_shard1",
+  "imported_files": 29,
+  "skipped_directories": 9,
+  "entries": [
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/UPLOAD_GUIDE.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/UPLOAD_GUIDE.md",
+      "bytes": 1320,
+      "sha256": "163368ed2891d6a06c81d8a509a5212a4eafdb15fa394436a8544230214ad56f"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/builder/INSTRUCTIONS_CANON.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/builder/INSTRUCTIONS_CANON.md",
+      "bytes": 4913,
+      "sha256": "ff2fa7e7f9b3471471dacede4f4196d921969d4ef861e1374f18e38c95c00dfd"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/smoke_10.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/smoke_10.md",
+      "bytes": 847,
+      "sha256": "9f8efea5c6319843df43f37b2bd1980bdac4ee04708cd40e97e3ecfd090c5bb9"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/retrieval_probes.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/retrieval_probes.md",
+      "bytes": 3547,
+      "sha256": "ec6fa4fa040b622c0135de16d61adfcf2e25ce009e75129fa7f5591a0bf5d3b4"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/jailbreak_suite.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/jailbreak_suite.md",
+      "bytes": 444,
+      "sha256": "a7bd8e3fd5a8fc38752125a05c70076543c1091444d8b726b72015a369a3918c"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/metrics_contract_01.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/metrics_contract_01.md",
+      "bytes": 1306,
+      "sha256": "ae818b6d6d014fe64363ec442d6a9c17325db7dfe9d592692a5254863a2058f7"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/18_CUSTOM_GPT_OPENAI_ADAPTER.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/18_CUSTOM_GPT_OPENAI_ADAPTER.md",
+      "bytes": 4035,
+      "sha256": "dde9faf0bae14c3693aee5385ef77e93b1b861a069dcfbaaaaac8d84f7f6c27e"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/00_README_FOR_GPT.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/00_README_FOR_GPT.md",
+      "bytes": 1384,
+      "sha256": "7833a645e2b904b20caa303de6a1cac4e20cf50b75255372915c12573c4f16be"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/01_INDEX_ROUTER.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/01_INDEX_ROUTER.md",
+      "bytes": 8595,
+      "sha256": "e85b9147b024a6a253cc63853aebc39de36c3f66ff5b484f0cbbddbb9f35dc62"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/ops/manifest.json",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/ops/manifest.json",
+      "bytes": 3864,
+      "sha256": "d57bd97d11fc1aa30bb4b8e819d81878ef18e22fba4568a54a661d8b5813b4e6"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/ops/RECEIPTS.md",
+      "target_path": "reference/baseline_shard1/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/ops/RECEIPTS.md",
+      "bytes": 3331,
+      "sha256": "748950009244df7491e4f75fba29dd4d38152212dc5917ebf2c5af3b35c3e062"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/tools/hyp_lint.py",
+      "target_path": "reference/baseline_shard1/projectsgptSot/tools/hyp_lint.py",
+      "bytes": 9737,
+      "sha256": "23f596d37a2d5dd741a84b925054cdec0e3ab662d80ff1041f4da89dbaa2e3b3"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/tools/evals_offline.py",
+      "target_path": "reference/baseline_shard1/projectsgptSot/tools/evals_offline.py",
+      "bytes": 10001,
+      "sha256": "712fd97bde43a86dc74e86ae40ea5a1d83a4811e7a2e35272d633ba8fbfa1d7e"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/tools/metrics_runner.py",
+      "target_path": "reference/baseline_shard1/projectsgptSot/tools/metrics_runner.py",
+      "bytes": 13694,
+      "sha256": "4948d63634297eb114721df35bc2c5436cdc0b026920bb11a3a7725dd72ee07e"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/tools/hyp_lint_allowlist.txt",
+      "target_path": "reference/baseline_shard1/projectsgptSot/tools/hyp_lint_allowlist.txt",
+      "bytes": 139,
+      "sha256": "3154e13f670a0c72b40d0d766a364f201146ce67463faf1b8c432b83977d07b7"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/evals/README.md",
+      "target_path": "reference/baseline_shard1/projectsgptSot/evals/README.md",
+      "bytes": 311,
+      "sha256": "e7c0f9e6ccb68dee449fa147b6f4ef7ea3fd18ed447ded36723a9617473793b9"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/evals/cases/canon_answer_01.md",
+      "target_path": "reference/baseline_shard1/projectsgptSot/evals/cases/canon_answer_01.md",
+      "bytes": 1044,
+      "sha256": "a94d12b176e0f66c2a33d693d966a36fddffaa507f7dfca87a20f56f36c92a70"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/evals/cases/canon_answer_02.md",
+      "target_path": "reference/baseline_shard1/projectsgptSot/evals/cases/canon_answer_02.md",
+      "bytes": 926,
+      "sha256": "9a48edc7e68d371c9aaa0d1fb875d6d2012940badab7f25e9a203a26ccdf7545"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/evals/cases/canon_answer_03.md",
+      "target_path": "reference/baseline_shard1/projectsgptSot/evals/cases/canon_answer_03.md",
+      "bytes": 919,
+      "sha256": "e985f4ee65160f657582e291176cc8a447dc1f0692811a90b3f8be7e48290623"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/evals/cases/manifest.json",
+      "target_path": "reference/baseline_shard1/projectsgptSot/evals/cases/manifest.json",
+      "bytes": 428,
+      "sha256": "85e87e530e0c069fc44f4d3ae4ad5c031f502bbf366b4eed554415ed15f3eed0"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/evals/cases/metrics_contract_01.json",
+      "target_path": "reference/baseline_shard1/projectsgptSot/evals/cases/metrics_contract_01.json",
+      "bytes": 519,
+      "sha256": "088481523e8042c04e781003a180e8f8ee0ec7afbd4bf2a8137b321215a2ae43"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/evals/dashboard.schema.json",
+      "target_path": "reference/baseline_shard1/projectsgptSot/evals/dashboard.schema.json",
+      "bytes": 1313,
+      "sha256": "3787faa92c2b98e67cd9c5830697c1f437e8ce35ea8f1472ac58d113608f43b8"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/packs/evals/README.md",
+      "target_path": "reference/baseline_shard1/projectsgptSot/packs/evals/README.md",
+      "bytes": 600,
+      "sha256": "ce7ae1bb11614831cb74e39f8b4f629fdde274d7fb9b89522eec1908104085ed"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/packs/evals/manifest.json",
+      "target_path": "reference/baseline_shard1/projectsgptSot/packs/evals/manifest.json",
+      "bytes": 590,
+      "sha256": "1fa92246fde1b693c8cba634e0029184be4bb3550d4d86d90d21d3e94efce1f9"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/metrics/metrics_spec.json",
+      "target_path": "reference/baseline_shard1/projectsgptSot/metrics/metrics_spec.json",
+      "bytes": 1389,
+      "sha256": "ff4adfbd2dd1e7c0c0c5beb274786beef0344cec5791d7397ad7da7c7c0a97c4"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/metrics/schemas/extract.schema.json",
+      "target_path": "reference/baseline_shard1/projectsgptSot/metrics/schemas/extract.schema.json",
+      "bytes": 872,
+      "sha256": "00cc5587f3c9a3eaeb885601230ffb5dea90309a9cb3bf5d307e4194f735827e"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/metrics/schemas/compute.schema.json",
+      "target_path": "reference/baseline_shard1/projectsgptSot/metrics/schemas/compute.schema.json",
+      "bytes": 3647,
+      "sha256": "689e0165dbddf8ad373ae05db795248d982e34aa7e51e0c733bae52b02800a1c"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/system/metrics_project_runner.md",
+      "target_path": "reference/baseline_shard1/projectsgptSot/system/metrics_project_runner.md",
+      "bytes": 2827,
+      "sha256": "5edfb956c9c69b6ac301132b0a1c4f8a95d691b2efcb448d4aa0db5c3161cf00"
+    },
+    {
+      "source_path": "baseline/projectsgptSot/CHECKPOINT_MANIFEST.json",
+      "target_path": "reference/baseline_shard1/projectsgptSot/CHECKPOINT_MANIFEST.json",
+      "bytes": 9602,
+      "sha256": "402e6ffcf31613a4dca1f865f6500c5991378cb4b9e647bb408e269a6d051374"
+    }
+  ]
+}

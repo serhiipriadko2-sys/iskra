@@ -218,7 +218,7 @@ export function computeIntegrityStateV02(params: {
 
 /**
  * Derive integrity from the conversation history and last playbook. The
- * final assistant message is inspected for canon citations (e.g.
+ * final model message is inspected for canon citations (e.g.
  * `{e:canon:...}`) and receipts (sha256 + bytes) for any sandbox
  * attachments. Missing citations in ROUTINE playbook responses
  * produce warnings; missing receipts or citations in other playbooks
@@ -228,7 +228,7 @@ export function deriveGuardIntegrity(
   history: Message[],
   lastPlaybook: PlaybookType
 ): IntegrityState {
-  // Find last assistant message
+  // Find last model message
   const lastAssistant = [...history].reverse().find(m => m.role === 'model');
   const text = lastAssistant?.text || '';
   const state: IntegrityState = {

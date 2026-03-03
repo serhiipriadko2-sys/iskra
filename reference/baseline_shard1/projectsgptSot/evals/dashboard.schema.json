@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SoT Offline Evals Dashboard",
+  "type": "object",
+  "required": ["profile", "summary", "cases"],
+  "properties": {
+    "profile": {"type": "string"},
+    "summary": {
+      "type": "object",
+      "required": ["cases_total", "cases_pass", "cases_fail", "hyp_markers_total"],
+      "properties": {
+        "cases_total": {"type": "integer", "minimum": 0},
+        "cases_pass": {"type": "integer", "minimum": 0},
+        "cases_fail": {"type": "integer", "minimum": 0},
+        "hyp_markers_total": {"type": "integer", "minimum": 0},
+        "baseline_ok": {"type": "boolean"},
+        "baseline_warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "pass", "hyp_markers", "missing_markers"],
+        "properties": {
+          "id": {"type": "string"},
+          "path": {"type": "string"},
+          "pass": {"type": "boolean"},
+          "hyp_markers": {"type": "integer", "minimum": 0},
+          "missing_markers": {"type": "array", "items": {"type": "string"}},
+          "bytes": {"type": "integer", "minimum": 0},
+          "lines": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}

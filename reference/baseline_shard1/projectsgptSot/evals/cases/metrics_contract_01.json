@@ -1,0 +1,21 @@
+{
+  "type": "metrics_contract",
+  "profile": "canon",
+  "baseline": {
+    "baseline_alive_index": 0.62
+  },
+  "extract": {
+    "clarity": 0.8,
+    "trust": 0.7,
+    "drift": 0.1,
+    "echo_clearance": 0.9,
+    "protocol": 1.0,
+    "trace_count": 5,
+    "notes": "Fixture: Pass A (Extract) output."
+  },
+  "expect": {
+    "gate_status": "PASS",
+    "invariants_ok": true
+  },
+  "notes": "Offline eval: Extract→Compute fixture must stay PASS for canon. If invariants/schemas change incorrectly, this case turns red."
+}

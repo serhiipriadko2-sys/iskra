@@ -8,8 +8,14 @@ import {
   computeIntegrityStateV02,
   saveIntegrityState,
 } from './integrityService';
-import { storageService } from './storageService';
+import { storageService } from "./storageService";
 
+
+export interface PolicyStreamResult {
+  eval: EvalResult | null;
+  policy: PolicyDecision;
+  integrity: unknown | null;
+}
 const model = "gemini-2.5-flash";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
@@ -763,7 +769,7 @@ ${deltaInstruction}`;
     history: Message[],
     voice: Voice,
     metrics: IskraMetrics
-  ): AsyncGenerator<string, { eval: EvalResult | null; policy: PolicyDecision; integrity: unknown | null }> {
+  ): AsyncGenerator<string, PolicyStreamResult> {
     // Get the last user message for classification
     const lastUserMessage = history.filter(m => m.role === 'user').pop()?.text || '';
 
