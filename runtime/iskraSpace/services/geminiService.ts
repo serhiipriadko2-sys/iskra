@@ -1,9 +1,9 @@
-import { Type, Content } from "@google/genai";
+import { Type, Content } from '@google/genai';
 import { DailyAdvice, PlanTop3, JournalPrompt, TranscriptionMessage, ConversationAnalysis, Message, Voice, DeepResearchReport, MemoryNode, Evidence, Task, IskraMetrics, ResponseMode } from '../types';
-import { getSystemInstructionForVoice } from "./voiceEngine";
-import { DELTA_PROTOCOL_INSTRUCTION } from "./deltaProtocol";
-import { evaluateResponse, EvalResult, EvalContext } from "./evalService";
-import { policyEngine, PolicyDecision, PlaybookType } from "./policyEngine";
+import { getSystemInstructionForVoice } from './voiceEngine';
+import { DELTA_PROTOCOL_INSTRUCTION } from './deltaProtocol';
+import { evaluateResponse, EvalResult, EvalContext } from './evalService';
+import { policyEngine, PolicyDecision, PlaybookType } from './policyEngine';
 import {
   computeIntegrityStateV02,
   saveIntegrityState,
@@ -21,6 +21,33 @@ const model = "gemini-2.5-flash";
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const GEMINI_EDGE_FN_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1/gemini` : '';
+
+
+interface LegacyLiveSession {
+  sendRealtimeInput(args: { media: Blob }): void
+  close(): void
+}
+
+interface LegacyLiveClient {
+  connect(args: {
+    model: string
+    callbacks: Record<string, unknown>
+    config?: Record<string, unknown>
+  }): Promise<LegacyLiveSession>
+}
+
+interface LegacyModelsClient {
+  generateContent(args: {
+    model: string
+    contents: string
+    config?: Record<string, unknown>
+  }): Promise<{ text?: string }>
+}
+
+export interface LegacyGeminiClient {
+  live: LegacyLiveClient
+  models: LegacyModelsClient
+}
 
 const OFFLINE_MODE =
   Boolean(import.meta.env.VITEST) ||
@@ -69,8 +96,7 @@ export function getResponseModeInstruction(mode?: ResponseMode): string {
  * Direct Gemini client in the browser is disabled for security reasons.
  * Use Supabase Edge Function proxy via this service instead.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getAI(): any {
+export function getAI(): LegacyGeminiClient {
   throw new Error('Direct Gemini client is disabled in frontend. Use Supabase Edge Function proxy (services/geminiService).');
 }
 
@@ -111,16 +137,32 @@ function toGeminiContents(input: string | Content[]): Content[] {
   ];
 }
 
-function extractTextFromGeminiResponse(data: any): string {
+interface GeminiCandidatePart {
+  text?: string
+}
+
+interface GeminiCandidate {
+  content?: {
+    parts?: GeminiCandidatePart[]
+  }
+}
+
+interface GeminiResponse {
+  candidates?: GeminiCandidate[]
+  text?: string
+}
+
+function extractTextFromGeminiResponse(data: unknown): string {
+  const parsed = data as GeminiResponse;
   // Gemini REST shape: { candidates: [ { content: { parts: [ { text } ] } } ] }
-  const parts = data?.candidates?.[0]?.content?.parts;
+  const parts = parsed?.candidates?.[0]?.content?.parts;
   if (Array.isArray(parts)) {
     return parts
-      .map((p: any) => (typeof p?.text === 'string' ? p.text : ''))
+      .map((part) => (typeof part?.text === 'string' ? part.text : ''))
       .join('');
   }
   // Fallbacks
-  if (typeof data?.text === 'string') return data.text;
+  if (typeof parsed?.text === 'string') return parsed.text;
   return '';
 }
 
