@@ -8,7 +8,6 @@ import {
   computeIntegrityStateV02,
   saveIntegrityState,
 } from './integrityService';
-import type { IntegrityState } from '../../src/types/guard.js';
 import { storageService } from "./storageService";
 
 const model = "gemini-2.5-flash";
@@ -722,7 +721,7 @@ ${deltaInstruction}`;
     history: Message[],
     voice: Voice,
     metrics: IskraMetrics
-  ): AsyncGenerator<string, { eval: EvalResult | null; policy: PolicyDecision; integrity: IntegrityState | null }> {
+  ): AsyncGenerator<string, { eval: EvalResult | null; policy: PolicyDecision; integrity: unknown | null }> {
     // Get the last user message for classification
     const lastUserMessage = history.filter(m => m.role === 'user').pop()?.text || '';
 

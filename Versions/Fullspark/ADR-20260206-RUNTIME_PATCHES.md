@@ -260,3 +260,60 @@ updated: 2026-02-06
 
 ∆DΩΛ
 
+
+Зависимости и взаимодействия
+core__adr_20260206_runtime_patches.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+00_ROUTER.md
+ARCHITECTURE.md
+COUNCIL_PROTOCOL.md
+EARLY_WARNING.md
+METRICS_BUNDLE.md
+PLAYBOOKS_vNext.md
+SLO_GUARD.md
+Входящие (этот файл упоминается в):
+
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: ADR: Runtime patches: как меняются runtime-правила.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_adr_20260206_runtime_patches (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+00_ROUTER.md
+ARCHITECTURE.md
+COUNCIL_PROTOCOL.md
+EARLY_WARNING.md
+METRICS_BUNDLE.md
+PLAYBOOKS_vNext.md
+SLO_GUARD.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-ADR-20260206-RUNTIME_PATCHES.md-presence (файл доступен, читается, парсится)
+T-ADR-20260206-RUNTIME_PATCHES.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: ADR-20260206-RUNTIME_PATCHES.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/types/siftExtended.ts`
+- `runtime/src/types/protocols.ts`
+- `runtime/iskraSpace/services/deltaProtocol.ts`
+- `runtime/iskraSpace/App.tsx`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

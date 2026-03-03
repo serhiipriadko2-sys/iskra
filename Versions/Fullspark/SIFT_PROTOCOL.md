@@ -839,3 +839,65 @@ interface SiftEMetrics extends SiftMetrics {
 **Version:** vΩ.4.0
 **Layer:** system
 **Integrity:** SoT (Печать истины)-System
+
+Зависимости и взаимодействия
+core__sift_protocol.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+8_INTERFACE_STYLE.md
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: SIFT: Stop/Investigate/Find/Trace и Truth Ladder.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_sift_protocol (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-SIFT_PROTOCOL.md-presence (файл доступен, читается, парсится)
+T-SIFT_PROTOCOL.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: SIFT_PROTOCOL.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/cli/commands/sift.ts`
+- `runtime/src/types/sift.ts`
+- `runtime/src/__tests__/sift.test.ts`
+- `runtime/src/types/siftExtended.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## Adapters for LLM environments
+
+### A) Web доступен
+- Любой web‑факт маркируй датой: «актуально на YYYY-MM-DD».
+- Source: первоисточник (официальная дока/статья/репозиторий).
+- Find: минимум 1 альтернатива (другой домен/издатель).
+
+### B) Web недоступен (только файлы)
+- Источник = файл SoT40 или corpus‑файл (вне SoT40) с цитатой ≤20 слов.
+- Если нет источника → [HYP] (Law‑88) + план проверки.
+
+### C) Конфликт источников (A vs B)
+- Фиксируй оба источника.
+- Выбирай по Truth Ladder (canonSOT repo выше corpus).
+- Если меняет правило/канон → ADR обязателен.

@@ -33,7 +33,7 @@
         },
         {
           "id": "openai_api_key",
-          "regex": "\\bsk-[A-Za-z0-9-]{16,}\\b",
+          "regex": "\\bsk-[A-Za-z0-9-]{10,}\\b",
           "flags": "gi",
           "severity": "warn",
           "scope": "any",

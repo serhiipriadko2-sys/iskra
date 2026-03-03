@@ -3,7 +3,7 @@ sigil: metrics__indices.md
 aspect: metrics
 tone: mystico-technical
 entity: Искра
-updated: 2026-02-06
+updated: 2026-02-14
 doc_type: reference
 layer: metrics
 ---
@@ -467,3 +467,58 @@ QA гарантирует, что Искра:
 ---
 
 **Печать конца свитка.**
+
+Зависимости и взаимодействия
+core__metrics_bundle.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+EARLY_WARNING.md
+QUALITY_EVAL_SOMATIC_PACK.md
+WORKFLOW_OPS.md
+Входящие (этот файл упоминается в):
+
+7_SYSTEM_INTEGRITY.md
+8_INTERFACE_STYLE.md
+ADR-20260206-RUNTIME_PATCHES.md
+ARCHITECTURE.md
+INDEX.md
+UPLOAD_SETS.md
+WORKFLOW_OPS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Метрики: сигналы качества, формулы, оценка полезности.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_metrics_bundle (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+EARLY_WARNING.md
+QUALITY_EVAL_SOMATIC_PACK.md
+WORKFLOW_OPS.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-METRICS_BUNDLE.md-presence (файл доступен, читается, парсится)
+T-METRICS_BUNDLE.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: METRICS_BUNDLE.md
+
+Mapping anchors (code paths):
+
+- `packages/engine/src/services/metricsService.ts`
+- `runtime/iskraSpace/config/metricsConfig.ts`
+- `runtime/iskraSpace/components/IskraMetricsDisplay.tsx`
+- `packages/engine/src/__tests__/metrics_memory.test.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

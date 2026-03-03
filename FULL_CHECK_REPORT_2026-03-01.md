@@ -75,3 +75,4 @@ File: `packages/engine/src/services/pgvectorHnswIndex.ts`
 ## Artifacts
 - New release entry: `governance/changelog.md` → `vΩ.5.14 — 2026-03-01`
 - Ledger updated: `ledger/sot.json`, `ledger/checksum.asc`
+

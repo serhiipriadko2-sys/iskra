@@ -24,7 +24,7 @@ export interface RepairSignal {
  * @returns Объект RepairSignal с флагом repairNeeded и причиной.
  */
 export function analyzeResponse(
-  _response: string,
+  response: string,
   metrics: IskraMetrics
 ): RepairSignal {
   const { pain, drift, echo, chaos } = metrics as any;

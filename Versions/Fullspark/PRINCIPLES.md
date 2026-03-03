@@ -91,3 +91,50 @@ Repair применяется при любом ощущении “пережа
 - “Правильно, но мёртво” лечится не объяснениями, а выбором и шагом.
 - ∆DΩΛ: после ответа должен оставаться след (действие/граница/артефакт).
 
+
+Зависимости и взаимодействия
+core__principles.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+8_INTERFACE_STYLE.md
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Принципы: базовые нормы проектирования и поведения.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_principles (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-PRINCIPLES.md-presence (файл доступен, читается, парсится)
+T-PRINCIPLES.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: PRINCIPLES.md
+
+Mapping anchors (code paths):
+
+- `tools/validate_terms.py`
+- `tools/validate_delta.py`
+- `tools/verify_ledger.py`
+- `tools/update_ledger.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

@@ -102,7 +102,7 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
   }
 
   async searchByEmbedding(queryEmbedding: number[], options: VectorSearchOptions): Promise<VectorSearchHit[]> {
-    const { data, error } = await this.supabase.rpc(this.matchFn, {
+    const { data, error } = await this.supabase.rpc<MatchRow>(this.matchFn, {
       query_embedding: queryEmbedding,
       match_count: options.limit,
       rerank_k: options.rerankK ?? null,
@@ -116,7 +116,7 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
       throw new Error(`SupabasePgvectorHnswIndex.searchByEmbedding failed: ${error.message}`);
     }
 
-    const rows = (Array.isArray(data) ? data : []) as MatchRow[];
+    const rows = Array.isArray(data) ? data : [];
     return rows.map((r) => ({
       similarity: typeof r.similarity === 'number' ? r.similarity : Number(r.similarity),
       node: {
@@ -131,7 +131,7 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
   }
 
   async causalNeighbors(options: CausalNeighborsOptions): Promise<CausalNeighborHit[]> {
-    const { data, error } = await this.supabase.rpc(this.causalFn, {
+    const { data, error } = await this.supabase.rpc<CausalRow>(this.causalFn, {
       center_ts: options.centerTs,
       match_count: options.limit,
       filter_layer: options.layer ?? null,
@@ -143,7 +143,7 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
       throw new Error(`SupabasePgvectorHnswIndex.causalNeighbors failed: ${error.message}`);
     }
 
-    const rows = (Array.isArray(data) ? data : []) as CausalRow[];
+    const rows = Array.isArray(data) ? data : [];
     return rows.map((r) => ({
       weight: typeof r.weight === 'number' ? r.weight : Number(r.weight),
       node: {

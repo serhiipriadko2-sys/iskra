@@ -884,3 +884,110 @@ final_score = base_score × user_preference × (1 + inertia_bonus)
 D: source_code_analysis → synthesis → documented
 Ω: 92%
 Λ: Commit и push документа
+
+Зависимости и взаимодействия
+core__cognitive_architecture.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+00_ROUTER.md
+8_INTERFACE_STYLE.md
+INDEX.md
+RAG_ENGINE.md
+SECURITY.md
+TELOS.md
+WORKFLOW_OPS.md
+Входящие (этот файл упоминается в):
+
+3_COGNITIVE_ARCH.md
+8_INTERFACE_STYLE.md
+ARCHITECTURE.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Когнитивная архитектура (расшир.): слои/подсистемы/модули.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_cognitive_architecture (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+00_ROUTER.md
+8_INTERFACE_STYLE.md
+INDEX.md
+RAG_ENGINE.md
+SECURITY.md
+TELOS.md
+WORKFLOW_OPS.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-COGNITIVE_ARCHITECTURE.md-presence (файл доступен, читается, парсится)
+T-COGNITIVE_ARCHITECTURE.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: COGNITIVE_ARCHITECTURE.md
+
+Mapping anchors (code paths):
+
+- `packages/engine/src/services/memory.ts`
+- `packages/engine/src/services/metricsService.ts`
+- `packages/engine/src/services/voiceSystem.ts`
+- `runtime/src/types/consciousness.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## Research Threads (corpus: «научная работа.txt»)
+
+Корпус (вне SoT40): `научная работа.txt`. Каждая нить → [HYP] до проверки.
+
+Формат: Claim(цитата≤20 слов) → что проверить → какой артефакт обязателен.
+
+
+
+### RT-01 [HYP]
+- Claim: «Телос-ориентированная архитектура представляет собой фундаментальный парадигмальный сдвиг в проектировании систем искусственного интеллекта, где понятие цели или предназначения трансформируется из внешней,»
+- Verify: через SIFT (источник/альтернативы/трассировка).
+- Required artifact: mini‑note + Evidence + QC(content_ok).
+
+### RT-02 [HYP]
+- Claim: «В отличие от традиционных подходов, где цель системы определяется исключительно через набор промптов и примеров, Телос-архитектура встраивает явное представление целевого»
+- Verify: через SIFT (источник/альтернативы/трассировка).
+- Required artifact: mini‑note + Evidence + QC(content_ok).
+
+### RT-03 [HYP]
+- Claim: «Концепция Телоса восходит к аристотелевской философии, где *telos* обозначает внутреннюю цель или завершённость, присущую сущности.»
+- Verify: через SIFT (источник/альтернативы/трассировка).
+- Required artifact: mini‑note + Evidence + QC(content_ok).
+
+### RT-04 [HYP]
+- Claim: «В применении к ИИ-системам это трансформируется в **формализованное представление цели**, которое служит организующим принципом для всех последующих операций.»
+- Verify: через SIFT (источник/альтернативы/трассировка).
+- Required artifact: mini‑note + Evidence + QC(content_ok).
+
+### RT-05 [HYP]
+- Claim: «Архитектурное воплощение Телоса требует разработки специализированных представлений, включающих онтологические структуры, иерархии ценностей и механизмы проверки когерентности — достаточно выразительных для»
+- Verify: через SIFT (источник/альтернативы/трассировка).
+- Required artifact: mini‑note + Evidence + QC(content_ok).
+
+### RT-06 [HYP]
+- Claim: «Фундаментальное отличие Телос-архитектуры от традиционных подходов заключается в **локализации целеполагания: внутренняя vs.»
+- Verify: через SIFT (источник/альтернативы/трассировка).
+- Required artifact: mini‑note + Evidence + QC(content_ok).
+
+### RT-07 [HYP]
+- Claim: «В промпт-инженерных системах цель существует исключительно как паттерн во входных данных, воспроизводимый моделью через механизмы статистического обучения.»
+- Verify: через SIFT (источник/альтернативы/трассировка).
+- Required artifact: mini‑note + Evidence + QC(content_ok).
+
+### RT-08 [HYP]
+- Claim: «Эта экзогенная локализация создаёт критические уязвимости: цель подвержена искажению при передаче через ограниченное контекстное окно, конкурирует за внимание модели с»
+- Verify: через SIFT (источник/альтернативы/трассировка).
+- Required artifact: mini‑note + Evidence + QC(content_ok).

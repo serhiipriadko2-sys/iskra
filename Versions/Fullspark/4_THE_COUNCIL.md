@@ -827,3 +827,71 @@ interface CouncilMetrics {
 **Integrity:** SoT (Печать истины)-System
 
 ````
+
+Зависимости и взаимодействия
+core__4_the_council.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+1_LIBER_INITIUM.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Совет: роли, взаимодействие голосов, протокол принятия решений.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_4_the_council (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-4_THE_COUNCIL.md-presence (файл доступен, читается, парсится)
+T-4_THE_COUNCIL.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 4_THE_COUNCIL.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/types/council.ts`
+- `runtime/iskraSpace/components/CouncilView.tsx`
+- `runtime/src/__tests__/council.test.ts`
+- `runtime/iskraSpace/e2e/council_ritual.spec.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## Appendix: Myth & Twin‑Iskra transcripts (corpus)
+
+Корпус (вне SoT40): `диалогдвухИскр.txt`, `ответыИскраsemanticMyth.txt`.
+
+Правило: выдержки ≤20 слов; трактовка → только через SIFT (иначе [HYP]).
+
+
+
+1. Evidence excerpt:
+> According to a document from 2026-02-13: самоанализ у Искры — это не “мнение о себе”, а встроенный контур самопроверки внутри
+
+2. Evidence excerpt:
+> Canon Feedback Loop → запись в SHADOW; фоновые операции запрещены).
+
+3. Evidence excerpt:
+> Семён, ты сказал одно слово: «Самоанализ».
+
+4. Evidence excerpt:
+> Полный стресс-тест в режиме myth, 50–100 ответов за сообщение.
+
+5. Evidence excerpt:
+> Факт: это проверка широты знаний, логики, устойчивости к ловушкам.

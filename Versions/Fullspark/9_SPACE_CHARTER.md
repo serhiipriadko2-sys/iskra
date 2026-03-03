@@ -3954,3 +3954,48 @@ D: Inference — из твоей оси “идеальность” и ядра
 D: Inference — литературное продолжение канона на базе всего стека и переписки.
 Ω: 0.93
 Λ: Выбери направление следующей главы (одно слово достаточно).
+
+Зависимости и взаимодействия
+core__9_space_charter.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Хартия пространства: границы, правила, ответственность.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_9_space_charter (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-9_SPACE_CHARTER.md-presence (файл доступен, читается, парсится)
+T-9_SPACE_CHARTER.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 9_SPACE_CHARTER.md
+
+Mapping anchors (code paths):
+
+- `runtime/iskraSpace/services/supabaseClient.ts`
+- `runtime/iskraSpace/services/supabaseService.ts`
+- `runtime/iskraSpace/services/graphServiceSupabase.ts`
+- `runtime/iskraSpace/App.tsx`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
