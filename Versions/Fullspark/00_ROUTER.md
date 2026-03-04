@@ -2,7 +2,7 @@
 sigil: projects__00_router.md
 doc_type: reference
 layer: projects
-updated: 2026-02-13
+updated: 2026-02-14
 priority: critical
 ---
 # 00_ROUTER — Project Instructions + протокол (vΩ.1)
@@ -89,3 +89,64 @@ Ledger-first: результат фиксируй как ledger_entry; файл 
 - **Инцидент‑триггер**: при `CRITICAL` или повторном `CLOSE_HONESTLY` без нужды → включить режим `AUDIT` и логировать причины.
 
 См.: `SLO_GUARD.md`, `PLAYBOOKS_vNext.md`, `ADR-20260206-09.md`.
+
+Зависимости и взаимодействия
+core__00_router.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+COUNCIL_GRAPH_PACK.md
+PLAYBOOKS_vNext.md
+QUALITY_EVAL_SOMATIC_PACK.md
+SLO_GUARD.md
+SOMATIC_INTUITION.md
+Входящие (этот файл упоминается в):
+
+ADR-20260206-RUNTIME_PATCHES.md
+ARCHITECTURE.md
+COGNITIVE_ARCHITECTURE.md
+INDEX.md
+PLAYBOOKS_vNext.md
+SLO_GUARD.md
+UPLOAD_SETS.md
+WORKFLOW_OPS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Маршрутизация: пайплайн, правила маршрутизации, режимы выполнения.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_00_router (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+COUNCIL_GRAPH_PACK.md
+PLAYBOOKS_vNext.md
+QUALITY_EVAL_SOMATIC_PACK.md
+SLO_GUARD.md
+SOMATIC_INTUITION.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-00_ROUTER.md-presence (файл доступен, читается, парсится)
+T-00_ROUTER.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 00_ROUTER.md
+
+Mapping anchors (code paths):
+
+- `tools/build_projects_stack.py`
+- `tools/validate_terms.py`
+- `tools/validate_delta.py`
+- `runtime/src/cli/commands/sift.ts`
+- `runtime/src/types/sift.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

@@ -49,7 +49,49 @@ export {
   DEFAULT_METRICS,
   calculateIntegrityScore,
   calculateAliveIndex,
+  calculateIntegrityScoreX,
+  calculateAliveIndexX,
 } from './types/metrics.js';
+
+// =============================================================================
+// XCODE & GUARD - Explainable code and SLO Guard
+// =============================================================================
+
+/**
+ * Explainable code interfaces for functions that return a value along
+ * with a structured explanation of how it was computed. See
+ * runtime/src/types/explainable.ts for details.
+ */
+export type {
+  EvidenceKind,
+  EvidenceRef,
+  ExplainStep,
+  Explainable,
+} from './types/explainable.js';
+
+export type {
+  ValidateExplainableOptions,
+  XCodeValidationIssue,
+  XCodeValidationResult,
+} from './xcode/validateExplainable.js';
+
+export { validateExplainable } from './xcode/validateExplainable.js';
+
+export type { XCodeCompare, XCodeRegistryEntry } from './xcode/registry.js';
+
+export { XCODE_REQUIRED } from './xcode/registry.js';
+
+export type {
+  GuardDecision,
+  IntegrityState,
+  GuardOutcome,
+  GuardInput,
+} from './types/guard.js';
+
+export {
+  decideSloGuard,
+  decideSloGuardExplainable,
+} from './types/guard.js';
 
 // =============================================================================
 // VOICES - The Council (9 Voices)
@@ -72,6 +114,7 @@ export {
   VOICE_MANIFESTS,
   calculateVoiceScores,
   selectVoice,
+  selectVoiceX,
 } from './types/voices.js';
 
 // =============================================================================
@@ -143,6 +186,8 @@ export type {
   EvidenceResult,
   TraceResult,
   SiftVerdict,
+  SiftVerdictFlip,
+  SiftVerdictStatus,
   SiftResult as FullSiftResult,
   QuickCheckResult,
   SiftMetrics,
@@ -152,6 +197,10 @@ export {
   SIFT_TRIGGER_KEYWORDS,
   shouldActivateSift,
   calculateSiftOmega,
+  calculateSiftOmegaX,
+  decideSiftVerdictStatus,
+  calculateSiftVerdictFlip,
+  calculateSiftVerdictFlipX,
 } from './types/sift.js';
 
 // =============================================================================

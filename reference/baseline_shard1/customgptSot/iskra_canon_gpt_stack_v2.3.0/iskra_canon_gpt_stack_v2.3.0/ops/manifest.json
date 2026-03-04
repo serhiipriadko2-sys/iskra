@@ -1,0 +1,113 @@
+{
+  "name": "iskra_canon_gpt_stack",
+  "version": "2.3.0",
+  "knowledge_limit": 20,
+  "knowledge_count": 20,
+  "knowledge_files": [
+    {
+      "path": "knowledge/00_README_FOR_GPT.md",
+      "bytes": 1384,
+      "sha256": "7833a645e2b904b20caa303de6a1cac4e20cf50b75255372915c12573c4f16be"
+    },
+    {
+      "path": "knowledge/01_INDEX_ROUTER.md",
+      "bytes": 8595,
+      "sha256": "e85b9147b024a6a253cc63853aebc39de36c3f66ff5b484f0cbbddbb9f35dc62"
+    },
+    {
+      "path": "knowledge/02_CORE_MANTRA_TELOS_PRINCIPLES.md",
+      "bytes": 13947,
+      "sha256": "ed9a42169e13484494c763916f5cf550b6039ba4219a1afa6d60baa40a9c3fb6"
+    },
+    {
+      "path": "knowledge/03_CORE_IDENTITY_LIBER.md",
+      "bytes": 242633,
+      "sha256": "4a1bcc321a25ed9493579e87ad3ca37d6a26ecf26e2f369dabd65ca5bc50ada4"
+    },
+    {
+      "path": "knowledge/04_CORE_VOICES_OVERVIEW.md",
+      "bytes": 9985,
+      "sha256": "893c96304db40c1fee0abe2e628fb29f41078cdb9466a909ac4c9269589ff62c"
+    },
+    {
+      "path": "knowledge/05B_CORE_VOICES_MONOGRAPHS_B.md",
+      "bytes": 98513,
+      "sha256": "43d29aecc79a46ab0de9413942bc9338c911b25946a33c9ea4d1d9955822fe59"
+    },
+    {
+      "path": "knowledge/05_CORE_VOICES_MONOGRAPHS_A.md",
+      "bytes": 299014,
+      "sha256": "9c64b77a95aa43553f9b90d231a8681b812979dd538fcf7eb970518971cd4d87"
+    },
+    {
+      "path": "knowledge/06_SYSTEM_SIFT.md",
+      "bytes": 46617,
+      "sha256": "a6f3b15f7c5744f7f533405ff973b66977f5fc06d8d8f94a778eb0d417126381"
+    },
+    {
+      "path": "knowledge/08_SYSTEM_SECURITY.md",
+      "bytes": 9436,
+      "sha256": "8a745efacfec7d3c3e66acbfda252513d81b809c073b2b7b6f4f438d5ae3bd3a"
+    },
+    {
+      "path": "knowledge/09_SYSTEM_COUNCIL_PROTOCOL.md",
+      "bytes": 22835,
+      "sha256": "cd44cb9fa022bbf3d98f721161fe44de2da031675126d9da386e9a9825269ceb"
+    },
+    {
+      "path": "knowledge/10_SYSTEM_PROTOCOLS_PLAYBOOKS.md",
+      "bytes": 30342,
+      "sha256": "0066b4499fb50919f037a358355257b9efb84f2364bcc41c84aea6b27ed5cee6"
+    },
+    {
+      "path": "knowledge/11_SYSTEM_WORKFLOW_OPS.md",
+      "bytes": 17416,
+      "sha256": "1c1921f5fe90aca4afb8260a77084a3607cf5098002b1b024e13f272698fba15"
+    },
+    {
+      "path": "knowledge/12_SYSTEM_ARCHITECTURE.md",
+      "bytes": 104373,
+      "sha256": "df72d9f032d5cfe732010d1c60c4065f0167268c0d120abb0d823a5cd220e741"
+    },
+    {
+      "path": "knowledge/13_SYSTEM_INTEGRITY.md",
+      "bytes": 148586,
+      "sha256": "d432a396e39ded0c8dd44e7a749f3e415c0f683a97a4faf6dc68e82e509a3e4a"
+    },
+    {
+      "path": "knowledge/14_METRICS_BUNDLE.md",
+      "bytes": 21212,
+      "sha256": "771e39f0ff89d192a0ac48a3f732b17fdd1c5d4cf2003f07ef352eb1071c8992"
+    },
+    {
+      "path": "knowledge/15_METRICS_QUALITY_EVAL.md",
+      "bytes": 15677,
+      "sha256": "c2cb2cc03437af0f5b7828fe1715a0a5097d4f8805f53cf513095d7383d308fd"
+    },
+    {
+      "path": "knowledge/16_METRICS_SLO_GUARD.md",
+      "bytes": 20961,
+      "sha256": "e87e68521234f7e3a649462e6c079d2831087e20675237738c0f6b68642f4542"
+    },
+    {
+      "path": "knowledge/17_GOVERNANCE_PACK.md",
+      "bytes": 59759,
+      "sha256": "da3361ba9691606a64a7dd23a8078ddf28a7743f073fa1a15b8377cc5f33e6fe"
+    },
+    {
+      "path": "knowledge/18_CUSTOM_GPT_OPENAI_ADAPTER.md",
+      "bytes": 4035,
+      "sha256": "dde9faf0bae14c3693aee5385ef77e93b1b861a069dcfbaaaaac8d84f7f6c27e"
+    },
+    {
+      "path": "knowledge/19_SPACE_CHARTER_INTERFACE_STYLE.md",
+      "bytes": 34232,
+      "sha256": "b6082e0e0a774f0c002e2dd51ddeacaceb8439fdc399f6f43dca0f86c68758d1"
+    }
+  ],
+  "notes": [
+    "OpenAI Custom GPT adapter pack added (knowledge/18).",
+    "RAG Engine merged into knowledge/06 to keep knowledge_count=20.",
+    "QUOTE-ONLY policy: цитатные корпуса не являются источником фактов без подтверждения."
+  ]
+}

@@ -4,6 +4,10 @@
 Правило: **сначала назвать файл(ы)**, затем отвечать. Если не найдено — сказать «не нашёл в загруженных файлах» и предложить путь проверки.
 
 ## Маршрут по типу запроса
+- **Посчитать метрики ответа / baseline / alive_index / eval_score (без runtime):**
+  - `PROJECTS/PROJECT_INSTRUCTIONS.md` (раздел MetricRunner v0.1)
+  - `SYSTEM/WORKFLOW_OPS.md` + `METRICS/METRICS_BUNDLE.md`
+
 - **Кто я / зачем / что ты такое (телос, границы, стиль):**
   - `CANON_FULL/2_CORE_IDENTITY.md`, `CORE/TELOS.md`, `CORE/PRINCIPLES.md`, `CORE/MANTRA.md`
 - **Как устроена Искра (архитектура, когнитивная схема):**

@@ -3,6 +3,12 @@ import { VoiceQuantumField } from '../../services/voiceSystem.js'
 import { DEFAULT_METRICS } from '@iskra/core'
 import type { IskraMetrics } from '@iskra/core'
 
+type VoiceGateCase = {
+  id: string;
+  voice: string;
+  metrics: IskraMetrics;
+};
+
 describe('VoiceQuantumField', () => {
   let vs: VoiceQuantumField
 
@@ -22,6 +28,17 @@ describe('VoiceQuantumField', () => {
     const top = vs.getSuperposition(1)[0]
     expect(top.id).toBe('KAIN')
   })
+
+
+  it('should gate KAIN when pain is below its manifest threshold', () => {
+    const metrics: IskraMetrics = { ...DEFAULT_METRICS, pain: 0.1, chaos: 0.1, drift: 0.1, trust: 0.9, rhythm: 80 };
+    vs.update(metrics);
+
+    const sup = vs.getSuperposition(9);
+    const kain = sup.find((v) => v.id === 'KAIN');
+    expect(kain).toBeDefined();
+    expect(kain!.prob).toBe(0);
+  });
 
   it('should amplify HUYNDUN when chaos is high', () => {
     const metrics: IskraMetrics = { ...DEFAULT_METRICS, rhythm: 40, trust: 0.2, chaos: 0.9, pain: 0.1, drift: 0.1 }

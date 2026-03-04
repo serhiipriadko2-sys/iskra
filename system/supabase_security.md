@@ -35,9 +35,9 @@
 
 ## 4. Ограничивайте частоту запросов и атак
 
-- Используйте встроенные возможности Supabase для rate limiting
-  (например, `supabase.functions.invoke` поддерживает лимиты). Это
-  предотвращает brute-force атаки на пароль и злоупотребление API.
+- Для Edge Functions включайте защиту от злоупотребления (rate limiting).
+  Supabase публикует пример rate limiting через Redis (Upstash) и рекомендует
+  лимитировать по user id из Supabase Auth.
 - Применяйте ограничения на количество регистраций и восстановлений
   пароля в единицу времени.
 
@@ -69,10 +69,32 @@
 - Подписывайтесь только на те таблицы и каналы, которые действительно
   отображаются в UI. Это уменьшит нагрузку и улучшит масштабируемость.
 
+## 8. Edge Functions (особенно embeddings)
+
+Минимальный security‑контур для функций типа `embed`:
+
+1) **Auth обязателен.** Функция должна требовать `Authorization: Bearer ...`.
+2) **CORS preflight.** Для вызовов из браузера обрабатывайте `OPTIONS`.
+3) **Rate limiting.** Включайте лимиты (в идеале — через внешнее атомарное хранилище).
+4) **PII‑контур.** Не отправляйте явные персональные данные в embeddings без политики.
+5) **Секреты.** `service_role` — только сервер/Edge, никогда в браузер.
+
+Техническая привязка к репо:
+
+- `supabase/config.toml` фиксирует `verify_jwt=true` для `embed`.
+- `supabase/functions/embed/index.ts` обрабатывает `OPTIONS`, требует bearer‑token
+  и (опционально) включает best‑effort rate limiting через env.
+- `packages/engine/src/services/safeEmbeddings.ts` даёт input‑hygiene+PII policy+cache.
+
 ## Источники
 
-Краткие рекомендации собраны на основе best‑practice гайдов Supabase
-и сообщества. См. также статью о типичных ошибках и мерах безопасности,
-где подчёркиваются важность включения RLS, избегание сервисного ключа на
-клиенте, хранение ключей в `.env` и необходимость использования Supabase
-Auth【85037661947665†L120-L174】.
+### Supabase docs (primary)
+
+- Functions auth & security: требование Authorization и подходы защиты.
+- Function config: `verify_jwt` как переключатель поведения.
+- CORS: необходимость обработки OPTIONS при вызове из браузера.
+- Rate limiting example: Upstash Redis.
+
+### Internal (Iskra)
+
+- `system/security.md` (no secrets) + `system/workflow_ops.md` (QA gates).

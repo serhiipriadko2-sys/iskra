@@ -1,0 +1,21 @@
+{
+  "cases": [
+    {
+      "id": "canon_answer_01",
+      "path": "evals/cases/canon_answer_01.md"
+    },
+    {
+      "id": "canon_answer_02",
+      "path": "evals/cases/canon_answer_02.md"
+    },
+    {
+      "id": "canon_answer_03",
+      "path": "evals/cases/canon_answer_03.md"
+    },
+    {
+      "id": "metrics_contract_01",
+      "type": "metrics_contract",
+      "path": "evals/cases/metrics_contract_01.json"
+    }
+  ]
+}

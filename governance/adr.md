@@ -2,7 +2,7 @@
 sigil: governance__ADR.md
 doc_type: reference
 layer: governance
-updated: 2026-02-01
+updated: 2026-02-28
 ---
 
 # ADR
@@ -38,6 +38,21 @@ ADR-YYYYMMDD-XX: <короткое имя>
 В этом файле ведём список принятых ADR (ссылками на блоки ниже).
 
 ---
+
+## ADR-20260220: XCode / Explainable Code
+Статус: proposed  
+Контекст: текущая практика часто понимает «код» как вычисление значения без проверяемого объяснения. Это порождает дрейф смысла, слабую проверяемость и риск «болтовни вместо доказательства» в ответах (эхо).  
+Решение: ввести контракт **XCode** для критичных вычислений: результат обязан включать `value` (что посчитали) + `how[]` (структурная трасса шагов) + (опционально) `contracts_checked` и `evidence` (ссылки на SoT/данные). `how[]` не является свободным текстом — это массив `ExplainStep` с полями `label/formula/inputs/output/refs`.  
+Альтернативы: (а) хранить «как» в prose-документации; (б) полная формализация (TLA+/Coq) для всех модулей; (в) оставить как есть и полагаться на ревью.  
+Последствия: увеличится объём кода на «трассу», но вырастет проверяемость; появится QA‑гейт, который ломает сборку при пустом `how`.  
+Тесты/QA: (1) unit‑тесты, требующие `how.length > 0` для `*X` пилотов; (2) сверка стабильности `value` vs legacy‑функции.  
+ΔDΩΛ:
+- Δ: вводится понятие Explainable Code (XCode) как «value+how+evidence»
+- D: `governance/adr_20260220_xcode_explainable_code.md`, `system/xcode_explainable_code.md`, `runtime/src/types/explainable.ts` + XCode‑пилоты и тест‑гейт
+- Ω: 0.87
+- Λ: расширить пилоты на metrics/guard и добавить реестр XCode‑пилотов
+Подписи: Owner/Семён · Builder/assistant
+
 
 ## ADR-20260101-01: Fill Canon Stubs (rev12 → rev12a)
 Статус: accepted  
@@ -138,4 +153,101 @@ ADR-YYYYMMDD-XX: <короткое имя>
 - Λ: обновить ledger после синхронизации
 Подписи: Owner/Семён · Builder/assistant
 
+---
+
+## ADR-20260213-07: Anti‑Empty Delivery Attestation & Ledger Views
+Статус: accepted  
+Дата: 2026-02-13  
+Контекст: При создании артефактов система не проверяла их реальное содержимое, что приводило к empty-delivery.  
+Решение: Ввести обязательную квитанцию артефакта (path + bytes + sha256 + qc) перед DONE.  
+Последствия: Все артефакты проходят минимальный content-check перед подтверждением доставки.
+
+---
+
+## ADR-20260213-08: Minimal Content‑Check for Delivered Artifacts
+Статус: accepted  
+Дата: 2026-02-13  
+Контекст: `bytes>0` недостаточно для валидации артефакта — файл может содержать placeholder или ошибку.  
+Решение: Ввести `qc.content_ok` как обязательное поле квитанции.  
+Последствия: DONE с артефактом требует `qc.content_ok==true`.
+
+---
+
+## ADR-20260220-09: SoT40 Promotion Policy (canonSOTprojects → canonSOT)
+Статус: accepted  
+Дата: 2026-02-20  
+Контекст: SoT40 используется как загрузчик/полигон под лимит Projects (40 файлов), но изменения должны попадать в нижний канон без дрейфа и без потерь.  
+Решение: Ввести политику промоута: (1) SoT40 рассматривается как *view* (проекционный слой); (2) любые изменения в `core/`, `system/`, `metrics/`, `governance/`, `ledger/` проходят через ADR; (3) промоут делается по таблице маппинга «SoT40 файл → canonical path»; (4) при конфликте канон выигрывает, а SoT40 фиксирует дельту как `[HYP]` до проверки.  
+Альтернативы: (а) держать SoT40 как отдельный канон; (б) ручной перенос без маппинга/ADR.  
+Последствия: появляется явная процедура и трассируемость; увеличивается дисциплина, но снижается вероятность «двух истин».  
+Тесты/QA: `python tools/verify_ledger.py`; проверка наличия ключевых маркеров (ARTIFACT_ATTEST, has_done_validated, Integrity Violation, Law‑88).  
+ΔDΩΛ:
+- Δ: SoT40 закреплён как view, промоут нормализован
+- D: добавлена политика промоута, введён маппинг
+- Ω: 0.82
+- Λ: пересмотреть после 3 релизов SoT40
+Подписи: Owner/Семён · Builder/assistant
+
+## ADR-20260220-10: Law‑88 Hypothesis Marking as Core Invariant
+Статус: accepted  
+Дата: 2026-02-20  
+Контекст: в Projects/SoT40 появилась практика маркировать недоказанные утверждения как `[HYP]`, но в нижнем каноне это было не закреплено как инвариант.  
+Решение: Добавить Law‑88 в `core/principles.md` как инвариант, а также использовать в SIFT как правило “нет источника ⇒ HYP”.  
+Альтернативы: держать Law‑88 только в governance/policy; держать только в SIFT.  
+Последствия: уменьшается эпистемический дрейф; возрастает требование к Evidence/Trace в ответах.  
+Тесты/QA: grep‑проверка `Law‑88` в `core/principles.md` + контроль, что SIFT описывает no‑web режим.  
+ΔDΩΛ:
+- Δ: Law‑88 становится ядром, а не локальной практикой
+- D: обновлены `core/principles.md` и `system/sift_protocol.md`
+- Ω: 0.86
+- Λ: пересмотреть после калибровки SIFT‑адаптеров
+Подписи: Owner/Семён · Builder/assistant
+
+---
+
+## Appendix: Projects View (SoT40)
+
+### Source: SoT40 view block
+*(extracted from Versions/Fullspark)*
+
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+WORKFLOW_OPS.md
+Входящие (этот файл упоминается в):
+
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Реестр решений: ADR как governance-истина и история изменений.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_adr (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+WORKFLOW_OPS.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-ADR.md-presence (файл доступен, читается, парсится)
+T-ADR.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: ADR.md
+
+Mapping anchors (code paths):
+
+(явных code-якорей не найдено)
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+---
+
+## Appendix: Embedded ADR texts (in-pack)
 

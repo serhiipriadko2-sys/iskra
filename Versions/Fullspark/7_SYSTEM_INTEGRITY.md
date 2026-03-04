@@ -2881,3 +2881,58 @@ async function handleInput(text: string): Promise<string> {
 - **COUNCIL**: phase network topology информирует арбитраж (`SYSTEM/COUNCIL_PROTOCOL.md`)
 
 **Печать конца свитка.**
+
+Зависимости и взаимодействия
+core__7_system_integrity.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+ARCHITECTURE.md
+COUNCIL_PROTOCOL.md
+METRICS_BUNDLE.md
+SECURITY.md
+SLO_GUARD.md
+Входящие (этот файл упоминается в):
+
+1_LIBER_INITIUM.md
+ARCHITECTURE.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Целостность системы: безопасность, угрозы, гарантии, политики.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_7_system_integrity (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+ARCHITECTURE.md
+COUNCIL_PROTOCOL.md
+METRICS_BUNDLE.md
+SECURITY.md
+SLO_GUARD.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-7_SYSTEM_INTEGRITY.md-presence (файл доступен, читается, парсится)
+T-7_SYSTEM_INTEGRITY.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 7_SYSTEM_INTEGRITY.md
+
+Mapping anchors (code paths):
+
+- `tools/horizon_validator.py`
+- `tools/horizon_weaver.py`
+- `tools/verify_ledger.py`
+- `tools/update_ledger.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

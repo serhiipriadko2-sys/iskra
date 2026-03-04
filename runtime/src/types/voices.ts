@@ -7,6 +7,7 @@
  */
 
 import type { IskraMetrics } from './metrics.js';
+import type { Explainable, ExplainStep, EvidenceRef } from './xcode.js';
 
 /**
  * Voice identifiers (uppercase for canonical consistency)
@@ -263,3 +264,47 @@ export const VOICE_MANIFESTS: Record<VoiceName, Voice> = {
     ],
   },
 };
+
+/**
+ * Explainable voice selection (XCode)
+ * Returns the same value as selectVoice(), plus a structured trace of the trigger path.
+ */
+export function selectVoiceX(metrics: IskraMetrics): Explainable<VoiceActivation> {
+  const scores = calculateVoiceScores(metrics);
+  const value = selectVoice(metrics);
+
+  const refs: EvidenceRef[] = [{ kind: 'canon', ref: 'core/voices.md' }];
+
+  const how: ExplainStep[] = [
+    {
+      label: 'calculate_voice_scores',
+      formula: 'score functions per voice',
+      inputs: {
+        rhythm: metrics.rhythm,
+        trust: metrics.trust,
+        pain: metrics.pain,
+        chaos: metrics.chaos,
+        drift: metrics.drift,
+        clarity: metrics.clarity,
+        silence_mass: metrics.silence_mass,
+      },
+      output: JSON.stringify(scores),
+      refs,
+    },
+    {
+      label: 'apply_priority_triggers',
+      formula: 'priority checks → fallback max score',
+      inputs: { reason: value.reason },
+      output: `${value.primary}${value.secondary ? ' + ' + value.secondary : ''}`,
+      refs,
+    },
+  ];
+
+  const contracts_checked = [
+    'VoiceActivation.primary is one of 9 canonical voices',
+    'scores includes all voices',
+  ];
+
+  return { value, how, contracts_checked, evidence: refs };
+}
+

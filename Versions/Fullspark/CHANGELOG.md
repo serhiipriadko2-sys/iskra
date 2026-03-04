@@ -3,7 +3,7 @@ sigil: governance__changelog.md
 aspect: governance
 tone: mystico-technical
 entity: Искра
-updated: 2026-02-13
+updated: 2026-02-20
 doc_type: reference
 layer: governance
 ---
@@ -23,6 +23,11 @@ layer: governance
 
 
 
+
+## v1.1.0 (canonSOTprojects) — 2026-02-20
+- **Code-level anchors hardened** — во всех 40 файлах заполнены `Mapping anchors` только путями из `iskra_inventory_full.csv` (без выдумок).
+- **Release receipt without self-hash** — добавлен `PROJECTS/INDEX.md §4.6` (digest_38 + правило “квитанция zip вне архива”).
+- **SoT40 Manifest fixed** — `PROJECTS/UPLOAD_SETS.md` обновлён до v1.1.0, добавлен `stable_manifest_digest_38`, исключён self-hash носитель (`UPLOAD_SETS.md`) из per-file sha.
 
 ## vΩ.3.11-sot40 — 2026-02-13
 - **Anti-Empty v1 adopted** — RC/QC/2PC/Attestation/Bridge и запрет “DONE без квитанции”: `SYSTEM/WORKFLOW_OPS.md §0.2`, `GOVERNANCE_PACK.md (addendum)`, `ADR.md (ADR-20260213-01)`.
@@ -149,3 +154,53 @@ layer: governance
 
 **Печать конца свитка.**
 - 2026-01-31: Adopted Memory Stack (ADR-000); merged PROJECTS files to fit 40-file cap.
+
+
+
+Зависимости и взаимодействия
+governance__changelog.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+1. ADR.md
+2. GOVERNANCE_PACK.md
+3. INDEX.md
+4. METRICS_BUNDLE.md
+
+Входящие (этот файл упоминается в):
+
+1. UPLOAD_SETS.md
+
+Внутри Искры (семантические контуры)
+Hypothesis: История изменений как слой governance; помогает трассировке решений/версий (Ω↓).
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из назначения changelog.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги) — в этом наборе кода нет.
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+
+HARD RUNTIME CONTRACT (v0.1)
+Role: governance_changelog
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT): ADR.md, GOVERNANCE_PACK.md, INDEX.md, METRICS_BUNDLE.md
+Calls (CALL/HARD): —
+Config keys (semantic): N/A
+Failure semantics: Missing file ⇒ деградация трассировки версий; не блокирует работу протоколов.
+Verification tests (semantic):
+- T-CHANGELOG.md-presence (файл доступен, читается)
+- T-CHANGELOG.md-links (все Soft refs доступны)
+
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: CHANGELOG.md
+
+Mapping anchors (code paths):
+
+- `tools/update_ledger.py`
+- `tools/verify_ledger.py`
+- `tools/validate_delta.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

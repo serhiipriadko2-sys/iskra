@@ -8,12 +8,14 @@ export interface EngineResponse {
   metrics: IskraMetrics;
   context: MantraNode[];
   superposition: { id: VoiceID, prob: number }[];
+  retrieval_trace?: GraphRagTrace;
 }
 
 export class CoreEngine {
   private memory: MemoryService;
   private metrics: MetricsEngine;
   private voices: VoiceQuantumField;
+  private graphRag: GraphRagRetriever;
 
   constructor(
     memoryService: MemoryService,
@@ -23,6 +25,7 @@ export class CoreEngine {
     this.memory = memoryService;
     this.metrics = metricsEngine;
     this.voices = voiceSystem;
+    this.graphRag = new GraphRagRetriever(this.memory);
   }
 
   /**
@@ -68,10 +71,10 @@ export class CoreEngine {
     // Now additive in MetricsEngine
     const currentMetrics = this.metrics.update(reflex, text);
 
-    // 3. Fractal Memory Retrieval
-    // Use current state to find resonant memories
-    // Retrieve 10 memories for deep context
-    const memories = await this.memory.retrieve(text, currentMetrics, 10);
+    // 3. GraphRAG Retrieval (vector seeds + transient graph traversal)
+    // Rationale: improve recall and provide structured context paths.
+    const graph = await this.graphRag.retrieve(text, currentMetrics);
+    const memories = graph.nodes;
 
     // 4. Memory Impact on State
     // "The past changes the present"
@@ -89,7 +92,8 @@ export class CoreEngine {
       voice: selectedVoice,
       metrics: postMemoryMetrics,
       context: memories,
-      superposition
+      superposition,
+      retrieval_trace: graph.trace,
     };
   }
 

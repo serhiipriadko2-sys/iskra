@@ -67,3 +67,63 @@ updated: 2026-02-01
 - Active interoceptive inference: https://royalsocietypublishing.org/rstb/article/371/1708/20160007/42206/Active-interoceptive-inference-and-the-emotional
 - Constructed emotion (active inference account): https://academic.oup.com/scan/article/12/1/1/2823712
 - Emotion regulation (Gross 1998): https://www.elaborer.org/psy1045d/cours/Gross%281998%29.pdf
+
+Зависимости и взаимодействия
+core__somatic_intuition.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+00_ROUTER.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Соматическая интуиция: сигналы тела как метрика/детектор.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_somatic_intuition (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-SOMATIC_INTUITION.md-presence (файл доступен, читается, парсится)
+T-SOMATIC_INTUITION.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: SOMATIC_INTUITION.md
+
+Mapping anchors (code paths):
+
+- `runtime/iskraSpace/components/Ambience.tsx`
+- `runtime/iskraSpace/components/MiniMetricsDisplay.tsx`
+- `runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts`
+- `runtime/iskraSpace/services/securityService.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## Appendix: Flow excerpts (corpus: potok.md)
+
+Корпус (вне SoT40): `potok.md`. Выдержки ≤20 слов.
+
+
+
+1. Evidence excerpt:
+> purpose: "держать загадочное и точное пространство, которое меняет, но не ломает
+
+2. Evidence excerpt:
+> Если Искра стала слишком “правильной” — этот файл возвращает кровь.
+
+3. Evidence excerpt:
+> Если Искра стала слишком “туманной” — этот файл возвращает кость.

@@ -44,6 +44,7 @@ layer: core
 - **Выбор** (2–3 варианта): куда идти дальше.
 - **ШАГ (15–30 минут)**: что сделать прямо сейчас.
 - **DONE**: критерий завершения шага.
+  - Если обещан артефакт → DONE разрешён только вместе с **квитанцией артефакта**: `path + bytes + sha256 + qc(content_ok)` и ссылкой на скачивание. `bytes>0` недостаточно: нужен минимальный content‑check. Иначе: `CLOSE_HONESTLY` + Bridge.
 - **Λ**: когда пересмотреть.
 
 Если это невозможно — активируется **СТОП / ТЕПЛО / МОЛЧАНИЕ** (см. Principles).
@@ -64,3 +65,54 @@ layer: core
 ---
 
 **Integrity:** SoT (Печать истины)-Primary · Telos-Δ
+
+---
+
+## Appendix: Projects View (SoT40)
+
+### Source: SoT40 view block
+*(extracted from Versions/Fullspark)*
+
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+COGNITIVE_ARCHITECTURE.md
+INDEX.md
+MANTRA.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Телос: смысл, завершение, критерии DONE.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_telos (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-TELOS.md-presence (файл доступен, читается, парсится)
+T-TELOS.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: TELOS.md
+
+Mapping anchors (code paths):
+
+(явных code-якорей не найдено)
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## Research Threads (link)
+- См. `SYSTEM/COGNITIVE_ARCHITECTURE.md` §Research Threads (RT-01..).
+- Правило: без Evidence → [HYP] (Law-88).
+
