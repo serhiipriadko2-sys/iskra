@@ -1,0 +1,70 @@
+{
+  "shards": {
+    "1": {
+      "phase": "phase1_shard1_reference_import",
+      "target_root": "reference/baseline_shard1",
+      "manifest_path": "ingest/shard1_import_manifest.json",
+      "match_mode": "prefixes",
+      "patterns": [
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/UPLOAD_GUIDE.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/builder/INSTRUCTIONS_CANON.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/evals/",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/ops/",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/00_README_FOR_GPT.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/01_INDEX_ROUTER.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/18_CUSTOM_GPT_OPENAI_ADAPTER.md",
+        "baseline/projectsgptSot/CHECKPOINT_MANIFEST.json",
+        "baseline/projectsgptSot/evals/",
+        "baseline/projectsgptSot/metrics/",
+        "baseline/projectsgptSot/packs/evals/",
+        "baseline/projectsgptSot/system/metrics_project_runner.md",
+        "baseline/projectsgptSot/tools/"
+      ]
+    },
+    "2": {
+      "phase": "phase1_shard2_reference_import",
+      "target_root": "reference/baseline_shard2",
+      "manifest_path": "ingest/shard2_import_manifest.json",
+      "match_mode": "prefixes",
+      "patterns": [
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/02_CORE_MANTRA_TELOS_PRINCIPLES.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/03_CORE_IDENTITY_LIBER.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/04_CORE_VOICES_OVERVIEW.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/05_CORE_VOICES_MONOGRAPHS_A.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/05B_CORE_VOICES_MONOGRAPHS_B.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/06_SYSTEM_SIFT.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/08_SYSTEM_SECURITY.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/09_SYSTEM_COUNCIL_PROTOCOL.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/10_SYSTEM_PROTOCOLS_PLAYBOOKS.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/11_SYSTEM_WORKFLOW_OPS.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/12_SYSTEM_ARCHITECTURE.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/13_SYSTEM_INTEGRITY.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/14_METRICS_BUNDLE.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/15_METRICS_QUALITY_EVAL.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/16_METRICS_SLO_GUARD.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/17_GOVERNANCE_PACK.md",
+        "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/19_SPACE_CHARTER_INTERFACE_STYLE.md"
+      ]
+    },
+    "3": {
+      "phase": "phase1_shard3_reference_import",
+      "target_root": "reference/baseline_shard3",
+      "manifest_path": "ingest/shard3_import_manifest.json",
+      "match_mode": "prefixes",
+      "patterns": [
+        "baseline/repoSot/CONTRIBUTING.md",
+        "baseline/repoSot/DEEP_AUDIT_REPORT_v5.md",
+        "baseline/repoSot/ECOSYSTEM_AUDIT_2025.md",
+        "baseline/repoSot/FINAL_SUMMARY.md",
+        "baseline/repoSot/FULL_CHECK_REPORT_2026-03-01.md",
+        "baseline/repoSot/ISKRA_MANIFEST.md",
+        "baseline/repoSot/LIBER_INITIUM.md",
+        "baseline/repoSot/LICENSE",
+        "baseline/repoSot/README.md",
+        "baseline/repoSot/ROADMAP_2025_2026.md",
+        "baseline/repoSot/ROADMAP_SCIENTIFIC_TURN.md",
+        "baseline/repoSot/SCIENTIFIC_ANALYSIS_ISKRA.md"
+      ]
+    }
+  }
+}

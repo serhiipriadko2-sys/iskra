@@ -38,5 +38,13 @@
       "sha256": "f3be59ee7d25f0ed6dcfa87f06efc983acf59eb68fbf0142bfa35811150de4ae",
       "bytes": 3290
     }
-  ]
+  ],
+  "progress": {
+    "entries_total": 796,
+    "imported_entries": 58,
+    "remaining_entries": 738,
+    "completion_percent": 7.29,
+    "shards_completed": 3,
+    "shards_planned": 6
+  }
 }

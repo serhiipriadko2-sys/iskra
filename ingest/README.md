@@ -12,9 +12,14 @@
 ```bash
 python tools/generate_baseline_manifest.py
 python tools/build_phase1_classification.py
+python tools/import_phase1_shard.py 1
+python tools/import_phase1_shard.py 2
+python tools/import_phase1_shard.py 3
+# standalone scripts:
 python tools/import_phase1_shard1.py
 python tools/import_phase1_shard2.py
 python tools/import_phase1_shard3.py
+python tools/check_shard_registry_consistency.py
 ```
 
 ## PR-C / Shard #1
