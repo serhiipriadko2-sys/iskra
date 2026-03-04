@@ -11,11 +11,7 @@ on:
       - "appendix/**"
       - "ledger/**"
       - "ingest/**"
-      - "tools/import_phase1_shard.py"
-      - "tools/import_phase1_shard1.py"
-      - "tools/import_phase1_shard2.py"
-      - "tools/import_phase1_shard3.py"
-      - "tools/check_shard_registry_consistency.py"
+      - "tools/**"
       - "package.json"
       - "manifest.yml"
       - "README.md"
@@ -32,32 +28,19 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Verify SoT hashes (ledger/sot.json)
-        run: |
-          python - << 'PY'
-          import json, hashlib, os, sys
-          base="."
-          with open("ledger/sot.json","r",encoding="utf-8") as f:
-            sot=json.load(f)
-          bad=[]
-          for rel, expected in sot["sha256"].items():
-            path=os.path.join(base, rel)
-            if not os.path.exists(path):
-              bad.append((rel,"missing"))
-              continue
-            h=hashlib.sha256()
-            with open(path,"rb") as fp:
-              for chunk in iter(lambda: fp.read(8192), b""):
-                h.update(chunk)
-            got=h.hexdigest()
-            if got!=expected:
-              bad.append((rel,f"expected {expected} got {got}"))
-          if bad:
-            print("Hash mismatches:")
-            for rel, msg in bad:
-              print(" -", rel, msg)
-            sys.exit(1)
-          print("OK: all hashes match ledger/sot.json")
-          PY
+        run: python tools/verify_ledger.py
+
+      - name: Verify package boundaries (no deep src imports)
+        run: python tools/check_no_src_imports.py
+
+      - name: Validate declarative SoT40 scope manifest
+        run: python tools/verify_sot40_scope.py
+
+      - name: Build SoT40 artifact and receipt
+        run: python tools/build_sot40_artifact.py --out-dir dist/sot40
+
+      - name: Verify SoT40 receipt
+        run: python tools/verify_sot40_receipt.py --receipt dist/sot40/receipt.json
 
   ingest-stage-checks:
     runs-on: ubuntu-latest

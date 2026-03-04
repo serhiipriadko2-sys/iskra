@@ -1,7 +1,6 @@
 import { MetricsEngine, metricsEngine as defaultMetrics } from './services/metricsService.js';
 import { VoiceQuantumField, voiceSystem as defaultVoices } from './services/voiceSystem.js';
 import { MemoryService } from './services/memory.js';
-import { GraphRagRetriever, GraphRagTrace } from './services/graphRag.js';
 import { IskraMetrics, VoiceID, MantraNode } from '@iskra/core';
 
 export interface EngineResponse {
