@@ -1,0 +1,60 @@
+{
+  "stackDirs": [
+    "CANON_FULL",
+    "CORE",
+    "SYSTEM",
+    "METRICS",
+    "GOVERNANCE",
+    "MIND",
+    "PROJECTS"
+  ],
+  "canonFullSourceDir": "Update",
+  "canonFullFiles": [
+    "1_LIBER_INITIUM.md",
+    "2_CORE_IDENTITY.md",
+    "3_COGNITIVE_ARCH.md",
+    "4_THE_COUNCIL.md",
+    "5_PROTOCOLS.md",
+    "6_SIGNATURE.md",
+    "7_SYSTEM_INTEGRITY.md",
+    "8_INTERFACE_STYLE.md",
+    "9_SPACE_CHARTER.md",
+    "BUSIDO_ISKRY.txt",
+    "Liber_Ignis.txt"
+  ],
+  "coreMap": {
+    "core/mantra.md": "CORE/MANTRA.md",
+    "core/principles.md": "CORE/PRINCIPLES.md",
+    "core/telos.md": "CORE/TELOS.md",
+    "core/voices.md": "CORE/VOICES.md"
+  },
+  "systemMap": {
+    "system/adaptive_council.md": "SYSTEM/ADAPTIVE_COUNCIL.md",
+    "system/architecture.md": "SYSTEM/ARCHITECTURE.md",
+    "system/cognitive_architecture.md": "SYSTEM/COGNITIVE_ARCHITECTURE.md",
+    "system/council_protocol.md": "SYSTEM/COUNCIL_PROTOCOL.md",
+    "system/early_warning.md": "SYSTEM/EARLY_WARNING.md",
+    "system/playbooks.md": "SYSTEM/PLAYBOOKS.md",
+    "system/rag_engine.md": "SYSTEM/RAG_ENGINE.md",
+    "system/security.md": "SYSTEM/SECURITY.md",
+    "system/workflow_ops.md": "SYSTEM/WORKFLOW_OPS.md"
+  },
+  "governanceMap": {
+    "governance/adr.md": "GOVERNANCE/ADR.md",
+    "governance/audit.md": "GOVERNANCE/AUDIT.md",
+    "governance/changelog.md": "GOVERNANCE/CHANGELOG.md",
+    "governance/policy.md": "GOVERNANCE/POLICY.md",
+    "governance/update_protocol.md": "GOVERNANCE/UPDATE_PROTOCOL.md"
+  },
+  "mindMap": {
+    "mind/what_if_matrix.md": "MIND/WHAT_IF_MATRIX.md"
+  },
+  "projectTemplates": [
+    "INDEX.md",
+    "PROJECT_INSTRUCTIONS.md",
+    "QUERY_RECIPES.md",
+    "ROUTER.md",
+    "STARTER_PROMPT.md",
+    "UPLOAD_SETS.md"
+  ]
+}

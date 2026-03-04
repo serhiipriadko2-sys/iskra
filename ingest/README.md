@@ -15,7 +15,7 @@ python tools/build_phase1_classification.py
 python tools/import_phase1_shard.py 1
 python tools/import_phase1_shard.py 2
 python tools/import_phase1_shard.py 3
-# backward-compatible wrappers:
+# standalone scripts:
 python tools/import_phase1_shard1.py
 python tools/import_phase1_shard2.py
 python tools/import_phase1_shard3.py

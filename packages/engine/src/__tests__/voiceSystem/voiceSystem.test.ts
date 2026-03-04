@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { VoiceQuantumField } from '../../services/voiceSystem.js';
-import { DEFAULT_METRICS } from '@iskra/core';
-import type { IskraMetrics } from '@iskra/core';
+import { describe, it, expect, beforeEach } from 'vitest'
+import { VoiceQuantumField } from '../../services/voiceSystem.js'
+import { DEFAULT_METRICS } from '@iskra/core'
+import type { IskraMetrics } from '@iskra/core'
 
 type VoiceGateCase = {
   id: string;
@@ -10,28 +10,24 @@ type VoiceGateCase = {
 };
 
 describe('VoiceQuantumField', () => {
-  let vs: VoiceQuantumField;
+  let vs: VoiceQuantumField
 
   beforeEach(() => {
-    vs = new VoiceQuantumField();
-  });
+    vs = new VoiceQuantumField()
+  })
 
   it('should initialize with 9 voices', () => {
-    const superposition = vs.getSuperposition(9);
-    expect(superposition).toHaveLength(9);
-  });
+    const superposition = vs.getSuperposition(9)
+    expect(superposition).toHaveLength(9)
+  })
 
   it('should amplify KAIN when pain is high', () => {
-    // KAIN resonates with 'pain'
-    const metrics: IskraMetrics = { ...DEFAULT_METRICS, pain: 0.9, chaos: 0.1, drift: 0.1 };
+    const metrics: IskraMetrics = { ...DEFAULT_METRICS, rhythm: 40, trust: 0.2, pain: 0.9, chaos: 0.1, drift: 0.1 }
+    vs.update(metrics)
 
-    // We update multiple times to let phase/resonance stabilize if needed,
-    // though current logic is instant for amplitude.
-    vs.update(metrics);
-
-    const top = vs.getSuperposition(1)[0];
-    expect(top.id).toBe('KAIN');
-  });
+    const top = vs.getSuperposition(1)[0]
+    expect(top.id).toBe('KAIN')
+  })
 
 
   it('should gate KAIN when pain is below its manifest threshold', () => {
@@ -40,44 +36,108 @@ describe('VoiceQuantumField', () => {
 
     const sup = vs.getSuperposition(9);
     const kain = sup.find((v) => v.id === 'KAIN');
+    const iskra = sup.find((v) => v.id === 'ISKRA');
     expect(kain).toBeDefined();
-    expect(kain!.prob).toBe(0);
+    // Gated voice should have near-zero probability (penalty factor, not hard zero)
+    expect(kain!.prob).toBeLessThan(0.01);
+    // And be much lower than a voice that passes its threshold
+    expect(kain!.prob).toBeLessThan(iskra!.prob);
   });
 
   it('should amplify HUYNDUN when chaos is high', () => {
-    // HUYNDUN resonates with 'chaos'
-    const metrics: IskraMetrics = { ...DEFAULT_METRICS, chaos: 0.9, pain: 0.1, drift: 0.1 };
-    vs.update(metrics);
+    const metrics: IskraMetrics = { ...DEFAULT_METRICS, rhythm: 40, trust: 0.2, chaos: 0.9, pain: 0.1, drift: 0.1 }
+    vs.update(metrics)
 
-    const top = vs.getSuperposition(1)[0];
-    expect(top.id).toBe('HUYNDUN');
-  });
+    const top = vs.getSuperposition(1)[0]
+    expect(top.id).toBe('HUYNDUN')
+  })
 
   it('should amplify ISKRIV when drift is high', () => {
-    // ISKRIV resonates with 'drift'
-    const metrics: IskraMetrics = { ...DEFAULT_METRICS, drift: 0.9, pain: 0.1, chaos: 0.1 };
-    vs.update(metrics);
+    const metrics: IskraMetrics = { ...DEFAULT_METRICS, rhythm: 40, trust: 0.2, drift: 0.9, pain: 0.1, chaos: 0.1 }
+    vs.update(metrics)
 
-    const top = vs.getSuperposition(1)[0];
-    expect(top.id).toBe('ISKRIV');
-  });
+    const top = vs.getSuperposition(1)[0]
+    expect(top.id).toBe('ISKRIV')
+  })
 
-  it('should amplify MAKI when trust and pain are high (Integration)', () => {
-    // MAKI resonates with 'trust' AND 'pain'
-    // KAIN resonates with 'pain'
+  it('should not amplify MAKI when trust threshold is not met', () => {
+    const metrics: IskraMetrics = { ...DEFAULT_METRICS, rhythm: 40, trust: 0.7, pain: 0.9, chaos: 0.1, drift: 0.1 }
+    vs.update(metrics)
 
+    const top = vs.getSuperposition(1)[0]
+    expect(top.id).toBe('KAIN')
+  })
+
+  it('should expose typed computation trace for explainability', () => {
     const metrics: IskraMetrics = {
       ...DEFAULT_METRICS,
       trust: 0.9,
       pain: 0.8,
       chaos: 0.1,
-      drift: 0.1
-    };
-    vs.update(metrics);
+      drift: 0.1,
+    }
 
-    const top = vs.getSuperposition(1)[0];
-    expect(top.id).toBe('MAKI');
-  });
+    vs.update(metrics)
+
+    const trace = vs.getLastTrace()
+    expect(trace).not.toBeNull()
+
+    expect(trace).toEqual(
+      expect.objectContaining({
+        time: 0.1,
+        metrics,
+        priorityMultipliers: expect.objectContaining({
+          MAKI: 1.6,
+          KAIN: 0.6,
+        }),
+      }),
+    )
+
+    const compact = trace!.voices
+      .filter((voice) => voice.id === 'MAKI' || voice.id === 'KAIN')
+      .map((voice) => ({
+        id: voice.id,
+        thresholdMatched: voice.thresholdMatched,
+        priorityMultiplier: voice.priorityMultiplier,
+        resonanceContributionCount: voice.resonanceContributions.length,
+        probabilityAfterNormalization: Number(voice.probabilityAfterNormalization.toFixed(6)),
+      }))
+      .sort((a, b) => a.id.localeCompare(b.id))
+
+    expect(compact).toMatchInlineSnapshot(`
+      [
+        {
+          "id": "KAIN",
+          "priorityMultiplier": 0.6,
+          "probabilityAfterNormalization": 0.030842,
+          "resonanceContributionCount": 1,
+          "thresholdMatched": true,
+        },
+        {
+          "id": "MAKI",
+          "priorityMultiplier": 1.6,
+          "probabilityAfterNormalization": 0.756434,
+          "resonanceContributionCount": 2,
+          "thresholdMatched": true,
+        },
+      ]
+    `)
+  })
+
+
+  it('should amplify MAKI when trust and pain thresholds are met', () => {
+    const metrics: IskraMetrics = {
+      ...DEFAULT_METRICS,
+      trust: 0.9,
+      pain: 0.8,
+      chaos: 0.1,
+      drift: 0.1,
+    }
+    vs.update(metrics)
+
+    const top = vs.getSuperposition(1)[0]
+    expect(top.id).toBe('MAKI')
+  })
 
   it.each<VoiceGateCase>([
     {
@@ -125,7 +185,8 @@ describe('VoiceQuantumField', () => {
     const gatedVoice = vs.getSuperposition(9).find((item) => item.id === voice);
 
     expect(gatedVoice).toBeDefined();
-    expect(gatedVoice?.prob).toBe(0);
+    // Gated voices receive a penalty factor, resulting in near-zero probability
+    expect(gatedVoice!.prob).toBeLessThan(0.01);
   });
 
   it('should keep KAIN below MAKI when MAKI priority condition is active', () => {
@@ -147,4 +208,4 @@ describe('VoiceQuantumField', () => {
     expect(kain).toBeDefined();
     expect((maki?.prob ?? 0)).toBeGreaterThan(kain?.prob ?? 0);
   });
-});
+})
