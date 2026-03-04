@@ -1,6 +1,6 @@
 {
   "kind": "ledger_entry",
-  "phase": "baseline_ingest_phase1_shard1",
+  "phase": "baseline_ingest_phase1_shard3",
   "source_archive": "Versions/baseline.zip",
   "views": [
     {
@@ -27,6 +27,16 @@
       "path": "ingest/shard1_import_manifest.json",
       "sha256": "93beb1db703f4355fd2e9ba0297578c0430c804f0d98a916146b0350e8a71d93",
       "bytes": 9659
+    },
+    {
+      "path": "ingest/shard2_import_manifest.json",
+      "sha256": "a26a36e6251a4e755793c743a6e36ebc6686f44c61f8494a5fb50aaf55aebd7d",
+      "bytes": 7301
+    },
+    {
+      "path": "ingest/shard3_import_manifest.json",
+      "sha256": "f3be59ee7d25f0ed6dcfa87f06efc983acf59eb68fbf0142bfa35811150de4ae",
+      "bytes": 3290
     }
   ]
 }
