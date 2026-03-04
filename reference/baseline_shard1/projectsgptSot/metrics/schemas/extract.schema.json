@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Iskra Metrics Extract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "clarity",
+    "trust",
+    "drift",
+    "echo_clearance",
+    "protocol",
+    "trace_count"
+  ],
+  "properties": {
+    "clarity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "trust": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "drift": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "echo_clearance": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "protocol": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "trace_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "source_archive": "Versions/baseline.zip",
+  "entries_scanned": 796,
+  "findings_total": 4,
+  "findings": [
+    {
+      "type": "openai_key_like",
+      "path": "baseline/projectsgptSot/8_INTERFACE_STYLE.md",
+      "snippet": "sk-abcdefghij1234567"
+    },
+    {
+      "type": "openai_key_like",
+      "path": "baseline/projectsgptSot/8_INTERFACE_STYLE.md",
+      "snippet": "sk-abcdefghij1234567"
+    },
+    {
+      "type": "openai_key_like",
+      "path": "baseline/projectsgptSot/8_INTERFACE_STYLE.md",
+      "snippet": "sk-1234567890abcdefg"
+    },
+    {
+      "type": "binary_payload",
+      "path": "baseline/repoSot/Versions/Fullspark/releases/SoT40-canonSOTprojects-v1.1.0.zip",
+      "bytes": 1586567
+    }
+  ]
+}

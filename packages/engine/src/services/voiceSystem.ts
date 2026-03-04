@@ -19,6 +19,30 @@ function thresholdGate(metrics: IskraMetrics, thresholds: VoiceThresholds): numb
   return 1;
 }
 
+function calculateResonanceFactor(voiceId: VoiceID, metrics: IskraMetrics): number {
+  switch (voiceId) {
+    case 'KAIN':
+      return 1 + metrics.pain * 3.0
+    case 'HUYNDUN':
+      return 1 + metrics.chaos * 3.0
+    case 'ISKRIV':
+      return 1 + metrics.drift * 3.5
+    case 'MAKI':
+      return 1 + metrics.trust + metrics.pain
+    case 'SAM':
+      return 1 + (1 - metrics.clarity) * 2.0
+    case 'ANHANTRA':
+      return 1 + (1 - metrics.trust) * 2.5 + metrics.silence_mass * 2.0
+    case 'SIBYL':
+      return 1 + (metrics.foresight ?? 0) * 2.0
+    case 'PINO':
+      return 1.5
+    case 'ISKRA':
+    default:
+      return 1 + metrics.trust * 0.5
+  }
+}
+
 /**
  * Voice Quantum Field
  * Manages the superposition of all 9 voices.
@@ -64,18 +88,12 @@ export class VoiceQuantumField {
       // 0. Threshold gate (manifest constraint)
       const gate = thresholdGate(metrics, voice.thresholds);
 
-      // 1. Resonance: Metrics amplify amplitude
-      let resonanceFactor = 1.0;
-      if (voice.quantum.resonance) {
-        voice.quantum.resonance.forEach((metricKey) => {
-          let val = metrics[metricKey] || 0;
+      // 1. Resonance: Voice-specific formulas from manifest
+      let resonanceFactor = calculateResonanceFactor(voice.id, metrics);
 
-          // Normalize non-0-1 metrics
-          if (metricKey === 'rhythm') val = Math.min(1.0, val / 120);
-
-          // Constructive interference if metric is high
-          if (val > 0.3) resonanceFactor += val * 2.0;
-        });
+      // MAKI has explicit priority over KAIN when trust and pain are high.
+      if (voice.id === 'KAIN' && metrics.trust >= 0.8 && metrics.pain >= 0.3) {
+        resonanceFactor *= 0.25;
       }
 
       // Apply gate after resonance so we keep the same dynamics but respect constraints.

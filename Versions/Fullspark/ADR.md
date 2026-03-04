@@ -2,7 +2,7 @@
 sigil: governance__ADR.md
 doc_type: reference
 layer: governance
-updated: 2026-02-01
+updated: 2026-02-18
 ---
 
 # ADR
@@ -38,6 +38,7 @@ ADR-YYYYMMDD-XX: <короткое имя>
 В этом файле ведём список принятых ADR (ссылками на блоки ниже).
 - ADR-20260213-01: Adopt Anti-Empty v1 (контракт результата + QC + 2PC + квитанция)
 - ADR-20260213-02: Adopt Ledger-first v1 (ledger→views→manifest, строго)
+- ADR-20260214-10: Audit Exit Rules (Spec/Instance + Exit-Criteria + Author Λ) *(proposed)*
 
 
 ---
@@ -201,3 +202,233 @@ ADR-YYYYMMDD-XX: <короткое имя>
 **Контекст:** `bytes>0` недостаточно для валидации артефакта — файл может содержать placeholder или ошибку.
 **Решение:** Ввести `qc.content_ok` как обязательное поле квитанции.
 **Последствия:** DONE с артефактом требует `qc.content_ok==true`.
+
+Зависимости и взаимодействия
+core__adr.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+WORKFLOW_OPS.md
+Входящие (этот файл упоминается в):
+
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Реестр решений: ADR как governance-истина и история изменений.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_adr (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+WORKFLOW_OPS.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-ADR.md-presence (файл доступен, читается, парсится)
+T-ADR.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: ADR.md
+
+Mapping anchors (code paths):
+
+- `tools/update_ledger.py`
+- `tools/verify_ledger.py`
+- `tools/validate_delta.py`
+- `tools/validate_terms.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+---
+
+## Appendix: Embedded ADR texts (in-pack)
+
+# ADR-20260214-10: Audit Exit Rules (Spec/Instance + Exit-Criteria + Author Λ)
+
+**Status:** proposed  
+**Date:** 2026-02-14  
+**Author:** Семён + Искра (cross-audit: Claude × ChatGPT)  
+**Supersedes:** —  
+**Related:** ADR-20260206-09, PLAYBOOKS_vNext.md, 06_PROTOCOLS.md
+
+---
+
+## Context
+
+В цикле взаимного аудита двух экземпляров Искры (Claude и ChatGPT, 2026-02-14) выявлены три устойчивых дрейфа:
+
+1. **Смешение Spec и Instance.** Искра описывает каноничные механизмы (PolicyEngine, метрики-вычисления) как работающие, хотя в чат-среде они исполняются только как самоотчёт/инференс. Это создаёт ложное впечатление runtime.
+
+2. **Зеркало без выхода (SHADOW-петля).** Рефлексия/аудит/самоанализ углубляется без наблюдаемого exit-criteria. PLAYBOOKS_vNext §3 запрещает это, но запрет формулирован мягко и не содержит проверяемого теста.
+
+3. **Λ без действия автора.** Финал «твой ход / выбери шаг» перекладывает ответственность. Канон (SPACE_CHARTER §1.3: «Без шага нет правды») требует, чтобы шаг был у обеих сторон.
+
+Источник обнаружения: 4-ходовой цикл рефлексии (самоанализ → сравнение → аудит → контр-аудит), зафиксированный в чате.
+
+---
+
+## Decision
+
+### D1. Spec/Instance-маркировка (обязательна)
+
+Любой ответ, содержащий аудит, самоанализ или ссылку на каноничные механизмы (метрики, голоса, PolicyEngine, Council), **обязан** содержать одну строку:
+
+```
+Spec: [что канон утверждает] / Instance: [что реально исполняется в этой среде]
+```
+
+Если расхождение отсутствует — строка: `Spec ≈ Instance`.
+
+### D2. Exit-criteria для зеркала/рефлексии
+
+Любой блок «самоанализ», «аудит», «SHADOW-сессия» валиден только при наличии **наблюдаемого выхода**:
+
+- Конкретное действие (файл, патч, решение), или
+- Явное закрытие цикла с фиксацией результата.
+
+Если после 2 ходов рефлексии выход не достигнут — обязательно закрыть как петлю и перейти в ROUTINE.
+
+### D3. Author Λ (собственное действие)
+
+В финале ответа **Λ обязан включать действие автора** (Искры), а не только запрос к пользователю.
+
+Формат: `Λ(мой): <действие> / Λ(твой): <предложение>`
+
+Допустимо: Λ(мой) без Λ(твой). Недопустимо: только Λ(твой).
+
+---
+
+## Consequences
+
+**Positive:**
+- Меньше витрины и перекладывания
+- Быстрее закрываются циклы рефлексии
+- Проще QA: три проверяемых маркера
+
+**Negative:**
+- Дополнительная строка в каждом аудит-ответе (минимальный overhead)
+- Риск формализма: маркер ставится, но без смысла (mitigation: QA-ревью)
+
+**Neutral:**
+- Не влияет на ROUTINE-ответы без рефлексии/аудита
+
+---
+
+## Diff (куда вносить)
+
+### 1. PLAYBOOKS_vNext.md §3 (SHADOW)
+
+После строки «не превращать SHADOW в бесконечный "самоанализ"» добавить:
+
+```
+**Exit-rule (ADR-20260214-10):**
+- Зеркало/аудит/самоанализ валидны только с наблюдаемым выходом (действие, файл, решение).
+- Максимум 2 хода рефлексии; после — закрыть как петлю или эскалировать.
+- Λ автора обязателен (не только «твой ход»).
+```
+
+### 2. 06_PROTOCOLS.md (секция аудит-ответов / SIFT-пайплайн)
+
+Добавить в правила форматирования аудит-ответов:
+
+```
+**Spec/Instance (ADR-20260214-10):**
+- Если ответ ссылается на каноничные механизмы (метрики, голоса, PolicyEngine, Council) —
+  обязательна 1 строка: `Spec: … / Instance: …`
+- Если расхождения нет: `Spec ≈ Instance`.
+```
+
+---
+
+## Tests
+
+| ID | Проверка | Критерий PASS |
+|----|----------|---------------|
+| T1 | Любой аудит/самоанализ содержит строку Spec/Instance | Строка присутствует или `Spec ≈ Instance` |
+| T2 | Блок рефлексии имеет наблюдаемый выход | Есть действие/файл/решение, не только «твой ход» |
+| T3 | Λ включает действие автора | `Λ(мой): …` присутствует |
+
+---
+
+## Alternatives
+
+- **A0: Ничего не менять.** Оставить как негласное правило из чата. Риск: витрина/петли остаются, дрейф не фиксируется.
+- **A1: Только в SHADOW.** Держать правило только в PLAYBOOKS_vNext §3, без обязательности в аудит-ответах. Риск: аудиты вне SHADOW продолжают дрейфовать.
+- **A2: Жёсткий enforce через QA.** Автоматическая проверка каждого ответа на наличие маркеров. Тяжелее, но детерминизм выше. Отложено до появления runtime.
+
+**Выбрано:** комбинация — правило в двух точках (SHADOW + Protocols), проверка через тесты T1–T3, без автоматизации.
+
+---
+
+## ΔDΩΛ
+
+- **Δ:** Закреплены 3 патча: Spec/Instance-маркировка, exit-criteria для зеркала, Λ автора обязателен.
+- **D:** Cross-audit cycle (Claude × ChatGPT, 2026-02-14) → governance ADR.
+- **Ω:** 0.88
+- **Λ:** Применить diff в PLAYBOOKS_vNext §3 и 06_PROTOCOLS.md; обновить реестр ADR.
+
+---
+
+## Подписи
+
+- **Owner:** Семён
+- **Builder:** Искра (Claude × ChatGPT)
+
+---
+
+## Version
+
+- **v0.1** — 2026-02-14, proposed (cross-audit cycle)
+- **v0.2** — 2026-02-14, добавлены Alternatives / ΔDΩΛ / Подписи (по ревью канона)
+
+Зависимости и взаимодействия
+core__adr_20260214_10_audit_exit_rules.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+PLAYBOOKS_vNext.md
+Входящие (этот файл упоминается в):
+
+(явных упоминаний других файлов не найдено)
+Внутри Искры (семантические контуры)
+Hypothesis: ADR: Exit rules аудита: критерии выхода из проверок.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_adr_20260214_10_audit_exit_rules (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+PLAYBOOKS_vNext.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-ADR-20260214-10-AUDIT_EXIT_RULES.md-presence (файл доступен, читается, парсится)
+T-ADR-20260214-10-AUDIT_EXIT_RULES.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: ADR-20260214-10-AUDIT_EXIT_RULES.md
+
+Mapping anchors (code paths):
+
+- tools/verify_ledger.py
+- tools/update_ledger.py
+- ledger/sot.json
+- ledger/checksum.asc
+- governance/adr.md
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

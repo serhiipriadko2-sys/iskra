@@ -3,12 +3,9 @@
   "version": "0.1.0",
   "main": "src/index.ts",
   "scripts": {
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "test": "vitest run"
   },
-  "dependencies": {
-    "@iskra/core": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^2.0.0"

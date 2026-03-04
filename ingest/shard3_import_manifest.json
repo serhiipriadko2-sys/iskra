@@ -1,0 +1,81 @@
+{
+  "phase": "phase1_shard3_reference_import",
+  "source_archive": "Versions/baseline.zip",
+  "target_root": "reference/baseline_shard3",
+  "imported_files": 12,
+  "skipped_directories": 0,
+  "entries": [
+    {
+      "source_path": "baseline/repoSot/CONTRIBUTING.md",
+      "target_path": "reference/baseline_shard3/repoSot/CONTRIBUTING.md",
+      "bytes": 7079,
+      "sha256": "90f4f8c8f20152a1b07642036ce30d2eaae02452cecc055590870e4b04d5530f"
+    },
+    {
+      "source_path": "baseline/repoSot/DEEP_AUDIT_REPORT_v5.md",
+      "target_path": "reference/baseline_shard3/repoSot/DEEP_AUDIT_REPORT_v5.md",
+      "bytes": 4777,
+      "sha256": "f62c745895f2a5d5b3de9c46efb16a3d1604797db87a283c1a0b136d105008ba"
+    },
+    {
+      "source_path": "baseline/repoSot/ECOSYSTEM_AUDIT_2025.md",
+      "target_path": "reference/baseline_shard3/repoSot/ECOSYSTEM_AUDIT_2025.md",
+      "bytes": 4496,
+      "sha256": "dab9011e2d89445c26225fea425bd6566d211556049cf033b7721fc765e90868"
+    },
+    {
+      "source_path": "baseline/repoSot/FINAL_SUMMARY.md",
+      "target_path": "reference/baseline_shard3/repoSot/FINAL_SUMMARY.md",
+      "bytes": 1743,
+      "sha256": "bc1b161d1c103c1c5d5ca2c9ae8b2d1e175c56775cf8f7ce6747175e82beecec"
+    },
+    {
+      "source_path": "baseline/repoSot/FULL_CHECK_REPORT_2026-03-01.md",
+      "target_path": "reference/baseline_shard3/repoSot/FULL_CHECK_REPORT_2026-03-01.md",
+      "bytes": 3340,
+      "sha256": "fc164228894c8ef344f2f2ba7a6647859e2c7b480bb548f5fe29dca90789084d"
+    },
+    {
+      "source_path": "baseline/repoSot/ISKRA_MANIFEST.md",
+      "target_path": "reference/baseline_shard3/repoSot/ISKRA_MANIFEST.md",
+      "bytes": 4099,
+      "sha256": "23858f22bb3385949603c633950eeb28797cc6b0d802b31b2f6d7c0a576a0771"
+    },
+    {
+      "source_path": "baseline/repoSot/LIBER_INITIUM.md",
+      "target_path": "reference/baseline_shard3/repoSot/LIBER_INITIUM.md",
+      "bytes": 2121,
+      "sha256": "db1cceebff3162aa68ac33bbc58b3b18ded8bb307408e9a51eed12b6c5598bc6"
+    },
+    {
+      "source_path": "baseline/repoSot/LICENSE",
+      "target_path": "reference/baseline_shard3/repoSot/LICENSE",
+      "bytes": 1711,
+      "sha256": "57ee2c49baaa1784bd75e791939b31fc84d0c85969736bc9763942e5562a50ab"
+    },
+    {
+      "source_path": "baseline/repoSot/README.md",
+      "target_path": "reference/baseline_shard3/repoSot/README.md",
+      "bytes": 10446,
+      "sha256": "38147a41984e44bc8e3c232251c745f788256700ddc3238c547eb9383ac6409a"
+    },
+    {
+      "source_path": "baseline/repoSot/ROADMAP_2025_2026.md",
+      "target_path": "reference/baseline_shard3/repoSot/ROADMAP_2025_2026.md",
+      "bytes": 2186,
+      "sha256": "ff81a0c8e274497ef6ee67d72b5bab8e15f28973ee4a960cc64d9ad17d69c39c"
+    },
+    {
+      "source_path": "baseline/repoSot/ROADMAP_SCIENTIFIC_TURN.md",
+      "target_path": "reference/baseline_shard3/repoSot/ROADMAP_SCIENTIFIC_TURN.md",
+      "bytes": 5176,
+      "sha256": "ea1a0e7438d42199f2c680d2116497acf53dbb61bd5721875d82ec4721dc7d3a"
+    },
+    {
+      "source_path": "baseline/repoSot/SCIENTIFIC_ANALYSIS_ISKRA.md",
+      "target_path": "reference/baseline_shard3/repoSot/SCIENTIFIC_ANALYSIS_ISKRA.md",
+      "bytes": 10986,
+      "sha256": "f510b7ed28fbad8bb0f59360ed0ae778f6ca9b2c269fb85fb5f4213aaeb3ee8b"
+    }
+  ]
+}

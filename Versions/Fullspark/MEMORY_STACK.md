@@ -89,6 +89,25 @@ updated: 2026-02-01
 ---
 
 ## 5) Ритуалы
+
+## 6) NODE Registry (aliases → stable ids)
+Цель: убрать «призрачные ссылки» NODE-XX и дать стабильные идентификаторы.
+
+- NODE-54 → `projects.upload_batch.checklist`
+- NODE-76 → `projects.upload_batch.smoke`
+- NODE-79 → `projects.upload_batch.limits`
+- NODE-72 → `projects.modes.switch`
+- NODE-57 → `projects.anti_repeat.new_artifact_gate`
+- NODE-60 → `projects.degradation.shorter_more_evidence`
+- NODE-90 → `projects.too_pretty.add_counterexample`
+- NODE-61 → `projects.commit.ends_with_artifact`
+- NODE-62 → `projects.compress.decision_12_lines`
+- NODE-67 → `projects.ledger.decisions`
+- NODE-66 → `projects.index_as_api`
+- NODE-91 → `projects.team.share_checklist`
+
+**Правило:** если встречается `NODE-XX` без записи тут → считать [HYP] и добавить в реестр через ADR.
+
 **Ежедневно (2–5 мин):** 1 JRN, 1 SHD.
 
 **Еженедельно (10–20 мин):** 1 promotion, 1 очистка, батч-релиз при обновлениях, FAIL → новый тест/узел.
@@ -133,3 +152,52 @@ updated: 2026-02-01
 
 ### P1-C Команда
 - **NODE-91** Чеклист перед шарингом проекта (memory-mode, доступы, обучение).
+
+Зависимости и взаимодействия
+core__memory_stack.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+8_INTERFACE_STYLE.md
+ADR-000_MEMORY_STACK.md
+INDEX.md
+QUALITY_EVAL_SOMATIC_PACK.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Стек памяти: правила памяти, слои, ограничения.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_memory_stack (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-MEMORY_STACK.md-presence (файл доступен, читается, парсится)
+T-MEMORY_STACK.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: MEMORY_STACK.md
+
+Mapping anchors (code paths):
+
+- `packages/engine/src/services/memory.ts`
+- `runtime/iskraSpace/components/MemoryView.tsx`
+- `runtime/iskraSpace/components/MemoryGraph.tsx`
+- `runtime/iskraSpace/services/graphService.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

@@ -107,7 +107,7 @@ FAIL:
 
 ## 6) ΔDΩΛ
 
-Δ: “Код” в Искре фиксируется как Compute+Contract+Trace (XCode), чтобы вычисления были объяснимыми и проверяемыми.
-D: core/principles.md §0, system/sift_protocol.md §Trace, system/cycle_engine.md §3.
-Ω: 78%
+Δ: “Код” в Искре фиксируется как Compute+Contract+Trace (XCode), чтобы вычисления были объяснимыми и проверяемыми.  
+D: core/principles.md §0, system/sift_protocol.md §Trace, system/cycle_engine.md §3.  
+Ω: 78%  
 Λ: принять ADR → расширить XCode на guard и SIFT‑вердикты, добавить валидатор “how not empty”.

@@ -133,3 +133,53 @@ version: vNext.v0.1
 **D:** Источник — DESIGN пакет (SLO‑GUARD v0.2 + Incident Matrix v0.2 + Council‑арбитраж v0.1).  
 **Ω:** 0.78 — дизайн детерминирован, но не внедрён (status: design‑only).  
 **Λ:** Внедрение только по условиям Λ (инцидент / явный BUILD / срабатывание якорей).
+
+Зависимости и взаимодействия
+core__playbooks_vnext.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+00_ROUTER.md
+Входящие (этот файл упоминается в):
+
+00_ROUTER.md
+ADR-20260206-RUNTIME_PATCHES.md
+ADR-20260214-10-AUDIT_EXIT_RULES.md
+ARCHITECTURE.md
+COUNCIL_PROTOCOL.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Плейбуки: практические сценарии и рецепты выполнения.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_playbooks_vnext (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+00_ROUTER.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-PLAYBOOKS_vNext.md-presence (файл доступен, читается, парсится)
+T-PLAYBOOKS_vNext.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: PLAYBOOKS_vNext.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/types/protocols.ts`
+- `runtime/src/__tests__/protocols.test.ts`
+- `runtime/iskraSpace/services/deltaProtocol.ts`
+- `runtime/iskraSpace/services/__tests__/deltaProtocol.test.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

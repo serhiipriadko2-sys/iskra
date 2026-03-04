@@ -49018,7 +49018,7 @@ describe('SecurityService', () => {
 
     it('detects OpenAI API keys', () => {
       // Pattern: \bsk-[A-Za-z0-9]{10,}\b
-      const text = 'My key is sk-abcdefghij1234567890';
+      const text = 'My key is sk-abc123def456';
       const findings = securityService.scanPII(text);
 
       expect(findings.length).toBeGreaterThan(0);
@@ -49122,7 +49122,7 @@ describe('SecurityService', () => {
     });
 
     it('redacts API keys', () => {
-      const text = 'API key: sk-abcdefghij1234567890';
+      const text = 'API key: sk-abc123def456';
       const sanitized = securityService.sanitizeInput(text);
 
       expect(sanitized).toContain('[REDACTED]');
@@ -49136,7 +49136,7 @@ describe('SecurityService', () => {
     });
 
     it('handles multiple PII in one text', () => {
-      const text = 'Email: a@b.com, Key: sk-proj-abc123456789012345678';
+      const text = 'Email: a@b.com, Key: sk-proj-abc1234567890';
       const sanitized = securityService.sanitizeInput(text);
 
       // Should have at least one REDACTED
@@ -50109,7 +50109,7 @@ describe('SecurityService Expanded Patterns', () => {
 
     it('should detect API keys and secrets', () => {
       const secrets = [
-        'sk-1234567890abcdefghijklmnop', // OpenAI style
+        'sk-1234567890abcde', // OpenAI style
         'Bearer eyJhbGciOiJIUzI1NiIs', // JWT token start
         '-----BEGIN RSA PRIVATE KEY-----',
         '-----BEGIN OPENSSH PRIVATE KEY-----',
@@ -78283,3 +78283,77 @@ IskraSpace состоит из нескольких ключевых компо�
 - `ROADMAP_2025_2026.md` — ссылка в исходном каноне; файл отсутствует в текущем стеке.
 <a id="external-final-summary"></a>
 - `FINAL_SUMMARY.md` — ссылка в исходном каноне; файл отсутствует в текущем стеке.
+
+Зависимости и взаимодействия
+core__8_interface_style.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+1_LIBER_INITIUM.md
+ARCHITECTURE.md
+COGNITIVE_ARCHITECTURE.md
+COUNCIL_GRAPH_PACK.md
+INDEX.md
+Liber_Ignis.txt
+MANTRA.md
+MEMORY_STACK.md
+METRICS_BUNDLE.md
+PRINCIPLES.md
+QUALITY_EVAL_SOMATIC_PACK.md
+SIFT_PROTOCOL.md
+VOICES.md
+WORKFLOW_OPS.md
+Входящие (этот файл упоминается в):
+
+1_LIBER_INITIUM.md
+ARCHITECTURE.md
+COGNITIVE_ARCHITECTURE.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Интерфейс и стиль: UX/тон, форматирование, представление артефактов.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_8_interface_style (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+1_LIBER_INITIUM.md
+ARCHITECTURE.md
+COGNITIVE_ARCHITECTURE.md
+COUNCIL_GRAPH_PACK.md
+INDEX.md
+Liber_Ignis.txt
+MANTRA.md
+MEMORY_STACK.md
+METRICS_BUNDLE.md
+PRINCIPLES.md
+QUALITY_EVAL_SOMATIC_PACK.md
+SIFT_PROTOCOL.md
+VOICES.md
+WORKFLOW_OPS.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-8_INTERFACE_STYLE.md-presence (файл доступен, читается, парсится)
+T-8_INTERFACE_STYLE.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 8_INTERFACE_STYLE.md
+
+Mapping anchors (code paths):
+
+- `apps/iskra-web/src/components/ChatInterface.tsx`
+- `runtime/iskraSpace/App.tsx`
+- `runtime/iskraSpace/components/Ambience.tsx`
+- `runtime/iskraSpace/components/CouncilView.tsx`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

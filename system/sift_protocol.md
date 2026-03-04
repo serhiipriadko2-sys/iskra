@@ -925,3 +925,4 @@ Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv
 - Фиксируй оба источника.
 - Выбирай по Truth Ladder (canonSOT repo выше corpus).
 - Если меняет правило/канон → ADR обязателен.
+

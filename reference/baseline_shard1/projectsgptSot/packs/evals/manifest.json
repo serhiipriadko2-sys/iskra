@@ -1,0 +1,20 @@
+{
+  "pack": "EvalsPack",
+  "version": "0.1.0",
+  "purpose": "Prompts-as-code: закрепить измеримость поведения (offline harness + CI job).",
+  "pinned_models": [
+    {
+      "model": "gpt-5.2",
+      "snapshot": "gpt-5.2-2025-12-11",
+      "notes": "Снапшоты фиксируют поведение модели для стабильных регрессий."
+    }
+  ],
+  "baseline": {
+    "file": "ledger/baselines.json",
+    "sample_n_min": 30
+  },
+  "profiles": {
+    "canon": {"hyp_marker_threshold": 0},
+    "lab": {"hyp_marker_threshold": 2}
+  }
+}
