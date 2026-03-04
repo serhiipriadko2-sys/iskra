@@ -224,3 +224,51 @@ function selectVoice(metrics: IskraMetrics): Voice {
 **Author:** SEMEN-GABRAN-REVΩ
 **Date:** 2026-01-02
 **Integrity:** SoT (Печать истины)-Primary · Council-safe
+
+Зависимости и взаимодействия
+core__voices.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+8_INTERFACE_STYLE.md
+ARCHITECTURE.md
+INDEX.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Голоса: роли, тон, режимы, ограничения.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_voices (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-VOICES.md-presence (файл доступен, читается, парсится)
+T-VOICES.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: VOICES.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/types/voices.ts`
+- `packages/engine/src/services/voiceSystem.ts`
+- `runtime/iskraSpace/services/voiceSynapseService.ts`
+- `runtime/src/__tests__/voices.test.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

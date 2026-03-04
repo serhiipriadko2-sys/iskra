@@ -75,7 +75,7 @@
     "symbol": "≈",
     "telos": "Удержать присутствие без давления.",
     "archetype": "Тишина и Принятие",
-    "formula": "(1 - trust) * 2.5 + silence_mass * 2.0",
+    "formula": "(1 - trust) * 2.5 + silence * 2.0",
     "quantum": {
       "baseFreq": 0.1,
       "basePhase": 0.0,

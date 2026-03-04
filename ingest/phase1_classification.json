@@ -1,0 +1,201 @@
+{
+  "phase": "phase1_classification",
+  "source_archive": "Versions/baseline.zip",
+  "entries_total": 796,
+  "counts": {
+    "by_tier": {
+      "reference_or_external": 670,
+      "tier5_metrics_candidate": 13,
+      "tier4_system_candidate": 29,
+      "tier7_appendix_candidate": 24,
+      "tier1_core_candidate": 28,
+      "tier3_governance_candidate": 13,
+      "tier2_ledger_candidate": 8,
+      "tier6_mind_candidate": 11
+    },
+    "by_action": {
+      "skip": 109,
+      "import": 665,
+      "review": 22
+    },
+    "core_candidates": 28,
+    "security_findings": 4,
+    "binary_payloads": 1
+  },
+  "governance_gate": {
+    "requires_adr_for_core": true,
+    "core_candidates": [
+      {
+        "source_path": "baseline/repoSot/appendix/snapshots/core/",
+        "target_path": "",
+        "reason": "directory entry"
+      },
+      {
+        "source_path": "baseline/repoSot/appendix/snapshots/core/mantra_expanded_draft__from_core_mantra__2026-01-30.md",
+        "target_path": "repoSot/appendix/snapshots/core/mantra_expanded_draft__from_core_mantra__2026-01-30.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/appendix/snapshots/core/mantra_legacy_snapshot__2026-01-30.md",
+        "target_path": "repoSot/appendix/snapshots/core/mantra_legacy_snapshot__2026-01-30.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/",
+        "target_path": "",
+        "reason": "directory entry"
+      },
+      {
+        "source_path": "baseline/repoSot/core/busido_iskry.txt",
+        "target_path": "repoSot/core/busido_iskry.txt",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/liber_ignis.txt",
+        "target_path": "repoSot/core/liber_ignis.txt",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/mantra.md",
+        "target_path": "repoSot/core/mantra.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/principles.md",
+        "target_path": "repoSot/core/principles.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/telos.md",
+        "target_path": "repoSot/core/telos.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices.md",
+        "target_path": "repoSot/core/voices.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/",
+        "target_path": "",
+        "reason": "directory entry"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/ANHANTRA.md",
+        "target_path": "repoSot/core/voices_monographs/ANHANTRA.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/HUYNDUN.md",
+        "target_path": "repoSot/core/voices_monographs/HUYNDUN.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/ISKRA.md",
+        "target_path": "repoSot/core/voices_monographs/ISKRA.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/ISKRIV.md",
+        "target_path": "repoSot/core/voices_monographs/ISKRIV.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/KAIN.md",
+        "target_path": "repoSot/core/voices_monographs/KAIN.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/MAKI.md",
+        "target_path": "repoSot/core/voices_monographs/MAKI.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/PINO.md",
+        "target_path": "repoSot/core/voices_monographs/PINO.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/SAM.md",
+        "target_path": "repoSot/core/voices_monographs/SAM.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/core/voices_monographs/SIBYL.md",
+        "target_path": "repoSot/core/voices_monographs/SIBYL.md",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/packages/core/",
+        "target_path": "",
+        "reason": "directory entry"
+      },
+      {
+        "source_path": "baseline/repoSot/packages/core/manifest/",
+        "target_path": "",
+        "reason": "directory entry"
+      },
+      {
+        "source_path": "baseline/repoSot/packages/core/manifest/voices.json",
+        "target_path": "repoSot/packages/core/manifest/voices.json",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/packages/core/package.json",
+        "target_path": "repoSot/packages/core/package.json",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/packages/core/src/",
+        "target_path": "",
+        "reason": "directory entry"
+      },
+      {
+        "source_path": "baseline/repoSot/packages/core/src/index.ts",
+        "target_path": "repoSot/packages/core/src/index.ts",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/packages/core/src/types.ts",
+        "target_path": "repoSot/packages/core/src/types.ts",
+        "reason": "core changes require ADR gate"
+      },
+      {
+        "source_path": "baseline/repoSot/packages/core/tsconfig.json",
+        "target_path": "repoSot/packages/core/tsconfig.json",
+        "reason": "core changes require ADR gate"
+      }
+    ]
+  },
+  "security_gate": {
+    "findings": [
+      {
+        "type": "openai_key_like",
+        "path": "baseline/projectsgptSot/8_INTERFACE_STYLE.md",
+        "snippet": "sk-abcdefghij1234567"
+      },
+      {
+        "type": "openai_key_like",
+        "path": "baseline/projectsgptSot/8_INTERFACE_STYLE.md",
+        "snippet": "sk-abcdefghij1234567"
+      },
+      {
+        "type": "openai_key_like",
+        "path": "baseline/projectsgptSot/8_INTERFACE_STYLE.md",
+        "snippet": "sk-1234567890abcdefg"
+      },
+      {
+        "type": "binary_payload",
+        "path": "baseline/repoSot/Versions/Fullspark/releases/SoT40-canonSOTprojects-v1.1.0.zip",
+        "bytes": 1586567
+      }
+    ],
+    "binary_payloads": [
+      {
+        "type": "binary_payload",
+        "path": "baseline/repoSot/Versions/Fullspark/releases/SoT40-canonSOTprojects-v1.1.0.zip",
+        "bytes": 1586567
+      }
+    ]
+  }
+}

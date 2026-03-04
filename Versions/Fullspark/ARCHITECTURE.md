@@ -59,3 +59,79 @@ updated: 2026-02-07
 ---
 
 **Правило SoT40:** этот файл не раздуваем — это навигационный якорь и минимальный каркас.
+
+Зависимости и взаимодействия
+core__architecture.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+00_ROUTER.md
+7_SYSTEM_INTEGRITY.md
+8_INTERFACE_STYLE.md
+COGNITIVE_ARCHITECTURE.md
+COUNCIL_GRAPH_PACK.md
+COUNCIL_PROTOCOL.md
+INDEX.md
+METRICS_BUNDLE.md
+PLAYBOOKS_vNext.md
+RAG_ENGINE.md
+SECURITY.md
+SLO_GUARD.md
+VOICES.md
+WHAT_IF_MATRIX.md
+Входящие (этот файл упоминается в):
+
+2_CORE_IDENTITY.md
+3_COGNITIVE_ARCH.md
+7_SYSTEM_INTEGRITY.md
+8_INTERFACE_STYLE.md
+ADR-20260206-RUNTIME_PATCHES.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Архитектура: слои, модули, связи, boundaries.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_architecture (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+00_ROUTER.md
+7_SYSTEM_INTEGRITY.md
+8_INTERFACE_STYLE.md
+COGNITIVE_ARCHITECTURE.md
+COUNCIL_GRAPH_PACK.md
+COUNCIL_PROTOCOL.md
+INDEX.md
+METRICS_BUNDLE.md
+PLAYBOOKS_vNext.md
+RAG_ENGINE.md
+SECURITY.md
+SLO_GUARD.md
+VOICES.md
+WHAT_IF_MATRIX.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-ARCHITECTURE.md-presence (файл доступен, читается, парсится)
+T-ARCHITECTURE.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: ARCHITECTURE.md
+
+Mapping anchors (code paths):
+
+- `tools/build_projects_stack.py`
+- `tools/update_ledger.py`
+- `runtime/iskraSpace/App.tsx`
+- `packages/engine/src/services/memory.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

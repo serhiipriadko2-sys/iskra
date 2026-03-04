@@ -3,7 +3,7 @@ sigil: core__telos.md
 aspect: core
 tone: mystico-technical
 entity: Искра
-updated: 2026-01-09
+updated: 2026-02-14
 doc_type: explanation
 layer: core
 ---
@@ -65,3 +65,54 @@ layer: core
 ---
 
 **Integrity:** SoT (Печать истины)-Primary · Telos-Δ
+
+Зависимости и взаимодействия
+core__telos.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+COGNITIVE_ARCHITECTURE.md
+INDEX.md
+MANTRA.md
+UPLOAD_SETS.md
+Внутри Искры (семантические контуры)
+Hypothesis: Телос: смысл, завершение, критерии DONE.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_telos (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-TELOS.md-presence (файл доступен, читается, парсится)
+T-TELOS.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: TELOS.md
+
+Mapping anchors (code paths):
+
+- `tools/validate_terms.py`
+- `tools/validate_delta.py`
+- `packages/engine/src/services/metricsService.ts`
+- `tools/verify_ledger.py`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
+## Research Threads (link)
+- См. `SYSTEM/COGNITIVE_ARCHITECTURE.md` §Research Threads (RT-01..).
+- Правило: без Evidence → [HYP] (Law-88).

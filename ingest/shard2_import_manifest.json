@@ -1,0 +1,111 @@
+{
+  "phase": "phase1_shard2_reference_import",
+  "source_archive": "Versions/baseline.zip",
+  "target_root": "reference/baseline_shard2",
+  "imported_files": 17,
+  "skipped_directories": 0,
+  "entries": [
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/02_CORE_MANTRA_TELOS_PRINCIPLES.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/02_CORE_MANTRA_TELOS_PRINCIPLES.md",
+      "bytes": 13947,
+      "sha256": "ed9a42169e13484494c763916f5cf550b6039ba4219a1afa6d60baa40a9c3fb6"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/03_CORE_IDENTITY_LIBER.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/03_CORE_IDENTITY_LIBER.md",
+      "bytes": 242633,
+      "sha256": "4a1bcc321a25ed9493579e87ad3ca37d6a26ecf26e2f369dabd65ca5bc50ada4"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/04_CORE_VOICES_OVERVIEW.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/04_CORE_VOICES_OVERVIEW.md",
+      "bytes": 9985,
+      "sha256": "893c96304db40c1fee0abe2e628fb29f41078cdb9466a909ac4c9269589ff62c"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/06_SYSTEM_SIFT.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/06_SYSTEM_SIFT.md",
+      "bytes": 46617,
+      "sha256": "a6f3b15f7c5744f7f533405ff973b66977f5fc06d8d8f94a778eb0d417126381"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/08_SYSTEM_SECURITY.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/08_SYSTEM_SECURITY.md",
+      "bytes": 9436,
+      "sha256": "8a745efacfec7d3c3e66acbfda252513d81b809c073b2b7b6f4f438d5ae3bd3a"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/09_SYSTEM_COUNCIL_PROTOCOL.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/09_SYSTEM_COUNCIL_PROTOCOL.md",
+      "bytes": 22835,
+      "sha256": "cd44cb9fa022bbf3d98f721161fe44de2da031675126d9da386e9a9825269ceb"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/10_SYSTEM_PROTOCOLS_PLAYBOOKS.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/10_SYSTEM_PROTOCOLS_PLAYBOOKS.md",
+      "bytes": 30342,
+      "sha256": "0066b4499fb50919f037a358355257b9efb84f2364bcc41c84aea6b27ed5cee6"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/11_SYSTEM_WORKFLOW_OPS.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/11_SYSTEM_WORKFLOW_OPS.md",
+      "bytes": 17416,
+      "sha256": "1c1921f5fe90aca4afb8260a77084a3607cf5098002b1b024e13f272698fba15"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/12_SYSTEM_ARCHITECTURE.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/12_SYSTEM_ARCHITECTURE.md",
+      "bytes": 104373,
+      "sha256": "df72d9f032d5cfe732010d1c60c4065f0167268c0d120abb0d823a5cd220e741"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/13_SYSTEM_INTEGRITY.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/13_SYSTEM_INTEGRITY.md",
+      "bytes": 148586,
+      "sha256": "d432a396e39ded0c8dd44e7a749f3e415c0f683a97a4faf6dc68e82e509a3e4a"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/14_METRICS_BUNDLE.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/14_METRICS_BUNDLE.md",
+      "bytes": 21212,
+      "sha256": "771e39f0ff89d192a0ac48a3f732b17fdd1c5d4cf2003f07ef352eb1071c8992"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/15_METRICS_QUALITY_EVAL.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/15_METRICS_QUALITY_EVAL.md",
+      "bytes": 15677,
+      "sha256": "c2cb2cc03437af0f5b7828fe1715a0a5097d4f8805f53cf513095d7383d308fd"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/16_METRICS_SLO_GUARD.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/16_METRICS_SLO_GUARD.md",
+      "bytes": 20961,
+      "sha256": "e87e68521234f7e3a649462e6c079d2831087e20675237738c0f6b68642f4542"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/17_GOVERNANCE_PACK.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/17_GOVERNANCE_PACK.md",
+      "bytes": 59759,
+      "sha256": "da3361ba9691606a64a7dd23a8078ddf28a7743f073fa1a15b8377cc5f33e6fe"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/19_SPACE_CHARTER_INTERFACE_STYLE.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/19_SPACE_CHARTER_INTERFACE_STYLE.md",
+      "bytes": 34232,
+      "sha256": "b6082e0e0a774f0c002e2dd51ddeacaceb8439fdc399f6f43dca0f86c68758d1"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/05_CORE_VOICES_MONOGRAPHS_A.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/05_CORE_VOICES_MONOGRAPHS_A.md",
+      "bytes": 299014,
+      "sha256": "9c64b77a95aa43553f9b90d231a8681b812979dd538fcf7eb970518971cd4d87"
+    },
+    {
+      "source_path": "baseline/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/05B_CORE_VOICES_MONOGRAPHS_B.md",
+      "target_path": "reference/baseline_shard2/customgptSot/iskra_canon_gpt_stack_v2.3.0/iskra_canon_gpt_stack_v2.3.0/knowledge/05B_CORE_VOICES_MONOGRAPHS_B.md",
+      "bytes": 98513,
+      "sha256": "43d29aecc79a46ab0de9413942bc9338c911b25946a33c9ea4d1d9955822fe59"
+    }
+  ]
+}

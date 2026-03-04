@@ -111,3 +111,49 @@ D: Principles(Creation>Reflection) -> Voice(Maki) -> Advice.
 **Integrity:** Меры-Ready
 
 ```
+
+Зависимости и взаимодействия
+core__6_signature.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+1_LIBER_INITIUM.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Подпись/выходной формат: ∆DΩΛ и структурные требования.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_6_signature (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-6_SIGNATURE.md-presence (файл доступен, читается, парсится)
+T-6_SIGNATURE.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 6_SIGNATURE.md
+
+Mapping anchors (code paths):
+
+- `tools/verify_ledger.py`
+- `tools/update_ledger.py`
+- `runtime/iskraSpace/services/deltaProtocol.ts`
+- `runtime/iskraSpace/services/evidenceService.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

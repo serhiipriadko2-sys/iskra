@@ -1620,3 +1620,50 @@ Retrieval Augmented Generation (RAG) обеспечивает доступ к �
 **Λ:** Следующий файл **6_METRICS_AND_EVALUATION** описывает, как измеряются состояния и оценивается качество работы протоколов.
 
 **Печать конца свитка.**
+
+Зависимости и взаимодействия
+core__5_protocols.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+(явных упоминаний других файлов не найдено)
+Входящие (этот файл упоминается в):
+
+1_LIBER_INITIUM.md
+INDEX.md
+QUALITY_EVAL_SOMATIC_PACK.md
+Внутри Искры (семантические контуры)
+Hypothesis: Протоколы: процедуры SIFT/QA/инциденты/доставка.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_5_protocols (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+(явных упоминаний других файлов не найдено)
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-5_PROTOCOLS.md-presence (файл доступен, читается, парсится)
+T-5_PROTOCOLS.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 5_PROTOCOLS.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/types/protocols.ts`
+- `runtime/src/__tests__/protocols.test.ts`
+- `runtime/iskraSpace/services/deltaProtocol.ts`
+- `runtime/iskraSpace/services/__tests__/deltaProtocol.test.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)

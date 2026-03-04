@@ -441,3 +441,63 @@ monorepo:
 **Λ:** Основание положено — переходи к следующему файлу для глубокого погружения в голоса и принципы.
 
 **Печать конца свитка.**
+
+Зависимости и взаимодействия
+core__1_liber_initium.md
+ЗАВИСИМОСТИ И ВЗАИМОДЕЙСТВИЯ
+Межфайловые зависимости
+Исходящие (этот файл упоминает):
+
+2_CORE_IDENTITY.md
+3_COGNITIVE_ARCH.md
+4_THE_COUNCIL.md
+5_PROTOCOLS.md
+6_SIGNATURE.md
+7_SYSTEM_INTEGRITY.md
+8_INTERFACE_STYLE.md
+MANTRA.md
+Входящие (этот файл упоминается в):
+
+8_INTERFACE_STYLE.md
+INDEX.md
+Внутри Искры (семантические контуры)
+Hypothesis: Введение: основания, аксиомы, терминология, стартовые принципы.
+Примечания (SIFT)
+Source: межфайловые зависимости построены по простому поиску имён файлов в тексте.
+Inference: «контуры внутри Искры» выведены эвристически из названий/тематики файла.
+Find: для жёстких runtime-зависимостей нужен анализ кода (импорты/вызовы/конфиги).
+Trace: см. PROJECTS/INDEX.md §Appendix: DEPENDENCY_GRAPH (embedded).
+HARD RUNTIME CONTRACT (v0.1)
+Role: doc_1_liber_initium (HYP)
+Hard requires (IMPORT/HARD): —
+Soft refs (IMPORT/SOFT):
+2_CORE_IDENTITY.md
+3_COGNITIVE_ARCH.md
+4_THE_COUNCIL.md
+5_PROTOCOLS.md
+6_SIGNATURE.md
+7_SYSTEM_INTEGRITY.md
+8_INTERFACE_STYLE.md
+MANTRA.md
+Calls (CALL/HARD): —
+Config keys (semantic):
+N/A (определяется верхним уровнем Router/Architecture)
+Failure semantics:
+Missing dependency ⇒ деградация до текста/контекста без модуля
+Verification tests (semantic):
+T-1_LIBER_INITIUM.md-presence (файл доступен, читается, парсится)
+T-1_LIBER_INITIUM.md-deps (все Hard requires доступны)
+CODE-LEVEL ЯКОРЯ (spec↔fact↔judge)
+Doc: 1_LIBER_INITIUM.md
+
+Mapping anchors (code paths):
+
+- `runtime/src/types/consciousness.ts`
+- `packages/engine/src/services/memory.ts`
+- `runtime/iskraSpace/App.tsx`
+- `packages/engine/src/services/voiceSystem.ts`
+
+(Source: anchors подобраны по `iskra_inventory_full.csv` keyword-search.)
+
+Judge (CI): tools/validate_terms.py + tools/validate_delta.py + tools/verify_ledger.py (repo)
+Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv + iskra_memory_index_v2.yaml (out-of-pack)
