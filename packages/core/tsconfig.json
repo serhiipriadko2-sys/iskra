@@ -9,7 +9,11 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "declaration": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "composite": true
   },
-  "include": ["src", "manifest"]
+  "include": [
+    "src",
+    "manifest"
+  ]
 }
