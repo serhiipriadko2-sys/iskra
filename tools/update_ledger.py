@@ -42,6 +42,10 @@ def should_exclude(rel_path: Path) -> bool:
     parts = rel_path.parts
     path_str = str(rel_path)
     
+    # SECURITY: Exclude __pycache__ directories and .pyc files to prevent bytecode smuggling
+    if "__pycache__" in parts or path_str.endswith(".pyc"):
+        return True
+    
     # Exclude node_modules anywhere in the path
     if "node_modules" in parts:
         return True

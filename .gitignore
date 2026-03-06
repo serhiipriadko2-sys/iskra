@@ -8,14 +8,14 @@ package-lock.json
 .env.local
 .env.*
 
-# Editors
-.vscode/
-.idea/
-
 # Logs and temp files
 *.log
 *.tmp
 *.swp
+
+# Editors
+.vscode/
+.idea/
 
 # Python
 __pycache__/
@@ -27,44 +27,5 @@ venv/
 .venv/
 .env
 .env.local
-
-# Build artifacts
-dist/
-build/
-target/
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-*.a
-*.out
-
-# Compression
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-
-# System
-.DS_Store
-Thumbs.db
+.env.*
 ```
