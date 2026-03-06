@@ -1,4 +1,5 @@
 import type { IskraMetrics } from './types.js';
+import { validateSignal, validateKmax } from './utils/validation.js';
 
 export interface MetricTimeSeries {
   metric: keyof IskraMetrics;
@@ -147,6 +148,9 @@ function calculateTrend(values: number[]): number {
 }
 
 export function calculateHFD(timeSeries: number[], kMax: number = 10): number {
+  validateSignal(timeSeries);
+  validateKmax(kMax, timeSeries.length);
+  
   const N = timeSeries.length;
   if (N < kMax * 2) return 1.5;
 
@@ -184,6 +188,8 @@ export function calculateDFA(
   minBox: number = 4,
   maxBox: number = 64
 ): number {
+  validateSignal(timeSeries);
+  
   const N = timeSeries.length;
   if (N < maxBox) return 0.5;
 

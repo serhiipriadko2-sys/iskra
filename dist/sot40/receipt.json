@@ -2,7 +2,7 @@
   "artifact": "SoT40",
   "stack_dir": "dist/sot40/stack",
   "zip_path": "dist/sot40/sot40.zip",
-  "sha256": "e2eb979bc7fb98c625afbdf7747a075e384b27c830879c938712891a235cd9df",
+  "sha256": "3484e1134590fc3d187cf39122c8fa185d07778aeedb3f4aefded75f9c65667e",
   "bytes": 1526061,
   "file_count": 39,
   "qc": {
