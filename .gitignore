@@ -1,7 +1,30 @@
 ```
-# Checksum and signature files
-checksum.asc
+# Build artifacts
+dist/
+*.zip
 
-# SOT (State of Things) files
-sot.json
+# Dependencies
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
 ```
