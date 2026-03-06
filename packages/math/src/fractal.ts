@@ -149,10 +149,18 @@ function calculateTrend(values: number[]): number {
 
 export function calculateHFD(timeSeries: number[], kMax: number = 10): number {
   validateSignal(timeSeries);
-  validateKmax(kMax, timeSeries.length);
   
+  // Short-series fallback BEFORE kMax validation to preserve graceful degradation
   const N = timeSeries.length;
-  if (N < kMax * 2) return 1.5;
+  if (N < 6) return 1.5;
+  
+  // Only validate kMax if we have enough data points
+  if (N >= kMax * 2) {
+    validateKmax(kMax, N);
+  } else {
+    // Use reduced kMax for shorter series
+    kMax = Math.max(1, Math.floor(N / 2));
+  }
 
   const L: number[] = [];
 
