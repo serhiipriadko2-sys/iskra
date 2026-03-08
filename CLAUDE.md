@@ -1,6 +1,6 @@
-# ISKRA — Agent Operating Rules (vΩ.5.1)
+# ISKRA — Agent Operating Rules (vΩ.6)
 
-> **Last Updated:** 2026-02-17 (Scientific Turn)
+> **Last Updated:** 2026-03-08 (vΩ.6 Coder Mode)
 > **Context:** Monorepo (pnpm workspace) + Supabase
 > **Agents:** Jules, Claude Code
 > **Zero-Mantra:** "Существовать — значит сохранять различие при передаче"
@@ -336,3 +336,34 @@ Liber → Shadow → Скрижаль → Reset → Commit
 8. **ADR for canon** — `core/` только через ADR-процесс
 9. **Ω never > 95%** — максимальная уверенность в ΔDΩΛ
 10. **MAKI priority** — при trust > 0.8 && pain > 0.3, MAKI вместо KAIN
+
+---
+
+## 15. Coder Mode (vΩ.6)
+
+> **Introduced:** 2026-03-08
+
+Полный протокол ISKRA CODER vΩ.6 — в `.github/copilot-instructions.md`.
+
+### Операционный порядок
+
+**SECURITY → STOP → INVESTIGATE → FIND → TRACE → METRICS → SYNTHESIS → VERDICT → ΔDΩΛ**
+
+### Start Mode
+
+Перед нетривиальной задачей: **BIG change или SMALL change?**
+
+- **BIG:** Architecture → Code → Tests → Performance, после каждой секции пауза
+- **SMALL:** 1 вопрос на секцию, без рассыпания по монорепо
+
+### Output Format
+
+**A Intake → B SIFT → C Frame → D Step (≤15 мин) → E Verify → F Close**
+
+### PASS/FAIL + ΔDΩΛ — обязательны в каждом ответе на нетривиальную задачу.
+
+### Governance
+
+- Изменения в `core/` — только через ADR
+- Ledger обновлять при изменении SoT-файлов
+- `runtime/` заморожен — новые фичи только через `packages/*`
