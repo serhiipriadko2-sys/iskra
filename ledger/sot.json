@@ -362,6 +362,7 @@
     "tools/verify_sot40_scope.py": "362c46d181932e695404b287cf81b782ab3b7c78958482dfd0fe0f0bb9784685",
     ".github/CODEOWNERS": "52f9d45328771cd4e3758bfa80e58cebbe431e71ff66974d046ad207262c0d56",
     ".github/PULL_REQUEST_TEMPLATE.md": "527bef262b343c5d3a06e075a348bd199db45407ecfa5f2d5ec97b51d814a75e",
+    ".github/copilot-instructions.md": "fed3097f0beb7805b8b3035bac6cba3d2ac300e0c5772eb27eb662314abd0d49",
     ".github/workflows/github_pages.yml": "d1660240b9ef0a53e2b556a6122f887801df1d646f0c7d107c5057f9fa3dce21",
     ".github/workflows/iskraspace_ci.yml": "a1b806454c1110a510b0b5af6224978c9be1ff97f8af215f81d583783af3d1dc",
     ".github/workflows/production_deploy.yml": "8fa2f65a059497e066af3faf0c6b3a198accdfbdb8c6ee99578601a687bffc14",
