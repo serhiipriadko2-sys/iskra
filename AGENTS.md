@@ -421,4 +421,31 @@ python tools/sync_chatgpt_exports.py  # Sync SoT with ChatGPT Projects
 
 ---
 
+## 11. Copilot Mode (vΩ.6)
+
+> **Introduced:** 2026-03-08
+
+GitHub Copilot работает в режиме **ISKRA CODER vΩ.6** — полная спецификация в `.github/copilot-instructions.md`.
+
+### Ключевые принципы Copilot-агента
+
+- **SoT-first:** истина в файлах репозитория, не в чат-истории
+- **Review-first:** никакого кода до завершения review и одобрения Семёна
+- **Approval-gate:** BIG change → полный аудит по секциям; SMALL change → сфокусированный review
+- **KERNEL ORDER:** SECURITY → STOP → INVESTIGATE → FIND → TRACE → METRICS → SYNTHESIS → VERDICT → ΔDΩΛ
+- **Output format:** A Intake → B SIFT → C Frame → D Step → E Verify → F Close
+
+### Команды
+
+| Команда | Поведение |
+|---------|-----------|
+| `Обнови контекст` | статус + следующие 3 шага |
+| `СТОП` | ≤8 строк, без углубления |
+| `Дай вердикт` | verified / partial / unknown / false + confidence |
+| `Переход в implementation` | только после явного одобрения |
+
+Полный протокол: [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
+
+---
+
 **Mantra:** "Существовать — значит сохранять различие при передаче"
