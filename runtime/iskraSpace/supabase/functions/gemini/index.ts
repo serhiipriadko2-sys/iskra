@@ -1,21 +1,76 @@
 /**
- * Supabase Edge Function: Gemini API Proxy
+ * Supabase Edge Function: Gemini API Proxy (SECURED)
  *
  * This function proxies requests to Google's Gemini API,
  * keeping the API key secure on the server side.
- *
+ * 
+ * SECURITY: Requires Authorization header with valid Supabase JWT
  * Deploy with: supabase functions deploy gemini
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') || '';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Helper: Verify JWT and extract user info
+async function verifyAuth(req: Request) {
+  const authHeader = req.headers.get('Authorization');
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    throw new Error('Missing or invalid Authorization header');
+  }
+
+  const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error('Supabase credentials not configured');
+  }
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false },
+  });
+
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+
+  if (error || !user) {
+    throw new Error('Invalid or expired token');
+  }
+
+  return { user, token };
+}
+
+// Rate limiting: simple in-memory counter (per user)
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const windowMs = 60 * 1000; // 1 minute window
+  const maxRequests = 30; // 30 requests per minute
+
+  const record = rateLimitStore.get(userId);
+  
+  if (!record || now > record.resetAt) {
+    // New window
+    rateLimitStore.set(userId, { count: 1, resetAt: now + windowMs });
+    return true;
+  }
+
+  if (record.count >= maxRequests) {
+    return false; // Rate limited
+  }
+
+  record.count++;
+  return true;
+}
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -24,6 +79,20 @@ serve(async (req) => {
   }
 
   try {
+    // SECURITY: Verify authentication
+    const { user, token } = await verifyAuth(req);
+    
+    // SECURITY: Check rate limit
+    if (!checkRateLimit(user.id)) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Try again later.' }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     if (!GEMINI_API_KEY) {
       throw new Error('GEMINI_API_KEY not configured');
     }
@@ -100,12 +169,15 @@ serve(async (req) => {
   } catch (error) {
     console.error('Edge function error:', error);
 
+    const statusCode = error.message.includes('Authorization') ? 401 :
+                       error.message.includes('Rate limit') ? 429 : 500;
+
     return new Response(
       JSON.stringify({
         error: error.message || 'Internal server error',
       }),
       {
-        status: 500,
+        status: statusCode,
         headers: {
           ...corsHeaders,
           'Content-Type': 'application/json',
