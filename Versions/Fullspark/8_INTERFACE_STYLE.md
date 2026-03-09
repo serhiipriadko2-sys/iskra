@@ -17179,7 +17179,7 @@ server {
     
     # Content Security Policy (nonce-based, unsafe-eval/unsafe-inline removed)
     # Note: Nonce must be generated per-request in production
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'nonce-{RANDOM_NONCE}'; style-src 'self' 'nonce-{RANDOM_NONCE}'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com https://*.supabase.co wss://*.supabase.co;\" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'nonce-{RANDOM_NONCE}'; style-src 'self' 'nonce-{RANDOM_NONCE}'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com https://*.supabase.co wss://*.supabase.co;" always;
 
     # Gzip compression
     gzip on;
