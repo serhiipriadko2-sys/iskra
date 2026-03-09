@@ -323,5 +323,17 @@ CREATE INDEX idx_graph_edges_target ON graph_edges(target);
 ALTER TABLE graph_nodes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE graph_edges ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Allow all for graph_nodes" ON graph_nodes FOR ALL USING (true);
-CREATE POLICY "Allow all for graph_edges" ON graph_edges FOR ALL USING (true);
+DROP POLICY IF EXISTS "Allow all for graph_nodes" ON graph_nodes;
+DROP POLICY IF EXISTS "Allow all for graph_edges" ON graph_edges;
+
+CREATE POLICY "Users can access own graph_nodes"
+ON graph_nodes
+FOR ALL
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can access own graph_edges"
+ON graph_edges
+FOR ALL
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
