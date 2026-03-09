@@ -10,9 +10,10 @@ AS $$
 DECLARE
   updated_count int;
 BEGIN
-  -- 1. Ensure the user is actually authenticated
-  IF auth.uid() IS NULL THEN
-    RAISE EXCEPTION 'Must be authenticated to claim legacy data';
+  -- 1. Restrict execution to trusted backend callers only.
+  -- Legacy device_id is caller-supplied and cannot be safely verified in client context.
+  IF COALESCE(auth.jwt()->>'role', '') <> 'service_role' THEN
+    RAISE EXCEPTION 'claim_legacy_data must be executed by service_role';
   END IF;
 
   -- 2. Update memory_nodes that have no owner and match the old device_id in content
@@ -30,4 +31,7 @@ END;
 $$;
 
 -- Grant execute permission to authenticated users
-GRANT EXECUTE ON FUNCTION public.claim_legacy_data(text) TO authenticated;
+REVOKE ALL ON FUNCTION public.claim_legacy_data(text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.claim_legacy_data(text) FROM anon;
+REVOKE ALL ON FUNCTION public.claim_legacy_data(text) FROM authenticated;
+GRANT EXECUTE ON FUNCTION public.claim_legacy_data(text) TO service_role;
