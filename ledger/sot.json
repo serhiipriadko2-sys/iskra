@@ -355,7 +355,7 @@
     "tools/simulation.test.ts": "32a7615785e26223fa08683d3f83e33da121bc2c42d2ad9df8ea29b1e2093758",
     "tools/sot40_scope_manifest.json": "d5a655472d39f17674b6e9cf07043ec4662c0db8877c084e2c7923fb0c3d416c",
     "tools/sync_chatgpt_exports.py": "7e9126fd3b877d7a629747914a6722149c9a370788de418fbddc1aa813ceacfb",
-    "tools/update_ledger.py": "403ffccb6e8bacd4ea7746f5dbaa682052b6ab67c41856274c98e599155336bb",
+    "tools/update_ledger.py": "294339bc3e186e8327de2d074d12c56766407fab501eefb8daabd0e232ef4854",
     "tools/validate_delta.py": "85ea4598dd335b6aa6f92451dbae616faa451a2d41dac45e6cc908886117b7e3",
     "tools/validate_terms.py": "0c0fc0ebee4f7a9933af4b78a5a85484fe192d944f02eac2fbaf1cc60aaa4cc6",
     "tools/verify_ledger.py": "35052ba6235da5baa48b2c5330ad44dacafcfa9d2a0659cd3c49d7974b9ff950",
