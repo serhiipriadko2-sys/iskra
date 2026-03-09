@@ -8,6 +8,7 @@ export interface EngineState {
   superposition: { id: VoiceID; prob: number }[];
   context: MantraNode[];
   isProcessing: boolean;
+  retrievalTrace?: any;
 }
 
 export const useEngine = () => {
@@ -16,7 +17,8 @@ export const useEngine = () => {
     voice: 'ISKRA',
     superposition: [],
     context: [],
-    isProcessing: false
+    isProcessing: false,
+    retrievalTrace: undefined
   });
 
   const processInput = useCallback(async (text: string) => {
@@ -28,6 +30,7 @@ export const useEngine = () => {
         voice: response.voice,
         superposition: response.superposition,
         context: response.context,
+        retrievalTrace: response.retrieval_trace,
         isProcessing: false
       });
       return response;

@@ -1,6 +1,6 @@
 import { EmbeddingProvider, SafeEmbeddingProvider, SupabaseEdgeEmbeddingProvider, createSupabaseClient } from '@iskra/engine';
 
-export class BrowserEmbeddingProvider implements EmbeddingProvider {
+export class AdaptiveEmbeddingProvider implements EmbeddingProvider {
   private readonly delegate: EmbeddingProvider;
 
   constructor() {

@@ -13,17 +13,19 @@ const COLORS = {
 };
 
 const MetricsDisplay: React.FC<{ metrics: IskraMetrics }> = ({ metrics }) => (
-  <div style={{ display: 'flex', gap: '1rem', color: COLORS.secondaryText, fontSize: '0.8rem' }}>
+  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', color: COLORS.secondaryText, fontSize: '0.8rem' }}>
+    <div>RHYTHM: {metrics.rhythm.toFixed(0)}</div>
     <div>TRUST: {(metrics.trust * 100).toFixed(0)}%</div>
     <div>PAIN: {(metrics.pain * 100).toFixed(0)}%</div>
     <div>CHAOS: {(metrics.chaos * 100).toFixed(0)}%</div>
+    <div>DRIFT: {(metrics.drift * 100).toFixed(0)}%</div>
   </div>
 );
 
 export const ChatInterface: React.FC = () => {
-  const { metrics, voice, superposition, processInput, isProcessing } = useEngine();
+  const { metrics, voice, superposition, processInput, isProcessing, context } = useEngine();
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState<{ role: 'user' | 'iskra'; text: string; voice?: VoiceID }[]>([]);
+  const [history, setHistory] = useState<{ role: 'user' | 'iskra'; text: string; voice?: VoiceID; contextCount?: number }[]>([]);
 
   // Enable somatic feedback based on metrics
   useSomaticFeedback(metrics);
@@ -38,17 +40,19 @@ export const ChatInterface: React.FC = () => {
 
     try {
       const response = await processInput(userMsg);
-      // In a real app, the engine would return generated text.
-      // For now, we simulate a response based on the selected voice.
-      const simulatedResponse = `[${response.voice}] processing complete. Resonance detected.`;
+
+      // Real-time engine integration:
+      // Since LLM generation is Task 4.2, we show the system status and context retrieval for now.
+      const statusText = `[${response.voice}] Active. Retrieved ${response.context.length} memory nodes. Resonance: ${response.superposition[0]?.prob.toFixed(2)}`;
 
       setHistory(prev => [...prev, {
         role: 'iskra',
-        text: simulatedResponse,
-        voice: response.voice
+        text: statusText,
+        voice: response.voice,
+        contextCount: response.context.length
       }]);
     } catch (err) {
-      setHistory(prev => [...prev, { role: 'iskra', text: 'Error: System Failure.' }]);
+      setHistory(prev => [...prev, { role: 'iskra', text: 'Error: System Failure. Neural link disconnected.' }]);
     }
   };
 
@@ -67,13 +71,25 @@ export const ChatInterface: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderBottom: `1px solid ${COLORS.secondaryText}`
+        borderBottom: `1px solid ${COLORS.secondaryText}`,
+        position: 'relative'
       }}>
         <QuantumField metrics={metrics} superposition={superposition} width={window.innerWidth} height={300} />
+        <div style={{
+           position: 'absolute',
+           top: '10px',
+           right: '10px',
+           fontSize: '0.7rem',
+           color: COLORS.accent,
+           textAlign: 'right'
+        }}>
+           CORE_ENGINE_VΩ.6<br/>
+           PHASE: QUANTUM_ACTIVE
+        </div>
       </div>
 
       {/* Metrics Bar */}
-      <div style={{ padding: '0.5rem', background: '#00000033', textAlign: 'center' }}>
+      <div style={{ padding: '0.5rem', background: '#00000033', borderBottom: `1px solid #1A1D1F` }}>
         <MetricsDisplay metrics={metrics} />
       </div>
 
@@ -86,32 +102,39 @@ export const ChatInterface: React.FC = () => {
             padding: '0.8rem',
             borderRadius: '8px',
             background: msg.role === 'user' ? COLORS.primary : '#1A1D1F',
-            color: msg.role === 'user' ? '#000' : COLORS.text
+            color: msg.role === 'user' ? '#000' : COLORS.text,
+            boxShadow: msg.role === 'iskra' ? '0 2px 10px rgba(0,0,0,0.5)' : 'none'
           }}>
             {msg.voice && (
-              <div style={{ fontSize: '0.7rem', color: COLORS.accent, marginBottom: '0.2rem' }}>
-                {msg.voice}
+              <div style={{ fontSize: '0.7rem', color: COLORS.accent, marginBottom: '0.2rem', fontWeight: 'bold' }}>
+                VOICE::{msg.voice}
               </div>
             )}
             {msg.text}
+            {msg.contextCount !== undefined && (
+               <div style={{ fontSize: '0.6rem', color: COLORS.secondaryText, marginTop: '0.4rem', borderTop: '1px solid #ffffff11', paddingTop: '0.2rem' }}>
+                  REF: {msg.contextCount} nodes in fractal space
+               </div>
+            )}
           </div>
         ))}
-        {isProcessing && <div style={{ color: COLORS.secondaryText, fontStyle: 'italic' }}>Thinking...</div>}
+        {isProcessing && <div style={{ color: COLORS.accent, fontStyle: 'italic', fontSize: '0.9rem' }}>Analyzing neural oscillations...</div>}
       </div>
 
       {/* Input Area */}
-      <form onSubmit={handleSubmit} style={{ padding: '1rem', display: 'flex', gap: '0.5rem' }}>
+      <form onSubmit={handleSubmit} style={{ padding: '1rem', display: 'flex', gap: '0.5rem', background: '#000' }}>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter the rhythm..."
+          placeholder="Transmit signal..."
           style={{
             flex: 1,
             padding: '0.8rem',
             borderRadius: '4px',
-            border: 'none',
+            border: '1px solid #333',
             background: '#1A1D1F',
-            color: COLORS.text
+            color: COLORS.text,
+            outline: 'none'
           }}
         />
         <button
@@ -123,10 +146,12 @@ export const ChatInterface: React.FC = () => {
             border: 'none',
             background: COLORS.accent,
             color: '#fff',
-            cursor: isProcessing ? 'wait' : 'pointer'
+            cursor: isProcessing ? 'wait' : 'pointer',
+            fontWeight: 'bold',
+            transition: 'opacity 0.2s'
           }}
         >
-          SEND
+          {isProcessing ? '...' : 'SEND'}
         </button>
       </form>
     </div>

@@ -383,11 +383,14 @@ python tools/sync_chatgpt_exports.py  # Sync SoT with ChatGPT Projects
 | 4 | Production Readiness | FUTURE |
 
 ### Phase 2 Active Tasks
-- [ ] **Task 2.1:** Move `GraphService` from `runtime` to `@iskra/engine`
-- [ ] **Task 2.2:** Enforce voice thresholds from `voices.json` manifest in VoiceQuantumField
-- [ ] **Task 2.3:** Add Supabase client to `@iskra/engine` for persistent storage
+- [x] **Task 2.1:** Move `GraphService` from `runtime` to `@iskra/engine`
+- [x] **Task 2.2:** Enforce voice thresholds from `voices.json` manifest in VoiceQuantumField
+- [x] **Task 2.3:** Add Supabase client to `@iskra/engine` for persistent storage
 - [ ] **Task 2.4:** Connect `apps/iskra-web` to live CoreEngine data
-- [ ] **Task 2.5:** Replace mock embeddings with Supabase Edge Function (pgvector)
+- [x] **Task 2.5:** Replace mock embeddings with Supabase Edge Function (pgvector)
+- [x] **Task 2.6:** GraphRAG expansion (vector seeds + transient graph traversal)
+- [x] **Task 2.7:** Harden Edge embeddings (security + cost)
+- [x] **Task 2.8:** Supabase pgvector HNSW index for GraphRAG
 
 ### Immediate Priorities (Horizon 0)
 - [ ] Stabilize canon (eliminate SoT duplication)

@@ -1,4 +1,4 @@
-import { IskraError, IskraValidationError as CoreValidationError } from '@iskra/core';
+import { IskraValidationError as CoreValidationError } from '@iskra/core';
 
 /**
  * Validates that a signal array is non-empty and contains only finite numbers.
@@ -34,7 +34,7 @@ export function validateKmax(kmax: number, signalLength: number): void {
  */
 export class IskraValidationError extends CoreValidationError {
   constructor(message: string) {
-    super(`Validation error: ${message}`);
+    super(message);
     this.name = 'IskraValidationError';
   }
 }
