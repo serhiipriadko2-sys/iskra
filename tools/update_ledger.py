@@ -66,7 +66,18 @@ def should_exclude(rel_path: Path) -> bool:
 
 def main() -> None:
     out = {"version": "sot-ledger/1", "sha256": {}}
-    skipped = []
+
+    def normalize_path(rel: Path) -> str:
+        path_str = str(rel).replace(os.sep, "/")
+        try:
+            path_str.encode("utf-8", "strict")
+            json.dumps(path_str, ensure_ascii=False)
+        except UnicodeError as exc:
+            raise RuntimeError(
+                f"Invalid UTF-8 path detected while building ledger: {path_str!r}. "
+                "Rename the file to a valid UTF-8 name before updating the ledger."
+            ) from exc
+        return path_str
     
     # directories
     for d in INCLUDE_DIRS:
@@ -84,18 +95,8 @@ def main() -> None:
             if should_exclude(rel):
                 continue
             
-            # Try to get a valid UTF-8 path string
-            try:
-                path_str = str(rel).replace(os.sep,"/")
-                # Test if it can be encoded/decoded properly
-                path_str.encode('utf-8').decode('utf-8')
-                # Also test JSON serialization
-                json.dumps(path_str)
-                out["sha256"][path_str] = sha256_file(file)
-            except (UnicodeError, UnicodeDecodeError, UnicodeEncodeError) as e:
-                # Skip files with invalid UTF-8 filenames
-                skipped.append((str(rel), str(e)))
-                continue
+            path_str = normalize_path(rel)
+            out["sha256"][path_str] = sha256_file(file)
 
     # top-level files
     for f in INCLUDE_FILES:
@@ -103,25 +104,13 @@ def main() -> None:
         if p.exists() and p.is_file():
             rel = p.relative_to(ROOT)
             if rel not in EXCLUDE:
-                try:
-                    path_str = str(rel).replace(os.sep,"/")
-                    path_str.encode('utf-8').decode('utf-8')
-                    out["sha256"][path_str] = sha256_file(p)
-                except (UnicodeError, UnicodeDecodeError, UnicodeEncodeError) as e:
-                    skipped.append((str(rel), str(e)))
-                    continue
+                path_str = normalize_path(rel)
+                out["sha256"][path_str] = sha256_file(p)
 
     ledger = ROOT / "ledger"
     ledger.mkdir(exist_ok=True)
     (ledger / "sot.json").write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Updated {ledger/'sot.json'} with {len(out['sha256'])} entries")
-    
-    if skipped:
-        print(f"\n⚠ Skipped {len(skipped)} files with encoding issues:")
-        for path, error in skipped[:10]:  # Show first 10
-            print(f"  - {path}")
-        if len(skipped) > 10:
-            print(f"  ... and {len(skipped) - 10} more")
 
     # Also keep a human-readable checksum file in sync.
     # This is NOT included in sot.json to avoid self-reference loops.
