@@ -185,33 +185,62 @@ ALTER TABLE voice_preferences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
 
--- Policy: Users can only access their own data
--- For anonymous users, we use a device_id passed as a header
+-- Policy: users can only access their own data via auth.uid()
+-- NOTE: this schema is intended for authenticated requests only.
 
--- Users table - anyone can create, users can read/update their own
+-- Users table
 CREATE POLICY "Users can insert their own profile"
     ON users FOR INSERT
-    WITH CHECK (true);
+    WITH CHECK (id = auth.uid());
 
 CREATE POLICY "Users can view their own profile"
     ON users FOR SELECT
-    USING (true);
+    USING (id = auth.uid());
 
 CREATE POLICY "Users can update their own profile"
     ON users FOR UPDATE
-    USING (true);
+    USING (id = auth.uid())
+    WITH CHECK (id = auth.uid());
 
--- For other tables, allow all operations (anonymous access for MVP)
--- In production, you'd want to restrict this based on auth.uid()
+CREATE POLICY "Users can manage own metrics_snapshots"
+    ON metrics_snapshots FOR ALL
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
 
-CREATE POLICY "Allow all for metrics_snapshots" ON metrics_snapshots FOR ALL USING (true);
-CREATE POLICY "Allow all for memory_nodes" ON memory_nodes FOR ALL USING (true);
-CREATE POLICY "Allow all for journal_entries" ON journal_entries FOR ALL USING (true);
-CREATE POLICY "Allow all for tasks" ON tasks FOR ALL USING (true);
-CREATE POLICY "Allow all for habits" ON habits FOR ALL USING (true);
-CREATE POLICY "Allow all for voice_preferences" ON voice_preferences FOR ALL USING (true);
-CREATE POLICY "Allow all for chat_history" ON chat_history FOR ALL USING (true);
-CREATE POLICY "Allow all for audit_log" ON audit_log FOR ALL USING (true);
+CREATE POLICY "Users can manage own memory_nodes"
+    ON memory_nodes FOR ALL
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can manage own journal_entries"
+    ON journal_entries FOR ALL
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can manage own tasks"
+    ON tasks FOR ALL
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can manage own habits"
+    ON habits FOR ALL
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can manage own voice_preferences"
+    ON voice_preferences FOR ALL
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can manage own chat_history"
+    ON chat_history FOR ALL
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can manage own audit_log"
+    ON audit_log FOR ALL
+    USING (user_id = auth.uid())
+    WITH CHECK (user_id = auth.uid());
 
 -- =============================================================================
 -- FUNCTIONS
