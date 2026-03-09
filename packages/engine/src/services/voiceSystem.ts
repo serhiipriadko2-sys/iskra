@@ -71,29 +71,6 @@ const getPriorityMultipliers = (metrics: IskraMetrics): Record<VoiceID, number> 
   return multipliers
 }
 
-function calculateResonanceFactor(voiceId: VoiceID, metrics: IskraMetrics): number {
-  switch (voiceId) {
-    case 'KAIN':
-      return 1 + metrics.pain * 3.0
-    case 'HUYNDUN':
-      return 1 + metrics.chaos * 3.0
-    case 'ISKRIV':
-      return 1 + metrics.drift * 3.5
-    case 'MAKI':
-      return 1 + metrics.trust + metrics.pain
-    case 'SAM':
-      return 1 + (1 - metrics.clarity) * 2.0
-    case 'ANHANTRA':
-      return 1 + (1 - metrics.trust) * 2.5 + metrics.silence_mass * 2.0
-    case 'SIBYL':
-      return 1 + (metrics.foresight ?? 0) * 2.0
-    case 'PINO':
-      return 1.5
-    case 'ISKRA':
-    default:
-      return 1 + metrics.trust * 0.5
-  }
-}
 
 /**
  * Voice Quantum Field

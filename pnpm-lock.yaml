@@ -69,6 +69,10 @@ importers:
         version: 2.1.9(@types/node@22.19.15)(jsdom@27.4.0)
 
   packages/math:
+    dependencies:
+      '@iskra/core':
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       typescript:
         specifier: ^5.0.0
