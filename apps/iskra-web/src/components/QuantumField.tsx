@@ -48,12 +48,12 @@ export const QuantumField: React.FC<QuantumFieldProps> = ({
 
       // Global chaos factor affects everything
       const chaos = metrics.chaos || 0;
-      const jitter = chaos * 5;
+      const jitter = chaos * 8; // Increased jitter for visibility
 
-      // If no superposition data, fallback to single wave (Trust)
+      // If no superposition data, fallback to single wave (ISKRA)
       const waves = superposition.length > 0
         ? superposition
-        : [{ id: 'ISKRA' as VoiceID, prob: metrics.trust || 0.5 }];
+        : [{ id: 'ISKRA' as VoiceID, prob: 1.0 }];
 
       // Render each voice as a wave
       waves.forEach((voice, i) => {
@@ -63,24 +63,22 @@ export const QuantumField: React.FC<QuantumFieldProps> = ({
         const prob = voice.prob;
 
         // Amplitude based on probability
-        const amplitude = prob * (height / 3);
+        const amplitude = prob * (height / 4);
 
-        // Frequency varies slightly per voice to create interference look
-        const freq = 0.05 + (i * 0.01);
+        // Frequency varies per voice
+        const freq = 0.02 + (i * 0.015);
 
-        // Phase shift based on index
-        const phase = i * (Math.PI / 4);
+        // Phase shift
+        const phase = i * (Math.PI / 3);
 
         ctx.strokeStyle = color;
-        ctx.lineWidth = 2 * prob + 0.5; // Thicker lines for dominant voices
-        ctx.globalAlpha = Math.min(1, prob * 2); // Fade out weak voices
+        ctx.lineWidth = 3 * prob + 1;
+        ctx.globalAlpha = Math.max(0.1, prob);
 
         ctx.moveTo(0, height / 2);
 
-        for (let x = 0; x < width; x++) {
-          // Wave equation: Base sine + Chaos noise
+        for (let x = 0; x < width; x += 2) {
           const noise = (Math.random() - 0.5) * jitter;
-
           const y = height / 2 +
             Math.sin((x * freq) + t + phase) * amplitude +
             noise;
@@ -91,10 +89,13 @@ export const QuantumField: React.FC<QuantumFieldProps> = ({
         ctx.stroke();
       });
 
-      // Reset alpha
-      ctx.globalAlpha = 1.0;
+      // Background energy glow (Chaos influence)
+      if (chaos > 0.3) {
+          ctx.fillStyle = \`rgba(163, 77, 255, \${chaos * 0.1})\`;
+          ctx.fillRect(0, 0, width, height);
+      }
 
-      t += (metrics.rhythm || 60) / 600; // Speed based on Rhythm
+      t += (metrics.rhythm || 60) / 1000;
       animationId = requestAnimationFrame(render);
     };
 

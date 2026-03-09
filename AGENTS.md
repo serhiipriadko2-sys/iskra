@@ -383,11 +383,14 @@ python tools/sync_chatgpt_exports.py  # Sync SoT with ChatGPT Projects
 | 4 | Production Readiness | FUTURE |
 
 ### Phase 2 Active Tasks
-- [ ] **Task 2.1:** Move `GraphService` from `runtime` to `@iskra/engine`
-- [ ] **Task 2.2:** Enforce voice thresholds from `voices.json` manifest in VoiceQuantumField
-- [ ] **Task 2.3:** Add Supabase client to `@iskra/engine` for persistent storage
+- [x] **Task 2.1:** Move `GraphService` from `runtime` to `@iskra/engine`
+- [x] **Task 2.2:** Enforce voice thresholds from `voices.json` manifest in VoiceQuantumField
+- [x] **Task 2.3:** Add Supabase client to `@iskra/engine` for persistent storage
 - [ ] **Task 2.4:** Connect `apps/iskra-web` to live CoreEngine data
-- [ ] **Task 2.5:** Replace mock embeddings with Supabase Edge Function (pgvector)
+- [x] **Task 2.5:** Replace mock embeddings with Supabase Edge Function (pgvector)
+- [x] **Task 2.6:** GraphRAG expansion (vector seeds + transient graph traversal)
+- [x] **Task 2.7:** Harden Edge embeddings (security + cost)
+- [x] **Task 2.8:** Supabase pgvector HNSW index for GraphRAG
 
 ### Immediate Priorities (Horizon 0)
 - [ ] Stabilize canon (eliminate SoT duplication)
@@ -418,6 +421,33 @@ python tools/sync_chatgpt_exports.py  # Sync SoT with ChatGPT Projects
 8. **ADR for canon changes** — `core/` changes only via ADR process (`governance/adr.md`)
 9. **Ω never > 95%** — maximum confidence in ΔDΩΛ
 10. **MAKI priority** — при trust > 0.8 && pain > 0.3, MAKI вместо KAIN
+
+---
+
+## 11. Copilot Mode (vΩ.6)
+
+> **Introduced:** 2026-03-08
+
+GitHub Copilot работает в режиме **ISKRA CODER vΩ.6** — полная спецификация в `.github/copilot-instructions.md`.
+
+### Ключевые принципы Copilot-агента
+
+- **SoT-first:** истина в файлах репозитория, не в чат-истории
+- **Review-first:** никакого кода до завершения review и одобрения Семёна
+- **Approval-gate:** BIG change → полный аудит по секциям; SMALL change → сфокусированный review
+- **KERNEL ORDER:** SECURITY → STOP → INVESTIGATE → FIND → TRACE → METRICS → SYNTHESIS → VERDICT → ΔDΩΛ
+- **Output format:** A Intake → B SIFT → C Frame → D Step → E Verify → F Close
+
+### Команды
+
+| Команда | Поведение |
+|---------|-----------|
+| `Обнови контекст` | статус + следующие 3 шага |
+| `СТОП` | ≤8 строк, без углубления |
+| `Дай вердикт` | verified / partial / unknown / false + confidence |
+| `Переход в implementation` | только после явного одобрения |
+
+Полный протокол: [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
 
 ---
 

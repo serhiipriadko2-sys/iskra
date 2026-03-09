@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from pathlib import PurePosixPath
 from zipfile import ZipFile
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -36,6 +37,25 @@ def allowed(path: str) -> bool:
     return False
 
 
+def safe_target(src: str) -> Path | None:
+    normalized = src.replace('\\', '/')
+    rel = PurePosixPath(normalized).as_posix().removeprefix('baseline/')
+    rel_path = Path(rel)
+
+    if rel_path.is_absolute() or '..' in rel_path.parts:
+        return None
+
+    out_root = OUT_ROOT.resolve()
+    target = (OUT_ROOT / rel_path).resolve()
+
+    try:
+        target.relative_to(out_root)
+    except ValueError:
+        return None
+
+    return target
+
+
 def main() -> None:
     if not ARCHIVE.exists():
         raise SystemExit(f'missing archive: {ARCHIVE}')
@@ -53,8 +73,9 @@ def main() -> None:
                 continue
 
             payload = zipf.read(src)
-            rel = src.removeprefix('baseline/')
-            target = OUT_ROOT / rel
+            target = safe_target(src)
+            if target is None:
+                continue
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(payload)
 
