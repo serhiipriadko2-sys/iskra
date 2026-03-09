@@ -1,0 +1,17 @@
+# VCS and metadata
+.git
+.gitignore
+
+# Dependencies and build artifacts
+**/node_modules
+**/dist
+**/.turbo
+**/.cache
+
+# Logs
+**/*.log
+
+# Environment files (prevent secret leakage into Docker build context)
+**/.env
+**/.env.*
+!**/.env.example
