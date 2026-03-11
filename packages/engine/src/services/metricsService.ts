@@ -1,12 +1,12 @@
 import { IskraMetrics, DEFAULT_METRICS, MantraNode } from '@iskra/core';
 import {
   calculateHFD,
-  calculateDFA,
   calculateShannonEntropy,
   complex,
   interference,
   QuantumStateVector
 } from '@iskra/math';
+import { Explainable, ExplainStep } from '../types/explainable';
 
 /**
  * MetricsEngine Service
@@ -20,54 +20,121 @@ export class MetricsEngine {
     this.history.push(initialMetrics);
   }
 
+  private computeNextMetrics(
+    modifiers: Partial<IskraMetrics>,
+    text?: string
+  ): {
+    next: IskraMetrics;
+    entropy: number | null;
+    fractalDimension: number;
+    appliedModifiers: Record<string, number>;
+  } {
+    const current = this.getCurrentMetrics();
+    const next: IskraMetrics = { ...current };
+    const appliedModifiers: Record<string, number> = {};
+
+    // Apply modifiers additively
+    for (const key in modifiers) {
+      if (Object.prototype.hasOwnProperty.call(modifiers, key)) {
+        const metricKey = key as keyof IskraMetrics;
+        const val = modifiers[metricKey];
+        if (typeof val === 'number') {
+          const currentVal = next[metricKey] || 0;
+          next[metricKey] = Math.max(0, Math.min(1, currentVal + val));
+          appliedModifiers[metricKey] = val;
+        }
+      }
+    }
+
+    let entropy: number | null = null;
+    if (text) {
+      entropy = calculateShannonEntropy(text);
+      if (entropy < 2.0) next.drift = Math.min(1.0, next.drift + 0.1);
+      if (entropy > 5.0) next.chaos = Math.min(1.0, next.chaos + 0.1);
+    }
+
+    const chaosSeries = this.history.map(m => m.chaos);
+    const driftSeries = this.history.map(m => m.drift);
+
+    const dChaos = chaosSeries.length > 5 ? calculateHFD(chaosSeries) : 1.5;
+    const dDrift = driftSeries.length > 5 ? calculateHFD(driftSeries) : 1.5;
+    const fractalDimension = (dChaos + dDrift) / 2;
+
+    if (fractalDimension > 1.6 && fractalDimension < 1.8) {
+      next.clarity = Math.min(1.0, next.clarity + 0.05);
+    }
+
+    return { next, entropy, fractalDimension, appliedModifiers };
+  }
+
   /**
    * Updates metrics based on new input.
    * Modifiers are ADDITIVE to current state, not replacements.
    */
   public update(modifiers: Partial<IskraMetrics>, text?: string): IskraMetrics {
-    const current = this.getCurrentMetrics();
-    const next: IskraMetrics = { ...current };
+    const computed = this.computeNextMetrics(modifiers, text);
 
-    // Apply modifiers additively
-    for (const key in modifiers) {
-      if (Object.prototype.hasOwnProperty.call(modifiers, key)) {
-        const k = key as keyof IskraMetrics;
-        const val = modifiers[k];
-        if (typeof val === 'number') {
-            const currentVal = next[k] || 0;
-            // Clamp between 0 and 1
-            next[k] = Math.max(0, Math.min(1, currentVal + val));
-        }
+    this.history.push(computed.next);
+    if (this.history.length > 100) this.history.shift();
+
+    return computed.next;
+  }
+
+  /**
+   * XCode-style explainable update for Scientific Turn metrics pipeline.
+   */
+  public updateExplainable(
+    modifiers: Partial<IskraMetrics>,
+    text?: string
+  ): Explainable<IskraMetrics> {
+    const computed = this.computeNextMetrics(modifiers, text);
+
+    this.history.push(computed.next);
+    if (this.history.length > 100) this.history.shift();
+
+    const how: ExplainStep[] = [
+      {
+        label: 'apply_modifiers',
+        formula: 'next[k] = clamp01(current[k] + delta[k])',
+        inputs: { modifier_count: Object.keys(computed.appliedModifiers).length },
+        output: Object.keys(computed.appliedModifiers).length,
+        refs: [{ kind: 'project', ref: 'packages/engine/src/services/metricsService.ts' }]
+      },
+      {
+        label: 'entropy_feedback',
+        formula: 'if entropy<2 => drift+0.1; if entropy>5 => chaos+0.1',
+        inputs: {
+          entropy: computed.entropy,
+          has_text: Boolean(text)
+        },
+        output: computed.entropy,
+        refs: [{ kind: 'canon', ref: 'AGENTS.md#3-scientific-turn-vω50' }]
+      },
+      {
+        label: 'fractal_feedback',
+        formula: 'D=(D_chaos + D_drift)/2; if 1.6<D<1.8 => clarity+0.05',
+        inputs: {
+          history_size: this.history.length,
+          fractal_dimension: Number(computed.fractalDimension.toFixed(6))
+        },
+        output: Number(computed.fractalDimension.toFixed(6)),
+        refs: [{ kind: 'canon', ref: 'AGENTS.md#3-scientific-turn-vω50' }]
       }
-    }
+    ];
 
-    // Calculate Entropy if text is provided
-    if (text) {
-      const h = calculateShannonEntropy(text);
-      // Feedback loop: Low entropy (loop) increases drift; High entropy (chaos) increases chaos
-      if (h < 2.0) next.drift = Math.min(1.0, next.drift + 0.1);
-      if (h > 5.0) next.chaos = Math.min(1.0, next.chaos + 0.1);
-    }
-
-    // Calculate Fractal Dimensions
-    const chaosSeries = this.history.map(m => m.chaos);
-    const driftSeries = this.history.map(m => m.drift);
-
-    // Safety check for empty history or insufficient data for HFD
-    const D_chaos = chaosSeries.length > 5 ? calculateHFD(chaosSeries) : 1.5;
-    const D_drift = driftSeries.length > 5 ? calculateHFD(driftSeries) : 1.5;
-
-    const FractalDimension = (D_chaos + D_drift) / 2;
-
-    // Feedback: High fractal dimension stabilizes the system (Self-Organized Criticality)
-    if (FractalDimension > 1.6 && FractalDimension < 1.8) {
-      next.clarity = Math.min(1.0, next.clarity + 0.05); // Insight
-    }
-
-    this.history.push(next);
-    if (this.history.length > 100) this.history.shift(); // Keep window manageable
-
-    return next;
+    return {
+      value: computed.next,
+      how,
+      contracts_checked: [
+        'how.length > 0',
+        'metrics clamped to [0,1] where modifiers applied',
+        'history window <= 100'
+      ],
+      evidence: [
+        { kind: 'canon', ref: 'system/xcode_explainable_code.md' },
+        { kind: 'project', ref: 'packages/engine/src/services/metricsService.ts' }
+      ]
+    };
   }
 
   /**
@@ -88,7 +155,6 @@ export class MetricsEngine {
       if (m.fractal) {
         totalEntropy += m.fractal.entropy;
 
-        // Voice-specific impacts
         if (m.fractal.dominantVoice === 'KAIN') painImpact += 0.1;
         if (m.fractal.dominantVoice === 'MAKI') trustImpact += 0.1;
         if (m.fractal.dominantVoice === 'HUYNDUN') next.chaos = Math.min(1.0, next.chaos + 0.1);
@@ -97,16 +163,13 @@ export class MetricsEngine {
 
     const avgEntropy = totalEntropy / memories.length;
 
-    // High entropy memories induce Drift (confusion)
     if (avgEntropy > 0.7) {
       next.drift = Math.min(1.0, next.drift + 0.15);
     }
 
-    // Apply voice impacts
     next.pain = Math.min(1.0, next.pain + painImpact);
     next.trust = Math.min(1.0, next.trust + trustImpact);
 
-    // Commit change
     this.history.push(next);
     if (this.history.length > 100) this.history.shift();
 
@@ -127,7 +190,7 @@ export class MetricsEngine {
    */
   public calculateVoiceInterference(voice1: string, voice2: string): number {
     const v1State = this.quantumStates.get(voice1) || { amplitude: complex(1, 0), phase: 0, probability: 1 };
-    const v2State = this.quantumStates.get(voice2) || { amplitude: complex(1, 0), phase: Math.PI, probability: 1 }; // Default opposition
+    const v2State = this.quantumStates.get(voice2) || { amplitude: complex(1, 0), phase: Math.PI, probability: 1 };
 
     return interference(v1State, v2State);
   }
