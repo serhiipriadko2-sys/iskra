@@ -6,5 +6,8 @@ export * from './services/graphRag.js';
 export * from './services/pgvectorHnswIndex.js';
 export * from './services/edgeEmbeddings.js';
 export * from './services/safeEmbeddings.js';
+export * from './services/explainableValidator.js';
 export * from './infra/supabaseClient.js';
 export * from './CoreEngine.js';
+
+export * from './types/explainable.js';

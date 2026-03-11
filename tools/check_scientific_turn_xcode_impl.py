@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Implementation-first status checker for Scientific Turn and XCode.
 
-This script avoids narrative-only snapshots and derives status from repository facts.
+Computes status from repository facts (SoT docs + implementation markers),
+not from narrative interpretation.
 """
 
 from __future__ import annotations
@@ -33,11 +34,39 @@ class AreaResult:
 
 
 def _read(rel_path: str) -> str:
-    return (REPO_ROOT / rel_path).read_text(encoding="utf-8")
+    path = REPO_ROOT / rel_path
+    if not path.exists():
+        return ""
+    return path.read_text(encoding="utf-8")
 
 
 def _find(rel_path: str, pattern: str) -> bool:
     return re.search(pattern, _read(rel_path), flags=re.MULTILINE) is not None
+
+
+def _has_conflict_markers(rel_path: str) -> bool:
+    content = _read(rel_path)
+    return re.search(r'^(<<<<<<<|=======|>>>>>>>)', content, flags=re.MULTILINE) is not None
+
+
+def _status_scientific(integration_present: bool, tracker_open: bool) -> str:
+    if integration_present and tracker_open:
+        return "partial"
+    if integration_present and not tracker_open:
+        return "verified"
+    if not integration_present and tracker_open:
+        return "false"
+    return "unknown"
+
+
+def _status_xcode(runtime_contract_present: bool, governance_open: bool) -> str:
+    if runtime_contract_present and governance_open:
+        return "partial"
+    if runtime_contract_present and not governance_open:
+        return "verified"
+    if not runtime_contract_present and governance_open:
+        return "false"
+    return "unknown"
 
 
 def run_checks() -> List[AreaResult]:
@@ -48,6 +77,13 @@ def run_checks() -> List[AreaResult]:
             file="AGENTS.md",
             pattern=r"\|\s*2\s*\|\s*Quantum Engine\s*\|\s*ACTIVE\s*\|",
             found=_find("AGENTS.md", r"\|\s*2\s*\|\s*Quantum Engine\s*\|\s*ACTIVE\s*\|"),
+        ),
+        CheckItem(
+            area="scientific_turn",
+            key="scientific_doc_has_no_conflicts",
+            file="docs/SCIENTIFIC_TURN_XCODE_STATUS_2026-03-11.md",
+            pattern="no git conflict markers",
+            found=not _has_conflict_markers("docs/SCIENTIFIC_TURN_XCODE_STATUS_2026-03-11.md"),
         ),
         CheckItem(
             area="scientific_turn",
@@ -78,10 +114,16 @@ def run_checks() -> List[AreaResult]:
         ),
     ]
 
-    # If integration exists but tracker still open -> partial.
-    integration_present = scientific_checks[2].found and scientific_checks[3].found
-    tracker_open = scientific_checks[0].found and scientific_checks[1].found
-    scientific_status = "partial" if integration_present and tracker_open else "unknown"
+    scientific_by_key = {c.key: c for c in scientific_checks}
+    integration_present = (
+        scientific_by_key["web_instantiates_core_engine"].found
+        and scientific_by_key["web_calls_engine_process_input"].found
+    )
+    tracker_open = (
+        scientific_by_key["phase2_active_marker"].found
+        and scientific_by_key["task_2_4_unchecked_marker"].found
+    )
+    scientific_status = _status_scientific(integration_present, tracker_open)
 
     xcode_checks = [
         CheckItem(
@@ -93,6 +135,13 @@ def run_checks() -> List[AreaResult]:
                 "governance/adr_20260220_xcode_explainable_code.md",
                 r"^status:\s*proposed\s*$",
             ),
+        ),
+        CheckItem(
+            area="xcode",
+            key="xcode_tool_has_no_conflicts",
+            file="tools/check_scientific_turn_xcode_impl.py",
+            pattern="no git conflict markers",
+            found=not _has_conflict_markers("tools/check_scientific_turn_xcode_impl.py"),
         ),
         CheckItem(
             area="xcode",
@@ -117,19 +166,33 @@ def run_checks() -> List[AreaResult]:
         ),
         CheckItem(
             area="xcode",
+            key="engine_explainable_metrics_exists",
+            file="packages/engine/src/services/metricsService.ts",
+            pattern=r"public updateExplainable\(",
+            found=_find("packages/engine/src/services/metricsService.ts", r"public updateExplainable\("),
+        ),
+        CheckItem(
+            area="xcode",
+            key="engine_explainable_validator_exists",
+            file="packages/engine/src/services/explainableValidator.ts",
+            pattern=r"export function validateExplainable",
+            found=_find("packages/engine/src/services/explainableValidator.ts", r"export function validateExplainable"),
+        ),
+        CheckItem(
+            area="xcode",
             key="xcode_runtime_validator_exists",
             file="runtime/src/xcode/validateExplainable.ts",
             pattern=r"export function validateExplainable",
-            found=_find(
-                "runtime/src/xcode/validateExplainable.ts",
-                r"export function validateExplainable",
-            ),
+            found=_find("runtime/src/xcode/validateExplainable.ts", r"export function validateExplainable"),
         ),
     ]
 
-    runtime_contract_present = all(c.found for c in xcode_checks[1:])
-    governance_open = xcode_checks[0].found
-    xcode_status = "partial" if runtime_contract_present and governance_open else "unknown"
+    xcode_by_key = {c.key: c for c in xcode_checks}
+    governance_open = xcode_by_key["adr_proposed"].found
+    runtime_contract_present = all(
+        c.found for c in xcode_checks if c.key != "adr_proposed"
+    )
+    xcode_status = _status_xcode(runtime_contract_present, governance_open)
 
     return [
         AreaResult(name="scientific_turn", status=scientific_status, checks=scientific_checks),
@@ -152,6 +215,7 @@ def main() -> int:
     if args.json:
         print(json.dumps([asdict(r) for r in results], ensure_ascii=False, indent=2))
     else:
+        print("status legend: verified | partial | unknown | false")
         for result in results:
             print(f"[{result.name}] status={result.status}")
             for check in result.checks:
