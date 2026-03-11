@@ -9,6 +9,8 @@
 
 ## Метод
 
+Статусы checker: `verified | partial | unknown | false`.
+
 > Automation: run `python tools/check_scientific_turn_xcode_impl.py --json` to reproduce this status from code/doc facts.
 
 Проверены источники:
@@ -28,7 +30,7 @@
 ## A) Scientific Turn
 
 ### Вердикт
-**partial** — реализация продвинута, но канонический трекер всё ещё в активной фазе.
+**partial** — реализация есть, но трекер/фаза в SoT ещё открыты.
 
 ### Fact Trace (quote ≤20 words)
 | # | Source | Quote | Meaning |
@@ -54,7 +56,7 @@
 ## B) XCode
 
 ### Вердикт
-**partial** — пилотный контур работает и тестируется, но governance-статус не финализирован.
+**partial** — runtime+engine контур реализован, но governance-статус ещё не финализирован.
 
 ### Fact Trace (quote ≤20 words)
 | # | Source | Quote | Meaning |
