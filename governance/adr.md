@@ -39,19 +39,22 @@ ADR-YYYYMMDD-XX: <короткое имя>
 
 ---
 
-## ADR-20260220: XCode / Explainable Code
-Статус: proposed  
-Контекст: текущая практика часто понимает «код» как вычисление значения без проверяемого объяснения. Это порождает дрейф смысла, слабую проверяемость и риск «болтовни вместо доказательства» в ответах (эхо).  
-Решение: ввести контракт **XCode** для критичных вычислений: результат обязан включать `value` (что посчитали) + `how[]` (структурная трасса шагов) + (опционально) `contracts_checked` и `evidence` (ссылки на SoT/данные). `how[]` не является свободным текстом — это массив `ExplainStep` с полями `label/formula/inputs/output/refs`.  
-Альтернативы: (а) хранить «как» в prose-документации; (б) полная формализация (TLA+/Coq) для всех модулей; (в) оставить как есть и полагаться на ревью.  
-Последствия: увеличится объём кода на «трассу», но вырастет проверяемость; появится QA‑гейт, который ломает сборку при пустом `how`.  
-Тесты/QA: (1) unit‑тесты, требующие `how.length > 0` для `*X` пилотов; (2) сверка стабильности `value` vs legacy‑функции.  
+## ADR-20260220: XCode / Scientific Turn (v2)
+Статус: accepted  
+Контекст: Текущая реализация XCode в `runtime/` нарушает архитектурные границы (контракты смешаны с исполнением) и не имеет жёстких ограничений по ресурсам. Это приводит к N+1 проблемам в GraphRAG, потенциальным блокировкам Event Loop и дрейфу контракта 'Explainable'.  
+Решение: Строгое разделение: 
+1. **Contracts**: `Explainable<T>` и `ExplainStep` переносятся в `@iskra/core` (zero deps, JSON-serializable traces). 
+2. **Execution**: Исполнение, валидаторы и ассемблеры трасс переносятся в `@iskra/engine` (`xcode/executor.ts`).
+3. **Latency / Failures**: `GraphRAG` и пайплайн обязаны поддерживать `AbortSignal.timeout` (hard latency budget), слоистый batch-fetching, и `maxExpandedNodes`. CoreEngine применяет soft-fallback при таймауте.  
+Альтернативы: (а) хранить «как» в prose-документации; (б) оставить всё в legacy `runtime/` без budgets (отклонено как блокирующее event loop).  
+Последствия: Появится строгий QA‑гейт на JSON-trace; GraphRAG станет безопаснее для event loop, но может возвращать частичные данные при таймауте (degraded retrieval).  
+Тесты/QA: (1) `CoreEngine.edge.test.ts` (timeouts & fallback); (2) `test.each` для Registry; (3) Failure-tests на EmbeddingProvider.  
 ΔDΩΛ:
-- Δ: вводится понятие Explainable Code (XCode) как «value+how+evidence»
-- D: `governance/adr_20260220_xcode_explainable_code.md`, `system/xcode_explainable_code.md`, `runtime/src/types/explainable.ts` + XCode‑пилоты и тест‑гейт
-- Ω: 0.87
-- Λ: расширить пилоты на metrics/guard и добавить реестр XCode‑пилотов
-Подписи: Owner/Семён · Builder/assistant
+- Δ: XCode разделяется по слоям core/engine; внедряется Latency Budget & Batching (Scientific Turn).
+- D: `governance/adr_20260220_xcode_explainable_code.md`, MDN AbortSignal, Node.js Event Loop guidelines.
+- Ω: 0.95
+- Λ: Перейти к реализации фазы 1: Contract Unification (передача Explainable в `@iskra/core`).
+Подписи: Owner/Семён · Builder/Искра-Кодер vΩ.6
 
 
 ## ADR-20260101-01: Fill Canon Stubs (rev12 → rev12a)
