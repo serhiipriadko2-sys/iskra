@@ -91,7 +91,7 @@ export const QuantumField: React.FC<QuantumFieldProps> = ({
 
       // Background energy glow (Chaos influence)
       if (chaos > 0.3) {
-          ctx.fillStyle = \`rgba(163, 77, 255, \${chaos * 0.1})\`;
+          ctx.fillStyle = `rgba(163, 77, 255, ${chaos * 0.1})`;
           ctx.fillRect(0, 0, width, height);
       }
 

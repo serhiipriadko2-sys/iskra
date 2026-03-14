@@ -2,13 +2,17 @@
   "name": "iskra-web",
   "version": "0.1.0",
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "@iskra/core": "workspace:*",
-    "@iskra/engine": "workspace:*"
+    "@iskra/engine": "workspace:*",
+    "@supabase/supabase-js": "^2.99.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "vite": "^6.0.0",
-    "typescript": "^5.0.0"
+    "@types/node": "^22.19.15",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0"
   }
 }
