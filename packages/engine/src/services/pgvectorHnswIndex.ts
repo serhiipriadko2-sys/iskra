@@ -102,7 +102,7 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
   }
 
   async searchByEmbedding(queryEmbedding: number[], options: VectorSearchOptions): Promise<VectorSearchHit[]> {
-    const { data, error } = await this.supabase.rpc<MatchRow>(this.matchFn, {
+    const { data: rawData, error } = await this.supabase.rpc(this.matchFn, {
       query_embedding: queryEmbedding,
       match_count: options.limit,
       rerank_k: options.rerankK ?? null,
@@ -116,6 +116,7 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
       throw new Error(`SupabasePgvectorHnswIndex.searchByEmbedding failed: ${error.message}`);
     }
 
+    const data = rawData as MatchRow[] | null;
     const rows = Array.isArray(data) ? data : [];
     return rows.map((r) => ({
       similarity: typeof r.similarity === 'number' ? r.similarity : Number(r.similarity),
@@ -124,14 +125,14 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
         content: r.content,
         layer: asLayer(r.layer),
         timestamp: r.ts,
-        fractal: asFractalMetadata(r.fractal),
+        ...(asFractalMetadata(r.fractal) ? { fractal: asFractalMetadata(r.fractal) } : {}),
         embedding: asNumberArray(r.embedding),
       },
-    }));
+    } as VectorSearchHit));
   }
 
   async causalNeighbors(options: CausalNeighborsOptions): Promise<CausalNeighborHit[]> {
-    const { data, error } = await this.supabase.rpc<CausalRow>(this.causalFn, {
+    const { data: rawData, error } = await this.supabase.rpc(this.causalFn, {
       center_ts: options.centerTs,
       match_count: options.limit,
       filter_layer: options.layer ?? null,
@@ -143,6 +144,7 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
       throw new Error(`SupabasePgvectorHnswIndex.causalNeighbors failed: ${error.message}`);
     }
 
+    const data = rawData as CausalRow[] | null;
     const rows = Array.isArray(data) ? data : [];
     return rows.map((r) => ({
       weight: typeof r.weight === 'number' ? r.weight : Number(r.weight),
@@ -151,10 +153,10 @@ export class SupabasePgvectorHnswIndex implements VectorIndex {
         content: r.content,
         layer: asLayer(r.layer),
         timestamp: r.ts,
-        fractal: asFractalMetadata(r.fractal),
+        ...(asFractalMetadata(r.fractal) ? { fractal: asFractalMetadata(r.fractal) } : {}),
         embedding: asNumberArray(r.embedding),
       },
-    }));
+    } as CausalNeighborHit));
   }
 
   async upsert(node: MantraNode): Promise<void> {

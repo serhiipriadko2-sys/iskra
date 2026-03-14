@@ -32,7 +32,9 @@ export class SupabaseEdgeEmbeddingProvider implements EmbeddingProvider {
 
   constructor(private readonly supabase: SupabaseClient, options: SupabaseEdgeEmbeddingProviderOptions = {}) {
     this.functionName = options.functionName ?? 'embed';
-    this.timeoutMs = options.timeoutMs;
+    if (options.timeoutMs !== undefined) {
+      this.timeoutMs = options.timeoutMs;
+    }
   }
 
   async embed(text: string): Promise<number[]> {
@@ -42,10 +44,14 @@ export class SupabaseEdgeEmbeddingProvider implements EmbeddingProvider {
       : null;
 
     try {
-      const { data, error } = await this.supabase.functions.invoke<EdgeEmbeddingsResponse>(this.functionName, {
+      const invokeOptions: any = {
         body: { input: text } satisfies EdgeEmbeddingsRequest,
-        signal: controller?.signal
-      });
+      };
+      if (controller?.signal) {
+        invokeOptions.signal = controller.signal;
+      }
+
+      const { data, error } = await this.supabase.functions.invoke<EdgeEmbeddingsResponse>(this.functionName, invokeOptions);
 
       if (error) {
         // Standardized error handling patterns from supabase-js docs.

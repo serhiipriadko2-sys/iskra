@@ -14,8 +14,11 @@ export interface GraphRagOptions {
   similarity_threshold?: number; // 0..1 for building SIMILARITY edges
   causal_window_ms?: number; // for building CAUSAL edges within same layer
   neighbor_m?: number; // per-node neighbor fanout (top-M)
+  max_expanded_nodes?: number; // limit total BFS nodes
   // Query-time tuning (used when a DB vector index is configured)
   hnsw_ef_search?: number;
+  // Latency budget
+  signal?: AbortSignal;
 }
 
 export interface GraphRagSeed {
@@ -64,7 +67,9 @@ export class GraphRagRetriever {
       similarity_threshold: options?.similarity_threshold ?? 0.78,
       causal_window_ms: options?.causal_window_ms ?? 3_600_000,
       neighbor_m: options?.neighbor_m ?? 12,
+      max_expanded_nodes: options?.max_expanded_nodes ?? 100,
       hnsw_ef_search: options?.hnsw_ef_search ?? 80,
+      signal: options?.signal ?? new AbortController().signal,
     };
   }
 
@@ -74,7 +79,9 @@ export class GraphRagRetriever {
       steps: [],
     };
 
-    const queryEmbedding = await this.memory.embed(query);
+    if (this.options.signal.aborted) throw new Error('GraphRAG Aborted before start');
+
+    const queryEmbedding = await this.memory.embed(query, { signal: this.options.signal });
 
     // Seed selection:
     // - If a DB vector index is configured, take a larger preselect window (seed_k*4)
@@ -84,9 +91,9 @@ export class GraphRagRetriever {
     const seedEf = computeEfSearch(this.options.hnsw_ef_search, seedPreselect);
     const seedHits = await this.memory.vectorSearchByEmbedding(queryEmbedding, {
       limit: seedPreselect,
-      minSimilarity: undefined,
       efSearch: seedEf.effective,
       rerankK: seedPreselect * 5,
+      signal: this.options.signal,
     });
 
     if (seedHits.length === 0) {
@@ -139,45 +146,88 @@ export class GraphRagRetriever {
 
     const neighborEf = computeEfSearch(this.options.hnsw_ef_search, this.options.neighbor_m);
 
-    const getNeighbors = async (node: MantraNode): Promise<Edge[]> => {
-      const cached = neighborCache.get(node.id);
-      if (cached) return cached;
 
-      const edges: Edge[] = [];
 
-      // Similarity (top-M)
-      const simHits = await this.memory.vectorSearchByEmbedding(node.embedding, {
-        limit: this.options.neighbor_m,
-        excludeId: node.id,
-        minSimilarity: this.options.similarity_threshold,
-        efSearch: seedEf.effective,
-        rerankK: this.options.neighbor_m * 10,
-      });
+    const getNeighborsBatch = async (nodes: MantraNode[]): Promise<Edge[][]> => {
+      if (this.options.signal.aborted) throw new Error('Aborted');
+      const results: Edge[][] = new Array(nodes.length).fill([]);
+      const toFetchIdx: number[] = [];
+      const simOptions = [];
+      const causalOptions = [];
 
-      for (const h of simHits) {
-        nodeCache.set(h.node.id, h.node);
-        edges.push({ to: h.node.id, type: 'SIMILARITY', weight: h.similarity });
+      for (let i = 0; i < nodes.length; i++) {
+        const nodeOpt = nodes[i];
+        if (!nodeOpt) continue;
+        const cached = neighborCache.get(nodeOpt.id);
+        if (cached) {
+          results[i] = cached;
+        } else {
+          simOptions.push(nodeOpt.embedding);
+          causalOptions.push({
+            centerTs: nodeOpt.timestamp,
+            limit: this.options.neighbor_m,
+            layer: nodeOpt.layer,
+            excludeId: nodeOpt.id,
+            windowMs: this.options.causal_window_ms,
+            signal: this.options.signal,
+          });
+        }
       }
 
-      // Causal (same layer, time window)
-      const causalHits = await this.memory.causalNeighbors({
-        centerTs: node.timestamp,
-        limit: this.options.neighbor_m,
-        layer: node.layer,
-        excludeId: node.id,
-        windowMs: this.options.causal_window_ms,
-      });
+      if (toFetchIdx.length > 0) {
+        // Run vector memory batches
+        const [simBatches, causalBatches] = await Promise.all([
+          this.memory.vectorSearchMultiple(simOptions, {
+            limit: this.options.neighbor_m,
+            minSimilarity: this.options.similarity_threshold,
+            efSearch: neighborEf.effective, // Fixed from seedEf!
+            rerankK: this.options.neighbor_m * 10,
+            signal: this.options.signal,
+          }),
+          this.memory.causalNeighborsMultiple(causalOptions)
+        ]);
 
-      for (const h of causalHits) {
-        nodeCache.set(h.node.id, h.node);
-        edges.push({ to: h.node.id, type: 'CAUSAL', weight: h.weight });
+        for (let j = 0; j < toFetchIdx.length; j++) {
+          const originalIdx = toFetchIdx[j];
+          if (originalIdx === undefined) continue;
+          const node = nodes[originalIdx];
+          if (!node) continue;
+          const edges: Edge[] = [];
+          
+          const sBatch = simBatches[j];
+          if (sBatch) {
+            for (const h of sBatch) {
+              nodeCache.set(h.node.id, h.node);
+              edges.push({ to: h.node.id, type: 'SIMILARITY', weight: h.similarity });
+            }
+          }
+          
+          const cBatch = causalBatches[j];
+          if (cBatch) {
+            for (const h of cBatch) {
+              nodeCache.set(h.node.id, h.node);
+              edges.push({ to: h.node.id, type: 'CAUSAL', weight: h.weight });
+            }
+          }
+          
+          neighborCache.set(node.id, edges);
+          results[originalIdx] = edges;
+        }
       }
 
-      neighborCache.set(node.id, edges);
-      return edges;
+      return results;
     };
 
-    await bfsExpandLazy(seeds.map((s) => s.node.id), getNeighbors, nodeCache, this.options.expand_depth, bestDepth);
+    await bfsExpandBatch(
+      seeds.map((s) => s.node.id),
+      getNeighborsBatch,
+      nodeCache,
+      this.options.expand_depth,
+      bestDepth,
+      this.options.max_expanded_nodes,
+      this.options.signal
+    );
+
     trace.steps.push({
       label: 'bfs_expand',
       data: {
@@ -223,33 +273,49 @@ export class GraphRagRetriever {
   }
 }
 
-async function bfsExpandLazy(
+async function bfsExpandBatch(
   startIds: string[],
-  getNeighbors: (node: MantraNode) => Promise<Edge[]>,
+  getNeighborsBatch: (nodes: MantraNode[]) => Promise<Edge[][]>,
   nodeCache: Map<string, MantraNode>,
   maxDepth: number,
   bestDepth: Map<string, number>,
+  maxNodes: number,
+  signal: AbortSignal
 ): Promise<void> {
-  const queue: Array<{ id: string; depth: number }> = startIds.map((id) => ({ id, depth: 0 }));
+  let currentLevel = startIds;
   for (const id of startIds) if (!bestDepth.has(id)) bestDepth.set(id, 0);
 
-  while (queue.length > 0) {
-    const current = queue.shift();
-    if (!current) break;
-    if (current.depth >= maxDepth) continue;
+  for (let depth = 0; depth < maxDepth; depth++) {
+    if (signal.aborted) break;
+    if (bestDepth.size >= maxNodes) break;
+    if (currentLevel.length === 0) break;
 
-    const node = nodeCache.get(current.id);
-    if (!node) continue;
-
-    const edges = await getNeighbors(node);
-    for (const e of edges) {
-      const nextDepth = current.depth + 1;
-      const prev = bestDepth.get(e.to);
-      if (prev === undefined || nextDepth < prev) {
-        bestDepth.set(e.to, nextDepth);
-        queue.push({ id: e.to, depth: nextDepth });
-      }
+    const nodesToExpand: MantraNode[] = [];
+    for (const id of currentLevel) {
+      const node = nodeCache.get(id);
+      if (node) nodesToExpand.push(node);
     }
+
+    if (nodesToExpand.length === 0) break;
+
+    const edgeBatches = await getNeighborsBatch(nodesToExpand);
+    const nextLevel = new Set<string>();
+
+    for (let i = 0; i < nodesToExpand.length; i++) {
+        const edges = edgeBatches[i];
+        if (!edges) continue;
+        for (const e of edges) {
+            const nextDepth = depth + 1;
+            const prev = bestDepth.get(e.to);
+            if (prev === undefined || nextDepth < prev) {
+                if (bestDepth.size < maxNodes) {
+                    bestDepth.set(e.to, nextDepth);
+                    nextLevel.add(e.to);
+                }
+            }
+        }
+    }
+    currentLevel = Array.from(nextLevel);
   }
 }
 

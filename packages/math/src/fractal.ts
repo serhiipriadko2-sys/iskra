@@ -1,4 +1,4 @@
-import type { IskraMetrics } from './types.js';
+import type { IskraMetrics, FractalIndicators, QuantumIndicators, SystemPhase } from '@iskra/core';
 import { validateSignal, validateKmax } from './utils/validation.js';
 
 export interface MetricTimeSeries {
@@ -8,22 +8,7 @@ export interface MetricTimeSeries {
   windowSize: number;
 }
 
-export interface FractalIndicators {
-  D_chaos: number;
-  D_clarity: number;
-  D_drift: number;
-  H_trust: number;
-  complexityIndex: number;
-  edgeDistance: number;
-}
 
-export interface QuantumIndicators {
-  CSI: number;
-  EI: number;
-  NC: number;
-}
-
-export type SystemPhase = 'stable' | 'edge' | 'chaotic';
 
 export const D_THRESHOLDS = {
   stable: { min: 1.0, max: 1.4 },

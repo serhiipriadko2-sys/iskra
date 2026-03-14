@@ -9,8 +9,8 @@ describe('validateExplainable', () => {
     const result = engine.updateExplainable({ trust: 0.05 }, 'entropy signal');
 
     const validation = validateExplainable(result);
-    expect(validation.valid).toBe(true);
-    expect(validation.errors).toEqual([]);
+    expect(validation.ok).toBe(true);
+    expect(validation.issues).toEqual([]);
   });
 
   it('rejects payload without formula/canon/how', () => {
@@ -21,9 +21,11 @@ describe('validateExplainable', () => {
       evidence: []
     };
 
-    const validation = validateExplainable(invalid);
-    expect(validation.valid).toBe(false);
-    expect(validation.errors).toContain('at least one step must include formula');
-    expect(validation.errors).toContain('evidence must include at least one canon reference');
+    const validation = validateExplainable(invalid, { requireAnyFormula: true, requireAnyRefs: true });
+    expect(validation.ok).toBe(false);
+    
+    const codes = validation.issues.map(i => i.code);
+    expect(codes).toContain('formula_missing');
+    expect(codes).toContain('refs_missing');
   });
 });

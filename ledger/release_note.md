@@ -10,9 +10,23 @@
 ### Что сделано
 - Заполнены все SoT-заглушки.
 - Добавлены протоколы: STOP/REPAIR/WARM, режимы 0–3, Council.
-- Описана лаборатория: ChatGPT Projects + GitHub + Apps/Company knowledge.
 - Добавлены evals/qa/security baseline.
 - Обновлены sha256 и checksum.
+
+## [PENDING] vΩ.6.0 (XCode Scientific Turn Integration) — 2026-03-XX
+### Что будет сделано
+- XCode контракты переносятся в `@iskra/core` (`Explainable`, `ExplainStep`).
+- Исполнение XCode и ассемблеры трасс переносятся в `@iskra/engine` (`xcode/executor.ts`).
+- `runtime/src/xcode/registry.ts` переведён в legacy shim.
+- В GraphRAG и CoreEngine внедрены timeout бюджетирование (`AbortSignal`) и hard limits (`maxExpandedNodes`). Batching соседних узлов по слоям.
+- Изолирована эвристика `analyzeReflex` из процесса.
+
+### Риски
+- Возможен degraded retrieval при таймаутах.
+  Λ: Применять soft-fallback, отдавая частичный результат с пометкой `timeout`.
+
+### Следующий шаг
+- Завершение Phase 1-4 и финальное обновление хэшей `ledger/sot.json`.
 
 ### Риски
 - Увеличился объём канона → возможна “перегруженность”.  

@@ -102,7 +102,7 @@ export class VoiceQuantumField {
   public update(metrics: IskraMetrics) {
     this.time += 0.1
     const priorityMultipliers = getPriorityMultipliers(metrics)
-    const traces: VoiceComputationTrace['voices'] = []
+    const traces: Omit<VoiceComputationTrace['voices'][number], 'probabilityAfterNormalization'>[] = []
 
     VOICES.forEach((voice) => {
       const previousState =
@@ -121,7 +121,7 @@ export class VoiceQuantumField {
       } = VOICE_RUNTIME_CONFIG.weights
 
       let resonanceFactor = thresholdMatched ? thresholdBaseFactor : thresholdPenaltyFactor
-      const resonanceContributions: VoiceComputationTrace['voices'][number]['resonanceContributions'] = []
+      const resonanceContributions: Omit<VoiceComputationTrace['voices'][number], 'probabilityAfterNormalization'>['resonanceContributions'] = []
 
       if (thresholdMatched && voice.quantum.resonance) {
         voice.quantum.resonance.forEach((metricKey) => {
@@ -192,9 +192,12 @@ export class VoiceQuantumField {
     let r = Math.random() * sum
 
     for (let i = 0; i < voices.length; i++) {
-      r -= probs[i]
+      const p = probs[i];
+      if (p === undefined) continue;
+      r -= p;
       if (r <= 0) {
-        return voices[i]
+        const v = voices[i];
+        if (v) return v;
       }
     }
 

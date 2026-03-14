@@ -2,7 +2,7 @@ import { MantraNode, FractalMetadata, IskraMetrics } from '@iskra/core';
 import { calculateResonance } from '@iskra/math';
 
 export interface EmbeddingProvider {
-  embed(text: string): Promise<number[]>;
+  embed(text: string, options?: { signal?: AbortSignal }): Promise<number[]>;
 }
 
 export interface VectorSearchOptions {
@@ -17,6 +17,8 @@ export interface VectorSearchOptions {
   efSearch?: number;
   /** Optional preselect size for DB rerank (if supported). */
   rerankK?: number;
+  /** Optional abort signal to respect latency budgets. */
+  signal?: AbortSignal;
 }
 
 export interface VectorSearchHit {
@@ -31,6 +33,7 @@ export interface CausalNeighborsOptions {
   layer?: MantraNode['layer'];
   excludeId?: string;
   windowMs?: number;
+  signal?: AbortSignal;
 }
 
 export interface CausalNeighborHit {
@@ -42,7 +45,9 @@ export interface CausalNeighborHit {
 /** Optional DB-backed vector index for scaling GraphRAG. */
 export interface VectorIndex {
   searchByEmbedding(queryEmbedding: number[], options: VectorSearchOptions): Promise<VectorSearchHit[]>;
+  searchMultipleByEmbedding?(queryEmbeddings: number[][], options: VectorSearchOptions): Promise<VectorSearchHit[][]>;
   causalNeighbors?(options: CausalNeighborsOptions): Promise<CausalNeighborHit[]>;
+  causalNeighborsMultiple?(optionsList: CausalNeighborsOptions[]): Promise<CausalNeighborHit[][]>;
   upsert?(node: MantraNode): Promise<void>;
 }
 
@@ -59,7 +64,9 @@ export class MemoryService {
 
   constructor(embeddingProvider: EmbeddingProvider, vectorIndex?: VectorIndex, options?: MemoryServiceOptions) {
     this.embeddingProvider = embeddingProvider;
-    this.vectorIndex = vectorIndex;
+    if (vectorIndex !== undefined) {
+      this.vectorIndex = vectorIndex;
+    }
     this.options = {
       persistence: options?.persistence ?? 'best_effort',
     };
@@ -69,8 +76,8 @@ export class MemoryService {
    * Expose embeddings for downstream retrievers (GraphRAG).
    * SECURITY: This does not expose keys; it only delegates to the provider.
    */
-  async embed(text: string): Promise<number[]> {
-    return this.embeddingProvider.embed(text);
+  async embed(text: string, options?: { signal?: AbortSignal }): Promise<number[]> {
+    return this.embeddingProvider.embed(text, options);
   }
 
   /**
@@ -85,6 +92,7 @@ export class MemoryService {
    * Vector search (cosine similarity). Uses DB index if provided, otherwise scans in-memory.
    */
   async vectorSearchByEmbedding(queryEmbedding: number[], options: VectorSearchOptions): Promise<VectorSearchHit[]> {
+    if (options.signal?.aborted) throw new Error('Aborted');
     if (this.vectorIndex) {
       return this.vectorIndex.searchByEmbedding(queryEmbedding, options);
     }
@@ -109,10 +117,28 @@ export class MemoryService {
   }
 
   /**
+   * Batch execution for vector search. Avoids N+1 RPCs.
+   */
+  async vectorSearchMultiple(queryEmbeddings: number[][], options: VectorSearchOptions): Promise<VectorSearchHit[][]> {
+    if (options.signal?.aborted) throw new Error('Aborted');
+    if (this.vectorIndex?.searchMultipleByEmbedding) {
+      return this.vectorIndex.searchMultipleByEmbedding(queryEmbeddings, options);
+    }
+    // Fallback: sequential execution if no batch support
+    const results = [];
+    for (const qe of queryEmbeddings) {
+      if (options.signal?.aborted) break;
+      results.push(await this.vectorSearchByEmbedding(qe, options));
+    }
+    return results;
+  }
+
+  /**
    * Causal neighbors: same layer, within a time window.
    * Uses VectorIndex implementation if available.
    */
   async causalNeighbors(options: CausalNeighborsOptions): Promise<CausalNeighborHit[]> {
+    if (options.signal?.aborted) throw new Error('Aborted');
     if (this.vectorIndex?.causalNeighbors) {
       return this.vectorIndex.causalNeighbors(options);
     }
@@ -135,11 +161,30 @@ export class MemoryService {
         const weight = 1 - diff / windowMs;
         return { node, weight };
       })
-      .filter(Boolean)
-      .sort((a, b) => (b!.weight - a!.weight))
-      .slice(0, limit) as CausalNeighborHit[];
+      .filter((h): h is NonNullable<typeof h> => h !== null)
+      .sort((a, b) => b.weight - a.weight)
+      .slice(0, limit);
 
     return hits;
+  }
+
+  /**
+   * Batch execution for causal neighbors.
+   */
+  async causalNeighborsMultiple(optionsList: CausalNeighborsOptions[]): Promise<CausalNeighborHit[][]> {
+    // Check signal from the first option broadly
+    if (optionsList.length > 0 && optionsList[0] && optionsList[0].signal?.aborted) throw new Error('Aborted');
+
+    if (this.vectorIndex?.causalNeighborsMultiple) {
+      return this.vectorIndex.causalNeighborsMultiple(optionsList);
+    }
+
+    const results = [];
+    for (const opt of optionsList) {
+      if (opt.signal?.aborted) break;
+      results.push(await this.causalNeighbors(opt));
+    }
+    return results;
   }
 
   async addMemory(content: string, fractal: FractalMetadata, layer: 'core' | 'memory' | 'dream' = 'memory'): Promise<MantraNode> {
@@ -209,7 +254,7 @@ export class MemoryService {
   }
 
   private cosineSimilarity(vecA: number[], vecB: number[]): number {
-    const dotProduct = vecA.reduce((acc, val, i) => acc + val * vecB[i], 0);
+    const dotProduct = vecA.reduce((acc, val, i) => acc + val * (vecB[i] ?? 0), 0);
     const magA = Math.sqrt(vecA.reduce((acc, val) => acc + val * val, 0));
     const magB = Math.sqrt(vecB.reduce((acc, val) => acc + val * val, 0));
     return (magA && magB) ? dotProduct / (magA * magB) : 0;
