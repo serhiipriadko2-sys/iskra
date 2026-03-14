@@ -62,14 +62,14 @@ export class CoreEngine {
     let graph: { nodes: MantraNode[]; trace: GraphRagTrace } = { nodes: [], trace: { seeds: [], steps: [] } };
     try {
       // Pass signal down to graphRag if implemented
-      graph = await this.graphRag.retrieve(text, currentMetrics);
+      graph = await this.graphRag.retrieve(text, currentMetrics, { signal: _signal });
       traceSteps.push({
         label: 'graphrag_retrieval',
         inputs: { query: text },
         output: { nodesCount: graph.nodes.length, status: 'success' },
       });
     } catch (err: any) {
-      if (err instanceof Error && err.message.includes('Abort')) {
+      if (err instanceof Error && (err.name === 'AbortError' || err.message.includes('Abort'))) {
         // Latency budget blown -> Return gracefully with zero context
         // This is explicitly allowed by the Fallback Policy in ADR 20260220
         traceSteps.push({
@@ -77,13 +77,16 @@ export class CoreEngine {
             inputs: { query: text },
             output: { status: 'timeout', fallback: 'zero_context' },
         });
-        // We throw so that if the router calls it and catches an AbortError it can
-        // do standard web handling, OR we degrade here. The ADR says "Fallback to
-        // basic retrieval or zero-context". We will degrade here so the engine loop completes.
+      } else {
+        // Other unexpected errors during retrieval -> gracefully degrade
+        traceSteps.push({
+            label: 'graphrag_retrieval',
+            inputs: { query: text },
+            output: { status: 'error', error: err instanceof Error ? err.message : String(err), fallback: 'zero_context' },
+        });
       }
-      
-      // Let standard errors bubble up
-      throw err;
+      // We do not throw. The ADR says "Fallback to basic retrieval or zero-context". 
+      // By swallowing the error and leaving `graph` empty, we gracefully degrade.
     }
 
     const memories = graph.nodes;

@@ -41,14 +41,14 @@ describe('CoreEngine Edge Cases', () => {
       throw new Error('GraphRAG Aborted before start');
     });
 
-    // 3. Current Engine design: processInput does not catch GraphRAG errors yet.
+    // 3. Current Engine design: processInput catches GraphRAG errors now.
     // The ADR specifies we should *fallback* or gracefully degrade.
-    // Let's ensure processInput throws the expected abort error so the router can handle it,
-    // OR we update CoreEngine to catch it and return empty context.
+    // Let's ensure processInput returns a valid response with zero context and the correct trace.
+    const response = await engine.processInput('test', new AbortController().signal);
     
-    // For now, ADR 20260220 says: "Router enforces 2.5s timeout. If GraphRAG times out, fallback to basic retrieval or zero-context."
-    // Let's test that CoreEngine propagates it so the router can catch it.
-    await expect(engine.processInput('test')).rejects.toThrow('GraphRAG Aborted before start');
+    expect(response.value.context).toEqual([]);
+    const trace = response.how.find(t => t.label === 'graphrag_retrieval');
+    expect((trace?.output as any)?.fallback).toBe('zero_context');
   });
 
   it('preserves metrics updates even if retrieval fails', async () => {
@@ -58,15 +58,20 @@ describe('CoreEngine Edge Cases', () => {
      const engine = new CoreEngine(mockMemory, metrics, new VoiceQuantumField());
      
      vi.spyOn((engine as any).graphRag, 'retrieve').mockImplementation(async () => {
-       throw new Error('GraphRAG Aborted before start');
+       throw new Error('GraphRAG arbitrary error');
      });
 
      // To implement graceful degradation INSIDE CoreEngine:
-     // Engine needs to try/catch the retrieval. Let's assume we update CoreEngine to do this.
+     // Engine try/catches the retrieval.
      
-     // Currently it throws. If we update CoreEngine to catch, this test will guide us.
-     // Let's expect it to throw for now, representing the current state before Phase 3 CoreEngine modifications.
-     await expect(engine.processInput('pain')).rejects.toThrow();
+     const response = await engine.processInput('pain');
+     
+     // Context should be empty
+     expect(response.value.context).toEqual([]);
+     
+     const trace = response.how.find(t => t.label === 'graphrag_retrieval');
+     expect((trace?.output as any)?.status).toBe('error');
+     expect((trace?.output as any)?.fallback).toBe('zero_context');
      
      // The reflex (pain) should still have been registered BEFORE the retrieval failed.
      expect(metrics.getCurrentMetrics().pain).toBeGreaterThan(0.2); // Default is 0.2, reflex adds 0.4
