@@ -1,4 +1,4 @@
-import type { Explainable, EvidenceRef } from '@iskra/core';
+import type { EvidenceRef } from '@iskra/core';
 
 export type XCodeRegistryEntry = {
   /** Stable ID, used by CI/QA gates. */

@@ -77,7 +77,7 @@ export type {
 
 export { validateExplainable } from './xcode/validateExplainable.js';
 
-export type { XCodeCompare, XCodeRegistryEntry } from './xcode/registry.js';
+export type { XCodeRegistryEntry } from './xcode/registry.js';
 
 export { XCODE_REQUIRED } from './xcode/registry.js';
 

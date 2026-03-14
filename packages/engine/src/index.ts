@@ -11,3 +11,5 @@ export * from './infra/supabaseClient.js';
 export * from './CoreEngine.js';
 
 export * from './types/explainable.js';
+export * from './services/ewsService.js';
+export * from './services/coherenceService.js';

@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/// <reference types="node" />
+
 
 import { Command } from "commander";
 import chalk from "chalk";

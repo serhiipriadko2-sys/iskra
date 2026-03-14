@@ -22,9 +22,9 @@ describe('CoreEngine Integration', () => {
 
     const response = await engine.processInput('Hello world');
 
-    expect(response.voice).toBeDefined();
-    expect(response.metrics).toBeDefined();
-    expect(response.superposition.length).toBeGreaterThan(0);
+    expect(response.value.voice).toBeDefined();
+    expect(response.value.metrics).toBeDefined();
+    expect(response.value.superposition.length).toBeGreaterThan(0);
   });
 
   it('should shift towards KAIN when retrieving overwhelming painful memories', async () => {
@@ -53,14 +53,14 @@ describe('CoreEngine Integration', () => {
     const response = await engine.processInput('I feel pain');
 
     // Metrics should reflect high pain
-    expect(response.metrics.pain).toBeGreaterThan(0.8);
+    expect(response.value.metrics.pain).toBeGreaterThan(0.8);
 
     // Check if KAIN is present
-    const kainEntry = response.superposition.find(v => v.id === 'KAIN');
+    const kainEntry = response.value.superposition.find(v => v.id === 'KAIN');
 
     if (!kainEntry) {
-         console.log('Superposition:', JSON.stringify(response.superposition, null, 2));
-         console.log('Metrics:', JSON.stringify(response.metrics, null, 2));
+         console.log('Superposition:', JSON.stringify(response.value.superposition, null, 2));
+         console.log('Metrics:', JSON.stringify(response.value.metrics, null, 2));
     }
 
     expect(kainEntry).toBeDefined();

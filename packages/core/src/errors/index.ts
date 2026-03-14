@@ -10,11 +10,13 @@ export class IskraError extends Error {
     super(message);
     this.name = 'IskraError';
     this.code = code;
-    this.context = context;
+    if (context !== undefined) {
+      this.context = context;
+    }
     
     // Maintain proper stack trace
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, IskraError);
+    if ((Error as any).captureStackTrace) {
+      (Error as any).captureStackTrace(this, IskraError);
     }
   }
 }
