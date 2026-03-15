@@ -43,13 +43,13 @@ export const ChatInterface: React.FC = () => {
 
       // Real-time engine integration:
       // Since LLM generation is Task 4.2, we show the system status and context retrieval for now.
-      const statusText = `[${response.voice}] Active. Retrieved ${response.context.length} memory nodes. Resonance: ${response.superposition[0]?.prob.toFixed(2)}`;
+      const statusText = `[${response.value.voice}] Active. Retrieved ${response.value.context.length} memory nodes. Resonance: ${response.value.superposition?.[0]?.prob.toFixed(2) || '0.00'}`;
 
       setHistory(prev => [...prev, {
         role: 'iskra',
         text: statusText,
-        voice: response.voice,
-        contextCount: response.context.length
+        voice: response.value.voice,
+        contextCount: response.value.context.length
       }]);
     } catch (err) {
       setHistory(prev => [...prev, { role: 'iskra', text: 'Error: System Failure. Neural link disconnected.' }]);
@@ -125,7 +125,7 @@ export const ChatInterface: React.FC = () => {
       <form onSubmit={handleSubmit} style={{ padding: '1rem', display: 'flex', gap: '0.5rem', background: '#000' }}>
         <input
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
           placeholder="Transmit signal..."
           style={{
             flex: 1,

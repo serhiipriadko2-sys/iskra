@@ -26,11 +26,11 @@ export const useEngine = () => {
     try {
       const response = await engine.processInput(text);
       setState({
-        metrics: response.metrics,
-        voice: response.voice,
-        superposition: response.superposition,
-        context: response.context,
-        retrievalTrace: response.retrieval_trace,
+        metrics: response.value.metrics,
+        voice: response.value.voice,
+        superposition: response.value.superposition,
+        context: response.value.context,
+        retrievalTrace: response.value.retrieval_trace,
         isProcessing: false
       });
       return response;

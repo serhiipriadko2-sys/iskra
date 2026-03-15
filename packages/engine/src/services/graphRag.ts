@@ -73,15 +73,16 @@ export class GraphRagRetriever {
     };
   }
 
-  async retrieve(query: string, metrics: IskraMetrics): Promise<GraphRagResult> {
+  async retrieve(query: string, metrics: IskraMetrics, runtimeOptions?: { signal?: AbortSignal }): Promise<GraphRagResult> {
+    const signal = runtimeOptions?.signal ?? this.options.signal;
     const trace: GraphRagTrace = {
       seeds: [],
       steps: [],
     };
 
-    if (this.options.signal.aborted) throw new Error('GraphRAG Aborted before start');
+    if (signal.aborted) throw new Error('GraphRAG Aborted before start');
 
-    const queryEmbedding = await this.memory.embed(query, { signal: this.options.signal });
+    const queryEmbedding = await this.memory.embed(query, { signal });
 
     // Seed selection:
     // - If a DB vector index is configured, take a larger preselect window (seed_k*4)
@@ -93,7 +94,7 @@ export class GraphRagRetriever {
       limit: seedPreselect,
       efSearch: seedEf.effective,
       rerankK: seedPreselect * 5,
-      signal: this.options.signal,
+      signal,
     });
 
     if (seedHits.length === 0) {
@@ -149,7 +150,7 @@ export class GraphRagRetriever {
 
 
     const getNeighborsBatch = async (nodes: MantraNode[]): Promise<Edge[][]> => {
-      if (this.options.signal.aborted) throw new Error('Aborted');
+      if (signal.aborted) throw new Error('Aborted');
       const results: Edge[][] = new Array(nodes.length).fill([]);
       const toFetchIdx: number[] = [];
       const simOptions = [];
@@ -169,7 +170,7 @@ export class GraphRagRetriever {
             layer: nodeOpt.layer,
             excludeId: nodeOpt.id,
             windowMs: this.options.causal_window_ms,
-            signal: this.options.signal,
+            signal,
           });
         }
       }
@@ -182,7 +183,7 @@ export class GraphRagRetriever {
             minSimilarity: this.options.similarity_threshold,
             efSearch: neighborEf.effective, // Fixed from seedEf!
             rerankK: this.options.neighbor_m * 10,
-            signal: this.options.signal,
+            signal,
           }),
           this.memory.causalNeighborsMultiple(causalOptions)
         ]);
@@ -225,7 +226,7 @@ export class GraphRagRetriever {
       this.options.expand_depth,
       bestDepth,
       this.options.max_expanded_nodes,
-      this.options.signal
+      signal
     );
 
     trace.steps.push({
