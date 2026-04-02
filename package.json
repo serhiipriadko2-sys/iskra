@@ -11,7 +11,8 @@
     "lint": "pnpm -r lint",
     "typecheck": "pnpm run build:runtime && pnpm -r --if-present typecheck",
     "build:runtime": "pnpm --dir runtime build",
-    "verify": "cd runtime && npm run build && cd .. && npm run check:shard-registry && npm run typecheck && pnpm test && python tools/verify_ledger.py",
+    "verify": "cd runtime && npm run build && cd .. && npm run check:shard-registry && npm run typecheck && pnpm test && npx tsx tools/verify_ledger.ts",
+    "ledger:update": "npx tsx tools/update_ledger.ts",
     "check:imports": "python tools/check_no_src_imports.py",
     "sot40:build": "python tools/build_sot40_artifact.py --out-dir dist/sot40",
     "sot40:verify": "python tools/verify_sot40_receipt.py --receipt dist/sot40/receipt.json",
@@ -24,6 +25,7 @@
     "import:shard": "python tools/import_phase1_shard.py"
   },
   "devDependencies": {
+    "tsx": "^4.7.1",
     "typescript": "^5.0.0",
     "vitest": "^2.0.0"
   }

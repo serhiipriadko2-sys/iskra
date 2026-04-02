@@ -41,11 +41,15 @@ function walkDir(dir: string): string[] {
     const list = fs.readdirSync(dir);
     for (const file of list) {
         const fullPath = path.join(dir, file);
-        const stat = fs.statSync(fullPath);
-        if (stat && stat.isDirectory()) {
-            results = results.concat(walkDir(fullPath));
-        } else {
-            results.push(fullPath);
+        try {
+            const stat = fs.lstatSync(fullPath);
+            if (stat && stat.isDirectory()) {
+                results = results.concat(walkDir(fullPath));
+            } else if (stat && stat.isFile()) {
+                results.push(fullPath);
+            }
+        } catch (e) {
+            // skip inaccessible files or broken symlinks
         }
     }
     return results;
