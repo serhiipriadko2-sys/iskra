@@ -1,8 +1,9 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { IskraMetrics, IskraPhase } from '../types';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { IskraMetrics, IskraPhase, calculateIntegrityScoreX, calculateAliveIndexX } from '../types';
 import IskraMetricsDisplay from './IskraMetricsDisplay';
 import { SessionStatus } from './LiveConversation';
+import { MetricExplainableCard } from './ExplainableTrace';
 import { calculateDerivedMetrics } from '../utils/metrics';
 import { getActiveVoice } from '../services/voiceEngine';
 import { storageService } from '../services/storageService';
@@ -78,6 +79,10 @@ const IskraStateView: React.FC<IskraStateViewProps> = ({ metrics, phase, onShatt
     const activeVoice = getActiveVoice(metrics, prefs, lastState.lastVoice);
     
     const derived = calculateDerivedMetrics(metrics);
+
+    // XCode explainable computations
+    const integrityX = useMemo(() => calculateIntegrityScoreX(metrics), [metrics]);
+    const aliveX = useMemo(() => calculateAliveIndexX(metrics, 3), [metrics]); // trace=3 as default mid-cycle
     const [isGlitching, setIsGlitching] = useState(false);
     const [logs, setLogs] = useState<string[]>([]);
     
@@ -221,6 +226,22 @@ const IskraStateView: React.FC<IskraStateViewProps> = ({ metrics, phase, onShatt
                                 value={derived.trust_seal} 
                                 desc="Доверие с учетом дрейфа"
                                 color={derived.trust_seal > 0.7 ? 'text-primary' : 'text-text-muted'}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-4">
+                        <h3 className="text-sm text-text-muted uppercase tracking-wider font-bold ml-1">XCode: Индексы состояния</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <MetricExplainableCard
+                                title="Integrity Score"
+                                explainable={integrityX}
+                                color={integrityX.value >= 0.5 ? 'text-success' : 'text-warning'}
+                            />
+                            <MetricExplainableCard
+                                title="Alive Index"
+                                explainable={aliveX}
+                                color={aliveX.value >= 0.3 ? 'text-accent' : 'text-danger'}
                             />
                         </div>
                     </div>

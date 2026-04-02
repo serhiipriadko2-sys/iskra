@@ -1,5 +1,5 @@
 
-import { IskraMetrics, Voice, VoiceName, VoicePreferences } from '../types';
+import { Explainable, ExplainStep, EvidenceRef, IskraMetrics, Voice, VoiceName, VoicePreferences } from '../types';
 import { storageService } from './storageService';
 
 /**
@@ -254,23 +254,136 @@ const VOICE_PROMPTS: Record<VoiceName, string> = {
 `
 };
 
-export function getActiveVoice(metrics: IskraMetrics, prefs?: VoicePreferences, currentVoiceName?: VoiceName): Voice {
-  // If prefs not provided, try to get from storage
+export interface VoiceSelectionExplanationValue {
+  selectedVoice: VoiceName;
+  selectedScore: number;
+  currentVoiceName: VoiceName | null;
+  scores: Record<VoiceName, number>;
+}
+
+const VOICE_EXPLANATION_REFS: EvidenceRef[] = [
+  { kind: 'canon', ref: 'core/voices.md' },
+  { kind: 'project', ref: 'runtime/iskraSpace/services/voiceEngine.ts' },
+];
+
+function computeVoiceScores(
+  metrics: IskraMetrics,
+  prefs?: VoicePreferences,
+  currentVoiceName?: VoiceName,
+): { selectedVoice: Voice; selectedScore: number; scores: Record<VoiceName, number>; effectiveLastVoice: VoiceName | null } {
   const effectivePrefs = prefs || storageService.getVoicePreferences();
-  const effectiveLastVoice = currentVoiceName || storageService.getLastVoiceState().lastVoice;
+  const effectiveLastVoice = currentVoiceName || storageService.getLastVoiceState().lastVoice || null;
 
   let highestScore = -1;
-  let selectedVoice = VOICES[0]; // Default to first if all zero
+  let selectedVoice = VOICES[0];
+  const scores = {} as Record<VoiceName, number>;
 
   for (const voice of VOICES) {
-    const score = voice.activation(metrics, effectivePrefs, effectiveLastVoice);
+    const score = voice.activation(metrics, effectivePrefs, effectiveLastVoice ?? undefined);
+    scores[voice.name] = Number(score.toFixed(4));
     if (score > highestScore) {
-        highestScore = score;
-        selectedVoice = voice;
+      highestScore = score;
+      selectedVoice = voice;
     }
   }
-  
-  return selectedVoice;
+
+  return {
+    selectedVoice,
+    selectedScore: Number(highestScore.toFixed(4)),
+    scores,
+    effectiveLastVoice,
+  };
+}
+
+export function getVoiceSelectionExplanation(
+  metrics: IskraMetrics,
+  prefs?: VoicePreferences,
+  currentVoiceName?: VoiceName,
+): Explainable<VoiceSelectionExplanationValue> {
+  const { selectedVoice, selectedScore, scores, effectiveLastVoice } = computeVoiceScores(
+    metrics,
+    prefs,
+    currentVoiceName,
+  );
+
+  const rankedScores = Object.entries(scores)
+    .sort((a, b) => b[1] - a[1])
+    .map(([voice, score]) => ({ voice, score }));
+
+  const topAlternatives = rankedScores.slice(0, 3);
+
+  const how: ExplainStep[] = [
+    {
+      label: 'collect_metrics',
+      formula: 'use current IskraMetrics as resonance inputs',
+      inputs: {
+        rhythm: metrics.rhythm,
+        trust: metrics.trust,
+        pain: metrics.pain,
+        chaos: metrics.chaos,
+        drift: metrics.drift,
+        clarity: metrics.clarity,
+        silence_mass: metrics.silence_mass,
+        echo: metrics.echo,
+        mirror_sync: metrics.mirror_sync,
+      },
+      output: { currentVoiceName: effectiveLastVoice },
+      refs: VOICE_EXPLANATION_REFS,
+    },
+    {
+      label: 'score_voices',
+      formula: 'activation(metrics, prefs, currentVoiceName)',
+      inputs: {
+        currentVoiceName: effectiveLastVoice,
+        hasPreferences: Boolean(prefs),
+      },
+      output: scores,
+      refs: VOICE_EXPLANATION_REFS,
+    },
+    {
+      label: 'select_highest_score',
+      formula: 'argmax(score)',
+      inputs: {
+        rankedTop3: JSON.stringify(topAlternatives),
+      },
+      output: {
+        selectedVoice: selectedVoice.name,
+        selectedScore,
+      },
+      refs: VOICE_EXPLANATION_REFS,
+    },
+  ];
+
+  return {
+    value: {
+      selectedVoice: selectedVoice.name,
+      selectedScore,
+      currentVoiceName: effectiveLastVoice,
+      scores,
+    },
+    how,
+    contracts_checked: [
+      'selectedVoice exists in canonical voice set',
+      'scores include all runtime/iskraSpace voices',
+      'how.length > 0',
+    ],
+    evidence: VOICE_EXPLANATION_REFS,
+  };
+}
+
+export function getActiveVoiceWithExplanation(
+  metrics: IskraMetrics,
+  prefs?: VoicePreferences,
+  currentVoiceName?: VoiceName,
+): { voice: Voice; explanation: Explainable<VoiceSelectionExplanationValue> } {
+  const explanation = getVoiceSelectionExplanation(metrics, prefs, currentVoiceName);
+  const voice = VOICES.find((candidate) => candidate.name === explanation.value.selectedVoice) || VOICES[0];
+
+  return { voice, explanation };
+}
+
+export function getActiveVoice(metrics: IskraMetrics, prefs?: VoicePreferences, currentVoiceName?: VoiceName): Voice {
+  return getActiveVoiceWithExplanation(metrics, prefs, currentVoiceName).voice;
 }
 
 export function getSystemInstructionForVoice(voice: Voice): string {
