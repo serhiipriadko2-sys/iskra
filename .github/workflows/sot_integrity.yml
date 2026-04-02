@@ -27,8 +27,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Verify SoT hashes (ledger/sot.json)
-        run: python tools/verify_ledger.py
+        run: npx tsx tools/verify_ledger.ts
 
       - name: Verify package boundaries (no deep src imports)
         run: python tools/check_no_src_imports.py
@@ -56,7 +61,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -73,4 +78,4 @@ jobs:
         run: |
           python tools/build_phase1_classification.py
           python tools/check_core_adr_gate.py core/mantra.md governance/adr.md
-          python tools/verify_ledger.py
+          npx tsx tools/verify_ledger.ts
