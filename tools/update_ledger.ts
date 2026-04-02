@@ -19,9 +19,10 @@ const CHECKSUM_DEFAULTS = {
 };
 
 function sha256_file(filePath: string): string {
-    const fileBuffer = fs.readFileSync(filePath);
+    // Normalize line endings to LF for consistent hashing across Windows/Linux
+    const content = fs.readFileSync(filePath, 'utf-8').replace(/\r\n/g, '\n');
     const hashSum = crypto.createHash('sha256');
-    hashSum.update(fileBuffer);
+    hashSum.update(content, 'utf-8');
     return hashSum.digest('hex');
 }
 
