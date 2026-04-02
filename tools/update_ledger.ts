@@ -26,7 +26,7 @@ function sha256_file(filePath: string): string {
 }
 
 function should_exclude(rel_path: string): boolean {
-    const parts = rel_path.split(path.sep);
+    const parts = rel_path.split('/');
     if (parts.includes('__pycache__') || rel_path.endsWith('.pyc')) return true;
     if (parts.includes('node_modules')) return true;
     if (parts.includes('coverage')) return true;
