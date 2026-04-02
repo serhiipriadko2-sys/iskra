@@ -62,7 +62,7 @@ export class CoreEngine {
     let graph: { nodes: MantraNode[]; trace: GraphRagTrace } = { nodes: [], trace: { seeds: [], steps: [] } };
     try {
       // Pass signal down to graphRag if implemented
-      graph = await this.graphRag.retrieve(text, currentMetrics, { signal: _signal });
+      graph = await this.graphRag.retrieve(text, currentMetrics, { ...(_signal ? { signal: _signal } : {}) });
       traceSteps.push({
         label: 'graphrag_retrieval',
         inputs: { query: text },
