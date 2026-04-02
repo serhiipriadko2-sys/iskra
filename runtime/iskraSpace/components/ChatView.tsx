@@ -1,12 +1,13 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import ChatWindow from './ChatWindow';
 import { IskraAIService, type PolicyStreamResult } from '../services/geminiService';
 import { searchService } from '../services/searchService';
 import { Message, IskraMetrics, Voice, VoiceName, SearchResult, VoicePreferences, ResponseMode } from '../types';
-import { getActiveVoice } from '../services/voiceEngine';
+import { getActiveVoice, getVoiceSelectionExplanation } from '../services/voiceEngine';
 import { storageService } from '../services/storageService';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
+import VoiceExplainableDisplay from './ExplainableTrace';
 import { decode, decodeAudioData } from '../css/audioUtils';
 import { Volume2Icon, VolumeXIcon, SparkleIcon, XIcon } from './icons';
 
@@ -67,6 +68,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   // Policy / Integrity observability (last turn)
   const [lastPolicyDecision, setLastPolicyDecision] = useState<any | null>(null);
   const [lastPostIntegrity, setLastPostIntegrity] = useState<any | null>(null);
+  const [showVoiceWhy, setShowVoiceWhy] = useState(false);
 
   // Cycle through response modes: simple → deep → debate → simple
   const cycleResponseMode = () => {
@@ -326,6 +328,11 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   // Get current voice visuals
   const voiceStyle = currentVoice ? VOICE_COLORS[currentVoice.name] : 'border-border';
 
+  const voiceExplanation = useMemo(() => {
+    if (selectedVoiceName !== 'AUTO' || !currentVoice) return null;
+    return getVoiceSelectionExplanation(metrics, voicePrefs, currentVoice.name);
+  }, [currentVoice, metrics, selectedVoiceName, voicePrefs]);
+
   return (
     <div className="flex flex-col h-full overflow-hidden animate-fade-in relative">
         
@@ -342,6 +349,17 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
                         Активен: {currentVoice.name}
                     </span>
                 )}
+                {selectedVoiceName === 'AUTO' && currentVoice && voiceExplanation && (
+                    <button
+                        onClick={() => setShowVoiceWhy((prev) => !prev)}
+                        className={`px-2 py-0.5 rounded-full text-xs border flex items-center gap-1 transition-colors ${showVoiceWhy ? 'text-primary bg-primary/10 border-primary/20' : 'text-text-muted bg-white/5 border-white/10 hover:bg-white/10'}`}
+                        title="Показать explainable trace выбора голоса"
+                    >
+                        <span>💡</span>
+                        <span>{showVoiceWhy ? 'Скрыть почему' : 'Почему?'}</span>
+                    </button>
+                )}
+
                 {/* Response Mode Switcher */}
                 <button
                     onClick={cycleResponseMode}
@@ -430,6 +448,12 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
             </div>
          </div>
       </header>
+
+      {showVoiceWhy && voiceExplanation && (
+        <div className="relative z-10 px-4 pt-4">
+          <VoiceExplainableDisplay explainable={voiceExplanation} />
+        </div>
+      )}
       
       <div className="flex-grow overflow-hidden relative z-10">
         {/* Applying Voice Aura to window */}

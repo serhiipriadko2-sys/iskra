@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { getActiveVoice, getSystemInstructionForVoice } from '../voiceEngine';
+import { getActiveVoice, getActiveVoiceWithExplanation, getSystemInstructionForVoice } from '../voiceEngine';
 import { IskraMetrics, VoicePreferences } from '../../types';
 
 // Mock storageService
@@ -187,6 +187,17 @@ describe('voiceEngine', () => {
       const voice = getActiveVoice(metrics);
 
       expect(voice.name).toBe('SIBYL');
+    });
+
+    it('should return explainable trace that matches selected voice', () => {
+      const metrics = createMetrics({ pain: 0.8, chaos: 0.2, drift: 0.1 });
+      const selected = getActiveVoice(metrics);
+      const explained = getActiveVoiceWithExplanation(metrics);
+
+      expect(explained.voice.name).toBe(selected.name);
+      expect(explained.explanation.value.selectedVoice).toBe(selected.name);
+      expect(explained.explanation.how.length).toBeGreaterThan(0);
+      expect(explained.explanation.value.scores.KAIN).toBeGreaterThan(0);
     });
 
     describe('with voice preferences', () => {

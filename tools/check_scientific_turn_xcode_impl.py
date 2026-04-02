@@ -182,8 +182,11 @@ def run_checks() -> List[AreaResult]:
             area="xcode",
             key="xcode_runtime_validator_exists",
             file="runtime/src/xcode/validateExplainable.ts",
-            pattern=r"export function validateExplainable",
-            found=_find("runtime/src/xcode/validateExplainable.ts", r"export function validateExplainable"),
+            pattern=r"export\s+(?:function\s+validateExplainable|\{\s*validateExplainable\s*\})",
+            found=_find(
+                "runtime/src/xcode/validateExplainable.ts",
+                r"export\s+(?:function\s+validateExplainable|\{\s*validateExplainable\s*\})",
+            ),
         ),
     ]
 

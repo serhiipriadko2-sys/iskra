@@ -18,6 +18,8 @@ export {
   DEFAULT_METRICS,
   calculateIntegrityScore,
   calculateAliveIndex,
+  calculateIntegrityScoreX,
+  calculateAliveIndexX,
 } from '@iskra/runtime';
 
 export type {
@@ -27,11 +29,20 @@ export type {
   VoicePreferences,
 } from '@iskra/runtime';
 
+export type {
+  EvidenceKind,
+  EvidenceRef,
+  ExplainStep,
+  Explainable,
+} from '@iskra/runtime';
+
 export {
   VOICE_SYMBOLS,
   VOICE_MANIFESTS,
   calculateVoiceScores,
   selectVoice,
+  selectVoiceX,
+  validateExplainable,
 } from '@iskra/runtime';
 
 export type { IskraPhase } from '@iskra/runtime';
