@@ -107,6 +107,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.88.0
         version: 2.98.0
+      iskra-monorepo:
+        specifier: file:../..
+        version: 'file:'
       react:
         specifier: ^19.2.0
         version: 19.2.4
@@ -1939,6 +1942,10 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  'iskra-monorepo@file:':
+    resolution: {directory: '', type: directory}
+    engines: {node: '>=20.0.0', pnpm: '>=9.0.0'}
 
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
@@ -4387,6 +4394,8 @@ snapshots:
   is-unicode-supported@2.1.0: {}
 
   isexe@2.0.0: {}
+
+  'iskra-monorepo@file:': {}
 
   jackspeak@3.4.3:
     dependencies:

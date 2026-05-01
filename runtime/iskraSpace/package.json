@@ -23,6 +23,7 @@
     "@google/genai": "^1.34.0",
     "@iskra/runtime": "file:..",
     "@supabase/supabase-js": "^2.88.0",
+    "iskra-monorepo": "file:../..",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
