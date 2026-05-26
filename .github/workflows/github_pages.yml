@@ -31,12 +31,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
-          cache-dependency-path: runtime/package-lock.json
 
       - name: Install runtime dependencies
         working-directory: runtime
-        run: npm install
+        run: npm install --no-fund --no-audit
 
       - name: Build @iskra/runtime
         working-directory: runtime
@@ -44,11 +42,11 @@ jobs:
 
       - name: Install iskraSpace dependencies
         working-directory: runtime/iskraSpace
-        run: npm install
+        run: npm install --no-fund --no-audit
 
       - name: TypeCheck iskraSpace
         working-directory: runtime/iskraSpace
-        run: npm run typecheck
+        run: npx tsc --noEmit
 
       - name: Build iskraSpace for GitHub Pages
         working-directory: runtime/iskraSpace
