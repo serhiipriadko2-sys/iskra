@@ -36,7 +36,7 @@ jobs:
 
       - name: Install runtime dependencies
         working-directory: runtime
-        run: npm ci
+        run: npm install
 
       - name: Build @iskra/runtime
         working-directory: runtime
@@ -44,7 +44,7 @@ jobs:
 
       - name: Install iskraSpace dependencies
         working-directory: runtime/iskraSpace
-        run: npm ci
+        run: npm install
 
       - name: TypeCheck iskraSpace
         working-directory: runtime/iskraSpace
