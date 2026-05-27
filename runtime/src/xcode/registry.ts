@@ -1,4 +1,4 @@
-import type { EvidenceRef } from '@iskra/core';
+import type { EvidenceRef } from '../types/explainable.js';
 
 export type XCodeRegistryEntry = {
   /** Stable ID, used by CI/QA gates. */
@@ -13,8 +13,8 @@ export type XCodeRegistryEntry = {
  * This is the enforcement surface for ADR-20260220.
  *
  * Notice: The active executing logic and QA test factories have been moved
- * into `@iskra/engine` and test helpers respectively to fulfill the
- * Scientific Turn architecture mandate.
+ * into engine-specific packages over time, but the registry itself remains
+ * local so `@iskra/runtime` stays self-contained for app builds.
  */
 export const XCODE_REQUIRED: XCodeRegistryEntry[] = [
   {
