@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { AppView } from '../App';
-import { PulseIcon, ListTodoIcon, BookTextIcon, UsersIcon, MicIcon, SparkleIcon, BrainCircuitIcon, MessageCircleIcon, LayersIcon, DatabaseIcon, FileSearchIcon, BeaconIcon, MenuIcon, XIcon, IskraLogo, ScaleIcon, CircleIcon } from './icons';
+import { PulseIcon, ListTodoIcon, BookTextIcon, UsersIcon, SparkleIcon, BrainCircuitIcon, MessageCircleIcon, LayersIcon, DatabaseIcon, FileSearchIcon, BeaconIcon, MenuIcon, XIcon, IskraLogo, ScaleIcon, CircleIcon } from './icons';
 import { soundService } from '../services/soundService';
 
 interface SidebarProps {
@@ -22,7 +22,6 @@ const NAV_ITEMS = [
 
 const SECONDARY_ITEMS = [
     { id: 'DUO', name: 'Связь', icon: UsersIcon },
-    { id: 'LIVE', name: 'Голос', icon: MicIcon },
     { id: 'RUNES', name: 'Руны', icon: SparkleIcon },
     { id: 'RESEARCH', name: 'Поиск', icon: FileSearchIcon },
     { id: 'MEMORY', name: 'Память', icon: DatabaseIcon },

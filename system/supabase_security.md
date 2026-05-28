@@ -5,6 +5,23 @@
 > рекомендациях сообщества и внутренних аудитов. Воспринимайте его как
 > живой чеклист: обновляйте, когда появляются новые практики.
 
+## 0. Current Iskra Live Priorities
+
+[FACT] Проверка live проекта `AgiIskra` на 2026-05-28 выявила несколько практических приоритетов:
+- permissive RLS на части `public.*` tables
+- GraphQL visibility для `anon` и `authenticated` там, где она не нужна
+- публично вызываемые `SECURITY DEFINER` RPC
+- слишком широкий privileged surface в `db-proxy`
+- public invoke у import/backfill/diagnostic Edge Functions
+- drift между repo assumptions и live embedding/retrieval surface
+
+Рабочие артефакты для этого прохода:
+- `docs/operations/sprint1_remediation_matrix.md`
+- `docs/architecture/ARCHITECTURE_TRUTH_BOUNDARY_v1.md`
+- `governance/adr_20260528_embedding_standard_v1.md`
+- `docs/security/db_proxy_decision_v1.md`
+- `docs/operations/sprint2_implementation_backlog.md`
+
 ## 1. Включайте Row Level Security (RLS)
 
 - **Включите RLS для каждой таблицы.** По умолчанию Supabase таблицы
@@ -14,6 +31,7 @@
   насколько это возможно: например, разрешать доступ пользователю только к
   своим записям или записям с общим `workspace_id`. Сложные выражения
   усложняют аудит и увеличивают риск ошибок.
+- **Не оставляйте permissive placeholders в production.** Always-true policies должны считаться временной аварийной мерой, а не рабочим состоянием.
 
 ## 2. Никогда не используйте `service_role` ключ на клиенте
 
@@ -24,6 +42,7 @@
   действует только в рамках RLS.
 - Храните ключи в переменных окружения (`.env`) и **не коммитте их** в
   репозиторий. Регулярно их обновляйте и ограничивайте время жизни.
+- Любой generic proxy поверх `service_role` должен считаться risky-by-default. См. `docs/security/db_proxy_decision_v1.md`.
 
 ## 3. Используйте Supabase Auth и минимизируйте права анона
 
@@ -32,6 +51,7 @@
 - Политики RLS должны различать `authenticated` и `anonymous` роли и
   предоставлять минимум доступа для анонимов. Например, анонимному
   пользователю можно разрешить только чтение публичных данных.
+- Если объект не должен быть discoverable до sign-in, отзывайте не только строки через RLS, но и лишний `SELECT`, чтобы он исчезал из GraphQL/Data API surface.
 
 ## 4. Ограничивайте частоту запросов и атак
 
@@ -40,6 +60,7 @@
   лимитировать по user id из Supabase Auth.
 - Применяйте ограничения на количество регистраций и восстановлений
   пароля в единицу времени.
+- Internal rate-limiting tables и helper RPC не должны быть публично discoverable без сильной причины.
 
 ## 5. Обеспечьте сетевую безопасность
 
@@ -61,6 +82,7 @@
   схем/баз для каждого клиента.
 - Разделяйте hot и cold данные (например, архивные логи можно вынести в
   отдельную таблицу/хранилище).
+- Для Iskra отдельно различайте `public` app-state и `iskra` canon-state. См. `docs/architecture/ARCHITECTURE_TRUTH_BOUNDARY_v1.md`.
 
 ## 7. Управляйте realtime‑подписками
 
@@ -85,6 +107,15 @@
 - `supabase/functions/embed/index.ts` обрабатывает `OPTIONS`, требует bearer‑token
   и (опционально) включает best‑effort rate limiting через env.
 - `packages/engine/src/services/safeEmbeddings.ts` даёт input‑hygiene+PII policy+cache.
+- Canon import/backfill/diagnostic functions не должны оставаться публично вызываемыми после bootstrap.
+
+## 9. Truth-Boundary Security Rules for Iskra
+
+1. `public.*` = user/app state, auth-scoped by default.
+2. `iskra.*` = canon-memory and retrieval domain, server-side write path only.
+3. Public executable `SECURITY DEFINER` functions are disallowed unless explicitly justified.
+4. Generic service-role HTTP proxies are disallowed as a steady-state architecture.
+5. Embedding model/dimension drift is a security and reliability problem, not just a quality problem.
 
 ## Источники
 
@@ -98,3 +129,5 @@
 ### Internal (Iskra)
 
 - `system/security.md` (no secrets) + `system/workflow_ops.md` (QA gates).
+- `docs/operations/sprint1_remediation_matrix.md`
+- `docs/security/db_proxy_decision_v1.md`

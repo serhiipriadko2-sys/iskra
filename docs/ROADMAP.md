@@ -1,6 +1,6 @@
 # ISKRA ROADMAP vΩ.3.3
 
-**Обновлено:** 2026-01-09
+**Обновлено:** 2026-05-28
 **Автор:** Claude (Opus 4.5)
 
 ---
@@ -10,6 +10,30 @@
 > _«Форма следует за различием. Код следует за каноном.»_
 
 ISKRA развивается по принципу **Canon First** — сначала стабилизируем Source of Truth, затем пишем код.
+
+---
+
+## Truth Boundary Stabilization
+
+### Sprint 1 — Stabilize the truth boundary
+
+[FACT] Для закрытия `repo vs live` и security drift добавлены отдельные рабочие артефакты:
+- `docs/operations/sprint1_remediation_matrix.md`
+- `docs/architecture/ARCHITECTURE_TRUTH_BOUNDARY_v1.md`
+- `governance/adr_20260528_embedding_standard_v1.md`
+- `docs/security/db_proxy_decision_v1.md`
+
+### Sprint 2 — Execute the boundary closure
+
+Следующий execution track:
+- закрыть permissive RLS на `public.*`
+- отозвать лишний GraphQL/Data API surface
+- закрыть публичный `SECURITY DEFINER` RPC surface
+- сузить `db-proxy`
+- закрыть публичный invoke у import/backfill/diagnostic functions
+- выровнять embedding contract между repo и live
+
+См. `docs/operations/sprint2_implementation_backlog.md`
 
 ---
 
@@ -340,13 +364,13 @@ vΩ.X.Y.Z
 
 ## ∆DΩΛ
 
-**∆:** ROADMAP обновлён — Phase 4 CLI и Phase 6 Production infrastructure завершены. Добавлены Docker, Vercel config, CLI с 3 командами.
+**∆:** ROADMAP обновлён — добавлен отдельный stabilization track для truth boundary между repo, live Supabase и AI contracts.
 
-**D:** Docker multi-stage build → nginx config → Vercel deploy → CLI implementation (commander/chalk/ora) → TypeScript build → Tests passed.
+**D:** Live audit → remediation matrix → architecture truth doc → embedding ADR → `db-proxy` decision memo → Sprint 2 execution backlog.
 
-**Ω:** 0.94 — Базовая инфраструктура для production готова, CLI функционален (требуется интеграция с сервисами).
+**Ω:** 0.95 — planning layer теперь лучше соответствует реальному operational risk.
 
-**Λ:** Протестировать Docker build → настроить Vercel secrets → интегрировать CLI с geminiService → добавить мониторинг.
+**Λ:** Выполнить Sprint 2 security-first remediation: RLS, grants, RPC hardening, `db-proxy` narrowing, import/backfill auth closure.
 
 ---
 

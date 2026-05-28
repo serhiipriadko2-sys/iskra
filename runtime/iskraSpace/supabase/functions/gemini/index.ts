@@ -15,9 +15,10 @@ const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') || '';
+const APP_ORIGIN = Deno.env.get('APP_ORIGIN') || '*';
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': APP_ORIGIN,
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
@@ -169,12 +170,15 @@ serve(async (req) => {
   } catch (error) {
     console.error('Edge function error:', error);
 
-    const statusCode = error.message.includes('Authorization') ? 401 :
-                       error.message.includes('Rate limit') ? 429 : 500;
+    const message = error instanceof Error ? error.message : 'Internal server error';
+    const statusCode = message.includes('Authorization') ||
+                       message.includes('Missing or invalid') ||
+                       message.includes('Invalid or expired token') ? 401 :
+                       message.includes('Rate limit') ? 429 : 500;
 
     return new Response(
       JSON.stringify({
-        error: error.message || 'Internal server error',
+        error: message,
       }),
       {
         status: statusCode,

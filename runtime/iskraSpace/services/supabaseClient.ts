@@ -77,6 +77,15 @@ async function ensureSession(): Promise<Session | null> {
 // Helper to get current user ID backed by a real Supabase session.
 export async function getUserId(): Promise<string> {
   const session = await ensureSession();
+/**
+ * Ensures the browser has a real Supabase Auth session.
+ *
+ * SECURITY: device-local UUIDs are not accepted by auth.uid()-based RLS.
+ * Anonymous Supabase Auth users still receive the authenticated Postgres role
+ * and a JWT, so user-owned rows can be protected by RLS.
+ */
+export async function ensureSupabaseSession(): Promise<string | null> {
+  const { data: { session } } = await supabase.auth.getSession();
 
   if (session?.user?.id) {
     return session.user.id;
@@ -102,6 +111,50 @@ export async function hasSupabaseSession(): Promise<boolean> {
 
 export function getLegacyDeviceId(): string | null {
   return safeStorage.getItem('iskra_device_id');
+  const { data, error } = await supabase.auth.signInAnonymously();
+  if (error) {
+    console.warn('Anonymous Supabase sign-in failed. Falling back to local-only mode.', error.message);
+    return null;
+  }
+
+  return data.session?.user?.id ?? data.user?.id ?? null;
+}
+
+/**
+ * Returns the current access token for Edge Functions.
+ * The anon publishable key is not a user JWT and must not be used as Bearer auth.
+ */
+export async function getAccessToken(): Promise<string | null> {
+  let { data: { session } } = await supabase.auth.getSession();
+
+  if (!session?.access_token) {
+    await ensureSupabaseSession();
+    ({ data: { session } } = await supabase.auth.getSession());
+  }
+
+  return session?.access_token ?? null;
+}
+
+// Helper to get current user ID.
+// Prefer a real Supabase Auth user. Fall back to a local-only ID only when
+// Supabase Auth is unavailable; DB writes will be blocked by secure RLS in that mode.
+export async function getUserId(): Promise<string> {
+  const authUserId = await ensureSupabaseSession();
+  if (authUserId) return authUserId;
+
+  let deviceId = safeStorage.getItem('iskra_device_id');
+  if (!deviceId) {
+    deviceId = generateUUID();
+    safeStorage.setItem('iskra_device_id', deviceId);
+  }
+
+  return deviceId;
+}
+
+// Helper to get current authenticated access token for protected Edge Functions
+export async function getAccessToken(): Promise<string | null> {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token ?? null;
 }
 
 // Check if Supabase is available

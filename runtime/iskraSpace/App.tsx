@@ -227,7 +227,16 @@ export default function App() {
                             {view === 'BEACON' && <BeaconView />}
                             {view === 'DUO' && <DuoLink />}
                             {view === 'CHAT' && <ChatView metrics={metrics} onUserInput={handleUserInput} />}
-                            {view === 'LIVE' && <LiveConversation metrics={metrics} />}
+                            {view === 'LIVE' && (
+                                <div className="flex h-full items-center justify-center p-6">
+                                    <div className="max-w-xl rounded-2xl border border-border bg-surface/80 p-6 text-center shadow-deep">
+                                        <h2 className="font-serif text-2xl text-text">Голос временно скрыт</h2>
+                                        <p className="mt-3 text-sm text-text-muted">
+                                            Этот режим не входит в текущий beta-контур. Voice path вернётся после перевода на безопасный серверный поток.
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                             {view === 'RUNES' && <RuneView metrics={metrics} />}
                             {view === 'RESEARCH' && <DeepResearchView metrics={metrics} />}
                             {view === 'MEMORY' && <MemoryView />}
