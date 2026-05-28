@@ -1,7 +1,7 @@
 # ISKRA Repository Index (RAG)
 
 > Machine-readable index for Retrieval-Augmented Generation
-> Version: vΩ.3.1 | Updated: 2026-01-03
+> Version: vΩ.3.2 | Updated: 2026-05-28
 
 ---
 
@@ -13,10 +13,37 @@
 | `system/` | Execution architecture | architecture.md, playbooks.md, sift_protocol.md, ews.md |
 | `runtime/` | TypeScript library + React app | src/types/, iskraSpace/ |
 | `metrics/` | 11 IskraMetrics | indices.md, evals.md |
-| `governance/` | ADR & policies | adr.md, policy.md |
+| `governance/` | ADR & policies | adr.md, policy.md, adr_20260528_embedding_standard_v1.md |
 | `ledger/` | Integrity (SHA-256) | sot.json |
 | `mind/` | Reflection layer | shadow_core.md, reflexions.md |
 | `appendix/` | Practices & rituals | liber_ignis.md, chronology.md |
+| `docs/operations/` | Live drift, remediation, execution | sprint1_remediation_matrix.md, sprint2_implementation_backlog.md |
+| `docs/architecture/` | Truth-boundary decisions | ARCHITECTURE_TRUTH_BOUNDARY_v1.md |
+| `docs/security/` | Security decision records | db_proxy_decision_v1.md |
+
+---
+
+## 0. Current Stabilization Entry Points
+
+### 0.1 Truth Boundary
+- **Location**: `docs/architecture/ARCHITECTURE_TRUTH_BOUNDARY_v1.md`
+- **Purpose**: Defines `public` vs `iskra`, approved flows, and production vs legacy surface.
+
+### 0.2 Live Security Remediation
+- **Location**: `docs/operations/sprint1_remediation_matrix.md`
+- **Purpose**: Table-by-table and function-by-function exposure, target state, fix path, and verification.
+
+### 0.3 Embedding Standard
+- **Location**: `governance/adr_20260528_embedding_standard_v1.md`
+- **Purpose**: Freezes canon embedding model/dimension contract.
+
+### 0.4 db-proxy Decision
+- **Location**: `docs/security/db_proxy_decision_v1.md`
+- **Purpose**: Captures the decision to constrain then replace/remove the privileged proxy surface.
+
+### 0.5 Sprint 2 Execution
+- **Location**: `docs/operations/sprint2_implementation_backlog.md`
+- **Purpose**: Highest-risk-first execution backlog for SQL, grants, RPC hardening, and Edge function tightening.
 
 ---
 
@@ -329,6 +356,8 @@ For optimal RAG retrieval, prioritize these documents:
 3. `system/architecture.md` - ∆DΩΛ
 4. `metrics/indices.md` - 11 Metrics
 5. `runtime/src/types/*.ts` - All type definitions
+6. `docs/architecture/ARCHITECTURE_TRUTH_BOUNDARY_v1.md` - Truth boundary between `public`, `iskra`, and live production surface
+7. `governance/adr_20260528_embedding_standard_v1.md` - Canon embedding contract
 
 ### Medium Priority (Implementation)
 1. `runtime/iskraSpace/services/voiceEngine.ts`
@@ -336,17 +365,22 @@ For optimal RAG retrieval, prioritize these documents:
 3. `runtime/iskraSpace/services/deltaProtocol.ts`
 4. `system/playbooks.md`
 5. `system/sift_protocol.md`
+6. `docs/operations/sprint1_remediation_matrix.md`
+7. `docs/security/db_proxy_decision_v1.md`
 
 ### Context Priority (Background)
 1. `mind/shadow_core.md`
 2. `appendix/liber_ignis.md`
 3. `governance/adr.md`
 4. `docs/AUDIT_REPORT.md`
+5. `docs/operations/sprint2_implementation_backlog.md`
 
 ---
 
 ## Version History
 
+- **vΩ.3.2** (2026-05-28): Truth-boundary stabilization docs indexed
+  - Added remediation, architecture boundary, embedding ADR, db-proxy decision, and Sprint 2 execution backlog
 - **vΩ.3.1** (2026-01-03): Phase 2 completion
   - Added runtime library tests (120 tests in src/__tests__/)
   - Unified types: VoiceName, IskraPhase, VoicePreferences
