@@ -21,7 +21,8 @@ const model = "gemini-2.5-flash";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const GEMINI_EDGE_FN_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1/gemini` : '';
+const GEMINI_FUNCTION_SLUG = import.meta.env.VITE_GEMINI_FUNCTION_SLUG || 'gemini';
+const GEMINI_EDGE_FN_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1/${GEMINI_FUNCTION_SLUG}` : '';
 
 
 interface LegacyLiveSession {
