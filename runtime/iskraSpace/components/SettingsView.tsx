@@ -13,9 +13,6 @@ const SettingsView: React.FC = () => {
     const [integrityReport, setIntegrityReport] = useState<IntegrityReport | null>(null);
     const [isCheckingIntegrity, setIsCheckingIntegrity] = useState(false);
 
-    const [isUpdating, setIsUpdating] = useState(false);
-    const [updateStatus, setUpdateStatus] = useState<string | null>(null);
-
     const [responseMode, setResponseMode] = useState<ResponseMode>(storageService.getResponseMode());
 
     const handleResponseModeChange = (mode: ResponseMode) => {
@@ -82,20 +79,6 @@ const SettingsView: React.FC = () => {
             setIntegrityReport(report);
             setIsCheckingIntegrity(false);
         }, 800);
-    };
-
-    const handleUpdate = () => {
-        setIsUpdating(true);
-        setUpdateStatus("Проверка версий...");
-        
-        setTimeout(() => {
-             setUpdateStatus("Синхронизация изменений (Git Pull)...");
-             setTimeout(() => {
-                 setIsUpdating(false);
-                 setUpdateStatus("Система обновлена. Версия канона соответствует master/HEAD.");
-                 setTimeout(() => setUpdateStatus(null), 3000);
-             }, 1500);
-        }, 1000);
     };
 
     return (
@@ -267,24 +250,13 @@ const SettingsView: React.FC = () => {
                         <h3 className="font-serif text-xl text-text">Система</h3>
                     </div>
                      <div className="space-y-3 text-sm">
-                         <div className="flex justify-between items-center">
+                         <div className="flex justify-between">
                              <span className="text-text-muted">Версия Канона</span>
-                             <div className="flex items-center gap-3">
-                                <span className="font-mono text-text">v3.0.0</span>
-                                <button 
-                                    onClick={handleUpdate} 
-                                    disabled={isUpdating}
-                                    className="text-xs bg-surface2 border border-white/10 px-2 py-1 rounded hover:bg-white/10 transition-colors text-accent disabled:opacity-50"
-                                >
-                                    {isUpdating ? <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" /> : 'Синхронизация (Pull)'}
-                                </button>
-                             </div>
+                             <span className="font-mono text-text">v3.0.0</span>
                          </div>
-                         {updateStatus && (
-                             <div className="text-xs font-mono text-success bg-success/10 p-2 rounded border border-success/20 animate-fade-in">
-                                 {updateStatus}
-                             </div>
-                         )}
+                         <div className="rounded-lg border border-border bg-surface2/50 p-3 text-xs text-text-muted">
+                             Обновление приложения выполняется вне интерфейса. Этот экран показывает состояние и локальные инструменты, но не запускает pull или деплой.
+                         </div>
                           <div className="flex justify-between">
                              <span className="text-text-muted">Версия Приложения</span>
                              <span className="font-mono text-text">vΩ.1.3 (React 19)</span>
