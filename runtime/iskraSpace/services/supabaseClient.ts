@@ -64,6 +64,12 @@ export async function getUserId(): Promise<string> {
   return deviceId;
 }
 
+// Helper to get current authenticated access token for protected Edge Functions
+export async function getAccessToken(): Promise<string | null> {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token ?? null;
+}
+
 // Check if Supabase is available
 export async function isSupabaseAvailable(): Promise<boolean> {
   try {
