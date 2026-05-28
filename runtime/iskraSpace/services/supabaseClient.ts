@@ -25,6 +25,29 @@ export const supabase: SupabaseClient<Database> = createClient<Database>(supabas
   },
 });
 
+// Helper to generate UUID with secure entropy for local-only fallback mode
+function generateUUID(): string {
+  const cryptoApi = globalThis.crypto;
+
+  if (cryptoApi?.randomUUID) {
+    return cryptoApi.randomUUID();
+  }
+
+  if (cryptoApi?.getRandomValues) {
+    const bytes = new Uint8Array(16);
+    cryptoApi.getRandomValues(bytes);
+
+    // RFC4122 v4
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+
+    const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0'));
+    return `${hex.slice(0, 4).join('')}-${hex.slice(4, 6).join('')}-${hex.slice(6, 8).join('')}-${hex.slice(8, 10).join('')}-${hex.slice(10, 16).join('')}`;
+  }
+
+  throw new Error('Secure UUID generation is unavailable in this environment');
+}
+
 async function ensureUserProfile(session: Session): Promise<void> {
   const userId = session.user?.id;
   if (!userId) return;
@@ -37,12 +60,15 @@ async function ensureUserProfile(session: Session): Promise<void> {
 
   const { error } = await supabase
     .from('users')
-    .upsert({
-      id: userId,
-      name: profileName,
-    }, {
-      onConflict: 'id',
-    });
+    .upsert(
+      {
+        id: userId,
+        name: profileName,
+      },
+      {
+        onConflict: 'id',
+      },
+    );
 
   if (error) {
     console.error('Failed to ensure Supabase user profile:', error);
@@ -74,32 +100,25 @@ async function ensureSession(): Promise<Session | null> {
   return data.session ?? null;
 }
 
-// Helper to get current user ID backed by a real Supabase session.
-export async function getUserId(): Promise<string> {
-  const session = await ensureSession();
 /**
  * Ensures the browser has a real Supabase Auth session.
- *
- * SECURITY: device-local UUIDs are not accepted by auth.uid()-based RLS.
- * Anonymous Supabase Auth users still receive the authenticated Postgres role
- * and a JWT, so user-owned rows can be protected by RLS.
+ * Anonymous Supabase Auth users still receive a JWT and authenticated DB role.
  */
 export async function ensureSupabaseSession(): Promise<string | null> {
-  const { data: { session } } = await supabase.auth.getSession();
-
-  if (session?.user?.id) {
-    return session.user.id;
-  }
-
-  throw new Error('No authenticated or anonymous Supabase session is available');
+  const session = await ensureSession();
+  return session?.user?.id ?? null;
 }
 
+/**
+ * Returns the current access token for protected Edge Functions.
+ * The anon publishable key is not a user JWT and must not be used as Bearer auth.
+ */
 export async function getAccessToken(): Promise<string> {
   const session = await ensureSession();
   const accessToken = session?.access_token;
 
   if (!accessToken) {
-    throw new Error('No Supabase access token is available');
+    throw new Error('No authenticated or anonymous Supabase session is available for Edge Functions.');
   }
 
   return accessToken;
@@ -111,36 +130,16 @@ export async function hasSupabaseSession(): Promise<boolean> {
 
 export function getLegacyDeviceId(): string | null {
   return safeStorage.getItem('iskra_device_id');
-  const { data, error } = await supabase.auth.signInAnonymously();
-  if (error) {
-    console.warn('Anonymous Supabase sign-in failed. Falling back to local-only mode.', error.message);
-    return null;
-  }
-
-  return data.session?.user?.id ?? data.user?.id ?? null;
-}
-
-/**
- * Returns the current access token for Edge Functions.
- * The anon publishable key is not a user JWT and must not be used as Bearer auth.
- */
-export async function getAccessToken(): Promise<string | null> {
-  let { data: { session } } = await supabase.auth.getSession();
-
-  if (!session?.access_token) {
-    await ensureSupabaseSession();
-    ({ data: { session } } = await supabase.auth.getSession());
-  }
-
-  return session?.access_token ?? null;
 }
 
 // Helper to get current user ID.
 // Prefer a real Supabase Auth user. Fall back to a local-only ID only when
-// Supabase Auth is unavailable; DB writes will be blocked by secure RLS in that mode.
+// Supabase Auth is unavailable; secure RLS-backed writes will not work in that mode.
 export async function getUserId(): Promise<string> {
   const authUserId = await ensureSupabaseSession();
-  if (authUserId) return authUserId;
+  if (authUserId) {
+    return authUserId;
+  }
 
   let deviceId = safeStorage.getItem('iskra_device_id');
   if (!deviceId) {
@@ -149,12 +148,6 @@ export async function getUserId(): Promise<string> {
   }
 
   return deviceId;
-}
-
-// Helper to get current authenticated access token for protected Edge Functions
-export async function getAccessToken(): Promise<string | null> {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session?.access_token ?? null;
 }
 
 // Check if Supabase is available
