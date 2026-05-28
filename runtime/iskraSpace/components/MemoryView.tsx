@@ -38,9 +38,9 @@ const MemoryView: React.FC = () => {
     loadMemory();
   }, []);
 
-  const loadMemory = async () => {
+  const loadMemory = async (forceSearchRebuild = false) => {
         setIsLoading(true);
-        await searchService.build(); // Pre-build index
+        await searchService.build(forceSearchRebuild);
         setArchive(memoryService.getArchive());
         setShadow(memoryService.getShadow());
         setIsLoading(false);
@@ -121,7 +121,8 @@ const MemoryView: React.FC = () => {
       setNewContent('');
       setNewType('event');
       setFileError(null);
-      loadMemory();
+      searchService.invalidate();
+      loadMemory(true);
   };
 
   const filteredArchive = useMemo(() => {
