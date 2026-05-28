@@ -39,10 +39,20 @@ jobs:
         run: npm ci --ignore-scripts || npm install --ignore-scripts
 
       - name: TypeScript typecheck
-        run: npm run typecheck
+        run: npm run typecheck 2>&1 | tee runtime-typecheck.log
 
       - name: Build
-        run: npm run build
+        run: npm run build 2>&1 | tee runtime-build.log
+
+      - name: Upload runtime diagnostics
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: runtime-ci-diagnostics
+          path: |
+            runtime/runtime-typecheck.log
+            runtime/runtime-build.log
+          retention-days: 7
 
       - name: Run tests with coverage
         run: npm run test:coverage -- --run
