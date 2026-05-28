@@ -1,4 +1,4 @@
-import type { Explainable, EvidenceRef } from '@iskra/core';
+import type { Explainable, EvidenceRef } from '../../types/explainable.js';
 import {
   DEFAULT_METRICS,
   calculateAliveIndex,
