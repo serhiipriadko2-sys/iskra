@@ -8,6 +8,8 @@ import { IskraAIService } from './geminiService';
  * Hybrid search: lexical (tf-idf-like) + semantic (embeddings).
  */
 class SearchService {
+  private readonly remoteSemanticEnabled = import.meta.env.VITE_ENABLE_REMOTE_SEMANTIC_SEARCH === 'true';
+  private readonly allowSensitiveRemoteEmbedding = import.meta.env.VITE_ALLOW_SENSITIVE_REMOTE_EMBEDDING === 'true';
   private ready = false;
   private lexIndex: {
     docs: { id: string; type: SearchResult['type']; layer?: MemoryNodeLayer; text: string; title?: string; tags?: string[]; ts?: number }[];
@@ -41,6 +43,12 @@ class SearchService {
       return this.aiService;
   }
 
+  private isRemoteEmbeddingAllowed(doc: { type: SearchResult['type'] }): boolean {
+    if (this.allowSensitiveRemoteEmbedding) return true;
+    return doc.type === 'task';
+  }
+
+  async build() {
   invalidate() {
     this.ready = false;
     this.lexIndex = { docs: [], vocab: new Map() };
@@ -112,10 +120,6 @@ ${JSON.stringify(n.content) || ''}`, title: n.title, tags: [...(n.tags || []), `
     }
     const { docs } = this.lexIndex;
 
-    // Generate query embedding using lazy loaded service
-    const queryVector = await this.getAi().getEmbedding(query);
-    const useSemantic = queryVector.length > 0;
-
     // 1. Filter
     const pool = docs.filter(d => {
       if (filters.type && !filters.type.includes(d.type)) return false;
@@ -126,13 +130,25 @@ ${JSON.stringify(n.content) || ''}`, title: n.title, tags: [...(n.tags || []), `
       return true;
     });
 
+    const semanticPool = this.remoteSemanticEnabled
+      ? pool.filter((doc) => this.isRemoteEmbeddingAllowed(doc))
+      : [];
+
+    // Generate query embedding using lazy loaded service only when remote semantic search is allowed.
+    const queryVector = this.remoteSemanticEnabled
+      ? await this.getAi().getEmbedding(query)
+      : [];
+    const useSemantic = queryVector.length > 0;
+
     // 2. Score (Hybrid)
     const lexScored = pool.map(d => ({
         doc: d,
         lexScore: this.scoreLex(query, d.text)
     })).filter(i => i.lexScore > 0).sort((a, b) => b.lexScore - a.lexScore);
     
-    const topCandidates = lexScored.slice(0, 5);
+    const topCandidates = lexScored
+      .filter((candidate) => !useSemantic || semanticPool.some((doc) => doc.id === candidate.doc.id))
+      .slice(0, 5);
     
     const finalResults = await Promise.all(topCandidates.map(async (candidate) => {
         let semanticScore = 0;

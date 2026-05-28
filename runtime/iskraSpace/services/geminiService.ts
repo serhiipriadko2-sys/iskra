@@ -9,6 +9,7 @@ import {
   saveIntegrityState,
 } from './integrityService';
 import { storageService } from "./storageService";
+import { getAccessToken } from './supabaseClient';
 
 
 export interface PolicyStreamResult {
@@ -167,12 +168,14 @@ function extractTextFromGeminiResponse(data: unknown): string {
 }
 
 async function callGeminiEdgeFunction(payload: Record<string, unknown>): Promise<Response> {
+  const accessToken = await getAccessToken();
+
   const res = await fetch(GEMINI_EDGE_FN_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify(payload),
   });
