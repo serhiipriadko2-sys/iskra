@@ -41,7 +41,17 @@ class SearchService {
       return this.aiService;
   }
 
-  async build() {
+  invalidate() {
+    this.ready = false;
+    this.lexIndex = { docs: [], vocab: new Map() };
+    this.vectors.clear();
+  }
+
+  async build(force = false) {
+    if (force) {
+      this.invalidate();
+    }
+
     if (this.ready) return;
 
     // 1. Collect documents
@@ -56,7 +66,8 @@ class SearchService {
     
     const memDoc = (n: MemoryNode, layer: MemoryNodeLayer) => ({
       id: `memory_${layer}_${n.id}`, type: 'memory' as const, layer,
-      text: `${n.title || ''}\n${JSON.stringify(n.content) || ''}`, title: n.title, tags: [...(n.tags || []), `_type:${n.type}`], ts: +new Date(n.timestamp)
+      text: `${n.title || ''}
+${JSON.stringify(n.content) || ''}`, title: n.title, tags: [...(n.tags || []), `_type:${n.type}`], ts: +new Date(n.timestamp)
     });
     const memory = [
       ...archive.map(n => memDoc(n, 'archive')),
