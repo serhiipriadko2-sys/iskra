@@ -21,9 +21,19 @@ const model = "gemini-2.5-flash";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const GEMINI_FUNCTION_SLUG = import.meta.env.VITE_GEMINI_FUNCTION_SLUG || 'gemini';
-const GEMINI_EDGE_FN_URL = SUPABASE_URL ? `${SUPABASE_URL}/functions/v1/${GEMINI_FUNCTION_SLUG}` : '';
+const GEMINI_EDGE_FUNCTION_SLUG = normalizeEdgeFunctionSlug(
+  import.meta.env.VITE_GEMINI_EDGE_FUNCTION_SLUG ||
+    import.meta.env.VITE_GEMINI_FUNCTION_SLUG ||
+    'gemini'
+);
+const GEMINI_EDGE_FN_URL =
+  SUPABASE_URL && GEMINI_EDGE_FUNCTION_SLUG
+    ? `${SUPABASE_URL}/functions/v1/${GEMINI_EDGE_FUNCTION_SLUG}`
+    : '';
 
+function normalizeEdgeFunctionSlug(slug: string): string {
+  return slug.trim().replace(/^\/+|\/+$/g, '');
+}
 
 interface LegacyLiveSession {
   sendRealtimeInput(args: { media: Blob }): void
@@ -55,6 +65,7 @@ const OFFLINE_MODE =
   Boolean(import.meta.env.VITEST) ||
   !SUPABASE_URL ||
   !SUPABASE_ANON_KEY ||
+  !GEMINI_EDGE_FUNCTION_SLUG ||
   !GEMINI_EDGE_FN_URL;
 
 /**
