@@ -32,7 +32,10 @@ jobs:
         run: npm ci --ignore-scripts || npm install --ignore-scripts
 
       - name: Build @iskra/runtime
-        run: npm run build 2>&1 | tee runtime-build.log
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee runtime-build.log
 
       - name: Install iskraSpace dependencies
         working-directory: runtime/iskraSpace
@@ -40,30 +43,42 @@ jobs:
 
       - name: TypeScript typecheck
         working-directory: runtime/iskraSpace
-        run: npm run typecheck 2>&1 | tee iskraspace-typecheck.log
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run typecheck 2>&1 | tee iskraspace-typecheck.log
 
       - name: Lint
         working-directory: runtime/iskraSpace
-        run: npm run lint 2>&1 | tee iskraspace-lint.log
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run lint 2>&1 | tee iskraspace-lint.log
 
       - name: Run unit tests
         working-directory: runtime/iskraSpace
-        run: npm run test:run 2>&1 | tee iskraspace-test.log
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:run 2>&1 | tee iskraspace-unit.log
 
       - name: Build iskraSpace
         working-directory: runtime/iskraSpace
-        run: npm run build 2>&1 | tee iskraspace-build.log
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee iskraspace-build.log
 
       - name: Upload iskraSpace diagnostics
         uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+        if: ${{ failure() }}
         with:
           name: iskraspace-ci-diagnostics
           path: |
             runtime/runtime-build.log
             runtime/iskraSpace/iskraspace-typecheck.log
             runtime/iskraSpace/iskraspace-lint.log
-            runtime/iskraSpace/iskraspace-test.log
+            runtime/iskraSpace/iskraspace-unit.log
             runtime/iskraSpace/iskraspace-build.log
           retention-days: 7
 
@@ -89,7 +104,10 @@ jobs:
         run: npm ci --ignore-scripts || npm install --ignore-scripts
 
       - name: Build @iskra/runtime
-        run: npm run build
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee runtime-build-e2e.log
 
       - name: Install iskraSpace dependencies
         working-directory: runtime/iskraSpace
@@ -101,15 +119,10 @@ jobs:
 
       - name: Run E2E tests
         working-directory: runtime/iskraSpace
-        run: npx playwright test --project=chromium 2>&1 | tee iskraspace-e2e.log
-
-      - name: Upload E2E diagnostics
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: iskraspace-e2e-diagnostics
-          path: runtime/iskraSpace/iskraspace-e2e.log
-          retention-days: 7
+        shell: bash
+        run: |
+          set -o pipefail
+          npx playwright test --project=chromium 2>&1 | tee iskraspace-e2e.log
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
@@ -117,4 +130,14 @@ jobs:
         with:
           name: playwright-report
           path: runtime/iskraSpace/playwright-report/
+          retention-days: 7
+
+      - name: Upload iskraSpace e2e diagnostics
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: iskraspace-e2e-diagnostics
+          path: |
+            runtime/runtime-build-e2e.log
+            runtime/iskraSpace/iskraspace-e2e.log
           retention-days: 7
