@@ -105,6 +105,7 @@ Input: Sprint 1 remediation matrix, architecture truth doc, embedding ADR, `db-p
 
 **Why fourth**
 - [FACT] It is the broadest live privileged tunnel because it supports arbitrary CRUD plus RPC using service-role credentials.
+- [FACT] Its live source is currently missing from the repo paths checked during this pass, so this is also a function-source drift issue.
 
 **Work**
 - remove generic `select/insert/update/delete`
@@ -112,6 +113,7 @@ Input: Sprint 1 remediation matrix, architecture truth doc, embedding ADR, `db-p
 - add structured audit logging for every invocation
 - reject arbitrary table input
 - document any remaining approved operations
+- import or recreate the tracked function source in repo so future changes can be reviewed normally
 
 **Dependencies**
 - must know whether any hidden operational flow still depends on current broad behavior
@@ -120,6 +122,7 @@ Input: Sprint 1 remediation matrix, architecture truth doc, embedding ADR, `db-p
 - no arbitrary table CRUD path remains
 - only approved RPC calls succeed
 - audit trail exists for every invocation
+- repo contains the tracked source or the function is retired
 
 ---
 
@@ -321,6 +324,7 @@ Input: Sprint 1 remediation matrix, architecture truth doc, embedding ADR, `db-p
 - [HYP] Hidden dependency on current `db-proxy` behavior may slow P0-4.
 - [INTERP] `claim_legacy_data(...)` may have edge-case users depending on it, so removal should follow verification, not assumption.
 - [INTERP] `public.memory_nodes` may be more coupled to app logic than current visible evidence shows.
+- [FACT] `db-proxy` currently has a live implementation without a tracked repo source at the expected function paths checked during this pass.
 
 ## Sprint 2 Exit Criteria
 

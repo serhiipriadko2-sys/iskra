@@ -1,19 +1,33 @@
 # Supabase (Scientific Turn)
 
-This folder contains **Edge Functions** used by Iskra.
+This folder contains **Edge Functions** and **schema/migration artifacts** used by Iskra.
 
-## Database (pgvector + HNSW)
+## Current Truth-Boundary Notes
 
-GraphRAG at scale needs DB-side ANN (Approximate Nearest Neighbors). We use:
+[FACT] The repository currently contains both:
+- a legacy `public.memory_nodes` GraphRAG path documented below
+- a newer live canon-ingestion path in schema `iskra.*` with a `1536`-dimension embedding contract
+
+[FACT] Sprint 1 fixed the planning layer for this drift with:
+- `docs/architecture/ARCHITECTURE_TRUTH_BOUNDARY_v1.md`
+- `governance/adr_20260528_embedding_standard_v1.md`
+- `docs/operations/sprint1_remediation_matrix.md`
+- `docs/operations/sprint2_implementation_backlog.md`
+
+[RULE] Until repo and live are fully reconciled, do not assume that the older `public.memory_nodes` path is the production canon-retrieval truth.
+
+## Database (legacy public GraphRAG path)
+
+GraphRAG at scale needs DB-side ANN (Approximate Nearest Neighbors). The legacy repo path uses:
 
 - Postgres `pgvector`
 - `HNSW` index for cosine distance
 
-Schema + RPC live in:
+Schema + RPC are documented in:
 
 - `supabase/migrations/20260301141500_memory_nodes_pgvector_hnsw.sql`
 
-It creates:
+This older path describes:
 
 - `public.memory_nodes` (embedding `vector(384)` for `gte-small`)
 - HNSW index: `USING hnsw (embedding vector_cosine_ops)`
@@ -24,8 +38,22 @@ It creates:
 
 ### SECURITY
 
-- `memory_nodes` has **RLS enabled** and default policies require an **authenticated user**.
-- If you need server-side ingestion/querying, do it in trusted environments (Edge/Server) with a service role key in env.
+- `memory_nodes` must have **RLS enabled** with owner-scoped access if it remains part of the app-state domain.
+- If `public.memory_nodes` is deprecated in favor of `iskra.*`, freeze writes and migrate callers instead of treating both domains as equivalent.
+
+## Canon Embedding Standard (current target)
+
+[DECISION] For canon ingestion and canon retrieval, the target standard is:
+- model: `text-embedding-3-small`
+- dimensions: `1536`
+
+See:
+- `governance/adr_20260528_embedding_standard_v1.md`
+
+This means:
+- canon ingestion/query paths must use one model/dimension contract
+- mixed-dimension canon retrieval is not allowed as a steady state
+- any future model change requires explicit reindex discipline
 
 ## embed
 
@@ -77,7 +105,18 @@ Notes:
   newer JWT Signing Keys. If you migrate to Signing Keys, implement manual JWT
   validation (see Supabase auth docs/examples).
 
-### Local DB smoke (optional)
+## Truth-Boundary Security Work
+
+The first repo-side execution pack for live security closure starts with:
+
+- `supabase/migrations/20260528182000_truth_boundary_p0_security_hardening.sql`
+
+It targets:
+- permissive RLS removal
+- unnecessary `anon` / `authenticated` table exposure revocation
+- privileged RPC execute revocation
+
+## Local DB smoke (optional)
 
 After `supabase start`, you can apply migrations and run a quick sanity check:
 
