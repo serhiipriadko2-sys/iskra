@@ -8,6 +8,7 @@ on:
   pull_request:
     paths:
       - "runtime/iskraSpace/**"
+      - ".github/workflows/iskraspace_ci.yml"
 
 jobs:
   build-and-test:
@@ -28,7 +29,7 @@ jobs:
           cache-dependency-path: runtime/package-lock.json
 
       - name: Install runtime dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts || npm install --ignore-scripts
 
       - name: Build @iskra/runtime
         run: npm run build
@@ -72,7 +73,7 @@ jobs:
           cache-dependency-path: runtime/package-lock.json
 
       - name: Install runtime dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts || npm install --ignore-scripts
 
       - name: Build @iskra/runtime
         run: npm run build
