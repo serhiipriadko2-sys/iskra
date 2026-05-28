@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          (npm ci --ignore-scripts || npm install --ignore-scripts) 2>&1 | tee runtime-install.log
+          { node --version; npm --version; npm ci --ignore-scripts || npm install --ignore-scripts; } 2>&1 | tee runtime-install.log
 
       - name: Build @iskra/runtime
         shell: bash
@@ -45,7 +45,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          (npm ci || npm install) 2>&1 | tee iskraspace-install.log
+          { node --version; npm --version; npm ci || npm install; } 2>&1 | tee iskraspace-install.log
 
       - name: TypeScript typecheck
         working-directory: runtime/iskraSpace
@@ -112,7 +112,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          (npm ci --ignore-scripts || npm install --ignore-scripts) 2>&1 | tee runtime-install-e2e.log
+          { node --version; npm --version; npm ci --ignore-scripts || npm install --ignore-scripts; } 2>&1 | tee runtime-install-e2e.log
 
       - name: Build @iskra/runtime
         shell: bash
@@ -125,7 +125,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          (npm ci || npm install) 2>&1 | tee iskraspace-install-e2e.log
+          { node --version; npm --version; npm ci || npm install; } 2>&1 | tee iskraspace-install-e2e.log
 
       - name: Install Playwright browsers
         working-directory: runtime/iskraSpace
