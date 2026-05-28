@@ -45,7 +45,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          npm ci 2>&1 | tee iskraspace-install.log
+          (npm ci || npm install) 2>&1 | tee iskraspace-install.log
 
       - name: TypeScript typecheck
         working-directory: runtime/iskraSpace
@@ -125,7 +125,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          npm ci 2>&1 | tee iskraspace-install-e2e.log
+          (npm ci || npm install) 2>&1 | tee iskraspace-install-e2e.log
 
       - name: Install Playwright browsers
         working-directory: runtime/iskraSpace
