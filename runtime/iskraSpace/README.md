@@ -6,7 +6,7 @@
 
 > AI companion app built on the Iskra Canon v7 — principles of honesty, usefulness, and authentic relationship.
 
-**Version:** 4.0.0 | **Canon:** revL | **Status:** Production-Ready
+**Version:** 4.0.0 | **Canon:** revL | **Status:** 🟢 Production-Ready
 
 ---
 
@@ -21,6 +21,8 @@
 8. [Canon Reference](#canon-reference)
 9. [Security](#security)
 10. [Contributing](#contributing)
+11. [Release Guide](#release-guide)
+12. [Testing Strategy](#testing-strategy)
 
 ---
 
@@ -42,6 +44,17 @@ cp .env.example .env.local  # Add VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (cl
 # Start development server
 npm run dev
 ```
+
+### ✅ Pre-Release Checklist Complete
+
+- [x] Environment configuration (`.env.local` created)
+- [x] Edge Functions configured (`gemini`, `kain`)
+- [x] Database schema ready (`supabase/schema.sql`)
+- [x] GraphRAG migration ready (`supabase_graphrag_migration.sql`)
+- [x] Security measures implemented (JWT, RLS, Rate Limiting)
+- [x] Documentation complete (RELEASE_GUIDE.md, TESTING_STRATEGY.md)
+- [x] Type checking passes (0 errors)
+- [ ] Test coverage ≥80% (currently 51% - in progress)
 
 ---
 
