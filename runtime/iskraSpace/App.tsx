@@ -9,7 +9,6 @@ const DayPulse = lazy(() => import('./components/DayPulse'));
 const Planner = lazy(() => import('./components/Planner'));
 const Journal = lazy(() => import('./components/Journal'));
 const DuoLink = lazy(() => import('./components/DuoLink'));
-const LiveConversation = lazy(() => import('./components/LiveConversation'));
 const RuneView = lazy(() => import('./components/TarotView'));
 const IskraStateView = lazy(() => import('./components/IskraStateView'));
 const ChatView = lazy(() => import('./components/ChatView'));
