@@ -71,7 +71,7 @@ const SectionButton = ({
 export default function ComponentPreview() {
   const [activeSection, setActiveSection] = useState<PreviewSectionId>('QUANTUM_FIELD');
   const [metrics, setMetrics] = useState<IskraMetrics>(() => buildMockMetrics());
-  const [activeVoice, setActiveVoice] = useState<VoiceName | undefined>(undefined);
+  const activeVoice: VoiceName | undefined = undefined;
 
   const status: SessionStatus = DEFAULT_STATUS;
 
@@ -107,7 +107,7 @@ export default function ComponentPreview() {
                 step={0.01}
                 value={metrics.chaos}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setMetrics((prev) => ({ ...prev, chaos: Number(e.target.value) }))
+                  setMetrics((prev: IskraMetrics) => ({ ...prev, chaos: Number(e.target.value) }))
                 }
               />
             </div>
@@ -133,14 +133,14 @@ export default function ComponentPreview() {
             <button
               type="button"
               className="px-3 py-2 rounded-xl bg-surface2 border border-white/10 hover:bg-surface hover:text-text text-text-muted transition-colors"
-              onClick={() => setMetrics((prev) => ({ ...prev, pain: 0.82, chaos: 0.2, trust: 0.35 }))}
+              onClick={() => setMetrics((prev: IskraMetrics) => ({ ...prev, pain: 0.82, chaos: 0.2, trust: 0.35 }))}
             >
               Резкая боль
             </button>
             <button
               type="button"
               className="px-3 py-2 rounded-xl bg-surface2 border border-white/10 hover:bg-surface hover:text-text text-text-muted transition-colors"
-              onClick={() => setMetrics((prev) => ({ ...prev, chaos: 0.9, drift: 0.75, trust: 0.2 }))}
+              onClick={() => setMetrics((prev: IskraMetrics) => ({ ...prev, chaos: 0.9, drift: 0.75, trust: 0.2 }))}
             >
               Хаос
             </button>
