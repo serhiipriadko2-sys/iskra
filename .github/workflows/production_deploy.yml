@@ -38,7 +38,7 @@ jobs:
           version: 9
 
       - name: Install pnpm workspace dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build pnpm workspace packages
         run: pnpm build
@@ -143,14 +143,12 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel@${{ env.VERCEL_CLI_VERSION }}
 
-      - name: Pull Vercel Environment
+      - name: Deploy to Vercel
         working-directory: runtime/iskraSpace
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build with Vercel
-        working-directory: runtime/iskraSpace
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy to Vercel Production
-        working-directory: runtime/iskraSpace
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
