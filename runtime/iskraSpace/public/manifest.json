@@ -1,0 +1,22 @@
+{
+  "short_name": "Iskra",
+  "name": "Iskra Space",
+  "description": "A privacy-safe PWA shell for Iskra Space.",
+  "lang": "ru",
+  "id": ".",
+  "scope": ".",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#05080A",
+  "background_color": "#05080A",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icons/iskra-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
