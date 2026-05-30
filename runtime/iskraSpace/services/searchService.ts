@@ -2,6 +2,7 @@ import { storageService } from './storageService';
 import { memoryService } from './memoryService';
 import { MemoryNode, MemoryNodeLayer, SearchFilters, SearchResult, Task, JournalEntry } from '../types';
 import { IskraAIService } from './geminiService';
+import { graphServiceSupabase } from './graphServiceSupabase';
 
 /**
  * Hybrid search: lexical (tf-idf-like) + semantic (embeddings).
@@ -192,7 +193,39 @@ class SearchService {
       })
     );
 
-    return finalResults.sort((a, b) => b.score - a.score);
+    const isOnline = await import('./supabaseClient').then(m => m.isSupabaseAvailable()).catch(() => false);
+    let cloudResults: SearchResult[] = [];
+    if (isOnline) {
+      try {
+        const nodes = await graphServiceSupabase.searchNodes(query, 5);
+        cloudResults = nodes.map(node => ({
+          id: `graph_${node.id}`,
+          type: 'memory' as const,
+          layer: node.layer?.toLowerCase() as any,
+          title: node.title,
+          snippet: String(node.content),
+          score: node.resonance_score || 0.5,
+          meta: {
+            tags: node.metadata?.tags as string[] || [],
+            ts: +new Date(node.timestamp || new Date()),
+            semantic: node.resonance_score
+          }
+        }));
+      } catch (e) {
+        console.warn('Failed to fetch from graphServiceSupabase:', e);
+      }
+    }
+
+    const combined = [...finalResults, ...cloudResults];
+    const seen = new Set<string>();
+    const uniqueResults = combined.filter(r => {
+      const key = `${r.title || ''}_${r.snippet.substring(0, 50)}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    return uniqueResults.sort((a, b) => b.score - a.score);
   }
 }
 

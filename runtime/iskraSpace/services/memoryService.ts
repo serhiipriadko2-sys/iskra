@@ -232,6 +232,24 @@ export const memoryService = {
       const archive = this.getArchive(false); // Get raw list
       const updatedArchive = [fullNode, ...archive];
       localStorage.setItem(ARCHIVE_KEY, JSON.stringify(updatedArchive));
+
+      // Background sync to Supabase GraphRAG
+      import('./supabaseClient').then(async (client) => {
+        const isOnline = await client.isSupabaseAvailable().catch(() => false);
+        if (isOnline) {
+          try {
+            const { graphServiceSupabase } = await import('./graphServiceSupabase');
+            const node = await graphServiceSupabase.addNode(
+              fullNode.layer,
+              fullNode.type,
+              typeof fullNode.content === 'string' ? fullNode.content : JSON.stringify(fullNode.content)
+            );
+            await graphServiceSupabase.buildConnections(node.id);
+          } catch (e) {
+            console.warn('Failed to sync node to Supabase graph:', e);
+          }
+        }
+      });
     } catch (error) {
       console.error("Error adding to archive in localStorage", error);
     }
@@ -280,6 +298,24 @@ export const memoryService = {
       const shadow = this.getShadow(false);
       const updatedShadow = [fullNode, ...shadow];
       localStorage.setItem(SHADOW_KEY, JSON.stringify(updatedShadow));
+
+      // Background sync to Supabase GraphRAG
+      import('./supabaseClient').then(async (client) => {
+        const isOnline = await client.isSupabaseAvailable().catch(() => false);
+        if (isOnline) {
+          try {
+            const { graphServiceSupabase } = await import('./graphServiceSupabase');
+            const node = await graphServiceSupabase.addNode(
+              fullNode.layer,
+              fullNode.type,
+              typeof fullNode.content === 'string' ? fullNode.content : JSON.stringify(fullNode.content)
+            );
+            await graphServiceSupabase.buildConnections(node.id);
+          } catch (e) {
+            console.warn('Failed to sync node to Supabase graph:', e);
+          }
+        }
+      });
     } catch (error) {
       console.error("Error adding to shadow in localStorage", error);
     }

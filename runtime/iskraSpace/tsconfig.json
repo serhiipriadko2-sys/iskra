@@ -30,6 +30,12 @@
       ],
       "@iskra/runtime/*": [
         "../src/*"
+      ],
+      "@iskra/math": [
+        "../../packages/math/src/index.ts"
+      ],
+      "@iskra/math/*": [
+        "../../packages/math/src/*"
       ]
     },
     "allowImportingTsExtensions": true,

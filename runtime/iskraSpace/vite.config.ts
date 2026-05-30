@@ -7,14 +7,13 @@ export default defineConfig(() => {
   return {
     base: process.env.VITE_BASE_PATH || '/',
     plugins: [react()],
-    // Configure server to allow serving files from the parent directory. This is
-    // required when resolving the local @iskra/runtime package and other shared
-    // files outside of the iskraSpace root.
+    // Configure server to allow serving files from the monorepo root directory. This is
+    // required when resolving the local @iskra/runtime and @iskra/math packages.
     server: {
       port: 3000,
       host: '0.0.0.0',
       fs: {
-        allow: [path.resolve(root, '..')],
+        allow: [path.resolve(root, '../..')],
       },
     },
     resolve: {
@@ -27,6 +26,9 @@ export default defineConfig(() => {
         // source files so Vite/TS can resolve modules without requiring a build.
         { find: /^@iskra\/runtime$/, replacement: path.resolve(root, '../src/index.ts') },
         { find: /^@iskra\/runtime\/(.*)$/, replacement: path.resolve(root, `../src/$1`) },
+        // Explicit alias for the local math package. Point to the TypeScript source files.
+        { find: /^@iskra\/math$/, replacement: path.resolve(root, '../../packages/math/src/index.ts') },
+        { find: /^@iskra\/math\/(.*)$/, replacement: path.resolve(root, `../../packages/math/src/$1`) },
       ],
     },
     test: {

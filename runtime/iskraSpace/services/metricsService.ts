@@ -1,7 +1,7 @@
-
 import { IskraMetrics, IskraPhase, MetaMetrics } from '../types';
 import { metricsConfig } from '../config/metricsConfig';
 import { clamp } from '../utils/metrics';
+import { calculateShannonEntropy, interpretEntropy } from '@iskra/math';
 
 class MetricsService {
   /**
@@ -12,6 +12,23 @@ class MetricsService {
     const lowerText = text.toLowerCase();
     const targets: Partial<IskraMetrics> = {};
 
+    // 1. Calculate Shannon Entropy and map to Chaos / Echo targets
+    try {
+      const entropy = calculateShannonEntropy(text);
+      const entropyState = interpretEntropy(entropy);
+      if (entropyState === 'CHAOS') {
+        targets.chaos = 0.8;
+      } else if (entropyState === 'LOOP') {
+        targets.echo = 0.85;
+      } else if (entropyState === 'FLOW') {
+        targets.clarity = 0.8;
+        targets.trust = 0.85;
+      }
+    } catch (e) {
+      console.warn('Entropy calculation failed:', e);
+    }
+
+    // 2. Standard heuristic signal calculation
     for (const key in metricsConfig) {
       const metricKey = key as keyof typeof metricsConfig;
       const config = metricsConfig[metricKey];
@@ -33,7 +50,9 @@ class MetricsService {
       }
       
       if (metricSpecificSignalFound) {
-        targets[metricKey] = clamp(score, 0, 1);
+        // Blend with entropy targets if already set
+        const baseVal = targets[metricKey] !== undefined ? (targets[metricKey]! + score) / 2 : score;
+        targets[metricKey] = clamp(baseVal, 0, 1);
       }
     }
     

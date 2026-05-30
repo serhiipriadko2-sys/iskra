@@ -31,6 +31,7 @@ import { metricsService } from './services/metricsService';
 import { canonService } from './services/canonService';
 import { storageService } from './services/storageService';
 import { checkRitualTriggers, executePhoenix, executeShatter, getPhaseAfterRitual } from './services/ritualService';
+import { syncService } from './services/syncService';
 
 export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'LIVE' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
 
@@ -137,6 +138,7 @@ export default function App() {
             setShowTour(true);
         }
         canonService.seedCanon();
+        syncService.syncAllPending();
     }, []);
 
     useEffect(() => {
