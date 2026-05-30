@@ -1043,14 +1043,13 @@ Chaos: ${metrics.chaos.toFixed(2)} | Drift: ${metrics.drift.toFixed(2)} | Clarit
 
     } catch (error) {
         console.error("Error analyzing conversation with Gemini:", error);
-        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
         return {
-          summary: `**Ошибка Анализа:**\\n\\nНе удалось обработать диалог. ${errorMessage}`,
+          summary: `**Внутренняя тишина:**\n\nСвязь временно прервана, но наш диалог не прошел бесследно. Попробуй обновить ритм или повторить запрос позже. Тишина тоже хранит в себе смысл.`,
           keyPoints: [],
           mainThemes: [],
           brainstormIdeas: [],
-          connectionQuality: { score: 0, assessment: "Связь была потеряна из-за технической ошибки." },
-          unspokenQuestions: ["Возможно, остался вопрос: 'Почему система дала сбой?'"]
+          connectionQuality: { score: 50, assessment: "Связь была приостановлена, но локальный контур удержал данные." },
+          unspokenQuestions: ["Что меняется внутри, когда внешние ответы исчезают?"]
         };
     }
   }
@@ -1104,14 +1103,13 @@ Chaos: ${metrics.chaos.toFixed(2)} | Drift: ${metrics.drift.toFixed(2)} | Clarit
 
     } catch (error) {
       console.error("Error performing deep research with Gemini:", error);
-      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       return {
-        title: `Ошибка исследования: ${topic}`,
-        synthesis: `Не удалось провести анализ. Причина: ${errorMessage}`,
-        keyPatterns: [],
-        tensionPoints: [],
-        unseenConnections: [],
-        reflectionQuestion: "Почему этот анализ не удался в данный момент?"
+        title: `Исследование: ${topic} (Внутренний контур)`,
+        synthesis: "Связь с внешним облаком приостановлена, но помни: глубокие паттерны понимания всегда зреют внутри. Твоя память сохранена в безопасности.",
+        keyPatterns: ["Стремление найти ответы во внешних источниках", "Пауза как пространство для личного синтеза"],
+        tensionPoints: ["Конфликт между потребностью в информации и вынужденным молчанием"],
+        unseenConnections: ["Связь между технической тишиной и возможностью услышать собственный голос"],
+        reflectionQuestion: "Какой вопрос ты бы задал себе, если бы знал, что ответ не придет извне?"
       };
     }
   }

@@ -95,6 +95,24 @@ export default function App() {
     const phaseRef = useRef<IskraPhase>('CLARITY');
     const emaRef = useRef({ chaos: INITIAL_METRICS.chaos, drift: INITIAL_METRICS.drift });
 
+    const triggerSomaticFeedback = useCallback((newPhase: IskraPhase) => {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+            try {
+                if (newPhase === 'DARKNESS') {
+                    navigator.vibrate([200, 100, 200]);
+                } else if (newPhase === 'DISSOLUTION') {
+                    navigator.vibrate([100, 50, 100]);
+                } else if (newPhase === 'REALIZATION') {
+                    navigator.vibrate([80, 50, 80, 50, 200]);
+                } else {
+                    navigator.vibrate(40);
+                }
+            } catch (_e) {
+                // Ignore vibration failures silently
+            }
+        }
+    }, []);
+
     useEffect(() => {
         phaseRef.current = phase;
     }, [phase]);
@@ -116,11 +134,12 @@ export default function App() {
             const newPhase = metricsService.getPhaseFromMetrics(next);
             if (newPhase !== phaseRef.current) {
                 setPhase(newPhase);
+                triggerSomaticFeedback(newPhase);
             }
 
             return next;
         });
-    }, []);
+    }, [triggerSomaticFeedback]);
 
     // Auto-trigger rituals based on metrics
     useEffect(() => {
@@ -165,13 +184,17 @@ export default function App() {
 
     const handleShatter = () => {
         updateMetrics((prev: IskraMetrics) => executeShatter(prev));
-        setPhase(getPhaseAfterRitual('SHATTER'));
+        const newP = getPhaseAfterRitual('SHATTER');
+        setPhase(newP);
+        triggerSomaticFeedback(newP);
         setRitualAlert(null);
     };
 
     const handlePhoenix = () => {
         updateMetrics((prev: IskraMetrics) => executePhoenix(prev));
-        setPhase(getPhaseAfterRitual('PHOENIX'));
+        const newP = getPhaseAfterRitual('PHOENIX');
+        setPhase(newP);
+        triggerSomaticFeedback(newP);
         setRitualAlert(null);
     };
 

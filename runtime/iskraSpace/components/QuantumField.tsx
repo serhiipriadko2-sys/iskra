@@ -17,6 +17,7 @@ interface Particle {
   vx: number;
   vy: number;
   size: number;
+  baseSize: number;
   opacity: number;
   hue: number;
   life: number;
@@ -117,10 +118,12 @@ const QuantumField: React.FC<QuantumFieldProps> = ({
           particle.vy += (Math.random() - 0.5) * metrics.chaos * 0.1;
         }
 
-        // Pain creates pulsation
+        // Pain creates pulsation (applied to dynamic size, preserving stable baseSize)
         if (metrics.pain > 0.5) {
           const pulseFactor = Math.sin(timestamp * 0.01) * metrics.pain;
-          particle.size = particle.size * (1 + pulseFactor * 0.3);
+          particle.size = particle.baseSize * (1 + pulseFactor * 0.3);
+        } else {
+          particle.size = particle.baseSize;
         }
 
         // Update position
@@ -132,9 +135,12 @@ const QuantumField: React.FC<QuantumFieldProps> = ({
           particle.vx += Math.sin(timestamp * 0.0005 + index) * metrics.drift * 0.01;
         }
 
-        // Gradually shift hue towards active voice
-        const hueDiff = targetHue - particle.hue;
-        particle.hue += hueDiff * 0.02;
+        // Gradually shift hue towards active voice (shortest path circular interpolation)
+        let hueDiff = targetHue - particle.hue;
+        while (hueDiff < -180) hueDiff += 360;
+        while (hueDiff > 180) hueDiff -= 360;
+        particle.hue = (particle.hue + hueDiff * 0.02) % 360;
+        if (particle.hue < 0) particle.hue += 360;
 
         // Life cycle
         particle.life -= deltaTime * 0.001;
@@ -247,13 +253,15 @@ const QuantumField: React.FC<QuantumFieldProps> = ({
 function createParticle(width: number, height: number, baseHue: number): Particle {
   const angle = Math.random() * Math.PI * 2;
   const distance = Math.random() * Math.min(width, height) * 0.4;
+  const initialSize = 1 + Math.random() * 3;
 
   return {
     x: width / 2 + Math.cos(angle) * distance,
     y: height / 2 + Math.sin(angle) * distance,
     vx: (Math.random() - 0.5) * 0.5,
     vy: (Math.random() - 0.5) * 0.5,
-    size: 1 + Math.random() * 3,
+    size: initialSize,
+    baseSize: initialSize,
     opacity: Math.random() * 0.5 + 0.2,
     hue: baseHue + (Math.random() - 0.5) * 30,
     life: Math.random() * 5 + 3,
