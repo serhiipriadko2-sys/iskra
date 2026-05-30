@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Explainable } from '../types';
+import type { ExplainStep, Explainable } from '../types';
 import type { VoiceSelectionExplanationValue } from '../services/voiceEngine';
 
 interface ExplainableTraceProps {
@@ -8,6 +8,12 @@ interface ExplainableTraceProps {
 }
 
 const formatScore = (value: number) => value.toFixed(2).replace(/\.00$/, '');
+
+const formatUnknown = (value: unknown): string => {
+  if (typeof value === 'number') return value.toFixed(4);
+  if (typeof value === 'string') return value;
+  return JSON.stringify(value, null, 2);
+};
 
 const VoiceExplainableDisplay: React.FC<ExplainableTraceProps> = ({
   title = 'Почему выбран этот голос?',
@@ -45,14 +51,14 @@ const VoiceExplainableDisplay: React.FC<ExplainableTraceProps> = ({
       </div>
 
       <div className="mt-4 space-y-3">
-        {explainable.how.map((step) => (
+        {explainable.how.map((step: ExplainStep) => (
           <div key={step.label} className="rounded-lg border border-white/10 bg-black/10 p-3">
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <div className="font-mono text-xs text-text-muted">{step.label}</div>
               {step.formula ? <div className="text-xs text-accent">{step.formula}</div> : null}
             </div>
             {step.output !== undefined ? (
-              <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-words font-mono text-xs text-text">{JSON.stringify(step.output, null, 2)}</pre>
+              <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-words font-mono text-xs text-text">{formatUnknown(step.output)}</pre>
             ) : null}
           </div>
         ))}
@@ -107,14 +113,14 @@ export const MetricExplainableCard: React.FC<MetricExplainableCardProps> = ({
       {open && (
         <div className="mt-3 space-y-2 animate-fade-in">
           <div className="text-[10px] uppercase tracking-wide text-text-muted">XCode trace</div>
-          {explainable.how.map((step) => (
+          {explainable.how.map((step: ExplainStep) => (
             <div key={step.label} className="rounded-lg border border-white/10 bg-black/10 p-2">
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <div className="font-mono text-[10px] text-text-muted">{step.label}</div>
                 {step.formula ? <div className="text-[10px] text-accent">{step.formula}</div> : null}
               </div>
               {step.output !== undefined ? (
-                <pre className="mt-1 font-mono text-[10px] text-text">{typeof step.output === 'number' ? step.output.toFixed(4) : JSON.stringify(step.output, null, 2)}</pre>
+                <pre className="mt-1 font-mono text-[10px] text-text">{formatUnknown(step.output)}</pre>
               ) : null}
             </div>
           ))}
