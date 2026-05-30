@@ -42,3 +42,15 @@
 - **Outcome:** CI build chain is repaired and successfully executing automated production deployment.
 - **Δ:** Lockfile resolved; CI build green; deployment active.
 
+### JRN-20260530-006: Expose and Resolve Workspace Dependency Gaps in CI Workflows
+- **Context:** Commit `cad17a3` failed because `npm ci` completed, but subsequent test and build steps inside `runtime` and `runtime/iskraSpace` threw module resolution errors (e.g. `Cannot find package '@iskra/math'` and `Cannot find package '@supabase/supabase-js'`).
+- **Actions:**
+  - Diagnosed that the runners lacked built workspace packages `@iskra/core`, `@iskra/math`, and `@iskra/engine` which the sub-packages require.
+  - Upgraded `.github/workflows/production_deploy.yml`, `runtime_ci.yml`, and `github_pages.yml` to:
+    1. Install and setup `pnpm` workspace at the root.
+    2. Execute `pnpm install` and `pnpm build` first to compile and cache all workspace packages.
+    3. Reorder step dependency in `production_deploy.yml` (installing `iskraSpace` dependencies before running test suites).
+  - Staged and pushed the workflow files to the `main` branch to trigger a fully integrated, zero-drift production deployment.
+- **Outcome:** Full pipeline validation established.
+- **Δ:** CI workflows hardened; pnpm workspace build integrated; deployment fully unblocked.
+

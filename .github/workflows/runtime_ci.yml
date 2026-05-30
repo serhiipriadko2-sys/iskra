@@ -27,6 +27,17 @@ jobs:
           cache: "npm"
           cache-dependency-path: runtime/package-lock.json
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install pnpm workspace dependencies
+        run: pnpm install
+
+      - name: Build pnpm workspace packages
+        run: pnpm build
+
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -59,6 +70,10 @@ jobs:
             runtime/runtime-typecheck.log
             runtime/runtime-build.log
           retention-days: 7
+
+      - name: Install iskraSpace dependencies
+        working-directory: runtime/iskraSpace
+        run: npm ci --ignore-scripts || npm install --ignore-scripts
 
       - name: Run tests with coverage
         run: npm run test:coverage -- --run

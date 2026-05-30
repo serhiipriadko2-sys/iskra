@@ -32,6 +32,17 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install pnpm workspace dependencies
+        run: pnpm install
+
+      - name: Build pnpm workspace packages
+        run: pnpm build
+
       - name: Install runtime dependencies
         working-directory: runtime
         run: npm install --no-fund --no-audit
