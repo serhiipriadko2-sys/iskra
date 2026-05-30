@@ -10,13 +10,5 @@
   "orientation": "portrait",
   "theme_color": "#05080A",
   "background_color": "#05080A",
-  "categories": ["productivity", "utilities"],
-  "icons": [
-    {
-      "src": "icons/iskra-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
+  "categories": ["productivity", "utilities"]
 }
