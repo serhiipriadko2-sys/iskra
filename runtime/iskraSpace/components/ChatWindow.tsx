@@ -32,9 +32,16 @@ const renderMarkdown = (text: string) => {
             );
         }
         
-        // Headers (##)
-        if (paragraph.startsWith('##')) {
-             return <h3 key={pIdx} className="text-lg font-bold mt-4 mb-2 text-primary font-serif tracking-wide" dangerouslySetInnerHTML={{__html: parseInline(paragraph.replace(/^#+\s/, ''))}} />
+        // Headers (#, ##, ###, ####)
+        if (paragraph.startsWith('#')) {
+             const level = (paragraph.match(/^#+/) || ['#'])[0].length;
+             const contentText = paragraph.replace(/^#+\s+/, '');
+             const headerClasses = level === 1 
+                 ? "text-xl font-bold mt-5 mb-3 text-primary font-serif tracking-wide" 
+                 : level === 2 
+                 ? "text-lg font-bold mt-4 mb-2 text-primary font-serif tracking-wide"
+                 : "text-base font-bold mt-3 mb-1 text-primary font-serif tracking-wide";
+             return <h3 key={pIdx} className={headerClasses} dangerouslySetInnerHTML={{__html: parseInline(contentText)}} />;
         }
         
         // Bold line (Key: Value)
