@@ -29,6 +29,9 @@ export default defineConfig(() => {
         // Explicit alias for the local math package. Point to the TypeScript source files.
         { find: /^@iskra\/math$/, replacement: path.resolve(root, '../../packages/math/src/index.ts') },
         { find: /^@iskra\/math\/(.*)$/, replacement: path.resolve(root, `../../packages/math/src/$1`) },
+        // Math source imports core types directly when compiled through iskraSpace.
+        { find: /^@iskra\/core$/, replacement: path.resolve(root, '../../packages/core/src/index.ts') },
+        { find: /^@iskra\/core\/(.*)$/, replacement: path.resolve(root, `../../packages/core/src/$1`) },
       ],
     },
     test: {

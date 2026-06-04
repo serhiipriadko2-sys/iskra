@@ -5,9 +5,9 @@ test.describe('Navigation', () => {
     // Skip onboarding by setting localStorage
     await page.goto('/');
     await page.evaluate(() => {
-      localStorage.setItem('iskra_onboarding_complete', 'true');
-      localStorage.setItem('iskra_tutorial_complete', 'true');
-      localStorage.setItem('iskra_user_name', 'TestUser');
+      localStorage.setItem('iskra-onboarding-complete', 'true');
+      localStorage.setItem('iskra-tutorial-seen', 'true');
+      localStorage.setItem('iskra-user-name', 'TestUser');
     });
     await page.reload();
   });
@@ -66,8 +66,8 @@ test.describe('Mobile Navigation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => {
-      localStorage.setItem('iskra_onboarding_complete', 'true');
-      localStorage.setItem('iskra_tutorial_complete', 'true');
+      localStorage.setItem('iskra-onboarding-complete', 'true');
+      localStorage.setItem('iskra-tutorial-seen', 'true');
     });
     await page.reload();
   });

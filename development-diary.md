@@ -62,3 +62,22 @@
 - **Outcome:** Clean dependency resolution guaranteed across all runner environments regardless of minor local lockfile drift.
 - **Δ:** Frozen lockfile restriction bypassed; CI pipeline restored to auto-resolve drift; release unblocked.
 
+
+### JRN-20260604-001: Runtime and iskraSpace CI Context Repair
+- **Context:** GitHub Actions failures after the Gemini mirror merge separated into three roots: Runtime CI ran root pnpm workspace commands from `runtime`, iskraSpace isolated typecheck lacked an `@iskra/core` alias behind `@iskra/math`, and no-env tests crashed at top-level Supabase client creation.
+- **Actions:**
+  - Moved Runtime CI pnpm workspace install/build steps to the repository root.
+  - Added `@iskra/core` resolver aliases for iskraSpace and runtime Vitest contexts.
+  - Added no-env Supabase offline guards so tests can import services without live credentials.
+  - Regenerated `ledger/sot.json` and `ledger/checksum.asc`.
+- **Outcome:** Local gates passed: runtime build, runtime tests, runtime coverage, runtime lint, iskraSpace typecheck, iskraSpace tests, iskraSpace lint, iskraSpace build, root pnpm build, and ledger verification.
+- **Status:** Local verified; remote GitHub Actions verification pending PR run.
+
+### JRN-20260604-002: iskraSpace E2E Storage Contract Repair
+- **Context:** PR E2E verification hung on onboarding flows because several Playwright specs seeded obsolete underscore localStorage keys instead of the actual `storageService` contract.
+- **Actions:**
+  - Updated E2E setup from `iskra_onboarding_complete`, `iskra_tutorial_complete`, and `iskra_user_name` to `iskra-onboarding-complete`, `iskra-tutorial-seen`, and `iskra-user-name`.
+  - Adjusted the full onboarding assertion to accept the real first-entry state: main app visible with tutorial tour overlay.
+  - Regenerated `ledger/sot.json` and `ledger/checksum.asc`.
+- **Outcome:** Local Chromium E2E passed: 27/27 tests.
+- **Status:** Local verified; remote GitHub Actions verification pending refreshed PR run.
