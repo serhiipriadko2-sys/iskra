@@ -11,12 +11,16 @@ import type { Database } from '../types/supabase';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const allowAnonymousAuth = import.meta.env.VITE_ENABLE_ANONYMOUS_AUTH !== 'false';
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
-if (!supabaseUrl || !supabaseAnonKey) {
+const effectiveSupabaseUrl = supabaseUrl || 'http://127.0.0.1:54321';
+const effectiveSupabaseAnonKey = supabaseAnonKey || 'local-test-anon-key';
+
+if (!isSupabaseConfigured) {
   console.warn('Supabase credentials not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.');
 }
 
-export const supabase: SupabaseClient<Database> = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+export const supabase: SupabaseClient<Database> = createClient<Database>(effectiveSupabaseUrl, effectiveSupabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
@@ -68,6 +72,10 @@ async function ensureSession(): Promise<Session | null> {
   }
 
   sessionPromise = (async () => {
+    if (!isSupabaseConfigured) {
+      return null;
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
 
     if (session) {
@@ -146,6 +154,10 @@ export function getLegacyDeviceId(): string | null {
 
 // Check if Supabase is available
 export async function isSupabaseAvailable(): Promise<boolean> {
+  if (!isSupabaseConfigured) {
+    return false;
+  }
+
   try {
     const { error } = await supabase.from('users').select('id').limit(1);
     return !error;

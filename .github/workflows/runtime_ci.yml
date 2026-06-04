@@ -33,9 +33,11 @@ jobs:
           version: 9
 
       - name: Install pnpm workspace dependencies
+        working-directory: .
         run: pnpm install --frozen-lockfile
 
       - name: Build pnpm workspace packages
+        working-directory: .
         run: pnpm build
 
       - name: Cache node_modules

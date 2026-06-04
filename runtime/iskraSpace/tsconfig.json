@@ -36,6 +36,12 @@
       ],
       "@iskra/math/*": [
         "../../packages/math/src/*"
+      ],
+      "@iskra/core": [
+        "../../packages/core/src/index.ts"
+      ],
+      "@iskra/core/*": [
+        "../../packages/core/src/*"
       ]
     },
     "allowImportingTsExtensions": true,

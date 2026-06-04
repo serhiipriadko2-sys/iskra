@@ -18,3 +18,15 @@
 - **Assertion:** Full `@iskra` workspace compiles under Vite and tsc constraints.
 - **Evidence:** `pnpm build` finished with successful bundle outputs in `dist/` directories.
 - **Status:** Verified.
+
+### EVI-20260604-001: Runtime and iskraSpace CI Repair Gates
+- **Assertion:** The CI repair addresses the observed Runtime CI, iskraSpace CI, and Production Deployment failures without live Supabase deployment.
+- **Evidence:**
+  - `npm run build` in `runtime` passed.
+  - `npm run test -- --run` in `runtime` passed: 48 files, 859 tests.
+  - `npm run test:coverage -- --run` in `runtime` passed.
+  - `npm run lint` in `runtime` passed with existing warnings only.
+  - `npm run typecheck`, `npm run test:run`, `npm run lint`, and `npm run build` in `runtime/iskraSpace` passed.
+  - `pnpm build` at repository root passed.
+  - `npx tsx tools/verify_ledger.ts` returned `Ledger OK (417 files)`.
+- **Status:** Local verified; remote GitHub Actions pending.
