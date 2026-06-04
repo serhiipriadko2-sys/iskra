@@ -47,8 +47,8 @@ test.describe('Onboarding Flow', () => {
     await expect(page.locator('h2')).toContainText('Инициализация');
     await page.getByRole('button', { name: /Начать/i }).click();
 
-    // Should navigate to main app (Pulse view)
-    await expect(page.locator('[data-testid="pulse-view"], .pulse-container, h1')).toBeVisible({ timeout: 5000 });
+    // Should navigate to the main app; the tutorial tour may be visible on first entry.
+    await expect(page.locator('main')).toBeVisible({ timeout: 5000 });
   });
 
   test('saves onboarding completion to localStorage', async ({ page }) => {
@@ -63,7 +63,7 @@ test.describe('Onboarding Flow', () => {
 
     // Check localStorage
     const isComplete = await page.evaluate(() => {
-      return localStorage.getItem('iskra_onboarding_complete');
+      return localStorage.getItem('iskra-onboarding-complete');
     });
     expect(isComplete).toBe('true');
   });

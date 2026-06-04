@@ -4,9 +4,9 @@ test.describe('App Core Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => {
-      localStorage.setItem('iskra_onboarding_complete', 'true');
-      localStorage.setItem('iskra_tutorial_complete', 'true');
-      localStorage.setItem('iskra_user_name', 'TestUser');
+      localStorage.setItem('iskra-onboarding-complete', 'true');
+      localStorage.setItem('iskra-tutorial-seen', 'true');
+      localStorage.setItem('iskra-user-name', 'TestUser');
     });
     await page.reload();
   });
@@ -43,8 +43,8 @@ test.describe('Chat Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => {
-      localStorage.setItem('iskra_onboarding_complete', 'true');
-      localStorage.setItem('iskra_tutorial_complete', 'true');
+      localStorage.setItem('iskra-onboarding-complete', 'true');
+      localStorage.setItem('iskra-tutorial-seen', 'true');
     });
     await page.reload();
 
@@ -73,8 +73,8 @@ test.describe('Journal Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => {
-      localStorage.setItem('iskra_onboarding_complete', 'true');
-      localStorage.setItem('iskra_tutorial_complete', 'true');
+      localStorage.setItem('iskra-onboarding-complete', 'true');
+      localStorage.setItem('iskra-tutorial-seen', 'true');
     });
     await page.reload();
 
@@ -101,8 +101,8 @@ test.describe('Planner Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => {
-      localStorage.setItem('iskra_onboarding_complete', 'true');
-      localStorage.setItem('iskra_tutorial_complete', 'true');
+      localStorage.setItem('iskra-onboarding-complete', 'true');
+      localStorage.setItem('iskra-tutorial-seen', 'true');
     });
     await page.reload();
 
@@ -120,8 +120,8 @@ test.describe('Accessibility', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => {
-      localStorage.setItem('iskra_onboarding_complete', 'true');
-      localStorage.setItem('iskra_tutorial_complete', 'true');
+      localStorage.setItem('iskra-onboarding-complete', 'true');
+      localStorage.setItem('iskra-tutorial-seen', 'true');
     });
     await page.reload();
   });
@@ -145,14 +145,14 @@ test.describe('Data Persistence', () => {
   test('preserves user data across page reloads', async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => {
-      localStorage.setItem('iskra_onboarding_complete', 'true');
-      localStorage.setItem('iskra_tutorial_complete', 'true');
-      localStorage.setItem('iskra_user_name', 'PersistenceTest');
+      localStorage.setItem('iskra-onboarding-complete', 'true');
+      localStorage.setItem('iskra-tutorial-seen', 'true');
+      localStorage.setItem('iskra-user-name', 'PersistenceTest');
     });
     await page.reload();
 
     // Verify localStorage persisted
-    const userName = await page.evaluate(() => localStorage.getItem('iskra_user_name'));
+    const userName = await page.evaluate(() => localStorage.getItem('iskra-user-name'));
     expect(userName).toBe('PersistenceTest');
   });
 });

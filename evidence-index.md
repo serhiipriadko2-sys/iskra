@@ -30,3 +30,14 @@
   - `pnpm build` at repository root passed.
   - `npx tsx tools/verify_ledger.ts` returned `Ledger OK (417 files)`.
 - **Status:** Local verified; remote GitHub Actions pending.
+
+### EVI-20260604-002: iskraSpace E2E Repair Gates
+- **Assertion:** The refreshed Playwright specs now follow the app storage contract and no longer hang on onboarding.
+- **Evidence:**
+  - `npx playwright install chromium` completed locally.
+  - Initial local CI-mode Chromium E2E reproduced the failure/hang path before the fix.
+  - After repair, `CI=true npx playwright test --project=chromium --reporter=line` passed: 27/27 tests in 52.1s.
+  - `npm run typecheck` in `runtime/iskraSpace` passed.
+  - `npm run lint` in `runtime/iskraSpace` passed with existing warnings only.
+  - `npx tsx tools/verify_ledger.ts` returned `Ledger OK (417 files)`.
+- **Status:** Local verified; remote GitHub Actions pending.

@@ -72,3 +72,12 @@
   - Regenerated `ledger/sot.json` and `ledger/checksum.asc`.
 - **Outcome:** Local gates passed: runtime build, runtime tests, runtime coverage, runtime lint, iskraSpace typecheck, iskraSpace tests, iskraSpace lint, iskraSpace build, root pnpm build, and ledger verification.
 - **Status:** Local verified; remote GitHub Actions verification pending PR run.
+
+### JRN-20260604-002: iskraSpace E2E Storage Contract Repair
+- **Context:** PR E2E verification hung on onboarding flows because several Playwright specs seeded obsolete underscore localStorage keys instead of the actual `storageService` contract.
+- **Actions:**
+  - Updated E2E setup from `iskra_onboarding_complete`, `iskra_tutorial_complete`, and `iskra_user_name` to `iskra-onboarding-complete`, `iskra-tutorial-seen`, and `iskra-user-name`.
+  - Adjusted the full onboarding assertion to accept the real first-entry state: main app visible with tutorial tour overlay.
+  - Regenerated `ledger/sot.json` and `ledger/checksum.asc`.
+- **Outcome:** Local Chromium E2E passed: 27/27 tests.
+- **Status:** Local verified; remote GitHub Actions verification pending refreshed PR run.
