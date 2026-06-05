@@ -22,18 +22,45 @@ SOFTWARE.
 
 ---
 
-ISKRA Canon License Addendum:
+# ISKRA License Scope Addendum
 
-The philosophical documents in core/ directory ("Canon") are licensed under
-Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+This repository contains both software and canon/content artifacts. Unless a
+file states otherwise:
 
-You are free to:
-- Share: copy and redistribute the material in any medium or format
-- Adapt: remix, transform, and build upon the material
+1. Software source code, scripts, package configuration, tests, and build tools
+   are licensed under the MIT License above.
+2. Canonical, philosophical, governance, memory, and Agent Builder knowledge
+   documents are licensed under Creative Commons Attribution-ShareAlike 4.0
+   International (CC BY-SA 4.0).
+3. Generated release receipts, manifests, and checksums may be copied and
+   redistributed as part of preserving artifact provenance and verification.
+4. Third-party dependencies, external services, and linked documentation remain
+   governed by their own licenses and terms.
 
-Under the following terms:
-- Attribution: You must give appropriate credit
-- ShareAlike: If you remix, transform, or build upon the material, you must
-  distribute your contributions under the same license as the original
+Examples of content covered by the CC BY-SA 4.0 scope include, where present:
 
-Full CC BY-SA 4.0 text: https://creativecommons.org/licenses/by-sa/4.0/
+- `core/`
+- `system/`
+- `governance/`
+- `metrics/`
+- `mind/`
+- `ledger/` documentation and receipts
+- `dist/agent-builder/**/agent_files/`
+- `dist/agent-builder/**/memory_current/`
+- `dist/agent-builder/**/README_AGENT_BUILDER_UPLOAD.md`
+- `dist/agent-builder/**/RELEASE_RECEIPT.md`
+
+CC BY-SA 4.0 summary:
+
+You may share and adapt the covered content, provided that you give appropriate
+credit and distribute adapted material under the same or a compatible license.
+
+Full license text:
+https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+Human-readable deed:
+https://creativecommons.org/licenses/by-sa/4.0/
+
+If a future file needs a different license, it should state that license clearly
+in the file or in a nearby README. License-scope changes should be made through
+a reviewable PR because they affect downstream reuse rights.
