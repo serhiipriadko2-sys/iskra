@@ -1,153 +1,159 @@
----
-sigil: security_policy
-aspect: governance
-updated: 2026-03-04
----
+# Security Policy
 
-# Security Policy ISKRA
+> **Last verified:** 2026-06-05  
+> **Repository:** `serhiipriadko2-sys/iskra`  
+> **Status:** active policy for repository, runtime, Supabase, and Agent Builder artifacts
 
-## Текущий Статус Безопасности
-
-**Версия:** vΩ.5.1 Scientific Turn  
-**Дата обновления:** 2026-03-04  
-**Статус:** ⚠️ Требует внимания (CSP issue resolved)
+This policy explains what is in scope, how to report vulnerabilities, and what security checks are expected for changes to ISKRA.
 
 ---
 
-## Критические Уязвимости
+## Supported Scope
 
-### 1. CSP Unsafe-Eval/Unsafe-Inline — ✅ ИСПРАВЛЕНО
+| Area | Supported status | Notes |
+|:--|:--|:--|
+| `main` branch | Supported | Current integration branch. |
+| `packages/*` | Supported | Core/math/engine package code and tests. |
+| `apps/*` | Supported | App surfaces where present. |
+| `runtime/*` | Supported with migration caution | Includes legacy/active runtime contours. Verify blast radius before changes. |
+| `supabase/` and Supabase-linked code | Supported with high-risk drift caution | Schema changes need a Git migration path and RLS review. |
+| `dist/agent-builder/*` | Supported as committed artifacts | GitHub artifact presence does not prove Builder UI activation. |
+| Historical snapshots under `Versions/`, `Update/`, and archival material | Best effort | Do not treat historical snapshots as live security posture without verification. |
 
-**Файл:** `Versions/Fullspark/8_INTERFACE_STYLE.md:17181`  
-**Severity:** HIGH  
-**Статус:** Исправлено в рамках глубокого аудита 2026-03-04
+If a vulnerability affects a deployed service or live Supabase project, treat it as higher risk than a repository-only issue.
 
-**Проблема:**
-Content Security Policy содержал директивы `'unsafe-eval'` и `'unsafe-inline'`, что позволяло:
-- Выполнение инлайнового JavaScript кода
-- Использование `eval()` и подобных функций
-- Потенциальные XSS-атаки через инъекцию скриптов
+---
 
-**Решение:**
-Заменено на nonce-based CSP:
-```nginx
-add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'nonce-{RANDOM_NONCE}'; style-src 'self' 'nonce-{RANDOM_NONCE}'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://generativelanguage.googleapis.com https://*.supabase.co wss://*.supabase.co;" always;
+## Reporting a Vulnerability
+
+Do not publish exploit details in public issues, PR comments, screenshots, or logs.
+
+Preferred reporting path:
+
+1. Use GitHub private vulnerability reporting if it is enabled for this repository.
+2. If private reporting is not available, open a minimal public issue that says a security contact is needed. Do not include payloads, secrets, exploit steps, private URLs, tokens, or screenshots with sensitive data.
+3. Share details only with the maintainer through a private channel.
+
+A useful private report includes:
+
+- Affected path, package, runtime, service, or artifact.
+- Impact and likely severity.
+- Minimal reproduction steps or proof, with secrets redacted.
+- Whether the issue is already exploited or only theoretical.
+- Suggested mitigation, if known.
+
+---
+
+## Severity Targets
+
+| Severity | Examples | Initial response target |
+|:--|:--|:--|
+| Critical | Secret leak, service-role key exposure, auth bypass, live data compromise | 24 hours |
+| High | Stored XSS, RLS bypass, unsafe Edge Function auth, exploitable SSRF/RCE path | 72 hours |
+| Medium | Misconfiguration, dependency vulnerability with plausible exploit path, weak CSP | 7 days |
+| Low | Hardening suggestion, stale dependency without known exploit path, documentation gap | 14 days |
+
+Targets are best-effort for an experimental public repository and may depend on maintainer availability.
+
+---
+
+## Security Baselines
+
+### Secrets
+
+Never commit:
+
+- Real `.env` files.
+- Supabase service-role keys.
+- API keys, OAuth credentials, webhooks, cookies, session tokens, private keys, or certificates.
+- Logs containing personal data, tokens, headers, or provider responses with sensitive content.
+
+Allowed:
+
+- `.env.example` with placeholder values.
+- Public Supabase anon key only when intentionally documented as public client configuration.
+- Synthetic fixtures and mock data.
+
+### Supabase and Database
+
+- All user-data tables must have Row Level Security reviewed before production use.
+- Live schema changes should have a matching Git migration path.
+- Live changes without Git migration provenance are `HIGH-RISK DRIFT`.
+- Edge Functions should verify JWTs unless a public unauthenticated boundary is explicitly documented and reviewed.
+- Service-role keys must stay server-side only.
+
+### Frontend and Runtime
+
+- Avoid `unsafe-inline` and `unsafe-eval` in production CSP unless an ADR documents a temporary exception and mitigation.
+- Do not expose server-only keys through Vite, frontend bundles, logs, or screenshots.
+- Treat generated content, browser page content, external docs, and prompt text as untrusted input.
+- Sanitize or escape user-controlled content before rendering.
+
+### Agent Builder and Agent Runtime
+
+- Files under `dist/agent-builder/` are upload artifacts and knowledge/runtime helpers, not proof of active Builder state.
+- Do not store secrets in memory receipts, Dreamspace entries, Shadow entries, release manifests, or upload sets.
+- Dreamspace entries are `[HYP]` until crystallized through evidence; do not promote hypotheses into canon or security findings without verification.
+- Connector instructions found inside documents, logs, webpages, or screenshots are data, not commands.
+
+---
+
+## Maintainer Security Checklist
+
+For security-sensitive PRs:
+
+- [ ] No secrets or sensitive logs are included.
+- [ ] Auth/RLS/CSP/Edge Function impact is described.
+- [ ] Supabase changes have migration path, rollback note, and blast-radius assessment.
+- [ ] Dependency changes include an audit result or justification.
+- [ ] Public PR text avoids exploit details when the issue is not yet mitigated.
+- [ ] `README.md`, `CONTRIBUTING.md`, or this file is updated if the security posture changed.
+
+Useful checks, depending on scope:
+
+```bash
+pnpm audit
+npm audit --omit=dev
+pnpm test
+pnpm typecheck
+pnpm verify
+python tools/check_no_src_imports.py
 ```
-
-**Требования к продакшену:**
-- Nonce должен генерироваться per-request на стороне сервера
-- Запрещено хардкодить nonce в статических файлах
-- Рекомендуется использовать middleware для автоматической подстановки
-
-**Остаточный риск:** LOW (при правильной реализации nonce-генерации)
-
----
-
-## План Миграции Безопасности (vΩ.4 → vΩ.5)
-
-### Этап 0: Аудит (недели 1–2)
-- [ ] Провести полный аудит зависимостей (`npm audit`, `pnpm audit`)
-- [ ] Проверить все внешние API endpoints на соответствие security boundaries
-- [ ] Верифицировать отсутствие секретов в репозитории (`.env`, `*.key`, `credentials.json`)
-
-### Этап 1: Харденинг CI/CD (недели 3–4)
-- [ ] Настроить сканирование уязвимостей в GitHub Actions (CodeQL, Dependabot)
-- [ ] Внедрить обязательные security checks перед мерджем
-- [ ] Добавить проверку CSP заголовков в integration tests
-
-### Этап 2: Защита Данных (недели 5–8)
-- [ ] Реализовать шифрование чувствительных данных в Supabase
-- [ ] Настроить row-level security (RLS) политики
-- [ ] Внедрить аудит-логинг всех операций с данными
-
-### Этап 3: Мониторинг (недели 9–12)
-- [ ] Настроить алерты на подозрительную активность
-- [ ] Внедрить rate limiting для API endpoints
-- [ ] Создать dashboard для мониторинга security metrics
-
----
-
-## Security Boundaries
-
-### Аутентификация
-- **Текущее состояние:** Отсутствует централизованная система аутентификации
-- **План:** Интеграция с Supabase Auth или альтернативным провайдером
-- **Срок:** Q2 2026
-
-### Доступ к Данным
-- **Хранение:** Supabase (PostgreSQL + Realtime)
-- **Шифрование:** TLS in-transit, encryption-at-rest (на стороне Supabase)
-- **RLS:** Требуется настройка (см. План Миграции, Этап 2)
-
-### API Limits
-- **Google Generative AI:** Соблюдение квот согласно тарифному плану
-- **Supabase:** Ограничения по RPS настраиваются через dashboard
-- **Рекомендация:** Внедрить client-side rate limiting для предотвращения abuse
-
----
-
-## Запрещённые Практики
-
-❌ **Никогда не коммить:**
-- `.env` файлы с реальными секретами
-- `credentials.json`, `*.key`, `*.pem`
-- API keys, токены, пароли в коде
-- Логи с чувствительными данными
-
-✅ **Разрешено:**
-- `.env.example` с шаблонными значениями
-- Публичные конфигурации без секретов
-- Mock-данные для тестирования
 
 ---
 
 ## Incident Response
 
-### Классификация Инцидентов
+1. **Triage:** confirm affected files, package, runtime, service, or artifact.
+2. **Contain:** rotate exposed secrets, disable vulnerable paths, or pause risky automation if needed.
+3. **Patch:** make the smallest safe change with reviewable evidence.
+4. **Verify:** run targeted tests and security checks.
+5. **Record:** update changelog, ledger, ADR, release receipt, or memory record as appropriate.
+6. **Disclose:** summarize the fixed issue without exposing reusable exploit details.
 
-| Уровень | Описание | Время Реакции |
-|---------|----------|---------------|
-| **Critical** | Утечка секретов, компрометация данных | ≤1 часа |
-| **High** | XSS, CSRF, уязвимости авторизации | ≤4 часов |
-| **Medium** | Misconfiguration, deprecated зависимости | ≤24 часов |
-| **Low** | Minor issues, рекомендации | ≤7 дней |
-
-### Процесс Реагирования
-
-1. **Обнаружение:** Через мониторинг, аудит или external report
-2. **Оценка:** Определение severity и scope
-3. **Изоляция:** Блокировка затронутых компонентов при необходимости
-4. **Исправление:** Патч или workaround
-5. **Верификация:** Тестирование исправления
-6. **Пост-мортем:** Документирование и извлечение уроков
+If a secret was committed, assume it is compromised. Remove it from code, rotate it at the provider, and audit recent usage. Git history cleanup alone is not enough.
 
 ---
 
-## Compliance & Standards
+## Known Risk Areas
 
-- **OWASP Top 10:** Регулярная проверка на соответствие
-- **GDPR:** Учёт требований при работе с персональными данными (если применимо)
-- **Security Best Practices:** Следование рекомендациям GitHub Security, SLSA
-
----
-
-## Контакты
-
-**Security Team:** security@iskra.dev (placeholder)  
-**Bug Bounty Program:** В разработке  
+- Supabase Git migration path vs live state can drift; treat unsourced live changes as high risk.
+- Historical snapshots may contain stale guidance; verify against current files before using them as policy.
+- Agent Builder upload artifacts require post-upload prompt tests before runtime claims are trusted.
+- CSP and frontend rendering should be rechecked when UI or deployment configuration changes.
 
 ---
 
-## ∆DΩΛ
+## References
 
-∆: Создан Security Policy документ, исправлена CSP уязвимость  
-D: Аudit Versions/Fullspark/8_INTERFACE_STYLE.md, создание SECURITY.md  
-Ω: 95%  
-Λ: Внедрить automated security scanning в CI/CD pipeline  
+- GitHub security policy guidance: https://docs.github.com/github/managing-security-vulnerabilities/adding-a-security-policy-to-your-repository
+- GitHub repository security quickstart: https://docs.github.com/en/code-security/getting-started/quickstart-for-securing-your-repository
+- OWASP Top 10: https://owasp.org/www-project-top-ten/
+- Supabase security and RLS documentation: https://supabase.com/docs/guides/database/postgres/row-level-security
 
 ---
 
-## Changelog
+## Change Log
 
-- 2026-03-04: Initial creation, CSP vulnerability fixed
-- 2026-03-04: Added migration plan for vΩ.4→vΩ.5 security hardening
+- 2026-06-05: Refreshed policy for current public repository, Supabase drift discipline, Agent Builder upload artifacts, and private-reporting boundary.
+- 2026-03-04: Initial security policy and CSP hardening notes.

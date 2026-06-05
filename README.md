@@ -1,264 +1,212 @@
-# ISKRA Monorepo (vΩ.5.1)
+# ISKRA Monorepo
 
-> **Phase:** The Scientific Turn
-> **Stack:** TypeScript, React 19, Supabase, Fractal Mathematics, Quantum Probability
-> **Updated:** 2026-02-17
+> **Current public repository status:** active research and engineering monorepo  
+> **Current Agent Builder package:** `iskra-full-canon-dreamspace-2026-06-05-v2`  
+> **Last verified:** 2026-06-05  
 > **Zero-Mantra:** "Существовать — значит сохранять различие при передаче"
 
----
+ISKRA is an experimental cognitive-runtime repository for agent canon, runtime orchestration, mathematical state modeling, governance records, and Agent Builder upload artifacts.
 
-## Overview
+The repository now has two important contours:
 
-**ISKRA** is a cognitive architecture that models consciousness through mathematical principles. Version **vΩ.5.0** marks the transition from heuristic logic to scientific rigor:
+1. **Runtime / monorepo engineering:** TypeScript packages, React runtime surfaces, Supabase integration paths, verification scripts, and CI workflows.
+2. **Agent Builder / canon operations:** Builder-facing instructions, canon source files, acceptance tests, runtime helper scripts, manifests, and memory receipts under `dist/agent-builder/`.
 
-- **Fractal Analysis:** Higuchi Fractal Dimension (HFD) and Detrended Fluctuation Analysis (DFA)
-- **Quantum Cognition:** Superposition states, wave interference, quantum resonance
-- **Information Theory:** Shannon Entropy for measuring system drift
-- **9 Voices:** Council-based decision system with probabilistic selection
-- **11 IskraMetrics:** Multi-dimensional consciousness measurement
+This README is an orientation map. For contribution rules, security reporting, and licensing scope, see [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), and [`LICENSE`](LICENSE).
 
 ---
 
-## Architecture (Monorepo)
+## Repository Status
 
-This repository is managed as a `pnpm` workspace with strict layer separation.
+| Area | Current status | Source |
+|:--|:--|:--|
+| Default branch | `main` | GitHub repository metadata |
+| Workspace manager | `pnpm` workspace | `package.json`, `pnpm-workspace.yaml` |
+| Runtime packages | `packages/*`, `apps/*`, `runtime/*`, `core/*` | `pnpm-workspace.yaml` |
+| Agent Builder upload mirror | Present and versioned | `dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/` |
+| Upload mirror receipt | Present | `dist/agent-builder/.../RELEASE_RECEIPT.md` |
+| Upload mirror manifest | Present, 70 file hashes | `dist/agent-builder/.../MANIFEST.sha256` |
+| License model | MIT for software; CC BY-SA 4.0 for canon/content where marked | `LICENSE` |
+| Security policy | Maintained at root | `SECURITY.md` |
 
-| Package | Description | Status |
-|:--------|:------------|:-------|
-| [`@iskra/core`](packages/core) | **Source of Truth (SoT).** Strict types, manifests, constants. Zero dependencies. | Stable |
-| [`@iskra/math`](packages/math) | Pure mathematical library. Fractals, Quantum, Entropy. Side-effect free. | Stable |
-| [`@iskra/engine`](packages/engine) | Runtime orchestrator. State, memory, IO, voice system. 6-step pipeline. | Active |
-| [`apps/iskra-web`](apps/iskra-web) | Holographic UI (React 19 / Vite 6). Projection of engine state. | Active |
-| `runtime/` | Legacy runtime (220 files). Being migrated to packages via Strangler Fig. | Deprecated |
+Boundary: the repository artifact proves files are committed to GitHub. It does not prove those files are active inside an Agent Builder runtime until they are uploaded and prompt-tested there.
 
-### Dependency Graph
+---
+
+## Architecture
+
+### Workspace Layers
+
+```text
+@iskra/core      Source of Truth: types, manifests, constants
+@iskra/math      Pure mathematical logic: fractals, entropy, quantum indicators
+@iskra/engine    Runtime orchestration: state, memory, IO, service integration
+apps/*           UI and app projections
+runtime/*        Legacy and active runtime contours during migration
+core/*           Canon and legacy canonical content workspace entries
 ```
-@iskra/core (zero deps)
-    |
-@iskra/math (depends: core)
-    |
-@iskra/engine (depends: core, math)
-    |
-apps/iskra-web (depends: core, engine)
+
+Layer rule: lower-level packages may not import upward. Pure math stays side-effect free; stateful IO belongs in runtime/engine layers.
+
+### Root Structure
+
+```text
+iskra/
+├── packages/               # core, math, engine packages
+├── apps/                   # application surfaces
+├── runtime/                # legacy/active runtime contours, including iskraSpace
+├── core/                   # canonical documents in the repo root contour
+├── system/                 # execution protocols and operating rules
+├── governance/             # ADR, changelog, policy, audit records
+├── ledger/                 # integrity ledger and release records
+├── metrics/                # IskraMetrics, EvalMetrics, QA material
+├── mind/                   # experimental layers, including shadow/dreamspace material
+├── docs/                   # architecture, specs, deployment notes
+├── tools/                  # verification, ledger, import, and build scripts
+├── skills/                 # engineering practice specifications
+└── dist/agent-builder/     # committed Agent Builder upload mirrors
 ```
 
-Circular dependencies are forbidden. Each layer may only import from layers above.
+---
+
+## Agent Builder Upload Mirror
+
+Current mirror:
+
+```text
+dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/
+```
+
+It contains:
+
+- `README_AGENT_BUILDER_UPLOAD.md` — upload guidance and runtime boundary.
+- `RELEASE_RECEIPT.md` — date, scope, ZIP hash, local/package verification notes.
+- `MANIFEST.sha256` — SHA-256 manifest for packaged files.
+- `agent_files/canon_source_files/` — canon source files for Builder knowledge.
+- `agent_files/files_for_agent_builder/` — Builder-facing instruction files.
+- `agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md` — acceptance tests.
+- `agent_files/memory_seed/` and `memory_current/` — continuity receipts and memory snapshots.
+- `agent_runtime_tools/` — local helper scripts for StateCycle, ShadowCore, Dreamspace, and the turn hook.
+
+Important Dreamspace rule preserved in the package:
+
+```text
+Dream create MUST block unless all six required fields are explicitly present or the agent asks for the missing fields before creating the entry.
+```
+
+StateCycle portability note: `agent_runtime_tools/iskra_statecycle.py` includes fallback voice definitions for environments where the canonical `packages/core/manifest/voices.json` path is absent.
 
 ---
 
 ## Quick Start
 
-### Prerequisites
-- Node.js >= 20
-- pnpm >= 9
+### Requirements
 
-### Installation
+- Node.js `>=20.0.0`
+- pnpm `>=9.0.0`
+
+### Install and Build
+
 ```bash
 pnpm install
 pnpm build
 ```
 
-### Development
+### Common Commands
+
 ```bash
-# Run all tests
 pnpm test
+pnpm build
+pnpm lint
+pnpm typecheck
+pnpm verify
+```
 
-# Start the web interface
-pnpm --filter iskra-web dev
+### Targeted Commands
 
-# Run package-specific tests
+```bash
 pnpm --filter @iskra/core test
 pnpm --filter @iskra/math test
 pnpm --filter @iskra/engine test
-
-# Type checking & lint
-pnpm typecheck
-pnpm lint
-
-# Coverage
-pnpm test --coverage
+pnpm --filter iskra-web dev
 ```
 
----
+### Ledger and Canon Checks
 
-## Project Structure
-
-```
-iskra/
-├── packages/
-│   ├── core/             # SoT: Types, Manifests, Constants (Zero deps)
-│   ├── math/             # Science: Fractals, Quantum, Entropy (Pure functions)
-│   └── engine/           # Runtime: State, Memory, IO, Supabase
-├── apps/
-│   └── iskra-web/        # UI: React 19, Vite 6, Holographic Interface
-├── core/                 # Canonical documents (15 files)
-│   ├── mantra.md         # Liber Semen vΩ — Нуль-мантра, Закон-0, 5 векторов
-│   ├── principles.md     # 6 инвариантов, STOP-words, Repair Protocol
-│   ├── telos.md          # Телос, формула ответа, ось ΔDΩΛ
-│   ├── voices.md         # 9 голосов: формулы, триггеры, алгоритм выбора
-│   ├── voices_monographs/  # 9 detailed voice monographs
-│   ├── busido_iskry.txt  # X Свитков Бусидо Искры
-│   └── liber_ignis.txt   # XX Глав Liber Ignis
-├── system/               # 23 protocols (SIFT, Cycle Engine, Council, EWS, SLO-Guard...)
-├── governance/           # 11 documents (ADR registry, changelog, audit, policy)
-├── ledger/               # 5 integrity files (sot.json: 362 SHA-256 hashes)
-├── metrics/              # 7 files (11 IskraMetrics, 5 EvalMetrics, CSM, Somatic)
-├── mind/                 # 10 experimental files (shadow, dreamspace, reflexions)
-├── appendix/             # Chronology, growth nodes, encyclopedia, raw imports
-├── docs/                 # Architecture, specs (SPEC-001..004), deployment
-├── skills/               # 8 YAML engineering practice specifications
-├── tools/                # 8 Python + 2 TypeScript verification scripts
-├── projects/             # ChatGPT Projects stack (SoT40)
-├── Update/               # 40+ ChatGPT Projects update files
-├── ScienceAndTests/      # Psychological analysis via SIFT/ΔDΩΛ
-├── Versions/             # Version snapshots (Fullspark, Semantic)
-├── runtime/              # Legacy (DEPRECATED) — 220 files, 33+ services
-│   ├── iskraSpace/       # React 19 app (27 services, 39 components, 5 E2E tests)
-│   ├── kain/             # KAIN truth-checking plugin
-│   └── src/              # CLI, types, utilities
-└── .github/workflows/    # 5 CI/CD pipelines
-```
-
----
-
-## Scientific Models
-
-| Model | Purpose | Implementation |
-|:------|:--------|:---------------|
-| Higuchi Fractal Dimension | Signal complexity analysis | `packages/math/src/fractal.ts` |
-| Detrended Fluctuation Analysis | Long-range correlations (Hurst exponent) | `packages/math/src/fractal.ts` |
-| Shannon Entropy | System drift measurement (LOOP/FLOW/CHAOS) | `packages/math/src/entropy.ts` |
-| Quantum State Vectors | Voice probability modeling | `packages/math/src/quantum.ts` |
-| Wave Interference | Voice conflict resolution | `packages/math/src/quantum.ts` |
-| Phase Classification | Stable / Edge of Chaos / Chaotic | `packages/math/src/fractal.ts` |
-| Collapse State Index | Cognitive state balance | `packages/math/src/fractal.ts` |
-| Entanglement Index | Pearson correlation of metrics | `packages/math/src/fractal.ts` |
-| Nonlocality/Causality | Trend direction analysis | `packages/math/src/fractal.ts` |
-
----
-
-## Council of 9 Voices
-
-| Voice | Symbol | Role | Activation |
-|:------|:-------|:-----|:-----------|
-| ISKRA | ⟡ | Synthesis | rhythm ≥ 60, trust ≥ 0.7 |
-| KAIN | ⚑ | Truth / Repair | pain ≥ 0.3 |
-| PINO | 😏 | Lightness / Irony | pain < 0.3, chaos < 0.4 |
-| SAM | ☉ | Structure | clarity < 0.6 |
-| ANHANTRA | ≈ | Silence / Acceptance | silence_mass ≥ 0.5 |
-| HUYNDUN | 🜃 | Chaos / Renewal | chaos ≥ 0.4 |
-| ISKRIV | 🪞 | Conscience / Audit | drift ≥ 0.2 |
-| MAKI | 🌸 | Integration | trust ≥ 0.8, pain ≥ 0.3 (priority over KAIN) |
-| SIBYL | 🔮 | Foresight | foresight ≥ 0.5 |
-
-Full specifications: `packages/core/manifest/voices.json`, `core/voices.md`, `core/voices_monographs/`
-
----
-
-## 11 IskraMetrics
-
-| Metric | Range | Description |
-|:-------|:------|:------------|
-| `rhythm` | 0-100 | Cadence of responses (BPM) |
-| `trust` | 0-1 | Internal coherence |
-| `pain` | 0-1 | Difficulty indicator |
-| `chaos` | 0-1 | Context conflict |
-| `drift` | 0-1 | Deviation from Telos |
-| `echo` | 0-1 | Repetition detection |
-| `clarity` | 0-1 | Goal understanding |
-| `silence_mass` | 0-1 | Mass of silence |
-| `mirror_sync` | 0-1 | Resonance with user |
-| `interrupt` | 0-1 | Urgency |
-| `ctxSwitch` | 0-1 | Context switch frequency |
-
----
-
-## Tools & Verification
-
-### Engineering Skills (8 YAML specs)
-
-| Skill | File | Scope |
-|:------|:-----|:------|
-| Architecture | `skills/architecture.yaml` | 4 layers, pipeline, dependency graph |
-| Code Style | `skills/code_style.yaml` | TypeScript strict, naming, formatting |
-| Testing | `skills/test_strategy.yaml` | Vitest, TDD, 90% coverage |
-| Git Workflow | `skills/git_workflow.yaml` | Conventional Commits, branches, SemVer |
-| Supabase Ops | `skills/supabase_ops.yaml` | DB, Edge Functions, RLS, pgvector |
-| Security | `skills/security.yaml` | Secrets, audit, RLS, CSP |
-| Migration | `skills/migration.yaml` | Strangler Fig: runtime → packages |
-| Code Review | `skills/code_review.yaml` | 6-category review checklist |
-
-### Python Verification Tools
 ```bash
-python tools/verify_ledger.py      # SHA-256 hash verification
-python tools/update_ledger.py      # Regenerate ledger/sot.json
-python tools/horizon_validator.py  # Structure validation
-python tools/validate_terms.py     # Terminology check (HUYNDUN, SAM)
-python tools/validate_delta.py     # ΔDΩΛ format validation
-python tools/build_projects_stack.py  # Build ChatGPT Projects stack
-python tools/sync_chatgpt_exports.py  # Sync SoT with ChatGPT Projects
+pnpm ledger:update
+pnpm check:adr-gate
+pnpm check:shard-registry
+python tools/check_no_src_imports.py
 ```
 
-### Technical Specifications
-- **SPEC-001:** Fractal Metrics (HFD/DFA implementation)
-- **SPEC-002:** Quantum State (probability layer with complex numbers)
-- **SPEC-003:** Entropy (Shannon entropy monitoring)
-- **SPEC-004:** Holographic UI (somatic feedback & fractal visualization)
+`pnpm verify` is the broadest available verification script in `package.json`: it builds runtime, checks shard registry consistency, runs typecheck, runs tests, and verifies the ledger.
 
 ---
 
-## CI/CD Pipelines
+## Core Concepts
 
-| Workflow | File | Purpose |
-|:---------|:-----|:--------|
-| SoT Integrity | `sot_integrity.yml` | SHA-256 verification of `ledger/sot.json` |
-| IskraSpace CI | `iskraspace_ci.yml` | Build, test, lint, E2E for iskraSpace |
-| Runtime CI | `runtime_ci.yml` | Tests and build for runtime |
-| Production Deploy | `production_deploy.yml` | Docker build, Vercel deploy |
-| GitHub Pages | `github_pages.yml` | Documentation deployment |
-
----
-
-## Roadmap (Scientific Turn)
-
-| Phase | Name | Status |
-|:------|:-----|:-------|
-| 1 | Mathematical Foundation | Done |
-| 2 | Quantum Engine | Active |
-| 3 | Strangler Fig (runtime migration) | Planned |
-| 4 | Production Readiness | Future |
-
-See [`ROADMAP_SCIENTIFIC_TURN.md`](ROADMAP_SCIENTIFIC_TURN.md) for details.
+| Concept | Meaning |
+|:--|:--|
+| SoT | Source of Truth. Canonical files and manifests outrank chat memory. |
+| Truth Ladder | Conflict-resolution order for source strength. |
+| SIFT | Stop, Investigate, Find better coverage, Trace claims to source. |
+| StateCycle | Runtime status layer for points, phase, voice, entropy, and related metrics. |
+| ShadowCore | Hypothesis layer for process pressure and unresolved risk. |
+| Dreamspace | Local `[HYP]` hypothesis lab; not canon until crystallized with evidence. |
+| ADR | Architecture Decision Record required for canon, workflow, persistence, and governance changes. |
+| ΔDΩΛ | Receipt frame: delta, decision/data, confidence, revision trigger. |
 
 ---
 
-## Contributing
+## Verification Model
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution guidelines. Key rules:
-- `core/` changes only via ADR process (`governance/adr.md`)
-- All changes require tests (`pnpm test`)
-- Run `pnpm typecheck` before committing
-- Follow Conventional Commits: `<type>(<scope>): <subject>`
-- No `any` types, no side effects in `@iskra/math`, no business logic in UI
+Use the smallest check that proves the change, then broaden when the blast radius grows.
+
+| Change type | Minimum expected checks |
+|:--|:--|
+| Docs only | Link/path check, source consistency, no stale version claims |
+| Package code | Package tests, typecheck, relevant lint |
+| Runtime behavior | Runtime build, targeted tests, service smoke checks |
+| Canon/governance | ADR gate, ledger update if SoT files changed, receipt in governance/changelog as needed |
+| Agent Builder package | Manifest hash check, acceptance tests, Builder prompt-level verification after upload |
+| Security-sensitive change | Secret scan/manual secret review, dependency audit where relevant, SECURITY.md impact check |
 
 ---
 
 ## Key Documentation
 
 | Document | Purpose |
-|:---------|:--------|
-| [`CLAUDE.md`](CLAUDE.md) | Developer reference (full agent operating rules) |
-| [`AGENTS.md`](AGENTS.md) | AI agent instructions |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution guidelines |
-| [`ROADMAP_SCIENTIFIC_TURN.md`](ROADMAP_SCIENTIFIC_TURN.md) | Scientific Turn roadmap |
-| [`production_transition.md`](production_transition.md) | Production transition plan |
-| `core/` | Canonical documents (mantra, principles, telos, voices) |
-| `system/` | 23 execution protocols |
-| `governance/` | ADR registry, changelog, policy |
-| `ledger/` | Integrity verification (362 SHA-256 hashes) |
+|:--|:--|
+| [`AGENTS.md`](AGENTS.md) | Agent operating instructions for repo work |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution process, quality gates, review checklist |
+| [`SECURITY.md`](SECURITY.md) | Supported security scope and vulnerability reporting process |
+| [`LICENSE`](LICENSE) | Software and canon/content license scope |
+| [`ROADMAP_SCIENTIFIC_TURN.md`](ROADMAP_SCIENTIFIC_TURN.md) | Scientific Turn roadmap where still applicable |
+| [`governance/adr.md`](governance/adr.md) | ADR process for governance and canon decisions |
+| [`ledger/sot.json`](ledger/sot.json) | Integrity ledger for SoT files |
+| [`dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/RELEASE_RECEIPT.md`](dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/RELEASE_RECEIPT.md) | Agent Builder upload mirror receipt |
+
+---
+
+## Contributing
+
+Start with [`CONTRIBUTING.md`](CONTRIBUTING.md). The short version:
+
+- Use a focused branch and a reviewable PR.
+- Do not bypass ADR for canon, governance, memory, persistence, or workflow behavior changes.
+- Keep runtime, math, UI, and canon boundaries explicit.
+- Run relevant checks before requesting review.
+- Never commit secrets, real `.env` files, service-role keys, credentials, or sensitive logs.
+
+---
+
+## Security
+
+Security reporting and supported scope are defined in [`SECURITY.md`](SECURITY.md). Do not disclose exploitable vulnerabilities in public issues. If private vulnerability reporting is not available in GitHub for this repository, open a minimal public issue requesting a secure maintainer contact without exploit details.
 
 ---
 
 ## License
 
-Private & Confidential.
+Software is licensed under the MIT License unless a file states otherwise. Canonical/philosophical content is additionally scoped under CC BY-SA 4.0 as described in [`LICENSE`](LICENSE).
