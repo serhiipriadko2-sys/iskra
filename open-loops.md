@@ -15,7 +15,13 @@
 - **Mitigation:** Run the Playwright test suite `test:e2e` post-deploy to confirm RLS policies enforce multi-user isolation on auth schema.
 
 ### OPN-20260606-001: Runtime Bridge App Activation
-- **Description:** `plugins/iskra-toolchain-bridge/` is verified as source and mirrored into the v4 Builder package, but the local Codex app activation cannot be checked in this environment.
-- **Status:** Blocked by local tool execution.
-- **Risk:** The plugin schema and smoke contour are valid, but actual Codex Desktop installation and Agent Builder UI behavior may still drift from the local source package.
-- **Mitigation:** On a machine where `codex.exe` runs, install or expose the plugin in Codex Desktop, run the bridge smoke command from the plugin root, upload the v4 package to Agent Builder, and execute acceptance prompts before marking `verified in Builder UI`.
+- **Description:** `plugins/iskra-toolchain-bridge/` is verified as source, mirrored into v4, and exposed in `C:\Users\gabra\.codex\config.toml` as `iskra-toolchain-bridge@iskra-local`, but active Codex Desktop plugin load is not proven.
+- **Status:** Config exposed; app load blocked by local CLI execution.
+- **Risk:** The plugin schema, smoke contour, and config entry are valid, but actual Codex Desktop runtime discovery may still require app restart or UI inventory proof.
+- **Mitigation:** Restart Codex Desktop or open a fresh session, verify plugin visibility in app inventory, and rerun runtime smoke from the app-visible plugin path before marking `live`.
+
+### OPN-20260606-002: Runtime Bridge CI Status Checks
+- **Description:** Opera browser review of GitHub commit `e6ce1fb` observed `Status checks: failure`, `4 / 6`.
+- **Status:** Open.
+- **Risk:** Runtime bridge package may be locally verified while repository CI remains red for unrelated or related checks.
+- **Mitigation:** Inspect current GitHub Actions checks/logs after the next push and repair or explicitly classify baseline failures before production release claims.

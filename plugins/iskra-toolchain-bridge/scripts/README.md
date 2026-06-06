@@ -6,6 +6,8 @@
   obvious secret patterns.
 - `smoke_runtime.py` validates the runtime package, vault clone dry-run,
   credential-bearing URL rejection, and optional public GitHub read reachability.
+- `diagnose_codex_desktop.ps1` records Codex Desktop CLI/config/plugin exposure
+  status without printing secrets.
 - `iskra_git_clone_with_vault.ps1` is the Windows vault-safe git clone helper.
 - `iskra_git_clone_with_vault.sh` is the POSIX vault-safe git clone helper.
 

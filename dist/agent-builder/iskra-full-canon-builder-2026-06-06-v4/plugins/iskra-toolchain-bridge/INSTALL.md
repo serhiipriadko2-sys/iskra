@@ -26,9 +26,20 @@ py plugins/iskra-toolchain-bridge/scripts/smoke_runtime.py `
 
 ## Codex Runtime Install
 
-If the Codex CLI is available, install through a configured marketplace or local
-plugin flow supported by the current Codex Desktop build. Do not claim installed
-status until the plugin is visible in the Codex app or `codex` reports it.
+This repository now exposes the plugin through a local Codex marketplace entry:
+
+```toml
+[marketplaces.iskra-local]
+source_type = "local"
+source = 'C:\github\iskra-1\plugins'
+
+[plugins."iskra-toolchain-bridge@iskra-local"]
+enabled = true
+```
+
+That connects the plugin source to Codex Desktop configuration. Do not claim
+fully installed status until the plugin is visible in the Codex app or `codex`
+reports it.
 
 Current known blocker on this machine:
 
@@ -45,6 +56,14 @@ codex mcp list
 
 Then reinstall/update the plugin through the current Codex plugin workflow and
 rerun `smoke_runtime.py`.
+
+Diagnostic receipt:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File `
+  plugins/iskra-toolchain-bridge/scripts/diagnose_codex_desktop.ps1 `
+  -ReceiptPath plugins/iskra-toolchain-bridge/codex-desktop-diagnostic.json
+```
 
 ## Vault-Safe Clone Smoke
 

@@ -17,7 +17,7 @@
     {
       "name": "plugin_manifest_hash",
       "ok": true,
-      "detail": "d653c0221cf695de9fd15ad733ce8be8731f4210f1ed05ef40d62a11f836d998"
+      "detail": "4b8c42eba7d82da925aaede6b466228d1ce14855246c95d6376b0327d33f736b"
     },
     {
       "name": "vault_clone_dry_run",
@@ -32,7 +32,7 @@
     {
       "name": "git_public_ls_remote",
       "ok": true,
-      "detail": "e85d6e9577f54b8ed6a7b634a34a966dd6c8552e\tHEAD"
+      "detail": "e6ce1fb0745bac776eaef254663ec6b38d29faae\tHEAD"
     }
   ],
   "boundary": "This validates local runtime source package shape, not Codex app installation."

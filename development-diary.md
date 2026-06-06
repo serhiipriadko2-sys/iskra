@@ -97,3 +97,12 @@
 - **Verification:** Plugin schema validation PASS; connector contracts PASS for 8 contracts; runtime smoke PASS; credential-bearing git URLs rejected; vault clone helper dry-run PASS; public `git ls-remote` PASS; manifest check PASS with 143 payload lines; zip integrity PASS with 144 entries and sha256 `0e909c78fc3eb8d74b1a0f30e9d0928a7609eec52e2fc0f2f5b5bc48271dec2a`; obvious-secret scan PASS.
 - **Risk:** Codex app install/runtime activation is not verified because local `codex.exe` returns `Access is denied`. Builder UI activation is still pending prompt-level verification after upload.
 - **Status:** Runtime source verified; app activation pending.
+
+### JRN-20260606-003: Codex Activation Exposure and Live Connector Contracts
+- **Context:** Runtime bridge needed Codex Desktop config exposure, live connector receipts, and Builder hardening prompts beyond static contract files.
+- **Actions:** Added local Codex marketplace config for `iskra-toolchain-bridge@iskra-local`, added Codex activation diagnostics, live connector receipts, plugin version `0.3.0`, and `BUILDER_RUNTIME_HARDENING_PROMPTS.md`. Mirrored updated plugin source into v4 and updated release/QC/toolchain receipts.
+- **Evidence:** `CODEX_ACTIVATION_RECEIPT.md`, `codex-desktop-diagnostic.json`, `LIVE_CONNECTOR_RECEIPT.md`, `live-connector-receipt.json`, `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md`, and `C:\Users\gabra\.codex\config.toml`.
+- **Verification:** GitHub connector read PASS; Supabase project metadata/types/functions read PASS; Opera browser page review PASS; Codex config exposure PASS; Codex CLI/app load BLOCKED by `Access is denied`; official Codex manual helper PARTIAL due `HTTP 403`.
+- **Artifact:** v4 zip regenerated with 150 entries, 149 manifest payload lines, bytes `1914053`, sha256 `6943c012e6522525949a4bb211d1ce1f2d0246da1c78df1c74c81e02b7146e1b`.
+- **Risk:** Browser review observed GitHub status checks `failure`, `4 / 6`; app-visible plugin load and Builder UI upload remain pending.
+- **Status:** Live read contracts partial-verified; app load and Builder UI verification pending.

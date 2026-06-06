@@ -1,7 +1,7 @@
 # Iskra Toolchain Bridge
 
 Status: runtime source package
-Version: 0.2.0
+Version: 0.3.0
 
 This plugin turns the Agent Builder toolchain expansion from packaged knowledge
 into a local, testable Codex/Agent runtime bridge.
@@ -15,6 +15,7 @@ into a local, testable Codex/Agent runtime bridge.
 - Local smoke checks that validate plugin shape, connector contracts, secret URL
   rejection, manifest consistency, and optional public GitHub reachability.
 - Receipt files for runtime installation and validation.
+- Codex Desktop activation diagnostics and live connector receipts.
 
 ## Boundary
 
@@ -47,3 +48,17 @@ py plugins/iskra-toolchain-bridge/scripts/smoke_runtime.py `
 Codex app runtime. If the shell returns `Access is denied`, keep this package in
 `proposed/runtime-source` status and use the smoke checks as proof of local
 package correctness.
+
+On this machine the plugin is also exposed through the Codex config as:
+
+```toml
+[marketplaces.iskra-local]
+source_type = "local"
+source = 'C:\github\iskra-1\plugins'
+
+[plugins."iskra-toolchain-bridge@iskra-local"]
+enabled = true
+```
+
+This is config exposure, not final proof of app load. Restart Codex Desktop or
+open a fresh session and verify plugin visibility before marking it `live`.

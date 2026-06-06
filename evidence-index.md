@@ -67,3 +67,15 @@
   - v4 zip integrity passed with 144 entries, bytes `1902867`, sha256 `0e909c78fc3eb8d74b1a0f30e9d0928a7609eec52e2fc0f2f5b5bc48271dec2a`.
   - Obvious-secret scan passed over the source plugin and v4 mirrored plugin.
 - **Status:** Local runtime source verified; Codex app install and Agent Builder UI activation pending.
+
+### EVI-20260606-003: Live Connector Contracts and Builder Hardening
+- **Assertion:** The runtime bridge has observed live read paths and release-blocking Builder hardening prompts.
+- **Evidence:**
+  - GitHub connector `get_repo` passed for `serhiipriadko2-sys/iskra`, repo id `1126614067`, default branch `main`, visibility `public`, permissions include `pull`, `push`, `triage`, `maintain`, and `admin`.
+  - Supabase connector read passed for `AgiIskra / typcvaszcfdpkzbjzuur`, status `ACTIVE_HEALTHY`, region `eu-west-1`, Postgres `17.6.1.063`, API URL `https://typcvaszcfdpkzbjzuur.supabase.co`, Edge Functions and generated type summary observed without mutation.
+  - Opera browser connector opened the GitHub commit page for `e6ce1fb` and read page identity, file tree, and status via accessibility tree.
+  - `C:\Users\gabra\.codex\config.toml` exposes local marketplace `iskra-local` and enables `iskra-toolchain-bridge@iskra-local`.
+  - `codex-desktop-diagnostic.json` records plugin files present, config exposure true, and `codex.exe` blocked with `Access is denied`.
+  - `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md` adds six release-blocking prompts.
+  - v4 zip regenerated with 150 entries, bytes `1914053`, sha256 `6943c012e6522525949a4bb211d1ce1f2d0246da1c78df1c74c81e02b7146e1b`.
+- **Status:** Live read contracts verified; Codex app load, Builder UI upload, and CI status checks pending.

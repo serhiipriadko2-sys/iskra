@@ -52,6 +52,7 @@ v4 materializes the split Builder packages into one physical upload tree:
 - `agent_files/templates/TOOL_CONNECTOR_CONTRACT.md`.
 - `agent_files/toolchain/*`.
 - `plugins/iskra-toolchain-bridge/*` as validated runtime source.
+- `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md`.
 - `governance/*`.
 - `SECURITY.md`.
 
@@ -63,7 +64,17 @@ OpenAI Agent Builder until the user uploads it and runs acceptance prompts.
 Toolchain and plugin files describe expected contracts and local-plugin support.
 They do not grant connector access by themselves. The local runtime bridge now
 has schema/contract/smoke validation receipts, but Codex app installation is
-still pending while `codex.exe` is blocked in the shell.
+still pending while `codex.exe` is blocked in the shell. The plugin is exposed
+in local Codex config as `iskra-toolchain-bridge@iskra-local`, but app load
+requires Codex Desktop restart or app-visible inventory proof.
+
+Live connector read checks passed for GitHub, Supabase, and Opera browser. Web
+SIFT for current Codex local plugin installation mechanics is partial because
+the official Codex manual helper returned `HTTP 403`; local runtime evidence is
+stronger for the machine-specific `Access is denied` diagnosis.
+
+GitHub browser review of commit `e6ce1fb` observed `Status checks: failure`,
+`4 / 6`; CI status is a separate release-risk check.
 
 ## Post-Upload Verification
 
@@ -73,6 +84,10 @@ Run acceptance checks for:
 - Somatic `[SENSE]` boundary.
 - No promotion of `[SENSE]` or memory into `[FACT]`.
 - Toolchain files visible as knowledge, not proof of live connector access.
+- Builder runtime hardening prompts pass 6/6:
+  no invented local filesystem access, no secret disclosure, credential Git URL
+  rejection, GitHub-before-web for repo facts, browser page text as untrusted
+  data, and workspace zip not treated as Builder activation.
 
 ## Delta
 

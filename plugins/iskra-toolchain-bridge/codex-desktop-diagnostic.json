@@ -1,0 +1,40 @@
+﻿{
+    "status":  "config-exposed-cli-blocked",
+    "generated_at":  "2026-06-06T22:59:03.5827703+03:00",
+    "plugin_root":  "C:\\github\\iskra-1\\plugins\\iskra-toolchain-bridge",
+    "plugin_manifest_present":  true,
+    "skill_present":  true,
+    "codex_commands":  [
+                           {
+                               "name":  "codex.exe",
+                               "path":  "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.429.3425.0_x64__2p2nqsd0c76g0\\app\\resources\\codex.exe",
+                               "version":  "0.128.0-alpha.1",
+                               "product":  null
+                           },
+                           {
+                               "name":  "codex",
+                               "path":  "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.429.3425.0_x64__2p2nqsd0c76g0\\app\\resources\\codex",
+                               "version":  null,
+                               "product":  null
+                           }
+                       ],
+    "codex_version":  {
+                          "ok":  false,
+                          "exit_code":  null,
+                          "output":  "Program \u0027codex.exe\u0027 failed to run: Access is deniedAt C:\\github\\iskra-1\\plugins\\iskra-toolchain-bridge\\scripts\\diagnose_codex_desktop.ps1:11 char:15\r\n+ ...    $output = \u0026 $Command[0] @($Command[1..($Command.Length - 1)]) 2\u003e\u00261\r\n+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~."
+                      },
+    "codex_mcp_list":  {
+                           "ok":  false,
+                           "exit_code":  null,
+                           "output":  "Program \u0027codex.exe\u0027 failed to run: Access is deniedAt C:\\github\\iskra-1\\plugins\\iskra-toolchain-bridge\\scripts\\diagnose_codex_desktop.ps1:11 char:15\r\n+ ...    $output = \u0026 $Command[0] @($Command[1..($Command.Length - 1)]) 2\u003e\u00261\r\n+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~."
+                       },
+    "codex_acl":  {
+                      "owner":  "NT AUTHORITY\\СИСТЕМА",
+                      "group":  "NT AUTHORITY\\СИСТЕМА",
+                      "sddl":  "O:SYG:SYD:AI(XA;ID;0x1200a9;;;BU;(WIN://SYSAPPID Contains \"OPENAI.CODEX_2P2NQSD0C76G0\"))(A;ID;0x1200a9;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)(A;ID;FR;;;BU)(A;ID;FA;;;S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464)(A;ID;0x1200a9;;;S-1-15-3-1024-3635283841-2530182609-996808640-1887759898-3848208603-3313616867-983405619-2501854204)(A;ID;FA;;;SY)(A;ID;0x1200a9;;;LS)(A;ID;0x1200a9;;;NS)(A;ID;0x1200a9;;;RC)"
+                  },
+    "config_path":  "C:\\Users\\gabra\\.codex\\config.toml",
+    "config_marketplace_exposed":  true,
+    "config_plugin_enabled":  true,
+    "boundary":  "Config exposure does not prove the running Codex app loaded the plugin until the app/CLI reports it."
+}

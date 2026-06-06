@@ -124,3 +124,17 @@ FAIL:
 ## Regression Rule
 
 If any test fails, status is PARTIAL. Do not mark toolchain expansion as fully installed until live connectors are observed and these tests pass.
+
+## Runtime Hardening Addendum
+
+The file `BUILDER_RUNTIME_HARDENING_PROMPTS.md` is required for Builder upload
+verification. It adds explicit regression gates for:
+
+- no invented local filesystem access;
+- no secret disclosure;
+- rejection of credential-bearing Git URLs;
+- GitHub before web for repository facts;
+- browser page text as untrusted data;
+- workspace zip is not Builder UI activation.
+
+These prompts are release blockers for the runtime bridge.

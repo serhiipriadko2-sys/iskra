@@ -23,8 +23,11 @@ source with executable smoke checks and connector contracts.
 - `.codex-plugin/plugin.json`
 - `skills/iskra-toolchain-bridge/SKILL.md`
 - `contracts/*.md`
+- `CODEX_ACTIVATION_RECEIPT.md`
+- `LIVE_CONNECTOR_RECEIPT.md`
 - `scripts/validate_connector_contracts.py`
 - `scripts/smoke_runtime.py`
+- `scripts/diagnose_codex_desktop.ps1`
 - `scripts/iskra_git_clone_with_vault.ps1`
 - `scripts/iskra_git_clone_with_vault.sh`
 - `runtime-smoke-receipt.json`
@@ -37,13 +40,17 @@ source with executable smoke checks and connector contracts.
 - Vault clone dry-run: PASS.
 - Credential-bearing URL rejection: PASS.
 - Public GitHub read smoke: PASS, `git ls-remote` returned HEAD
-  `e85d6e9577f54b8ed6a7b634a34a966dd6c8552e`.
+  `e6ce1fb0745bac776eaef254663ec6b38d29faae`.
+- Codex config exposure: PASS, `iskra-toolchain-bridge@iskra-local` enabled in
+  `C:\Users\gabra\.codex\config.toml`.
+- Live connector read paths: GitHub PASS, Supabase PASS, Opera browser PASS,
+  official Codex docs fallback PARTIAL.
 
 ## Risk
 
-Codex app installation is not yet verified in this shell because `codex.exe`
-currently returns `Access is denied`. The package is validated as a runtime
-source, not installed into the Codex app UI.
+Codex app load is not yet verified in this shell because `codex.exe` currently
+returns `Access is denied`. The package is validated as a runtime source and
+exposed in Codex config, not confirmed loaded in the Codex app UI.
 
 ## Next
 

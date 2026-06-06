@@ -41,3 +41,26 @@ Plugin schema validation, connector-contract validation, runtime smoke, manifest
 
 ### Rollback / Reversal Trigger
 Rollback if Codex Desktop rejects the plugin manifest, connector contracts fail real runtime tests, or Agent Builder upload behavior proves the mirrored bridge causes prompt/tool discipline drift.
+
+## ADR-20260606-003: Runtime Bridge Requires Config Exposure, Live Read Receipts, and Hardening Prompts
+
+### Context
+The runtime bridge moved from static package files to local plugin source, but the next gate required actual Codex Desktop exposure, live connector read evidence, and Builder acceptance prompts that catch common unsafe overclaims.
+
+### Decision
+Expose `plugins/iskra-toolchain-bridge/` through a local Codex marketplace entry `iskra-local`, keep app load status separate from config exposure, record live read receipts for GitHub/Supabase/browser, and add Builder runtime hardening prompts as release blockers.
+
+### Alternatives
+- Treat plugin source validation as enough. Rejected because it does not prove connector reality or app discovery.
+- Wait for `codex.exe` to become callable before adding receipts. Rejected because GitHub/Supabase/browser live reads are independently observable and useful now.
+
+### Consequences
+- `config-exposed-cli-blocked` is a valid intermediate status.
+- Runtime bridge claims must distinguish source validation, config exposure, live read connectors, app load, and Builder UI activation.
+- Builder upload verification must include local filesystem truth, secret safety, credential URL rejection, GitHub-before-web discipline, browser text trust, and upload boundary prompts.
+
+### Verification
+GitHub connector read PASS; Supabase connector read PASS; Opera browser read PASS; local Codex config exposure PASS; Codex CLI/app load BLOCKED by `Access is denied`; official Codex manual helper PARTIAL due `HTTP 403`.
+
+### Rollback / Reversal Trigger
+Remove `iskra-local` config exposure and revert hardening prompt additions if Codex Desktop rejects local marketplace loading or Builder prompt tests show the new gates conflict with higher-priority canon/security rules.

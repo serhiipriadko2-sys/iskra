@@ -17,6 +17,9 @@ mirrors:
 - `agent_files/files_for_agent_builder/` - compact Builder-facing setup,
   kernel, memory, tools, commands, Dreamspace, and toolchain instructions.
 - `agent_files/evals/` - canon and toolchain acceptance tests.
+- `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md` - release-blocking
+  prompts for local filesystem truth, secret safety, credential URL rejection,
+  GitHub-before-web discipline, browser page trust, and Builder upload boundary.
 - `agent_files/templates/` - ADR, ledger, and tool connector templates.
 - `agent_files/toolchain/` - toolchain manifest and connector/git-vault specs.
 - `agent_runtime_tools/` - local/helper runtime scripts for Dreamspace,
@@ -27,7 +30,8 @@ mirrors:
   memory, not immutable source of truth.
 - `plugins/iskra-toolchain-bridge/` - validated local plugin/skill bridge
   source for compatible Codex/plugin runtimes, including connector contracts,
-  vault-safe git clone helpers, and smoke receipts.
+  vault-safe git clone helpers, activation diagnostics, live connector receipts,
+  and smoke receipts.
 - `SECURITY.md` - repository public security policy copied into the package
   root for Builder-visible security boundary.
 - `provenance/` - component manifests, source README preservation, and original
@@ -63,7 +67,9 @@ versions. The exact source copies are preserved under
    GitHub, Supabase, official docs, or created artifacts.
 8. Install `plugins/iskra-toolchain-bridge/*` only in a compatible local
    Codex/plugin runtime. Current source validation is PASS, but Codex app
-   installation remains pending until `codex.exe` is callable.
+   installation remains pending until `codex.exe` is callable or app-visible
+   plugin inventory confirms load. Local config exposure is present as
+   `iskra-toolchain-bridge@iskra-local`.
 
 ## Status Boundary
 
@@ -77,6 +83,7 @@ Valid status labels:
 - `created in workspace`
 - `packaged as upload set`
 - `mirrored in GitHub`
+- `config-exposed-cli-blocked`
 - `uploaded by user, pending Builder verification`
 - `verified in Builder UI`
 
@@ -91,6 +98,7 @@ Valid status labels:
   connector access.
 - Runtime bridge smoke is PASS as local source validation, not proof of Codex
   app installation.
+- Runtime hardening prompts pass 6/6.
 - Governance and security files are visible as package knowledge, including
   `governance/` and `SECURITY.md`.
 
