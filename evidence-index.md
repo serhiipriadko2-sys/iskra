@@ -41,3 +41,16 @@
   - `npm run lint` in `runtime/iskraSpace` passed with existing warnings only.
   - `npx tsx tools/verify_ledger.ts` returned `Ledger OK (417 files)`.
 - **Status:** Local verified; remote GitHub Actions pending.
+
+### EVI-20260606-001: Agent Builder v4 Materialized Merge
+- **Assertion:** `iskra-full-canon-builder-2026-06-06-v4/` is a single local upload tree that preserves the full-canon Dreamspace source layer and the toolchain source layer without source-file loss.
+- **Evidence:**
+  - Source inventory: Dreamspace 81 files, toolchain 15 files.
+  - Source overlaps: 2 files, both preserved under `provenance/conflict-originals/`.
+  - Lossless mapping check: PASS.
+  - Required-layer audit: PASS, including repository `governance/` and root `SECURITY.md`.
+  - Manifest check: PASS, 127 payload hash lines.
+  - Zip integrity check: PASS, 128 entries.
+  - Zip receipt: bytes `1881214`, sha256 `7a4dbec0379086c36c566002e818574d52d8130f5e7525b8bc599205059c1513`.
+  - Secret scan: PASS for obvious credential patterns.
+- **Status:** Local verified; Builder UI upload and runtime prompt verification pending.

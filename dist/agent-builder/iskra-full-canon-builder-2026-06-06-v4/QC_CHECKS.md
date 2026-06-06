@@ -5,12 +5,18 @@ Date: 2026-06-06
 
 ## Local Checks
 
+- Source file inventory: PASS.
+- Source overlap detection: PASS, two overlaps found and resolved.
+- Conflict source preservation: PASS.
 - Required-file presence: PASS.
-- Dream create six-field block smoke: PASS (`--adoml` missing blocks creation).
-- Turn hook smoke: PASS.
-- Zip integrity: PASS after final packaging.
-- Manifest regeneration: `MANIFEST.sha256` covers every packaged file except itself.
-- Secret scan: REVIEWED. Hits are policy/example strings (`service_role` guidance and a redacted/private-key detection fixture), not observed credential values.
+- Governance source presence: PASS, `governance/` copied.
+- Security policy presence: PASS, root `SECURITY.md` copied.
+- Manifest regeneration: PASS, `MANIFEST.sha256` covers packaged payload files
+  except itself and sidecar `ZIP_RECEIPT.json`.
+- Zip integrity: PASS when `ZIP_RECEIPT.json` reports `artifact_qc_content_ok:
+  true`.
+- Secret scan: PASS for obvious credential patterns. Policy/example mentions
+  are allowed only as non-secret text.
 
 ## Required Builder UI Checks
 

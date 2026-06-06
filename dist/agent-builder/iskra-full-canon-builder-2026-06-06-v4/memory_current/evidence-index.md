@@ -1,0 +1,165 @@
+- 2026-05-23: chat instruction from Семён to remember the principle "не предавай принципы"; persisted in `project-memory.md`.
+- 2026-05-28: Web-first verification on Opera Browser Connector vs ChatGPT web search. Evidence: Opera press release `press.opera.com/2026/04/16/opera-announces-browser-connector/`; Opera setup guide `blogs.opera.com/news/2026/05/how-to-set-up-opera-browser-connector-for-chatgpt/`; Opera Neon MCP release `press.opera.com/2026/03/31/opera-neon-adds-mcp-connector/`; OpenAI Help Center `help.openai.com/en/articles/9237897-chatgpt-search/` and `help.openai.com/en/articles/10093903`; runtime connector check returned `Browser not connected`.
+- 2026-05-28: `runtime/iskraSpace` release audit memo created at `/workspace/output/iskraSpace_release_audit_2026-05-28.docx` with receipt sha256 `47c49afac0aabf54a74b6d9ff3ffaf91ca2e6423b4d08e1e9d5b8ea3ff0b89f6`.
+- 2026-05-28: GitHub evidence set inspected via web/raw sources for commit `6932adf18d1cc4860b03612116350981c61042e2`: `runtime/iskraSpace/README.md`, `SERVICES.md`, `metadata.json`, `manifest.json`, `services/searchService.ts`, `services/supabaseClient.ts`, `supabase/schema.sql`, `supabase/functions/gemini/index.ts`, `supabase/functions/kain/index.ts`, and tree listings for `components/`, `services/`, and `supabase/`.
+- 2026-05-28: Live Supabase evidence captured for project `typcvaszcfdpkzbjzuur`: security advisors (security type), read-only SQL on `pg_tables`, `pg_policies`, and `information_schema.routines`, confirming permissive public policies and exposed `SECURITY DEFINER` routines.
+- 2026-05-28: Repair sprint artifacts created:
+  - `/workspace/output/iskraSpace_live_supabase_hotfix_2026-05-28.sql` sha256 `78529f192662046af416cfca27c2853ddea2ecbadadc63db0d75bb65f54f0957`
+  - `/workspace/output/iskraSpace_repo_patch_2026-05-28.diff` sha256 `2e5c46a50359501b9ca06dd8a6d725b4c0296c3612b3eb3de80475fee9e80b37`
+  - `/workspace/output/iskraSpace_repair_runbook_2026-05-28.md` sha256 `e2eaa0275d99573a76a7290064cbcb6417cfa781f35b314ff8be81b4e8c530b3`
+- 2026-05-28: Rollback helper created at `/workspace/output/iskraSpace_live_supabase_rollback_2026-05-28.sql` sha256 `5544ccc9577652769c27a5b8cce7f7bfc5ff989844f598568023d7b4639b00c3`.
+- 2026-05-28: Live Supabase hotfix was applied successfully through connector. Post-change evidence:
+  - `pg_policies` now shows owner-scoped policies restricted to `{authenticated}` on audited user-data tables.
+  - `role_table_grants` no longer shows `anon` grants for the audited tables.
+  - `role_routine_grants` no longer shows `anon` or `PUBLIC` execute on `claim_legacy_data`, and no longer shows `anon` execute on `check_rate_limit`.
+  - security advisors still report residual warnings for `rate_limits`, authenticated GraphQL discoverability, `update_updated_at` search_path, and authenticated `SECURITY DEFINER` execution.
+- 2026-05-28: GitHub connector changes committed on branch `codex/iskraspace-session-gemini-fix-20260528`:
+  - `b08ef93b57da2e7468980c83d36a2d4a6f93165e` — session bootstrap and user identity contract
+  - `7fa3531a6915122ef5ae5ce2ac687297ef6b1cd9` — semantic search privacy guard
+  - `5f1cc5016927ad484e1eb2d2915394d3b96f9899` — Gemini proxy bearer token fix
+- 2026-05-28: Draft PR opened: `https://github.com/serhiipriadko2-sys/iskra/pull/157`
+- 2026-05-28: Residual live Supabase warnings narrowed further:
+  - `rate_limits` policy now present: `Service role can manage rate_limits`
+  - `check_rate_limit` execute narrowed to `service_role` and `postgres`
+  - `claim_legacy_data` execute narrowed to `service_role` and `postgres`
+  - `update_updated_at()` now includes `SET search_path TO 'public'`
+  - remaining advisor warnings reduced to authenticated GraphQL discoverability on app tables and `pg_trgm` in `public`
+- 2026-05-28: PR #157 review and CI evidence:
+  - review thread on `runtime/iskraSpace/services/supabaseClient.ts` flags repeated `users` upserts and concurrent anonymous sign-in races
+  - review thread on `runtime/iskraSpace/services/searchService.ts` flags O(N*M) filtering and a lexical-search regression for sensitive docs
+  - workflow runs for head `5f1cc5016927ad484e1eb2d2915394d3b96f9899`: `iskraSpace CI` run `26598957720`, `Runtime CI` run `26598957887`, `SoT integrity` run `26598957818`
+  - decoded logs show `iskraSpace CI` failing first on unsynced `runtime/package-lock.json`, `Runtime CI` failing on missing `@iskra/core` type resolution, and `SoT integrity` failing ledger hash verification across multiple files including the three patched iskraSpace services
+- 2026-05-28: Live Supabase GraphQL and function evidence:
+  - `information_schema.role_routine_grants` shows `graphql.resolve` still executable by `anon` and `authenticated`
+  - edge function list for project `typcvaszcfdpkzbjzuur` shows `db-proxy`, `iskra-canon-backfill-1536`, `iskra-canon-import-1536`, `iskra-canon-import-diagnostic`; no `gemini`
+  - `list_tables` on schema `public` shows the core app tables exist with RLS enabled and currently `0` rows
+- 2026-05-28: Follow-up repair commits after PR #157 review:
+  - `bb139038f6f0aa589936b867ea3a4a6b5aac9a3a` — deduplicated Supabase session bootstrap and `users` upsert path in `runtime/iskraSpace/services/supabaseClient.ts`
+  - `f4b000c12765506b1dfc7730402badf4d543d769` — restored valid `searchService.ts` structure and preserved lexical results while gating semantic embedding by eligibility
+- 2026-05-28: Old PR merge drift:
+  - PR #157 merged at `2026-05-28T20:56:48Z`
+  - compare of `main` base `856ce35cf22b63be1eb4724a23c2a76903540ef3` vs branch head `db86b6970d280f245e4b09e116580e43b3d961fb` showed the branch still ahead by 4 commits after that merge point
+  - current `main` fetch still shows malformed `runtime/iskraSpace/services/searchService.ts`
+- 2026-05-28: Follow-up draft PR opened to carry the missing repair commits:
+  - PR #158 `https://github.com/serhiipriadko2-sys/iskra/pull/158`
+  - head `f4b000c12765506b1dfc7730402badf4d543d769`
+  - scope: `supabaseClient.ts`, `searchService.ts`
+  - early status: Netlify preview pending, no workflow-run payload surfaced yet
+- 2026-05-28: Clean repair path after PR #158 conflict:
+  - PR #159 `https://github.com/serhiipriadko2-sys/iskra/pull/159`
+  - changed files only: `runtime/iskraSpace/services/searchService.ts`, `runtime/iskraSpace/services/supabaseClient.ts`
+  - head `650945bc1d9b15d3f5f7ffb634090b31697a45a7`
+  - workflow runs on merge commit `73d5e2833305453625fb6384eded8614f3326c8f`:
+    - `iskraSpace CI` run `26602403752`
+    - `SoT integrity` run `26602403754`
+    - `Runtime CI` run `26602403755`
+- 2026-05-28: PR #159 CI root-cause evidence:
+  - `iskraSpace CI` job `78389108994`: `npm ci` reports `runtime/package.json` and `runtime/package-lock.json` out of sync before app-specific steps run
+  - `Runtime CI` job `78389108973`: `tsc --noEmit` fails in `runtime/src/__tests__/helpers/xcode-helpers.ts(1,47)` on unresolved `@iskra/core`
+  - `SoT integrity` job `78389108934`: `npx tsx tools/verify_ledger.ts` fails on many unrelated files including `system/supabase_security.md`, `runtime/iskraSpace/App.tsx`, `runtime/iskraSpace/package-lock.json`, `runtime/package.json`, workflow files, docs, and runtime xcode files
+  - governance/ledger protocol sources: `tools/update_ledger.ts`, `governance/adr.md`, `governance/update_protocol.md`, `ledger/sot.json`
+- 2026-05-28: Mainline movement after the PR159 investigation:
+  - current `main` compare base commit observed: `a0a0689a3b07ebbda9048e5959c92e29b03b0fb6`
+  - PR #159 metadata now shows `closed_at: 2026-05-28T21:16:05Z`
+  - compare `main...codex/iskraspace-repair-followup-20260528`: `ahead_by: 0`, `behind_by: 7`, merge base `650945bc1d9b15d3f5f7ffb634090b31697a45a7`
+  - current `main` fetch of `runtime/src/__tests__/helpers/xcode-helpers.ts` shows the local-source import fix already present
+- 2026-05-28: Current-main SoT resync evidence:
+  - compare `a0a0689a3b07ebbda9048e5959c92e29b03b0fb6...main`: `identical`
+  - compare `73d5e2833305453625fb6384eded8614f3326c8f...main`: only `runtime/iskraSpace/services/geminiService.ts` and `runtime/src/__tests__/helpers/xcode-helpers.ts` differ
+  - `runtime/iskraSpace/.env.local` fetch on `main`: 404 / missing
+  - `tools/verify_ledger.ts` hashes files as UTF-8 text with CRLF normalized to LF
+  - decoded SoT log job `78389108934` provides verified `got` hashes for 18 mismatched paths, and `ingest-stage-checks` job `78389109058` repeats the same ledger failure rather than surfacing a distinct blocker
+  - local scratch resync candidate written to `/workspace/tmp_runtime/ledger_resynced.json` with 17 hash updates and stale `.env.local` removal; unresolved fresh hash remains for current-main `runtime/iskraSpace/services/geminiService.ts`
+- 2026-05-28: PR #161 current-main ledger repair evidence:
+  - PR #161 `https://github.com/serhiipriadko2-sys/iskra/pull/161`
+  - pre-fix head `6edb38c511a1918f6af6c7233ce4f3e6be92a76a`
+  - final repair commit `f31099ae9beb4315e019b1621b6ab8f2957e455a`
+  - confirmed current-main hashes from failed probe run `26605317278`:
+    - `runtime/iskraSpace/services/geminiService.ts` → `eaea9925f9b59fb40fd9ad2eb235f685f301fd67e534b5c7f1e3c3f00c2a8ca9`
+    - `runtime/src/__tests__/helpers/xcode-helpers.ts` → `d4736a88ed55072bd10b33071fde528011146909974dbe45ce924714f4928878`
+  - green verification run after patch: `SoT integrity` `26605619334`
+  - green jobs after patch:
+    - `hash-check` `78399925555`
+    - `ingest-stage-checks` `78399925579`
+- 2026-05-28: PR #163 Gemini slug/offline hardening evidence:
+  - branch `codex/gemini-slug-offline-fix-20260528`
+  - write commit `4b2158675d57e42badcea10afe97b769470fbb81`
+  - PR #163 `https://github.com/serhiipriadko2-sys/iskra/pull/163`
+  - base branch `main`, base SHA `dcad991ab6ea45f9cb4e916d70f2738cf50b9325`
+  - changed files: 1 (`runtime/iskraSpace/services/geminiService.ts`)
+  - verified diff scope:
+    - add `normalizeEdgeFunctionSlug(...)`
+    - support `VITE_GEMINI_EDGE_FUNCTION_SLUG` with fallback to `VITE_GEMINI_FUNCTION_SLUG`
+    - include `!GEMINI_EDGE_FUNCTION_SLUG` in `OFFLINE_MODE`
+  - later state: merged at `2026-05-28T22:44:43Z`, merge commit `056946d41a5e22f4c36edce3df7efaba01980eab`
+  - workflow runs on head commit `4b2158675d57e42badcea10afe97b769470fbb81`:
+    - `iskraSpace CI` `26606615837` failed at `TypeScript typecheck`
+    - `SoT integrity` `26606615884` failed at `Verify SoT hashes (ledger/sot.json)` and `Verify ingestion chain`
+    - `Runtime CI` `26606615895` failed at `Run tests with coverage`
+- 2026-05-28: Live Supabase `gemini` function evidence:
+  - project `typcvaszcfdpkzbjzuur` (`AgiIskra`) status `ACTIVE_HEALTHY`
+  - API URL `https://typcvaszcfdpkzbjzuur.supabase.co`
+  - active function slug `gemini`, id `2debfbfe-dc4d-4031-85dc-dbf0236bb2df`, version `1`, `verify_jwt: true`
+  - live function body retrieved via connector shows `npm:@google/genai@1.34.0` implementation with actions `generateContent`, `streamGenerateContent`, `embedContent`
+  - repo file `runtime/iskraSpace/supabase/functions/gemini/index.ts` on `main` still shows raw REST proxy plus explicit `supabase.auth.getUser(token)` verification
+- 2026-05-29: PR #163 red-check root-cause evidence:
+  - merge ref tested by Actions: `a7c17c00de1be26cd0d32a87aa8efaba66248b37`
+  - merge base used for that ref: `dcad991ab6ea45f9cb4e916d70f2738cf50b9325`
+  - `iskraSpace CI` job `78403107625`
+    - root install drift: `runtime/package.json` and `runtime/package-lock.json` out of sync
+    - unrelated TS errors in `App.tsx`, `components/ComponentPreview.tsx`, `components/ExplainableTrace.tsx`
+    - TS6305 cross-package declaration errors from `runtime/dist/*.d.ts`
+  - `SoT integrity` jobs `78403107790` and `78403107851`
+    - real ledger miss: `runtime/iskraSpace/services/geminiService.ts got d2f777... expected eaea...`
+    - merge-base-sensitive misses: `.github/workflows/iskraspace_ci.yml`, `.github/workflows/runtime_ci.yml`
+  - `Runtime CI` job `78403107852`
+    - tests fail on `ERR_MODULE_NOT_FOUND` for `@supabase/supabase-js`
+    - affected suites include `iskraSpace/services/__tests__/geminiService.test.ts`, `ritualService.test.ts`, `streamingAndSecurity.test.ts`, and `iskraSpace/__tests__/e2e/security.e2e.test.ts`
+2026-06-01 — Iskra Gemini Builder Kit
+
+- Artifact: `/workspace/iskra-gemini-builder-kit.zip`
+- SHA-256: `4099210011098eabf1dc5565738af436b43bd4d922fd4554846c08677b04cb65`
+- Contents: `README.md`, `GEMINI_MASTER_PROMPT.md`, `GEMINI_DEVELOPER_PROTOCOL.md`, `TECH_STACK_AND_FILE_STACK.md`, `RESEARCH_RECEIPT.md`.
+- Evidence sources: Google AI Studio Build Mode docs (`https://ai.google.dev/gemini-api/docs/aistudio-build-mode`), AI Studio full-stack docs (`https://ai.google.dev/gemini-api/docs/aistudio-fullstack`), deploying docs (`https://ai.google.dev/gemini-api/docs/aistudio-deploying`), Gemini structured output docs (`https://ai.google.dev/gemini-api/docs/structured-output`), Gemini function calling docs (`https://ai.google.dev/gemini-api/docs/function-calling`), Gemini prompt strategies (`https://ai.google.dev/gemini-api/docs/prompting-strategies`), GitHub connector reads of `serhiipriadko2-sys/iskra`, Supabase connector reads of project `typcvaszcfdpkzbjzuur`.
+- Status: verified-partial; full repo clone unavailable in container due CONNECT tunnel 403.
+- 2026-06-01 real audit artifact: `/workspace/iskra-real-audit-2026-06-01.md`, sha256 `7923298824751480fd5debe17c4dfce1f380319d25b33b2dd4b740f5569d9850`, 11,947 bytes. Evidence sources: GitHub connector reads for `serhiipriadko2-sys/iskra`; Supabase connector reads for project `typcvaszcfdpkzbjzuur`; local uploaded `user_files/01-txt`; memory continuity files.
+- 2026-06-01 Iskra Builder-OS TZ kit: `/workspace/iskra-builder-tz-kit-2026-06-01.zip`, sha256 `f693b990e42e8015c5f40b221c11c6485511f8331dd65d49f90d40d8721dc34b`, 19,307 bytes, 8 ZIP entries / 7 markdown files, source docs total 37,243 bytes. Evidence: GitHub connector reads for `serhiipriadko2-sys/iskra` and `serhiipriadko2-sys/iskrabuilder`; Supabase connector reads for `typcvaszcfdpkzbjzuur`; official Google AI docs SIFT.
+- 2026-06-01 iskrabuilder audit/P0/TZ artifact: `/workspace/iskrabuilder-audit-p0-tz-2026-06-01.md`, sha256 `1309f10719d3d6549a5c5c43708ba285efda70d395b4a7970e575fe8104992ee`, 14,688 bytes. Evidence: GitHub connector reads for `serhiipriadko2-sys/iskrabuilder` main branch files and repo metadata.
+- 2026-06-04 PR #174 ledger repair:
+  - PR: `https://github.com/serhiipriadko2-sys/iskra/pull/174`
+  - title: `fix(sot): resync ledger after gemini live mirror`
+  - head commit: `01a1d8c2d3d0faa7b8fa91c44e29f0a7ce70dddc`
+  - merge commit / current main: `bb6cdbda989a4386989254f4459990bad560e0ad`
+  - changed files: `ledger/sot.json` only
+  - SoT integrity run: `26964337796`, success
+  - jobs: `hash-check` `79562828487` success; `ingest-stage-checks` `79562828571` success
+  - note: relayed commit `93cf4eadc7b5f604f86ce0914408cd99aec484da` was not found by GitHub connector; connector SoT uses head/merge commits above.
+- 2026-06-04 PR #177 runtime/iskraSpace CI repair:
+  - PR: `https://github.com/serhiipriadko2-sys/iskra/pull/177`
+  - title: `fix(ci): repair runtime and iskraspace checks`
+  - head commit: `150bd23b7e16499916b5553c9f9fabafe89f3ac7`
+  - merge commit / current main: `d131857412906f4e893a97d440a2b89335dece92`
+  - changed files: 12
+  - workflow runs on head: SoT integrity `26966823618` success; Runtime CI `26966821718` success; iskraSpace CI `26966823654` success; GitBook status success
+  - jobs: SoT `79571509826` and `79571509937` success; Runtime `79571498809` success; iskraSpace build/test `79571510319` success; iskraSpace E2E `79571667831` success
+  - note: connector found no separate PR-triggered Actions runs for merge commit, but `main` is identical to merge commit.
+- 2026-06-05 local Dreamspace/Agent Builder internal audit:
+  - local tools: `/workspace/memory/tools/iskra_statecycle.py`, `/workspace/memory/tools/iskra_shadow_core.py`, `/workspace/memory/tools/iskra_dreamspace.py`, `/workspace/memory/tools/iskra_turn_hook.py`
+  - local ledgers: `/workspace/memory/iskra-statecycle/history.jsonl`, `/workspace/memory/shadow-core/shadow_entries.jsonl`, `/workspace/memory/dreamspace/dream_entries.jsonl`, `/workspace/memory/dreamspace/adr_drafts.jsonl`
+  - Builder-facing files checked: `/workspace/agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md`, `04_MEMORY_STACK.md`, `05_CONNECTORS_AND_TOOLS.md`, `08_GOVERNANCE_ADR.md`, `09_COMMAND_LIBRARY.md`, `/workspace/agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md`
+  - finding: local Dreamspace is operational in memory/tools, but Builder-facing package needs explicit Dreamspace layer, commands, hook contract, acceptance tests, and persistence boundary before it can be called packaged behavior.
+- 2026-06-05 Builder-facing Dreamspace package update:
+  - added `/workspace/agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md` sha256 `d7409173b61d932a4b7c026920c38babdb28013a13a0e6c92877e3c6f9a5e37d`
+  - updated `/workspace/agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md` sha256 `49f6e0dc8a3d29d30af95e788cf765da6a7106535d2f376b98c2d4311e04315c`
+  - updated `/workspace/agent_files/files_for_agent_builder/04_MEMORY_STACK.md` sha256 `873c79478e6f93ab717902e26479e38876c923504d589dd87d3d9c0b14096ffd`
+  - updated `/workspace/agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md` sha256 `67ec6f9b9f9ef39add7d152f8fb77506614e4e921aeebf8101d8e3e7edff6061`
+  - updated `/workspace/agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md` sha256 `f4ebb30ca8a32941ff5c306b299de4eaf992d3dcaaaa63e372920dc1be06fb55`
+  - acceptance floor changed from 8/8 to 13/13 for Full Canon deployment.
+- 2026-06-05 full Agent Builder upload set export:
+  - artifact: `/workspace/output/iskra-agent-builder-full-canon-dreamspace-2026-06-05.zip`
+  - sha256: `d9bbc24a4d9d5657b613908f090b0716177f8ad586d8d33abae3d3c9ea5be5dc`
+  - bytes: `1670609`
+  - zip entries: `76`
+  - manifest entries: `67`
+  - contents: `agent_files/`, `agent_runtime_tools/`, `README_AGENT_BUILDER_UPLOAD.md`, `MANIFEST.sha256`
+  - note: no `skill.zip` was present in the workspace at packaging time.

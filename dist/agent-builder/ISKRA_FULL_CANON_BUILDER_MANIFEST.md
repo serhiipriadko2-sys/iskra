@@ -4,7 +4,7 @@ sigil: agent_builder__full_canon_unified_manifest
 doc_type: manifest
 layer: agent-builder
 updated: 2026-06-06
-status: working-source-map
+status: materialized-source-map
 
 ## Builder identity
 
@@ -36,9 +36,9 @@ Expanded form:
 | Toolchain | yes | Connector/tool policy, git/vault bridge, plugin expansion | `iskra-toolchain-upload-set-v2-2026-06-06/` |
 | Plugins / skills | yes | Portable Builder/tool extension units | `.../plugins/iskra-toolchain-bridge/` |
 | Evals | yes | Acceptance tests and safety/canon verification | both component mirrors under `agent_files/evals/` |
-| ADR / governance | yes | Durable behavior decisions and rollback triggers | `governance/` paths inside package mirrors and repo governance docs |
+| ADR / governance | yes | Durable behavior decisions and rollback triggers | `iskra-full-canon-builder-2026-06-06-v4/governance/` plus Builder governance instructions |
 | Manifest / checksums | yes | Reproducibility and package boundary | component manifests and sha256 files |
-| Security boundary | yes | Secret safety, live mutation rules, prompt-injection boundary | core canon + connector/tool docs + SECURITY.md |
+| Security boundary | yes | Secret safety, live mutation rules, prompt-injection boundary | core canon + connector/tool docs + `iskra-full-canon-builder-2026-06-06-v4/SECURITY.md` |
 | Setup/upload guide | yes | How to place files in Agent Builder and verify after upload | component README/setup docs |
 | Release/QC receipt | yes | What changed, hashes, checks, residual risk | component release receipts |
 | Dependency map/index | yes | Human navigation and SoT graph | component index files + this manifest |
@@ -50,25 +50,27 @@ Expanded form:
 dist/agent-builder/
   README.md
   ISKRA_FULL_CANON_BUILDER_MANIFEST.md
+  iskra-full-canon-builder-2026-06-06-v4/
   iskra-full-canon-dreamspace-2026-06-05-v2/
   iskra-toolchain-upload-set-v2-2026-06-06/
 ```
 
 ## Current interpretation
 
-- `iskra-full-canon-dreamspace-2026-06-05-v2/` is the base full-canon Builder layer.
-- `iskra-toolchain-upload-set-v2-2026-06-06/` is the toolchain/plugin expansion layer.
-- Together they represent one Iskra Agent Builder assembly.
+- `iskra-full-canon-builder-2026-06-06-v4/` is the materialized single Builder package tree.
+- `iskra-full-canon-dreamspace-2026-06-05-v2/` is the base full-canon Builder source layer.
+- `iskra-toolchain-upload-set-v2-2026-06-06/` is the toolchain/plugin expansion source layer.
+- The two source layers are preserved as provenance; v4 is the upload target.
 
-## Missing or pending materialization
+## Materialization status
 
-The logical unified builder should eventually be materialized into a single upload directory if the Builder UI workflow needs one archive/directory.
+The logical unified builder has been materialized into a single upload directory:
 
-Recommended future path:
+Current target path:
 
 `dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/`
 
-That directory should contain all required layers in one tree, including Somatic `[SENSE]` files and any new ADRs/tests that are currently present only in PR overlays or workspace exports.
+That directory contains the required layers in one tree, including Somatic `[SENSE]` files, Dreamspace, memory, runtime helpers, toolchain docs, plugin bridge, governance/ADR docs, `SECURITY.md`, acceptance tests, receipts, and provenance records.
 
 ## Acceptance gates for unified v4
 

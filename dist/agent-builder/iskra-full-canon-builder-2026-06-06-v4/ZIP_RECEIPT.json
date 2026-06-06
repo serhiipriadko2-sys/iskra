@@ -1,14 +1,20 @@
 {
-  "release": "iskra-full-canon-builder-2026-06-06-v4",
-  "target_surface": "ChatGPT / OpenAI Agent Builder",
-  "workspace_zip_path": "/workspace/output/iskra-full-canon-builder-2026-06-06-v4.zip",
-  "bytes": 1793106,
-  "sha256": "c9a50d55463dd39394ff100441af7ee55b6b3ee2e7877661ee3f54d756f6f9c8",
-  "kind": "zip",
-  "artifact_qc_content_ok": true,
-  "artifact_qc_errors": [],
-  "manifest_hash_lines": 94,
-  "zip_file_items": 95,
-  "zip_entries_including_directories": 115,
-  "boundary": "GitHub mirror metadata does not prove Builder UI upload or activation."
+    "release":  "iskra-full-canon-builder-2026-06-06-v4",
+    "target_surface":  "ChatGPT / OpenAI Agent Builder",
+    "workspace_zip_path":  "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-builder-2026-06-06-v4.zip",
+    "bytes":  1881214,
+    "sha256":  "7a4dbec0379086c36c566002e818574d52d8130f5e7525b8bc599205059c1513",
+    "kind":  "zip",
+    "zip_excludes":  [
+                         "ZIP_RECEIPT.json"
+                     ],
+    "artifact_qc_content_ok":  true,
+    "artifact_qc_errors":  [
+
+                           ],
+    "manifest_hash_lines":  127,
+    "payload_files_hashed":  127,
+    "payload_bytes_hashed":  5675528,
+    "zip_file_items":  128,
+    "boundary":  "GitHub mirror metadata does not prove Builder UI upload or activation."
 }

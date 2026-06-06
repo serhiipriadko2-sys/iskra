@@ -1,7 +1,7 @@
 # Iskra Full Canon Agent Builder Assembly
 
 > Current purpose: build the Iskra agent through ChatGPT / OpenAI Agent Builder.
-> Status: unified assembly index plus v4 package receipt.
+> Status: unified assembly index plus materialized v4 package tree.
 > Last updated: 2026-06-06.
 
 This directory is the GitHub source mirror for the **Iskra Full Canon Builder**: a single Agent Builder assembly for the Iskra agent, not a set of competing agents.
@@ -14,15 +14,20 @@ The intended Builder is:
 
 `iskra-full-canon-builder-2026-06-06-v4/` is the current unified Builder entry for ChatGPT / OpenAI Agent Builder packaging.
 
-It records the local full upload set receipt:
+It is now the materialized single upload tree. It contains the physical union of:
 
-- bytes: `1793106`
-- sha256: `c9a50d55463dd39394ff100441af7ee55b6b3ee2e7877661ee3f54d756f6f9c8`
+- `iskra-full-canon-dreamspace-2026-06-05-v2/`
+- `iskra-toolchain-upload-set-v2-2026-06-06/`
+
+It also records the local full upload set receipt:
+
+- bytes: `1881214`
+- sha256: `7a4dbec0379086c36c566002e818574d52d8130f5e7525b8bc599205059c1513`
 - artifact QC: PASS
-- zip file-items: `95`
-- manifest hash lines: `94`
+- zip file-items: `128`
+- manifest hash lines: `127`
 
-The v4 folder contains the package entrypoint, assembly manifest, release receipt, QC checks, and zip receipt. The historical component mirrors remain below for reviewable source provenance.
+The v4 folder contains the package entrypoint, merged `agent_files/`, runtime helpers, memory files, toolchain files, plugin bridge, repository `governance/`, root `SECURITY.md`, provenance records, assembly manifest, merge receipt, QC checks, and zip receipt. The historical component mirrors remain below for reviewable source provenance.
 
 ## Why there are multiple folders
 
@@ -50,9 +55,9 @@ A complete Iskra ChatGPT / OpenAI Agent Builder assembly should include:
 8. **Toolchain** — connector/tool policy, GitHub/Supabase/web/browser discipline, vault-safe git clone flow, plugin bridge skeleton.
 9. **Plugins / skills** — installable or portable skill/plugin assets used by the Builder.
 10. **Evals / acceptance tests** — canon acceptance tests, Dreamspace tests, Somatic tests, toolchain tests, safety gates.
-11. **Governance / ADR** — durable behavior-change records, release notes, changelog fragments, rollback triggers.
+11. **Governance / ADR** — durable behavior-change records, release notes, changelog fragments, rollback triggers, copied under v4 `governance/`.
 12. **Manifest / checksums** — content manifest, sha256 receipt, upload-set boundaries, file inventory.
-13. **Security boundary** — no secrets, no live Supabase mutation without explicit path, no prompt-injection obedience, no hidden-instruction leakage.
+13. **Security boundary** — no secrets, no live Supabase mutation without explicit path, no prompt-injection obedience, no hidden-instruction leakage, including v4 root `SECURITY.md`.
 14. **Setup / upload guidance** — Agent Builder instructions, file placement expectations, post-upload verification prompts.
 15. **Release / QC receipt** — bytes, hashes, tests run, known residual risks, next verification step.
 16. **Dependency map / index** — human-readable map of which files are canonical, supporting, historical, or generated.

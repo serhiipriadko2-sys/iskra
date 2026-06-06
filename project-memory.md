@@ -14,3 +14,7 @@
 ## Active Integrations & Credentials
 - Anonymous authentication is secured in `supabaseClient.ts` through JWT tokens issued via Auth session.
 - Gemini proxy runs on Supabase Edge Function to prevent API key exposure to frontend clients.
+
+## Agent Builder Assembly
+- **[FACT] 2026-06-06:** `dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/` is the materialized local upload tree for the Iskra ChatGPT / OpenAI Agent Builder package. It merges the full-canon Dreamspace v2 source layer and the toolchain upload-set v2 source layer, includes repository `governance/` and root `SECURITY.md`, with conflict originals preserved under `provenance/`.
+- **[FACT] Verification:** Local lossless mapping, manifest, zip integrity, and obvious-secret scans passed. Builder UI activation is still pending user upload and prompt-level verification.

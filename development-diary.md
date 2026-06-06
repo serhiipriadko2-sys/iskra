@@ -81,3 +81,11 @@
   - Regenerated `ledger/sot.json` and `ledger/checksum.asc`.
 - **Outcome:** Local Chromium E2E passed: 27/27 tests.
 - **Status:** Local verified; remote GitHub Actions verification pending refreshed PR run.
+
+### JRN-20260606-001: Agent Builder v4 Materialized Merge
+- **Context:** `dist/agent-builder` had two source upload sets for the Iskra Agent Builder package: full-canon Dreamspace v2 and toolchain upload-set v2. The v4 directory existed as an entry/receipt folder, but not as a full physical union tree.
+- **Actions:** Materialized `dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/` as one upload tree, copied all unique source files, added repository `governance/` and root `SECURITY.md`, resolved two overlapping Builder instruction files with the extended toolchain versions, and preserved exact originals under `provenance/conflict-originals/`.
+- **Evidence:** `MERGE_RECEIPT.md`, `MANIFEST.sha256`, `ZIP_RECEIPT.json`, top-level `dist/agent-builder/README.md`, and `ISKRA_FULL_CANON_BUILDER_MANIFEST.md`.
+- **Verification:** Required-layer audit PASS; lossless mapping PASS; manifest check PASS with 127 payload hash lines; zip integrity PASS with 128 entries; secret scan PASS.
+- **Risk:** Builder UI behavior remains unverified until the package is uploaded and acceptance prompts are run.
+- **Status:** Local verified; Builder UI verification pending.
