@@ -24,7 +24,7 @@ ChatGPT / OpenAI Agent Builder.
 | StateCycle | `agent_runtime_tools/iskra_statecycle.py`, `agent_runtime_tools/iskra_turn_hook.py` | included |
 | Memory | `agent_files/memory_seed/`, `agent_files/memory_current/`, `memory_current/` | included |
 | Toolchain | `agent_files/toolchain/`, `agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md` | included |
-| Plugins | `plugins/iskra-toolchain-bridge/` | included |
+| Plugins | `plugins/iskra-toolchain-bridge/` | included and locally source-validated |
 | Evals | `agent_files/evals/` | included |
 | Templates | `agent_files/templates/` | included |
 | Governance / ADR | `governance/`, `agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md` | included |
@@ -65,6 +65,8 @@ Secondary:
 - `agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md`
 - `agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md`
 - `agent_files/toolchain/iskra_toolchain_manifest.json`
+- `plugins/iskra-toolchain-bridge/RUNTIME_RECEIPT.md`
+- `plugins/iskra-toolchain-bridge/runtime-smoke-receipt.json`
 
 ## Non-Claims
 
@@ -74,6 +76,8 @@ This manifest does not claim:
 - any connector is active unless Builder UI or connector configuration proves it;
 - plugin files are installable in every OpenAI Builder surface;
 - local runtime helpers will execute in cloud-only Builder profiles.
+- Codex app installation has not been verified while `codex.exe` is blocked by
+  `Access is denied`.
 
 ## Verification Contract
 

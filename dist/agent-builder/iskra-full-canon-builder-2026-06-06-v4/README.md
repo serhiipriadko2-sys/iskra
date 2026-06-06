@@ -25,8 +25,9 @@ mirrors:
   stack, and update protocol files.
 - `memory_current/` and `agent_files/memory_*` - continuity receipts and seed
   memory, not immutable source of truth.
-- `plugins/iskra-toolchain-bridge/` - local plugin/skill bridge material for
-  compatible Codex/plugin runtimes.
+- `plugins/iskra-toolchain-bridge/` - validated local plugin/skill bridge
+  source for compatible Codex/plugin runtimes, including connector contracts,
+  vault-safe git clone helpers, and smoke receipts.
 - `SECURITY.md` - repository public security policy copied into the package
   root for Builder-visible security boundary.
 - `provenance/` - component manifests, source README preservation, and original
@@ -61,7 +62,8 @@ versions. The exact source copies are preserved under
 7. Treat memory files as continuity receipts. They do not override canon,
    GitHub, Supabase, official docs, or created artifacts.
 8. Install `plugins/iskra-toolchain-bridge/*` only in a compatible local
-   Codex/plugin runtime.
+   Codex/plugin runtime. Current source validation is PASS, but Codex app
+   installation remains pending until `codex.exe` is callable.
 
 ## Status Boundary
 
@@ -87,6 +89,8 @@ Valid status labels:
 - Routine low-risk answers do not force Somatic Pulse.
 - Toolchain files are visible as knowledge and do not imply unverified
   connector access.
+- Runtime bridge smoke is PASS as local source validation, not proof of Codex
+  app installation.
 - Governance and security files are visible as package knowledge, including
   `governance/` and `SECURITY.md`.
 

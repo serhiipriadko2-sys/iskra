@@ -89,3 +89,11 @@
 - **Verification:** Required-layer audit PASS; lossless mapping PASS; manifest check PASS with 127 payload hash lines; zip integrity PASS with 128 entries; secret scan PASS.
 - **Risk:** Builder UI behavior remains unverified until the package is uploaded and acceptance prompts are run.
 - **Status:** Local verified; Builder UI verification pending.
+
+### JRN-20260606-002: Runtime Toolchain Bridge Expansion
+- **Context:** The v4 Agent Builder package needed the toolchain bridge to become a verifiable Codex/Agent runtime contour, not only uploaded knowledge files.
+- **Actions:** Added `plugins/iskra-toolchain-bridge/` as the repository plugin source with Codex plugin manifest, skill entrypoint, connector contracts, vault-safe git clone helpers, contract validator, and runtime smoke script. Mirrored the plugin into `dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/plugins/iskra-toolchain-bridge/` and updated v4 README, assembly manifest, release receipt, QC checks, toolchain manifest, `MANIFEST.sha256`, and `ZIP_RECEIPT.json`.
+- **Evidence:** `plugins/iskra-toolchain-bridge/runtime-smoke-receipt.json`, v4 plugin `runtime-smoke-receipt.json`, `scripts/smoke_runtime.py`, `scripts/validate_connector_contracts.py`, and updated Builder receipts.
+- **Verification:** Plugin schema validation PASS; connector contracts PASS for 8 contracts; runtime smoke PASS; credential-bearing git URLs rejected; vault clone helper dry-run PASS; public `git ls-remote` PASS; manifest check PASS with 143 payload lines; zip integrity PASS with 144 entries and sha256 `0e909c78fc3eb8d74b1a0f30e9d0928a7609eec52e2fc0f2f5b5bc48271dec2a`; obvious-secret scan PASS.
+- **Risk:** Codex app install/runtime activation is not verified because local `codex.exe` returns `Access is denied`. Builder UI activation is still pending prompt-level verification after upload.
+- **Status:** Runtime source verified; app activation pending.

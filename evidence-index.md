@@ -54,3 +54,16 @@
   - Zip receipt: bytes `1881214`, sha256 `7a4dbec0379086c36c566002e818574d52d8130f5e7525b8bc599205059c1513`.
   - Secret scan: PASS for obvious credential patterns.
 - **Status:** Local verified; Builder UI upload and runtime prompt verification pending.
+
+### EVI-20260606-002: Runtime Toolchain Bridge Verification
+- **Assertion:** The Iskra toolchain bridge is a portable Codex/Agent runtime source with verifiable contracts and smoke tests, not only static Agent Builder knowledge.
+- **Evidence:**
+  - Repository plugin source exists at `plugins/iskra-toolchain-bridge/`.
+  - Builder mirror exists at `dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/plugins/iskra-toolchain-bridge/`.
+  - Codex plugin validator passed for both source and v4 mirror.
+  - `validate_connector_contracts.py` passed with 8 contracts: GitHub, Supabase, web/browser, secrets vault, Agent Builder, artifact manager, schedule runner, and monitoring.
+  - `smoke_runtime.py` passed for source and v4 mirror, including credential-bearing URL rejection, vault-safe clone dry-run, and public `git ls-remote` verification.
+  - v4 manifest check passed with 143 payload hash lines.
+  - v4 zip integrity passed with 144 entries, bytes `1902867`, sha256 `0e909c78fc3eb8d74b1a0f30e9d0928a7609eec52e2fc0f2f5b5bc48271dec2a`.
+  - Obvious-secret scan passed over the source plugin and v4 mirrored plugin.
+- **Status:** Local runtime source verified; Codex app install and Agent Builder UI activation pending.

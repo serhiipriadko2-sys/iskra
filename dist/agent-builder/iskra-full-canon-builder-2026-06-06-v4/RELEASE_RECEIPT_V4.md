@@ -51,7 +51,7 @@ v4 materializes the split Builder packages into one physical upload tree:
 - `agent_files/evals/ISKRA_TOOLCHAIN_ACCEPTANCE_TESTS.md`.
 - `agent_files/templates/TOOL_CONNECTOR_CONTRACT.md`.
 - `agent_files/toolchain/*`.
-- `plugins/iskra-toolchain-bridge/*`.
+- `plugins/iskra-toolchain-bridge/*` as validated runtime source.
 - `governance/*`.
 - `SECURITY.md`.
 
@@ -61,7 +61,9 @@ The package is a Builder upload set. It is not verified active inside ChatGPT /
 OpenAI Agent Builder until the user uploads it and runs acceptance prompts.
 
 Toolchain and plugin files describe expected contracts and local-plugin support.
-They do not grant connector access by themselves.
+They do not grant connector access by themselves. The local runtime bridge now
+has schema/contract/smoke validation receipts, but Codex app installation is
+still pending while `codex.exe` is blocked in the shell.
 
 ## Post-Upload Verification
 

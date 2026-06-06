@@ -1,7 +1,7 @@
 {
   "name": "iskra-toolchain-expansion",
   "version": "2026.06.06",
-  "status": "proposed-builder-ready",
+  "status": "runtime-source-validated-builder-ready",
   "created_at": "2026-06-06",
   "owner": "Iskra vOmega.7 - Full Canon",
   "capabilities": [
@@ -67,5 +67,13 @@
   "contract_template": "agent_files/templates/TOOL_CONNECTOR_CONTRACT.md",
   "agent_builder_connector_spec": "agent_files/toolchain/AGENT_BUILDER_CONNECTOR_SPEC.md",
   "git_clone_vault_spec": "agent_files/toolchain/GIT_CLONE_VAULT_SPEC.md",
-  "git_clone_helper": "agent_files/toolchain/git_clone_with_vault.sh"
+  "git_clone_helper": "agent_files/toolchain/git_clone_with_vault.sh",
+  "runtime_plugin_source": "plugins/iskra-toolchain-bridge",
+  "runtime_smoke_receipt": "plugins/iskra-toolchain-bridge/runtime-smoke-receipt.json",
+  "runtime_validation": {
+    "plugin_schema": "PASS",
+    "connector_contracts": "PASS",
+    "runtime_smoke": "PASS",
+    "codex_app_install": "blocked: codex.exe Access is denied"
+  }
 }

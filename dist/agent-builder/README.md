@@ -21,11 +21,11 @@ It is now the materialized single upload tree. It contains the physical union of
 
 It also records the local full upload set receipt:
 
-- bytes: `1881214`
-- sha256: `7a4dbec0379086c36c566002e818574d52d8130f5e7525b8bc599205059c1513`
+- bytes: `1902867`
+- sha256: `0e909c78fc3eb8d74b1a0f30e9d0928a7609eec52e2fc0f2f5b5bc48271dec2a`
 - artifact QC: PASS
-- zip file-items: `128`
-- manifest hash lines: `127`
+- zip file-items: `144`
+- manifest hash lines: `143`
 
 The v4 folder contains the package entrypoint, merged `agent_files/`, runtime helpers, memory files, toolchain files, plugin bridge, repository `governance/`, root `SECURITY.md`, provenance records, assembly manifest, merge receipt, QC checks, and zip receipt. The historical component mirrors remain below for reviewable source provenance.
 

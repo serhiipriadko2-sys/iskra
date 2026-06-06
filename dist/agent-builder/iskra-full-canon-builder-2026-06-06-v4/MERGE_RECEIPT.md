@@ -46,6 +46,8 @@ append the toolchain expansion. Exact source versions are preserved under:
 - Toolchain source README is preserved under `provenance/source-readmes/`.
 - Repository governance files are copied under `governance/`.
 - Repository security policy is copied as `SECURITY.md`.
+- Runtime plugin bridge source is copied under
+  `plugins/iskra-toolchain-bridge/` with local smoke receipt.
 - The final target manifest is `MANIFEST.sha256`.
 - QC status is recorded in `QC_CHECKS.md`.
 
