@@ -1,11 +1,17 @@
 # ISKRA Monorepo
 
 > **Current public repository status:** active research and engineering monorepo  
+> **Public release priority:** `runtime/iskraSpace` (`iskra-space`)  
+> **Internal contour:** all other repository areas support Semyon + Iskra unless promoted by ADR  
 > **Current Agent Builder package:** `iskra-full-canon-dreamspace-2026-06-05-v2`  
-> **Last verified:** 2026-06-05  
+> **Last verified:** 2026-06-06  
 > **Zero-Mantra:** "Существовать — значит сохранять различие при передаче"
 
-ISKRA is an experimental cognitive-runtime repository for agent canon, runtime orchestration, mathematical state modeling, governance records, and Agent Builder upload artifacts.
+ISKRA is an experimental cognitive-runtime repository for agent canon, runtime orchestration, mathematical state modeling, governance records, Agent Builder upload artifacts, and the Iskra Space application.
+
+The current public product focus is **Iskra Space** in [`runtime/iskraSpace/`](runtime/iskraSpace/). That folder is the application being prepared for release into the world.
+
+Everything else in the repository is the internal/support contour by default: governance, canon, ledger, Supabase repair work, older runtime surfaces, experiments, tools, and Agent Builder material. These parts still matter, but they support the release unless a later ADR explicitly promotes another area to public-product scope.
 
 The repository now has two important contours:
 
@@ -21,6 +27,9 @@ This README is an orientation map. For contribution rules, security reporting, a
 | Area | Current status | Source |
 |:--|:--|:--|
 | Default branch | `main` | GitHub repository metadata |
+| Public release target | `runtime/iskraSpace` | `runtime/iskraSpace/RELEASE_STATUS.md`, `docs/architecture/ISKRA_SPACE_RELEASE_PRIORITY_v1.md` |
+| Product package | `iskra-space` | `runtime/iskraSpace/package.json` |
+| Internal/support contour | All non-promoted repo areas | `governance/adr_20260606_iskraspace_release_priority.md` |
 | Workspace manager | `pnpm` workspace | `package.json`, `pnpm-workspace.yaml` |
 | Runtime packages | `packages/*`, `apps/*`, `runtime/*`, `core/*` | `pnpm-workspace.yaml` |
 | Agent Builder upload mirror | Present and versioned | `dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/` |
