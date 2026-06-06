@@ -1,7 +1,7 @@
 # Iskra Full Canon Agent Builder Assembly
 
 > Current purpose: build the Iskra agent through ChatGPT / OpenAI Agent Builder.
-> Status: unified assembly index over reviewable package mirrors.
+> Status: unified assembly index plus v4 package receipt.
 > Last updated: 2026-06-06.
 
 This directory is the GitHub source mirror for the **Iskra Full Canon Builder**: a single Agent Builder assembly for the Iskra agent, not a set of competing agents.
@@ -10,16 +10,31 @@ The intended Builder is:
 
 `full-canon builder = canon + dreamspace + somatic + shadow core + statecycle + memory + toolchain + plugins + evals + ADR + manifest`
 
+## Current v4 Entry
+
+`iskra-full-canon-builder-2026-06-06-v4/` is the current unified Builder entry for ChatGPT / OpenAI Agent Builder packaging.
+
+It records the local full upload set receipt:
+
+- bytes: `1793106`
+- sha256: `c9a50d55463dd39394ff100441af7ee55b6b3ee2e7877661ee3f54d756f6f9c8`
+- artifact QC: PASS
+- zip file-items: `95`
+- manifest hash lines: `94`
+
+The v4 folder contains the package entrypoint, assembly manifest, release receipt, QC checks, and zip receipt. The historical component mirrors remain below for reviewable source provenance.
+
 ## Why there are multiple folders
 
-The folders under this path are historical, reviewable upload-set mirrors. They preserve provenance and make every file readable in GitHub diffs.
+The folders under this path are historical, reviewable upload-set mirrors plus the current v4 package entry. They preserve provenance and make every file readable in GitHub diffs.
 
 They should be read as component layers of one Builder:
 
 - `iskra-full-canon-dreamspace-2026-06-05-v2/` — core full-canon Dreamspace package, including canon files, command library, runtime hook tools, StateCycle, ShadowCore, Dreamspace, memory seeds/current memory, evals, templates, manifest, and release receipt.
 - `iskra-toolchain-upload-set-v2-2026-06-06/` — toolchain expansion layer, including Agent Builder setup/toolchain docs, connector/tool contracts, vault-backed git clone helper, plugin skeleton, toolchain manifest, and toolchain acceptance tests.
+- `iskra-full-canon-builder-2026-06-06-v4/` — current unified Builder entry and receipt for the full upload set.
 
-These are not two separate Builder products. They are source layers for the same Iskra Builder.
+These are not separate Builder products. They are source layers and package receipts for the same Iskra Builder.
 
 ## Required unified Builder layers
 
@@ -43,27 +58,14 @@ A complete Iskra ChatGPT / OpenAI Agent Builder assembly should include:
 16. **Dependency map / index** — human-readable map of which files are canonical, supporting, historical, or generated.
 17. **Rollback / residual risk notes** — known drift, pending Builder UI verification, and exact rollback signal.
 
-## Current working interpretation
-
-The current GitHub source-of-truth for Builder packaging is a **layered mirror**:
-
-- Dreamspace/full-canon base: `iskra-full-canon-dreamspace-2026-06-05-v2/`
-- Toolchain layer: `iskra-toolchain-upload-set-v2-2026-06-06/`
-
-The next packaging step, if a single upload directory is required, is to materialize these layers into one consolidated directory, for example:
-
-`dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/`
-
-Until that consolidation is created, this README is the top-level entrypoint that defines the two mirrors as one logical Iskra Agent Builder assembly.
-
 ## Verification boundary
 
-A file committed here is a GitHub mirror, not proof that it is active inside ChatGPT / OpenAI Agent Builder.
+A file committed here is a GitHub mirror or package receipt, not proof that it is active inside ChatGPT / OpenAI Agent Builder.
 
 Valid statuses:
 
 - `mirrored in GitHub` — file is present in this repo.
-- `exported as upload set` — archive/file artifact was produced for upload.
+- `packaged as upload set` — archive/file artifact was produced for upload.
 - `uploaded by user` — user confirms upload to Builder UI.
 - `verified in Builder UI` — prompt-level behavior has been tested in the Builder runtime.
 
