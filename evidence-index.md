@@ -127,8 +127,10 @@
   - GitHub Checks API read for `2d1a2f154b5a8563abe2d824d275ce98ba2b8e52` showed failed Google Cloud Developer Connect runs `79907967157` and `79907967125`.
   - Check output identified `runtime/src/types/guard.ts(15,23): Cannot find module '../../../ledger/baselines.json'`.
   - `Dockerfile` now copies `ledger/baselines.json` into the runtime builder context and copies root/package sources needed by `runtime/iskraSpace` aliases.
-  - Local Docker daemon was unavailable, so a Dockerfile-layout simulation ran `npm ci && npm run build` for `runtime`, then `npm ci && npm run build` for `runtime/iskraSpace`, using only files copied by the Dockerfile; simulation passed.
-- **Status:** Local verified; remote Google Cloud confirmation pending after push.
+  - Dockerfile-layout simulation ran `npm ci && npm run build` for `runtime`, then `npm ci && npm run build` for `runtime/iskraSpace`, using only files copied by the Dockerfile; simulation passed.
+  - Real Docker Desktop build passed: `docker build -t iskra-space-release-check:2026-06-07 .`.
+  - Container smoke passed: temporary container on `http://localhost:18080/` returned HTTP 200, bytes `9762`, and `ROOT_DIV_OK`.
+- **Status:** Local Docker verified; remote Google Cloud confirmation pending after push.
 
 ### EVI-20260607-006: Supabase Boundary And Exposure Checklist
 - **Assertion:** Release docs now distinguish direct `runtime/iskraSpace` Supabase requirements from engine/web retrieval and leave credential rotation as an owner action.

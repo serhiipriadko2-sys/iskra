@@ -36,7 +36,7 @@
 - **Description:** GitHub check-runs for baseline commit `2d1a2f154b5a8563abe2d824d275ce98ba2b8e52` show two completed failures: `rmgpgab-iskra-europe-west1-serhiipriadko2-sys-iskra--maraw` and `cloudrun-iskra-git-europe-west8-serhiipriadko2-sys-iskra-mcnh`.
 - **Status:** Local repair prepared; remote confirmation pending.
 - **Risk:** Local checks can pass while release/deploy checks remain failed.
-- **Mitigation:** The Checks API/root-cause pass found Google Cloud Docker builds failing because `runtime/src/types/guard.ts` could not resolve `../../../ledger/baselines.json`. The working-tree `Dockerfile` now copies that ledger file and the root/package sources required by `runtime/iskraSpace` aliases. Keep this loop open until a pushed PR shows the Google Cloud checks green or classified.
+- **Mitigation:** The Checks API/root-cause pass found Google Cloud Docker builds failing because `runtime/src/types/guard.ts` could not resolve `../../../ledger/baselines.json`. The working-tree `Dockerfile` now copies that ledger file and the root/package sources required by `runtime/iskraSpace` aliases. Local Docker Desktop build and container smoke passed; keep this loop open until a pushed PR shows the Google Cloud checks green or classified.
 
 ### OPN-20260607-003: Supabase Live Function Drift Before Public Release
 - **Description:** Fresh read-only Supabase baseline lists live `gemini`, `db-proxy`, `iskra-canon-import-1536`, `iskra-canon-backfill-1536`, and `iskra-canon-import-diagnostic`; repo-side `embed` exists but is absent from the live function list.
