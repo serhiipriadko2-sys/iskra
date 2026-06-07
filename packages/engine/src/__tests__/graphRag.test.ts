@@ -78,4 +78,33 @@ describe('GraphRagRetriever', () => {
     expect(out.trace.seeds.length).toBeGreaterThan(0);
     expect(out.trace.steps.map((s) => s.label)).toContain('bfs_expand');
   });
+
+  it('expands to a non-seed neighbor through batch lookup when seed_k is one', async () => {
+    const mem = new MemoryService(new BagEmbeddingProvider());
+
+    const seed = await mem.addMemory('apple orchard', fractal, 'memory');
+    const neighbor = await mem.addMemory('apple banana', fractal, 'memory');
+    await mem.addMemory('car engine', fractal, 'memory');
+
+    seed.timestamp = new Date(Date.now() - 1_000).toISOString();
+    neighbor.timestamp = new Date(Date.now() - 500).toISOString();
+
+    const r = new GraphRagRetriever(mem, {
+      seed_k: 1,
+      expand_depth: 1,
+      limit: 5,
+      neighbor_m: 3,
+      similarity_threshold: 0.45,
+      causal_window_ms: 5_000,
+    });
+
+    const out = await r.retrieve('apple orchard', metrics);
+    const seedIds = out.trace.seeds.map((s) => s.id);
+    const ids = out.nodes.map((n) => n.id);
+
+    expect(seedIds).toEqual([seed.id]);
+    expect(seedIds).not.toContain(neighbor.id);
+    expect(ids).toContain(seed.id);
+    expect(ids).toContain(neighbor.id);
+  });
 });

@@ -54,18 +54,16 @@ test.describe('Chat Functionality', () => {
   });
 
   test('displays chat interface', async ({ page }) => {
-    // Should have some form of input
-    const hasInput = await page.locator('input, textarea').count();
-    expect(hasInput).toBeGreaterThan(0);
+    // Should have a ready chat input after lazy view load.
+    await expect(page.locator('textarea, input[type="text"]').first()).toBeVisible({ timeout: 10000 });
   });
 
   test('can type in chat input', async ({ page }) => {
     const input = page.locator('input[type="text"], textarea').first();
-    if (await input.isVisible()) {
+    await expect(input).toBeVisible({ timeout: 10000 });
       await input.fill('Привет, Искра!');
       const value = await input.inputValue();
       expect(value).toBe('Привет, Искра!');
-    }
   });
 });
 

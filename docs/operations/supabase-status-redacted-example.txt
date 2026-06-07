@@ -1,0 +1,25 @@
+# Supabase Status Redacted Example
+
+Status: template only
+Scope: local Supabase status output
+
+Do not commit raw `supabase status` output. It can include local database URLs,
+publishable keys, secret keys, storage credentials, and service endpoints.
+
+Use this shape when a status receipt is needed:
+
+```text
+Studio: REDACTED_URL
+API URL: REDACTED_URL
+Database URL: REDACTED_DATABASE_URL
+Publishable key: REDACTED
+Secret key: REDACTED
+Storage access key: REDACTED
+Storage secret key: REDACTED
+Region: local or project region only
+Captured at: YYYY-MM-DDTHH:MM:SSZ
+Purpose: short reason
+```
+
+If a raw status file was committed, assume credential-like values were exposed
+until the project owner confirms they were local-only and non-production.

@@ -3,7 +3,8 @@
 > **Current public repository status:** active research and engineering monorepo  
 > **Public release priority:** `runtime/iskraSpace` (`iskra-space`)  
 > **Internal contour:** all other repository areas support Semyon + Iskra unless promoted by ADR  
-> **Current Agent Builder package:** `iskra-full-canon-dreamspace-2026-06-05-v2`  
+> **Current Agent Builder package:** `iskra-full-canon-builder-2026-06-06-v4`
+> **Builder UI status:** unverified until uploaded and prompt-tested there
 > **Last verified:** 2026-06-06  
 > **Zero-Mantra:** "Существовать — значит сохранять различие при передаче"
 
@@ -32,9 +33,9 @@ This README is an orientation map. For contribution rules, security reporting, a
 | Internal/support contour | All non-promoted repo areas | `governance/adr_20260606_iskraspace_release_priority.md` |
 | Workspace manager | `pnpm` workspace | `package.json`, `pnpm-workspace.yaml` |
 | Runtime packages | `packages/*`, `apps/*`, `runtime/*`, `core/*` | `pnpm-workspace.yaml` |
-| Agent Builder upload mirror | Present and versioned | `dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/` |
-| Upload mirror receipt | Present | `dist/agent-builder/.../RELEASE_RECEIPT.md` |
-| Upload mirror manifest | Present, 70 file hashes | `dist/agent-builder/.../MANIFEST.sha256` |
+| Agent Builder upload mirror | Present and versioned | `dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/` |
+| Upload mirror receipt | Present | `dist/agent-builder/.../RELEASE_RECEIPT_V4.md` |
+| Upload mirror manifest | Present, 149 payload hashes | `dist/agent-builder/.../MANIFEST.sha256` |
 | License model | MIT for software; CC BY-SA 4.0 for canon/content where marked | `LICENSE` |
 | Security policy | Maintained at root | `SECURITY.md` |
 
@@ -83,7 +84,7 @@ iskra/
 Current mirror:
 
 ```text
-dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/
+dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/
 ```
 
 It contains:
@@ -194,7 +195,7 @@ Use the smallest check that proves the change, then broaden when the blast radiu
 | [`ROADMAP_SCIENTIFIC_TURN.md`](ROADMAP_SCIENTIFIC_TURN.md) | Scientific Turn roadmap where still applicable |
 | [`governance/adr.md`](governance/adr.md) | ADR process for governance and canon decisions |
 | [`ledger/sot.json`](ledger/sot.json) | Integrity ledger for SoT files |
-| [`dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/RELEASE_RECEIPT.md`](dist/agent-builder/iskra-full-canon-dreamspace-2026-06-05-v2/RELEASE_RECEIPT.md) | Agent Builder upload mirror receipt |
+| [`dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/RELEASE_RECEIPT_V4.md`](dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/RELEASE_RECEIPT_V4.md) | Agent Builder upload mirror receipt |
 
 ---
 

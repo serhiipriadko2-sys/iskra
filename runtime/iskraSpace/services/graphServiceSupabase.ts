@@ -8,7 +8,7 @@
  * Uses RPC functions for graph traversal.
  */
 
-import { supabase as supabaseClient } from './supabaseClient';
+import { getUserId, supabase as supabaseClient } from './supabaseClient';
 import type {
   MemoryNode,
   MemoryEdge,
@@ -50,7 +50,7 @@ export class GraphServiceSupabase {
       resonance_score,
       metadata: {},
       related_ids: [],
-      user_id: await import('./supabaseClient').then(m => m.getUserId())
+      user_id: await getUserId()
     };
 
     const { data, error } = await supabaseClient
