@@ -66,26 +66,35 @@ Installed extensions with release relevance:
 
 ## Current GitHub Check Status
 
-Current HEAD `2d1a2f154b5a8563abe2d824d275ce98ba2b8e52` has completed failing check-runs:
+Post-merge update on 2026-06-07:
 
-- `rmgpgab-iskra-europe-west1-serhiipriadko2-sys-iskra--maraw (artful-striker-476211-h4)` -> failure, <https://github.com/serhiipriadko2-sys/iskra/runs/79907967157>
-- `cloudrun-iskra-git-europe-west8-serhiipriadko2-sys-iskra-mcnh (artful-striker-476211-h4)` -> failure, <https://github.com/serhiipriadko2-sys/iskra/runs/79907967125>
+- PR #195 is merged.
+- Local `HEAD` and `origin/main` both point at merge commit
+  `17056d685864428b2134c4dde630b296090410fd`.
+- Public GitHub checks on that merge commit show `ingest-stage-checks` and
+  `hash-check` succeeded.
+- The two Google Cloud checks still failed on deploy:
+  - `rmgpgab-iskra-europe-west1-serhiipriadko2-sys-iskra--maraw (artful-striker-476211-h4)`.
+  - `cloudrun-iskra-git-europe-west8-serhiipriadko2-sys-iskra-mcnh (artful-striker-476211-h4)`.
+- Their public summaries show build/push succeeded and deploy failed.
 
 Do not mark release gate green until current relevant checks are either passing
 or classified as unrelated with a signed release decision.
 
 Working-tree repair note:
 
-- The failing Google Cloud check logs point to Docker build context missing
-  `ledger/baselines.json` for `runtime/src/types/guard.ts`.
-- The `Dockerfile` now copies `ledger/baselines.json` into the runtime builder
-  context and copies root/package source needed by `runtime/iskraSpace` Vite
-  aliases.
-- Docker verification now has two receipts: the earlier Dockerfile-layout
-  simulation, and a real Docker Desktop build on 2026-06-07 with
-  `docker build -t iskra-space-release-check:2026-06-07 .`.
-- Container smoke also passed: temporary nginx container returned HTTP 200 for
-  `/`, response bytes `9762`, and contained the app root div.
+- The older Google Cloud build-context failure was repaired by copying
+  `ledger/baselines.json` and root/package sources into the Docker build stages.
+- The post-merge Google Cloud failure moved to deploy-stage, not build-stage.
+- The current branch repairs the likely Cloud Run port contract mismatch by
+  moving nginx, Docker healthcheck, and `EXPOSE` from port `80` to port `8080`.
+- Official Cloud Run docs state the ingress container must listen on the request
+  port, defaulting to `8080`.
+- Local Docker verification passed with
+  `docker build -t iskra-space-cloudrun-port-check:2026-06-07 .`.
+- Container smoke passed on host port `18082` mapped to container port `8080`:
+  `/` returned HTTP 200, bytes `9762`, root div present; `/health` returned
+  `healthy`.
 
 ## Local Gates In This PR
 
@@ -121,14 +130,16 @@ Final local result in this implementation pass:
   mixed-import, or >500 kB chunk warnings.
 - Chromium Playwright E2E passed: 27/27.
 - Docker build passed with tag `iskra-space-release-check:2026-06-07`.
-- Container smoke passed on `http://localhost:18080/`: HTTP 200, bytes `9762`,
-  root div present.
+- Post-merge Cloud Run port repair Docker build passed with tag
+  `iskra-space-cloudrun-port-check:2026-06-07`.
+- Container smoke passed on `http://localhost:18082/`: HTTP 200, bytes `9762`,
+  root div present, `/health` returned `healthy`, container port `8080`.
 - Ledger verification passed: 437 files.
 
 ## Release Blockers
 
-- Current GitHub check-runs are red for the baseline commit; the working tree has a Dockerfile repair and local Docker build/smoke proof, but remote confirmation is pending after push.
-- Open PR #195 targets `main` from `codex/iskra-release-readiness-plan`. Its observed head before this receipt update, `4da451e415d955fab01f38b757484b66bb347dd0`, had visible checks green (`ingest-stage-checks`, `hash-check`).
+- Current GitHub check-runs are red for merge commit `17056d685864428b2134c4dde630b296090410fd`; the current branch has a Cloud Run port repair and local Docker build/smoke proof, but remote confirmation is pending after push.
+- PR #195 is merged; release gate remains partial because merge-commit Google Cloud deploy checks are red.
 - Live `embed` is absent; this remains a blocker only if `apps/iskra-web`/engine retrieval is promoted or if the public release requires the `gemini` + `embed` hybrid.
 - Live `iskra-canon-import-diagnostic` remains ACTIVE with `verify_jwt=false`.
 - Live `iskra-canon-import-1536` and `iskra-canon-backfill-1536` remain ACTIVE with `verify_jwt=false`.
