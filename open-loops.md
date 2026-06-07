@@ -33,16 +33,16 @@
 - **Mitigation:** Do not quote the values. Follow `docs/operations/supabase_status_exposure_owner_checklist_2026-06-07.md`; rotate/audit any non-local or unknown value. Do not rewrite Git history without separate explicit approval.
 
 ### OPN-20260607-002: Current Baseline GitHub Checks Are Red
-- **Description:** GitHub check-runs for baseline commit `2d1a2f154b5a8563abe2d824d275ce98ba2b8e52` show two completed failures: `rmgpgab-iskra-europe-west1-serhiipriadko2-sys-iskra--maraw` and `cloudrun-iskra-git-europe-west8-serhiipriadko2-sys-iskra-mcnh`.
-- **Status:** Resolved for PR #195 visible checks.
-- **Risk:** Future pushes can re-open this loop if Google Cloud or GitHub Actions checks regress.
-- **Mitigation:** The Checks API/root-cause pass found Google Cloud Docker builds failing because `runtime/src/types/guard.ts` could not resolve `../../../ledger/baselines.json`. The working-tree `Dockerfile` now copies that ledger file and the root/package sources required by `runtime/iskraSpace` aliases. Local Docker Desktop build and container smoke passed. Open PR #195 exists; observed head `4da451e415d955fab01f38b757484b66bb347dd0` had visible check-runs green (`ingest-stage-checks`, `hash-check`) before this receipt update.
+- **Description:** GitHub check-runs for merge commit `17056d685864428b2134c4dde630b296090410fd` show two completed Google Cloud failures: `rmgpgab-iskra-europe-west1-serhiipriadko2-sys-iskra--maraw` and `cloudrun-iskra-git-europe-west8-serhiipriadko2-sys-iskra-mcnh`.
+- **Status:** Reopened after PR #195 merge; repo-side port repair local-verified, remote confirmation pending.
+- **Risk:** Public release can still fail deployment even though repository build/test gates are green.
+- **Mitigation:** The older Docker build-context failure was fixed before merge. The post-merge failures are deploy-stage: public summaries show build/push success and deploy failure. Current branch moves nginx/Docker healthcheck/EXPOSE/docker-compose to container port `8080` to match the Cloud Run default ingress contract. Local Docker build and smoke on container port `8080` passed. Push a focused PR and verify the Google Cloud checks on the new head before release sign-off.
 
 ### OPN-20260607-003: Supabase Live Function Drift Before Public Release
 - **Description:** Fresh read-only Supabase baseline lists live `gemini`, `db-proxy`, `iskra-canon-import-1536`, `iskra-canon-backfill-1536`, and `iskra-canon-import-diagnostic`; repo-side `embed` exists but is absent from the live function list.
 - **Status:** Open.
-- **Risk:** Public release could depend on an undocumented hybrid path or retain unauthenticated internal/diagnostic functions.
-- **Mitigation:** `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` separates direct `runtime/iskraSpace` `gemini embedContent` from engine/web `embed`. Before live mutation, refresh functions/migrations/advisors/app data path; remove `iskra-canon-import-diagnostic` or accept a time-boxed ADR exception; add owner/access/expiry decisions for `db-proxy` and canon import/backfill functions.
+- **Risk:** Public release could depend on an undocumented hybrid path or retain unauthenticated internal/diagnostic functions. The diagnostic function is especially sensitive because the refreshed source posture shows it responds without method/auth gate and reports env-presence checks.
+- **Mitigation:** `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` separates direct `runtime/iskraSpace` `gemini embedContent` from engine/web `embed`. `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-07.md` records the refreshed project/migration/function/source baseline. Before live mutation, refresh advisors/grants/logs/app data path; remove `iskra-canon-import-diagnostic` or accept a time-boxed ADR exception; add owner/access/expiry decisions for `db-proxy` and canon import/backfill functions.
 
 ### OPN-20260607-004: iskraSpace Build Warnings Before Release
 - **Description:** `pnpm --dir runtime/iskraSpace run build` passes, but emits warnings for CSS syntax (`-: .;`), mixed dynamic/static imports around Supabase modules, and a main chunk larger than 500 kB.

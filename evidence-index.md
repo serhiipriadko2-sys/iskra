@@ -147,5 +147,30 @@
   - Observed PR head before this receipt update: `4da451e415d955fab01f38b757484b66bb347dd0`.
   - Public PR lookup for `serhiipriadko2-sys:codex/iskra-release-readiness-plan` returned open PR #195, `Codex/iskra release readiness plan`, targeting `main`.
   - Public GitHub check-runs on the observed PR head included `ingest-stage-checks` completed success and `hash-check` completed success.
-  - Public PR lookup also shows previous PR #194 as closed.
+- Public PR lookup also shows previous PR #194 as closed.
 - **Status:** PR open; visible checks green. Supabase live and credential owner tasks remain separate.
+
+### EVI-20260607-008: Post-Merge GitHub And Cloud Run Port Repair
+- **Assertion:** PR #195 is merged, but the post-merge release gate remains partial because Google Cloud deploy checks fail on the merge commit.
+- **Evidence:**
+  - Public GitHub PR API returned PR #195 `state=closed`, `merged=true`, merge commit `17056d685864428b2134c4dde630b296090410fd`.
+  - Local `HEAD` and `origin/main` both resolved to `17056d685864428b2134c4dde630b296090410fd`.
+  - Public check-runs on the merge commit showed `ingest-stage-checks` success, `hash-check` success, and two Google Cloud failures.
+  - Google Cloud summaries showed build/push succeeded and deploy failed.
+  - `Dockerfile`, `nginx.conf`, and `docker-compose.yml` now use container port `8080`.
+  - Local Docker build passed with `docker build -t iskra-space-cloudrun-port-check:2026-06-07 .`.
+  - Container smoke passed on host `18082` to container `8080`: `/` HTTP 200, bytes `9762`, root div present; `/health` returned `healthy`.
+  - Operation receipt: `docs/operations/iskraspace_post_merge_verification_2026-06-07.md`.
+- **Status:** Local verified; remote Google Cloud confirmation pending after push.
+
+### EVI-20260607-009: Supabase Read-Only Function Baseline Refresh
+- **Assertion:** Live Supabase function drift is refreshed without mutation, and release blockers remain for internal/support functions.
+- **Evidence:**
+  - Supabase connector project read confirmed `AgiIskra / typcvaszcfdpkzbjzuur`, `ACTIVE_HEALTHY`, region `eu-west-1`, Postgres `17.6.1.063`.
+  - Migration list returned ten live migrations from `20260309091308` through `20260509093312`.
+  - Function list returned live `db-proxy`, `iskra-canon-backfill-1536`, `iskra-canon-import-1536`, `iskra-canon-import-diagnostic`, and `gemini`.
+  - `embed` lookup returned `Function not found`.
+  - Source posture reads confirmed `gemini` supports `embedContent` with `verify_jwt=true`; `db-proxy` is a service-role proxy with allowlist bearer check and `verify_jwt=true`; canon import/backfill/diagnostic functions have `verify_jwt=false`.
+  - Diagnostic source posture responds without method/auth gate and reports env-presence checks; no secret values were recorded.
+  - Operation receipt: `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-07.md`.
+- **Status:** Partial; advisors/grants/logs/app data path and owner decisions remain pending.

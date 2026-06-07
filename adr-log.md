@@ -64,3 +64,32 @@ GitHub connector read PASS; Supabase connector read PASS; Opera browser read PAS
 
 ### Rollback / Reversal Trigger
 Remove `iskra-local` config exposure and revert hardening prompt additions if Codex Desktop rejects local marketplace loading or Builder prompt tests show the new gates conflict with higher-priority canon/security rules.
+
+## ADR-20260607-004: Cloud Run Ingress Port 8080 For Production Image
+
+### Context
+After PR #195 merged, public GitHub checks on merge commit `17056d685864428b2134c4dde630b296090410fd` showed repository checks passing but two Google Cloud deploy checks failing. Their public summaries showed build and push succeeded, while deploy failed. The production image used nginx on port `80`; Cloud Run's default ingress request port is `8080` unless configured otherwise.
+
+### Decision
+Make the production Docker/nginx contour listen on container port `8080`: update `nginx.conf`, `Dockerfile` `EXPOSE`, Docker healthcheck, and `docker-compose.yml` mapping/healthcheck together.
+
+### Alternatives
+- Configure the Cloud Run service to send traffic to port `80`. Rejected for repo-side release repair because it requires live Google Cloud mutation and does not make the image default-compatible.
+- Keep nginx on port `80` and treat deploy failure as external. Rejected because local repo evidence shows an obvious mismatch with the default Cloud Run contract.
+
+### Consequences / Price
+- Local docker-compose host port remains `3000`, but maps to container `8080` instead of `80`.
+- Existing scripts or docs that assume container port `80` must be updated if they become active again.
+- The final proof still requires remote Google Cloud checks after push.
+
+### Verification
+Local Docker build passed with `docker build -t iskra-space-cloudrun-port-check:2026-06-07 .`. Container smoke on host `18082` mapped to container `8080` returned `/` HTTP 200, bytes `9762`, root div present, and `/health` body `healthy`.
+
+### Rollback / Reversal Trigger
+Revert to port `80` only if the Cloud Run service is explicitly configured to send requests to port `80` and a deploy check proves that configuration is the intended production contract.
+
+### Delta
+Delta: production image contract now matches Cloud Run default ingress port.
+D: public GitHub check summary, Docker/nginx files, official Cloud Run container contract, local Docker smoke.
+Omega: 0.89 locally; 0.74 for remote root cause until Google Cloud checks pass.
+Lambda: revise on failed post-push deploy or explicit Cloud Run port override evidence.

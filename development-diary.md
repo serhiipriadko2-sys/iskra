@@ -130,3 +130,11 @@
 - **Risk:** GitHub PR checks are green for the current PR head, but this does not close live Supabase owner decisions or credential classification.
 - **Next:** Continue with Supabase read-only baseline and owner credential classification. No live Supabase mutation or Git history rewrite without explicit approval.
 - **Status:** PR #195 open; visible PR/branch checks green.
+
+### JRN-20260607-004: Post-Merge Cloud Run Port Repair And Supabase Baseline
+- **Context:** PR #195 was merged, local `HEAD` matched `origin/main` at `17056d685864428b2134c4dde630b296090410fd`, but public GitHub check-runs on the merge commit showed two Google Cloud deploy failures while build/push steps succeeded.
+- **Actions:** Repaired the Cloud Run ingress contract by moving nginx, Docker healthcheck, exposed port, and docker-compose mapping from container port `80` to `8080`; created post-merge verification and Supabase read-only baseline operation docs; refreshed live Supabase project, migration, function list, and function source posture without mutation.
+- **Evidence:** Public GitHub PR API showed PR #195 `closed` and `merged=true`; merge-commit checks showed `ingest-stage-checks` and `hash-check` success plus two Google Cloud deploy failures. Local Docker build passed with `docker build -t iskra-space-cloudrun-port-check:2026-06-07 .`; smoke on host `18082` to container `8080` returned `/` HTTP 200, bytes `9762`, root div present, and `/health` body `healthy`. Supabase connector confirmed `embed` not found, `gemini` and `db-proxy` live with `verify_jwt=true`, and three canon/import/diagnostic functions live with `verify_jwt=false`.
+- **Risk:** Google Cloud deploy stderr is not available through the public check summary, so the port root cause remains an evidence-backed inference until remote checks pass. Supabase advisors/grants/logs and credential owner classification remain open.
+- **Next:** Commit and push `codex/iskra-post-merge-supabase-baseline`, open/attach PR, and verify Google Cloud checks on the new head. No live Supabase mutation or Git history rewrite without explicit approval.
+- **Status:** Local verified; remote deploy and Supabase owner decisions pending.
