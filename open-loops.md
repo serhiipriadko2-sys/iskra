@@ -34,9 +34,9 @@
 
 ### OPN-20260607-002: Current Baseline GitHub Checks Are Red
 - **Description:** GitHub check-runs for baseline commit `2d1a2f154b5a8563abe2d824d275ce98ba2b8e52` show two completed failures: `rmgpgab-iskra-europe-west1-serhiipriadko2-sys-iskra--maraw` and `cloudrun-iskra-git-europe-west8-serhiipriadko2-sys-iskra-mcnh`.
-- **Status:** Branch pushed and visible branch checks green; PR-level confirmation pending.
-- **Risk:** Local checks can pass while release/deploy checks remain failed.
-- **Mitigation:** The Checks API/root-cause pass found Google Cloud Docker builds failing because `runtime/src/types/guard.ts` could not resolve `../../../ledger/baselines.json`. The working-tree `Dockerfile` now copies that ledger file and the root/package sources required by `runtime/iskraSpace` aliases. Local Docker Desktop build and container smoke passed. Pushed commit `9b4354821a014a8fe12f08d80e15d537f33deb67` has visible branch checks green (`ingest-stage-checks`, `hash-check`), but no open PR exists; keep this loop open until PR-level checks are observed.
+- **Status:** Resolved for PR #195 visible checks.
+- **Risk:** Future pushes can re-open this loop if Google Cloud or GitHub Actions checks regress.
+- **Mitigation:** The Checks API/root-cause pass found Google Cloud Docker builds failing because `runtime/src/types/guard.ts` could not resolve `../../../ledger/baselines.json`. The working-tree `Dockerfile` now copies that ledger file and the root/package sources required by `runtime/iskraSpace` aliases. Local Docker Desktop build and container smoke passed. Open PR #195 exists; observed head `4da451e415d955fab01f38b757484b66bb347dd0` had visible check-runs green (`ingest-stage-checks`, `hash-check`) before this receipt update.
 
 ### OPN-20260607-003: Supabase Live Function Drift Before Public Release
 - **Description:** Fresh read-only Supabase baseline lists live `gemini`, `db-proxy`, `iskra-canon-import-1536`, `iskra-canon-backfill-1536`, and `iskra-canon-import-diagnostic`; repo-side `embed` exists but is absent from the live function list.

@@ -128,7 +128,7 @@ Final local result in this implementation pass:
 ## Release Blockers
 
 - Current GitHub check-runs are red for the baseline commit; the working tree has a Dockerfile repair and local Docker build/smoke proof, but remote confirmation is pending after push.
-- Pushed commit `9b4354821a014a8fe12f08d80e15d537f33deb67` has visible branch-level checks green (`ingest-stage-checks`, `hash-check`), but no open PR exists yet; PR-level confirmation remains pending.
+- Open PR #195 targets `main` from `codex/iskra-release-readiness-plan`. Its observed head before this receipt update, `4da451e415d955fab01f38b757484b66bb347dd0`, had visible checks green (`ingest-stage-checks`, `hash-check`).
 - Live `embed` is absent; this remains a blocker only if `apps/iskra-web`/engine retrieval is promoted or if the public release requires the `gemini` + `embed` hybrid.
 - Live `iskra-canon-import-diagnostic` remains ACTIVE with `verify_jwt=false`.
 - Live `iskra-canon-import-1536` and `iskra-canon-backfill-1536` remain ACTIVE with `verify_jwt=false`.

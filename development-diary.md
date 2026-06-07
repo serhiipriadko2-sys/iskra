@@ -123,10 +123,10 @@
 - **Next:** Open a focused PR. No live Supabase mutation or Git history rewrite in this pass.
 - **Status:** Local verified; remote Google Cloud and live Supabase owner decisions pending.
 
-### JRN-20260607-003: Branch Push And Remote Check Snapshot
-- **Context:** After Docker Desktop was enabled, the Docker repair needed real build proof and remote branch verification.
-- **Actions:** Ran real Docker build and nginx container smoke, committed Docker receipt updates, pushed `codex/iskra-release-readiness-plan` to GitHub, and checked the pushed commit through the public GitHub API.
-- **Evidence:** Commit `9b4354821a014a8fe12f08d80e15d537f33deb67` is pushed. Visible check-runs on that commit are green: `ingest-stage-checks` success and `hash-check` success. Public PR lookup shows no open PR for the branch and one closed PR, #194. `gh` is not authenticated and the local `GITHUB_PERSONAL_ACCESS_TOKEN` returned `Bad credentials`; GitHub connector PR creation also failed at the ChatGPT apps transport layer.
-- **Risk:** Remote PR-level checks cannot be considered fully closed until an open PR is created/reopened and its checks are observed. Do not infer live Supabase readiness from branch-level checks.
-- **Next:** Re-authenticate GitHub CLI or use GitHub UI to reopen/create the PR, then inspect PR checks.
-- **Status:** Branch pushed; visible branch checks green; PR creation blocked by auth/connector.
+### JRN-20260607-003: Branch Push And PR Check Snapshot
+- **Context:** After Docker Desktop was enabled, the Docker repair needed real build proof and remote PR verification.
+- **Actions:** Ran real Docker build and nginx container smoke, committed Docker receipt updates, pushed `codex/iskra-release-readiness-plan` to GitHub, then verified manually created PR #195 through the public GitHub API.
+- **Evidence:** Observed commit `4da451e415d955fab01f38b757484b66bb347dd0` backed open PR #195, `Codex/iskra release readiness plan`, before this receipt update. Visible check-runs on that commit were green: `ingest-stage-checks` success and `hash-check` success. Public PR lookup also showed prior PR #194 as closed.
+- **Risk:** GitHub PR checks are green for the current PR head, but this does not close live Supabase owner decisions or credential classification.
+- **Next:** Continue with Supabase read-only baseline and owner credential classification. No live Supabase mutation or Git history rewrite without explicit approval.
+- **Status:** PR #195 open; visible PR/branch checks green.
