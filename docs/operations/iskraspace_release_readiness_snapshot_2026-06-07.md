@@ -81,10 +81,11 @@ Working-tree repair note:
 - The `Dockerfile` now copies `ledger/baselines.json` into the runtime builder
   context and copies root/package source needed by `runtime/iskraSpace` Vite
   aliases.
-- Local Docker daemon was unavailable, so the Docker build was verified with a
-  Dockerfile-layout simulation that ran `npm ci && npm run build` for
-  `runtime`, then `npm ci && npm run build` for `runtime/iskraSpace` using only
-  the files copied by the Dockerfile.
+- Docker verification now has two receipts: the earlier Dockerfile-layout
+  simulation, and a real Docker Desktop build on 2026-06-07 with
+  `docker build -t iskra-space-release-check:2026-06-07 .`.
+- Container smoke also passed: temporary nginx container returned HTTP 200 for
+  `/`, response bytes `9762`, and contained the app root div.
 
 ## Local Gates In This PR
 
@@ -103,7 +104,7 @@ Required before handoff:
 - `npx playwright test --project=chromium` from `runtime/iskraSpace`
 - `npx tsx tools/verify_ledger.ts`
 - `py tools/check_no_src_imports.py`
-- Dockerfile-layout build simulation when Docker daemon is unavailable locally
+- Docker build and container smoke
 
 Final local result in this implementation pass:
 
@@ -119,13 +120,15 @@ Final local result in this implementation pass:
 - `runtime/iskraSpace` build passed without the previous CSS syntax,
   mixed-import, or >500 kB chunk warnings.
 - Chromium Playwright E2E passed: 27/27.
-- Dockerfile-layout simulation passed because the local Docker daemon was not
-  available.
+- Docker build passed with tag `iskra-space-release-check:2026-06-07`.
+- Container smoke passed on `http://localhost:18080/`: HTTP 200, bytes `9762`,
+  root div present.
 - Ledger verification passed: 437 files.
 
 ## Release Blockers
 
-- Current GitHub check-runs are red for the baseline commit; the working tree has a Dockerfile repair, but remote confirmation is pending after push.
+- Current GitHub check-runs are red for the baseline commit; the working tree has a Dockerfile repair and local Docker build/smoke proof, but remote confirmation is pending after push.
+- Open PR #195 targets `main` from `codex/iskra-release-readiness-plan`. Its observed head before this receipt update, `4da451e415d955fab01f38b757484b66bb347dd0`, had visible checks green (`ingest-stage-checks`, `hash-check`).
 - Live `embed` is absent; this remains a blocker only if `apps/iskra-web`/engine retrieval is promoted or if the public release requires the `gemini` + `embed` hybrid.
 - Live `iskra-canon-import-diagnostic` remains ACTIVE with `verify_jwt=false`.
 - Live `iskra-canon-import-1536` and `iskra-canon-backfill-1536` remain ACTIVE with `verify_jwt=false`.

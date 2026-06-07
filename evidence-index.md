@@ -127,8 +127,10 @@
   - GitHub Checks API read for `2d1a2f154b5a8563abe2d824d275ce98ba2b8e52` showed failed Google Cloud Developer Connect runs `79907967157` and `79907967125`.
   - Check output identified `runtime/src/types/guard.ts(15,23): Cannot find module '../../../ledger/baselines.json'`.
   - `Dockerfile` now copies `ledger/baselines.json` into the runtime builder context and copies root/package sources needed by `runtime/iskraSpace` aliases.
-  - Local Docker daemon was unavailable, so a Dockerfile-layout simulation ran `npm ci && npm run build` for `runtime`, then `npm ci && npm run build` for `runtime/iskraSpace`, using only files copied by the Dockerfile; simulation passed.
-- **Status:** Local verified; remote Google Cloud confirmation pending after push.
+  - Dockerfile-layout simulation ran `npm ci && npm run build` for `runtime`, then `npm ci && npm run build` for `runtime/iskraSpace`, using only files copied by the Dockerfile; simulation passed.
+  - Real Docker Desktop build passed: `docker build -t iskra-space-release-check:2026-06-07 .`.
+  - Container smoke passed: temporary container on `http://localhost:18080/` returned HTTP 200, bytes `9762`, and `ROOT_DIV_OK`.
+- **Status:** Local Docker verified; remote Google Cloud confirmation pending after push.
 
 ### EVI-20260607-006: Supabase Boundary And Exposure Checklist
 - **Assertion:** Release docs now distinguish direct `runtime/iskraSpace` Supabase requirements from engine/web retrieval and leave credential rotation as an owner action.
@@ -138,3 +140,12 @@
   - `docs/operations/supabase_status_exposure_owner_checklist_2026-06-07.md` defines provider-side classification/rotation/audit steps without quoting removed values.
   - Supabase changelog scan of <https://supabase.com/changelog.md> found release-relevant Edge Function/JWT/Data API/GraphQL notes and reinforces the need for a fresh advisor/API-exposure baseline before live mutation.
 - **Status:** Documentation verified; live mutation and credential classification remain pending owner-approved follow-up.
+
+### EVI-20260607-007: PR Push And Visible Remote Checks
+- **Assertion:** The release-readiness branch is pushed, open PR #195 exists, and the visible GitHub Actions checks for the PR head are green.
+- **Evidence:**
+  - Observed PR head before this receipt update: `4da451e415d955fab01f38b757484b66bb347dd0`.
+  - Public PR lookup for `serhiipriadko2-sys:codex/iskra-release-readiness-plan` returned open PR #195, `Codex/iskra release readiness plan`, targeting `main`.
+  - Public GitHub check-runs on the observed PR head included `ingest-stage-checks` completed success and `hash-check` completed success.
+  - Public PR lookup also shows previous PR #194 as closed.
+- **Status:** PR open; visible checks green. Supabase live and credential owner tasks remain separate.
