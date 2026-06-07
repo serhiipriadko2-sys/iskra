@@ -122,3 +122,11 @@
 - **Risk:** Remote Google Cloud checks still need confirmation after push; Supabase live diagnostic/import/backfill functions still need owner/access/expiry/removal decisions; removed credential-like values still need owner classification/rotation evidence.
 - **Next:** Open a focused PR. No live Supabase mutation or Git history rewrite in this pass.
 - **Status:** Local verified; remote Google Cloud and live Supabase owner decisions pending.
+
+### JRN-20260607-003: Branch Push And Remote Check Snapshot
+- **Context:** After Docker Desktop was enabled, the Docker repair needed real build proof and remote branch verification.
+- **Actions:** Ran real Docker build and nginx container smoke, committed Docker receipt updates, pushed `codex/iskra-release-readiness-plan` to GitHub, and checked the pushed commit through the public GitHub API.
+- **Evidence:** Commit `9b4354821a014a8fe12f08d80e15d537f33deb67` is pushed. Visible check-runs on that commit are green: `ingest-stage-checks` success and `hash-check` success. Public PR lookup shows no open PR for the branch and one closed PR, #194. `gh` is not authenticated and the local `GITHUB_PERSONAL_ACCESS_TOKEN` returned `Bad credentials`; GitHub connector PR creation also failed at the ChatGPT apps transport layer.
+- **Risk:** Remote PR-level checks cannot be considered fully closed until an open PR is created/reopened and its checks are observed. Do not infer live Supabase readiness from branch-level checks.
+- **Next:** Re-authenticate GitHub CLI or use GitHub UI to reopen/create the PR, then inspect PR checks.
+- **Status:** Branch pushed; visible branch checks green; PR creation blocked by auth/connector.

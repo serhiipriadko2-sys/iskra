@@ -140,3 +140,13 @@
   - `docs/operations/supabase_status_exposure_owner_checklist_2026-06-07.md` defines provider-side classification/rotation/audit steps without quoting removed values.
   - Supabase changelog scan of <https://supabase.com/changelog.md> found release-relevant Edge Function/JWT/Data API/GraphQL notes and reinforces the need for a fresh advisor/API-exposure baseline before live mutation.
 - **Status:** Documentation verified; live mutation and credential classification remain pending owner-approved follow-up.
+
+### EVI-20260607-007: Branch Push And Visible Remote Checks
+- **Assertion:** The release-readiness branch is pushed and the visible branch-level GitHub Actions checks are green, but PR-level verification is not complete.
+- **Evidence:**
+  - Pushed commit: `9b4354821a014a8fe12f08d80e15d537f33deb67`.
+  - Public GitHub check-runs on the pushed commit: `ingest-stage-checks` completed success and `hash-check` completed success.
+  - Public PR lookup for `serhiipriadko2-sys:codex/iskra-release-readiness-plan` returned no open PR and one closed PR: #194.
+  - `gh` CLI was installed but not authenticated; setting `GH_TOKEN` from local `GITHUB_PERSONAL_ACCESS_TOKEN` returned GitHub `Bad credentials`.
+  - GitHub connector PR creation failed at the ChatGPT apps transport layer.
+- **Status:** Branch pushed; visible branch checks green; open PR creation/reopen blocked.
