@@ -7,6 +7,31 @@ export default defineConfig(() => {
   return {
     base: process.env.VITE_BASE_PATH || '/',
     plugins: [react()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            const normalized = id.replace(/\\/g, '/');
+            if (normalized.includes('/node_modules/react') || normalized.includes('/node_modules/react-dom')) {
+              return 'vendor-react';
+            }
+            if (normalized.includes('/node_modules/@supabase/')) {
+              return 'vendor-supabase';
+            }
+            if (normalized.includes('/node_modules/@google/genai')) {
+              return 'vendor-genai';
+            }
+            if (
+              normalized.includes('/runtime/src/')
+              || normalized.includes('/packages/core/src/')
+              || normalized.includes('/packages/math/src/')
+            ) {
+              return 'iskra-runtime';
+            }
+          },
+        },
+      },
+    },
     // Configure server to allow serving files from the monorepo root directory. This is
     // required when resolving the local @iskra/runtime and @iskra/math packages.
     server: {

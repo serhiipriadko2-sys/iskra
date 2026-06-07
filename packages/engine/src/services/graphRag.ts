@@ -147,14 +147,12 @@ export class GraphRagRetriever {
 
     const neighborEf = computeEfSearch(this.options.hnsw_ef_search, this.options.neighbor_m);
 
-
-
     const getNeighborsBatch = async (nodes: MantraNode[]): Promise<Edge[][]> => {
       if (signal.aborted) throw new Error('Aborted');
       const results: Edge[][] = new Array(nodes.length).fill([]);
       const toFetchIdx: number[] = [];
-      const simOptions = [];
-      const causalOptions = [];
+      const simOptions: number[][] = [];
+      const causalOptions: Parameters<MemoryService['causalNeighborsMultiple']>[0] = [];
 
       for (let i = 0; i < nodes.length; i++) {
         const nodeOpt = nodes[i];
@@ -163,6 +161,7 @@ export class GraphRagRetriever {
         if (cached) {
           results[i] = cached;
         } else {
+          toFetchIdx.push(i);
           simOptions.push(nodeOpt.embedding);
           causalOptions.push({
             centerTs: nodeOpt.timestamp,
@@ -198,6 +197,7 @@ export class GraphRagRetriever {
           const sBatch = simBatches[j];
           if (sBatch) {
             for (const h of sBatch) {
+              if (h.node.id === node.id) continue;
               nodeCache.set(h.node.id, h.node);
               edges.push({ to: h.node.id, type: 'SIMILARITY', weight: h.similarity });
             }
@@ -206,6 +206,7 @@ export class GraphRagRetriever {
           const cBatch = causalBatches[j];
           if (cBatch) {
             for (const h of cBatch) {
+              if (h.node.id === node.id) continue;
               nodeCache.set(h.node.id, h.node);
               edges.push({ to: h.node.id, type: 'CAUSAL', weight: h.weight });
             }

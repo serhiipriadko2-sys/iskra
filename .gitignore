@@ -88,4 +88,8 @@ htmlcov/
 # Supabase specific
 supabase/.temp/
 supabase/storage/
+/supabase_status.txt
+/supabase_status*.txt
+/runtime/iskraSpace/playwright-report/
+/runtime/iskraSpace/test-results/
 ```

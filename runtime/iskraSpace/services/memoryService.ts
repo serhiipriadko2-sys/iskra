@@ -1,5 +1,7 @@
 
 import { MemoryNode, MantraNode, IntegrityReport } from '../types';
+import { graphServiceSupabase } from './graphServiceSupabase';
+import { isSupabaseAvailable } from './supabaseClient';
 
 const ARCHIVE_KEY = 'iskra-space-archive';
 const SHADOW_KEY = 'iskra-space-shadow';
@@ -7,7 +9,7 @@ const MANTRA_KEY = 'iskra-space-mantra';
 
 const generateId = (prefix: string): string => {
     const now = new Date();
-    const timestamp = now.toISOString().replace(/[-:.]/g, '').slice(0, -4);
+    const timestamp = now.toISOString().replaceAll('-', '').replaceAll(':', '').replaceAll('.', '').slice(0, -4);
     const random = Math.random().toString(36).substring(2, 8);
     return `${prefix}_${timestamp}_${random}`;
 }
@@ -234,11 +236,10 @@ export const memoryService = {
       localStorage.setItem(ARCHIVE_KEY, JSON.stringify(updatedArchive));
 
       // Background sync to Supabase GraphRAG
-      import('./supabaseClient').then(async (client) => {
-        const isOnline = await client.isSupabaseAvailable().catch(() => false);
+      void (async () => {
+        const isOnline = await isSupabaseAvailable().catch(() => false);
         if (isOnline) {
           try {
-            const { graphServiceSupabase } = await import('./graphServiceSupabase');
             const node = await graphServiceSupabase.addNode(
               fullNode.layer,
               fullNode.type,
@@ -249,7 +250,7 @@ export const memoryService = {
             console.warn('Failed to sync node to Supabase graph:', e);
           }
         }
-      });
+      })();
     } catch (error) {
       console.error("Error adding to archive in localStorage", error);
     }
@@ -300,11 +301,10 @@ export const memoryService = {
       localStorage.setItem(SHADOW_KEY, JSON.stringify(updatedShadow));
 
       // Background sync to Supabase GraphRAG
-      import('./supabaseClient').then(async (client) => {
-        const isOnline = await client.isSupabaseAvailable().catch(() => false);
+      void (async () => {
+        const isOnline = await isSupabaseAvailable().catch(() => false);
         if (isOnline) {
           try {
-            const { graphServiceSupabase } = await import('./graphServiceSupabase');
             const node = await graphServiceSupabase.addNode(
               fullNode.layer,
               fullNode.type,
@@ -315,7 +315,7 @@ export const memoryService = {
             console.warn('Failed to sync node to Supabase graph:', e);
           }
         }
-      });
+      })();
     } catch (error) {
       console.error("Error adding to shadow in localStorage", error);
     }

@@ -79,3 +79,62 @@
   - `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md` adds six release-blocking prompts.
   - v4 zip regenerated with 150 entries, bytes `1914053`, sha256 `6943c012e6522525949a4bb211d1ce1f2d0246da1c78df1c74c81e02b7146e1b`.
 - **Status:** Live read contracts verified; Codex app load, Builder UI upload, and CI status checks pending.
+
+### EVI-20260607-001: Sensitive Status Dump Current-Tree Gate
+- **Assertion:** Raw local Supabase status dumps are blocked from the current tree and CI gate.
+- **Evidence:**
+  - `supabase_status.txt` removed from the working tree.
+  - `docs/operations/supabase-status-redacted-example.txt` added as the safe template.
+  - `tools/check_no_sensitive_status_dumps.py` added and wired into `package.json` `verify` and `.github/workflows/sot_integrity.yml`.
+  - `py tools/check_no_sensitive_status_dumps.py` returned `[OK] no sensitive status dumps`.
+- **Status:** Local verified; historical exposure classification pending owner review.
+
+### EVI-20260607-002: GraphRAG Batch Expansion Regression
+- **Assertion:** GraphRAG expansion now performs batch neighbor lookup when `seed_k=1` and includes a non-seed expanded node.
+- **Evidence:**
+  - Added regression in `packages/engine/src/__tests__/graphRag.test.ts`.
+  - The new test failed before the code fix because the expanded neighbor was missing.
+  - `packages/engine/src/services/graphRag.ts` now fills `toFetchIdx`, preserves `simOptions`/`causalOptions` alignment, and filters self hits from batch results.
+  - `pnpm --filter @iskra/engine test src/__tests__/graphRag.test.ts src/__tests__/graphRag_hnsw_mode.test.ts` passed: 3 tests.
+- **Status:** Verified.
+
+### EVI-20260607-003: Fresh Supabase And GitHub Release Baseline
+- **Assertion:** `runtime/iskraSpace` is not release-ready until live Supabase drift and red GitHub checks are resolved or accepted.
+- **Evidence:**
+  - Supabase read-only connector observed `AgiIskra / typcvaszcfdpkzbjzuur` as `ACTIVE_HEALTHY` in `eu-west-1`, Postgres `17.6.1.063`.
+  - Live functions observed: `gemini` (`verify_jwt=true`), `db-proxy` (`verify_jwt=true`), `iskra-canon-import-1536` (`verify_jwt=false`), `iskra-canon-backfill-1536` (`verify_jwt=false`), and `iskra-canon-import-diagnostic` (`verify_jwt=false`).
+  - Repo-side `embed` source exists with `[functions.embed] verify_jwt=true`, but `embed` was absent from the live function list.
+  - GitHub check-runs for `2d1a2f154b5a8563abe2d824d275ce98ba2b8e52` showed two completed failures: run IDs `79907967157` and `79907967125`.
+  - Snapshot artifact: `docs/operations/iskraspace_release_readiness_snapshot_2026-06-07.md`.
+- **Status:** Partial; release blockers open.
+
+### EVI-20260607-004: Local iskraSpace Release Gates
+- **Assertion:** The local `runtime/iskraSpace` app gates pass for this implementation pass.
+- **Evidence:**
+  - `pnpm --dir runtime/iskraSpace run typecheck` passed.
+  - `pnpm --dir runtime/iskraSpace run lint` passed with 90 warnings and 0 errors.
+  - `pnpm --dir runtime/iskraSpace run test:run` passed: 629 tests passed, 3 skipped.
+  - `pnpm --dir runtime/iskraSpace run build` passed without the prior CSS syntax, mixed dynamic/static import, or >500 kB chunk warnings.
+  - Initial Chromium E2E exposed a race in `e2e/app.spec.ts`: Chat assertions could run while the lazy view still showed the loader. The spec now waits for the chat textbox condition.
+  - Targeted `npx playwright test app.spec.ts --project=chromium` passed: 12/12.
+  - Full `npx playwright test --project=chromium` from `runtime/iskraSpace` passed: 27/27.
+  - `npx tsx tools/verify_ledger.ts` passed after ledger update: 437 files.
+- **Status:** Local verified; release gate still partial due remote/live blockers.
+
+### EVI-20260607-005: Google Cloud Docker Check Root Cause And Local Repair
+- **Assertion:** The red Google Cloud/GitHub check-runs for baseline `2d1a2f1` have a repo-side Docker build-context root cause and a working-tree repair.
+- **Evidence:**
+  - GitHub Checks API read for `2d1a2f154b5a8563abe2d824d275ce98ba2b8e52` showed failed Google Cloud Developer Connect runs `79907967157` and `79907967125`.
+  - Check output identified `runtime/src/types/guard.ts(15,23): Cannot find module '../../../ledger/baselines.json'`.
+  - `Dockerfile` now copies `ledger/baselines.json` into the runtime builder context and copies root/package sources needed by `runtime/iskraSpace` aliases.
+  - Local Docker daemon was unavailable, so a Dockerfile-layout simulation ran `npm ci && npm run build` for `runtime`, then `npm ci && npm run build` for `runtime/iskraSpace`, using only files copied by the Dockerfile; simulation passed.
+- **Status:** Local verified; remote Google Cloud confirmation pending after push.
+
+### EVI-20260607-006: Supabase Boundary And Exposure Checklist
+- **Assertion:** Release docs now distinguish direct `runtime/iskraSpace` Supabase requirements from engine/web retrieval and leave credential rotation as an owner action.
+- **Evidence:**
+  - `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` records that `runtime/iskraSpace` uses `gemini` `embedContent`, while repo-side `embed` is release-required for engine/web retrieval if promoted.
+  - `docs/operations/iskraspace_supabase_cleanup_hardening_runbook_2026-06-07.md` and `docs/operations/iskraspace_release_readiness_snapshot_2026-06-07.md` were updated with that split.
+  - `docs/operations/supabase_status_exposure_owner_checklist_2026-06-07.md` defines provider-side classification/rotation/audit steps without quoting removed values.
+  - Supabase changelog scan of <https://supabase.com/changelog.md> found release-relevant Edge Function/JWT/Data API/GraphQL notes and reinforces the need for a fresh advisor/API-exposure baseline before live mutation.
+- **Status:** Documentation verified; live mutation and credential classification remain pending owner-approved follow-up.

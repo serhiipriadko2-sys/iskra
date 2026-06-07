@@ -3,9 +3,10 @@
 Status: SAFE PLAN / NO LIVE MUTATION
 Date: 2026-06-07
 Scope: public release gate for `runtime/iskraSpace`
-Parent issue: https://github.com/serhiipriadko2-sys/iskra/issues/190
-Follow-up issue: https://github.com/serhiipriadko2-sys/iskra/issues/192
-Provenance baseline: https://github.com/serhiipriadko2-sys/iskra/pull/191
+Parent issue: #190
+Follow-up issue: #192
+Provenance baseline: #191
+Companion boundary decision: `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md`
 
 ## Purpose
 
@@ -22,12 +23,14 @@ This document does not change production. It defines the safe order for the next
 - Public release path: behavior directly needed by `runtime/iskraSpace` users.
 - Internal/support path: operator, import, backfill, maintenance, diagnostics, or one-time setup behavior.
 - Retire path: behavior that should be removed before public release unless a time-boxed ADR exception is accepted.
+- Engine/web retrieval path: repo-supported `packages/engine` or `apps/iskra-web` behavior that becomes release-required only if promoted into the public product boundary.
 
 ## Function Decisions
 
 | Function | Current decision | Release impact | Required action before public release |
 | --- | --- | --- | --- |
 | `gemini` | `release-required` | Public app AI bridge. | Keep. Verify deployed code matches repo source and auth path. |
+| `embed` | `release-required` for engine/web retrieval paths; conditional for direct `runtime/iskraSpace` release | Repository embedding bridge for engine/web retrieval paths. Current `runtime/iskraSpace` app path sends `embedContent` through `gemini`. | Keep repo source. Verify live deployment/source match, `verify_jwt=true`, bearer auth defense-in-depth, CORS, rate-limit posture, and env separation before promoting engine/web retrieval or a `gemini` + `embed` hybrid. |
 | `db-proxy` | `internal/support` | Powerful operator database proxy. Not a public feature. | Add owner, allowlist review, runbook, and expiry/disable policy. Do not expose as public app contract. |
 | `iskra-canon-import-1536` | `internal/support` | Canon import/provisioning endpoint. | Add owner/runbook or remove after import windows close. Because `verify_jwt=false`, require explicit protection or removal. |
 | `iskra-canon-backfill-1536` | `internal/support` | Embedding backfill/maintenance endpoint. | Add owner/runbook or remove after backfill. Because `verify_jwt=false`, require explicit protection or removal. |
@@ -42,7 +45,8 @@ Do this before any live mutation.
 - Confirm the latest live function list.
 - Confirm the latest migration list.
 - Confirm advisor output.
-- Confirm whether `runtime/iskraSpace` launch uses only `gemini`, or also uses `iskra.*` canon/RAG paths.
+- Confirm whether `runtime/iskraSpace` launch uses `gemini` + `embed`, only the `gemini` `embedContent` action, or also uses `iskra.*` canon/RAG paths.
+- Confirm whether `apps/iskra-web` or `packages/engine` retrieval is in public scope; if yes, `embed` becomes a direct release blocker.
 - Record the exact commit used for the cleanup PR.
 
 PASS means the cleanup PR is based on a current snapshot, not on old memory.
@@ -131,7 +135,7 @@ If a change touches service-role behavior, unauthenticated Edge Functions, grant
 - `db-proxy`, `iskra-canon-import-1536`, and `iskra-canon-backfill-1536` have owner/runbook/access/expiry decisions.
 - Release-critical security advisors are fixed or accepted by ADR.
 - Post-change Supabase advisor output is attached to #190 or #192.
-- `runtime/iskraSpace` production Supabase path is clear: `gemini` only, `iskra.*` canon/RAG, legacy `public.*`, or a documented hybrid.
+- `runtime/iskraSpace` production Supabase path is clear: `gemini` + `embed`, `gemini` with internal `embedContent`, `iskra.*` canon/RAG, legacy `public.*`, or a documented hybrid.
 
 ## Rollback
 
@@ -145,3 +149,4 @@ For future live changes, rollback must be defined in the specific SQL/function P
 - Release gate issue #190.
 - Cleanup issue #192.
 - Live Supabase snapshot from 2026-06-06 recorded in `docs/operations/iskraspace_supabase_provenance_2026-06-06.md`.
+- Repo-side `embed` source: `supabase/functions/embed/index.ts` and `[functions.embed] verify_jwt = true` in `supabase/config.toml`.

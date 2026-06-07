@@ -3,6 +3,7 @@ import { memoryService } from './memoryService';
 import { MemoryNode, MemoryNodeLayer, SearchFilters, SearchResult, Task, JournalEntry } from '../types';
 import { IskraAIService } from './geminiService';
 import { graphServiceSupabase } from './graphServiceSupabase';
+import { isSupabaseAvailable } from './supabaseClient';
 
 /**
  * Hybrid search: lexical (tf-idf-like) + semantic (embeddings).
@@ -193,7 +194,7 @@ class SearchService {
       })
     );
 
-    const isOnline = await import('./supabaseClient').then(m => m.isSupabaseAvailable()).catch(() => false);
+    const isOnline = await isSupabaseAvailable().catch(() => false);
     let cloudResults: SearchResult[] = [];
     if (isOnline) {
       try {

@@ -12,6 +12,7 @@ RUN cd runtime && npm ci
 
 # Copy runtime source
 COPY runtime/src ./runtime/src
+COPY ledger/baselines.json ./ledger/baselines.json
 COPY runtime/tsconfig.json ./runtime/
 COPY runtime/vitest.config.ts ./runtime/
 COPY runtime/eslint.config.js ./runtime/
@@ -27,6 +28,12 @@ WORKDIR /app
 
 # Copy built runtime from previous stage
 COPY --from=runtime-builder /app/runtime ./runtime
+COPY --from=runtime-builder /app/ledger ./ledger
+
+# Copy workspace sources used by iskraSpace Vite aliases and local file deps
+COPY package.json ./package.json
+COPY packages/core ./packages/core
+COPY packages/math ./packages/math
 
 # Copy iskraSpace package files
 COPY runtime/iskraSpace/package*.json ./runtime/iskraSpace/

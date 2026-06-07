@@ -46,6 +46,9 @@ jobs:
       - name: Verify package boundaries (no deep src imports)
         run: python tools/check_no_src_imports.py
 
+      - name: Verify no sensitive local status dumps
+        run: python tools/check_no_sensitive_status_dumps.py
+
       - name: Validate declarative SoT40 scope manifest
         run: python tools/verify_sot40_scope.py
 
