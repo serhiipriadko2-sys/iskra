@@ -122,3 +122,34 @@ Delta: release signal is separated from optional Vercel credential drift.
 D: GitHub check runs, Vercel job log, production workflow.
 Omega: 0.91 for failure classification; 0.75 for future Vercel deploy until secrets are configured and tested.
 Lambda: revise when Vercel secrets are added or Cloud Run target changes.
+
+## ADR-20260608-002: IskraSpace Uses a Dual-Provider AI Gateway
+
+### Context
+`runtime/iskraSpace` used the `gemini` Supabase Edge Function as the release AI bridge for generation, streaming, and embeddings. The product decision is to keep Gemini available while adding OpenAI as an optional second provider, without exposing provider keys in the browser and without live Supabase mutation in the repo PR.
+
+### Decision
+Keep `geminiService.ts` as the stable app-facing service and keep the default Edge Function slug as `gemini`. Add provider routing inside the Edge Function with `gemini` as default and `openai` as optional, selected by `VITE_AI_PROVIDER`/payload and server-side `AI_PROVIDER`/`AI_FALLBACK_PROVIDER`. Provider keys remain Supabase Edge Function secrets only.
+
+### Alternatives
+- Replace Gemini with OpenAI. Rejected because it creates unnecessary release risk and loses the current green path.
+- Build a separate `openai` Edge Function immediately. Deferred because it would require new live function governance while the existing authenticated gateway can support both providers.
+- Put OpenAI calls in the browser. Rejected because API keys must not enter Vite/client code.
+
+### Consequences / Price
+- The repo now supports Gemini-only, OpenAI-only, and hybrid fallback modes.
+- The function name remains historically `gemini`, so docs must describe it as an AI gateway to avoid semantic drift.
+- OpenAI streaming is compatible SSE in the first pass; native OpenAI streaming can be added after staged proof.
+- Live Supabase deploy still requires approval, secret configuration, and post-deploy smoke receipts.
+
+### Verification
+Repo source now routes `generateContent`, `streamGenerateContent`, and `embedContent` by provider. Frontend env supports `VITE_AI_PROVIDER` and generic `VITE_AI_EDGE_FUNCTION_SLUG` while preserving legacy Gemini slug aliases.
+
+### Rollback / Reversal Trigger
+Rollback provider routing if staged Edge Function smoke fails for default Gemini parity, if OpenAI provider output breaks app JSON parsing at unacceptable rates, or if a separate provider-specific Edge Function becomes the accepted governance boundary.
+
+### Delta
+Delta: Gemini remains the default path; OpenAI becomes a supported optional provider.
+D: frontend gateway source, Supabase Edge Function source, operations receipt.
+Omega: 0.82 until staged Supabase deploy/smoke confirms runtime behavior.
+Lambda: revise after live/staging Edge Function proof or if provider policy changes.

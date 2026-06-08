@@ -146,3 +146,11 @@
 - **Risk:** Vercel remains unverified until secrets are configured and manual dispatch is run. Supabase live diagnostic/support functions remain public-release blockers until removed, protected, or accepted by time-boxed ADR.
 - **Next:** Push focused PR and verify that normal `main` pushes no longer create a red automatic Vercel deploy check.
 - **Status:** Local verified; remote workflow confirmation pending after PR.
+
+### JRN-20260608-002: IskraSpace Dual AI Provider Gateway
+- **Context:** User accepted keeping both Gemini and OpenAI for `runtime/iskraSpace`, with provider keys kept out of the browser and no live Supabase mutation in this pass.
+- **Actions:** Added repo-side provider routing to the `gemini` Supabase Edge Function, kept Gemini as default, added OpenAI generation through Responses API and embeddings through the embeddings API, preserved native Gemini streaming, added client-safe `VITE_AI_PROVIDER`/`VITE_AI_EDGE_FUNCTION_SLUG` selectors, and documented the rollout boundary.
+- **Evidence:** Source changes in `runtime/iskraSpace/services/geminiService.ts` and `runtime/iskraSpace/supabase/functions/gemini/index.ts`; operation receipt `docs/operations/iskraspace_dual_ai_provider_gateway_2026-06-08.md`; ADR `ADR-20260608-002`.
+- **Risk:** OpenAI path is repo-implemented but not live-smoked; live Supabase function deployment still requires explicit approval, server-side secrets, fresh baseline, and post-deploy generation/stream/embed receipts.
+- **Next:** Push focused PR, then stage Supabase deploy only after explicit approval and fresh baseline.
+- **Status:** Local verified; live proof pending.

@@ -21,18 +21,26 @@ const model = "gemini-2.5-flash";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const GEMINI_EDGE_FUNCTION_SLUG = normalizeEdgeFunctionSlug(
-  import.meta.env.VITE_GEMINI_EDGE_FUNCTION_SLUG ||
+type AiProvider = 'gemini' | 'openai' | 'auto';
+const AI_PROVIDER = normalizeAiProvider(import.meta.env.VITE_AI_PROVIDER);
+const AI_EDGE_FUNCTION_SLUG = normalizeEdgeFunctionSlug(
+  import.meta.env.VITE_AI_EDGE_FUNCTION_SLUG ||
+    import.meta.env.VITE_GEMINI_EDGE_FUNCTION_SLUG ||
     import.meta.env.VITE_GEMINI_FUNCTION_SLUG ||
     'gemini'
 );
-const GEMINI_EDGE_FN_URL =
-  SUPABASE_URL && GEMINI_EDGE_FUNCTION_SLUG
-    ? `${SUPABASE_URL}/functions/v1/${GEMINI_EDGE_FUNCTION_SLUG}`
+const AI_EDGE_FN_URL =
+  SUPABASE_URL && AI_EDGE_FUNCTION_SLUG
+    ? `${SUPABASE_URL}/functions/v1/${AI_EDGE_FUNCTION_SLUG}`
     : '';
 
 function normalizeEdgeFunctionSlug(slug: string): string {
   return slug.trim().replace(/^\/+|\/+$/g, '');
+}
+
+function normalizeAiProvider(provider: string | undefined): AiProvider {
+  if (provider === 'openai' || provider === 'auto') return provider;
+  return 'gemini';
 }
 
 interface LegacyLiveSession {
@@ -65,8 +73,8 @@ const OFFLINE_MODE =
   Boolean(import.meta.env.VITEST) ||
   !SUPABASE_URL ||
   !SUPABASE_ANON_KEY ||
-  !GEMINI_EDGE_FUNCTION_SLUG ||
-  !GEMINI_EDGE_FN_URL;
+  !AI_EDGE_FUNCTION_SLUG ||
+  !AI_EDGE_FN_URL;
 
 /**
  * Response Mode Instructions
@@ -110,7 +118,7 @@ export function getResponseModeInstruction(mode?: ResponseMode): string {
  * Use Supabase Edge Function proxy via this service instead.
  */
 export function getAI(): LegacyGeminiClient {
-  throw new Error('Direct Gemini client is disabled in frontend. Use Supabase Edge Function proxy (services/geminiService).');
+  throw new Error('Direct AI client is disabled in frontend. Use Supabase Edge Function proxy (services/geminiService).');
 }
 
 export function isOnlineAIAvailable(): boolean {
@@ -179,17 +187,20 @@ function extractTextFromGeminiResponse(data: unknown): string {
   return '';
 }
 
-async function callGeminiEdgeFunction(payload: Record<string, unknown>): Promise<Response> {
+async function callAiEdgeFunction(payload: Record<string, unknown>): Promise<Response> {
   const accessToken = await getAccessToken();
 
-  const res = await fetch(GEMINI_EDGE_FN_URL, {
+  const res = await fetch(AI_EDGE_FN_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       apikey: SUPABASE_ANON_KEY,
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      provider: AI_PROVIDER,
+      ...payload,
+    }),
   });
   return res;
 }
@@ -200,7 +211,7 @@ async function generateContentText(args: {
   config?: GeminiProxyGenerateConfig;
 }): Promise<string> {
   const config = args.config ?? {};
-  const res = await callGeminiEdgeFunction({
+  const res = await callAiEdgeFunction({
     action: 'generateContent',
     model: args.model,
     contents: toGeminiContents(args.contents),
@@ -213,12 +224,12 @@ async function generateContentText(args: {
 
   if (!res.ok) {
     const txt = await res.text();
-    throw new Error(`Gemini proxy error: ${res.status} ${txt}`);
+    throw new Error(`AI proxy error: ${res.status} ${txt}`);
   }
 
   const data = await res.json();
   const text = extractTextFromGeminiResponse(data);
-  if (!text) throw new Error('Gemini proxy returned empty text');
+  if (!text) throw new Error('AI proxy returned empty text');
   return text;
 }
 
@@ -231,7 +242,7 @@ async function* streamGenerateContentText(args: {
 
   // Best-effort streaming: if anything goes wrong, fall back to single-chunk generation.
   try {
-    const res = await callGeminiEdgeFunction({
+    const res = await callAiEdgeFunction({
       action: 'streamGenerateContent',
       model: args.model,
       contents: args.contents,
@@ -244,7 +255,7 @@ async function* streamGenerateContentText(args: {
 
     if (!res.ok || !res.body) {
       const txt = await res.text();
-      throw new Error(`Gemini stream proxy error: ${res.status} ${txt}`);
+      throw new Error(`AI stream proxy error: ${res.status} ${txt}`);
     }
 
     const reader = res.body.getReader();
@@ -299,7 +310,7 @@ async function* streamGenerateContentText(args: {
 }
 
 async function embedContentValues(text: string): Promise<number[]> {
-  const res = await callGeminiEdgeFunction({
+  const res = await callAiEdgeFunction({
     action: 'embedContent',
     model: 'text-embedding-004',
     content: { parts: [{ text }] },
@@ -307,7 +318,7 @@ async function embedContentValues(text: string): Promise<number[]> {
 
   if (!res.ok) {
     const txt = await res.text();
-    throw new Error(`Gemini embed proxy error: ${res.status} ${txt}`);
+    throw new Error(`AI embed proxy error: ${res.status} ${txt}`);
   }
 
   const data = await res.json();

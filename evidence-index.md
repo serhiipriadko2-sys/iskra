@@ -201,3 +201,13 @@
   - `docs/operations/iskraspace_supabase_live_cleanup_plan_2026-06-08.md` defines diagnostic removal, time-boxed ADR exception criteria, owner/access/expiry decisions for support functions, and pre-mutation evidence.
   - No live Supabase mutation was performed in this pass.
 - **Status:** Plan recorded; execution pending explicit approval.
+
+### EVI-20260608-004: IskraSpace Dual AI Provider Gateway
+- **Assertion:** `runtime/iskraSpace` now has repo-side support for Gemini default plus optional OpenAI routing without browser-side provider keys.
+- **Evidence:**
+  - `runtime/iskraSpace/services/geminiService.ts` adds client-safe `VITE_AI_PROVIDER` and `VITE_AI_EDGE_FUNCTION_SLUG` support while preserving the existing app-facing service API.
+  - `runtime/iskraSpace/supabase/functions/gemini/index.ts` routes `generateContent`, `streamGenerateContent`, and `embedContent` across Gemini/OpenAI providers.
+  - `runtime/iskraSpace/.env.example` documents server-side `GEMINI_API_KEY`, `OPENAI_API_KEY`, `AI_PROVIDER`, `AI_FALLBACK_PROVIDER`, and model envs.
+  - `docs/operations/iskraspace_dual_ai_provider_gateway_2026-06-08.md` records rollout, security boundary, and no-live-mutation status.
+  - `ADR-20260608-002` records the durable provider-boundary decision.
+- **Status:** Repo implementation pending local gates and PR; live Supabase smoke pending explicit approval.
