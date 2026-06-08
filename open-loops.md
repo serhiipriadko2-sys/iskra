@@ -34,9 +34,9 @@
 
 ### OPN-20260607-002: Current Baseline GitHub Checks Are Red
 - **Description:** GitHub check-runs for merge commit `17056d685864428b2134c4dde630b296090410fd` show two completed Google Cloud failures: `rmgpgab-iskra-europe-west1-serhiipriadko2-sys-iskra--maraw` and `cloudrun-iskra-git-europe-west8-serhiipriadko2-sys-iskra-mcnh`.
-- **Status:** Reopened after PR #195 merge; repo-side port repair local-verified, remote confirmation pending.
-- **Risk:** Public release can still fail deployment even though repository build/test gates are green.
-- **Mitigation:** The older Docker build-context failure was fixed before merge. The post-merge failures are deploy-stage: public summaries show build/push success and deploy failure. Current branch moves nginx/Docker healthcheck/EXPOSE/docker-compose to container port `8080` to match the Cloud Run default ingress contract. Local Docker build and smoke on container port `8080` passed. Push a focused PR and verify the Google Cloud checks on the new head before release sign-off.
+- **Status:** Resolved for Cloud Run after PR #196 merge.
+- **Risk:** Future Google Cloud regressions remain possible, but current Cloud Run checks are green on `e8236ace454aacdabb50cdfaa54b674971f88954`.
+- **Mitigation:** Keep Cloud Run as the mandatory deploy contour and inspect Google Cloud summaries first if this loop reopens.
 
 ### OPN-20260607-003: Supabase Live Function Drift Before Public Release
 - **Description:** Fresh read-only Supabase baseline lists live `gemini`, `db-proxy`, `iskra-canon-import-1536`, `iskra-canon-backfill-1536`, and `iskra-canon-import-diagnostic`; repo-side `embed` exists but is absent from the live function list.
@@ -49,3 +49,9 @@
 - **Status:** Resolved locally; final gate passed.
 - **Risk:** Remote or future builds can regress if regex-like content is reintroduced into Tailwind-scanned files or large dependencies collapse back into the main chunk.
 - **Mitigation:** `runtime/iskraSpace/services/memoryService.ts` now avoids the Tailwind-scanned `/[-:.]/g` regex literal, Supabase modules use static imports where needed, and `runtime/iskraSpace/vite.config.ts` defines manual chunks for React, Supabase, Gemini SDK, and runtime/core/math sources. Final `pnpm --dir runtime/iskraSpace run build` output was warning-free for the prior CSS/mixed-import/chunk warnings.
+
+### OPN-20260608-001: Optional Vercel Credential Contour
+- **Description:** `Deploy to Vercel` failed on merge commit `e8236ace454aacdabb50cdfaa54b674971f88954` because Vercel credentials were empty in the GitHub Actions job.
+- **Status:** Optional/manual contour planned; automatic main-push release gate removal pending PR.
+- **Risk:** If Vercel is treated as mandatory without configured secrets, release readiness will be falsely red despite Cloud Run being green.
+- **Mitigation:** Run Vercel only by manual workflow dispatch with `deploy_vercel=true`; fail fast when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, or `VERCEL_PROJECT_ID` are missing; keep Cloud Run as mandatory deploy target until Vercel secrets are configured and intentionally promoted.
