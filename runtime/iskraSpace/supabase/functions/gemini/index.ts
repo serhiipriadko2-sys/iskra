@@ -18,6 +18,7 @@ const DEFAULT_GEMINI_TEXT_MODEL = 'gemini-2.5-flash';
 const DEFAULT_GEMINI_EMBEDDING_MODEL = 'gemini-embedding-001';
 const DEFAULT_OPENAI_TEXT_MODEL = 'gpt-5';
 const DEFAULT_OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small';
+const EMBEDDING_DIMENSIONS = 1536;
 
 const corsHeaders = {
   'access-control-allow-origin': '*',
@@ -243,6 +244,7 @@ async function embedWithGemini(payload: AiProxyPayload) {
   const response = await ai.models.embedContent({
     model: modelFor('gemini', 'embedContent', payload.model),
     contents: payload.content as never,
+    config: { outputDimensionality: EMBEDDING_DIMENSIONS },
   });
   const maybeEmbedding = response as {
     embedding?: { values?: unknown };
