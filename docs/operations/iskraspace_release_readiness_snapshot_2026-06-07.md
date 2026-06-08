@@ -1,6 +1,6 @@
 # iskraSpace Release Readiness Snapshot
 
-Status: PARTIAL / NO LIVE MUTATION
+Status: PARTIAL / CLOUD RUN GREEN / VERCEL OPTIONAL / NO LIVE MUTATION
 Captured: 2026-06-07T11:06:25+03:00
 Scope: public release gate for `runtime/iskraSpace`
 Branch: `codex/iskra-release-readiness-plan`
@@ -65,6 +65,20 @@ Installed extensions with release relevance:
 - `supabase_vault` installed in `vault`.
 
 ## Current GitHub Check Status
+
+2026-06-08 update:
+
+- PR #196 is merged into `main` at
+  `e8236ace454aacdabb50cdfaa54b674971f88954`.
+- Current checks on `e8236ac` show `Build and Test`, `Build Docker Image`, both
+  Google Cloud / Cloud Run checks, `ingest-stage-checks`, and `hash-check`
+  completed successfully.
+- `Deploy to Vercel` failed because the job received empty Vercel credentials:
+  no `VERCEL_TOKEN`, no `VERCEL_ORG_ID`, and no `VERCEL_PROJECT_ID`.
+- Cloud Run is now the mandatory production deploy contour for release gate
+  purposes.
+- Vercel is optional/manual until credentials are configured and explicitly
+  reintroduced as mandatory.
 
 Post-merge update on 2026-06-07:
 
@@ -138,8 +152,8 @@ Final local result in this implementation pass:
 
 ## Release Blockers
 
-- Current GitHub check-runs are red for merge commit `17056d685864428b2134c4dde630b296090410fd`; the current branch has a Cloud Run port repair and local Docker build/smoke proof, but remote confirmation is pending after push.
-- PR #195 is merged; release gate remains partial because merge-commit Google Cloud deploy checks are red.
+- Cloud Run deploy checks are green on merge commit `e8236ace454aacdabb50cdfaa54b674971f88954`.
+- Vercel is no longer a mandatory release gate; it remains optional/manual until `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` are configured.
 - Live `embed` is absent; this remains a blocker only if `apps/iskra-web`/engine retrieval is promoted or if the public release requires the `gemini` + `embed` hybrid.
 - Live `iskra-canon-import-diagnostic` remains ACTIVE with `verify_jwt=false`.
 - Live `iskra-canon-import-1536` and `iskra-canon-backfill-1536` remain ACTIVE with `verify_jwt=false`.
@@ -149,6 +163,7 @@ Final local result in this implementation pass:
 
 ## Next Safe Step
 
-Open a focused PR with the local GraphRAG/type/security/docs changes. Do not
-apply live Supabase mutation from this PR. The next live-facing PR should carry a
-fresh advisor/migration baseline, expected delta, rollback, and explicit approval.
+Open a focused PR that makes Vercel optional/manual in the production workflow
+and records the Supabase live cleanup plan. Do not apply live Supabase mutation
+from this PR. The next live-facing PR should carry a fresh advisor/migration
+baseline, expected delta, rollback, and explicit approval.

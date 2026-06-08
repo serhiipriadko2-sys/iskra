@@ -174,3 +174,30 @@
   - Diagnostic source posture responds without method/auth gate and reports env-presence checks; no secret values were recorded.
   - Operation receipt: `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-07.md`.
 - **Status:** Partial; advisors/grants/logs/app data path and owner decisions remain pending.
+
+### EVI-20260608-001: PR #196 Cloud Run Closure And Vercel Credential Failure
+- **Assertion:** Cloud Run release deployment is green after PR #196, and the remaining Vercel failure is a credential/configuration contour rather than an app build failure.
+- **Evidence:**
+  - Local `main` and `origin/main` resolve to `e8236ace454aacdabb50cdfaa54b674971f88954`.
+  - Public GitHub PR lookup showed PR #196 `closed`, `merged=true`, merge commit `e8236ace454aacdabb50cdfaa54b674971f88954`.
+  - Current checks on `e8236ac` show `Build and Test`, `Build Docker Image`, both Google Cloud / Cloud Run checks, `ingest-stage-checks`, and `hash-check` success.
+  - `Deploy to Vercel` failed with empty Vercel credential environment and `No existing credentials found`.
+- **Status:** Cloud Run verified; Vercel optional/manual until credentials are configured.
+
+### EVI-20260608-002: Vercel Optional Workflow Boundary
+- **Assertion:** The production workflow no longer treats Vercel as an automatic main-push release gate.
+- **Evidence:**
+  - `.github/workflows/production_deploy.yml` adds manual `workflow_dispatch` input `deploy_vercel`.
+  - `deploy-vercel` runs only when `github.event_name == 'workflow_dispatch'` and `deploy_vercel == true`.
+  - The job validates `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` before calling the Vercel CLI.
+  - `VERCEL_TELEMETRY_DISABLED` is set for the Vercel job.
+  - Local PyYAML parse passed and confirmed `workflow_dispatch.inputs.deploy_vercel` plus the `deploy-vercel` job condition.
+  - Local guards passed: sensitive-status dump check, Supabase Edge security gate, unreleased gate, no-deep-src imports, ledger verification with 440 files, and `git diff --check`.
+- **Status:** Local verified; remote confirmation pending after PR.
+
+### EVI-20260608-003: Supabase Live Cleanup Plan
+- **Assertion:** Supabase live cleanup is planned as a separate approval-gated pass, not mixed into the Vercel workflow PR.
+- **Evidence:**
+  - `docs/operations/iskraspace_supabase_live_cleanup_plan_2026-06-08.md` defines diagnostic removal, time-boxed ADR exception criteria, owner/access/expiry decisions for support functions, and pre-mutation evidence.
+  - No live Supabase mutation was performed in this pass.
+- **Status:** Plan recorded; execution pending explicit approval.

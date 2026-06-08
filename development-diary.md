@@ -138,3 +138,11 @@
 - **Risk:** Google Cloud deploy stderr is not available through the public check summary, so the port root cause remains an evidence-backed inference until remote checks pass. Supabase advisors/grants/logs and credential owner classification remain open.
 - **Next:** Commit and push `codex/iskra-post-merge-supabase-baseline`, open/attach PR, and verify Google Cloud checks on the new head. No live Supabase mutation or Git history rewrite without explicit approval.
 - **Status:** Local verified; remote deploy and Supabase owner decisions pending.
+
+### JRN-20260608-001: Vercel Optional Gate And Supabase Cleanup Plan
+- **Context:** PR #196 is merged into `main` at `e8236ace454aacdabb50cdfaa54b674971f88954`. Current checks show `Build and Test`, `Build Docker Image`, both Google Cloud / Cloud Run checks, `ingest-stage-checks`, and `hash-check` passed. `Deploy to Vercel` failed because Vercel credentials were empty in the job environment.
+- **Actions:** Changed the production workflow so Vercel deploy runs only by manual `workflow_dispatch` with `deploy_vercel=true`, added fail-fast validation for `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID`, disabled Vercel telemetry, and kept Cloud Run as the mandatory production deploy contour. Added `docs/operations/iskraspace_supabase_live_cleanup_plan_2026-06-08.md`.
+- **Evidence:** GitHub job log showed empty Vercel credential env and `vercel` error `No existing credentials found`. Supabase connector baseline still lists `gemini`/`db-proxy` with `verify_jwt=true`, canon import/backfill/diagnostic with `verify_jwt=false`, and no live `embed`.
+- **Risk:** Vercel remains unverified until secrets are configured and manual dispatch is run. Supabase live diagnostic/support functions remain public-release blockers until removed, protected, or accepted by time-boxed ADR.
+- **Next:** Push focused PR and verify that normal `main` pushes no longer create a red automatic Vercel deploy check.
+- **Status:** Local verified; remote workflow confirmation pending after PR.

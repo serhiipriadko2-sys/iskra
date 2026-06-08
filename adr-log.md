@@ -93,3 +93,32 @@ Delta: production image contract now matches Cloud Run default ingress port.
 D: public GitHub check summary, Docker/nginx files, official Cloud Run container contract, local Docker smoke.
 Omega: 0.89 locally; 0.74 for remote root cause until Google Cloud checks pass.
 Lambda: revise on failed post-push deploy or explicit Cloud Run port override evidence.
+
+## ADR-20260608-001: Vercel Is Optional Manual Deploy Until Credentials Are Configured
+
+### Context
+After PR #196 merged, Cloud Run checks passed on `e8236ace454aacdabb50cdfaa54b674971f88954`, but the GitHub Actions `Deploy to Vercel` job failed because `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` were empty.
+
+### Decision
+Treat Cloud Run as the mandatory production deploy contour for `runtime/iskraSpace`. Vercel is optional and manual-only until credentials are configured and a separate decision promotes it back into the mandatory release gate.
+
+### Alternatives
+- Keep Vercel mandatory and require immediate secret configuration. Rejected because Cloud Run is already green and the Vercel failure is credential contour drift, not an app failure.
+- Remove Vercel deploy permanently. Rejected because Vercel may still be useful as a secondary deployment path after credentials are configured.
+
+### Consequences / Price
+- Normal `main` pushes should no longer fail because of missing Vercel credentials.
+- Manual Vercel dispatch without credentials fails fast with explicit missing-secret errors.
+- Release readiness must still account for Supabase live blockers.
+
+### Verification
+Workflow now exposes `workflow_dispatch.deploy_vercel`, gates `deploy-vercel` on manual dispatch, validates all required Vercel secrets before CLI calls, and disables Vercel telemetry for that job.
+
+### Rollback / Reversal Trigger
+Promote Vercel back to mandatory only after `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID` are configured, manual production deploy passes, and a release decision records Vercel as required.
+
+### Delta
+Delta: release signal is separated from optional Vercel credential drift.
+D: GitHub check runs, Vercel job log, production workflow.
+Omega: 0.91 for failure classification; 0.75 for future Vercel deploy until secrets are configured and tested.
+Lambda: revise when Vercel secrets are added or Cloud Run target changes.
