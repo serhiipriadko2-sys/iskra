@@ -55,3 +55,9 @@
 - **Status:** Optional/manual contour planned; automatic main-push release gate removal pending PR.
 - **Risk:** If Vercel is treated as mandatory without configured secrets, release readiness will be falsely red despite Cloud Run being green.
 - **Mitigation:** Run Vercel only by manual workflow dispatch with `deploy_vercel=true`; fail fast when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, or `VERCEL_PROJECT_ID` are missing; keep Cloud Run as mandatory deploy target until Vercel secrets are configured and intentionally promoted.
+
+### OPN-20260608-002: Dual AI Provider Live Smoke
+- **Description:** Repo source now supports Gemini default plus optional OpenAI routing in the `gemini` Supabase Edge Function.
+- **Status:** Open; repo implementation pending PR verification and live/staging deploy approval.
+- **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior are not proven against live Supabase secrets/runtime yet.
+- **Mitigation:** Before production release, refresh the Supabase read-only baseline, configure server-side `OPENAI_API_KEY`/model env only in Supabase, deploy only after explicit approval, and smoke generation, streaming, embeddings, and fallback without printing secret values.

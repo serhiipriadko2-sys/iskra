@@ -14,6 +14,11 @@ Supabase drift are closed or explicitly accepted. This snapshot separates the
 direct `runtime/iskraSpace` `gemini` path from the repo-side `embed` retrieval
 path used by engine/web surfaces.
 
+2026-06-08 repo-source update: the `gemini` Edge Function source now acts as a
+dual-provider AI gateway with Gemini as default and OpenAI as an optional
+provider. The live Supabase baseline in this snapshot has not been mutated or
+re-smoked for OpenAI yet.
+
 ## Runtime Dependency Map
 
 Observed from `runtime/iskraSpace/package.json`, `vite.config.ts`, and imports:
@@ -23,7 +28,7 @@ Observed from `runtime/iskraSpace/package.json`, `vite.config.ts`, and imports:
 - Runtime aliases: `@iskra/runtime`, `@iskra/math`, and `@iskra/core` resolve to local source paths in Vite.
 - External runtime services: `@supabase/supabase-js`, `@google/genai`, React 19.
 - Supabase session path: `services/supabaseClient.ts` reads `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, exposes `isSupabaseConfigured`, persists Auth sessions, and can create anonymous Auth sessions unless `VITE_ENABLE_ANONYMOUS_AUTH=false`.
-- Gemini path: `services/geminiService.ts` calls `${SUPABASE_URL}/functions/v1/gemini` and uses the Supabase access token path.
+- AI gateway path: `services/geminiService.ts` calls `${SUPABASE_URL}/functions/v1/gemini` by default, uses the Supabase access token path, and can select `gemini`, `openai`, or `auto` through client-safe provider routing.
 - Embedding path in `runtime/iskraSpace`: `geminiService.ts` sends `embedContent` through the `gemini` function.
 - Repo-side `embed` path outside `runtime/iskraSpace`: `packages/engine/src/services/edgeEmbeddings.ts` and `apps/iskra-web/src/engineInstance.ts` use the Supabase `embed` function.
 - PWA path: `index.html` registers `public/service-worker.js`; the service worker excludes Gemini/Supabase/network API paths from cache.
@@ -50,8 +55,8 @@ Live Edge Functions observed on 2026-06-07:
 
 Repo-side function posture:
 
-- `runtime/iskraSpace/supabase/functions/gemini/index.ts` has CORS handling, requires POST, reads `GEMINI_API_KEY` from Edge Function environment, and supports `generateContent`, `streamGenerateContent`, and `embedContent`.
-- Live `gemini` function is ACTIVE with `verify_jwt=true`. Connector-read source materially matches the repo-side Gemini proxy shape.
+- `runtime/iskraSpace/supabase/functions/gemini/index.ts` has CORS handling, requires POST, keeps provider keys server-side, routes Gemini/OpenAI providers, and supports `generateContent`, `streamGenerateContent`, and `embedContent`.
+- Live `gemini` function is ACTIVE with `verify_jwt=true`. The 2026-06-07 connector-read source materially matched the older Gemini-only proxy shape; the 2026-06-08 dual-provider repo source still requires live/staging deploy proof before it can be treated as live behavior.
 - `supabase/functions/embed/index.ts` requires an Authorization bearer header, has CORS handling, has optional per-worker rate limiting via `EMBED_RL_WINDOW_MS` and `EMBED_RL_MAX`, and `supabase/config.toml` pins `[functions.embed] verify_jwt = true`.
 - `embed` is not deployed in the fresh live function list; the companion boundary decision documents that this is a blocker only if engine/web retrieval is promoted into the public path.
 - Repo-side `runtime/iskraSpace/supabase/functions/kain/index.ts` exists, but no app caller or live deployment was observed in this snapshot.

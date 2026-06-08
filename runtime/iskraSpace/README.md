@@ -33,11 +33,14 @@ npm install
 # Configure environment
 cp .env.example .env.local  # Add VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (client-safe)
 
-# Configure server-side Gemini key (Supabase Edge Function env)
-# - Set GEMINI_API_KEY in Supabase project (do NOT put it into Vite env)
+# Configure server-side AI provider keys (Supabase Edge Function env)
+# - Default: AI_PROVIDER=gemini and GEMINI_API_KEY=...
+# - Optional: AI_PROVIDER=openai and OPENAI_API_KEY=...
+# - Optional fallback: AI_FALLBACK_PROVIDER=gemini or openai
+# - Do NOT put provider API keys into Vite env
 # - Deploy: supabase functions deploy gemini
 #
-# The frontend must never embed Gemini keys.
+# The frontend must never embed Gemini or OpenAI keys.
 
 # Start development server
 npm run dev
@@ -62,7 +65,7 @@ npm run dev
 | Layer | Technology |
 |-------|------------|
 | Frontend | React 19, TypeScript 5.8, Vite 6.2 |
-| AI | Google Gemini API |
+| AI | Supabase Edge AI gateway (Gemini default, OpenAI optional) |
 | Database | Supabase (PostgreSQL + GraphRAG) |
 | Testing | Vitest, Playwright |
 
@@ -128,7 +131,7 @@ Every ISKRA response includes:
 ## Services Reference
 
 ### Tier 1: Core AI Pipeline
-- `geminiService` (830 LoC) — AI generation, streaming
+- `geminiService` — AI gateway client for generation, streaming, and embeddings
 - `policyEngine` (556 LoC) — Playbook routing
 - `ragService` (757 LoC) — RAG + SIFT protocol
 - `evalService` (755 LoC) — 5-metric quality assessment
