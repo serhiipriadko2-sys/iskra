@@ -15,9 +15,10 @@ type AiProxyPayload = {
 };
 
 const DEFAULT_GEMINI_TEXT_MODEL = 'gemini-2.5-flash';
-const DEFAULT_GEMINI_EMBEDDING_MODEL = 'text-embedding-004';
+const DEFAULT_GEMINI_EMBEDDING_MODEL = 'gemini-embedding-001';
 const DEFAULT_OPENAI_TEXT_MODEL = 'gpt-5';
 const DEFAULT_OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small';
+const EMBEDDING_DIMENSIONS = 1536;
 
 const corsHeaders = {
   'access-control-allow-origin': '*',
@@ -63,8 +64,9 @@ function providerSequence(payload: AiProxyPayload): AiProvider[] {
 
 function modelFor(provider: AiProvider, action: AiAction, requestedModel: unknown): string {
   if (provider === 'gemini') {
+    if (action === 'embedContent') return DEFAULT_GEMINI_EMBEDDING_MODEL;
     if (typeof requestedModel === 'string' && requestedModel.trim()) return requestedModel;
-    return action === 'embedContent' ? DEFAULT_GEMINI_EMBEDDING_MODEL : DEFAULT_GEMINI_TEXT_MODEL;
+    return DEFAULT_GEMINI_TEXT_MODEL;
   }
 
   if (action === 'embedContent') {
@@ -239,10 +241,22 @@ async function generateWithOpenAi(payload: AiProxyPayload) {
 
 async function embedWithGemini(payload: AiProxyPayload) {
   const ai = getGeminiClient();
-  return ai.models.embedContent({
+  const response = await ai.models.embedContent({
     model: modelFor('gemini', 'embedContent', payload.model),
     contents: payload.content as never,
+    config: { outputDimensionality: EMBEDDING_DIMENSIONS },
   });
+  const maybeEmbedding = response as {
+    embedding?: { values?: unknown };
+    embeddings?: Array<{ values?: unknown }>;
+  };
+  const values = maybeEmbedding.embedding?.values ?? maybeEmbedding.embeddings?.[0]?.values;
+
+  return {
+    embedding: {
+      values: Array.isArray(values) ? values : [],
+    },
+  };
 }
 
 async function embedWithOpenAi(payload: AiProxyPayload) {

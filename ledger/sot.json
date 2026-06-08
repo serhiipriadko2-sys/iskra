@@ -277,7 +277,7 @@
     "runtime/iskraSpace/SERVICES.md": "5a887e09971e63f40e563e748320e9cd9989adb306b53162c8a9356a5cc1b26b",
     "runtime/iskraSpace/SIFT_MULTI_STEP_GUIDE.md": "d9c1b85818eb50c06418390872679ff1c20d0f2703d7eed64fdac384466ccc1b",
     "runtime/iskraSpace/supabase/functions/gemini/deno.json": "9926e455c902c7ffe1f19821ea0e43e4555c9abfdeba3fb244e326c1b2da8367",
-    "runtime/iskraSpace/supabase/functions/gemini/index.ts": "8e99d254067bcafc2635c90bd3113e7dd86bd90993c33b785015b841a843cc6d",
+    "runtime/iskraSpace/supabase/functions/gemini/index.ts": "6139561764a1e790e1df6a7c76a44ebd1fbab1d79238fab55488e18de7c96a84",
     "runtime/iskraSpace/supabase/functions/kain/index.ts": "e4e7000c8df11ff81163b2fa002c2e5481bec5dda0457478a55c04e7eccdd82d",
     "runtime/iskraSpace/supabase/schema.sql": "ab8741f6cb789baa2ad77bb1c2cb5573cbd818c005f266a59973ca629e39ab51",
     "runtime/iskraSpace/supabase_graphrag_migration.sql": "1745a3ebc41b57da294738fca8b7687815fb79d884b2219e8ab9f4e760991e44",
