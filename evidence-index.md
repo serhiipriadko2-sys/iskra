@@ -211,3 +211,11 @@
   - `docs/operations/iskraspace_dual_ai_provider_gateway_2026-06-08.md` records rollout, security boundary, and no-live-mutation status.
   - `ADR-20260608-002` records the durable provider-boundary decision.
 - **Status:** Repo implementation pending local gates and PR; live Supabase smoke pending explicit approval.
+
+### EVI-20260608-005: PR #198 Main Check Baseline
+- **Assertion:** The dual-provider AI gateway repo change is merged and the `main` branch check baseline is green.
+- **Evidence:**
+  - PR #198 is merged into `main` at merge commit `7784811`.
+  - Check-runs on `7784811` show `Deploy to Vercel` skipped as expected.
+  - Check-runs on `7784811` show `Build Docker Image`, `e2e`, `Deploy to GitHub Pages`, `Build iskraSpace`, `Build and Test`, `build-and-test`, `hash-check`, `ingest-stage-checks`, and both Google Cloud / Cloud Run checks completed success.
+- **Status:** Repo/main verified; staged/live Supabase provider smoke remains pending.

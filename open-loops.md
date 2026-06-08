@@ -58,6 +58,6 @@
 
 ### OPN-20260608-002: Dual AI Provider Live Smoke
 - **Description:** Repo source now supports Gemini default plus optional OpenAI routing in the `gemini` Supabase Edge Function.
-- **Status:** Open; repo implementation pending PR verification and live/staging deploy approval.
+- **Status:** Open; repo implementation merged in PR #198 and main checks are green, but live/staging deploy proof is pending approval.
 - **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior are not proven against live Supabase secrets/runtime yet.
 - **Mitigation:** Before production release, refresh the Supabase read-only baseline, configure server-side `OPENAI_API_KEY`/model env only in Supabase, deploy only after explicit approval, and smoke generation, streaming, embeddings, and fallback without printing secret values.
