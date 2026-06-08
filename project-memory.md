@@ -38,3 +38,4 @@
 - **[FACT] `Deploy to Vercel` failed because Vercel credentials were empty in the GitHub Actions job, not because the app build failed. Cloud Run is the mandatory production deploy contour; Vercel is optional/manual until secrets are configured.**
 - **[FACT] Supabase live cleanup remains separate and approval-gated: diagnostic/support functions must be removed, protected, or accepted by time-boxed ADR before public release sign-off.**
 - **[FACT] `runtime/iskraSpace` repo source now supports a dual-provider AI gateway: Gemini remains default, OpenAI is optional through the same Supabase Edge Function boundary, and provider keys remain server-side. Live Supabase deploy/smoke is still pending explicit approval.**
+- **[FACT] PR #198 is merged into `main` at `7784811`; post-merge checks are green for repo/build/e2e/Cloud Run/GitHub Pages/hash/ingest, and Vercel is skipped as optional/manual.**

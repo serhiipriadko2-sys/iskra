@@ -154,3 +154,11 @@
 - **Risk:** OpenAI path is repo-implemented but not live-smoked; live Supabase function deployment still requires explicit approval, server-side secrets, fresh baseline, and post-deploy generation/stream/embed receipts.
 - **Next:** Push focused PR, then stage Supabase deploy only after explicit approval and fresh baseline.
 - **Status:** Local verified; live proof pending.
+
+### JRN-20260608-003: PR #198 Merge And Main Check Baseline
+- **Context:** PR #198 (`Add dual AI provider gateway for IskraSpace`) was merged into `main`.
+- **Actions:** Fast-forwarded local `main` to merge commit `7784811`; checked GitHub check-runs on the merge commit.
+- **Evidence:** `Deploy to Vercel` completed `skipped`; `Build Docker Image`, `e2e`, `Deploy to GitHub Pages`, `Build iskraSpace`, `Build and Test`, `build-and-test`, `hash-check`, `ingest-stage-checks`, and both Google Cloud / Cloud Run checks completed `success`.
+- **Risk:** This proves repo/CI release contour only. The OpenAI provider path is not live-smoked until Supabase Edge Function secrets are configured and the function is deployed after explicit approval.
+- **Next:** Prepare or execute a staged Supabase smoke only after fresh read-only baseline and approval.
+- **Status:** Repo/main verified; live Supabase proof pending.

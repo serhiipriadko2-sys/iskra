@@ -85,6 +85,19 @@ Installed extensions with release relevance:
 - Vercel is optional/manual until credentials are configured and explicitly
   reintroduced as mandatory.
 
+2026-06-08 PR #198 update:
+
+- PR #198 is merged into `main` at `7784811`.
+- Post-merge checks on `7784811` show `Build Docker Image`, `e2e`, `Deploy to
+  GitHub Pages`, `Build iskraSpace`, `Build and Test`, `build-and-test`,
+  `hash-check`, `ingest-stage-checks`, and both Google Cloud / Cloud Run checks
+  completed successfully.
+- `Deploy to Vercel` completed `skipped`, matching the optional/manual deploy
+  boundary.
+- The dual-provider AI gateway is now repo/main verified, but the OpenAI path
+  is not live Supabase behavior until Edge Function secrets are configured,
+  deployment is explicitly approved, and generation/stream/embed smoke passes.
+
 Post-merge update on 2026-06-07:
 
 - PR #195 is merged.
