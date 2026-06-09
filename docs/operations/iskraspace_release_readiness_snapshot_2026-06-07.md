@@ -116,6 +116,17 @@ Installed extensions with release relevance:
 - Fresh read-only Supabase baseline:
   `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md`.
 
+2026-06-09 PR #202 and cleanup approval update:
+
+- PR #202 is merged into `main` at `169b16b790e4e2c7130b4bf2ef2176515ee43cbc`.
+- Observed post-merge checks on `169b16b` show `hash-check`,
+  `ingest-stage-checks`, and both Google Cloud / Cloud Run checks succeeded.
+- The cleanup execution boundary is now explicit in
+  `docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md`.
+- No live Supabase mutation has occurred in this packet.
+- Supabase advisors are now available through the connector and are summarized
+  as hardening work separate from first Edge Function cleanup.
+
 Post-merge update on 2026-06-07:
 
 - PR #195 is merged.
@@ -194,12 +205,12 @@ Final local result in this implementation pass:
 - Live `iskra-canon-import-diagnostic` remains ACTIVE with `verify_jwt=false`.
 - Live `iskra-canon-import-1536` and `iskra-canon-backfill-1536` remain ACTIVE with `verify_jwt=false`.
 - Owner/runbook/access/expiry decisions for `db-proxy` and canon import/backfill functions are still required.
-- Advisor baseline is only partially refreshed in this pass because available read-only connector tools exposed functions/projects/extensions, not full advisors or migration metadata.
+- Supabase advisors are available as of the 2026-06-09 cleanup approval packet; they add database hardening work but do not replace the first Edge Function cleanup.
 - Credential classification for the removed tracked Supabase status dump remains owner-action-required until every removed value is confirmed local-dev-only or rotated/audited.
 
 ## Next Safe Step
 
-Open a focused PR that makes Vercel optional/manual in the production workflow
-and records the Supabase live cleanup plan. Do not apply live Supabase mutation
-from this PR. The next live-facing PR should carry a fresh advisor/migration
-baseline, expected delta, rollback, and explicit approval.
+Request explicit owner approval for removing
+`iskra-canon-import-diagnostic` from live Supabase, execute with Dashboard/CLI or
+a delete-capable connector, then attach the before/after function list. Do not
+claim OpenAI support as live-verified until the separate provider smoke passes.
