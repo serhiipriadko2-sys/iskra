@@ -219,3 +219,26 @@
   - Check-runs on `7784811` show `Deploy to Vercel` skipped as expected.
   - Check-runs on `7784811` show `Build Docker Image`, `e2e`, `Deploy to GitHub Pages`, `Build iskraSpace`, `Build and Test`, `build-and-test`, `hash-check`, `ingest-stage-checks`, and both Google Cloud / Cloud Run checks completed success.
 - **Status:** Repo/main verified; staged/live Supabase provider smoke remains pending.
+
+### EVI-20260609-001: PR #201 Gemini Embedding And SoT Ledger Closure
+- **Assertion:** The Gemini embedding live path and associated SoT ledger blocker are closed.
+- **Evidence:**
+  - PR #201 is merged into `main` at merge commit `7015422`.
+  - Final PR head was `55ae92ca1e81ad02f577f2b477e73278613e721e`.
+  - Final PR receipt comment `4651784519` records external Gemini embed smoke PASS after live Supabase `gemini` version `5`: `provider=gemini`, `embedding.values` exists, length is `1536`, entries are numeric floats, and stale `text-embedding-004` requests are compatible through the Edge Function.
+  - Ledger maps `runtime/iskraSpace/supabase/functions/gemini/index.ts` to `6139561764a1e790e1df6a7c76a44ebd1fbab1d79238fab55488e18de7c96a84`.
+  - Follow-up SoT repair corrected `tools/projects_stack_templates/RETRIEVAL_EVAL.md` to `27ff1c974bad0ccf4031cf9b94dee4918c4b9971e64efa79aae43e0e19d7a02b`.
+  - Green checks: SoT integrity `27155980473`, Runtime CI `27155980435`, iskraSpace CI `27155980437`.
+  - Main merge commit `7015422` check-runs show Vercel skipped and Docker, e2e, GitHub Pages, iskraSpace, Build and Test, hash, ingest, and both Cloud Run checks succeeded.
+- **Status:** Gemini embedding path verified; OpenAI live provider smoke remains pending.
+
+### EVI-20260609-002: Supabase Read-Only Baseline After PR #201
+- **Assertion:** Live Supabase source posture now confirms the Gemini embedding repair and dual-provider gateway source, while support/diagnostic function blockers remain.
+- **Evidence:**
+  - `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md`.
+  - Supabase connector project read confirmed `AgiIskra / typcvaszcfdpkzbjzuur`, `ACTIVE_HEALTHY`, region `eu-west-1`, Postgres `17.6.1.063`.
+  - Edge Function list shows `gemini` version `5`, ACTIVE, `verify_jwt=true`; `db-proxy` version `3`, ACTIVE, `verify_jwt=true`; canon import/backfill/diagnostic functions version `3`, ACTIVE, `verify_jwt=false`.
+  - Live `gemini` source includes provider routing, `gemini-embedding-001`, `EMBEDDING_DIMENSIONS = 1536`, normalized `embedding.values`, OpenAI Responses/Embeddings routing, and JSON `text.format` mapping.
+  - Live migrations remain the ten known migrations through `20260509093312 / iskra_temp_rpc_import_close_again`.
+  - Installed extension signals include `vector`, `pg_graphql`, `pg_trgm`, `pg_net`, `supabase_vault`, `pg_stat_statements`, `uuid-ossp`, and `pgcrypto`.
+- **Status:** Read-only verified; advisors/grants/logs/app-data and OpenAI live smoke remain pending.

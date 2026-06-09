@@ -41,8 +41,8 @@
 ### OPN-20260607-003: Supabase Live Function Drift Before Public Release
 - **Description:** Fresh read-only Supabase baseline lists live `gemini`, `db-proxy`, `iskra-canon-import-1536`, `iskra-canon-backfill-1536`, and `iskra-canon-import-diagnostic`; repo-side `embed` exists but is absent from the live function list.
 - **Status:** Open.
-- **Risk:** Public release could depend on an undocumented hybrid path or retain unauthenticated internal/diagnostic functions. The diagnostic function is especially sensitive because the refreshed source posture shows it responds without method/auth gate and reports env-presence checks.
-- **Mitigation:** `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` separates direct `runtime/iskraSpace` `gemini embedContent` from engine/web `embed`. `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-07.md` records the refreshed project/migration/function/source baseline. Before live mutation, refresh advisors/grants/logs/app data path; remove `iskra-canon-import-diagnostic` or accept a time-boxed ADR exception; add owner/access/expiry decisions for `db-proxy` and canon import/backfill functions.
+- **Risk:** Public release could still retain unauthenticated internal/diagnostic functions. The diagnostic function is especially sensitive because the refreshed source posture shows it responds without method/auth gate and reports env-presence checks.
+- **Mitigation:** `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` separates direct `runtime/iskraSpace` `gemini embedContent` from engine/web `embed`. `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md` records the post-PR #201 project/migration/function/source baseline. Before live cleanup mutation, refresh advisors/grants/logs/app data path if available; remove `iskra-canon-import-diagnostic` or accept a time-boxed ADR exception; add owner/access/expiry decisions for `db-proxy` and canon import/backfill functions.
 
 ### OPN-20260607-004: iskraSpace Build Warnings Before Release
 - **Description:** `pnpm --dir runtime/iskraSpace run build` passes, but emits warnings for CSS syntax (`-: .;`), mixed dynamic/static imports around Supabase modules, and a main chunk larger than 500 kB.
@@ -58,6 +58,6 @@
 
 ### OPN-20260608-002: Dual AI Provider Live Smoke
 - **Description:** Repo source now supports Gemini default plus optional OpenAI routing in the `gemini` Supabase Edge Function.
-- **Status:** Open; repo implementation merged in PR #198 and main checks are green, but live/staging deploy proof is pending approval.
-- **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior are not proven against live Supabase secrets/runtime yet.
-- **Mitigation:** Before production release, refresh the Supabase read-only baseline, configure server-side `OPENAI_API_KEY`/model env only in Supabase, deploy only after explicit approval, and smoke generation, streaming, embeddings, and fallback without printing secret values.
+- **Status:** Partially closed. Gemini embedding live smoke is verified via PR #201; OpenAI provider live smoke remains open.
+- **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior are not proven against live Supabase secrets/runtime yet, so public release claims must not advertise OpenAI behavior as verified.
+- **Mitigation:** Before claiming OpenAI support, refresh the Supabase read-only baseline, configure server-side `OPENAI_API_KEY`/model env only in Supabase, deploy only after explicit approval, and smoke generation, streaming, embeddings, and fallback without printing secret values.

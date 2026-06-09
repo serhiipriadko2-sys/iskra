@@ -98,6 +98,24 @@ Installed extensions with release relevance:
   is not live Supabase behavior until Edge Function secrets are configured,
   deployment is explicitly approved, and generation/stream/embed smoke passes.
 
+2026-06-09 PR #201 update:
+
+- PR #201 is merged into `main` at `7015422`.
+- The Gemini embedding path is verified after live Supabase `gemini` Edge
+  Function version `5`: the response uses `provider=gemini`, returns
+  `embedding.values`, has exactly `1536` numeric dimensions, and tolerates stale
+  frontend-style `model: text-embedding-004` requests through the function.
+- SoT integrity is green after ledger updates for
+  `runtime/iskraSpace/supabase/functions/gemini/index.ts` and
+  `tools/projects_stack_templates/RETRIEVAL_EVAL.md`.
+- Post-merge checks on `7015422` show Vercel skipped and Docker, e2e, GitHub
+  Pages, iskraSpace, Build and Test, hash, ingest, and both Cloud Run checks
+  succeeded.
+- OpenAI live behavior remains unverified and must not be claimed as release
+  ready until separate provider smoke passes.
+- Fresh read-only Supabase baseline:
+  `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md`.
+
 Post-merge update on 2026-06-07:
 
 - PR #195 is merged.

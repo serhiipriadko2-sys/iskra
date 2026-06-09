@@ -162,3 +162,19 @@
 - **Risk:** This proves repo/CI release contour only. The OpenAI provider path is not live-smoked until Supabase Edge Function secrets are configured and the function is deployed after explicit approval.
 - **Next:** Prepare or execute a staged Supabase smoke only after fresh read-only baseline and approval.
 - **Status:** Repo/main verified; live Supabase proof pending.
+
+### JRN-20260609-001: PR #201 Gemini Embedding Live Fix And Ledger Closure
+- **Context:** PR #201 (`fix/gemini-embedding-model-20260608`) repaired the live Gemini embedding contour and closed the SoT ledger blocker.
+- **Actions:** Verified PR #201 merge status, final head `55ae92ca1e81ad02f577f2b477e73278613e721e`, final receipt comment `4651784519`, and post-merge `main` commit `7015422`.
+- **Evidence:** PR #201 checks were green on final head: SoT integrity run `27155980473`, Runtime CI run `27155980435`, and iskraSpace CI run `27155980437`. Main merge commit checks show Vercel skipped and Docker, e2e, GitHub Pages, iskraSpace, Build and Test, hash, ingest, and both Cloud Run checks succeeded.
+- **Risk:** This closes the Gemini embedding path, including the 1536-dimensional `embedding.values` contract. OpenAI live provider behavior still needs separate smoke before public OpenAI support claims.
+- **Next:** Decide between approval-gated OpenAI provider smoke or Supabase cleanup/removal pass for diagnostic/support functions.
+- **Status:** Gemini embed repo/CI/live-smoke evidence verified; OpenAI smoke open.
+
+### JRN-20260609-002: Supabase Read-Only Baseline After PR #201
+- **Context:** Refreshed live Supabase metadata after PR #201 and the Gemini embedding fix.
+- **Actions:** Read project, Edge Function list/source, migrations, and extensions through the Supabase connector without mutation; created `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md`.
+- **Evidence:** Live `gemini` is ACTIVE version `5` with `verify_jwt=true`, dual-provider source posture, `gemini-embedding-001`, normalized `embedding.values`, and `outputDimensionality=1536`. Live `db-proxy` remains `verify_jwt=true`; canon import/backfill/diagnostic functions remain `verify_jwt=false`; `embed` remains absent.
+- **Risk:** Advisors, grants/RLS inventory, recent logs, secret presence, and app data counts were not available through the current toolset. OpenAI provider behavior is still not live-smoked.
+- **Next:** Pick either OpenAI smoke or Supabase cleanup as the next implementation PR.
+- **Status:** Read-only baseline verified; cleanup/OpenAI smoke open.
