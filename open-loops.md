@@ -40,9 +40,9 @@
 
 ### OPN-20260607-003: Supabase Live Function Drift Before Public Release
 - **Description:** Fresh read-only Supabase baseline lists live `gemini`, `db-proxy`, `iskra-canon-import-1536`, `iskra-canon-backfill-1536`, and `iskra-canon-import-diagnostic`; repo-side `embed` exists but is absent from the live function list.
-- **Status:** Open.
+- **Status:** Open; approval packet prepared, live cleanup not executed.
 - **Risk:** Public release could still retain unauthenticated internal/diagnostic functions. The diagnostic function is especially sensitive because the refreshed source posture shows it responds without method/auth gate and reports env-presence checks.
-- **Mitigation:** `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` separates direct `runtime/iskraSpace` `gemini embedContent` from engine/web `embed`. `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md` records the post-PR #201 project/migration/function/source baseline. Before live cleanup mutation, refresh advisors/grants/logs/app data path if available; remove `iskra-canon-import-diagnostic` or accept a time-boxed ADR exception; add owner/access/expiry decisions for `db-proxy` and canon import/backfill functions.
+- **Mitigation:** `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` separates direct `runtime/iskraSpace` `gemini embedContent` from engine/web `embed`. `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md` records the post-PR #201 project/migration/function/source baseline. `docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md` records the explicit before/after, rollback, approval phrase, and advisor summary. Before live cleanup mutation, obtain explicit owner approval, remove `iskra-canon-import-diagnostic` or accept a time-boxed ADR exception, and add owner/access/expiry decisions for `db-proxy` and canon import/backfill functions.
 
 ### OPN-20260607-004: iskraSpace Build Warnings Before Release
 - **Description:** `pnpm --dir runtime/iskraSpace run build` passes, but emits warnings for CSS syntax (`-: .;`), mixed dynamic/static imports around Supabase modules, and a main chunk larger than 500 kB.
@@ -52,7 +52,7 @@
 
 ### OPN-20260608-001: Optional Vercel Credential Contour
 - **Description:** `Deploy to Vercel` failed on merge commit `e8236ace454aacdabb50cdfaa54b674971f88954` because Vercel credentials were empty in the GitHub Actions job.
-- **Status:** Optional/manual contour planned; automatic main-push release gate removal pending PR.
+- **Status:** Resolved for automatic main-push release gate; Vercel remains optional/manual and unverified until secrets are configured.
 - **Risk:** If Vercel is treated as mandatory without configured secrets, release readiness will be falsely red despite Cloud Run being green.
 - **Mitigation:** Run Vercel only by manual workflow dispatch with `deploy_vercel=true`; fail fast when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, or `VERCEL_PROJECT_ID` are missing; keep Cloud Run as mandatory deploy target until Vercel secrets are configured and intentionally promoted.
 

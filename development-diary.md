@@ -178,3 +178,11 @@
 - **Risk:** Advisors, grants/RLS inventory, recent logs, secret presence, and app data counts were not available through the current toolset. OpenAI provider behavior is still not live-smoked.
 - **Next:** Pick either OpenAI smoke or Supabase cleanup as the next implementation PR.
 - **Status:** Read-only baseline verified; cleanup/OpenAI smoke open.
+
+### JRN-20260609-003: PR #202 Merge And Supabase Cleanup Approval Packet
+- **Context:** PR #202 was the docs-only post-PR #201 baseline receipt; the next release blocker is live Supabase cleanup, not runtime code.
+- **Actions:** Verified and merged PR #202, fast-forwarded local `main`, confirmed post-merge checks on `169b16b`, refreshed Supabase project/function/advisor state without mutation, and created `docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md`.
+- **Evidence:** PR #202 merged at `169b16b790e4e2c7130b4bf2ef2176515ee43cbc`; post-merge `hash-check`, `ingest-stage-checks`, and both Cloud Run checks completed success. Supabase read-only refresh still shows live `gemini` version `5` with `verify_jwt=true`, live `db-proxy` with `verify_jwt=true`, and live diagnostic/import/backfill functions with `verify_jwt=false`; security and performance advisors were available and summarized in the approval packet.
+- **Risk:** No live Supabase mutation has occurred. Diagnostic/import/backfill functions remain public-release blockers until removed, protected, or ADR-exempted. OpenAI live provider behavior remains unverified.
+- **Next:** Request explicit owner approval for diagnostic removal, then execute deletion through Supabase Dashboard/CLI or an available delete-capable connector and verify the post-change function list.
+- **Status:** Approval packet prepared; live cleanup pending explicit approval.

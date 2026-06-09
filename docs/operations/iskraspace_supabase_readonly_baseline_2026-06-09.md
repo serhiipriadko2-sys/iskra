@@ -87,6 +87,21 @@ The currently available Supabase connector tools did not expose:
 These remain required evidence items before any destructive cleanup or public
 release sign-off.
 
+## 2026-06-09 Cleanup Approval Refresh
+
+A later read-only connector pass for the cleanup approval packet exposed
+security and performance advisors. The function list did not materially change:
+`gemini` remained version `5` with `verify_jwt=true`, `db-proxy` remained
+version `3` with `verify_jwt=true`, and canon import/backfill/diagnostic
+functions remained version `3` with `verify_jwt=false`.
+
+Advisor themes observed in that later pass include mutable function
+`search_path` warnings, `pg_trgm` installed in `public`, GraphQL exposure
+warnings, unindexed foreign keys, RLS init-plan warnings, unused-index
+candidates, and Auth connection allocation advice.
+
+Receipt: `docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md`.
+
 ## Release Interpretation
 
 Verified:
