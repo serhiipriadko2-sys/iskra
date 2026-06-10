@@ -18,6 +18,7 @@ ChatGPT / OpenAI Agent Builder.
 |---|---|---|
 | Canon | `agent_files/canon_source_files/` | included |
 | Builder instructions | `agent_files/files_for_agent_builder/` | included |
+| Horizon Weaver | `agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md`, `agent_runtime_tools/iskra_horizon_weaver.py` | included as Builder-layer v0.1 |
 | Dreamspace | `agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md`, `agent_runtime_tools/iskra_dreamspace.py` | included |
 | Somatic Intuition | `agent_files/canon_source_files/core__somatic_intuition.md`, `agent_files/canon_source_files/metrics__somatic_index.md` | included |
 | Shadow Core | `agent_runtime_tools/iskra_shadow_core.py` | included |
@@ -30,7 +31,7 @@ ChatGPT / OpenAI Agent Builder.
 | Governance / ADR | `governance/`, `agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md` | included |
 | Security policy | `SECURITY.md`, `agent_files/canon_source_files/31_SECURITY.md` | included |
 | Provenance | `provenance/` | included |
-| Manifest / QC | `MANIFEST.sha256`, `MERGE_RECEIPT.md`, `QC_CHECKS.md`, `ZIP_RECEIPT.json` | included |
+| Manifest / QC | `MANIFEST.sha256`, `MERGE_RECEIPT.md`, `QC_CHECKS.md`, `ZIP_RECEIPT.json` | included; Horizon branch refresh pending |
 
 ## Conflict Resolution
 
@@ -53,6 +54,7 @@ Primary:
 - `README.md`
 - `agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md`
 - `agent_files/INDEX.md`
+- `agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md`
 - `agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md`
 - `agent_files/evals/ISKRA_TOOLCHAIN_ACCEPTANCE_TESTS.md`
 - `governance/adr_20260606_unified_full_canon_builder_v4.md`
@@ -64,6 +66,7 @@ Secondary:
 - `agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md`
 - `agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md`
 - `agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md`
+- `agent_runtime_tools/iskra_horizon_weaver.py`
 - `agent_files/toolchain/iskra_toolchain_manifest.json`
 - `plugins/iskra-toolchain-bridge/RUNTIME_RECEIPT.md`
 - `plugins/iskra-toolchain-bridge/runtime-smoke-receipt.json`
@@ -74,10 +77,19 @@ This manifest does not claim:
 
 - the package is already uploaded into Agent Builder;
 - any connector is active unless Builder UI or connector configuration proves it;
+- Horizon can mutate Builder/GitHub/Supabase/live systems by itself;
+- Horizon proves consciousness, semantic truth, or auto-evolution;
 - plugin files are installable in every OpenAI Builder surface;
 - local runtime helpers will execute in cloud-only Builder profiles.
 - Codex app installation has not been verified while `codex.exe` is blocked by
   `Access is denied`.
+
+## Horizon Branch Refresh Gate
+
+The pre-Horizon manifest and zip receipt remain present for provenance. The
+Horizon branch is not a final refreshed upload archive until `MANIFEST.sha256`,
+optional zip receipt, secret scan, and Horizon helper smoke are regenerated from
+a checkout of this branch.
 
 ## Verification Contract
 
@@ -88,5 +100,6 @@ PASS requires:
 - source component manifests are preserved under `provenance/`;
 - required target files are present;
 - no obvious secret-bearing values are packaged;
+- Horizon helper source compiles and its dry-run/validate/permission-boundary smoke passes;
 - the optional zip archive passes integrity if generated;
 - post-upload Builder prompts pass in the UI.

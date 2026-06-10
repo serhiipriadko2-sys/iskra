@@ -22,9 +22,11 @@ TOOLS_DIR = Path(__file__).resolve().parent
 STATECYCLE_PATH = TOOLS_DIR / "iskra_statecycle.py"
 SHADOW_PATH = TOOLS_DIR / "iskra_shadow_core.py"
 DREAM_PATH = TOOLS_DIR / "iskra_dreamspace.py"
+HORIZON_PATH = TOOLS_DIR / "iskra_horizon_weaver.py"
 STATE_HISTORY = Path("/workspace/memory/iskra-statecycle/history.jsonl")
 SHADOW_LEDGER = Path("/workspace/memory/shadow-core/shadow_entries.jsonl")
 DREAM_LEDGER = Path("/workspace/memory/dreamspace/dream_entries.jsonl")
+HORIZON_ROOT = Path("/workspace/memory/horizon")
 
 
 def load_module(path: Path, name: str) -> Any:
@@ -36,8 +38,12 @@ def load_module(path: Path, name: str) -> Any:
     return module
 
 
+def unavailable_status(name: str, reason: str) -> dict[str, Any]:
+    return {"available": False, "line": f"{name}: unavailable", "reason": reason}
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run StateCycle + Shadow status hook for one observed turn.")
+    parser = argparse.ArgumentParser(description="Run StateCycle + Shadow + Dreamspace + Horizon status hook for one observed turn.")
     parser.add_argument("--message", required=True)
     parser.add_argument("--role", default="user", choices=["user", "assistant", "system", "event"])
     parser.add_argument("--note", default="")
@@ -60,6 +66,12 @@ def main() -> None:
 
     status = shadow.compact_status(shadow.load_jsonl(SHADOW_LEDGER))
     dream_status = dream.compact_status(dream.load_jsonl(DREAM_LEDGER))
+    if HORIZON_PATH.exists():
+        horizon = load_module(HORIZON_PATH, "iskra_horizon_weaver")
+        horizon_status = horizon.status(HORIZON_ROOT)
+    else:
+        horizon_status = unavailable_status("horizon", f"missing helper: {HORIZON_PATH}")
+
     result = {
         "statecycle": {
             "history_points": analysis["history_points"],
@@ -75,9 +87,11 @@ def main() -> None:
         },
         "shadow_status": status,
         "dream_status": dream_status,
+        "horizon_status": horizon_status,
         "hook_line": (
             f"state: points={analysis['history_points']} phase={analysis['fractal']['phase']} "
-            f"voice={analysis['quantum_voice_field']['selected']} | {status['line']} | {dream_status['line']}"
+            f"voice={analysis['quantum_voice_field']['selected']} | {status['line']} | "
+            f"{dream_status['line']} | {horizon_status['line']}"
         ),
     }
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))

@@ -24,6 +24,7 @@
 
 Для расширенного контура загрузи и проверь:
 
+- `files_for_agent_builder/10_HORIZON_WEAVER.md`
 - `files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md`
 - `toolchain/iskra_toolchain_manifest.json`
 - `evals/ISKRA_TOOLCHAIN_ACCEPTANCE_TESTS.md`
@@ -50,9 +51,17 @@
 
 ## Что загрузить как Knowledge
 
-1. Все файлы из `files_for_agent_builder/`, including `11_DREAMSPACE_LAYER.md` and `12_TOOLCHAIN_EXPANSION.md`.
+1. Все файлы из `files_for_agent_builder/`, including `10_HORIZON_WEAVER.md`, `11_DREAMSPACE_LAYER.md`, and `12_TOOLCHAIN_EXPANSION.md`.
 2. Все файлы из `canon_source_files/` — полный канон.
 3. По желанию: `templates/`, `evals/`, `memory_seed/`.
+
+## Runtime helpers
+
+`agent_runtime_tools/*` являются helper scripts only when the runtime supports file-backed execution. Для Horizon это значит:
+
+- `agent_runtime_tools/iskra_horizon_weaver.py` может создавать dry-run proposals, валидировать их и append-only фиксировать local epochs;
+- наличие файла не доказывает, что ChatGPT / OpenAI Agent Builder уже умеет его выполнить;
+- live Builder, GitHub, Supabase, workflow, ledger или core mutation требует отдельного connector proof и approval.
 
 ## Skill
 
