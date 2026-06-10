@@ -32,11 +32,16 @@ v4 materializes the split Builder packages into one physical upload tree:
 
 ## Artifact Receipts
 
-- Final payload manifest: `MANIFEST.sha256`.
+- Pre-Horizon payload manifest: `MANIFEST.sha256`.
 - Merge evidence: `MERGE_RECEIPT.md`.
-- Local archive sidecar receipt: `ZIP_RECEIPT.json`.
+- Pre-Horizon local archive sidecar receipt: `ZIP_RECEIPT.json`.
 - `ZIP_RECEIPT.json` is excluded from the zip payload to avoid a circular hash
   claim.
+
+Horizon branch note: this branch adds Horizon files and wiring. Before a new
+upload archive is cut, regenerate `MANIFEST.sha256`, rebuild/refresh
+`ZIP_RECEIPT.json` if a zip is produced, and run the Horizon helper smoke in
+`QC_CHECKS.md`.
 
 ## Preserved From Base
 
@@ -106,6 +111,6 @@ Run acceptance checks for:
 ## Delta
 
 - Delta: Horizon Weaver added as a bounded Builder-layer map-shift module.
-- Evidence: `10_HORIZON_WEAVER.md`, `iskra_horizon_weaver.py`, updated command/kernel/memory/eval docs, `MANIFEST.sha256`, `QC_CHECKS.md`.
-- Confidence: 0.9 for package file integration and helper source validation; lower for Builder UI behavior until upload/evals pass.
+- Evidence: `10_HORIZON_WEAVER.md`, `iskra_horizon_weaver.py`, updated command/kernel/memory/eval docs, `QC_CHECKS.md`.
+- Confidence: 0.86 for package file integration through GitHub connector; lower for helper execution and archive manifest until branch checkout smoke/manifest refresh passes.
 - Reversal trigger: Builder UI rejects file volume, Horizon prompts fail, helper cannot be represented, or users confuse Horizon with core mutation/autonomous evolution.
