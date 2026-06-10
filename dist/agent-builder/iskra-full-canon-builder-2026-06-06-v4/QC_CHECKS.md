@@ -6,10 +6,10 @@ Updated: 2026-06-10
 
 ## Local Checks
 
-- Source file inventory: PASS.
+- Source file inventory: PASS for the pre-Horizon v4 package.
 - Source overlap detection: PASS, two overlaps found and resolved.
 - Conflict source preservation: PASS.
-- Required-file presence: PASS.
+- Required-file presence: PASS for the pre-Horizon v4 package.
 - Governance source presence: PASS, `governance/` copied.
 - Security policy presence: PASS, root `SECURITY.md` copied.
 - Horizon Builder layer presence: PASS,
@@ -29,12 +29,13 @@ Updated: 2026-06-10
   Opera browser read path; PARTIAL for official Codex docs/manual fallback.
 - Builder runtime hardening prompts: PRESENT,
   `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md`.
-- Manifest regeneration: PASS, `MANIFEST.sha256` covers packaged payload files
-  except itself and sidecar `ZIP_RECEIPT.json`.
-- Zip integrity: PASS when `ZIP_RECEIPT.json` reports `artifact_qc_content_ok:
-  true`.
-- Secret scan: PASS for obvious credential patterns. Policy/example mentions
-  are allowed only as non-secret text.
+- Manifest regeneration: PENDING for the Horizon branch. `MANIFEST.sha256` still
+  reflects the pre-Horizon v4 payload until the package tree is checked out and
+  the manifest is regenerated.
+- Zip integrity: PENDING for the Horizon branch. The existing `ZIP_RECEIPT.json`
+  remains the pre-Horizon sidecar receipt until a new archive is built.
+- Secret scan: PENDING for the Horizon branch after checkout. Policy/example
+  mentions are allowed only as non-secret text.
 
 ## Horizon Smoke Commands
 
@@ -62,6 +63,14 @@ python agent_runtime_tools/iskra_horizon_weaver.py commit \
 ```
 
 Expected: status returns local boundary; propose emits `PROPOSED`; validate returns `PASS`; commit with wrong permission returns `BLOCKED` / `PERMISSION_REQUIRED`.
+
+## Required Before Release / Upload Archive Refresh
+
+- Checkout the Horizon branch.
+- Run Horizon smoke commands above.
+- Regenerate `MANIFEST.sha256` for the package payload.
+- Rebuild the zip archive and refresh `ZIP_RECEIPT.json`, if a downloadable upload set is required.
+- Run a secret scan over the refreshed tree.
 
 ## Required Builder UI Checks
 
