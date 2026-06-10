@@ -31,7 +31,7 @@ ChatGPT / OpenAI Agent Builder.
 | Governance / ADR | `governance/`, `agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md` | included |
 | Security policy | `SECURITY.md`, `agent_files/canon_source_files/31_SECURITY.md` | included |
 | Provenance | `provenance/` | included |
-| Manifest / QC | `MANIFEST.sha256`, `MERGE_RECEIPT.md`, `QC_CHECKS.md`, `ZIP_RECEIPT.json` | included |
+| Manifest / QC | `MANIFEST.sha256`, `MERGE_RECEIPT.md`, `QC_CHECKS.md`, `ZIP_RECEIPT.json` | included; Horizon branch refresh pending |
 
 ## Conflict Resolution
 
@@ -83,6 +83,13 @@ This manifest does not claim:
 - local runtime helpers will execute in cloud-only Builder profiles.
 - Codex app installation has not been verified while `codex.exe` is blocked by
   `Access is denied`.
+
+## Horizon Branch Refresh Gate
+
+The pre-Horizon manifest and zip receipt remain present for provenance. The
+Horizon branch is not a final refreshed upload archive until `MANIFEST.sha256`,
+optional zip receipt, secret scan, and Horizon helper smoke are regenerated from
+a checkout of this branch.
 
 ## Verification Contract
 
