@@ -54,6 +54,18 @@ ledger, security policy, or core canon by itself. Its local helper defaults to
 dry-run proposals; local epoch commit requires permission and only appends a
 local Horizon JSONL entry.
 
+## Horizon Branch QC Gate
+
+This branch adds Horizon files and instruction wiring. Before cutting a new
+upload archive, checkout the branch and regenerate:
+
+- `MANIFEST.sha256`
+- `ZIP_RECEIPT.json`, if a new zip is produced
+- secret scan / smoke receipt for `agent_runtime_tools/iskra_horizon_weaver.py`
+
+Until then, the existing manifest and zip receipt remain the pre-Horizon v4
+release receipts.
+
 ## Merge Rule
 
 The source sets had two relative path overlaps:
