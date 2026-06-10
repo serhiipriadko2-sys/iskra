@@ -30,7 +30,8 @@ Upload guidance:
 
 Verification:
 
-- `MANIFEST.sha256` contains SHA-256 hashes for every packaged file except itself and the sidecar `ZIP_RECEIPT.json`.
+- Existing `MANIFEST.sha256` and `ZIP_RECEIPT.json` are pre-Horizon v4 receipts until the Horizon branch is checked out and refreshed.
+- Before cutting a new upload archive, regenerate `MANIFEST.sha256`, rebuild/refresh `ZIP_RECEIPT.json` if a zip is produced, and run secret scan on the refreshed tree.
 - Smoke expectation exists for Horizon helper: py_compile, dry-run proposal, validation, and permission-boundary commit block.
 - Smoke check passed for turn hook with fallback voices in the base package; after Horizon upload, re-run the significant-turn hook check if file-backed helper execution is available.
 - Smoke check passed for incomplete Dream create blocking before persistence in the base package.
