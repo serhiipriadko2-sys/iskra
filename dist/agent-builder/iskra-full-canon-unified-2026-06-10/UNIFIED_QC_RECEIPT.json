@@ -1,0 +1,59 @@
+{
+  "build_utc": "20260610T201945Z",
+  "coverage": {
+    "extended_source_files": 154,
+    "missing_from_extended_count": 0,
+    "missing_from_extended": [],
+    "horizon_expected_count": 8,
+    "missing_horizon": [],
+    "missing_must": [],
+    "forbidden_paths": [],
+    "removed_byproducts": [
+      "agent_runtime_tools/__pycache__",
+      "tools/__pycache__"
+    ]
+  },
+  "manifest": {
+    "entries": 173,
+    "ok": 173,
+    "missing": [],
+    "mismatch": [],
+    "note": "Summary excludes MANIFEST.sha256 itself; hashes regenerated after this receipt is written."
+  },
+  "secret_hits": [],
+  "qc_hits": [],
+  "smoke": {
+    "horizon_validator_unittest": {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.421s\n\nOK\n"
+    },
+    "horizon_wrappers_unittest": {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.406s\n\nOK\n"
+    },
+    "python_syntax_compile": {
+      "returncode": 0,
+      "errors": []
+    }
+  },
+  "verdict": "PASS",
+  "github_mirror": {
+    "transport_safe_split": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
+    "parts_dir": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts",
+    "original_08_bytes": 3400610,
+    "original_08_sha256": "eb256d82816d3fa6d8653b34bf36b1dcdbf2f39b3f563b0071cf85e8bc7f031b",
+    "parts": 5,
+    "reassembly": "python tools/reassemble_interface_style.py --repo-root . --check",
+    "note": "GitHub connector mirror split only; source zip remains exact single-file package.",
+    "qc": {
+      "reassembly_check": "PASS",
+      "manifest_missing": 0,
+      "manifest_mismatch": 0,
+      "horizon_unittest": "PASS: 9 tests",
+      "forbidden_byproducts": 0,
+      "max_file_bytes": 759999
+    }
+  }
+}

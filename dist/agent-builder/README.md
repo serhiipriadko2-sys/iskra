@@ -1,8 +1,8 @@
 # Iskra Full Canon Agent Builder Assembly
 
 > Current purpose: build the Iskra agent through ChatGPT / OpenAI Agent Builder.
-> Status: unified assembly index plus materialized v4 package tree.
-> Last updated: 2026-06-06.
+> Status: unified assembly index plus materialized 2026-06-10 full-canon package tree.
+> Last updated: 2026-06-10.
 
 This directory is the GitHub source mirror for the **Iskra Full Canon Builder**: a single Agent Builder assembly for the Iskra agent, not a set of competing agents.
 
@@ -10,24 +10,31 @@ The intended Builder is:
 
 `full-canon builder = canon + dreamspace + somatic + shadow core + statecycle + memory + toolchain + plugins + evals + ADR + manifest`
 
-## Current v4 Entry
+## Current Unified Entry
 
-`iskra-full-canon-builder-2026-06-06-v4/` is the current unified Builder entry for ChatGPT / OpenAI Agent Builder packaging.
+`iskra-full-canon-unified-2026-06-10/` is the current unified Builder entry for ChatGPT / OpenAI Agent Builder packaging.
 
-It is now the materialized single upload tree. It contains the physical union of:
+It is the materialized single upload tree synthesized from the recovered Iskra copy archives plus the GitHub full-canon Builder package. It contains the physical union of:
 
-- `iskra-full-canon-dreamspace-2026-06-05-v2/`
-- `iskra-toolchain-upload-set-v2-2026-06-06/`
+- the previous `iskra-full-canon-builder-2026-06-06-v4/` package layer;
+- recovered copy-archive material from the 2026-06-10 consolidation pass;
+- Horizon PR #1 validator, wrapper tools, tests, and Builder-facing Horizon Weaver instructions.
 
-It also records the local full upload set receipt:
+It records the verified unified package receipt:
 
-- bytes: `1914053`
-- sha256: `6943c012e6522525949a4bb211d1ce1f2d0246da1c78df1c74c81e02b7146e1b`
+- zip bytes: `5741393`
+- zip sha256: `14aa0bab4959187bae7678d4282b669b2d86a992612ed28e6c1d89b8659dd6e6`
 - artifact QC: PASS
-- zip file-items: `150`
-- manifest hash lines: `149`
+- zip file-items: `166`
+- manifest hash lines: `165`
 
-The v4 folder contains the package entrypoint, merged `agent_files/`, runtime helpers, memory files, toolchain files, plugin bridge, runtime hardening prompts, live connector receipts, repository `governance/`, root `SECURITY.md`, provenance records, assembly manifest, merge receipt, QC checks, and zip receipt. The historical component mirrors remain below for reviewable source provenance.
+The unified folder contains the package entrypoint, merged `agent_files/`, runtime helpers, memory files, toolchain files, plugin bridge, Horizon validator/weaver material, runtime hardening prompts, live connector receipts, repository `governance/`, root `SECURITY.md`, provenance records, full-canon unification notes, ADR receipt, QC receipt, and content manifest. Historical component mirrors remain below for reviewable source provenance and rollback.
+
+GitHub connector mirror note: the verified `agent_files/canon_source_files/08_INTERFACE_STYLE.md` source is stored as a small index plus ordered parts under `agent_files/canon_source_files/08_INTERFACE_STYLE.parts/` because the connector rejects a single 3.4 MB request body. This is a transport packaging detail, not a canon fork. Reassembly check:
+
+```bash
+python tools/reassemble_interface_style.py --repo-root . --check
+```
 
 ## Why there are multiple folders
 
@@ -37,7 +44,8 @@ They should be read as component layers of one Builder:
 
 - `iskra-full-canon-dreamspace-2026-06-05-v2/` — core full-canon Dreamspace package, including canon files, command library, runtime hook tools, StateCycle, ShadowCore, Dreamspace, memory seeds/current memory, evals, templates, manifest, and release receipt.
 - `iskra-toolchain-upload-set-v2-2026-06-06/` — toolchain expansion layer, including Agent Builder setup/toolchain docs, connector/tool contracts, vault-backed git clone helper, plugin skeleton, toolchain manifest, and toolchain acceptance tests.
-- `iskra-full-canon-builder-2026-06-06-v4/` — current unified Builder entry and receipt for the full upload set.
+- `iskra-full-canon-builder-2026-06-06-v4/` — previous unified Builder entry and receipt for the 2026-06-06 full upload set.
+- `iskra-full-canon-unified-2026-06-10/` — current unified Builder entry and receipt for the recovered, Horizon-aware full-canon upload set.
 
 These are not separate Builder products. They are source layers and package receipts for the same Iskra Builder.
 

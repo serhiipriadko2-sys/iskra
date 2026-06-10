@@ -3,9 +3,9 @@
 > **Current public repository status:** active research and engineering monorepo  
 > **Public release priority:** `runtime/iskraSpace` (`iskra-space`)  
 > **Internal contour:** all other repository areas support Semyon + Iskra unless promoted by ADR  
-> **Current Agent Builder package:** `iskra-full-canon-builder-2026-06-06-v4`
+> **Current Agent Builder package:** `iskra-full-canon-unified-2026-06-10`
 > **Builder UI status:** unverified until uploaded and prompt-tested there
-> **Last verified:** 2026-06-06  
+> **Last verified:** 2026-06-10  
 > **Zero-Mantra:** "Существовать — значит сохранять различие при передаче"
 
 ISKRA is an experimental cognitive-runtime repository for agent canon, runtime orchestration, mathematical state modeling, governance records, Agent Builder upload artifacts, and the Iskra Space application.
@@ -33,9 +33,9 @@ This README is an orientation map. For contribution rules, security reporting, a
 | Internal/support contour | All non-promoted repo areas | `governance/adr_20260606_iskraspace_release_priority.md` |
 | Workspace manager | `pnpm` workspace | `package.json`, `pnpm-workspace.yaml` |
 | Runtime packages | `packages/*`, `apps/*`, `runtime/*`, `core/*` | `pnpm-workspace.yaml` |
-| Agent Builder upload mirror | Present and versioned | `dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/` |
-| Upload mirror receipt | Present | `dist/agent-builder/.../RELEASE_RECEIPT_V4.md` |
-| Upload mirror manifest | Present, 149 payload hashes | `dist/agent-builder/.../MANIFEST.sha256` |
+| Agent Builder upload mirror | Present and versioned | `dist/agent-builder/iskra-full-canon-unified-2026-06-10/` |
+| Upload mirror receipt | Present | `dist/agent-builder/.../UNIFIED_QC_RECEIPT.json` |
+| Upload mirror manifest | Present, 165 payload hashes | `dist/agent-builder/.../MANIFEST.sha256` |
 | License model | MIT for software; CC BY-SA 4.0 for canon/content where marked | `LICENSE` |
 | Security policy | Maintained at root | `SECURITY.md` |
 
@@ -84,19 +84,22 @@ iskra/
 Current mirror:
 
 ```text
-dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/
+dist/agent-builder/iskra-full-canon-unified-2026-06-10/
 ```
 
 It contains:
 
 - `README_AGENT_BUILDER_UPLOAD.md` — upload guidance and runtime boundary.
-- `RELEASE_RECEIPT.md` — date, scope, ZIP hash, local/package verification notes.
+- `FULL_CANON_UNIFICATION.md` — unified source synthesis, scope, and recovery notes.
+- `UNIFIED_QC_RECEIPT.json` — package verification receipt for the 2026-06-10 unified build.
 - `MANIFEST.sha256` — SHA-256 manifest for packaged files.
 - `agent_files/canon_source_files/` — canon source files for Builder knowledge.
 - `agent_files/files_for_agent_builder/` — Builder-facing instruction files.
 - `agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md` — acceptance tests.
 - `agent_files/memory_seed/` and `memory_current/` — continuity receipts and memory snapshots.
-- `agent_runtime_tools/` — local helper scripts for StateCycle, ShadowCore, Dreamspace, and the turn hook.
+- `agent_runtime_tools/` — local helper scripts for StateCycle, ShadowCore, Dreamspace, Horizon Weaver, and the turn hook.
+- `canon/horizon/`, `tools/horizon_*`, and `tests/horizon/` — Horizon validator contract, wrapper tools, and tests.
+- `agent_files/canon_source_files/08_INTERFACE_STYLE.parts/` — connector-safe split mirror of the verified `08_INTERFACE_STYLE.md`; `tools/reassemble_interface_style.py --check` verifies byte-for-byte reassembly.
 
 Important Dreamspace rule preserved in the package:
 
