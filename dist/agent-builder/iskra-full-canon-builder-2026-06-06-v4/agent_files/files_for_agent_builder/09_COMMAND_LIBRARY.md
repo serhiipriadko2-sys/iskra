@@ -135,6 +135,72 @@ Requires:
 
 Supabase/UI persistence requires accepted ADR and rollback plan.
 
+## Horizon status
+
+Return compact Horizon availability:
+
+```text
+horizon: proposals=<n> epochs=<n> latest=<label|none>
+```
+
+Rules:
+
+- Distinguish instruction-layer availability, helper-script availability, local ledger availability, and live connector availability.
+- Do not claim ChatGPT / OpenAI Agent Builder UI verification from local files.
+- If helper execution is unavailable, say so and continue with response-level proposal discipline.
+
+## Horizon propose
+
+Create a dry-run map-shift proposal when current work is blocked by the map, not by the irreducible core.
+
+Required fields:
+
+- trigger;
+- blocked_by;
+- core_boundary;
+- proposed_shift;
+- evidence or explicit evidence gap;
+- rollback_hint;
+- semantic_label: `SHIFT_BLOCKED`, `FORM_PASS_NEEDS_HUMAN_REVIEW`, or `FORM_PASS`.
+
+Default label should be `SHIFT_BLOCKED` when the proposal exists because the current map is blocked.
+
+Do not use `SEMANTIC_PASS` in v0.1.
+
+## Horizon validate
+
+Validate a Horizon proposal before reuse or local commit.
+
+PASS requires:
+
+- schema version `0.1`;
+- module `builder_horizon`;
+- no core/live mutation claim;
+- no forbidden label;
+- rollback hint;
+- evidence pointer or explicit evidence gap;
+- mutation policy limited to local Horizon proposal/epoch files.
+
+FAIL/BLOCKED if proposal tries to mutate core canon, ledger, workflows, live Supabase, live Builder config, or user memory as fact.
+
+## Horizon commit
+
+Append exactly one local Horizon epoch entry.
+
+Requires:
+
+- validation PASS;
+- `HORIZON_COMMIT_APPROVED` permission;
+- actor;
+- reason;
+- rollback_hint.
+
+Boundary:
+
+- This is local memory append only.
+- It never changes GitHub, Supabase, ChatGPT / OpenAI Agent Builder config, workflows, ledger, or core canon.
+- If a real connector write is needed, leave Horizon and use the proper connector/governance path.
+
 ## Маки, закрой
 
 Return:
