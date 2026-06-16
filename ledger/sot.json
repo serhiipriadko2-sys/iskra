@@ -417,7 +417,7 @@
     "docs/operations/iskraspace_supabase_live_cleanup_plan_2026-06-08.md": "daba5f0f266e977e1684da3c1daa88eac7471368c4bd8bcec8bc8a39ddd8a172",
     "docs/operations/iskraspace_supabase_provenance_2026-06-06.md": "74dad6e8b1cfd16aa3233f082f38985a6987099575542cb68f8e0525d57b19f1",
     "docs/operations/iskraspace_supabase_readonly_baseline_2026-06-07.md": "882613b3b5d55a280e7991e5e082c61fdc09adc88baeef165e7425d772f7cdc1",
-    "docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md": "b2db9b0ea6e35d211b33b1162183afc7ed11c416255d21f37e7f297ad76175e7",
+    "docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md": "50bbf134f49e57c8130e3753c0799a82ccb0e36fe51e48d49405457a1a84cad8",
     "docs/operations/sprint1_remediation_matrix.md": "913bdca3718217f8d3233b9d43242186132935c96ae7bfcf09acbc1b7733385a",
     "docs/operations/sprint2_implementation_backlog.md": "c0ab239e12102bc06cc35cb2c0f9cf53272dd3a373ac63cde2c5404fcccf7e21",
     "docs/operations/supabase-status-redacted-example.txt": "a1473fb3fa24709aef0c515f2b22c60357ba5427d3c4a8784708ab74e53f1f61",
@@ -443,6 +443,7 @@
     "README.md": "3a4814d63d579a8aa2a2194807b5abc3f9035773645298e14111e133fa48c6ec",
     "CONTRIBUTING.md": "a327ad6214bb650a6d9de4ec4beb7568f4168e41e8cc8200ab48fa5612600f48",
     "ISKRA_MANIFEST.md": "23858f22bb3385949603c633950eeb28797cc6b0d802b31b2f6d7c0a576a0771",
-    "LIBER_INITIUM.md": "db1cceebff3162aa68ac33bbc58b3b18ded8bb307408e9a51eed12b6c5598bc6"
+    "LIBER_INITIUM.md": "db1cceebff3162aa68ac33bbc58b3b18ded8bb307408e9a51eed12b6c5598bc6",
+    "governance/adr_20260616_retire_canon_import_backfill_edge_functions.md": "33b36b84f456e85a6e6416e220e7ba8da05305c91aa82002378c2be4e082c772"
   }
 }
