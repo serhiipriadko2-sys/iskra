@@ -1,6 +1,6 @@
 # iskraSpace Supabase Read-Only Baseline - 2026-06-09
 
-Status: READ-ONLY / NO LIVE MUTATION
+Status: BASELINE + 2026-06-16 APPROVED LIVE CLEANUP RECEIPT
 Project: `AgiIskra / typcvaszcfdpkzbjzuur`
 Region: `eu-west-1`
 Database: Postgres `17.6.1.063`
@@ -12,8 +12,12 @@ live `gemini` Edge Function now matches the dual-provider gateway contour and
 the Gemini embedding repair, while the internal/support Supabase functions still
 require release decisions before public sign-off.
 
-No Supabase deploy, delete, SQL, secret, config, or branch mutation was
-performed in this pass.
+The original 2026-06-09 baseline was read-only and performed no Supabase
+deploy, delete, SQL, secret, config, or branch mutation.
+
+On 2026-06-16, after explicit owner approval, the two canon import/backfill
+support functions were retired as 410 stubs with `verify_jwt=true`. No SQL,
+DDL, database branch, storage, or secret mutation was performed.
 
 ## Edge Functions
 
@@ -21,9 +25,9 @@ performed in this pass.
 | --- | ---: | --- | --- | --- |
 | `gemini` | 5 | ACTIVE | true | release-required; Gemini embed verified, OpenAI smoke pending |
 | `db-proxy` | 3 | ACTIVE | true | internal/support; owner/access/disable policy still required |
-| `iskra-canon-import-1536` | 3 | ACTIVE | false | internal/support; owner/access/expiry/removal required |
-| `iskra-canon-backfill-1536` | 3 | ACTIVE | false | internal/support; owner/access/expiry/removal required |
-| `iskra-canon-import-diagnostic` | 3 | ACTIVE | false | release blocker unless removed or accepted by time-boxed ADR |
+| `iskra-canon-import-1536` | 4 | ACTIVE | true | retired 410 stub; no import work |
+| `iskra-canon-backfill-1536` | 4 | ACTIVE | true | retired 410 stub; no backfill work |
+| `iskra-canon-import-diagnostic` | n/a | not found | n/a | absent live |
 | `embed` | n/a | not found | n/a | absent live; direct `runtime/iskraSpace` uses `gemini` `embedContent` |
 
 ## Gemini Function Source Posture
@@ -102,6 +106,30 @@ candidates, and Auth connection allocation advice.
 
 Receipt: `docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md`.
 
+## 2026-06-16 Approved Live Cleanup Receipt
+
+After explicit owner approval, Change-Set A was executed against
+`AgiIskra / typcvaszcfdpkzbjzuur`:
+
+| Function | Before | After | Source posture |
+| --- | --- | --- | --- |
+| `iskra-canon-import-1536` | version 3, `verify_jwt=false`, service-role import handler | version 4, `verify_jwt=true` | 410 JSON stub: `canon_import_retired` |
+| `iskra-canon-backfill-1536` | version 3, `verify_jwt=false`, service-role/OpenAI backfill handler | version 4, `verify_jwt=true` | 410 JSON stub: `canon_backfill_retired` |
+| `iskra-canon-import-diagnostic` | previously tracked as live | absent from 2026-06-16 live function list | no live function observed |
+
+Live read-back after deploy confirmed:
+
+- `gemini`: version 5, ACTIVE, `verify_jwt=true`;
+- `db-proxy`: version 3, ACTIVE, `verify_jwt=true`;
+- `iskra-canon-import-1536`: version 4, ACTIVE, `verify_jwt=true`, retired stub;
+- `iskra-canon-backfill-1536`: version 4, ACTIVE, `verify_jwt=true`, retired stub;
+- no `iskra-canon-import-diagnostic` entry in the function list.
+
+No secret values were read or printed. No SQL, DDL, branch, storage, or data
+mutation was performed. Rollback requires redeploying previous source only with
+`verify_jwt=true` plus an admin/custom-auth gate, or a new explicit ADR
+exception with expiry.
+
 ## Release Interpretation
 
 Verified:
@@ -116,11 +144,10 @@ Partial:
 
 Open:
 
-- `iskra-canon-import-diagnostic` remains live with `verify_jwt=false`.
-- `iskra-canon-import-1536` and `iskra-canon-backfill-1536` remain live with
-  `verify_jwt=false`.
 - `db-proxy` remains live and needs owner/access/disable policy.
-- Advisors/grants/logs/app-data evidence is still missing from this tool pass.
+- OpenAI provider behavior is still not live-smoked.
+- Security/performance advisors still require hardening triage before public sign-off.
+- App-data path counts and recent logs remain separate evidence items.
 
 ## Next Safe Step
 
@@ -128,15 +155,16 @@ Choose one focused path:
 
 1. OpenAI smoke path: configure/confirm server-side OpenAI env, then run an
    approval-gated live smoke for generation, streaming, embeddings, and fallback.
-2. Supabase cleanup path: remove or ADR-exempt `iskra-canon-import-diagnostic`,
-   and define owner/access/expiry/removal for import/backfill/db-proxy.
+2. Supabase cleanup path: keep import/backfill retired, keep diagnostic absent,
+   and define owner/access/disable policy for `db-proxy`.
 
 ## Delta
 
-Delta: live Supabase now confirms the Gemini embedding repair and dual-provider
-gateway source posture.
+Delta: live Supabase now confirms the Gemini embedding repair, dual-provider
+gateway source posture, and 2026-06-16 retirement of canon import/backfill
+privileged handlers.
 D: Supabase connector project/functions/migrations/extensions/source reads,
-GitHub PR #201 checks and comments.
-Omega: 0.9 for observed live metadata and Gemini source posture; 0.55 for OpenAI
-runtime behavior until smoke.
-Lambda: revise after OpenAI smoke, cleanup deploy, or advisor/grants/logs access.
+GitHub PR #201 checks and comments, 2026-06-16 live function deploy/read-back.
+Omega: 0.92 for observed live metadata and retired stub source posture; 0.55 for
+OpenAI runtime behavior until smoke.
+Lambda: revise after OpenAI smoke, `db-proxy` owner/access decision, or advisor/logs/app-data access.
