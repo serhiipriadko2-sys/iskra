@@ -39,10 +39,11 @@
 - **Mitigation:** Keep Cloud Run as the mandatory deploy contour and inspect Google Cloud summaries first if this loop reopens.
 
 ### OPN-20260607-003: Supabase Live Function Drift Before Public Release
-- **Description:** Fresh read-only Supabase baseline lists live `gemini`, `db-proxy`, `iskra-canon-import-1536`, `iskra-canon-backfill-1536`, and `iskra-canon-import-diagnostic`; repo-side `embed` exists but is absent from the live function list.
-- **Status:** Open; approval packet prepared, live cleanup not executed.
-- **Risk:** Public release could still retain unauthenticated internal/diagnostic functions. The diagnostic function is especially sensitive because the refreshed source posture shows it responds without method/auth gate and reports env-presence checks.
-- **Mitigation:** `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` separates direct `runtime/iskraSpace` `gemini embedContent` from engine/web `embed`. `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md` records the post-PR #201 project/migration/function/source baseline. `docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md` records the explicit before/after, rollback, approval phrase, and advisor summary. Before live cleanup mutation, obtain explicit owner approval, remove `iskra-canon-import-diagnostic` or accept a time-boxed ADR exception, and add owner/access/expiry decisions for `db-proxy` and canon import/backfill functions.
+- **Description:** Fresh live verification on 2026-06-16 shows `gemini`, `db-proxy`, `iskra-canon-import-1536`, and `iskra-canon-backfill-1536` active in `AgiIskra / typcvaszcfdpkzbjzuur`; `iskra-canon-import-diagnostic` is absent. The import/backfill functions were retired as 410 stubs and redeployed as version 4 with `verify_jwt=true` after explicit owner approval.
+- **Status:** Resolved for the unreviewed privileged unauthenticated Edge Function boundary; residual `db-proxy` owner/access/disable policy and OpenAI live smoke remain tracked separately.
+- **Risk:** Public release no longer retains canon import/backfill service-role-backed handlers without JWT. Reintroducing import/backfill behavior would recreate a privileged live boundary and must not happen without a new ADR, explicit expiry, and an authenticated admin/custom-auth gate.
+- **Mitigation:** ADR `governance/adr_20260616_retire_canon_import_backfill_edge_functions.md` records the decision, before/after live metadata, rollback path, and verification. Current PASS criterion: live function list shows zero unreviewed privileged functions with `verify_jwt=false`, and `iskra-canon-import-diagnostic` remains absent.
+
 
 ### OPN-20260607-004: iskraSpace Build Warnings Before Release
 - **Description:** `pnpm --dir runtime/iskraSpace run build` passes, but emits warnings for CSS syntax (`-: .;`), mixed dynamic/static imports around Supabase modules, and a main chunk larger than 500 kB.
