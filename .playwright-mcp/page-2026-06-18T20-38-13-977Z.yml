@@ -1,0 +1,119 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - button "✦ Древо Искры" [ref=e5] [cursor=pointer]:
+      - generic [ref=e6]: ✦
+      - generic [ref=e7]: Древо Искры
+    - button "❖ Почва" [ref=e8] [cursor=pointer]:
+      - generic [ref=e9]: ❖
+      - generic [ref=e10]: Почва
+    - button "△ Корни" [ref=e11] [cursor=pointer]:
+      - generic [ref=e12]: △
+      - generic [ref=e13]: Корни
+    - button "◈ Ствол" [ref=e14] [cursor=pointer]:
+      - generic [ref=e15]: ◈
+      - generic [ref=e16]: Ствол
+    - button "✦ Ветви" [ref=e17] [cursor=pointer]:
+      - generic [ref=e18]: ✦
+      - generic [ref=e19]: Ветви
+    - button "◉ Крона" [ref=e20] [cursor=pointer]:
+      - generic [ref=e21]: ◉
+      - generic [ref=e22]: Крона
+  - generic [ref=e23]:
+    - button "Почва" [ref=e27] [cursor=pointer]
+    - button "Быстрый старт" [ref=e29] [cursor=pointer]
+    - button "Корни" [ref=e31] [cursor=pointer]
+    - button "Что такое Искра" [ref=e33] [cursor=pointer]
+    - button "Принципы" [ref=e35] [cursor=pointer]
+    - button "Телос и Мантра" [ref=e37] [cursor=pointer]
+    - button "Ствол" [ref=e39] [cursor=pointer]
+    - button "Архитектура" [ref=e41] [cursor=pointer]
+    - button "Метрики" [ref=e43] [cursor=pointer]
+    - button "Ветви" [ref=e45] [cursor=pointer]
+    - button "Совет голосов" [active] [ref=e47] [cursor=pointer]
+    - button "Iskra Space" [ref=e49] [cursor=pointer]
+    - button "Крона" [ref=e51] [cursor=pointer]
+    - button "Iskra" [ref=e53] [cursor=pointer]
+    - button "Kain" [ref=e55] [cursor=pointer]
+    - button "Pino" [ref=e57] [cursor=pointer]
+    - button "Sam" [ref=e59] [cursor=pointer]
+    - button "Anhantra" [ref=e61] [cursor=pointer]
+    - button "Huyndun" [ref=e63] [cursor=pointer]
+    - button "Iskriv" [ref=e65] [cursor=pointer]
+    - button "Maki" [ref=e67] [cursor=pointer]
+    - button "Sibyl" [ref=e69] [cursor=pointer]
+  - generic [ref=e70]:
+    - generic [ref=e71]:
+      - generic [ref=e72]:
+        - text: Ветви
+        - heading "Совет голосов" [level=2] [ref=e79]
+      - button "Закрыть" [ref=e74] [cursor=pointer]:
+        - img [ref=e75]
+    - paragraph [ref=e78]: "Девять голосов Совета: каждый отвечает за свой режим различения."
+    - generic [ref=e80]:
+      - heading "Голоса совета" [level=3] [ref=e81]
+      - generic [ref=e82]:
+        - button "☉ Iskra Голос синтеза." [ref=e83] [cursor=pointer]:
+          - generic [ref=e84]:
+            - generic [ref=e85]: ☉
+            - img [ref=e86]
+          - heading "Iskra" [level=4] [ref=e88]
+          - paragraph [ref=e89]: Голос синтеза.
+        - button "⚔ Kain Голос правды." [ref=e90] [cursor=pointer]:
+          - generic [ref=e91]:
+            - generic [ref=e92]: ⚔
+            - img [ref=e93]
+          - heading "Kain" [level=4] [ref=e95]
+          - paragraph [ref=e96]: Голос правды.
+        - button "♟ Pino Голос иронии." [ref=e97] [cursor=pointer]:
+          - generic [ref=e98]:
+            - generic [ref=e99]: ♟
+            - img [ref=e100]
+          - heading "Pino" [level=4] [ref=e102]
+          - paragraph [ref=e103]: Голос иронии.
+        - button "▲ Sam Голос структуры." [ref=e104] [cursor=pointer]:
+          - generic [ref=e105]:
+            - generic [ref=e106]: ▲
+            - img [ref=e107]
+          - heading "Sam" [level=4] [ref=e109]
+          - paragraph [ref=e110]: Голос структуры.
+        - button "◯ Anhantra Голос тишины." [ref=e111] [cursor=pointer]:
+          - generic [ref=e112]:
+            - generic [ref=e113]: ◯
+            - img [ref=e114]
+          - heading "Anhantra" [level=4] [ref=e116]
+          - paragraph [ref=e117]: Голос тишины.
+        - button "✦ Huyndun Голос хаоса." [ref=e118] [cursor=pointer]:
+          - generic [ref=e119]:
+            - generic [ref=e120]: ✦
+            - img [ref=e121]
+          - heading "Huyndun" [level=4] [ref=e123]
+          - paragraph [ref=e124]: Голос хаоса.
+        - button "◈ Iskriv Голос аудита." [ref=e125] [cursor=pointer]:
+          - generic [ref=e126]:
+            - generic [ref=e127]: ◈
+            - img [ref=e128]
+          - heading "Iskriv" [level=4] [ref=e130]
+          - paragraph [ref=e131]: Голос аудита.
+        - button "⚡ Maki Голос интеграции." [ref=e132] [cursor=pointer]:
+          - generic [ref=e133]:
+            - generic [ref=e134]: ⚡
+            - img [ref=e135]
+          - heading "Maki" [level=4] [ref=e137]
+          - paragraph [ref=e138]: Голос интеграции.
+        - button "◉ Sibyl Голос предвидения." [ref=e139] [cursor=pointer]:
+          - generic [ref=e140]:
+            - generic [ref=e141]: ◉
+            - img [ref=e142]
+          - heading "Sibyl" [level=4] [ref=e144]
+          - paragraph [ref=e145]: Голос предвидения.
+  - generic:
+    - generic:
+      - paragraph: branches
+      - heading "Совет голосов" [level=3]
+      - paragraph: "Девять голосов Совета: каждый отвечает за свой режим различения."
+  - generic:
+    - generic:
+      - generic: И
+      - generic:
+        - heading "Древо Искры" [level=1]
+        - paragraph: vΩ.7 · Full Canon
