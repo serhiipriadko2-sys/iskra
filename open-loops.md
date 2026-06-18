@@ -59,6 +59,6 @@
 
 ### OPN-20260608-002: Dual AI Provider Live Smoke
 - **Description:** Repo source now supports Gemini default plus optional OpenAI routing in the `gemini` Supabase Edge Function.
-- **Status:** Partially closed. Gemini embedding live smoke is verified via PR #201; OpenAI provider live smoke remains open.
-- **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior are not proven against live Supabase secrets/runtime yet, so public release claims must not advertise OpenAI behavior as verified.
-- **Mitigation:** Before claiming OpenAI support, refresh the Supabase read-only baseline, configure server-side `OPENAI_API_KEY`/model env only in Supabase, deploy only after explicit approval, and smoke generation, streaming, embeddings, and fallback without printing secret values.
+- **Status:** Tooling ready, awaiting smoke verification. 
+- **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior must be proven against live Supabase secrets/runtime before claiming verified status in public releases.
+- **Mitigation:** Created `tools/smoke_openai_provider.py` to securely provision the secret via CLI, execute a POST call to Deno Edge Function using anon key auth, and unset the secret immediately. Run the tool to execute the live smoke test.
