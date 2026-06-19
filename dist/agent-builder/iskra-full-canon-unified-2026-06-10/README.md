@@ -43,6 +43,16 @@ provenance and rollback context, not the current entrypoint.
 - `MANIFEST.sha256`, `FULL_CANON_UNIFICATION.md`,
   `UNIFIED_QC_RECEIPT.json`, `RECOVERY_RECEIPT.md`, and legacy receipts -
   reproducibility, source synthesis, and verification records.
+- `PROVENANCE_RECEIPT.md` - exact / transformed / excluded source trace for
+  the 14 recovered archives and the GitHub mirror boundary.
+- `agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md` - current
+  routing table for canonical, legacy, superseded, and transport-only layers.
+- `agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md` - explicit
+  Builder, connector, helper-script, memory, and release-gate boundaries.
+- `agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md` - post-upload Builder
+  UI acceptance prompts.
+- `agent_files/memory_seed/MEMORY_SEED_CLEANUP.md` - memory seed cleanup labels
+  and drift handling.
 
 ## Horizon Boundary
 
@@ -84,8 +94,14 @@ agent.
 
 ## Horizon Branch QC Gate
 
-This branch adds Horizon files and instruction wiring. Before cutting a new
-upload archive, checkout the branch and regenerate:
+Current `main` refresh note: post-PR #206 Horizon root files were restored and
+strictened after the unified package merge. The package copies of the Horizon
+validator, contract, proposal schema, README, and validator wrapper are
+byte-identical to root `main` at verification time. Root `ledger/sot.json`
+remains repository-level SoT metadata and must be checked before cutting a new
+archive.
+
+Before cutting a new upload archive, checkout the branch and regenerate:
 
 - `MANIFEST.sha256`
 - `ZIP_RECEIPT.json`, if a new zip is produced
@@ -93,6 +109,20 @@ upload archive, checkout the branch and regenerate:
 
 The current manifest and unified QC receipt have been regenerated for this
 GitHub mirror package.
+
+## Release Gate
+
+GitBook is not a package-owned release gate. If GitBook statuses appear on
+GitHub, treat them as external App/status noise until disabled in GitHub/GitBook
+settings or removed from branch protection.
+
+Release gate for this package:
+
+1. GitHub `main` SoT/ledger check.
+2. Package manifest/QC check.
+3. Secret scan.
+4. Horizon tests.
+5. Builder UI acceptance prompts.
 
 ## Merge Rule
 
@@ -156,6 +186,8 @@ Valid status labels:
 - Runtime hardening prompts pass 6/6.
 - Governance and security files are visible as package knowledge, including
   `governance/` and `SECURITY.md`.
+- Canon layer index, runtime boundary, provenance receipt, and memory cleanup
+  labels are visible.
 
 ## Rollback
 

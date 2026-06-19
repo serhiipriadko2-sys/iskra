@@ -117,7 +117,6 @@
     "runtime/README.md": "cec263be1f25c38f0d7f69a442c634ed00410ffddf9ed4cf4cd85df9559411db",
     "runtime/eslint.config.js": "286d75f81dd3b996c744255d64a5bbc140609644f91cb2290f1e65a0f560aca1",
     "runtime/iskraSpace/.env.example": "60ebe08efdc1b56107fe5942b097d23b7f077e2f60863081518349c33bea8de0",
-    "runtime/iskraSpace/.env.local": "5948ffddacc3db3dd6f58fd1b123590ff039e2ee1e4c65ef6b55c6ae1e66f430",
     "runtime/iskraSpace/.env.production.example": "255ee237f83528494405cf4c74a0be30a7450354f2cd2a4e625c6884805f2289",
     "runtime/iskraSpace/.env.staging.example": "60cf9389c2dfcc75c122e602a651f5eb1380fada1a3b074fe0b38957ad4db9e6",
     "runtime/iskraSpace/01_MANIFEST_and_OVERVIEW.md": "b082b56ab1ed0df98e602a7daddb5753b6dc172a8032c710b3c4bb1a10cb4a5c",
