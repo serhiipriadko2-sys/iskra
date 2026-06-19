@@ -14,8 +14,8 @@
     ]
   },
   "manifest": {
-    "entries": 173,
-    "ok": 173,
+    "entries": 178,
+    "ok": 178,
     "missing": [],
     "mismatch": [],
     "note": "Summary excludes MANIFEST.sha256 itself; hashes regenerated after this receipt is written."
@@ -55,5 +55,28 @@
       "forbidden_byproducts": 0,
       "max_file_bytes": 759999
     }
+  },
+  "repair_20260619": {
+    "type": "metadata_only_builder_repair",
+    "main_head_verified": "aaabf5d055cd3c755a58a1df7c43a72a17a198b6",
+    "pr206_merge": "f629328bd3403b1a19db1a003f1ace37838cf8ae",
+    "horizon_package_parity": "PASS: root and package Horizon validator/contract/schema/README/wrapper byte-identical",
+    "gitbook_gate": "not package-owned; external GitHub App/status noise until disabled in GitHub/GitBook settings",
+    "added": [
+      "PROVENANCE_RECEIPT.md",
+      "agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md",
+      "agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
+      "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md",
+      "agent_files/memory_seed/MEMORY_SEED_CLEANUP.md"
+    ],
+    "updated": [
+      "README.md",
+      "agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md",
+      "UNIFIED_QC_RECEIPT.json",
+      "MANIFEST.sha256"
+    ],
+    "archive_repacked": false,
+    "verdict": "PASS",
+    "memory_receipt": "workspace memory only; package memory_current left unchanged for compact GitHub write-set"
   }
 }
