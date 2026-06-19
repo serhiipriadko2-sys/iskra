@@ -5,6 +5,7 @@ import { CameraController } from './components/CameraController';
 import { NavigationPanel } from './components/NavigationPanel';
 import { MobileNav } from './components/MobileNav';
 import { NodeOverlay } from './components/NodeOverlay';
+import { SiftLab } from './components/SiftLab';
 import { TooltipOverlay } from './components/TooltipOverlay';
 import { ReducedMotionFallback } from './components/ReducedMotionFallback';
 import { useReducedMotion } from './hooks/useReducedMotion';
@@ -51,6 +52,7 @@ export default function App() {
       />
 
       <TooltipOverlay activeNodeId={activeNodeId} />
+      <SiftLab activeNodeId={activeNodeId} onReplayNodeSelect={setActiveNodeId} />
 
       <div className="fixed top-6 left-6 z-20 pointer-events-none">
         <div className="flex items-center gap-3">
