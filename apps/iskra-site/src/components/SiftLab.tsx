@@ -441,8 +441,8 @@ export function SiftLab({ activeNodeId, onReplayNodeSelect }: SiftLabProps) {
   };
 
   return (
-    <aside className="fixed left-4 bottom-24 z-30 w-[calc(100vw-2rem)] max-w-[460px] md:bottom-4 lg:left-48">
-      <div className="glass-panel max-h-[62vh] overflow-hidden rounded-2xl shadow-2xl">
+    <aside className="fixed left-4 bottom-16 z-30 w-[calc(100vw-2rem)] max-w-[460px] md:bottom-4 lg:left-48">
+      <div className="glass-panel max-h-[45vh] md:max-h-[62vh] overflow-hidden rounded-2xl shadow-2xl">
         <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 py-3">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.22em]" style={{ color: nodeColor }}>
@@ -458,7 +458,7 @@ export function SiftLab({ activeNodeId, onReplayNodeSelect }: SiftLabProps) {
           </div>
         </div>
 
-        <div className="max-h-[calc(62vh-54px)] space-y-3 overflow-y-auto p-4">
+        <div className="max-h-[calc(45vh-54px)] md:max-h-[calc(62vh-54px)] space-y-3 overflow-y-auto p-3 md:p-4">
           <div className="flex flex-wrap gap-1.5">
             {(Object.keys(stageLabels) as SiftStage[]).map((item) => (
               <button

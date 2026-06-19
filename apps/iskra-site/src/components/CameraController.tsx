@@ -22,8 +22,9 @@ export function CameraController({ activeNodeId }: CameraControllerProps) {
   const lookAtTarget = useRef(new THREE.Vector3(...HOME_TARGET));
 
   useEffect(() => {
-    camera.fov = isMobile ? 62 : 55;
-    camera.updateProjectionMatrix();
+    const perspectiveCamera = camera as THREE.PerspectiveCamera;
+    perspectiveCamera.fov = isMobile ? 62 : 55;
+    perspectiveCamera.updateProjectionMatrix();
   }, [camera, isMobile]);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export function CameraController({ activeNodeId }: CameraControllerProps) {
   useFrame((_, delta) => {
     const orbit = controls as OrbitControlsImpl | null;
     const speed = reducedMotion ? 1 : Math.min(2.2 * delta, 1);
-    const distanceScale = isMobile ? 1.25 : 1;
+    const distanceScale = isMobile ? 1.05 : 1;
 
     const scaledTarget = new THREE.Vector3()
       .subVectors(targetPosition.current, lookAtTarget.current)

@@ -18,7 +18,7 @@ export function TreeTrunk() {
   return (
     <group ref={trunkRef}>
       {/* Central trunk */}
-      <mesh position={[0, 0, 0]} castShadow>
+      <mesh position={[0, 0, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.28, 0.48, 5.5, 48]} />
         <meshStandardMaterial
           color="#3E2723"

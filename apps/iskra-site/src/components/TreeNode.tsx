@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import type { TreeNodeData } from '../lib/treeData';
 
 interface TreeNodeProps {
@@ -17,6 +18,7 @@ export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
   const glowRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const reducedMotion = useReducedMotion();
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   useFrame(({ clock }) => {
     if (!meshRef.current || reducedMotion) return;
@@ -68,13 +70,13 @@ export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
       <Html distanceFactor={10} style={{ zIndex: 5 }}>
         <button
           onClick={() => onClick(node.id)}
-          className={`pointer-events-auto px-3 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-sm ${
+          className={`pointer-events-auto rounded-full font-mono uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-sm text-[9px] md:text-[10px] px-2 py-1 md:px-3 md:py-1.5 ${
             isActive
               ? 'bg-iskra-primary text-black shadow-[0_0_20px_rgba(255,122,0,0.5)]'
               : 'bg-iskra-surface/80 text-iskra-text hover:bg-white/10'
           } ${isDimmed ? 'opacity-40' : 'opacity-100'}`}
         >
-          {node.label}
+          {isMobile ? node.shortLabel : node.label}
         </button>
       </Html>
     </group>

@@ -32,15 +32,9 @@ export function FogEnvironment() {
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0005}
-        shadow-camera={{
-          near: 0.5,
-          far: 50,
-          left: -12,
-          right: 12,
-          top: 12,
-          bottom: -12,
-        }}
-      />
+      >
+        <orthographicCamera attach="shadow-camera" args={[-12, 12, 12, -12, 0.5, 50]} />
+      </directionalLight>
     </>
   );
 }

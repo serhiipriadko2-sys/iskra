@@ -36,7 +36,7 @@ export function SoilDisc() {
 
   return (
     <group position={[0, -5.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      <mesh>
+      <mesh receiveShadow>
         <circleGeometry args={[7.5, 64]} />
         <meshStandardMaterial map={texture} roughness={0.95} metalness={0.05} transparent opacity={0.9} />
       </mesh>
