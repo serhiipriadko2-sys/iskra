@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.1",
+  "module": "horizon",
+  "status": "validator_only_v0.1",
+  "default_wrapper_mode": "strict",
+  "meta_permission_required": true,
+  "semantic_labels_allowed": [
+    "FORM_PASS",
+    "FORM_PASS_NEEDS_HUMAN_REVIEW",
+    "SHIFT_BLOCKED"
+  ]
+}
