@@ -2,6 +2,7 @@ import { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { TreeScene } from './components/TreeScene';
 import { CameraController } from './components/CameraController';
+import { Effects } from './components/Effects';
 import { NavigationPanel } from './components/NavigationPanel';
 import { MobileNav } from './components/MobileNav';
 import { NodeOverlay } from './components/NodeOverlay';
@@ -9,6 +10,8 @@ import { SiftLab } from './components/SiftLab';
 import { TooltipOverlay } from './components/TooltipOverlay';
 import { ReducedMotionFallback } from './components/ReducedMotionFallback';
 import { useReducedMotion } from './hooks/useReducedMotion';
+import { useHashNodeId } from './hooks/useHashNodeId';
+import { useMediaQuery } from './hooks/useMediaQuery';
 
 function Loader() {
   return (
@@ -24,6 +27,9 @@ function Loader() {
 export default function App() {
   const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
+  const isMobile = useMediaQuery('(max-width: 767px)');
+
+  useHashNodeId(activeNodeId, setActiveNodeId);
 
   if (reducedMotion) {
     return <ReducedMotionFallback />;
@@ -36,20 +42,18 @@ export default function App() {
 
       <Suspense fallback={<Loader />}>
         <Canvas
+          shadows
           camera={{ position: [0, 1, 16], fov: 55, near: 0.1, far: 100 }}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-          dpr={[1, 1.5]}
+          dpr={isMobile ? [1, 1] : [1, 1.5]}
         >
           <CameraController activeNodeId={activeNodeId} />
           <TreeScene activeNodeId={activeNodeId} onNodeClick={setActiveNodeId} />
+          <Effects />
         </Canvas>
       </Suspense>
 
-      <NodeOverlay
-        activeNodeId={activeNodeId}
-        onClose={() => setActiveNodeId(null)}
-        onNavigate={setActiveNodeId}
-      />
+      <NodeOverlay activeNodeId={activeNodeId} onClose={() => setActiveNodeId(null)} />
 
       <TooltipOverlay activeNodeId={activeNodeId} />
       <SiftLab activeNodeId={activeNodeId} onReplayNodeSelect={setActiveNodeId} />

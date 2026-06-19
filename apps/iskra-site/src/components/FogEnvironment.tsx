@@ -10,20 +10,37 @@ export function FogEnvironment() {
   useFrame(({ clock }) => {
     if (!lightRef.current || reducedMotion) return;
     const t = clock.getElapsedTime();
-    lightRef.current.position.x = Math.sin(t * 0.2) * 6;
-    lightRef.current.position.z = Math.cos(t * 0.2) * 6;
-    lightRef.current.intensity = 1.5 + Math.sin(t * 1.2) * 0.3;
+    lightRef.current.position.x = Math.sin(t * 0.15) * 7;
+    lightRef.current.position.z = Math.cos(t * 0.15) * 7;
+    lightRef.current.intensity = 1.6 + Math.sin(t * 1.0) * 0.25;
   });
 
   return (
     <>
-      <color attach="background" args={['#05080A']} />
-      <fog attach="fog" args={['#05080A', 10, 35]} />
-      <ambientLight intensity={0.2} />
-      <pointLight ref={lightRef} position={[6, 4, 6]} color="#FF7A00" intensity={2} distance={40} />
-      <pointLight position={[-6, -2, -6]} color="#4DA3FF" intensity={0.8} distance={40} />
-      <pointLight position={[0, 8, 0]} color="#9B59B6" intensity={0.7} distance={30} />
-      <pointLight position={[0, -4, 4]} color="#5D4037" intensity={0.6} distance={25} />
+      <color attach="background" args={['#030507']} />
+      <fog attach="fog" args={['#030507', 8, 38]} />
+      <ambientLight intensity={0.15} />
+      <hemisphereLight intensity={0.2} groundColor="#2D1B14" color="#4DA3FF" />
+      <pointLight ref={lightRef} position={[7, 5, 7]} color="#FF7A00" intensity={2.2} distance={45} />
+      <pointLight position={[-7, -2, -7]} color="#4DA3FF" intensity={0.9} distance={45} />
+      <pointLight position={[0, 9, 0]} color="#9B59B6" intensity={0.8} distance={35} />
+      <pointLight position={[0, -5, 4]} color="#5D4037" intensity={0.7} distance={28} />
+      <directionalLight
+        position={[-5, 10, 5]}
+        intensity={0.4}
+        color="#FFB020"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-bias={-0.0005}
+        shadow-camera={{
+          near: 0.5,
+          far: 50,
+          left: -12,
+          right: 12,
+          top: 12,
+          bottom: -12,
+        }}
+      />
     </>
   );
 }

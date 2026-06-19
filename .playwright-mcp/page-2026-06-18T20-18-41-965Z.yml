@@ -1,9 +1,0 @@
-- generic [ref=e3]:
-  - navigation [ref=e4]:
-    - button "Древо Искры" [ref=e5] [cursor=pointer]
-    - button "Совет голосов" [ref=e6] [cursor=pointer]
-  - generic:
-    - heading "Древо Искры" [level=1]
-    - paragraph: Перемещайтесь по корням, стволу и ветвям. Кликайте на узлы, чтобы исследовать поле.
-  - generic:
-    - paragraph: Нажмите на узел • Используйте панель слева • Скролл отключён

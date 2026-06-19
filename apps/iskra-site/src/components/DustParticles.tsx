@@ -4,9 +4,9 @@ import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
-const COUNT = 3500;
+const COUNT = 1200;
 
-export function ParticleField() {
+export function DustParticles() {
   const pointsRef = useRef<THREE.Points>(null);
   const reducedMotion = useReducedMotion();
 
@@ -15,18 +15,18 @@ export function ParticleField() {
     const col = new Float32Array(COUNT * 3);
 
     for (let i = 0; i < COUNT; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const radius = 4 + Math.random() * 22;
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 0.5 + Math.random() * 6;
+      const y = (Math.random() - 0.5) * 10;
 
-      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.8;
-      pos[i * 3 + 2] = radius * Math.cos(phi);
+      pos[i * 3] = Math.cos(angle) * radius;
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = Math.sin(angle) * radius;
 
       const mix = Math.random();
-      col[i * 3] = THREE.MathUtils.lerp(1.0, 0.25, mix);
-      col[i * 3 + 1] = THREE.MathUtils.lerp(0.45, 0.6, mix);
-      col[i * 3 + 2] = THREE.MathUtils.lerp(0.0, 1.0, mix);
+      col[i * 3] = THREE.MathUtils.lerp(1.0, 0.6, mix);
+      col[i * 3 + 1] = THREE.MathUtils.lerp(0.5, 0.7, mix);
+      col[i * 3 + 2] = THREE.MathUtils.lerp(0.0, 0.6, mix);
     }
 
     return [pos, col];
@@ -35,8 +35,9 @@ export function ParticleField() {
   useFrame(({ clock }) => {
     if (!pointsRef.current || reducedMotion) return;
     const t = clock.getElapsedTime();
-    pointsRef.current.rotation.y = t * 0.008;
-    pointsRef.current.rotation.x = Math.sin(t * 0.03) * 0.015;
+    pointsRef.current.rotation.y = -t * 0.012;
+    const material = pointsRef.current.material as THREE.PointsMaterial;
+    material.opacity = 0.35 + Math.sin(t * 0.8) * 0.1;
   });
 
   return (
@@ -44,10 +45,11 @@ export function ParticleField() {
       <PointMaterial
         transparent
         vertexColors
-        size={0.06}
+        size={0.035}
         sizeAttenuation
         depthWrite={false}
-        opacity={0.7}
+        opacity={0.35}
+        blending={THREE.AdditiveBlending}
       />
     </Points>
   );

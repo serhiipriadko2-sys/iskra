@@ -4,7 +4,9 @@ import { TreeNode } from './TreeNode';
 import { TreeTrunk } from './TreeTrunk';
 import { SoilDisc } from './SoilDisc';
 import { ParticleField } from './ParticleField';
+import { DustParticles } from './DustParticles';
 import { FogEnvironment } from './FogEnvironment';
+import { Stars } from '@react-three/drei';
 import { TREE_NODES, allTreeNodes, findNodeById } from '../lib/treeData';
 import type { TreeNodeData } from '../lib/treeData';
 
@@ -148,6 +150,8 @@ export function TreeScene({ activeNodeId, onNodeClick }: TreeSceneProps) {
     <>
       <FogEnvironment />
       <ParticleField />
+      <DustParticles />
+      <Stars />
       <SoilDisc />
       <TreeTrunk />
       <TreeRoots activeBranchIds={activeBranchIds} />
