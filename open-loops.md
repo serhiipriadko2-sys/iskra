@@ -39,10 +39,11 @@
 - **Mitigation:** Keep Cloud Run as the mandatory deploy contour and inspect Google Cloud summaries first if this loop reopens.
 
 ### OPN-20260607-003: Supabase Live Function Drift Before Public Release
-- **Description:** Fresh read-only Supabase baseline lists live `gemini`, `db-proxy`, `iskra-canon-import-1536`, `iskra-canon-backfill-1536`, and `iskra-canon-import-diagnostic`; repo-side `embed` exists but is absent from the live function list.
-- **Status:** Open.
-- **Risk:** Public release could still retain unauthenticated internal/diagnostic functions. The diagnostic function is especially sensitive because the refreshed source posture shows it responds without method/auth gate and reports env-presence checks.
-- **Mitigation:** `docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md` separates direct `runtime/iskraSpace` `gemini embedContent` from engine/web `embed`. `docs/operations/iskraspace_supabase_readonly_baseline_2026-06-09.md` records the post-PR #201 project/migration/function/source baseline. Before live cleanup mutation, refresh advisors/grants/logs/app data path if available; remove `iskra-canon-import-diagnostic` or accept a time-boxed ADR exception; add owner/access/expiry decisions for `db-proxy` and canon import/backfill functions.
+- **Description:** Fresh live verification on 2026-06-16 shows `gemini`, `db-proxy`, `iskra-canon-import-1536`, and `iskra-canon-backfill-1536` active in `AgiIskra / typcvaszcfdpkzbjzuur`; `iskra-canon-import-diagnostic` is absent. The import/backfill functions were retired as 410 stubs and redeployed as version 4 with `verify_jwt=true` after explicit owner approval.
+- **Status:** Resolved for the unreviewed privileged unauthenticated Edge Function boundary; residual `db-proxy` owner/access/disable policy and OpenAI live smoke remain tracked separately.
+- **Risk:** Public release no longer retains canon import/backfill service-role-backed handlers without JWT. Reintroducing import/backfill behavior would recreate a privileged live boundary and must not happen without a new ADR, explicit expiry, and an authenticated admin/custom-auth gate.
+- **Mitigation:** ADR `governance/adr_20260616_retire_canon_import_backfill_edge_functions.md` records the decision, before/after live metadata, rollback path, and verification. Current PASS criterion: live function list shows zero unreviewed privileged functions with `verify_jwt=false`, and `iskra-canon-import-diagnostic` remains absent.
+
 
 ### OPN-20260607-004: iskraSpace Build Warnings Before Release
 - **Description:** `pnpm --dir runtime/iskraSpace run build` passes, but emits warnings for CSS syntax (`-: .;`), mixed dynamic/static imports around Supabase modules, and a main chunk larger than 500 kB.
@@ -52,12 +53,12 @@
 
 ### OPN-20260608-001: Optional Vercel Credential Contour
 - **Description:** `Deploy to Vercel` failed on merge commit `e8236ace454aacdabb50cdfaa54b674971f88954` because Vercel credentials were empty in the GitHub Actions job.
-- **Status:** Optional/manual contour planned; automatic main-push release gate removal pending PR.
+- **Status:** Resolved for automatic main-push release gate; Vercel remains optional/manual and unverified until secrets are configured.
 - **Risk:** If Vercel is treated as mandatory without configured secrets, release readiness will be falsely red despite Cloud Run being green.
 - **Mitigation:** Run Vercel only by manual workflow dispatch with `deploy_vercel=true`; fail fast when `VERCEL_TOKEN`, `VERCEL_ORG_ID`, or `VERCEL_PROJECT_ID` are missing; keep Cloud Run as mandatory deploy target until Vercel secrets are configured and intentionally promoted.
 
 ### OPN-20260608-002: Dual AI Provider Live Smoke
 - **Description:** Repo source now supports Gemini default plus optional OpenAI routing in the `gemini` Supabase Edge Function.
-- **Status:** Partially closed. Gemini embedding live smoke is verified via PR #201; OpenAI provider live smoke remains open.
-- **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior are not proven against live Supabase secrets/runtime yet, so public release claims must not advertise OpenAI behavior as verified.
-- **Mitigation:** Before claiming OpenAI support, refresh the Supabase read-only baseline, configure server-side `OPENAI_API_KEY`/model env only in Supabase, deploy only after explicit approval, and smoke generation, streaming, embeddings, and fallback without printing secret values.
+- **Status:** Tooling ready, awaiting smoke verification. 
+- **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior must be proven against live Supabase secrets/runtime before claiming verified status in public releases.
+- **Mitigation:** Created `tools/smoke_openai_provider.py` to securely provision the secret via CLI, execute a POST call to Deno Edge Function using anon key auth, and unset the secret immediately. Run the tool to execute the live smoke test.

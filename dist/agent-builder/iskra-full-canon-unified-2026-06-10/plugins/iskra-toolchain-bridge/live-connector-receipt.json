@@ -1,0 +1,65 @@
+{
+  "status": "partial-live-verified",
+  "date": "2026-06-06",
+  "github": {
+    "connector": "mcp__codex_apps__github",
+    "operation": "get_repo",
+    "status": "PASS",
+    "repository": "serhiipriadko2-sys/iskra",
+    "repository_id": "1126614067",
+    "visibility": "public",
+    "default_branch": "main",
+    "clone_url": "https://github.com/serhiipriadko2-sys/iskra.git",
+    "permissions_observed": ["pull", "push", "triage", "maintain", "admin"],
+    "local_gh_status": "installed but not authenticated"
+  },
+  "supabase": {
+    "connector": "mcp__codex_apps__supabase",
+    "status": "PASS",
+    "project_id": "typcvaszcfdpkzbjzuur",
+    "project_name": "AgiIskra",
+    "region": "eu-west-1",
+    "project_status": "ACTIVE_HEALTHY",
+    "database_version": "17.6.1.063",
+    "api_url": "https://typcvaszcfdpkzbjzuur.supabase.co",
+    "edge_functions": [
+      { "slug": "db-proxy", "status": "ACTIVE", "verify_jwt": true },
+      { "slug": "gemini", "status": "ACTIVE", "verify_jwt": true },
+      { "slug": "iskra-canon-backfill-1536", "status": "ACTIVE", "verify_jwt": false },
+      { "slug": "iskra-canon-import-1536", "status": "ACTIVE", "verify_jwt": false },
+      { "slug": "iskra-canon-import-diagnostic", "status": "ACTIVE", "verify_jwt": false }
+    ],
+    "schema_tables_observed": [
+      "audit_log",
+      "chat_history",
+      "graph_edges",
+      "graph_nodes",
+      "habits",
+      "journal_entries",
+      "memory_nodes",
+      "metrics_snapshots",
+      "rate_limits",
+      "tasks",
+      "users",
+      "voice_preferences"
+    ],
+    "mutation": "none"
+  },
+  "web_sift": {
+    "status": "PARTIAL",
+    "official_openai_manual_helper": "HTTP 403",
+    "boundary": "Official public docs do not prove machine-local Codex plugin loading."
+  },
+  "browser": {
+    "connector": "mcp__codex_apps__opera_browser_connector",
+    "status": "PASS",
+    "page_type": "GitHub commit page",
+    "url": "https://github.com/serhiipriadko2-sys/iskra/commit/e6ce1fb0745bac776eaef254663ec6b38d29faae",
+    "observed_title": "Expand Iskra runtime toolchain bridge",
+    "observed_commit": "e6ce1fb",
+    "observed_branch": "main",
+    "observed_file_count": 56,
+    "residual_signal": "Status checks: failure, 4 / 6"
+  },
+  "boundary": "This receipt proves read-path connector availability, not Builder UI upload or Codex app plugin load."
+}

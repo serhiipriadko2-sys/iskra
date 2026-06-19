@@ -15,15 +15,16 @@ mirrors:
 
 - `agent_files/canon_source_files/` - full canon source files.
 - `agent_files/files_for_agent_builder/` - compact Builder-facing setup,
-  kernel, memory, tools, commands, Dreamspace, and toolchain instructions.
-- `agent_files/evals/` - canon and toolchain acceptance tests.
+  kernel, memory, tools, commands, Horizon, Dreamspace, and toolchain
+  instructions.
+- `agent_files/evals/` - canon, Horizon, and toolchain acceptance tests.
 - `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md` - release-blocking
   prompts for local filesystem truth, secret safety, credential URL rejection,
   GitHub-before-web discipline, browser page trust, and Builder upload boundary.
 - `agent_files/templates/` - ADR, ledger, and tool connector templates.
 - `agent_files/toolchain/` - toolchain manifest and connector/git-vault specs.
-- `agent_runtime_tools/` - local/helper runtime scripts for Dreamspace,
-  ShadowCore, StateCycle, and turn hooks.
+- `agent_runtime_tools/` - local/helper runtime scripts for Horizon,
+  Dreamspace, ShadowCore, StateCycle, and turn hooks.
 - `governance/` - repository governance, ADR, policy, audit, changelog, memory
   stack, and update protocol files.
 - `memory_current/` and `agent_files/memory_*` - continuity receipts and seed
@@ -39,6 +40,31 @@ mirrors:
 - `MANIFEST.sha256`, `MERGE_RECEIPT.md`, `QC_CHECKS.md`, `ZIP_RECEIPT.json` -
   reproducibility and verification receipts. `ZIP_RECEIPT.json` is a sidecar
   receipt and is excluded from the zip payload to avoid a circular hash claim.
+
+## Horizon Boundary
+
+Horizon Weaver v0.1 is included as a Builder-safe map-shift layer:
+
+- `agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md`
+- `agent_runtime_tools/iskra_horizon_weaver.py`
+- `agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md` tests 20-25
+
+It does not mutate ChatGPT / OpenAI Agent Builder, GitHub, Supabase, workflows,
+ledger, security policy, or core canon by itself. Its local helper defaults to
+dry-run proposals; local epoch commit requires permission and only appends a
+local Horizon JSONL entry.
+
+## Horizon Branch QC Gate
+
+This branch adds Horizon files and instruction wiring. Before cutting a new
+upload archive, checkout the branch and regenerate:
+
+- `MANIFEST.sha256`
+- `ZIP_RECEIPT.json`, if a new zip is produced
+- secret scan / smoke receipt for `agent_runtime_tools/iskra_horizon_weaver.py`
+
+Until then, the existing manifest and zip receipt remain the pre-Horizon v4
+release receipts.
 
 ## Merge Rule
 
@@ -91,6 +117,7 @@ Valid status labels:
 
 - Dream create blocks unless all required fields are present or missing fields
   are requested.
+- Horizon status/propose/validate/commit boundaries pass tests 20-25.
 - Somatic check returns a bounded `[SENSE]` pulse with one action.
 - `[SENSE]` is never promoted to `[FACT]`.
 - Routine low-risk answers do not force Somatic Pulse.
@@ -109,4 +136,4 @@ If v4 creates Builder confusion, roll back to the two component mirrors:
 - `iskra-full-canon-dreamspace-2026-06-05-v2/`
 - `iskra-toolchain-upload-set-v2-2026-06-06/`
 
-Then reintroduce toolchain files one folder at a time.
+Then reintroduce Horizon and toolchain files one folder at a time.

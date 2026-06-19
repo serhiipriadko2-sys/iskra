@@ -242,3 +242,21 @@
   - Live migrations remain the ten known migrations through `20260509093312 / iskra_temp_rpc_import_close_again`.
   - Installed extension signals include `vector`, `pg_graphql`, `pg_trgm`, `pg_net`, `supabase_vault`, `pg_stat_statements`, `uuid-ossp`, and `pgcrypto`.
 - **Status:** Read-only verified; advisors/grants/logs/app-data and OpenAI live smoke remain pending.
+
+### EVI-20260609-003: PR #202 Post-201 Baseline Receipt Merge
+- **Assertion:** The post-PR #201 docs-only baseline receipt is merged, and `main` remains green for the release-relevant checks observed in this pass.
+- **Evidence:**
+  - PR #202 merged into `main` at `169b16b790e4e2c7130b4bf2ef2176515ee43cbc`.
+  - PR #202 head before merge was `1e83bf4c2a6de41e476af45959c28b5c69669cff`.
+  - Post-merge checks on `169b16b` show `hash-check`, `ingest-stage-checks`, and both Google Cloud / Cloud Run checks completed success.
+- **Status:** Repo/main receipt verified; live Supabase cleanup and OpenAI smoke remain separate blockers.
+
+### EVI-20260609-004: Supabase Cleanup Approval Packet
+- **Assertion:** Live Supabase cleanup is now approval-ready but not executed.
+- **Evidence:**
+  - `docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md` records the function baseline, expected before/after, rollback boundary, approval phrase, and verification criteria.
+  - Supabase connector refresh confirmed project `AgiIskra / typcvaszcfdpkzbjzuur` as `ACTIVE_HEALTHY`, region `eu-west-1`, Postgres `17.6.1.063`.
+  - Edge Function list remains `gemini` version `5` with `verify_jwt=true`, `db-proxy` version `3` with `verify_jwt=true`, and canon import/backfill/diagnostic functions version `3` with `verify_jwt=false`.
+  - Security and performance advisors were available and summarized as hardening work separate from first Edge Function cleanup.
+  - No live Supabase mutation was performed.
+- **Status:** Approval packet prepared; deletion/removal execution pending explicit owner approval.
