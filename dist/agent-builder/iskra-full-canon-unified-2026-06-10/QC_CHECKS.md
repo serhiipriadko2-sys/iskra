@@ -1,8 +1,8 @@
 # QC Checks
 
-Release: `iskra-full-canon-builder-2026-06-06-v4`
-Date: 2026-06-06
-Updated: 2026-06-10
+Release: `iskra-full-canon-unified-2026-06-10`
+Date: 2026-06-10
+Updated: 2026-06-20
 
 ## Local Checks
 

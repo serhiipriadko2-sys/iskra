@@ -1,8 +1,9 @@
 # Agent Builder Package Index
 
 Status: proposed package index
-Updated: 2026-06-10
-Scope: `iskra-full-canon-builder-2026-06-06-v4`
+Updated: 2026-06-20
+Scope: `iskra-full-canon-unified-2026-06-10`
+Previous scope: `iskra-full-canon-builder-2026-06-06-v4`
 
 This file is the package-level entry point for Agent Builder uploads. The SoT40 operational index remains `canon_source_files/21_INDEX.md`; this package index points to the active upload-facing documents and recent extension docs.
 

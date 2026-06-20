@@ -1,5 +1,6 @@
 {
   "build_utc": "20260610T201945Z",
+  "repair_utc": "20260620T204500Z",
   "coverage": {
     "extended_source_files": 154,
     "missing_from_extended_count": 0,
@@ -10,73 +11,90 @@
     "forbidden_paths": [],
     "removed_byproducts": [
       "agent_runtime_tools/__pycache__",
-      "tools/__pycache__"
+      "tools/__pycache__",
+      "tests/horizon/__pycache__",
+      "memory_current (root duplicate)"
     ]
   },
   "manifest": {
-    "entries": 178,
-    "ok": 178,
+    "entries": 228,
+    "ok": 228,
     "missing": [],
     "mismatch": [],
-    "note": "Summary excludes MANIFEST.sha256 itself; hashes regenerated after this receipt is written."
+    "note": "Regenerated 2026-06-20 after canon backfill, link normalization, and hygiene fixes. Excludes MANIFEST.sha256 itself."
   },
   "secret_hits": [],
   "qc_hits": [],
   "smoke": {
     "horizon_validator_unittest": {
       "returncode": 0,
-      "stdout": "",
       "stderr": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.421s\n\nOK\n"
     },
     "horizon_wrappers_unittest": {
       "returncode": 0,
-      "stdout": "",
       "stderr": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.406s\n\nOK\n"
     },
     "python_syntax_compile": {
       "returncode": 0,
       "errors": []
+    },
+    "reassemble_interface_style": {
+      "returncode": 0,
+      "stdout": "parts=5\\nbytes=3400544\\nsha256=cdf44a557f56c218ac3eed1d89d1f7593141ba0aced29d48c7b56d51c207dc35\\nREASSEMBLY_PASS"
+    },
+    "sha256sum_manifest": {
+      "returncode": 0,
+      "stdout": "228/228 OK"
     }
   },
   "verdict": "PASS",
   "github_mirror": {
     "transport_safe_split": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
     "parts_dir": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts",
-    "original_08_bytes": 3400610,
-    "original_08_sha256": "eb256d82816d3fa6d8653b34bf36b1dcdbf2f39b3f563b0071cf85e8bc7f031b",
+    "original_08_bytes": 3400544,
+    "original_08_sha256": "cdf44a557f56c218ac3eed1d89d1f7593141ba0aced29d48c7b56d51c207dc35",
     "parts": 5,
     "reassembly": "python tools/reassemble_interface_style.py --repo-root . --check",
-    "note": "GitHub connector mirror split only; source zip remains exact single-file package.",
+    "note": "Links normalized to flattened package structure on 2026-06-20; hash updated accordingly.",
     "qc": {
       "reassembly_check": "PASS",
       "manifest_missing": 0,
       "manifest_mismatch": 0,
       "horizon_unittest": "PASS: 9 tests",
       "forbidden_byproducts": 0,
-      "max_file_bytes": 759999
+      "max_file_bytes": 1048576
     }
   },
-  "repair_20260619": {
-    "type": "metadata_only_builder_repair",
-    "main_head_verified": "aaabf5d055cd3c755a58a1df7c43a72a17a198b6",
-    "pr206_merge": "f629328bd3403b1a19db1a003f1ace37838cf8ae",
-    "horizon_package_parity": "PASS: root and package Horizon validator/contract/schema/README/wrapper byte-identical",
-    "gitbook_gate": "not package-owned; external GitHub App/status noise until disabled in GitHub/GitBook settings",
-    "added": [
-      "PROVENANCE_RECEIPT.md",
-      "agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md",
-      "agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
-      "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md",
-      "agent_files/memory_seed/MEMORY_SEED_CLEANUP.md"
+  "repair_20260620": {
+    "type": "audit_driven_v2_repair",
+    "adr": "governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
+    "main_head_verified": "e33268fbdfbb0dc52b6fd1fb8399698bf9387129",
+    "hygiene": {
+      "line_endings": ".gitattributes added for LF enforcement",
+      "pii": "Anonymized memory_current/development-diary.md, project-memory.md, open-loops.md; replaced direct name references in instructions and compact instructions.",
+      "byproducts": "Removed tests/horizon/__pycache__ and root memory_current duplicate."
+    },
+    "metadata": {
+      "version_sync": "BUILDER_ASSEMBLY_MANIFEST.md, README.md, README_AGENT_BUILDER_UPLOAD.md, QC_CHECKS.md, agent_files/INDEX.md now reference iskra-full-canon-unified-2026-06-10.",
+      "links": "Normalized relative links inside 08_INTERFACE_STYLE.parts/ to flattened structure.",
+      "tools": "Added validate_terms.py, validate_delta.py, verify_ledger.py stub to tools/."
+    },
+    "canon_backfill": [
+      "agent_files/canon_source_files/AGENTS.md",
+      "agent_files/canon_source_files/voices_monographs/*.md",
+      "agent_files/canon_source_files/metrics/*.md",
+      "agent_files/canon_source_files/mind/*.md",
+      "agent_files/canon_source_files/docs_specs/*.md",
+      "agent_files/canon_source_files/appendix/*.md",
+      "agent_files/canon_source_files/LEDGER_LAYER.md",
+      "agent_files/canon_source_files/APPENDIX_LARGE_FILES.md"
     ],
-    "updated": [
-      "README.md",
-      "agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md",
-      "UNIFIED_QC_RECEIPT.json",
-      "MANIFEST.sha256"
+    "builder_artifacts": [
+      "agent.yaml",
+      "icon.svg",
+      "skills/iskra-toolchain-bridge/"
     ],
-    "archive_repacked": false,
     "verdict": "PASS",
-    "memory_receipt": "workspace memory only; package memory_current left unchanged for compact GitHub write-set"
+    "residual_risk": "Workspace Agents UI limits and retrieval behavior not yet live-tested; large appendix encyclopedia files remain out-of-package by design."
   }
 }

@@ -1,7 +1,8 @@
 # Iskra Agent Builder Upload Set
 
-Release: `iskra-full-canon-builder-2026-06-06-v4`
-Target: ChatGPT / OpenAI Agent Builder
+Release: `iskra-full-canon-unified-2026-06-10`
+Target: ChatGPT Agents Studio / Workspace Agents
+Previous release: `iskra-full-canon-builder-2026-06-06-v4`
 
 Purpose:
 

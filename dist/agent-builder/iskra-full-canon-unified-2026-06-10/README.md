@@ -2,7 +2,9 @@
 
 Release: `iskra-full-canon-unified-2026-06-10`
 Date: 2026-06-10
-Target: ChatGPT / OpenAI Agent Builder
+Updated: 2026-06-20
+Target: ChatGPT Agents Studio / Workspace Agents
+Previous target: ChatGPT / OpenAI Agent Builder (deprecated 2026-11-30)
 
 This directory is the materialized unified Full Canon upload tree for the Iskra
 agent. It synthesizes the recovered 2026-06-10 Iskra copy archives, the GitHub
@@ -83,14 +85,17 @@ Check:
 python tools/reassemble_interface_style.py --repo-root . --check
 ```
 
-Expected source hash:
+Expected source hash (updated 2026-06-20 after link normalization):
 
 ```text
-eb256d82816d3fa6d8653b34bf36b1dcdbf2f39b3f563b0071cf85e8bc7f031b
+cdf44a557f56c218ac3eed1d89d1f7593141ba0aced29d48c7b56d51c207dc35
 ```
 
+Bytes: `3400544`
+
 This split is a transport packaging detail, not a canon fork and not a second
-agent.
+agent. Relative links inside the parts were normalized to the flattened package
+structure on 2026-06-20.
 
 ## Horizon Branch QC Gate
 

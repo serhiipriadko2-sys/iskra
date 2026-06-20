@@ -1,0 +1,58 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - link "ChatGPT Home" [ref=e4] [cursor=pointer]:
+        - /url: /?slm=1
+        - img "Логотип ChatGPT" [ref=e5]
+      - generic [ref=e14]:
+        - generic [ref=e17]:
+          - heading "Войти или зарегистрироваться" [level=2] [ref=e18]
+          - form [ref=e19]:
+            - generic [ref=e20]:
+              - button "Продолжить с Google" [ref=e21] [cursor=pointer]:
+                - generic [ref=e22]:
+                  - img [ref=e25]
+                  - text: Продолжить с Google
+              - button "Продолжить с Apple" [ref=e27] [cursor=pointer]:
+                - generic [ref=e28]:
+                  - img [ref=e31]
+                  - text: Продолжить с Apple
+              - button "Продолжить с номером телефона" [ref=e33] [cursor=pointer]:
+                - generic [ref=e34]:
+                  - img [ref=e37]
+                  - text: Продолжить с номером телефона
+            - generic [ref=e41]: ИЛИ
+            - textbox "Адрес электронной почты" [ref=e48]
+            - button "Продолжить" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: Продолжить
+            - link "Сначала попробовать" [ref=e52] [cursor=pointer]:
+              - /url: "#"
+        - generic [ref=e53]:
+          - img [ref=e54]:
+            - generic [ref=e55]: ChatGPT
+          - generic [ref=e57]:
+            - link "Условия использования" [ref=e58] [cursor=pointer]:
+              - /url: https://openai.com/policies/terms-of-use
+            - generic [ref=e59]: "|"
+            - link "Политика конфиденциальности" [ref=e60] [cursor=pointer]:
+              - /url: https://openai.com/policies/privacy-policy
+    - dialog [ref=e61]:
+      - generic [ref=e62]:
+        - heading "Мы используем cookie-файлы" [level=1] [ref=e63]
+        - button "Закрыть" [ref=e64] [cursor=pointer]:
+          - img
+      - generic [ref=e65]:
+        - paragraph [ref=e66]:
+          - text: Файлы cookie помогают этому сайту работать, анализировать использование и поддерживать маркетингувую эффективность. Вы можете в любой момент
+          - button "настроить" [ref=e67] [cursor=pointer]
+          - text: параметры cookie. Подробнее см. в нашей
+          - link "Политике использования файлов cookie" [ref=e68] [cursor=pointer]:
+            - /url: https://openai.com/policies/cookie-policy/
+          - text: .
+        - generic [ref=e69]:
+          - button "Отклонить несущественное" [ref=e70] [cursor=pointer]:
+            - generic [ref=e71]: Отклонить несущественное
+          - button "Принять все" [active] [ref=e72] [cursor=pointer]:
+            - generic [ref=e73]: Принять все
+  - alert [ref=e74]
+  - status [ref=e75]

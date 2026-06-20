@@ -5,8 +5,8 @@ import argparse
 import hashlib
 from pathlib import Path
 
-EXPECTED_SHA256 = "eb256d82816d3fa6d8653b34bf36b1dcdbf2f39b3f563b0071cf85e8bc7f031b"
-EXPECTED_BYTES = 3400610
+EXPECTED_SHA256 = "cdf44a557f56c218ac3eed1d89d1f7593141ba0aced29d48c7b56d51c207dc35"
+EXPECTED_BYTES = 3400544
 
 
 def main() -> int:

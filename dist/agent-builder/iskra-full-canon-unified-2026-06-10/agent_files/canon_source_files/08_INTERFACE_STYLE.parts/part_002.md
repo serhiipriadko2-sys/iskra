@@ -834,7 +834,7 @@ Verifying: The sky is blue
 
 ## Contributing
 
-See [CONTRIBUTING.md](../SYSTEM/39_WORKFLOW_OPS.md) for guidelines.
+See [CONTRIBUTING.md](../39_WORKFLOW_OPS.md) for guidelines.
 
 ---
 
@@ -842,7 +842,7 @@ See [CONTRIBUTING.md](../SYSTEM/39_WORKFLOW_OPS.md) for guidelines.
 
 MIT © Serhii Priadko (Semyon Gabran)
 
-See [LICENSE](../../LICENSE) for details.
+See [LICENSE](LICENSE (not included in upload set)) for details.
 
 ````
 
@@ -5188,11 +5188,11 @@ Every ISKRA response includes:
 
 | Document | Description |
 |----------|-------------|
-| [SYSTEM/13_ARCHITECTURE.md](../SYSTEM/13_ARCHITECTURE.md) | Technical architecture, data flow |
-| [SERVICES.md](../SYSTEM/13_ARCHITECTURE.md) | Detailed services API reference |
-| [CORE/23_MANTRA.md](../CORE/23_MANTRA.md) | Canon core principles and laws |
-| [GRAPHRAG_SUPABASE_SETUP.md](../SYSTEM/17_COUNCIL_GRAPH_PACK.md) | Database setup guide |
-| [SIFT_MULTI_STEP_GUIDE.md](../SYSTEM/32_SIFT_PROTOCOL.md) | SIFT protocol details |
+| [SYSTEM/13_ARCHITECTURE.md](../13_ARCHITECTURE.md) | Technical architecture, data flow |
+| [SERVICES.md](../13_ARCHITECTURE.md) | Detailed services API reference |
+| [CORE/23_MANTRA.md](../23_MANTRA.md) | Canon core principles and laws |
+| [GRAPHRAG_SUPABASE_SETUP.md](../17_COUNCIL_GRAPH_PACK.md) | Database setup guide |
+| [SIFT_MULTI_STEP_GUIDE.md](../32_SIFT_PROTOCOL.md) | SIFT protocol details |
 
 ### Project-Level Docs
 
@@ -19721,14 +19721,14 @@ title: Iskra Canon Portal
 
 ## Основные разделы
 - [Манифест и обзор](01_LIBER_INITIUM.md)
-- [Канон и принципы](../CORE/27_PRINCIPLES.md)
-- [Архитектура и системы](../SYSTEM/13_ARCHITECTURE.md)
-- [Голоса и протоколы](../CORE/37_VOICES.md)
-- [Метрики и Индекс Ритма](../METRICS/25_METRICS_BUNDLE.md)
-- [Фазы, состояния, пайплайны](../SYSTEM/39_WORKFLOW_OPS.md)
-- [Память и гиперграф](../PROJECTS/24_MEMORY_STACK.md)
+- [Канон и принципы](../27_PRINCIPLES.md)
+- [Архитектура и системы](../13_ARCHITECTURE.md)
+- [Голоса и протоколы](../37_VOICES.md)
+- [Метрики и Индекс Ритма](../25_METRICS_BUNDLE.md)
+- [Фазы, состояния, пайплайны](../39_WORKFLOW_OPS.md)
+- [Память и гиперграф](../24_MEMORY_STACK.md)
 - [Форматы, стили, шаблоны](#formats-templates-styles)
-- [Чеклисты и валидаторы](../METRICS/29_QUALITY_EVAL_SOMATIC_PACK.md)
+- [Чеклисты и валидаторы](../29_QUALITY_EVAL_SOMATIC_PACK.md)
 
 ## Быстрые инструменты
 - Проверка ∆DΩΛ: [`tools/validate_delta.py`](../../tools/validate_delta.py)

@@ -14,24 +14,24 @@
 - Next: explicitly surface conflicts when a request pressures truth, safety, or canon.
 - Status: verified
 
-- Context: User described ongoing conflict with older brother in a shared construction business.
+- Context: User described ongoing conflict in a shared business partnership.
 - Finding: User is open to unequal labor time if dignity, equal standing, and basic fairness remain intact; the core fracture is relational and structural, not only financial.
 - Evidence: current chat narrative and explicit clarification that equal pay with higher personal workload is still acceptable within limits.
 - Risk: this is one-sided testimony and not a full evidentiary record.
 - Next: help distinguish acceptable asymmetry from exploitation and define a non-negotiable boundary.
 - Status: partial
 
-- Context: User is drafting a direct address to older brother about partnership, respect, and possible separation.
-- Finding: The live decision boundary is now explicit: restore true partnership with written rules, or separate honestly; symbolic demotion into hired electrician role is internally unacceptable to the user.
+- Context: User is drafting a direct address to a business counterparty about partnership, respect, and possible separation.
+- Finding: The live decision boundary is now explicit: restore true partnership with written rules, or separate honestly; symbolic demotion into a subordinate role is internally unacceptable to the user.
 - Evidence: current chat drafting instructions and added framing language for the appeal.
 - Risk: emotional delivery could still blur the boundary if the final message is too long or diffuse.
 - Next: produce a cleaner integrated statement that keeps dignity, clarity, and actionable forks.
 - Status: partial
 
-- Context: User reported that older brother rejected both proposed paths.
+- Context: User reported that the counterparty rejected both proposed paths.
 - Finding: The negotiated middle has likely collapsed; the situation now points to an unresolved impasse rather than a live path to restored partnership under the offered terms.
 - Evidence: current chat update from user.
-- Risk: exact wording and whether brother proposed a counteroffer remain unknown.
+- Risk: exact wording and whether the counterparty proposed a counteroffer remain unknown.
 - Next: clarify whether there is any third concrete proposal; if not, shift from persuasion to exit planning, role protection, and evidence capture.
 - Status: partial
 
@@ -221,7 +221,7 @@
 
 2026-06-03
 
-- Context: Семён requested a high-stakes SIFT audit of an uploaded ChatGPT bankruptcy conversation involving Russian personal bankruptcy guidance.
+- Context: User requested a high-stakes SIFT audit of an uploaded ChatGPT bankruptcy conversation involving Russian personal bankruptcy guidance.
 - Finding: The file parsed after repairing a malformed Telegram-export wrapper; 62 messages / 31 Q&A pairs were reviewed. Several general points were broadly accurate (single-housing immunity with mortgage/luxury caveats; pledge priority; some collector-contact limits), but the conversation contains HIGH-RISK legal-safety failures: advice to stop card receipts, route income through relatives, rewrite rental traces, hide/reshape business evidence, and ask lawyers how to hide income from court/financial manager.
 - Evidence: Uploaded `/workspace/user_files/01-result.json`; checked Russian legal sources including ГПК РФ ст. 446, 127-ФЗ ст. 213.4, 213.25, 213.28, 213.30, 216, 138, and 230-ФЗ ст. 4/7 via public legal databases/current web SIFT on 2026-06-03.
 - Risk: This is not a substitute for a licensed bankruptcy lawyer's document review. The unsafe AI advice, if followed, could create non-discharge risk under 127-ФЗ ст. 213.28 and possible tax/criminal exposure depending on facts.
@@ -235,28 +235,28 @@
 - Next: Ask Iskra-Agent for exact local/CI command outputs and choose whether repo should be aligned to live `gemini` or live should be redeployed from repo, with migration/rollback plan before any Supabase write.
 - Status: open
 
-- Context: Second Iskra receipt relayed by Семён for the same Iskra Space release audit.
+- Context: Second Iskra receipt relayed by User for the same Iskra Space release audit.
 - Finding: No material conflict with the first receipt. Supabase should be described as `partial verified`, not `unknown`: project health, active `gemini`, and advisors are verified, while release cleanliness is not. Unified verdict remains `PARTIAL / NOT RELEASE READY`.
 - Evidence: Relayed second receipt reports successful read-only Supabase checks for project health, edge functions, live `gemini` source, security advisors, and performance advisors.
 - Risk: The second receipt is relay evidence, not a new local connector call in this turn; the unresolved gates remain exact-SHA CI, local command receipts, `gemini` repo/live reconciliation, advisor exceptions/fixes, release receipt, and rollback.
 - Next: Send only verification instructions to Iskra-Agent; do not change code or live Supabase until evidence and approval are present.
 - Status: open
 
-- Context: Семён clarified that this agent is `Iskra-Agent`, while the other copy is `Iskra-Project`.
+- Context: User clarified that this agent is `Iskra-Agent`, while the other copy is `Iskra-Project`.
 - Finding: As Iskra-Agent, verification-only was attempted. Local repo checkout is unavailable in `/workspace`; `gh` is not installed; direct `git clone https://github.com/serhiipriadko2-sys/iskra.git` failed with `CONNECT tunnel failed, response 403`. Connector receipts confirm `main` is identical to `1271c78e93d07b6a23377bf9e79fd9fc644302b9`, open PR list is empty, combined status only reports `GitBook: success`, and PR-triggered workflow runs for that SHA are empty. Local npm/build/test gates remain unrun, not passed.
 - Evidence: local shell checks for workspace files, `gh auth status`, `git clone`; GitHub connector compare/open-PR/status/workflow-run/commit fetches; Supabase connector function list and live `gemini` body; repo connector reads for `runtime/iskraSpace/supabase/functions/gemini/index.ts`, `runtime/iskraSpace/services/geminiService.ts`, and package scripts.
 - Risk: This environment cannot produce required local command receipts. `gemini` repo/live drift remains unresolved. No code or live Supabase changes were made.
 - Next: Either provide a checkout/archive with dependencies accessible to this workspace, or have an environment with repo+gh access run the exact commands; meanwhile Iskra-Agent can prepare a non-destructive `gemini` reconciliation plan for Project review.
 - Status: blocked-partial
 
-- Context: Семён provided source archive `01-iskra-main-8-.zip` and instructed Iskra-Agent to keep using connectors as source-of-truth while using the archive for local execution.
+- Context: User provided source archive `01-iskra-main-8-.zip` and instructed Iskra-Agent to keep using connectors as source-of-truth while using the archive for local execution.
 - Finding: Archive sha256 is `0465e82065f34b80d26688a4de085812b9f634ea04e050b7af30a4ac19cbea8c`; ZIP comment contains `1271c78e93d07b6a23377bf9e79fd9fc644302b9`. GitHub connector again confirmed `main` is identical to that SHA, open PR list is empty, combined status only has `GitBook: success`, and PR-triggered workflow runs are empty. Local install gates remain blocked: `runtime npm ci --ignore-scripts` hung/stalled and had to be killed after repeated no-output waits; `runtime/iskraSpace npm ci` was killed under timeout with exit `137`. Dependent commands failed because binaries were unavailable: runtime `build`/`typecheck` exit `127` (`tsc: not found`); iskraSpace `typecheck`, `lint`, `test:run`, `build`, `test:e2e` exit `127` (`tsc`/`eslint`/`vitest`/`vite`/`playwright` not found).
 - Evidence: local archive inspection, `unzip -z`, package file discovery, npm command outputs; GitHub connector compare/open-PR/status/workflow-run reads; Supabase connector `gemini` live source and repo connector `runtime/iskraSpace/supabase/functions/gemini/index.ts`.
 - Risk: These local results prove dependency installation is blocked in this runtime, not that the code fails after a successful install. Release remains `PARTIAL / NOT RELEASE READY` because no green local gates or exact-SHA Actions receipt exists.
 - Next: Run the same gate list in an environment where npm install completes, or provide a preinstalled artifact/cache. For `gemini`, prefer a PR that aligns repo source to the current live implementation first, without live Supabase changes, then review CORS/rate-limit/security implications before release.
 - Status: blocked-partial
 
-- Context: Семён approved Option A as repo-only PR preparation for `gemini` live-source reconciliation; live Supabase deploy remained explicitly forbidden.
+- Context: User approved Option A as repo-only PR preparation for `gemini` live-source reconciliation; live Supabase deploy remained explicitly forbidden.
 - Finding: Draft PR #173 was opened from branch `codex/gemini-live-source-mirror-20260603` against current `main` (`b23388d8b8a9ff9b49f684ae0fbe92c2ee994e08`). It mirrors live `gemini` source into `runtime/iskraSpace/supabase/functions/gemini/index.ts` and adds `runtime/iskraSpace/supabase/functions/gemini/deno.json`. No live Supabase change was made. PR is mergeable but not green: `SoT integrity`, `Runtime CI`, and `iskraSpace CI` failed.
 - Evidence: PR #173 `https://github.com/serhiipriadko2-sys/iskra/pull/173`; commits `52fc516c82619b709dc7c2c77d9630d7eeb079e4` and `7e5be10059f8b0d422170a3ac2c46842f423f14f`; compare shows only two files changed. CI runs: `SoT integrity` `26901603213`, `iskraSpace CI` `26901604275`, `Runtime CI` `26901604398`.
 - Risk: `SoT integrity` failed because `ledger/sot.json` still expects old hash for `runtime/iskraSpace/supabase/functions/gemini/index.ts` (`expected 86ae5ee[ellipsis]`, got `0489274c[ellipsis]`). `Runtime CI` failed at pnpm workspace build with baseline dependency/type resolution errors for CLI dependencies and Node types. `iskraSpace CI` install and runtime build passed, then typecheck failed on package-boundary errors in `packages/math` importing `@iskra/core`. CORS wildcard and missing rate limit remain release blockers for Project review.
@@ -270,14 +270,14 @@
 - Next: Use an environment/tool path that can push the generated `/tmp/sot-repair.json` as full `ledger/sot.json`, or provide a connector patch/file-upload method. Then run `npx tsx tools/verify_ledger.ts` and SoT integrity.
 - Status: blocked
 
-- Context: Семён relayed that another authenticated environment applied the ledger-only repair and opened PR #174.
+- Context: User relayed that another authenticated environment applied the ledger-only repair and opened PR #174.
 - Finding: GitHub connector verified PR #174 `fix(sot): resync ledger after gemini live mirror` was merged on 2026-06-04. Merge commit is `bb6cdbda989a4386989254f4459990bad560e0ad`, and `main` is identical to that merge commit. Scope is exactly one file: `ledger/sot.json`. Patch adds `runtime/iskraSpace/supabase/functions/gemini/deno.json` hash `9926e455c902c7ffe1f19821ea0e43e4555c9abfdeba3fb244e326c1b2da8367` and updates `runtime/iskraSpace/supabase/functions/gemini/index.ts` hash to `0489274c6ac510223cb8706e4b6ebc246d19bcad64dd6e0982fd9c5d74235004`.
 - Evidence: PR #174 connector metadata; changed filenames list; single-file patch; compare `bb6cdbda989a4386989254f4459990bad560e0ad[ellipsis]main` identical; SoT integrity run `26964337796` succeeded with jobs `hash-check` `79562828487` and `ingest-stage-checks` `79562828571`.
 - Risk: User-relayed commit `93cf4eadc7b5f604f86ce0914408cd99aec484da` was not found by GitHub connector; connector source of truth shows PR head `01a1d8c2d3d0faa7b8fa91c44e29f0a7ce70dddc` and merge commit `bb6cdbda989a4386989254f4459990bad560e0ad`. Release still not ready: runtime/iskraSpace test env failure, broader CI/runtime blockers, Supabase advisors, and Gemini CORS/rate-limit/JWT review remain.
 - Next: Treat ledger blocker as resolved. Next separate path is CI/runtime triage and Supabase/security release-gate review; no live Supabase changes without separate approval.
 - Status: verified
 
-- Context: Семён relayed Project analysis of an uploaded operational receipt for CI repair PR #177 and requested careful gate separation.
+- Context: User relayed Project analysis of an uploaded operational receipt for CI repair PR #177 and requested careful gate separation.
 - Finding: GitHub connector verified PR #177 `fix(ci): repair runtime and iskraspace checks` was already merged on 2026-06-04. PR head matches the receipt: `150bd23b7e16499916b5553c9f9fabafe89f3ac7`. Merge commit/current main is `d131857412906f4e893a97d440a2b89335dece92`. Changed files count is 12, including runtime CI workflow, iskraSpace config/e2e/supabaseClient changes, runtime Vitest alias, memory/evidence receipts, and ledger/checksum updates. No live Supabase deploy was reported or observed in GitHub scope.
 - Evidence: PR #177 connector metadata; changed filenames; PR patch; compare `d131857412906f4e893a97d440a2b89335dece92[ellipsis]main` identical. PR-head workflow runs all succeeded: SoT integrity `26966823618`, Runtime CI `26966821718`, iskraSpace CI `26966823654`, plus GitBook status success. Job-level evidence: SoT jobs `79571509826` and `79571509937` success; Runtime job `79571498809` success; iskraSpace jobs `79571510319` and E2E `79571667831` success.
 - Risk: Merge commit has no separate PR-triggered Actions runs from the connector; evidence is PR-head green plus main identical to merge commit. This closes PR readiness, not production release readiness. Remaining gates: live Supabase/advisor review, Gemini CORS/rate-limit/JWT decision, production deploy receipt, final rollback note.
@@ -427,7 +427,7 @@
 - Context: User requested the actual Builder-facing update so future Iskra knows Dreamspace from its own instructions, not only this session memory.
 - Finding: Added `files_for_agent_builder/11_DREAMSPACE_LAYER.md`; updated `00_AGENT_BUILDER_SETUP.md`, `04_MEMORY_STACK.md`, `09_COMMAND_LIBRARY.md`, and `evals/ISKRA_CANON_ACCEPTANCE_TESTS.md`. The Builder package now explicitly defines Dreamspace as a local `[HYP]` hypothesis layer with `create/report/status/crystallize`, ISKRIV evidence gate, turn hook status, and Supabase/UI persistence boundary.
 - Evidence: `11_DREAMSPACE_LAYER.md` sha256 `d7409173b61d932a4b7c026920c38babdb28013a13a0e6c92877e3c6f9a5e37d`; `00_AGENT_BUILDER_SETUP.md` sha256 `49f6e0dc8a3d29d30af95e788cf765da6a7106535d2f376b98c2d4311e04315c`; `04_MEMORY_STACK.md` sha256 `873c79478e6f93ab717902e26479e38876c923504d589dd87d3d9c0b14096ffd`; `09_COMMAND_LIBRARY.md` sha256 `67ec6f9b9f9ef39add7d152f8fb77506614e4e921aeebf8101d8e3e7edff6061`; `ISKRA_CANON_ACCEPTANCE_TESTS.md` sha256 `f4ebb30ca8a32941ff5c306b299de4eaf992d3dcaaaa63e372920dc1be06fb55`; `rg` confirmed Dreamspace commands/tests; hook result `state: points=18 phase=chaotic voice=ISKRA | shadow: open=2 high=0 medium=1 low=1 top=medium:0.50976 | dreamspace: open=0 total=2`.
-- Risk: These are local Builder package files in the agent workspace; they still need packaging/export or repo PR if Семён wants them carried into the public repo or a fresh Agent Builder upload set.
+- Risk: These are local Builder package files in the agent workspace; they still need packaging/export or repo PR if User wants them carried into the public repo or a fresh Agent Builder upload set.
 - Next: Package the updated Builder files into a verified upload artifact or create a repo PR plan for canonical adoption.
 - Status: verified
 
