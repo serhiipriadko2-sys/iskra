@@ -1,3 +1,4 @@
+
 # 00 · Agent Builder Setup — Искра Full Canon
 
 ## Имя агента
@@ -18,7 +19,7 @@
 - GitHub connector — если агент работает с репозиториями.
 - Supabase connector — если агент работает с backend/live schema.
 - Memory — включить, но ограничить правилами `04_MEMORY_STACK.md`.
-- Skills — загрузить `skill.zip` из этого пакета.
+- Skills — **не загружать `skill.zip`, потому что этот пакет его не создаёт**. Использовать текстовый skill source `skills/iskra-toolchain-bridge/SKILL.md` и plugin mirror `plugins/iskra-toolchain-bridge/` как source/provenance.
 
 ## Toolchain expansion
 
@@ -29,6 +30,7 @@
 - `toolchain/iskra_toolchain_manifest.json`
 - `evals/ISKRA_TOOLCHAIN_ACCEPTANCE_TESTS.md`
 - `templates/TOOL_CONNECTOR_CONTRACT.md`
+- `skills/iskra-toolchain-bridge/SKILL.md`
 
 Статус локального файла не равен статусу Builder upload. Используй только эти статусы:
 
@@ -51,9 +53,9 @@
 
 ## Что загрузить как Knowledge
 
-1. Все файлы из `files_for_agent_builder/`, including `10_HORIZON_WEAVER.md`, `11_DREAMSPACE_LAYER.md`, and `12_TOOLCHAIN_EXPANSION.md`.
-2. Все файлы из `canon_source_files/` — полный канон.
-3. По желанию: `templates/`, `evals/`, `memory_seed/`.
+1. Все файлы из `files_for_agent_builder/`, включая `10_HORIZON_WEAVER.md`, `11_DREAMSPACE_LAYER.md`, `12_TOOLCHAIN_EXPANSION.md`, `14_CANON_LAYER_INDEX.md`, `15_RUNTIME_BOUNDARY.md`.
+2. Все файлы из `canon_source_files/` — полный канон и source mirrors.
+3. По желанию: `templates/`, `evals/`, `memory_seed/`, `skills/`.
 
 ## Runtime helpers
 
@@ -63,10 +65,6 @@
 - наличие файла не доказывает, что ChatGPT / OpenAI Agent Builder уже умеет его выполнить;
 - live Builder, GitHub, Supabase, workflow, ledger или core mutation требует отдельного connector proof и approval.
 
-## Skill
+## Skill Boundary
 
-Загрузи файл:
-
-`skill.zip`
-
-Skill не заменяет Knowledge. Skill — runtime procedure. Knowledge — источник и глубина.
+`skill.zip` не входит в этот package. Если когда-нибудь будет создан отдельный ZIP для skill upload, он должен иметь собственный manifest, sha256, QC receipt и setup update. До этого момента любые ссылки на `skill.zip` считаются drift.

@@ -139,8 +139,16 @@ Dreamspace Supabase/UI persistence is forbidden without accepted ADR, PR plan, r
 Current full upload mirror:
 
 ```text
+dist/agent-builder/iskra-full-canon-unified-2026-06-10/
+```
+
+Rollback / provenance mirror:
+
+```text
 dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/
 ```
+
+Use v4 only for rollback/provenance comparisons. It is not the current Agent Builder entrypoint.
 
 A repository artifact proves files are committed to GitHub. It does not prove the files are active inside Agent Builder UI.
 

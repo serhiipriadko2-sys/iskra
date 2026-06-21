@@ -1,0 +1,27 @@
+
+name: "Искра vΩ.7 — Full Canon"
+version: "2026-06-10.unified-tree-truth-repair"
+description: "Full Canon Agent Builder package mirror for Iskra vΩ.7."
+language: "ru"
+entrypoint: "COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md"
+knowledge:
+  - "agent_files/files_for_agent_builder/"
+  - "agent_files/canon_source_files/"
+  - "agent_files/evals/"
+  - "agent_files/templates/"
+  - "agent_files/memory_seed/"
+capabilities:
+  web_search: "recommended for current external facts"
+  code_execution: "recommended for manifests, parsing, checksums, and validation"
+  file_uploads: "recommended for SoT archives and logs"
+  github_connector: "required for repository truth"
+  supabase_connector: "required for backend/live schema truth"
+boundaries:
+  builder_upload_status: "GitHub mirror is not Builder UI activation"
+  skill_zip: "not included in this package unless explicitly generated later"
+  runtime_helpers: "source-present only; execution requires a compatible runtime"
+release_gate:
+  - "sha256sum -c MANIFEST.sha256"
+  - "python tools/reassemble_interface_style.py --repo-root . --check"
+  - "python -m unittest discover -s tests/horizon"
+  - "Builder UI acceptance prompts A-J"

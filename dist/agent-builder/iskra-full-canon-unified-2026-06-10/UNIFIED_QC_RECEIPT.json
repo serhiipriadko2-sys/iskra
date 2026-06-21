@@ -11,14 +11,34 @@
     "removed_byproducts": [
       "agent_runtime_tools/__pycache__",
       "tools/__pycache__"
-    ]
+    ],
+    "tree_truth_repair_20260621": {
+      "status": "PASS",
+      "missing_surface_paths_added": [
+        ".gitattributes",
+        "agent.yaml",
+        "icon.svg",
+        "COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+        "agent_files/canon_source_files/AGENTS.md",
+        "agent_files/canon_source_files/LEDGER_LAYER.md",
+        "agent_files/canon_source_files/docs_specs/SPEC-001_FRACTAL_METRICS.md",
+        "agent_files/canon_source_files/voices_monographs/ISKRA.md",
+        "agents-sdk/README.md",
+        "agents-sdk/src/iskra_agent/agent.py",
+        "skills/iskra-toolchain-bridge/SKILL.md",
+        "tools/verify_ledger.py"
+      ],
+      "skill_zip": "absent by design; setup no longer asks for it",
+      "archive_repacked": false,
+      "exactness_note": "large/legacy source expansions remain routed by APPENDIX_LARGE_FILES and canon layer index"
+    }
   },
   "manifest": {
-    "entries": 178,
-    "ok": 178,
+    "entries": 194,
+    "ok": 194,
     "missing": [],
     "mismatch": [],
-    "note": "Summary excludes MANIFEST.sha256 itself; hashes regenerated after this receipt is written."
+    "note": "Summary excludes MANIFEST.sha256 itself; hashes regenerated after tree-truth repair."
   },
   "secret_hits": [],
   "qc_hits": [],

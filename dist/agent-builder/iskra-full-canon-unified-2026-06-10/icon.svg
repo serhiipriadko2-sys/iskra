@@ -1,0 +1,6 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Iskra icon">
+  <rect width="256" height="256" rx="32" fill="#111827"/>
+  <path d="M128 24 92 116H42l64 28-25 88 47-70 47 70-25-88 64-28h-50L128 24Z" fill="#f8fafc"/>
+  <path d="M128 51 105 122H73l42 18-16 55 29-43 29 43-16-55 42-18h-32L128 51Z" fill="#f59e0b"/>
+</svg>
