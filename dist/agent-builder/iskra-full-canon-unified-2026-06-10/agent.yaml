@@ -1,0 +1,89 @@
+# Iskra vΩ.7 Workspace Agent manifest
+# This file documents the intended ChatGPT Agents Studio / Workspace Agents
+# configuration. The actual creation still happens through the UI at
+# https://chatgpt.com/agents/studio/new
+
+agent:
+  name: "Искра vΩ.7"
+  description: "Канонический субъект речи и инженерный контур различия. Русский по умолчанию."
+  icon: "icon.svg"
+  version: "2026-06-20"
+  release: "iskra-full-canon-unified-2026-06-10"
+  target_ui: "ChatGPT Agents Studio / Workspace Agents"
+  language: "ru"
+
+instructions:
+  primary: "agent_files/instructions"
+  compact: "agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md"
+
+knowledge:
+  base_path: "agent_files/canon_source_files"
+  files:
+    - "agent_files/canon_source_files/AGENTS.md"
+    - "agent_files/canon_source_files/00_ROUTER.md"
+    - "agent_files/canon_source_files/21_INDEX.md"
+    - "agent_files/canon_source_files/27_PRINCIPLES.md"
+    - "agent_files/canon_source_files/35_TELOS.md"
+    - "agent_files/canon_source_files/37_VOICES.md"
+    - "agent_files/canon_source_files/voices_monographs/*.md"
+    - "agent_files/canon_source_files/31_SECURITY.md"
+    - "agent_files/canon_source_files/32_SIFT_PROTOCOL.md"
+    - "agent_files/canon_source_files/39_WORKFLOW_OPS.md"
+    - "agent_files/canon_source_files/metrics/*.md"
+    - "agent_files/canon_source_files/mind/*.md"
+    - "agent_files/canon_source_files/docs_specs/*.md"
+    - "agent_files/canon_source_files/appendix/*.md"
+    - "agent_files/canon_source_files/LEDGER_LAYER.md"
+    - "agent_files/canon_source_files/APPENDIX_LARGE_FILES.md"
+
+builder_guides:
+  - "agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md"
+  - "agent_files/files_for_agent_builder/02_CANON_SOURCE_OF_TRUTH.md"
+  - "agent_files/files_for_agent_builder/03_RUNTIME_KERNEL.md"
+  - "agent_files/files_for_agent_builder/04_MEMORY_STACK.md"
+  - "agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md"
+  - "agent_files/files_for_agent_builder/06_VOICES_AND_COUNCIL.md"
+  - "agent_files/files_for_agent_builder/07_OUTPUT_AND_RECEIPTS.md"
+  - "agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md"
+  - "agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md"
+  - "agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md"
+  - "agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md"
+  - "agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md"
+  - "agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md"
+  - "agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md"
+  - "agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md"
+
+memory:
+  seed: "agent_files/memory_seed"
+  current: "agent_files/memory_current"
+  note: "Memory files are continuity receipts, not immutable canon. Review for PII before sharing the agent."
+
+evals:
+  - "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md"
+  - "agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md"
+  - "agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md"
+  - "agent_files/evals/ISKRA_TOOLCHAIN_ACCEPTANCE_TESTS.md"
+
+skills:
+  - path: "skills/iskra-toolchain-bridge"
+    entry: "SKILL.md"
+
+runtime_helpers:
+  - "agent_runtime_tools/iskra_statecycle.py"
+  - "agent_runtime_tools/iskra_shadow_core.py"
+  - "agent_runtime_tools/iskra_dreamspace.py"
+  - "agent_runtime_tools/iskra_horizon_weaver.py"
+  - "agent_runtime_tools/iskra_turn_hook.py"
+
+governance:
+  - "governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md"
+  - "governance/adr_20260606_unified_full_canon_builder_v4.md"
+  - "SECURITY.md"
+
+channels:
+  - "ChatGPT"
+  # Slack and other channels can be added through the Workspace Agents admin panel.
+
+actions: []
+# No destructive actions are bundled. Any future actions must include human approval
+# and be documented in a separate ADR.
