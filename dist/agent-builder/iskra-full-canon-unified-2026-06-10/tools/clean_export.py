@@ -57,6 +57,8 @@ def is_forbidden(rel_path: str) -> bool:
     suffix = p.suffix.lower()
     if parts & FORBIDDEN_DIRS:
         return True
+    if any(part.endswith(".egg-info") for part in parts):
+        return True
     if name in FORBIDDEN_NAMES:
         return True
     if suffix in FORBIDDEN_SUFFIXES:

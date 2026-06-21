@@ -1,13 +1,31 @@
 {
-  "release": "iskra-full-canon-builder-2026-06-06-v4",
-  "recovery_build_utc": "20260610T194051Z",
-  "source_label": "github_extended_archive_01",
-  "source_archive": "01-github-iskra-full-canon-builder-2026-06-06-v4-1-.zip",
-  "sanitizations": [
-    "agent_files/canon_source_files/08_INTERFACE_STYLE.md: replaced private-key-like test fixture with REDACTED_EXAMPLE_PRIVATE_KEY_FIXTURE",
-    "agent_files/canon_source_files/08_INTERFACE_STYLE.md: replaced private-key marker examples with REDACTED_PRIVATE_KEY_MARKER",
-    "Replaced automatic-QC trigger terms and private-key marker examples with neutral equivalents in recovered candidate text files."
+  "release": "iskra-full-canon-unified-2026-06-10",
+  "generated_at": "2026-06-21T19:32:44+00:00",
+  "status": "PASS",
+  "archive_kind": "sidecar_clean_export_zip",
+  "archive_path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10-clean.zip",
+  "archive_sha256": "b7740929e519ba71567397b7cc3637e8c92b63c9dfbf586fb494c541f7c09d21",
+  "archive_bytes": 2265010,
+  "entries": 246,
+  "source": "tools/clean_export.py --source manifest",
+  "manifest_entries": 245,
+  "included_extra": [
+    "MANIFEST.sha256"
   ],
-  "boundary": "Zip-level receipt is external in recovery bundle reports/RECEIPTS.json to avoid circular hash claims.",
-  "recovery_rebuild_utc": "20260610T194317Z"
+  "excluded_from_archive": [
+    "ZIP_RECEIPT.json",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "*.egg-info",
+    "local screenshots",
+    "raw archives",
+    "transient artifacts"
+  ],
+  "builder_ui_status": "uploaded by user, pending Builder verification",
+  "non_claims": [
+    "Archive integrity does not prove Builder UI verification",
+    "Archive excludes this receipt to avoid self-referential hash claims",
+    "No live Supabase/GitHub/Builder mutation was performed"
+  ]
 }

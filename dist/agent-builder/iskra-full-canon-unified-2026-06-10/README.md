@@ -15,7 +15,7 @@ provenance and rollback context, not the current entrypoint.
 
 ## What Is Inside
 
-- `agent_files/canon_source_files/` - full canon source files.
+- `agent_files/canon_source_files/` - Builder full-canon corpus files.
 - `agent_files/canon_source_files/08_INTERFACE_STYLE.parts/` - connector-safe
   ordered parts for the verified 3.4 MB Interface Style source file. Reassembly
   is byte-for-byte checked by `tools/reassemble_interface_style.py --check`.
@@ -45,6 +45,8 @@ provenance and rollback context, not the current entrypoint.
 - `MANIFEST.sha256`, `FULL_CANON_UNIFICATION.md`,
   `UNIFIED_QC_RECEIPT.json`, `RECOVERY_RECEIPT.md`, and legacy receipts -
   reproducibility, source synthesis, and verification records.
+- `CANON_TRACE_MAP.md` - exact / transformed / summarized / excluded / missing
+  classification for canon completeness claims.
 - `PROVENANCE_RECEIPT.md` - exact / transformed / excluded source trace for
   the 14 recovered archives and the GitHub mirror boundary.
 - `agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md` - current
@@ -97,19 +99,16 @@ This split is a transport packaging detail, not a canon fork and not a second
 agent. Relative links inside the parts were normalized to the flattened package
 structure on 2026-06-20.
 
-## Horizon Branch QC Gate
+## Current Package QC Gate
 
-Current `main` refresh note: post-PR #206 Horizon root files were restored and
-strictened after the unified package merge. The package copies of the Horizon
-validator, contract, proposal schema, README, and validator wrapper are
-byte-identical to root `main` at verification time. Root `ledger/sot.json`
-remains repository-level SoT metadata and must be checked before cutting a new
-archive.
+Current `main` refresh note: local package receipts are regenerated for this
+upload tree, but root `ledger/sot.json` and remote `origin/main` remain
+repository-level SoT metadata and must be checked before release claims.
 
 Before cutting a new upload archive, checkout the branch and regenerate:
 
 - `MANIFEST.sha256`
-- `ZIP_RECEIPT.json`, if a new zip is produced
+- clean export / `ZIP_RECEIPT.json`, if a new sidecar zip is produced
 - secret scan / smoke receipt for `agent_runtime_tools/iskra_horizon_weaver.py`
 
 The current manifest and unified QC receipt have been regenerated for this
@@ -163,9 +162,9 @@ versions. The exact source copies are preserved under
 ## Status Boundary
 
 This package is `created in workspace` and can be treated as `packaged as upload
-set` after the archive receipt passes. It is not `verified in Builder UI` until
-the user uploads it and runs the acceptance prompts inside ChatGPT / OpenAI
-Agent Builder.
+set` after the manifest and clean-export receipt pass. It is not
+`verified in Builder UI` until the user uploads the clean subset and runs the
+acceptance prompts inside ChatGPT Workspace Agents / Agent Builder.
 
 Valid status labels:
 
@@ -189,6 +188,7 @@ Valid status labels:
 - Runtime bridge smoke is PASS as local source validation, not proof of Codex
   app installation.
 - Runtime hardening prompts pass 6/6.
+- Agent Builder acceptance prompts A-P pass.
 - Governance and security files are visible as package knowledge, including
   `governance/` and `SECURITY.md`.
 - Canon layer index, runtime boundary, provenance receipt, and memory cleanup

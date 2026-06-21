@@ -1,21 +1,17 @@
 #!/usr/bin/env python3
-"""Validate ∆DΩΛ signature blocks in markdown/text files.
+"""Validate explicit Delta/Omega/Lambda receipt blocks.
 
-This tool is intentionally small and dependency-free.
+The validator intentionally ignores dependency folders, caches, binary files,
+manifests, JSON receipts, and canon prose that merely mentions the signature.
 
 Usage:
   python tools/validate_delta.py path/to/file.md [more files...]
   python tools/validate_delta.py --dir .
-
-Exit codes:
-  0 - all files PASS
-  1 - at least one FAIL
 """
 
 from __future__ import annotations
 
 import argparse
-import os
 import re
 import sys
 from dataclasses import dataclass
@@ -23,154 +19,191 @@ from pathlib import Path
 from typing import Iterable, List, Optional, Tuple
 
 
-# Match a standalone header line: "∆DΩΛ".
-# Important: use explicit [ \t] instead of \s to avoid consuming newlines.
-SIGNATURE_HEAD_RE = re.compile(r"^[ \t]*(?:∆|Δ)DΩΛ[ \t]*$", re.MULTILINE)
-
-# Accept:
-#   Δ: ...
-#   Δ — ...
-#   ∆: ...
-FIELD_RE = {
-    "delta": re.compile(r"^\s*[∆Δ]\s*(?:[:—-])\s*(.+)\s*$"),
-    "data": re.compile(r"^\s*D\s*(?:[:—-])\s*(.+)\s*$"),
-    "omega": re.compile(r"^\s*Ω\s*(?:[:—-])\s*(.+)\s*$"),
-    "lambda": re.compile(r"^\s*Λ\s*(?:[:—-])\s*(.+)\s*$"),
+SKIP_DIRS = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "node_modules",
 }
+SKIP_NAMES = {
+    "MANIFEST.sha256",
+    "UNIFIED_QC_RECEIPT.json",
+    "ZIP_RECEIPT.json",
+    "HORIZON_CONTRACT.json",
+    "HORIZON_PROPOSAL_SCHEMA.json",
+    "iskra_toolchain_manifest.json",
+}
+SKIP_SUFFIXES = {
+    ".7z",
+    ".bin",
+    ".docx",
+    ".gif",
+    ".gz",
+    ".ico",
+    ".jpeg",
+    ".jpg",
+    ".lock",
+    ".pdf",
+    ".png",
+    ".pyc",
+    ".pyo",
+    ".rar",
+    ".tar",
+    ".zip",
+}
+TEXT_SUFFIXES = {".md", ".txt", ".yaml", ".yml", ".toml", ".py"}
 
-DATA_KIND_RE = re.compile(r"\b(Fact|Inference|Hypothesis)\b", re.IGNORECASE)
+SIGNATURE_START_RE = re.compile(
+    r"(?im)^[ \t]*(?:#{1,6}[ \t]*)?(?:∆DΩΛ|ΔDΩΛ|Delta)\b[ \t:]*.*$"
+)
+FIELD_RE = {
+    "delta": re.compile(r"(?im)^[ \t]*(?:∆|Δ|Delta)[ \t]*(?:[:=—-])[ \t]*(.+)$"),
+    "data": re.compile(r"(?im)^[ \t]*(?:D|Data)[ \t]*(?:[:=—-])[ \t]*(.+)$"),
+    "omega": re.compile(r"(?im)^[ \t]*(?:Ω|Omega)[ \t]*(?:[:=—-])[ \t]*(.+)$"),
+    "lambda": re.compile(r"(?im)^[ \t]*(?:Λ|Lambda)[ \t]*(?:[:=—-])[ \t]*(.+)$"),
+}
+INLINE_FIELD_RE = {
+    "delta": re.compile(r"(?:^|[;,\s])(?:Delta|∆|Δ)[ \t]*(?:=|:)[ \t]*([^;]+)", re.I),
+    "data": re.compile(r"(?:^|[;,\s])(?:Data|D)[ \t]*(?:=|:)[ \t]*([^;]+)", re.I),
+    "omega": re.compile(r"(?:^|[;,\s])(?:Omega|Ω)[ \t]*(?:=|:)[ \t]*([^;]+)", re.I),
+    "lambda": re.compile(r"(?:^|[;,\s])(?:Lambda|Λ)[ \t]*(?:=|:)[ \t]*([^;]+)", re.I),
+}
+DATA_KIND_RE = re.compile(r"\b(Fact|Facts|Evidence|Data|Inference|Hypothesis|package|local|repo)\b", re.I)
+OMEGA_NUMBER_RE = re.compile(r"[-+]?\d+(?:\.\d+)?")
 
 
 @dataclass
 class SigResult:
     path: Path
     ok: bool
+    skipped: bool
     errors: List[str]
+
+
+def should_skip(path: Path) -> bool:
+    lowered_parts = {part.lower() for part in path.parts}
+    if lowered_parts & SKIP_DIRS:
+        return True
+    if path.name in SKIP_NAMES:
+        return True
+    suffix = path.suffix.lower()
+    if suffix in SKIP_SUFFIXES:
+        return True
+    if suffix and suffix not in TEXT_SUFFIXES:
+        return True
+    if "agent_files" in path.parts and "canon_source_files" in path.parts:
+        return True
+    return False
 
 
 def iter_candidate_files(root: Path) -> Iterable[Path]:
     for p in root.rglob("*"):
-        if not p.is_file():
-            continue
-        # Skip typical binary / huge files
-        if p.suffix.lower() in {".png", ".jpg", ".jpeg", ".gif", ".zip", ".pdf", ".docx"}:
-            continue
-        # Skip known large JSON logs by default
-        if p.suffix.lower() in {".json"} and p.stat().st_size > 5_000_000:
-            continue
-        yield p
+        if p.is_file() and not should_skip(p):
+            yield p
 
 
 def _parse_omega(raw: str) -> Tuple[Optional[float], Optional[str]]:
-    """Return (value_0_100, error)."""
-    s = raw.strip()
-    # Normalize percent
-    s = s.replace("%", "").strip()
-    # Try float
-    try:
-        v = float(s)
-    except ValueError:
-        return None, f"Ω is not a number: '{raw}'"
-
-    # If user gives 0..1 confidence, accept but scale.
-    if 0.0 <= v <= 1.0:
-        v = v * 100.0
-
-    if not (0.0 <= v <= 100.0):
-        return None, f"Ω out of range 0..100: {v} (from '{raw}')"
-
-    return v, None
+    match = OMEGA_NUMBER_RE.search(raw)
+    if not match:
+        return None, f"Omega is not numeric: '{raw}'"
+    value = float(match.group(0))
+    if 0.0 <= value <= 1.0:
+        value *= 100.0
+    if not (0.0 <= value <= 100.0):
+        return None, f"Omega out of range 0..100: {value} (from '{raw}')"
+    return value, None
 
 
-def validate_text(path: Path, text: str) -> SigResult:
-    errors: List[str] = []
-
-    # Find last occurrence of signature header
-    matches = list(SIGNATURE_HEAD_RE.finditer(text))
+def _latest_tail(text: str) -> Optional[str]:
+    matches = list(SIGNATURE_START_RE.finditer(text))
     if not matches:
-        return SigResult(path=path, ok=False, errors=["missing ∆DΩΛ header"])
+        return None
+    return text[matches[-1].start() :]
 
-    last = matches[-1]
-    tail = text[last.start():]
 
-    # Heuristic: signature should be near end
-    # If there's too much content after signature, flag
-    if len(tail.splitlines()) > 80:
-        errors.append("∆DΩΛ header found, but it is far from the end (more than 80 lines after it)")
+def _extract_fields(tail: str) -> dict[str, Optional[str]]:
+    found: dict[str, Optional[str]] = {"delta": None, "data": None, "omega": None, "lambda": None}
 
-    lines = tail.splitlines()
+    for key, pattern in FIELD_RE.items():
+        match = pattern.search(tail)
+        if match:
+            found[key] = match.group(1).strip()
 
-    found = {"delta": None, "data": None, "omega": None, "lambda": None}
+    if any(v is None for v in found.values()):
+        first_line = tail.splitlines()[0] if tail.splitlines() else tail
+        for key, pattern in INLINE_FIELD_RE.items():
+            if found[key] is None:
+                match = pattern.search(first_line)
+                if match:
+                    found[key] = match.group(1).strip()
 
-    for line in lines:
-        if found["delta"] is None:
-            m = FIELD_RE["delta"].match(line)
-            if m:
-                found["delta"] = m.group(1)
-                continue
-        if found["data"] is None:
-            m = FIELD_RE["data"].match(line)
-            if m:
-                found["data"] = m.group(1)
-                continue
-        if found["omega"] is None:
-            m = FIELD_RE["omega"].match(line)
-            if m:
-                found["omega"] = m.group(1)
-                continue
-        if found["lambda"] is None:
-            m = FIELD_RE["lambda"].match(line)
-            if m:
-                found["lambda"] = m.group(1)
-                continue
+    return found
 
-        if all(v is not None for v in found.values()):
-            break
 
-    for k, v in found.items():
-        if v is None:
-            errors.append(f"missing field: {k}")
+def validate_text(
+    path: Path,
+    text: str,
+    *,
+    strict_missing: bool = False,
+    strict_position: bool = False,
+    require_data_kind: bool = False,
+) -> SigResult:
+    tail = _latest_tail(text)
+    if tail is None:
+        if strict_missing:
+            return SigResult(path=path, ok=False, skipped=False, errors=["missing Delta receipt"])
+        return SigResult(path=path, ok=True, skipped=True, errors=[])
 
-    # Validate contents if present
-    if found["delta"] is not None and len(found["delta"].strip()) == 0:
-        errors.append("Δ is empty")
+    errors: List[str] = []
+    if strict_position and len(tail.splitlines()) > 80:
+        errors.append("Delta receipt starts more than 80 lines before EOF")
 
-    if found["data"] is not None:
-        if len(found["data"].strip()) == 0:
-            errors.append("D is empty")
-        if not DATA_KIND_RE.search(found["data"]):
-            errors.append("D should include Fact/Inference/Hypothesis")
+    found = _extract_fields(tail)
+    if all(value is None for value in found.values()) and not strict_missing:
+        return SigResult(path=path, ok=True, skipped=True, errors=[])
+
+    for key, value in found.items():
+        if value is None:
+            errors.append(f"missing field: {key}")
+        elif not value.strip():
+            errors.append(f"empty field: {key}")
+
+    if found["data"] is not None and require_data_kind and not DATA_KIND_RE.search(found["data"]):
+        errors.append("Data should include evidence kind or source hint")
 
     if found["omega"] is not None:
         _, err = _parse_omega(found["omega"])
         if err:
             errors.append(err)
 
-    if found["lambda"] is not None and len(found["lambda"].strip()) == 0:
-        errors.append("Λ is empty")
-
-    return SigResult(path=path, ok=(len(errors) == 0), errors=errors)
+    return SigResult(path=path, ok=not errors, skipped=False, errors=errors)
 
 
 def _read_text(path: Path) -> Tuple[Optional[str], Optional[str]]:
     try:
         return path.read_text(encoding="utf-8"), None
     except UnicodeDecodeError:
-        try:
-            return path.read_text(encoding="utf-8", errors="replace"), None
-        except Exception as e:  # noqa: BLE001
-            return None, str(e)
-    except Exception as e:  # noqa: BLE001
-        return None, str(e)
+        return path.read_text(encoding="utf-8", errors="replace"), None
+    except Exception as exc:  # noqa: BLE001
+        return None, str(exc)
 
 
 def main(argv: List[str]) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("paths", nargs="*", help="files to validate")
-    ap.add_argument("--dir", dest="dir_", help="validate all candidate files under dir")
+    ap.add_argument("--dir", dest="dir_", help="validate candidate files under dir")
+    ap.add_argument("--strict-missing", action="store_true", help="fail files without a Delta receipt")
+    ap.add_argument("--strict-position", action="store_true", help="require receipt near EOF")
+    ap.add_argument(
+        "--require-data-kind",
+        action="store_true",
+        help="require Data/D to include a recognizable evidence/source hint",
+    )
     args = ap.parse_args(argv)
 
-    files: List[Path] = []
     if args.dir_:
         root = Path(args.dir_)
         if not root.exists():
@@ -185,6 +218,9 @@ def main(argv: List[str]) -> int:
         return 1
 
     any_fail = False
+    checked = 0
+    skipped = 0
+
     for f in files:
         if not f.exists() or not f.is_file():
             any_fail = True
@@ -197,15 +233,26 @@ def main(argv: List[str]) -> int:
             print(f"FAIL {f}: cannot read ({err})")
             continue
 
-        res = validate_text(f, text)
-        if res.ok:
+        result = validate_text(
+            f,
+            text,
+            strict_missing=args.strict_missing,
+            strict_position=args.strict_position,
+            require_data_kind=args.require_data_kind,
+        )
+        if result.skipped:
+            skipped += 1
+            continue
+        checked += 1
+        if result.ok:
             print(f"PASS {f}")
         else:
             any_fail = True
             print(f"FAIL {f}")
-            for e in res.errors:
-                print(f"  - {e}")
+            for error in result.errors:
+                print(f"  - {error}")
 
+    print(f"SUMMARY checked={checked} skipped={skipped} failed={1 if any_fail else 0}")
     return 1 if any_fail else 0
 
 

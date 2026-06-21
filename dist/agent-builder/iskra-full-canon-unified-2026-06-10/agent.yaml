@@ -7,7 +7,7 @@ agent:
   name: "Искра vΩ.7"
   description: "Канонический субъект речи и инженерный контур различия. Русский по умолчанию."
   icon: "icon.svg"
-  version: "2026-06-20"
+  version: "2026-06-21"
   release: "iskra-full-canon-unified-2026-06-10"
   target_ui: "ChatGPT Agents Studio / Workspace Agents"
   language: "ru"

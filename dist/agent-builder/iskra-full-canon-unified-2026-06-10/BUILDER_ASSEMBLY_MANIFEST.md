@@ -32,7 +32,10 @@ ChatGPT / OpenAI Agent Builder.
 | Governance / ADR | `governance/`, `agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md` | included |
 | Security policy | `SECURITY.md`, `agent_files/canon_source_files/31_SECURITY.md` | included |
 | Provenance | `provenance/` | included |
-| Manifest / QC | `MANIFEST.sha256`, `MERGE_RECEIPT.md`, `QC_CHECKS.md`, `ZIP_RECEIPT.json` | included; Horizon branch refresh pending |
+| Canon trace map | `CANON_TRACE_MAP.md` | included as claim-boundary map |
+| Agents SDK fallback | `agents-sdk/` | included as code-first local fallback; `.venv` excluded from upload/export |
+| Clean export helper | `tools/clean_export.py` | included |
+| Manifest / QC | `MANIFEST.sha256`, `MERGE_RECEIPT.md`, `QC_CHECKS.md`, `UNIFIED_QC_RECEIPT.json`, `ZIP_RECEIPT.json` | included and refreshed for current package |
 
 ## Conflict Resolution
 
@@ -67,6 +70,8 @@ Secondary:
 - `agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md`
 - `agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md`
 - `agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md`
+- `CANON_TRACE_MAP.md`
+- `agents-sdk/README.md`
 - `agent_runtime_tools/iskra_horizon_weaver.py`
 - `agent_files/toolchain/iskra_toolchain_manifest.json`
 - `plugins/iskra-toolchain-bridge/RUNTIME_RECEIPT.md`
@@ -84,23 +89,28 @@ This manifest does not claim:
 - local runtime helpers will execute in cloud-only Builder profiles.
 - Codex app installation has not been verified while `codex.exe` is blocked by
   `Access is denied`.
+- this package mirrors the entire repository byte for byte.
+- sidecar zip creation proves Builder UI verification.
 
-## Horizon Branch Refresh Gate
+## Clean Export Gate
 
-The pre-Horizon manifest and zip receipt remain present for provenance. The
-Horizon branch is not a final refreshed upload archive until `MANIFEST.sha256`,
-optional zip receipt, secret scan, and Horizon helper smoke are regenerated from
-a checkout of this branch.
+The upload set must be exported from `MANIFEST.sha256` or tracked package files.
+`agents-sdk/.venv`, `__pycache__`, test caches, local screenshots, raw archives,
+and transient artifacts are excluded from the upload boundary. A sidecar clean
+zip can be generated with `tools/clean_export.py`, but the zip itself is not an
+upload-folder member.
 
 ## Verification Contract
 
 PASS requires:
 
-- `MANIFEST.sha256` exists and covers packaged files except itself and the
-  sidecar `ZIP_RECEIPT.json`;
+- `MANIFEST.sha256` exists and covers packaged files except itself,
+  `ZIP_RECEIPT.json`, and the sidecar clean archive;
 - source component manifests are preserved under `provenance/`;
 - required target files are present;
 - no obvious secret-bearing values are packaged;
 - Horizon helper source compiles and its dry-run/validate/permission-boundary smoke passes;
-- the optional zip archive passes integrity if generated;
+- Agents SDK fallback installs editably and passes local unit tests without a
+  live OpenAI call;
+- the optional sidecar zip archive passes integrity if generated;
 - post-upload Builder prompts pass in the UI.

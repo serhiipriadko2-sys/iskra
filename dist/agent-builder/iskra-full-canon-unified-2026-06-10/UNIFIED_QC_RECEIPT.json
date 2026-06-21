@@ -1,100 +1,140 @@
 {
-  "build_utc": "20260610T201945Z",
-  "repair_utc": "20260620T204500Z",
-  "coverage": {
-    "extended_source_files": 154,
-    "missing_from_extended_count": 0,
-    "missing_from_extended": [],
-    "horizon_expected_count": 8,
-    "missing_horizon": [],
-    "missing_must": [],
-    "forbidden_paths": [],
-    "removed_byproducts": [
-      "agent_runtime_tools/__pycache__",
-      "tools/__pycache__",
-      "tests/horizon/__pycache__",
-      "memory_current (root duplicate)"
-    ]
+  "release": "iskra-full-canon-unified-2026-06-10",
+  "generated_at": "2026-06-21T19:32:42+00:00",
+  "status": "LOCAL_GATES_PASS_BUILDER_PENDING",
+  "builder_ui_status": "uploaded by user, pending Builder verification",
+  "source_status": {
+    "head": "24d5155f38d6b46a49156b06b7fee96c4efdc07b",
+    "origin_main": "24d5155f38d6b46a49156b06b7fee96c4efdc07b",
+    "remote_drift": false
   },
   "manifest": {
-    "entries": 228,
-    "ok": 228,
-    "missing": [],
-    "mismatch": [],
-    "note": "Regenerated 2026-06-20 after canon backfill, link normalization, and hygiene fixes. Excludes MANIFEST.sha256 itself."
+    "entries": 245,
+    "total_bytes": 6697096,
+    "excludes": [
+      "root MANIFEST.sha256",
+      "ZIP_RECEIPT.json",
+      ".venv",
+      "__pycache__",
+      ".pytest_cache",
+      "*.egg-info",
+      "local screenshots",
+      "raw archives",
+      "transient artifacts"
+    ],
+    "includes_nested_interface_manifest": true,
+    "largest_files": [
+      {
+        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_004.md",
+        "bytes": 759999
+      },
+      {
+        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_001.md",
+        "bytes": 759957
+      },
+      {
+        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_003.md",
+        "bytes": 759956
+      },
+      {
+        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_002.md",
+        "bytes": 759929
+      },
+      {
+        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_005.md",
+        "bytes": 360703
+      },
+      {
+        "path": "agent_files/canon_source_files/03_COGNITIVE_ARCH.md",
+        "bytes": 323763
+      },
+      {
+        "path": "agent_files/canon_source_files/09_SPACE_CHARTER.md",
+        "bytes": 215838
+      },
+      {
+        "path": "agent_files/canon_source_files/mind/potok.md",
+        "bytes": 205616
+      },
+      {
+        "path": "agent_files/canon_source_files/22_LIBER_IGNIS.txt",
+        "bytes": 158386
+      },
+      {
+        "path": "agent_files/canon_source_files/appendix/liber_ignis_full.md",
+        "bytes": 156235
+      }
+    ]
   },
-  "secret_hits": [],
-  "qc_hits": [],
-  "smoke": {
-    "horizon_validator_unittest": {
-      "returncode": 0,
-      "stderr": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.421s\n\nOK\n"
+  "repaired_findings": [
+    "agent.yaml missing AGENTS.md reference resolved to root AGENTS.md",
+    "governance ADR reference restored inside package",
+    "active Builder verification status labels normalized",
+    "tracking query parameters removed from voice monograph links",
+    "Agents SDK fallback packaged with pyproject.toml and pinned openai-agents==0.17.6",
+    "validate_delta.py scoped to explicit receipts and excludes dependencies/transients",
+    "Builder acceptance prompts extended from A-J to A-P",
+    "CANON_TRACE_MAP.md added for exact/transformed/summarized/excluded/missing claims"
+  ],
+  "gates": {
+    "agent_yaml_paths": {
+      "status": "PASS",
+      "declared_paths": 51,
+      "missing": 0
     },
-    "horizon_wrappers_unittest": {
-      "returncode": 0,
-      "stderr": ".....\n----------------------------------------------------------------------\nRan 5 tests in 0.406s\n\nOK\n"
+    "interface_style_reassembly": {
+      "status": "PASS",
+      "bytes": 3400544,
+      "sha256": "cdf44a557f56c218ac3eed1d89d1f7593141ba0aced29d48c7b56d51c207dc35",
+      "parts": 5
     },
-    "python_syntax_compile": {
-      "returncode": 0,
-      "errors": []
+    "horizon_unittest": {
+      "status": "PASS",
+      "tests": 9
     },
-    "reassemble_interface_style": {
-      "returncode": 0,
-      "stdout": "parts=5\\nbytes=3400544\\nsha256=cdf44a557f56c218ac3eed1d89d1f7593141ba0aced29d48c7b56d51c207dc35\\nREASSEMBLY_PASS"
+    "python_compile": {
+      "status": "PASS"
     },
-    "sha256sum_manifest": {
-      "returncode": 0,
-      "stdout": "228/228 OK"
+    "validate_terms": {
+      "status": "PASS"
+    },
+    "validate_delta": {
+      "status": "PASS",
+      "checked": 42,
+      "skipped": 106
+    },
+    "agents_sdk_unittest": {
+      "status": "PASS",
+      "tests": 7,
+      "openai_agents": "0.17.6"
+    },
+    "secret_scan": {
+      "status": "PASS",
+      "policy_example_hits": 23,
+      "high_confidence_secret_hits": 0
+    },
+    "clean_export": {
+      "status": "PASS",
+      "files": 246,
+      "mode": "manifest source plus MANIFEST.sha256"
+    },
+    "manifest_hash_check": {
+      "status": "PASS",
+      "entries": 245,
+      "missing": 0,
+      "mismatches": 0
+    },
+    "sidecar_zip": {
+      "status": "PASS",
+      "entries": 246,
+      "receipt": "ZIP_RECEIPT.json excluded from manifest/zip"
     }
   },
-  "verdict": "PASS",
-  "github_mirror": {
-    "transport_safe_split": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
-    "parts_dir": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts",
-    "original_08_bytes": 3400544,
-    "original_08_sha256": "cdf44a557f56c218ac3eed1d89d1f7593141ba0aced29d48c7b56d51c207dc35",
-    "parts": 5,
-    "reassembly": "python tools/reassemble_interface_style.py --repo-root . --check",
-    "note": "Links normalized to flattened package structure on 2026-06-20; hash updated accordingly.",
-    "qc": {
-      "reassembly_check": "PASS",
-      "manifest_missing": 0,
-      "manifest_mismatch": 0,
-      "horizon_unittest": "PASS: 9 tests",
-      "forbidden_byproducts": 0,
-      "max_file_bytes": 1048576
-    }
-  },
-  "repair_20260620": {
-    "type": "audit_driven_v2_repair",
-    "adr": "governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
-    "main_head_verified": "e33268fbdfbb0dc52b6fd1fb8399698bf9387129",
-    "hygiene": {
-      "line_endings": ".gitattributes added for LF enforcement",
-      "pii": "Anonymized memory_current/development-diary.md, project-memory.md, open-loops.md; replaced direct name references in instructions and compact instructions.",
-      "byproducts": "Removed tests/horizon/__pycache__ and root memory_current duplicate."
-    },
-    "metadata": {
-      "version_sync": "BUILDER_ASSEMBLY_MANIFEST.md, README.md, README_AGENT_BUILDER_UPLOAD.md, QC_CHECKS.md, agent_files/INDEX.md now reference iskra-full-canon-unified-2026-06-10.",
-      "links": "Normalized relative links inside 08_INTERFACE_STYLE.parts/ to flattened structure.",
-      "tools": "Added validate_terms.py, validate_delta.py, verify_ledger.py stub to tools/."
-    },
-    "canon_backfill": [
-      "agent_files/canon_source_files/AGENTS.md",
-      "agent_files/canon_source_files/voices_monographs/*.md",
-      "agent_files/canon_source_files/metrics/*.md",
-      "agent_files/canon_source_files/mind/*.md",
-      "agent_files/canon_source_files/docs_specs/*.md",
-      "agent_files/canon_source_files/appendix/*.md",
-      "agent_files/canon_source_files/LEDGER_LAYER.md",
-      "agent_files/canon_source_files/APPENDIX_LARGE_FILES.md"
-    ],
-    "builder_artifacts": [
-      "agent.yaml",
-      "icon.svg",
-      "skills/iskra-toolchain-bridge/"
-    ],
-    "verdict": "PASS",
-    "residual_risk": "Workspace Agents UI limits and retrieval behavior not yet live-tested; large appendix encyclopedia files remain out-of-package by design."
-  }
+  "non_claims": [
+    "Not verified in Builder UI",
+    "Not proof of active connectors/tools",
+    "Not a byte-for-byte mirror of the full repository",
+    "No live Supabase/GitHub/Builder mutation performed"
+  ],
+  "next": "Upload only the clean subset and run Builder acceptance prompts A-P; promote to verified in Builder UI only with prompt-level evidence."
 }
