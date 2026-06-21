@@ -62,20 +62,21 @@ export function SoilDisc() {
         <meshPhysicalMaterial
           map={colorMap}
           bumpMap={bumpMap}
-          bumpScale={0.08}
+          bumpScale={0.12}
           displacementMap={displacementMap}
           displacementScale={0.18}
           displacementBias={-0.05}
-          roughness={0.95}
-          metalness={0.05}
-          clearcoat={0}
+          roughness={0.82}
+          metalness={0.15}
+          clearcoat={0.15}
+          clearcoatRoughness={0.5}
           transparent
           opacity={0.95}
         />
       </mesh>
-      <mesh position={[0, 0, 0.02]}>
+      <mesh position={[0, 0, 0.02]} receiveShadow>
         <ringGeometry args={[4, 7, 64]} />
-        <meshBasicMaterial color="#5D4037" transparent opacity={0.35} />
+        <meshStandardMaterial color="#3E2723" roughness={0.9} metalness={0.05} transparent opacity={0.35} />
       </mesh>
     </group>
   );

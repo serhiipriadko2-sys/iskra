@@ -14,19 +14,29 @@ export function DustParticles() {
     const pos = new Float32Array(COUNT * 3);
     const col = new Float32Array(COUNT * 3);
 
+    const goldColor = new THREE.Color('#ffd700');
+    const whiteColor = new THREE.Color('#ffffff');
+    const orangeColor = new THREE.Color('#e08e45');
+
     for (let i = 0; i < COUNT; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const radius = 0.5 + Math.random() * 6;
-      const y = (Math.random() - 0.5) * 10;
+      // Концентрация частиц ближе к центру (стволу дерева)
+      const radius = 0.15 + Math.pow(Math.random(), 2.2) * 3.8;
+      // Высота распределена вдоль ствола и корней дерева
+      const y = -4.5 + Math.random() * 9.5;
 
       pos[i * 3] = Math.cos(angle) * radius;
       pos[i * 3 + 1] = y;
       pos[i * 3 + 2] = Math.sin(angle) * radius;
 
-      const mix = Math.random();
-      col[i * 3] = THREE.MathUtils.lerp(1.0, 0.6, mix);
-      col[i * 3 + 1] = THREE.MathUtils.lerp(0.5, 0.7, mix);
-      col[i * 3 + 2] = THREE.MathUtils.lerp(0.0, 0.6, mix);
+      const rand = Math.random();
+      const mixedColor = rand < 0.65
+        ? goldColor.clone().lerp(orangeColor, Math.random() * 0.5)
+        : whiteColor.clone().lerp(goldColor, Math.random() * 0.5);
+
+      col[i * 3] = mixedColor.r;
+      col[i * 3 + 1] = mixedColor.g;
+      col[i * 3 + 2] = mixedColor.b;
     }
 
     return [pos, col];
@@ -35,9 +45,11 @@ export function DustParticles() {
   useFrame(({ clock }) => {
     if (!pointsRef.current || reducedMotion) return;
     const t = clock.getElapsedTime();
-    pointsRef.current.rotation.y = -t * 0.012;
+    // Медленное величественное вращение пыльцы вокруг дерева
+    pointsRef.current.rotation.y = -t * 0.015;
     const material = pointsRef.current.material as THREE.PointsMaterial;
-    material.opacity = 0.35 + Math.sin(t * 0.8) * 0.1;
+    // Деликатное мерцание пыльцы
+    material.opacity = 0.45 + Math.sin(t * 0.9) * 0.12;
   });
 
   return (
@@ -45,12 +57,13 @@ export function DustParticles() {
       <PointMaterial
         transparent
         vertexColors
-        size={0.035}
+        size={0.048}
         sizeAttenuation
         depthWrite={false}
-        opacity={0.35}
+        opacity={0.45}
         blending={THREE.AdditiveBlending}
       />
     </Points>
   );
 }
+

@@ -26,20 +26,20 @@ export function Effects() {
     composer.addPass(new RenderPass(scene, camera));
 
     const resolution = new THREE.Vector2(size.width, size.height);
-    const strength = isMobile ? 0.65 : 0.85;
-    const radius = isMobile ? 0.3 : 0.4;
-    const threshold = 0.55;
+    const strength = isMobile ? 0.35 : 0.48;
+    const radius = 0.5;
+    const threshold = 0.65;
     const bloomPass = new UnrealBloomPass(resolution, strength, radius, threshold);
     composer.addPass(bloomPass);
 
     if (!isMobile) {
       const bokehPass = new BokehPass(scene, camera, {
         focus: 16,
-        aperture: 0.0045,
-        maxblur: 0.006,
+        aperture: 0.0015,
+        maxblur: 0.003,
         width: size.width,
         height: size.height,
-      });
+      } as any);
       bokehPass.renderToScreen = false;
       composer.addPass(bokehPass);
       bokehPassRef.current = bokehPass;
@@ -71,7 +71,7 @@ export function Effects() {
     if (bokehPassRef.current && controls) {
       const focusTarget = controls.target.clone();
       const distance = camera.position.distanceTo(focusTarget);
-      bokehPassRef.current.uniforms.focus.value = distance;
+      (bokehPassRef.current.uniforms as any).focus.value = distance;
     }
   }, 1);
 

@@ -21,8 +21,13 @@ export function NodeOverlay({ activeNodeId, onClose }: NodeOverlayProps) {
   const node = activeNodeId ? findNodeById(activeNodeId) : null;
   if (!node) return null;
 
+  const isWideNode = node.id === 'architecture' || node.id === 'start' || node.id === 'soil' || node.id === 'metrics';
+  const widthClass = isWideNode
+    ? 'md:w-[46rem] lg:w-[58rem] xl:w-[68rem]'
+    : 'md:w-[28rem] lg:w-[32rem]';
+
   return (
-    <div className="fixed inset-2 md:inset-auto md:right-4 md:top-4 md:bottom-4 z-40 md:w-[28rem] lg:w-[32rem] flex flex-col pointer-events-none">
+    <div className={`fixed inset-2 md:inset-auto md:right-4 md:top-4 md:bottom-4 z-40 ${widthClass} flex flex-col transition-all duration-300 pointer-events-none`}>
       <div className="glass-card flex-1 overflow-y-auto p-4 md:p-8 pointer-events-auto animate-in zoom-in-95 md:slide-in-from-right duration-300">
         <div className="flex items-start justify-between mb-4 md:mb-5">
           <div>

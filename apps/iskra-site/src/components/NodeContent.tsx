@@ -9,6 +9,8 @@ import {
 import { architectureNodes, techStack } from '../lib/architecture';
 import { voices } from '../lib/voices';
 import type { TreeNodeData } from '../lib/treeData';
+import { CognitiveCycleSimulator } from './CognitiveCycleSimulator';
+import { EcosystemMap } from './EcosystemMap';
 
 interface NodeContentProps {
   node: TreeNodeData;
@@ -98,17 +100,32 @@ function PrinciplesContent() {
 
 function ArchitectureContent() {
   return (
-    <div className="space-y-6">
-      <ol className="relative border-l border-white/10 ml-2 space-y-4">
-        {architectureNodes.map((n) => (
-          <li key={n.id} className="ml-5">
-            <span className="absolute -left-1.5 mt-1.5 w-3 h-3 rounded-full" style={{ background: n.color }} />
-            <h4 className="font-mono text-sm text-iskra-text">{n.label}</h4>
-            <p className="text-sm text-iskra-muted mt-1">{n.description}</p>
-          </li>
-        ))}
-      </ol>
+    <div className="space-y-8">
       <div>
+        <p className="text-sm text-iskra-muted leading-relaxed mb-6">
+          Искра управляется иерархическим когнитивным рантаймом. Любой запрос проходит строго последовательную цепочку проверок и трансформаций, прежде чем превратиться в финальный ответ. Ниже представлена схема этой цепочки и её интерактивный симулятор.
+        </p>
+      </div>
+
+      <div className="border-t border-white/5 pt-6">
+        <h4 className="font-mono text-xs uppercase tracking-wider text-iskra-accent mb-4">Уровни когнитивного контроля</h4>
+        <ol className="relative border-l border-white/10 ml-2 space-y-4">
+          {architectureNodes.map((n) => (
+            <li key={n.id} className="ml-5">
+              <span className="absolute -left-1.5 mt-1.5 w-3 h-3 rounded-full" style={{ background: n.color }} />
+              <h4 className="font-mono text-sm text-iskra-text">{n.label} <span className="text-xs text-iskra-muted">— {n.simpleLabel}</span></h4>
+              <p className="text-xs text-iskra-muted mt-1">{n.description}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="border-t border-white/5 pt-6">
+        <h4 className="font-mono text-xs uppercase tracking-wider text-iskra-accent mb-4">Интерактивный симулятор цикла обработки</h4>
+        <CognitiveCycleSimulator />
+      </div>
+
+      <div className="border-t border-white/5 pt-6">
         <h4 className="font-mono text-xs uppercase tracking-wider text-iskra-accent mb-3">Технологический стек</h4>
         <div className="flex flex-wrap gap-2">
           {techStack.map((t) => (
@@ -177,31 +194,41 @@ function ProductContent() {
 
 function StartContent() {
   return (
-    <div className="space-y-6">
-      <ol className="space-y-4">
-        {startContent.steps.map((s) => (
-          <li key={s.label} className="p-4 rounded-xl border border-white/10 bg-iskra-surface/40">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="font-mono text-xs text-iskra-primary">{s.label}</span>
-              <h4 className="font-serif text-iskra-text">{s.title}</h4>
-            </div>
-            <code className="block text-xs font-mono text-iskra-muted bg-black/30 p-2 rounded break-all">{s.code}</code>
-          </li>
-        ))}
-      </ol>
-      <p className="text-sm text-iskra-muted">{startContent.note}</p>
-      <div className="flex flex-wrap gap-3">
-        {startContent.links.map((l) => (
-          <a
-            key={l.label}
-            href={l.url}
-            target="_blank"
-            rel="noreferrer"
-            className="px-4 py-2 rounded-full text-sm border border-white/10 bg-iskra-surface/40 hover:border-iskra-primary/50 text-iskra-text transition-colors"
-          >
-            {l.label} ↗
-          </a>
-        ))}
+    <div className="space-y-8">
+      <div>
+        <p className="text-sm text-iskra-muted leading-relaxed mb-6">
+          Искра — открытый проект. Ниже описаны четыре шага, чтобы склонировать и запустить систему на вашем компьютере, а также представлена интерактивная карта папок и файлов репозитория, раскрывающая внутреннее устройство проекта.
+        </p>
+        <ol className="space-y-4">
+          {startContent.steps.map((s) => (
+            <li key={s.label} className="p-4 rounded-xl border border-white/10 bg-iskra-surface/40">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="font-mono text-xs text-iskra-primary">{s.label}</span>
+                <h4 className="font-serif text-iskra-text">{s.title}</h4>
+              </div>
+              <code className="block text-xs font-mono text-iskra-muted bg-black/30 p-2 rounded break-all">{s.code}</code>
+            </li>
+          ))}
+        </ol>
+        <p className="text-xs text-iskra-muted mt-3">{startContent.note}</p>
+        <div className="flex flex-wrap gap-3 mt-4">
+          {startContent.links.map((l) => (
+            <a
+              key={l.label}
+              href={l.url}
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2 rounded-full text-xs border border-white/10 bg-iskra-surface/40 hover:border-iskra-primary/50 text-iskra-text transition-colors"
+            >
+              {l.label} ↗
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div className="border-t border-white/5 pt-6">
+        <h4 className="font-mono text-xs uppercase tracking-wider text-iskra-accent mb-4">Интерактивный обозреватель репозитория</h4>
+        <EcosystemMap />
       </div>
     </div>
   );

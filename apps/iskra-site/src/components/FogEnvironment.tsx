@@ -19,15 +19,17 @@ export function FogEnvironment() {
     <>
       <color attach="background" args={['#030507']} />
       <fog attach="fog" args={['#030507', 8, 38]} />
-      <ambientLight intensity={0.15} />
-      <hemisphereLight intensity={0.2} groundColor="#2D1B14" color="#4DA3FF" />
-      <pointLight ref={lightRef} position={[7, 5, 7]} color="#FF7A00" intensity={2.2} distance={45} />
-      <pointLight position={[-7, -2, -7]} color="#4DA3FF" intensity={0.9} distance={45} />
-      <pointLight position={[0, 9, 0]} color="#9B59B6" intensity={0.8} distance={35} />
-      <pointLight position={[0, -5, 4]} color="#5D4037" intensity={0.7} distance={28} />
+      <ambientLight intensity={0.35} />
+      <hemisphereLight intensity={0.4} groundColor="#1a0f0a" color="#ffeaa7" />
+      <pointLight ref={lightRef} position={[7, 5, 7]} color="#FF7A00" intensity={4.2} distance={45} />
+      <pointLight position={[-7, -2, -7]} color="#FFB020" intensity={1.5} distance={45} />
+      <pointLight position={[0, 8, 0]} color="#FF9A00" intensity={1.5} distance={35} />
+      <pointLight position={[0, -5, 4]} color="#5D4037" intensity={0.8} distance={28} />
+      {/* Задний контровой свет для отделения ствола от темного фона */}
+      <pointLight position={[0, 2, -6]} color="#FF8A00" intensity={3.5} distance={25} />
       <directionalLight
         position={[-5, 10, 5]}
-        intensity={0.4}
+        intensity={2.2}
         color="#FFB020"
         castShadow
         shadow-mapSize={[2048, 2048]}

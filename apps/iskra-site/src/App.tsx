@@ -46,7 +46,7 @@ export default function App() {
           shadows
           camera={{ position: [0, 1, 16], fov: 55, near: 0.1, far: 100 }}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-          dpr={isMobile ? [1, 1] : [1, 1.5]}
+          dpr={isMobile ? [1, 1] : [1, 1.25]}
           onCreated={(state) => {
             state.gl.toneMapping = THREE.ACESFilmicToneMapping;
             state.gl.toneMappingExposure = 1.15;

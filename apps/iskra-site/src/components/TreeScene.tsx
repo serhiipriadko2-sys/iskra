@@ -6,7 +6,7 @@ import { SoilDisc } from './SoilDisc';
 import { ParticleField } from './ParticleField';
 import { DustParticles } from './DustParticles';
 import { FogEnvironment } from './FogEnvironment';
-import { Stars, ContactShadows } from '@react-three/drei';
+import { ContactShadows } from '@react-three/drei';
 import { StarField } from './StarField';
 import { LocalEnvironment } from './LocalEnvironment';
 import { useMediaQuery } from '../hooks/useMediaQuery';
@@ -63,31 +63,124 @@ function getActiveBranchIds(activeId: string | null): Set<string> {
   return activeBranchIds;
 }
 
+// Создает волокнистые нити ветки, сужающиеся и закручивающиеся спиралью к концу
+function createBranchStrands(
+  start: THREE.Vector3,
+  end: THREE.Vector3,
+  seed: number,
+  count = 2,
+  isRoot = false
+): THREE.CatmullRomCurve3[] {
+  const dir = new THREE.Vector3().subVectors(end, start).normalize();
+  const up = Math.abs(dir.y) > 0.9 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 1, 0);
+  const right = new THREE.Vector3().crossVectors(dir, up).normalize();
+  const localUp = new THREE.Vector3().crossVectors(right, dir).normalize();
+
+  const strands: THREE.CatmullRomCurve3[] = [];
+
+  for (let s = 0; s < count; s++) {
+    const strandAngle = (s * 2 * Math.PI) / count + seed;
+    const points: THREE.Vector3[] = [];
+    const segments = 8;
+
+    // Ветви и корни останавливаются чуть раньше сферы для раскрытия "коготков"
+    const offsetLength = isRoot ? 0.0 : 0.35;
+    const actualEnd = new THREE.Vector3().addScaledVector(dir, -offsetLength).add(end);
+
+    for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      const p = new THREE.Vector3().lerpVectors(start, actualEnd, t);
+
+      if (i > 0 && i < segments) {
+        // Радиус пучка сужается по мере приближения к концу (t -> 1)
+        const bundleRadius = (isRoot ? 0.22 : 0.15) * (1.0 - t * 0.7) * Math.sin(t * Math.PI);
+        const spiralAngle = t * Math.PI * 1.6 + strandAngle;
+
+        p.addScaledVector(right, Math.cos(spiralAngle) * bundleRadius);
+        p.addScaledVector(localUp, Math.sin(spiralAngle) * bundleRadius);
+
+        // Мягкий органический изгиб ветки в пространстве
+        const wobble = (isRoot ? 0.16 : 0.11) * Math.sin(t * Math.PI);
+        p.x += Math.sin(t * Math.PI + seed) * wobble;
+        p.z += Math.cos(t * Math.PI + seed) * wobble;
+        p.y += (isRoot ? -0.1 : 0.08) * Math.sin(t * Math.PI);
+      }
+      points.push(p);
+    }
+    strands.push(new THREE.CatmullRomCurve3(points));
+  }
+
+  return strands;
+}
+
+// Генерирует 3 коготка-держателя (чашечку), обнимающие сферу на конце ветки
+function getClawCurves(start: THREE.Vector3, end: THREE.Vector3, seed: number): THREE.CatmullRomCurve3[] {
+  const dir = new THREE.Vector3().subVectors(end, start).normalize();
+  const preEnd = new THREE.Vector3().addScaledVector(dir, -0.35).add(end);
+
+  const up = Math.abs(dir.y) > 0.9 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 1, 0);
+  const right = new THREE.Vector3().crossVectors(dir, up).normalize();
+  const localUp = new THREE.Vector3().crossVectors(right, dir).normalize();
+
+  const clawCurves: THREE.CatmullRomCurve3[] = [];
+  const clawCount = 3;
+
+  for (let k = 0; k < clawCount; k++) {
+    const angle = k * ((2 * Math.PI) / clawCount) + seed;
+    const radialDir = new THREE.Vector3()
+      .addScaledVector(right, Math.cos(angle))
+      .addScaledVector(localUp, Math.sin(angle))
+      .normalize();
+
+    const p0 = preEnd.clone();
+    // Средняя точка огибает сферу чуть шире (радиус ~0.35)
+    const p1 = end.clone().addScaledVector(radialDir, 0.35).addScaledVector(dir, -0.15);
+    // Конечная точка касается сферы (экватора)
+    const p2 = end.clone().addScaledVector(radialDir, 0.28).addScaledVector(dir, 0.06);
+
+    clawCurves.push(new THREE.CatmullRomCurve3([p0, p1, p2]));
+  }
+
+  return clawCurves;
+}
+
+// Общий золотой металлический материал для всех веток и корней
+function GoldenWoodMaterial({ isActive }: { isActive: boolean }) {
+  return (
+    <meshPhysicalMaterial
+      color="#e5c158" // Благородное золото/бронза
+      roughness={0.18}
+      metalness={0.96}
+      clearcoat={1.0}
+      clearcoatRoughness={0.05}
+      emissive="#ff7a00"
+      emissiveIntensity={isActive ? 0.45 : 0.12}
+      transparent
+      opacity={isActive ? 1.0 : 0.8}
+    />
+  );
+}
+
 function TreeRoots({ activeBranchIds }: { activeBranchIds: Set<string> }) {
-  const rootNodes = useMemo(() => allTreeNodes.filter((n) => n.group === 'roots'), []);
+  const rootNodes = useMemo(() => allTreeNodes.filter((n) => n.group === 'roots' || n.group === 'soil'), []);
+
   return (
     <>
       {rootNodes.map((node) => {
-        const start = new THREE.Vector3(0, -1.8, 0);
+        const start = new THREE.Vector3(0, -2.4, 0);
         const end = new THREE.Vector3(...node.position);
-        const mid = new THREE.Vector3().lerpVectors(start, end, 0.5).setY(start.y - 1.2);
-        const curve = new THREE.CatmullRomCurve3([start, mid, end]);
+        const seed = node.position[0] * 3.5 + node.position[2] * 2.1;
         const isActive = activeBranchIds.has(node.id);
-        return (
-          <mesh key={`root-${node.id}`} castShadow>
-            <tubeGeometry args={[curve, 24, isActive ? 0.1 : 0.05, 8, false]} />
-            <meshPhysicalMaterial
-              color={node.color}
-              emissive={node.color}
-              emissiveIntensity={isActive ? 0.7 : 0.15}
-              roughness={0.65}
-              metalness={0.15}
-              clearcoat={0.25}
-              transparent
-              opacity={isActive ? 0.95 : 0.55}
-            />
+
+        // Для каждого корня генерируем 2 сплетенных волокна
+        const strands = createBranchStrands(start, end, seed, 2, true);
+
+        return strands.map((curve, idx) => (
+          <mesh key={`root-${node.id}-${idx}`} castShadow>
+            <tubeGeometry args={[curve, 24, isActive ? 0.045 : 0.024, 6, false]} />
+            <GoldenWoodMaterial isActive={isActive} />
           </mesh>
-        );
+        ));
       })}
     </>
   );
@@ -95,28 +188,36 @@ function TreeRoots({ activeBranchIds }: { activeBranchIds: Set<string> }) {
 
 function TreeBranches({ activeBranchIds }: { activeBranchIds: Set<string> }) {
   const branchNodes = useMemo(() => allTreeNodes.filter((n) => n.group === 'branches' || n.group === 'crown'), []);
+
   return (
     <>
       {branchNodes.map((node) => {
-        const start = new THREE.Vector3(0, 1.8, 0);
+        const start = new THREE.Vector3(0, 1.6, 0);
         const end = new THREE.Vector3(...node.position);
-        const mid = new THREE.Vector3().lerpVectors(start, end, 0.5).setY(end.y + 0.4);
-        const curve = new THREE.CatmullRomCurve3([start, mid, end]);
+        const seed = node.position[0] * 2.8 + node.position[2] * 1.7;
         const isActive = activeBranchIds.has(node.id);
+
+        // 3 волокна для главных ветвей
+        const strands = createBranchStrands(start, end, seed, 3, false);
+        const claws = getClawCurves(start, end, seed);
+
         return (
-          <mesh key={`branch-${node.id}`} castShadow>
-            <tubeGeometry args={[curve, 24, isActive ? 0.11 : 0.05, 8, false]} />
-            <meshPhysicalMaterial
-              color={node.color}
-              emissive={node.color}
-              emissiveIntensity={isActive ? 0.75 : 0.15}
-              roughness={0.55}
-              metalness={0.2}
-              clearcoat={0.3}
-              transparent
-              opacity={isActive ? 0.95 : 0.55}
-            />
-          </mesh>
+          <group key={`branch-group-${node.id}`}>
+            {/* Волокна ветви */}
+            {strands.map((curve, idx) => (
+              <mesh key={`branch-${node.id}-${idx}`} castShadow>
+                <tubeGeometry args={[curve, 28, isActive ? 0.045 : 0.024, 6, false]} />
+                <GoldenWoodMaterial isActive={isActive} />
+              </mesh>
+            ))}
+            {/* Коготки-держатели ноды */}
+            {claws.map((curve, idx) => (
+              <mesh key={`branch-claw-${node.id}-${idx}`} castShadow>
+                <tubeGeometry args={[curve, 8, isActive ? 0.028 : 0.016, 6, false]} />
+                <GoldenWoodMaterial isActive={isActive} />
+              </mesh>
+            ))}
+          </group>
         );
       })}
     </>
@@ -125,6 +226,7 @@ function TreeBranches({ activeBranchIds }: { activeBranchIds: Set<string> }) {
 
 function LeafBranches({ activeBranchIds }: { activeBranchIds: Set<string> }) {
   const leaves = useMemo(() => allTreeNodes.filter((n) => n.group === 'leaves'), []);
+
   return (
     <>
       {leaves.map((leaf) => {
@@ -132,23 +234,30 @@ function LeafBranches({ activeBranchIds }: { activeBranchIds: Set<string> }) {
         if (!parent) return null;
         const start = new THREE.Vector3(...parent.position);
         const end = new THREE.Vector3(...leaf.position);
-        const mid = new THREE.Vector3().lerpVectors(start, end, 0.5).setY(end.y + 0.3);
-        const curve = new THREE.CatmullRomCurve3([start, mid, end]);
+        const seed = leaf.position[0] * 4.2 + leaf.position[2] * 2.5;
         const isActive = activeBranchIds.has(leaf.id);
+
+        // 2 волокна для веточек к голосам
+        const strands = createBranchStrands(start, end, seed, 2, false);
+        const claws = getClawCurves(start, end, seed);
+
         return (
-          <mesh key={`leaf-branch-${leaf.id}`}>
-            <tubeGeometry args={[curve, 16, isActive ? 0.05 : 0.025, 6, false]} />
-            <meshPhysicalMaterial
-              color={leaf.color}
-              emissive={leaf.color}
-              emissiveIntensity={isActive ? 0.8 : 0.2}
-              roughness={0.45}
-              metalness={0.25}
-              clearcoat={0.3}
-              transparent
-              opacity={isActive ? 0.95 : 0.5}
-            />
-          </mesh>
+          <group key={`leaf-branch-group-${leaf.id}`}>
+            {/* Волокна ветви */}
+            {strands.map((curve, idx) => (
+              <mesh key={`leaf-branch-${leaf.id}-${idx}`}>
+                <tubeGeometry args={[curve, 20, isActive ? 0.028 : 0.015, 6, false]} />
+                <GoldenWoodMaterial isActive={isActive} />
+              </mesh>
+            ))}
+            {/* Коготки-держатели ноды */}
+            {claws.map((curve, idx) => (
+              <mesh key={`leaf-claw-${leaf.id}-${idx}`}>
+                <tubeGeometry args={[curve, 8, isActive ? 0.018 : 0.01, 6, false]} />
+                <GoldenWoodMaterial isActive={isActive} />
+              </mesh>
+            ))}
+          </group>
         );
       })}
     </>
@@ -166,7 +275,6 @@ export function TreeScene({ activeNodeId, onNodeClick }: TreeSceneProps) {
       <ParticleField />
       <DustParticles />
       <StarField />
-      <Stars radius={80} depth={50} count={1000} factor={2} saturation={0} fade speed={0.5} />
       <ContactShadows
         position={[0, -5.48, 0]}
         scale={22}
@@ -174,7 +282,7 @@ export function TreeScene({ activeNodeId, onNodeClick }: TreeSceneProps) {
         blur={2.5}
         opacity={0.35}
         resolution={isMobile ? 256 : 512}
-        frames={isMobile ? 1 : Infinity}
+        frames={1}
       />
       <SoilDisc />
       <TreeTrunk />
