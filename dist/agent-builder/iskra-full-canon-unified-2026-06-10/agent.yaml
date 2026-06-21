@@ -19,7 +19,7 @@ instructions:
 knowledge:
   base_path: "agent_files/canon_source_files"
   files:
-    - "agent_files/canon_source_files/AGENTS.md"
+    - "AGENTS.md"
     - "agent_files/canon_source_files/00_ROUTER.md"
     - "agent_files/canon_source_files/21_INDEX.md"
     - "agent_files/canon_source_files/27_PRINCIPLES.md"

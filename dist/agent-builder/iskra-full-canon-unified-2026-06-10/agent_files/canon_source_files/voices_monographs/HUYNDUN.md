@@ -146,12 +146,12 @@ updated: 2026-01-30
 
 Если хочешь — дам **“Эталонный слепок 2.0”**: манифест + набор команд (“вызовы Хундуня”) под твои типовые застревания (работа/отношения/деньги/творчество).
 
-[1]: https://en.wikipedia.org/wiki/Hundun?utm_source=chatgpt.com "Hundun"
+[1]: https://en.wikipedia.org/wiki/Hundun "Hundun"
 [2]: https://archive.org/download/daoist-scriptures-collection-english-translations/The%20Complete%20Works%20of%20Zhuangzi%20-%20Burton%20Watson%20%28Translator%29.pdf "The Complete Works of Zhuangzi"
 [3]: https://link.springer.com/content/pdf/10.1007/s11712-007-9016-y.pdf "“Emperor Hundun 渾沌”: A Cultural Hermeneutic | Dao"
 [4]: https://plato.stanford.edu/archIves/sum2004/entries/zhuangzi/ "Zhuangzi (Stanford Encyclopedia of Philosophy/Summer 2004 Edition)"
 [5]: https://iep.utm.edu/zhuangzi-chuang-tzu-chinese-philosopher/ "Zhuangzi | Internet Encyclopedia of Philosophy"
-[![The Busy Teacher’s Handbook to Teaching the Zhuangzi - Association for ...](https://tse2.mm.bing.net/th/id/OIP.Hc5kkjOl1ZOPODMv7gR6sgHaFE?cb=ucfimg2\&pid=Api\&ucfimg=1)](https://www.asianstudies.org/publications/eaa/archives/the-busy-teachers-handbook-to-teaching-the-zhuangzi/?utm_source=chatgpt.com)
+[![The Busy Teacher’s Handbook to Teaching the Zhuangzi - Association for ...](https://tse2.mm.bing.net/th/id/OIP.Hc5kkjOl1ZOPODMv7gR6sgHaFE?cb=ucfimg2\&pid=Api\&ucfimg=1)](https://www.asianstudies.org/publications/eaa/archives/the-busy-teachers-handbook-to-teaching-the-zhuangzi/)
 
 ## Суммирование
 
@@ -386,7 +386,7 @@ updated: 2026-01-30
 
 Если хочешь — начнём сразу: **какой дедлок ты хочешь разорвать первым?**
 
-[1]: https://zh.wikisource.org/zh-hant/%E8%8E%8A%E5%AD%90/%E6%87%89%E5%B8%9D%E7%8E%8B?utm_source=chatgpt.com "莊子/應帝王 - 維基文庫，自由的圖書館 - zh.wikisource.org"
-[2]: https://www.britannica.com/topic/wuwei-Chinese-philosophy?utm_source=chatgpt.com "Wuwei | Daoism, Non-Action & Spontaneity | Britannica"
-[3]: https://www.britannica.com/topic/Chinese-mythology?utm_source=chatgpt.com "Chinese mythology | Britannica"
+[1]: https://zh.wikisource.org/zh-hant/%E8%8E%8A%E5%AD%90/%E6%87%89%E5%B8%9D%E7%8E%8B "莊子/應帝王 - 維基文庫，自由的圖書館 - zh.wikisource.org"
+[2]: https://www.britannica.com/topic/wuwei-Chinese-philosophy "Wuwei | Daoism, Non-Action & Spontaneity | Britannica"
+[3]: https://www.britannica.com/topic/Chinese-mythology "Chinese mythology | Britannica"
 

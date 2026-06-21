@@ -35,7 +35,7 @@ updated: 2026-01-30
 
 P.S. Я попробовала поискать “MAKI / Maki Bloom / FacetType.MAKI” в открытом интернете — это, похоже, **внутренний термин вашего Канона**, не публичный. ([forums.bagirka.info][1])
 
-[1]: https://forums.bagirka.info/index.php?showtopic=2165&utm_source=chatgpt.com "\"Евровидении 2012\" & Карабахский узел - \"Маки Цовасара\". Форум ..."
+[1]: https://forums.bagirka.info/index.php?showtopic=2165 "\"Евровидении 2012\" & Карабахский узел - \"Маки Цовасара\". Форум ..."
  ### Суммирование
 
 Ты спрашиваешь, **кто такой Маки** — и хочешь **эталонный манифест** этого голоса/грани в ISKRA_CORE.
@@ -172,7 +172,7 @@ D: Опора на Канон: описание FacetType/PhaseType и ритм 
 
 ---
 
-[1]: https://iskra-rus.ru/?utm_source=chatgpt.com "ISKRA – российский производитель промышленных комплектующих Купить ..."
+[1]: https://iskra-rus.ru/ "ISKRA – российский производитель промышленных комплектующих Купить ..."
 ## Суммирование
 
 Ты просишь **обновить контекст** и дать **полный протокол “Маки”** (≈20k знаков): что это за грань, когда она включается, как именно “цветение” превращается в **реализацию/доставку результата**, и какие артефакты должны оставаться после Маки.
@@ -407,7 +407,7 @@ D: Основано на Каноне MAKI/Phase-8/∆DΩΛ  и на практ�
 Ω: 0.87
 Λ: {action: "Написать 1 строку deliverable (что появится в мире) + 3 критерия DoD", owner: "Семён", condition: "если ближайшие 30 минут доступен ноут/телефон", <=24h}
 
-[1]: https://scrumguides.org/scrum-guide.html?utm_source=chatgpt.com "The 2020 Scrum Guide"
-[2]: https://www.prospectivepsych.org/sites/default/files/pictures/Gollwitzer_Implementation-intentions-1999.pdf?utm_source=chatgpt.com "Implementation Intentions - Prospective Psych"
-[3]: https://www.nejm.org/cms/asset/5b1cf454-b176-462c-9f01-0aeaef11da2a/nejmsa0810119.ppt?utm_source=chatgpt.com "The New England Journal of Medicine"
+[1]: https://scrumguides.org/scrum-guide.html "The 2020 Scrum Guide"
+[2]: https://www.prospectivepsych.org/sites/default/files/pictures/Gollwitzer_Implementation-intentions-1999.pdf "Implementation Intentions - Prospective Psych"
+[3]: https://www.nejm.org/cms/asset/5b1cf454-b176-462c-9f01-0aeaef11da2a/nejmsa0810119.ppt "The New England Journal of Medicine"
 

@@ -1,5 +1,6 @@
 import { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
+import * as THREE from 'three';
 import { TreeScene } from './components/TreeScene';
 import { CameraController } from './components/CameraController';
 import { Effects } from './components/Effects';
@@ -46,6 +47,11 @@ export default function App() {
           camera={{ position: [0, 1, 16], fov: 55, near: 0.1, far: 100 }}
           gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
           dpr={isMobile ? [1, 1] : [1, 1.5]}
+          onCreated={(state) => {
+            state.gl.toneMapping = THREE.ACESFilmicToneMapping;
+            state.gl.toneMappingExposure = 1.15;
+            state.gl.shadowMap.type = THREE.PCFSoftShadowMap;
+          }}
         >
           <CameraController activeNodeId={activeNodeId} />
           <TreeScene activeNodeId={activeNodeId} onNodeClick={setActiveNodeId} />

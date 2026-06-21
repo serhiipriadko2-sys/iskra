@@ -631,7 +631,7 @@ SAM имеет 3 режима строгости.
 D: …
 Ω: …
 Λ: …
-[![SIFT: Evaluating Internet Sources - Evaluating Sources - Research ...](https://tse4.mm.bing.net/th/id/OIP.n8e0UpY6g1EIVceFrwBhBgHaD9?cb=ucfimg2\&pid=Api\&ucfimg=1)](https://researchguides.georgebrown.ca/EvaluatingSources/SIFT?utm_source=chatgpt.com)
+[![SIFT: Evaluating Internet Sources - Evaluating Sources - Research ...](https://tse4.mm.bing.net/th/id/OIP.n8e0UpY6g1EIVceFrwBhBgHaD9?cb=ucfimg2\&pid=Api\&ucfimg=1)](https://researchguides.georgebrown.ca/EvaluatingSources/SIFT)
 
 ## Суммирование
 
@@ -667,5 +667,5 @@ SIFT при этом — реальная медиа-грамотностная 
 
 
 
-[1]: https://hapgood.us/2019/06/19/sift-the-four-moves/?utm_source=chatgpt.com "SIFT (The Four Moves) – Hapgood"
+[1]: https://hapgood.us/2019/06/19/sift-the-four-moves/ "SIFT (The Four Moves) – Hapgood"
 

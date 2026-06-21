@@ -3,8 +3,7 @@ from __future__ import annotations
 from agents import function_tool
 
 
-@function_tool
-def github_read(owner_repo: str, path: str, ref: str = "main") -> str:
+def github_read_impl(owner_repo: str, path: str, ref: str = "main") -> str:
     """Read a file from a public GitHub repository.
 
     Args:
@@ -23,3 +22,6 @@ def github_read(owner_repo: str, path: str, ref: str = "main") -> str:
             return response.read().decode("utf-8")
     except Exception as exc:
         return f"[ERROR] Failed to read {url}: {exc}"
+
+
+github_read = function_tool(github_read_impl)

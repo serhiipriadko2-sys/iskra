@@ -34,7 +34,7 @@
 
 - `created in workspace`;
 - `exported as upload set`;
-- `uploaded by user, pending visual verification`;
+- `uploaded by user, pending Builder verification`;
 - `verified in Builder UI`.
 
 ## Что вставить в Instructions

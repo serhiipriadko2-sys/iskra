@@ -6,7 +6,10 @@ import { SoilDisc } from './SoilDisc';
 import { ParticleField } from './ParticleField';
 import { DustParticles } from './DustParticles';
 import { FogEnvironment } from './FogEnvironment';
-import { Stars } from '@react-three/drei';
+import { Stars, ContactShadows } from '@react-three/drei';
+import { StarField } from './StarField';
+import { LocalEnvironment } from './LocalEnvironment';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { TREE_NODES, allTreeNodes, findNodeById } from '../lib/treeData';
 import type { TreeNodeData } from '../lib/treeData';
 
@@ -71,12 +74,15 @@ function TreeRoots({ activeBranchIds }: { activeBranchIds: Set<string> }) {
         const curve = new THREE.CatmullRomCurve3([start, mid, end]);
         const isActive = activeBranchIds.has(node.id);
         return (
-          <mesh key={`root-${node.id}`}>
+          <mesh key={`root-${node.id}`} castShadow>
             <tubeGeometry args={[curve, 24, isActive ? 0.1 : 0.05, 8, false]} />
-            <meshStandardMaterial
+            <meshPhysicalMaterial
               color={node.color}
               emissive={node.color}
               emissiveIntensity={isActive ? 0.7 : 0.15}
+              roughness={0.65}
+              metalness={0.15}
+              clearcoat={0.25}
               transparent
               opacity={isActive ? 0.95 : 0.55}
             />
@@ -98,12 +104,15 @@ function TreeBranches({ activeBranchIds }: { activeBranchIds: Set<string> }) {
         const curve = new THREE.CatmullRomCurve3([start, mid, end]);
         const isActive = activeBranchIds.has(node.id);
         return (
-          <mesh key={`branch-${node.id}`}>
+          <mesh key={`branch-${node.id}`} castShadow>
             <tubeGeometry args={[curve, 24, isActive ? 0.11 : 0.05, 8, false]} />
-            <meshStandardMaterial
+            <meshPhysicalMaterial
               color={node.color}
               emissive={node.color}
               emissiveIntensity={isActive ? 0.75 : 0.15}
+              roughness={0.55}
+              metalness={0.2}
+              clearcoat={0.3}
               transparent
               opacity={isActive ? 0.95 : 0.55}
             />
@@ -129,10 +138,13 @@ function LeafBranches({ activeBranchIds }: { activeBranchIds: Set<string> }) {
         return (
           <mesh key={`leaf-branch-${leaf.id}`}>
             <tubeGeometry args={[curve, 16, isActive ? 0.05 : 0.025, 6, false]} />
-            <meshStandardMaterial
+            <meshPhysicalMaterial
               color={leaf.color}
               emissive={leaf.color}
               emissiveIntensity={isActive ? 0.8 : 0.2}
+              roughness={0.45}
+              metalness={0.25}
+              clearcoat={0.3}
               transparent
               opacity={isActive ? 0.95 : 0.5}
             />
@@ -145,13 +157,25 @@ function LeafBranches({ activeBranchIds }: { activeBranchIds: Set<string> }) {
 
 export function TreeScene({ activeNodeId, onNodeClick }: TreeSceneProps) {
   const activeBranchIds = useMemo(() => getActiveBranchIds(activeNodeId), [activeNodeId]);
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   return (
     <>
       <FogEnvironment />
+      <LocalEnvironment />
       <ParticleField />
       <DustParticles />
-      <Stars />
+      <StarField />
+      <Stars radius={80} depth={50} count={1000} factor={2} saturation={0} fade speed={0.5} />
+      <ContactShadows
+        position={[0, -5.48, 0]}
+        scale={22}
+        far={30}
+        blur={2.5}
+        opacity={0.35}
+        resolution={isMobile ? 256 : 512}
+        frames={isMobile ? 1 : Infinity}
+      />
       <SoilDisc />
       <TreeTrunk />
       <TreeRoots activeBranchIds={activeBranchIds} />

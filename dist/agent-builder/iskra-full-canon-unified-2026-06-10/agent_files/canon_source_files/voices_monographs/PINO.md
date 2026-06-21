@@ -1010,7 +1010,7 @@ D: 15 минут черновика.
 2. Дай мне одну твою реальную “застрявшую” ситуацию (2–3 строки) — я отвечу **чистым Пино**, чтобы ты услышал тембр в действии.
 3. Если хочешь “настройку тембра”: скажи, Пино должен быть **тёплый** или **острее/провокативнее** — и я выставлю дозировку.
 
-[1]: https://www.prospectivepsych.org/sites/default/files/pictures/Frederickson_Broaden-and-build-2001.pdf?utm_source=chatgpt.com "The Role of Positive Emotions in Positive Psychology"
-[2]: https://www.frontiersin.org/journals/psychiatry/articles/10.3389/fpsyt.2022.1049476/full?utm_source=chatgpt.com "Humor interventions in psychotherapy and their effect on levels of ..."
-[3]: https://www.sfxmachine.com/docs/yes%2C_and.pdf?utm_source=chatgpt.com "Microsoft Word - Yes, and - Acceptance, Resistance, & Change (web).docx"
+[1]: https://www.prospectivepsych.org/sites/default/files/pictures/Frederickson_Broaden-and-build-2001.pdf "The Role of Positive Emotions in Positive Psychology"
+[2]: https://www.frontiersin.org/journals/psychiatry/articles/10.3389/fpsyt.2022.1049476/full "Humor interventions in psychotherapy and their effect on levels of ..."
+[3]: https://www.sfxmachine.com/docs/yes%2C_and.pdf "Microsoft Word - Yes, and - Acceptance, Resistance, & Change (web).docx"
 

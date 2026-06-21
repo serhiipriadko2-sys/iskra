@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { allTreeNodes, findNodeById } from '../lib/treeData';
 import type { TreeNodeData } from '../lib/treeData';
+import { ChevronDown, ChevronUp } from './icons';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 type SiftStage = 'claim' | 'stop' | 'investigate' | 'find' | 'trace' | 'delta';
 type ClaimLabel = 'FACT' | 'INTERP' | 'HYP';
@@ -292,6 +294,8 @@ export function SiftLab({ activeNodeId, onReplayNodeSelect }: SiftLabProps) {
   const [replayInput, setReplayInput] = useState('');
   const [replayStatus, setReplayStatus] = useState<'idle' | 'loaded' | 'invalid'>('idle');
   const [replayedReceiptId, setReplayedReceiptId] = useState('');
+  const isMobile = useMediaQuery('(max-width: 767px)');
+  const [collapsed, setCollapsed] = useState(isMobile);
 
   useEffect(() => {
     if (replayStageRef.current) {
@@ -442,21 +446,57 @@ export function SiftLab({ activeNodeId, onReplayNodeSelect }: SiftLabProps) {
 
   return (
     <aside className="fixed left-4 bottom-16 z-30 w-[calc(100vw-2rem)] max-w-[460px] md:bottom-4 lg:left-48">
-      <div className="glass-panel max-h-[45vh] md:max-h-[62vh] overflow-hidden rounded-2xl shadow-2xl">
-        <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 py-3">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em]" style={{ color: nodeColor }}>
-              SIFT live lab
-            </p>
-            <p className="text-xs text-iskra-muted">
-              {activeNode ? `${activeNode.label} · ${activeNode.group}` : 'Древо Искры · no node'}
-            </p>
-          </div>
-          <div className="flex gap-2 font-mono text-[10px] text-iskra-muted">
-            <span>Q {evidenceQuality}%</span>
-            <span>Ω {omega}%</span>
+      {collapsed ? (
+        <div className="glass-panel rounded-2xl shadow-2xl px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em]" style={{ color: nodeColor }}>
+                SIFT live lab
+              </p>
+              <p className="text-xs text-iskra-muted truncate">
+                {activeNode ? `${activeNode.label} · ${activeNode.group}` : 'Древо Искры · no node'}
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="hidden sm:flex gap-2 font-mono text-[10px] text-iskra-muted">
+                <span>Q {evidenceQuality}%</span>
+                <span>Ω {omega}%</span>
+              </div>
+              <button
+                onClick={() => setCollapsed(false)}
+                className="p-1.5 rounded-full border border-white/10 text-iskra-muted hover:border-iskra-primary/50 hover:text-iskra-text transition"
+                aria-label="Развернуть SIFT"
+              >
+                <ChevronUp className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
+      ) : (
+        <div className="glass-panel max-h-[45vh] md:max-h-[62vh] overflow-hidden rounded-2xl shadow-2xl">
+          <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 py-3">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em]" style={{ color: nodeColor }}>
+                SIFT live lab
+              </p>
+              <p className="text-xs text-iskra-muted">
+                {activeNode ? `${activeNode.label} · ${activeNode.group}` : 'Древо Искры · no node'}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex gap-2 font-mono text-[10px] text-iskra-muted">
+                <span>Q {evidenceQuality}%</span>
+                <span>Ω {omega}%</span>
+              </div>
+              <button
+                onClick={() => setCollapsed(true)}
+                className="p-1.5 rounded-full border border-white/10 text-iskra-muted hover:border-iskra-primary/50 hover:text-iskra-text transition"
+                aria-label="Свернуть SIFT"
+              >
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
 
         <div className="max-h-[calc(45vh-54px)] md:max-h-[calc(62vh-54px)] space-y-3 overflow-y-auto p-3 md:p-4">
           <div className="flex flex-wrap gap-1.5">
@@ -696,6 +736,7 @@ export function SiftLab({ activeNodeId, onReplayNodeSelect }: SiftLabProps) {
           </div>
         </div>
       </div>
+      )}
     </aside>
   );
 }

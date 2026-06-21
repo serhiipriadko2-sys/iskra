@@ -40,6 +40,8 @@ export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
     <group position={node.position}>
       <mesh
         ref={meshRef}
+        castShadow
+        receiveShadow
         onClick={(e) => {
           e.stopPropagation();
           onClick(node.id);
@@ -51,12 +53,14 @@ export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
         onPointerOut={() => setHovered(false)}
       >
         <sphereGeometry args={[0.28, 32, 32]} />
-        <meshStandardMaterial
+        <meshPhysicalMaterial
           color={col}
           emissive={col}
           emissiveIntensity={isActive ? 1.6 : hovered ? 1 : 0.45}
           roughness={0.2}
           metalness={0.7}
+          clearcoat={1}
+          clearcoatRoughness={0.1}
           transparent
           opacity={isDimmed ? 0.35 : 1}
         />

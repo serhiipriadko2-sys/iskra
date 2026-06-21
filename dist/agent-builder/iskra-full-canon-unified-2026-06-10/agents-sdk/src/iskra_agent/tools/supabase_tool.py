@@ -3,8 +3,7 @@ from __future__ import annotations
 from agents import function_tool
 
 
-@function_tool
-def supabase_read(project_ref: str, table: str, select: str = "*", limit: int = 10) -> str:
+def supabase_read_impl(project_ref: str, table: str, select: str = "*", limit: int = 10) -> str:
     """Read rows from a Supabase table via the REST API.
 
     Requires SUPABASE_ANON_KEY environment variable.
@@ -39,3 +38,6 @@ def supabase_read(project_ref: str, table: str, select: str = "*", limit: int = 
             return json.dumps(data, ensure_ascii=False, indent=2)
     except Exception as exc:
         return f"[ERROR] Failed to read {url}: {exc}"
+
+
+supabase_read = function_tool(supabase_read_impl)

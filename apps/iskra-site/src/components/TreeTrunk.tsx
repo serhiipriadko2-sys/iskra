@@ -19,16 +19,23 @@ export function TreeTrunk() {
     <group ref={trunkRef}>
       {/* Central trunk */}
       <mesh position={[0, 0, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.28, 0.48, 5.5, 48]} />
-        <meshStandardMaterial
+        <cylinderGeometry args={[0.28, 0.48, 5.5, 64, 32]} />
+        <meshPhysicalMaterial
           color="#3E2723"
           emissive="#FF7A00"
-          emissiveIntensity={0.2}
-          roughness={0.85}
-          metalness={0.1}
+          emissiveIntensity={0.12}
+          roughness={0.9}
+          metalness={0.05}
+          clearcoat={0.15}
+          clearcoatRoughness={0.5}
+          sheen={0.4}
+          sheenColor="#FF7A00"
           bumpMap={barkTexture}
-          bumpScale={0.08}
+          bumpScale={0.06}
           roughnessMap={barkTexture}
+          displacementMap={barkTexture}
+          displacementScale={0.035}
+          displacementBias={-0.01}
         />
       </mesh>
 
@@ -42,14 +49,30 @@ export function TreeTrunk() {
       {[0, 1.4, -1.4].map((y, i) => (
         <mesh key={`ring-${i}`} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[1.0 + i * 0.2, 0.035, 12, 64]} />
-          <meshStandardMaterial color="#FF7A00" emissive="#FF7A00" emissiveIntensity={1.4} transparent opacity={0.85} />
+          <meshPhysicalMaterial
+            color="#FF7A00"
+            emissive="#FF7A00"
+            emissiveIntensity={1.4}
+            transparent
+            opacity={0.85}
+            roughness={0.2}
+            metalness={0.1}
+          />
         </mesh>
       ))}
 
       {/* Heart core */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[0.3, 32, 32]} />
-        <meshStandardMaterial color="#FF7A00" emissive="#FF7A00" emissiveIntensity={2.8} transparent opacity={0.95} />
+        <meshPhysicalMaterial
+          color="#FF7A00"
+          emissive="#FF7A00"
+          emissiveIntensity={2.8}
+          transparent
+          opacity={0.95}
+          roughness={0.1}
+          metalness={0.2}
+        />
       </mesh>
 
       {/* Volumetric glow discs */}

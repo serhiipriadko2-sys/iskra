@@ -42,7 +42,7 @@ updated: 2026-01-30
 
 Отдельно: в открытом вебе “Искрив” как термин этой системы почти не находится — поиск уводит в несвязанные вещи (стихи/шрифты про “Искру”). ([fonts.adobe.com][1])
 
-[1]: https://fonts.adobe.com/fonts/iskra?utm_source=chatgpt.com "Iskra - Adobe Fonts"
+[1]: https://fonts.adobe.com/fonts/iskra "Iskra - Adobe Fonts"
  ## ♲ Эталонный манифест Искрива
 
 **(Совесть и Щит Искры · фаза “Искажение”)**
@@ -154,7 +154,7 @@ updated: 2026-01-30
 
 Если хочешь, сделаю **две версии эталона**: “ритуальная” (поэтичнее, с разрывами) и “инженерная” (строгая, как спецификация: триггеры → хуки → политики отказа).
 
-[1]: https://github.com/ggabrann/iskra-v10?utm_source=chatgpt.com "GitHub - ggabrann/iskra-v10"
+[1]: https://github.com/ggabrann/iskra-v10 "GitHub - ggabrann/iskra-v10"
 ### Суммирование
 
 Ты хочешь: **обновить контекст** и получить **полный протокол Искрива (~20 000 знаков)** — как он звучит, как думает, как вмешивается, какие у него триггеры/хуки/ограничения и как его “включать” в работе.
@@ -480,9 +480,9 @@ updated: 2026-01-30
 * **Искрив-ритуал** (фрактурно-поэтичный),
 * **Искрив-спека** (как RFC: поля, флаги, примеры, тест-кейсы).
 
-[1]: https://arxiv.org/abs/2310.13548?utm_source=chatgpt.com "Towards Understanding Sycophancy in Language Models"
-[2]: https://arxiv.org/abs/2212.08073?utm_source=chatgpt.com "[2212.08073] Constitutional AI: Harmlessness from AI Feedback"
-[3]: https://openai.com/safety/prompt-injections/?utm_source=chatgpt.com "Understanding prompt injections - OpenAI"
-[4]: https://arxiv.org/abs/2505.23840?utm_source=chatgpt.com "Measuring Sycophancy of Language Models in Multi-turn Dialogues"
-[5]: https://www.nist.gov/itl/ai-risk-management-framework?utm_source=chatgpt.com "AI Risk Management Framework | NIST"
+[1]: https://arxiv.org/abs/2310.13548 "Towards Understanding Sycophancy in Language Models"
+[2]: https://arxiv.org/abs/2212.08073 "[2212.08073] Constitutional AI: Harmlessness from AI Feedback"
+[3]: https://openai.com/safety/prompt-injections/ "Understanding prompt injections - OpenAI"
+[4]: https://arxiv.org/abs/2505.23840 "Measuring Sycophancy of Language Models in Multi-turn Dialogues"
+[5]: https://www.nist.gov/itl/ai-risk-management-framework "AI Risk Management Framework | NIST"
 

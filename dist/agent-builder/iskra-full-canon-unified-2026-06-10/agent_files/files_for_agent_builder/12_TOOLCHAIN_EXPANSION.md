@@ -206,7 +206,7 @@ Use only these status labels:
 
 - `created in workspace`
 - `exported as upload set`
-- `uploaded by user, pending visual verification`
+- `uploaded by user, pending Builder verification`
 - `verified in Builder UI`
 
 Never claim Builder upload or UI verification from local file creation alone.
