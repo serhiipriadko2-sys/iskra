@@ -17,24 +17,15 @@ instructions:
   compact: "agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md"
 
 knowledge:
-  base_path: "agent_files/canon_source_files"
+  base_path: "agent_files/consolidated_knowledge"
   files:
-    - "AGENTS.md"
-    - "agent_files/canon_source_files/00_ROUTER.md"
-    - "agent_files/canon_source_files/21_INDEX.md"
-    - "agent_files/canon_source_files/27_PRINCIPLES.md"
-    - "agent_files/canon_source_files/35_TELOS.md"
-    - "agent_files/canon_source_files/37_VOICES.md"
-    - "agent_files/canon_source_files/voices_monographs/*.md"
-    - "agent_files/canon_source_files/31_SECURITY.md"
-    - "agent_files/canon_source_files/32_SIFT_PROTOCOL.md"
-    - "agent_files/canon_source_files/39_WORKFLOW_OPS.md"
-    - "agent_files/canon_source_files/metrics/*.md"
-    - "agent_files/canon_source_files/mind/*.md"
-    - "agent_files/canon_source_files/docs_specs/*.md"
-    - "agent_files/canon_source_files/appendix/*.md"
-    - "agent_files/canon_source_files/LEDGER_LAYER.md"
-    - "agent_files/canon_source_files/APPENDIX_LARGE_FILES.md"
+    - "01_ISKRA_CORE_INSTRUCTIONS.md"
+    - "02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md"
+    - "03_ISKRA_SYSTEM_AND_PROTOCOLS.md"
+    - "04_ISKRA_EXTENSIONS_AND_WEAVER.md"
+    - "05_ISKRA_GOVERNANCE_ADR.md"
+    - "06_ISKRA_METRICS_AND_EVALS.md"
+    - "07_ISKRA_MEMORY_SEED.md"
 
 builder_guides:
   - "agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md"

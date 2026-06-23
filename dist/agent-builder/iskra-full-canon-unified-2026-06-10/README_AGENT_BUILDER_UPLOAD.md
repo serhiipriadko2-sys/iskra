@@ -18,10 +18,8 @@ Status: `uploaded by user, pending Builder verification`
 
 - Upload the clean export generated from `MANIFEST.sha256`, not the mutable
   working directory.
-- Add `agent_files/files_for_agent_builder/*` as primary Builder instructions
-  and knowledge.
-- Add `agent_files/canon_source_files/*` as source-of-truth canon knowledge.
-- Add `agent_files/evals/*` as acceptance-test material.
+- Загрузите файлы из `agent_files/consolidated_knowledge/*` (Вариант А для классического интерфейса Custom GPTs) либо файлы из `agent_files/files_for_agent_builder/*` и `agent_files/canon_source_files/*` (Вариант Б для Assistants API / Agents SDK).
+- Добавьте `agent_files/evals/*` в качестве тестового материала.
 - Treat `agent_runtime_tools/*` as local helper source unless a runtime proves
   file-backed execution.
 - Treat `agent_files/memory_*` as continuity receipts, not immutable canon.
