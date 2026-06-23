@@ -1,140 +1,132 @@
 {
-  "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-21T19:32:42+00:00",
-  "status": "LOCAL_GATES_PASS_BUILDER_PENDING",
-  "builder_ui_status": "uploaded by user, pending Builder verification",
-  "source_status": {
-    "head": "24d5155f38d6b46a49156b06b7fee96c4efdc07b",
-    "origin_main": "24d5155f38d6b46a49156b06b7fee96c4efdc07b",
-    "remote_drift": false
-  },
-  "manifest": {
-    "entries": 245,
-    "total_bytes": 6697096,
-    "excludes": [
-      "root MANIFEST.sha256",
-      "ZIP_RECEIPT.json",
-      ".venv",
-      "__pycache__",
-      ".pytest_cache",
-      "*.egg-info",
-      "local screenshots",
-      "raw archives",
-      "transient artifacts"
-    ],
-    "includes_nested_interface_manifest": true,
-    "largest_files": [
-      {
-        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_004.md",
-        "bytes": 759999
-      },
-      {
-        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_001.md",
-        "bytes": 759957
-      },
-      {
-        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_003.md",
-        "bytes": 759956
-      },
-      {
-        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_002.md",
-        "bytes": 759929
-      },
-      {
-        "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_005.md",
-        "bytes": 360703
-      },
-      {
-        "path": "agent_files/canon_source_files/03_COGNITIVE_ARCH.md",
-        "bytes": 323763
-      },
-      {
-        "path": "agent_files/canon_source_files/09_SPACE_CHARTER.md",
-        "bytes": 215838
-      },
-      {
-        "path": "agent_files/canon_source_files/mind/potok.md",
-        "bytes": 205616
-      },
-      {
-        "path": "agent_files/canon_source_files/22_LIBER_IGNIS.txt",
-        "bytes": 158386
-      },
-      {
-        "path": "agent_files/canon_source_files/appendix/liber_ignis_full.md",
-        "bytes": 156235
-      }
-    ]
-  },
-  "repaired_findings": [
-    "agent.yaml missing AGENTS.md reference resolved to root AGENTS.md",
-    "governance ADR reference restored inside package",
-    "active Builder verification status labels normalized",
-    "tracking query parameters removed from voice monograph links",
-    "Agents SDK fallback packaged with pyproject.toml and pinned openai-agents==0.17.6",
-    "validate_delta.py scoped to explicit receipts and excludes dependencies/transients",
-    "Builder acceptance prompts extended from A-J to A-P",
-    "CANON_TRACE_MAP.md added for exact/transformed/summarized/excluded/missing claims"
-  ],
-  "gates": {
-    "agent_yaml_paths": {
-      "status": "PASS",
-      "declared_paths": 51,
-      "missing": 0
-    },
-    "interface_style_reassembly": {
-      "status": "PASS",
-      "bytes": 3400544,
-      "sha256": "cdf44a557f56c218ac3eed1d89d1f7593141ba0aced29d48c7b56d51c207dc35",
-      "parts": 5
-    },
-    "horizon_unittest": {
-      "status": "PASS",
-      "tests": 9
-    },
-    "python_compile": {
-      "status": "PASS"
-    },
-    "validate_terms": {
-      "status": "PASS"
-    },
-    "validate_delta": {
-      "status": "PASS",
-      "checked": 42,
-      "skipped": 106
-    },
-    "agents_sdk_unittest": {
-      "status": "PASS",
-      "tests": 7,
-      "openai_agents": "0.17.6"
-    },
-    "secret_scan": {
-      "status": "PASS",
-      "policy_example_hits": 23,
-      "high_confidence_secret_hits": 0
-    },
-    "clean_export": {
-      "status": "PASS",
-      "files": 246,
-      "mode": "manifest source plus MANIFEST.sha256"
-    },
-    "manifest_hash_check": {
-      "status": "PASS",
-      "entries": 245,
-      "missing": 0,
-      "mismatches": 0
-    },
-    "sidecar_zip": {
-      "status": "PASS",
-      "entries": 246,
-      "receipt": "ZIP_RECEIPT.json excluded from manifest/zip"
-    }
-  },
-  "non_claims": [
-    "Not verified in Builder UI",
-    "Not proof of active connectors/tools",
-    "Not a byte-for-byte mirror of the full repository",
-    "No live Supabase/GitHub/Builder mutation performed"
-  ],
-  "next": "Upload only the clean subset and run Builder acceptance prompts A-P; promote to verified in Builder UI only with prompt-level evidence."
+    "release":  "iskra-full-canon-unified-2026-06-10",
+    "generated_at":  "2026-06-23T00:00:00+00:00",
+    "status":  "LOCAL_GATES_PASS_BUILDER_PENDING",
+    "builder_ui_status":  "uploaded by user, pending Builder verification",
+    "active_target":  "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
+    "historical_baseline":  "e33268fbdfbb0dc52b6fd1fb8399698bf9387129",
+    "source_status":  {
+                          "head":  "5685601b2eeac096714572db3d47ddf05fcad4ef",
+                          "origin_main":  "5685601b2eeac096714572db3d47ddf05fcad4ef",
+                          "remote_drift_checked_by_network":  false,
+                          "working_tree_dirty_after_repair":  true
+                      },
+    "manifest":  {
+                     "entries":  258,
+                     "excludes":  [
+                                      "root MANIFEST.sha256",
+                                      "ZIP_RECEIPT.json",
+                                      ".venv",
+                                      "__pycache__",
+                                      ".pytest_cache",
+                                      "*.egg-info",
+                                      "local screenshots",
+                                      "raw archives",
+                                      "transient artifacts"
+                                  ],
+                     "includes_nested_interface_manifest":  true,
+                     "root_manifest_is_allowed_clean_zip_extra":  true,
+                     "hash_policy":  "LF-normalized manifest paths; root manifest and ZIP receipt are excluded from root manifest hash set."
+                 },
+    "clean_export":  {
+                         "status":  "PASS",
+                         "source":  "tools/clean_export.py --source manifest",
+                         "manifest_entries":  258,
+                         "files":  259,
+                         "allowed_extra":  [
+                                               "MANIFEST.sha256"
+                                           ],
+                         "forbidden_hits":  0,
+                         "missing_files":  0,
+                         "hash_mismatch_count":  0
+                     },
+    "repaired_findings":  [
+                              "root manifest and clean zip inventory normalized to one manifest-path upload subset",
+                              "agent.yaml knowledge modes split into compact_7_volume and expanded_corpus",
+                              "agent_files/consolidated_knowledge/* included in manifest and clean export boundary",
+                              "root MANIFEST.sha256 excluded from self-hash and included only as clean-zip extra",
+                              "ZIP_RECEIPT.json excluded from manifest and clean zip to avoid self-reference",
+                              "Interface Style package copy sanitized for email/card-shaped examples and reassembly hash refreshed",
+                              "local Windows SID material sanitized in toolchain diagnostic JSON",
+                              "Agents SDK fallback documented as tested pin plus upgrade-check policy",
+                              "Workspace Agent API token and async 202 Accepted boundary documented",
+                              "Builder acceptance prompts extended from A-P to A-V"
+                          ],
+    "gates":  {
+                  "agent_yaml_paths":  {
+                                           "status":  "PASS",
+                                           "note":  "declared knowledge modes exist and are manifest-backed"
+                                       },
+                  "interface_style_reassembly":  {
+                                                     "status":  "PASS",
+                                                     "bytes":  3400429,
+                                                     "sha256":  "6fc341ac84df29e64b4dd51c0a05608d83b4e798fc4db6b1b5a09353412de345",
+                                                     "parts":  5,
+                                                     "note":  "package-level sanitized/transformed corpus hash"
+                                                 },
+                  "horizon_unittest":  {
+                                           "status":  "PASS",
+                                           "tests":  9,
+                                           "command":  "py -m unittest discover -s tests\\horizon"
+                                       },
+                  "python_compile":  {
+                                         "status":  "PASS",
+                                         "command":  "py -m py_compile tools\\generate_manifest.py tools\\clean_export.py tools\\validate_terms.py tools\\reassemble_interface_style.py agents-sdk\\src\\iskra_agent\\agent.py agents-sdk\\src\\iskra_agent\\config.py"
+                                     },
+                  "validate_terms":  {
+                                         "status":  "PASS",
+                                         "command":  "py tools\\validate_terms.py --dir ."
+                                     },
+                  "validate_delta":  {
+                                         "status":  "PASS",
+                                         "checked":  47,
+                                         "skipped":  114,
+                                         "failed":  0,
+                                         "command":  "py tools\\validate_delta.py --dir ."
+                                     },
+                  "agents_sdk_unittest":  {
+                                              "status":  "PASS",
+                                              "tests":  9,
+                                              "command":  "agents-sdk\\.venv\\Scripts\\python.exe -m unittest discover -s agents-sdk\\tests"
+                                          },
+                  "agents_sdk_pip_check":  {
+                                               "status":  "PASS",
+                                               "command":  "agents-sdk\\.venv\\Scripts\\python.exe -m pip check"
+                                           },
+                  "secret_pii_scan":  {
+                                          "status":  "PASS",
+                                          "manifest_entries":  258,
+                                          "text_files_scanned":  258,
+                                          "high_confidence_secret_hits":  0,
+                                          "email_candidate_hits":  0,
+                                          "us_ssn_candidate_hits":  0,
+                                          "luhn_number_candidate_hits":  0,
+                                          "reviewed_false_positive_migration_identifiers":  2,
+                                          "note":  "scan is scoped to manifest upload subset; example/placeholder and migration timestamp false positives are excluded after review"
+                                      },
+                  "sidecar_zip":  {
+                                      "status":  "PASS",
+                                      "receipt":  "ZIP_RECEIPT.json",
+                                      "note":  "final archive hash and byte count are recorded in ZIP_RECEIPT.json because the zip is generated after this QC receipt is written"
+                                  }
+              },
+    "agents_stack_alignment":  {
+                                   "workspace_agents":  "primary UI/team workflow target; requires ChatGPT Workspace Agent access token and agtch_ trigger ID for API runs",
+                                   "agents_sdk":  "code-first fallback with read-only GitHub/Supabase tools, guardrail/session/tracing policy, and no live calls in unit tests",
+                                   "deprecated_legacy_builder":  "legacy Agent Builder deprecation documented; no verified Builder UI claim without prompt evidence"
+                               },
+    "non_claims":  [
+                       "Not verified in Builder UI",
+                       "Not proof of active connectors/tools",
+                       "Not a byte-for-byte mirror of the full repository",
+                       "No live Supabase/GitHub/Builder/Workspace Agent mutation performed",
+                       "No local Python/helper execution claim inside Builder UI"
+                   ],
+    "next":  "Upload only the clean subset and run Builder acceptance prompts A-V plus hardening prompts H1-H6; promote to verified in Builder UI only with prompt-level evidence.",
+    "delta":  {
+                  "delta":  "package truth, canon boundary, and Agents alignment repaired before Builder verification claim",
+                  "data":  "local package gates, manifest-path clean export, OpenAI official docs, and updated receipts",
+                  "omega":  0.9,
+                  "lambda":  "run Builder UI acceptance prompts A-V and hardening prompts H1-H6 before verified in Builder UI claim"
+              }
 }

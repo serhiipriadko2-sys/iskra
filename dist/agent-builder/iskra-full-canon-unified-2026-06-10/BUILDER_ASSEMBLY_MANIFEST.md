@@ -2,6 +2,7 @@
 
 Release: `iskra-full-canon-unified-2026-06-10`
 Date: 2026-06-10
+Updated: 2026-06-23
 Previous release: `iskra-full-canon-builder-2026-06-06-v4`
 Purpose: one materialized full-canon upload tree for the Iskra agent in
 ChatGPT / OpenAI Agent Builder.
@@ -18,6 +19,7 @@ ChatGPT / OpenAI Agent Builder.
 | Layer | Target path | Status |
 |---|---|---|
 | Canon | `agent_files/canon_source_files/` | included |
+| Consolidated knowledge | `agent_files/consolidated_knowledge/` | included as compact 7-volume upload mode |
 | Builder instructions | `agent_files/files_for_agent_builder/` | included |
 | Horizon Weaver | `agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md`, `agent_runtime_tools/iskra_horizon_weaver.py` | included as Builder-layer v0.1 |
 | Dreamspace | `agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md`, `agent_runtime_tools/iskra_dreamspace.py` | included |
@@ -91,14 +93,26 @@ This manifest does not claim:
   `Access is denied`.
 - this package mirrors the entire repository byte for byte.
 - sidecar zip creation proves Builder UI verification.
+- Workspace Agent API trigger success proves final task completion; `202
+  Accepted` means accepted/queued, not completed.
 
 ## Clean Export Gate
 
-The upload set must be exported from `MANIFEST.sha256` or tracked package files.
+The release upload set must be exported from `MANIFEST.sha256` manifest paths.
 `agents-sdk/.venv`, `__pycache__`, test caches, local screenshots, raw archives,
 and transient artifacts are excluded from the upload boundary. A sidecar clean
 zip can be generated with `tools/clean_export.py`, but the zip itself is not an
 upload-folder member.
+
+The selected knowledge mode must be explicit:
+
+- `compact_7_volume`: upload `agent_files/consolidated_knowledge/` as the
+  compact Builder/Custom GPT style knowledge base.
+- `expanded_corpus`: upload the broader multi-file corpus under
+  `agent_files/`.
+
+The selected mode must match `agent.yaml`, `MANIFEST.sha256`, clean zip
+inventory, `UNIFIED_QC_RECEIPT.json`, and Builder UI evidence.
 
 ## Verification Contract
 
@@ -106,6 +120,8 @@ PASS requires:
 
 - `MANIFEST.sha256` exists and covers packaged files except itself,
   `ZIP_RECEIPT.json`, and the sidecar clean archive;
+- clean zip inventory equals manifest paths plus the allowed
+  `MANIFEST.sha256` extra;
 - source component manifests are preserved under `provenance/`;
 - required target files are present;
 - no obvious secret-bearing values are packaged;

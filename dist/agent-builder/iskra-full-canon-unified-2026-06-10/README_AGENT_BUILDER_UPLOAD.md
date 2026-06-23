@@ -16,9 +16,14 @@ Status: `uploaded by user, pending Builder verification`
 
 ## Upload Guidance
 
-- Upload the clean export generated from `MANIFEST.sha256`, not the mutable
-  working directory.
-- Загрузите файлы из `agent_files/consolidated_knowledge/*` (Вариант А для классического интерфейса Custom GPTs) либо файлы из `agent_files/files_for_agent_builder/*` и `agent_files/canon_source_files/*` (Вариант Б для Assistants API / Agents SDK).
+- Upload only the clean subset generated from `MANIFEST.sha256`, not the
+  mutable working directory and not the local `agents-sdk/.venv`.
+- Use exactly one knowledge upload mode and keep it aligned with `agent.yaml`:
+  - **Compact 7-volume mode:** upload `agent_files/consolidated_knowledge/*`
+    when the UI has a tight file-count limit.
+  - **Expanded corpus mode:** upload `agent_files/files_for_agent_builder/*`,
+    `agent_files/canon_source_files/*`, and the selected eval/templates/toolchain
+    files when the surface can accept the full set.
 - Добавьте `agent_files/evals/*` в качестве тестового материала.
 - Treat `agent_runtime_tools/*` as local helper source unless a runtime proves
   file-backed execution.
@@ -38,27 +43,39 @@ Do not upload:
 Run from the package root:
 
 ```bash
-python tools/reassemble_interface_style.py --repo-root . --check
-python -m unittest discover -s tests/horizon
-python tools/validate_terms.py --dir .
-python tools/validate_delta.py --dir .
-python tools/clean_export.py
+py tools/reassemble_interface_style.py --repo-root . --check
+py -m unittest discover -s tests/horizon
+py tools/validate_terms.py --dir .
+py tools/validate_delta.py --dir .
+py tools/clean_export.py --source manifest
 ```
 
 Run from `agents-sdk`:
 
 ```bash
 pip install -e .
-python -m unittest discover
+py -m unittest discover
 ```
 
 If a clean upload zip is needed, create it as a sidecar outside this folder:
 
 ```bash
-python tools/clean_export.py --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force
+py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force
 ```
 
 Refresh `ZIP_RECEIPT.json` after zip creation.
+
+## Workspace Agent API Boundary
+
+- API triggers require a published Workspace Agent API channel with an
+  `agtch_...` trigger ID.
+- Use a ChatGPT Workspace Agent access token for `https://api.chatgpt.com/v1`;
+  an OpenAI Platform API key is the wrong credential class.
+- A successful trigger returns `202 Accepted` and queues the run. It does not
+  return the final answer through the HTTP response.
+- App access, write approvals, action constraints, admin/RBAC settings, and
+  destination permissions are configured in ChatGPT Workspace Agents, not by
+  this local zip.
 
 ## Boundary
 

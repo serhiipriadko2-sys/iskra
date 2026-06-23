@@ -2,10 +2,19 @@
 
 Status: `Builder full-canon corpus`, not a byte-identical full repository mirror.  
 Package: `dist/agent-builder/iskra-full-canon-unified-2026-06-10`  
-Updated: 2026-06-21
+Updated: 2026-06-23
 
 This map classifies what the upload set contains and what it intentionally does
 not prove. Exact byte parity is claimed only where explicitly listed.
+
+## Audit Baseline
+
+- Active remediation target: current `HEAD` package tree.
+- Historical baseline: commit `e33268fbdfbb0dc52b6fd1fb8399698bf9387129`.
+- Baseline drift is expected and must be reported separately from current
+  package health.
+- Current corpus is a Builder transport corpus. It is not a byte-for-byte mirror
+  of `apps/`, `packages/`, `runtime/`, `ledger/`, or every repository doc.
 
 ## Exact Copy
 
@@ -27,6 +36,15 @@ not prove. Exact byte parity is claimed only where explicitly listed.
 - `08_INTERFACE_STYLE.md` is split into
   `agent_files/canon_source_files/08_INTERFACE_STYLE.parts/` for transport and
   validated by `tools/reassemble_interface_style.py`.
+- The packaged Interface Style parts are Builder-knowledge sanitized: email-like
+  examples are replaced with `EMAIL_REDACTED` and card-shaped examples are
+  replaced with `CARD_REDACTED` so the upload subset does not preserve raw
+  PII-shaped test strings.
+- Local diagnostic identifiers that can expose workstation-specific Windows SID
+  material are sanitized to `SID_REDACTED`.
+- `agent_files/consolidated_knowledge/*` is a generated compact 7-volume upload
+  mode. It must be regenerated and re-hashed with the rest of the clean subset
+  if any source layer changes.
 - Root Builder instructions are transformed into:
   - `agent_files/instructions`
   - `agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md`
@@ -55,6 +73,9 @@ not prove. Exact byte parity is claimed only where explicitly listed.
   excluded.
 - ChatGPT Builder Preview evidence is excluded until a human runs acceptance
   prompts in the Builder UI.
+- Workspace Agent API run output is excluded until a published `agtch_...`
+  channel, Workspace Agent access token, destination permissions, and output
+  evidence are observed.
 
 ## Missing / Open Verification
 
@@ -65,6 +86,8 @@ not prove. Exact byte parity is claimed only where explicitly listed.
   before using this package as a release authority.
 - External citations in voice monographs are transport references, not
   independently revalidated source proofs unless a receipt says so.
+- Manifest/zip/receipt disagreement is a release blocker, even when individual
+  local tests pass.
 
 ## Acceptance Rule
 

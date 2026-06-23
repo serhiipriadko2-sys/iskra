@@ -6,9 +6,17 @@ from unittest.mock import patch
 
 from iskra_agent.agent import build_iskra_agent, load_instructions
 from iskra_agent.config import (
+    AGENTS_SDK_DEPENDENCY_POLICY,
     DESTRUCTIVE_TOOLS_ENABLED,
+    HUMAN_REVIEW_REQUIRED_FOR_SIDE_EFFECTS,
+    INPUT_GUARDRAILS_REQUIRED,
+    OUTPUT_GUARDRAILS_REQUIRED,
     REQUIRES_HUMAN_APPROVAL_FOR_WRITES,
-    VERIFIED_AGENTS_SDK_VERSION,
+    STATE_STRATEGY,
+    TESTED_AGENTS_SDK_VERSION,
+    TOOL_GUARDRAILS_REQUIRED,
+    TRACING_EXPECTED,
+    WORKSPACE_AGENT_API_BOUNDARY,
 )
 from iskra_agent.tools.github_tool import github_read_impl
 from iskra_agent.tools.supabase_tool import supabase_read_impl
@@ -31,6 +39,8 @@ class TestIskraAgent(unittest.TestCase):
         agent = build_iskra_agent(prefer_compact=True)
         self.assertEqual(agent.name, "iskra")
         self.assertTrue(agent.instructions)
+        self.assertIn("Agents SDK Runtime Boundary", agent.instructions)
+        self.assertIn("Workspace Agent API triggers", agent.instructions)
         self.assertEqual(len(agent.tools), 2)
 
     def test_no_destructive_tools_by_default(self):
@@ -53,8 +63,24 @@ class TestIskraAgent(unittest.TestCase):
         self.assertIn("[ERROR]", result)
         self.assertIn("raw.githubusercontent.com", result)
 
-    def test_verified_sdk_version_is_pinned(self):
-        self.assertEqual(VERIFIED_AGENTS_SDK_VERSION, "0.17.6")
+    def test_tested_sdk_version_policy_is_explicit(self):
+        self.assertEqual(TESTED_AGENTS_SDK_VERSION, "0.17.6")
+        self.assertIn("Pinned", AGENTS_SDK_DEPENDENCY_POLICY)
+        self.assertIn("refresh", AGENTS_SDK_DEPENDENCY_POLICY)
+
+    def test_runtime_alignment_policy_is_explicit(self):
+        self.assertEqual(STATE_STRATEGY, "session_or_server_managed_continuation")
+        self.assertTrue(TRACING_EXPECTED)
+        self.assertTrue(INPUT_GUARDRAILS_REQUIRED)
+        self.assertTrue(OUTPUT_GUARDRAILS_REQUIRED)
+        self.assertTrue(TOOL_GUARDRAILS_REQUIRED)
+        self.assertTrue(HUMAN_REVIEW_REQUIRED_FOR_SIDE_EFFECTS)
+
+    def test_workspace_agent_api_boundary(self):
+        self.assertEqual(WORKSPACE_AGENT_API_BOUNDARY["api_base"], "https://api.chatgpt.com/v1")
+        self.assertEqual(WORKSPACE_AGENT_API_BOUNDARY["trigger_id_prefix"], "agtch_")
+        self.assertIn("not an OpenAI Platform API key", WORKSPACE_AGENT_API_BOUNDARY["auth"])
+        self.assertIn("202 Accepted", WORKSPACE_AGENT_API_BOUNDARY["success"])
 
 
 if __name__ == "__main__":

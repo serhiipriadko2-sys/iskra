@@ -42,11 +42,25 @@ RULES = [
 ]
 
 SKIP_SUFFIX = {".png", ".jpg", ".jpeg", ".gif", ".zip", ".pdf", ".docx"}
+SKIP_DIRS = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__",
+    "node_modules",
+}
 
 
 def iter_files(root: Path) -> Iterable[Path]:
     for p in root.rglob("*"):
         if not p.is_file():
+            continue
+        lowered_parts = {part.lower() for part in p.relative_to(root).parts}
+        if lowered_parts & SKIP_DIRS:
+            continue
+        if any(part.endswith(".egg-info") for part in lowered_parts):
             continue
         if p.suffix.lower() in SKIP_SUFFIX:
             continue

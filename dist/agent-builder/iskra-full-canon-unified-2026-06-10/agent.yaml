@@ -17,15 +17,27 @@ instructions:
   compact: "agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md"
 
 knowledge:
-  base_path: "agent_files/consolidated_knowledge"
-  files:
-    - "01_ISKRA_CORE_INSTRUCTIONS.md"
-    - "02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md"
-    - "03_ISKRA_SYSTEM_AND_PROTOCOLS.md"
-    - "04_ISKRA_EXTENSIONS_AND_WEAVER.md"
-    - "05_ISKRA_GOVERNANCE_ADR.md"
-    - "06_ISKRA_METRICS_AND_EVALS.md"
-    - "07_ISKRA_MEMORY_SEED.md"
+  upload_modes:
+    compact_7_volume:
+      base_path: "agent_files/consolidated_knowledge"
+      intended_for: "file-count-limited Builder or Custom GPT style upload"
+      files:
+        - "01_ISKRA_CORE_INSTRUCTIONS.md"
+        - "02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md"
+        - "03_ISKRA_SYSTEM_AND_PROTOCOLS.md"
+        - "04_ISKRA_EXTENSIONS_AND_WEAVER.md"
+        - "05_ISKRA_GOVERNANCE_ADR.md"
+        - "06_ISKRA_METRICS_AND_EVALS.md"
+        - "07_ISKRA_MEMORY_SEED.md"
+    expanded_corpus:
+      intended_for: "surfaces that can accept the full file set or local SDK fallback"
+      paths:
+        - "agent_files/files_for_agent_builder"
+        - "agent_files/canon_source_files"
+        - "agent_files/evals"
+        - "agent_files/templates"
+        - "agent_files/toolchain"
+  rule: "Whichever upload mode is used must match MANIFEST.sha256 and the clean zip inventory."
 
 builder_guides:
   - "agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md"
@@ -74,6 +86,7 @@ governance:
 channels:
   - "ChatGPT"
   # Slack and other channels can be added through the Workspace Agents admin panel.
+  # API channels use an agtch_... trigger ID and Workspace Agent access token.
 
 actions: []
 # No destructive actions are bundled. Any future actions must include human approval

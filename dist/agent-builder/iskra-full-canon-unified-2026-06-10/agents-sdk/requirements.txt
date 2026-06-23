@@ -1,1 +1,2 @@
+# Tested release pin; refresh against official Agents SDK docs before next release.
 openai-agents==0.17.6

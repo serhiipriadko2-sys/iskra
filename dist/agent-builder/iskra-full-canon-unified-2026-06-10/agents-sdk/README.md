@@ -11,7 +11,11 @@ as a local code-first fallback when the hosted UI is unavailable or unsuitable.
 
 ## Prerequisites
 
-Verified local dependency: `openai-agents==0.17.6`.
+Tested local dependency: `openai-agents==0.17.6`.
+
+The exact pin is intentional for this release's reproducible local tests. Before
+cutting a later release, check the official Agents SDK docs and refresh the pin,
+tests, and receipts together. Do not treat `0.17.6` as a platform maximum.
 
 ```bash
 pip install -e .
@@ -51,3 +55,17 @@ python -m unittest discover
 - `SUPABASE_ANON_KEY` is read from the environment only; service-role keys are
   forbidden in this upload set.
 - Do not commit secrets into this directory.
+
+## Runtime Alignment
+
+This fallback keeps the hosted Workspace Agent and code-first Agents SDK
+surfaces separate:
+
+- Workspace Agent API triggers use `https://api.chatgpt.com/v1`, an `agtch_...`
+  API channel ID, and a Workspace Agent access token from ChatGPT Admin.
+- A successful trigger queues work with `202 Accepted`; it does not return the
+  final answer to the HTTP caller.
+- SDK runs should use one state strategy per conversation: session storage or
+  server-managed continuation, not mixed replay by default.
+- Tracing, input/output/tool guardrails, and human review for side effects are
+  required release criteria before any write-capable tools are added.

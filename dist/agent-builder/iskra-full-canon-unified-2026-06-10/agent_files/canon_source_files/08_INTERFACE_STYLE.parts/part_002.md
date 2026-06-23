@@ -883,7 +883,7 @@ VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # Optional
-VITE_SENTRY_DSN=https://xxx@sentry.io/xxx
+VITE_SENTRY_DSN=https://EMAIL_REDACTED/xxx
 VITE_POSTHOG_KEY=phc_xxx
 ```
 
@@ -3485,7 +3485,7 @@ DEBUG=false
 # =============================================================================
 # OPTIONAL: Analytics & Monitoring
 # =============================================================================
-# SENTRY_DSN=https://xxx@sentry.io/xxx
+# SENTRY_DSN=https://EMAIL_REDACTED/xxx
 # POSTHOG_KEY=your-posthog-key
 
 # =============================================================================
@@ -3788,7 +3788,7 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 # =============================================================================
 # OPTIONAL: Error Tracking (Sentry)
 # =============================================================================
-# VITE_SENTRY_DSN=https://xxx@xxx.ingest.sentry.io/xxx
+# VITE_SENTRY_DSN=https://EMAIL_REDACTED/xxx
 
 # =============================================================================
 # OPTIONAL: Analytics (PostHog - Privacy-First)
@@ -3824,7 +3824,7 @@ VITE_SUPABASE_URL=https://production-project.supabase.co
 VITE_SUPABASE_ANON_KEY=production_anon_key
 
 # Error Tracking (production project)
-VITE_SENTRY_DSN=https://xxx@xxx.ingest.sentry.io/production
+VITE_SENTRY_DSN=https://EMAIL_REDACTED/production
 
 # Analytics (production)
 VITE_POSTHOG_KEY=phc_production
@@ -3854,7 +3854,7 @@ VITE_SUPABASE_URL=https://staging-project.supabase.co
 VITE_SUPABASE_ANON_KEY=staging_anon_key
 
 # Error Tracking (staging project)
-VITE_SENTRY_DSN=https://xxx@xxx.ingest.sentry.io/staging
+VITE_SENTRY_DSN=https://EMAIL_REDACTED/staging
 
 # Analytics (staging)
 VITE_POSTHOG_KEY=phc_staging

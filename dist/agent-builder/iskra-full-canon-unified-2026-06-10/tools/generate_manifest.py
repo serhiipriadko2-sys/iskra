@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Normalize text files to LF and regenerate MANIFEST.sha256."""
+"""Normalize upload-subset text files to LF and regenerate MANIFEST.sha256."""
 
 from __future__ import annotations
 import hashlib
@@ -14,6 +14,7 @@ TEXT_SUFFIXES = {
     ".py",
     ".md",
     ".json",
+    ".sha256",
     ".txt",
     ".sh",
     ".ps1",
@@ -23,25 +24,44 @@ TEXT_SUFFIXES = {
     ".toml"
 }
 
-IGNORE_FILES = {
+IGNORE_ROOT_FILES = {
     "MANIFEST.sha256",
     "ZIP_RECEIPT.json",
-    ".gitattributes",
 }
 
 IGNORE_DIRS = {
     ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
     ".venv",
     "__pycache__",
     "node_modules",
 }
+
+IGNORE_NAMES = {".ds_store", "thumbs.db"}
+
+IGNORE_SUFFIXES = {
+    ".7z",
+    ".bak",
+    ".gz",
+    ".log",
+    ".pyc",
+    ".pyo",
+    ".rar",
+    ".tar",
+    ".tmp",
+    ".zip",
+}
+
+SCREENSHOT_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 
 
 def normalize_and_hash(file_path: Path) -> str:
     suffix = file_path.suffix.lower()
     
     # Check if file is text and needs LF normalization
-    if suffix in TEXT_SUFFIXES:
+    if suffix in TEXT_SUFFIXES or file_path.name == ".gitattributes":
         try:
             # Read content, decoding as UTF-8
             content = file_path.read_text(encoding="utf-8")
@@ -60,6 +80,28 @@ def normalize_and_hash(file_path: Path) -> str:
     return h.hexdigest()
 
 
+def is_ignored(file_path: Path) -> bool:
+    rel_path = file_path.relative_to(PACKAGE_ROOT)
+    parts = {part.lower() for part in rel_path.parts}
+    name = file_path.name.lower()
+    suffix = file_path.suffix.lower()
+    if parts & IGNORE_DIRS:
+        return True
+    if any(part.endswith(".egg-info") for part in parts):
+        return True
+    if rel_path.as_posix() in IGNORE_ROOT_FILES:
+        return True
+    if name in IGNORE_NAMES:
+        return True
+    if suffix in IGNORE_SUFFIXES:
+        return True
+    if suffix in SCREENSHOT_SUFFIXES and (
+        "screenshot" in name or "chatgpt_agent_" in name
+    ):
+        return True
+    return False
+
+
 def main() -> None:
     print(f"Regenerating manifest for: {PACKAGE_ROOT}")
     entries = []
@@ -69,10 +111,9 @@ def main() -> None:
         dirs[:] = [d for d in dirs if d not in IGNORE_DIRS and not d.endswith(".egg-info")]
         
         for file in files:
-            if file in IGNORE_FILES:
-                continue
-                
             file_path = Path(root) / file
+            if is_ignored(file_path):
+                continue
             rel_path = file_path.relative_to(PACKAGE_ROOT).as_posix()
             
             file_hash = normalize_and_hash(file_path)

@@ -1,31 +1,39 @@
 {
-  "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-21T19:32:44+00:00",
-  "status": "PASS",
-  "archive_kind": "sidecar_clean_export_zip",
-  "archive_path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10-clean.zip",
-  "archive_sha256": "b7740929e519ba71567397b7cc3637e8c92b63c9dfbf586fb494c541f7c09d21",
-  "archive_bytes": 2265010,
-  "entries": 246,
-  "source": "tools/clean_export.py --source manifest",
-  "manifest_entries": 245,
-  "included_extra": [
-    "MANIFEST.sha256"
-  ],
-  "excluded_from_archive": [
-    "ZIP_RECEIPT.json",
-    ".venv",
-    "__pycache__",
-    ".pytest_cache",
-    "*.egg-info",
-    "local screenshots",
-    "raw archives",
-    "transient artifacts"
-  ],
-  "builder_ui_status": "uploaded by user, pending Builder verification",
-  "non_claims": [
-    "Archive integrity does not prove Builder UI verification",
-    "Archive excludes this receipt to avoid self-referential hash claims",
-    "No live Supabase/GitHub/Builder mutation was performed"
-  ]
+    "release":  "iskra-full-canon-unified-2026-06-10",
+    "generated_at":  "2026-06-23T00:00:00+00:00",
+    "status":  "PASS",
+    "archive_kind":  "sidecar_clean_export_zip",
+    "archive_path":  "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10-clean.zip",
+    "archive_sha256":  "6007cd0945af2f3fbab14c1b4dc9f11ff0bfe99542cc6518b16d188602bae4de",
+    "archive_bytes":  2760142,
+    "entries":  259,
+    "source":  "py tools\\\\clean_export.py --source manifest --zip ..\\\\iskra-full-canon-unified-2026-06-10-clean.zip --force",
+    "manifest_entries":  258,
+    "included_extra":  [
+                           "MANIFEST.sha256"
+                       ],
+    "excluded_from_archive":  [
+                                  "ZIP_RECEIPT.json",
+                                  ".venv",
+                                  "__pycache__",
+                                  ".pytest_cache",
+                                  "*.egg-info",
+                                  "local screenshots",
+                                  "raw archives",
+                                  "transient artifacts"
+                              ],
+    "inventory_rule":  "archive entries must equal manifest entries plus MANIFEST.sha256",
+    "inventory_check":  {
+                            "expected_entries":  259,
+                            "actual_entries":  259,
+                            "status":  "PASS"
+                        },
+    "builder_ui_status":  "uploaded by user, pending Builder verification",
+    "non_claims":  [
+                       "Archive integrity does not prove Builder UI verification",
+                       "Archive excludes this receipt to avoid self-referential hash claims",
+                       "No live Supabase/GitHub/Builder/Workspace Agent mutation was performed",
+                       "Archive does not prove active tools/connectors or local Python execution"
+                   ],
+    "next":  "Upload only this clean subset, then run Builder acceptance prompts A-V and hardening prompts H1-H6."
 }

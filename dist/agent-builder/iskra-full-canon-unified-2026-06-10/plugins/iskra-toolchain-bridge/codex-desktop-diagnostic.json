@@ -1,4 +1,4 @@
-﻿{
+{
     "status":  "config-exposed-cli-blocked",
     "generated_at":  "2026-06-06T22:59:03.5827703+03:00",
     "plugin_root":  "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-builder-2026-06-06-v4\\plugins\\iskra-toolchain-bridge",
@@ -31,7 +31,7 @@
     "codex_acl":  {
                       "owner":  "NT AUTHORITY\\СИСТЕМА",
                       "group":  "NT AUTHORITY\\СИСТЕМА",
-                      "sddl":  "O:SYG:SYD:AI(XA;ID;0x1200a9;;;BU;(WIN://SYSAPPID Contains \"OPENAI.CODEX_2P2NQSD0C76G0\"))(A;ID;0x1200a9;;;S-1-15-3-2968813833-811790644-2202111208-3784096404-1081847329-2708967783-1438471679)(A;ID;FR;;;BU)(A;ID;FA;;;S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464)(A;ID;0x1200a9;;;S-1-15-3-1024-3635283841-2530182609-996808640-1887759898-3848208603-3313616867-983405619-2501854204)(A;ID;FA;;;SY)(A;ID;0x1200a9;;;LS)(A;ID;0x1200a9;;;NS)(A;ID;0x1200a9;;;RC)"
+                      "sddl":  "O:SYG:SYD:AI(XA;ID;0x1200a9;;;BU;(WIN://SYSAPPID Contains \"OPENAI.CODEX_2P2NQSD0C76G0\"))(A;ID;0x1200a9;;;SID_REDACTED)(A;ID;FR;;;BU)(A;ID;FA;;;SID_REDACTED)(A;ID;0x1200a9;;;SID_REDACTED)(A;ID;FA;;;SY)(A;ID;0x1200a9;;;LS)(A;ID;0x1200a9;;;NS)(A;ID;0x1200a9;;;RC)"
                   },
     "config_path":  "C:\\Users\\gabra\\.codex\\config.toml",
     "config_marketplace_exposed":  true,

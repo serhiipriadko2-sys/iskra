@@ -2,7 +2,7 @@
 
 Release: `iskra-full-canon-unified-2026-06-10`
 Date: 2026-06-10
-Updated: 2026-06-20
+Updated: 2026-06-23
 Target: ChatGPT Agents Studio / Workspace Agents
 Previous target: ChatGPT / OpenAI Agent Builder (deprecated 2026-11-30)
 
@@ -112,7 +112,16 @@ Before cutting a new upload archive, checkout the branch and regenerate:
 - secret scan / smoke receipt for `agent_runtime_tools/iskra_horizon_weaver.py`
 
 The current manifest and unified QC receipt have been regenerated for this
-GitHub mirror package.
+GitHub mirror package. The authoritative upload boundary is:
+
+- root `MANIFEST.sha256` for all clean-subset files except itself and
+  `ZIP_RECEIPT.json`;
+- sidecar clean zip generated from that manifest;
+- `UNIFIED_QC_RECEIPT.json` and `ZIP_RECEIPT.json` regenerated after the final
+  file changes.
+
+If those disagree, mark `DRIFT:` and regenerate in this order: files,
+manifest, QC receipt, clean zip, zip receipt.
 
 ## Release Gate
 
@@ -158,6 +167,11 @@ versions. The exact source copies are preserved under
    installation remains pending until `codex.exe` is callable or app-visible
    plugin inventory confirms load. Local config exposure is present as
    `iskra-toolchain-bridge@iskra-local`.
+
+Workspace Agent API triggers are a separate channel: they require a published
+`agtch_...` API channel, a Workspace Agent access token from ChatGPT Admin, and
+destination/app permissions configured in the Workspace Agent UI. A `202
+Accepted` trigger response means queued, not completed.
 
 ## Status Boundary
 

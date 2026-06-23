@@ -15,7 +15,7 @@ import subprocess
 import sys
 import zipfile
 from pathlib import Path
-from typing import Iterable, List
+from typing import Iterable, List, Tuple
 
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
@@ -68,25 +68,30 @@ def is_forbidden(rel_path: str) -> bool:
     return False
 
 
-def files_from_manifest() -> List[str]:
+def manifest_entries() -> List[Tuple[str, str]]:
     if not MANIFEST.exists():
         raise FileNotFoundError(f"manifest not found: {MANIFEST}")
 
-    files: List[str] = []
+    entries: List[Tuple[str, str]] = []
     for raw in MANIFEST.read_text(encoding="utf-8").splitlines():
         line = raw.strip()
         if not line or line.startswith("#"):
             continue
         if " *" in line:
-            _, rel_path = line.split(" *", 1)
+            digest, rel_path = line.split(" *", 1)
         else:
             parts = line.split(maxsplit=1)
             if len(parts) != 2:
                 continue
-            rel_path = parts[1]
+            digest, rel_path = parts
         rel_path = rel_path.replace("\\", "/")
-        if rel_path:
-            files.append(rel_path)
+        if rel_path and digest:
+            entries.append((digest.lower(), rel_path))
+    return entries
+
+
+def files_from_manifest() -> List[str]:
+    files = [rel_path for _, rel_path in manifest_entries()]
 
     if MANIFEST.exists():
         files.append("MANIFEST.sha256")
@@ -136,6 +141,18 @@ def hash_file(rel_path: str) -> str:
     return h.hexdigest()
 
 
+def verify_manifest_hashes() -> List[str]:
+    mismatches: List[str] = []
+    for expected, rel_path in manifest_entries():
+        path = PACKAGE_ROOT / rel_path
+        if not path.is_file():
+            continue
+        actual = hash_file(rel_path)
+        if actual != expected:
+            mismatches.append(f"{rel_path}: {actual} != {expected}")
+    return mismatches
+
+
 def copy_files(files: Iterable[str], out_dir: Path, force: bool) -> None:
     if out_dir.exists():
         if not force:
@@ -183,14 +200,18 @@ def main(argv: list[str]) -> int:
     forbidden = [f for f in files if is_forbidden(f)]
     missing = [f for f in files if not (PACKAGE_ROOT / f).is_file()]
     allowed = [f for f in files if f not in forbidden and f not in missing]
+    hash_mismatches = verify_manifest_hashes() if args.source == "manifest" else []
 
     result = {
         "package_root": str(PACKAGE_ROOT),
         "source": args.source,
+        "manifest_entries": len(manifest_entries()) if args.source == "manifest" else None,
         "file_count": len(allowed),
         "total_bytes": sum(file_size(f) for f in allowed),
         "forbidden_hits": forbidden,
         "missing_files": missing,
+        "hash_mismatches": hash_mismatches[:50],
+        "hash_mismatch_count": len(hash_mismatches),
         "largest_files": sorted(
             ({"path": f, "bytes": file_size(f), "sha256": hash_file(f)} for f in allowed),
             key=lambda item: item["bytes"],
@@ -206,7 +227,7 @@ def main(argv: list[str]) -> int:
         result["zip"] = write_zip(allowed, Path(args.zip_path), args.force)
 
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 1 if forbidden or missing else 0
+    return 1 if forbidden or missing or hash_mismatches else 0
 
 
 if __name__ == "__main__":
