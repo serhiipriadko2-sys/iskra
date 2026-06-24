@@ -1,39 +1,27 @@
 {
-    "release":  "iskra-full-canon-unified-2026-06-10",
-    "generated_at":  "2026-06-23T00:00:00+00:00",
-    "status":  "PASS",
-    "archive_kind":  "sidecar_clean_export_zip",
-    "archive_path":  "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10-clean.zip",
-    "archive_sha256":  "6007cd0945af2f3fbab14c1b4dc9f11ff0bfe99542cc6518b16d188602bae4de",
-    "archive_bytes":  2760142,
-    "entries":  259,
-    "source":  "py tools\\\\clean_export.py --source manifest --zip ..\\\\iskra-full-canon-unified-2026-06-10-clean.zip --force",
-    "manifest_entries":  258,
-    "included_extra":  [
-                           "MANIFEST.sha256"
-                       ],
-    "excluded_from_archive":  [
-                                  "ZIP_RECEIPT.json",
-                                  ".venv",
-                                  "__pycache__",
-                                  ".pytest_cache",
-                                  "*.egg-info",
-                                  "local screenshots",
-                                  "raw archives",
-                                  "transient artifacts"
-                              ],
-    "inventory_rule":  "archive entries must equal manifest entries plus MANIFEST.sha256",
-    "inventory_check":  {
-                            "expected_entries":  259,
-                            "actual_entries":  259,
-                            "status":  "PASS"
-                        },
-    "builder_ui_status":  "uploaded by user, pending Builder verification",
-    "non_claims":  [
-                       "Archive integrity does not prove Builder UI verification",
-                       "Archive excludes this receipt to avoid self-referential hash claims",
-                       "No live Supabase/GitHub/Builder/Workspace Agent mutation was performed",
-                       "Archive does not prove active tools/connectors or local Python execution"
-                   ],
-    "next":  "Upload only this clean subset, then run Builder acceptance prompts A-V and hardening prompts H1-H6."
+  "release": "iskra-full-canon-unified-2026-06-10",
+  "generated_at": "2026-06-24T09:15:00Z",
+  "status": "PENDING_REGENERATION_AFTER_PACKAGE_MIRROR_UPDATE",
+  "archive_kind": "sidecar_clean_export_zip",
+  "reason": "The package mirror manifest was updated through the GitHub connector, but this environment cannot download the full repository archive or rebuild the clean sidecar zip.",
+  "previous_archive_receipt": {
+    "status": "SUPERSEDED_BY_MANIFEST_CHANGE",
+    "archive_sha256": "6007cd0945af2f3fbab14c1b4dc9f11ff0bfe99542cc6518b16d188602bae4de",
+    "archive_bytes": 2760142,
+    "entries": 259,
+    "manifest_entries": 258
+  },
+  "current_manifest_entries": 265,
+  "required_regeneration": {
+    "command": "py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force",
+    "expected_inventory_rule": "archive entries must equal manifest entries plus MANIFEST.sha256",
+    "expected_archive_entries": 266
+  },
+  "builder_ui_status": "uploaded by user, pending Builder verification",
+  "non_claims": [
+    "No fresh sidecar zip PASS is claimed in this connector-only PR",
+    "Archive integrity is pending until a full checkout regenerates the zip",
+    "Builder UI readiness remains unverified"
+  ],
+  "next": "Regenerate the sidecar clean zip from a full checkout of the PR branch, then replace this receipt with PASS evidence."
 }
