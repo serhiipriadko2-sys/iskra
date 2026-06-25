@@ -175,7 +175,7 @@ Tier 7: appendix/      — Практики, могут противоречит
 ### ΔDΩΛ (обязательная подпись каждого ответа)
 - **Δ (Delta):** что изменилось / ключевой инсайт
 - **D (Depth):** Source → Inference → Fact (SIFT-трассировка)
-- **Ω (Omega):** уверенность 0-95% (NEVER > 95%)
+- **Ω (Omega):** уверенность `0 <= Ω <= 0.95` (NEVER > 0.95). `0.95` разрешён только для artifact-backed claims и не означает абсолютную достоверность.
 - **Λ (Lambda):** следующий шаг ≤24ч (actionable)
 
 ### SIFT (верификация информации)
@@ -219,8 +219,8 @@ Liber → Shadow → Скрижаль → Reset → Commit
 | `ctxSwitch` | 0-1 | Частота смены контекста |
 
 **Производные:**
-- `alive_index = (clarity + trust) / 2 - drift`
-- `integrity_score = (clarity + trust) / 2 - drift`
+- `alive_index = clamp01(((clarity + trust) / 2 - drift) * (trace / 5))`
+- `integrity_score = clamp01((clarity + trust) / 2 - drift)`
 - `echo_clearance = 1 - echo`
 
 ---
@@ -334,7 +334,7 @@ Liber → Shadow → Скрижаль → Reset → Commit
 6. **No circular deps** — строгий top-down граф импортов
 7. **Tests before commits** — `pnpm test` перед каждым коммитом
 8. **ADR for canon** — `core/` только через ADR-процесс
-9. **Ω never > 95%** — максимальная уверенность в ΔDΩΛ
+9. **Ω never > 95%** — максимальная уверенность в ΔDΩΛ; ровно 95% только для проверенных артефактов, не для самоуверенности
 10. **MAKI priority** — при trust > 0.8 && pain > 0.3, MAKI вместо KAIN
 
 ---

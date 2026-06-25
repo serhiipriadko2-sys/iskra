@@ -9,8 +9,10 @@ const VALID_METRIC_KEYS: (keyof VoiceThresholds)[] = [
   'pain',
   'chaos',
   'drift',
+  'echo',
   'clarity',
   'silence_mass',
+  'mirror_sync',
   'foresight',
 ]
 

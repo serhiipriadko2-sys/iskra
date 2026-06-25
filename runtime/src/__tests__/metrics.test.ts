@@ -78,7 +78,7 @@ describe('metrics', () => {
       };
 
       const result = calculateIntegrityScore(metrics);
-      expect(result).toBeLessThan(0);
+      expect(result).toBe(0);
     });
 
     it('should return high score for high clarity and trust with low drift', () => {
@@ -125,6 +125,29 @@ describe('metrics', () => {
     it('should return 0 when trace is 0', () => {
       const result = calculateAliveIndex(DEFAULT_METRICS, 0);
       expect(result).toBe(0);
+    });
+
+    it('should clamp trace below 0 and above 5', () => {
+      const metrics: IskraMetrics = {
+        ...DEFAULT_METRICS,
+        clarity: 1.0,
+        trust: 1.0,
+        drift: 0.0,
+      };
+
+      expect(calculateAliveIndex(metrics, -1)).toBe(0);
+      expect(calculateAliveIndex(metrics, 6)).toBe(1);
+    });
+
+    it('should clamp alive_index to 0 for high drift', () => {
+      const metrics: IskraMetrics = {
+        ...DEFAULT_METRICS,
+        clarity: 0.0,
+        trust: 0.0,
+        drift: 1.0,
+      };
+
+      expect(calculateAliveIndex(metrics, 5)).toBe(0);
     });
   });
 });

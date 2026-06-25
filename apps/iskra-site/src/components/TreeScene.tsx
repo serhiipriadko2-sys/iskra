@@ -272,29 +272,8 @@ export function TreeScene({ activeNodeId, onNodeClick }: TreeSceneProps) {
     <>
       <FogEnvironment />
       <LocalEnvironment />
-      <ParticleField />
-      <DustParticles />
-      <StarField />
-      <ContactShadows
-        position={[0, -5.48, 0]}
-        scale={22}
-        far={30}
-        blur={2.5}
-        opacity={0.35}
-        resolution={isMobile ? 256 : 512}
-        frames={1}
-      />
       <SoilDisc />
       <TreeTrunk />
-      <TreeRoots activeBranchIds={activeBranchIds} />
-      <TreeBranches activeBranchIds={activeBranchIds} />
-      <LeafBranches activeBranchIds={activeBranchIds} />
-
-      {allTreeNodes.map((node) => {
-        const isActive = node.id === activeNodeId;
-        const isDimmed = activeNodeId ? !activeBranchIds.has(node.id) : false;
-        return <TreeNode key={node.id} node={node} isActive={isActive} isDimmed={isDimmed} onClick={onNodeClick} />;
-      })}
     </>
   );
 }

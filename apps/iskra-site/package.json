@@ -10,7 +10,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "canon:index:generate": "node scripts/generate-canon-index.mjs",
+    "canon:index:check": "node scripts/generate-canon-index.mjs --check"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.0",

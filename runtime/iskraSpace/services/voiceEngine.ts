@@ -13,6 +13,29 @@ const getPref = (prefs: VoicePreferences | undefined, name: VoiceName) => {
     return (prefs && prefs[name] !== undefined) ? prefs[name] : 1.0;
 };
 
+const DEFAULT_PRIORITY_MULTIPLIERS: Record<VoiceName, number> = {
+  ISKRA: 1,
+  KAIN: 1,
+  PINO: 1,
+  SAM: 1,
+  ANHANTRA: 1,
+  HUYNDUN: 1,
+  ISKRIV: 1,
+  MAKI: 1,
+  SIBYL: 1,
+};
+
+function getPriorityMultipliers(metrics: IskraMetrics): Record<VoiceName, number> {
+  const multipliers = { ...DEFAULT_PRIORITY_MULTIPLIERS };
+
+  if (metrics.trust > 0.8 && metrics.pain > 0.3) {
+    multipliers.MAKI = 1.6;
+    multipliers.KAIN = 0.6;
+  }
+
+  return multipliers;
+}
+
 const VOICES: Voice[] = [
   {
     name: 'KAIN',
@@ -134,12 +157,15 @@ const VOICES: Voice[] = [
     // SIBYL sees patterns across time, activated when there's resonance with past.
     activation: (m: IskraMetrics, prefs?: VoicePreferences, current?: VoiceName) => {
         let score = 0;
+        if ((m.foresight ?? 0) >= 0.5) {
+            score = Math.max(score, (m.foresight ?? 0) * 2.0);
+        }
         // Activated when echo is high (patterns repeating) and clarity moderate
         if (m.echo > 0.6 && m.clarity > 0.4 && m.clarity < 0.8) {
-            score = m.echo * 2.0;
+            score = Math.max(score, m.echo * 2.0);
         }
         // Also activated when mirror_sync is very high (deep reflection)
-        if (m.mirror_sync > 0.8) score += 0.5;
+        if (m.mirror_sync > 0.8 && (m.echo > 0.6 || (m.foresight ?? 0) >= 0.5)) score += 0.5;
 
         if (current === 'SIBYL') score += 0.2;
         return score * getPref(prefs, 'SIBYL');
@@ -259,6 +285,7 @@ export interface VoiceSelectionExplanationValue {
   selectedScore: number;
   currentVoiceName: VoiceName | null;
   scores: Record<VoiceName, number>;
+  priorityMultipliers: Record<VoiceName, number>;
 }
 
 const VOICE_EXPLANATION_REFS: EvidenceRef[] = [
@@ -270,16 +297,24 @@ function computeVoiceScores(
   metrics: IskraMetrics,
   prefs?: VoicePreferences,
   currentVoiceName?: VoiceName,
-): { selectedVoice: Voice; selectedScore: number; scores: Record<VoiceName, number>; effectiveLastVoice: VoiceName | null } {
+): {
+  selectedVoice: Voice;
+  selectedScore: number;
+  scores: Record<VoiceName, number>;
+  priorityMultipliers: Record<VoiceName, number>;
+  effectiveLastVoice: VoiceName | null;
+} {
   const effectivePrefs = prefs || storageService.getVoicePreferences();
   const effectiveLastVoice = currentVoiceName || storageService.getLastVoiceState().lastVoice || null;
+  const priorityMultipliers = getPriorityMultipliers(metrics);
 
   let highestScore = -1;
   let selectedVoice = VOICES[0];
   const scores = {} as Record<VoiceName, number>;
 
   for (const voice of VOICES) {
-    const score = voice.activation(metrics, effectivePrefs, effectiveLastVoice ?? undefined);
+    const rawScore = voice.activation(metrics, effectivePrefs, effectiveLastVoice ?? undefined);
+    const score = rawScore * priorityMultipliers[voice.name];
     scores[voice.name] = Number(score.toFixed(4));
     if (score > highestScore) {
       highestScore = score;
@@ -291,6 +326,7 @@ function computeVoiceScores(
     selectedVoice,
     selectedScore: Number(highestScore.toFixed(4)),
     scores,
+    priorityMultipliers,
     effectiveLastVoice,
   };
 }
@@ -300,7 +336,7 @@ export function getVoiceSelectionExplanation(
   prefs?: VoicePreferences,
   currentVoiceName?: VoiceName,
 ): Explainable<VoiceSelectionExplanationValue> {
-  const { selectedVoice, selectedScore, scores, effectiveLastVoice } = computeVoiceScores(
+  const { selectedVoice, selectedScore, scores, priorityMultipliers, effectiveLastVoice } = computeVoiceScores(
     metrics,
     prefs,
     currentVoiceName,
@@ -326,16 +362,28 @@ export function getVoiceSelectionExplanation(
         silence_mass: metrics.silence_mass,
         echo: metrics.echo,
         mirror_sync: metrics.mirror_sync,
+        foresight: metrics.foresight ?? null,
       },
       output: { currentVoiceName: effectiveLastVoice },
       refs: VOICE_EXPLANATION_REFS,
     },
     {
+      label: 'apply_priority_rules',
+      formula: 'if trust > 0.8 && pain > 0.3 then MAKI x1.6 and KAIN x0.6',
+      inputs: {
+        trust: metrics.trust,
+        pain: metrics.pain,
+      },
+      output: priorityMultipliers,
+      refs: VOICE_EXPLANATION_REFS,
+    },
+    {
       label: 'score_voices',
-      formula: 'activation(metrics, prefs, currentVoiceName)',
+      formula: 'activation(metrics, prefs, currentVoiceName) * priorityMultiplier',
       inputs: {
         currentVoiceName: effectiveLastVoice,
         hasPreferences: Boolean(prefs),
+        priorityMultipliers: JSON.stringify(priorityMultipliers),
       },
       output: scores,
       refs: VOICE_EXPLANATION_REFS,
@@ -360,6 +408,7 @@ export function getVoiceSelectionExplanation(
       selectedScore,
       currentVoiceName: effectiveLastVoice,
       scores,
+      priorityMultipliers,
     },
     how,
     contracts_checked: [

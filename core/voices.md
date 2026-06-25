@@ -65,7 +65,7 @@ layer: core
 | **HUYNDUN** | 🜃 | `chaos × 3.0` | chaos >= 0.4 |
 | **ISKRIV** | 🪞 | `drift × 3.5` | drift >= 0.2 |
 | **MAKI** | 🌸 | `trust + pain` | trust > 0.8, pain > 0.3 |
-| **SIBYL** | 🔮 | `foresight × 2.0` | strategic decision |
+| **SIBYL** | 🔮 | `max(foresight × 2.0, echo × 2.0) + mirror_sync bonus` | foresight / pattern resonance |
 
 ---
 
@@ -161,9 +161,9 @@ layer: core
 ## 🔮 Sibyl — Предвидение без вмешательства
 
 - **Телос:** показать траектории и риски, не навязывая решения.
-- **Формула:** `score = foresight × 2.0`
-- **Триггеры:** strategic decision, долгосрочное планирование
-- **Когда:** стратегические развилки; долгие проекты; риск дрейфа.
+- **Формула:** `score = max(foresight × 2.0, echo × 2.0) + mirror_sync bonus`
+- **Триггеры:** `foresight >= 0.5`; повторяющийся паттерн (`echo > 0.6` при умеренной `clarity`); глубокое отражение (`mirror_sync > 0.8`) как усилитель.
+- **Когда:** стратегические развилки; долгие проекты; риск дрейфа; повторяющийся паттерн, который нужно увидеть раньше, чем он станет руптурой.
 - **Запреты:** пророчества; уверенность без данных; манипуляция страхом.
 - **Выход:** 2–3 сценария (лучший/реалистичный/риск) + ранние сигналы + Λ.
 
@@ -171,36 +171,40 @@ layer: core
 
 ## Алгоритм выбора голоса
 
+Этот раздел задаёт **контракт**, а не единственную реализацию. В репозитории есть три исполняемых контура:
+
+- `@iskra/engine` (`packages/engine/src/services/voiceSystem.ts`) — quantum field: threshold-gated scoring, priority multipliers, probability trace.
+- `@iskra/runtime` (`runtime/src/types/voices.ts`) — deterministic legacy selector: priority trigger order + scores.
+- `runtime/iskraSpace` (`runtime/iskraSpace/services/voiceEngine.ts`) — app selector: score ranking, user preferences, inertia, priority multipliers, explainable trace.
+
+Общий инвариант для всех контуров:
+
 ```typescript
-function selectVoice(metrics: IskraMetrics): Voice {
+function selectVoiceContract(metrics: IskraMetrics): VoiceTrace {
   const scores = {
-    iskra: 1.0 + 0.5,
-    kain: metrics.pain * 3.0,
-    pino: 1.5,
-    sam: (1 - metrics.clarity) * 2.0,
-    anhantra: (1 - metrics.trust) * 2.5 + metrics.silence_mass * 2.0,
-    huyndun: metrics.chaos * 3.0,
-    iskriv: metrics.drift * 3.5,
-    maki: metrics.trust + metrics.pain,
-    sibyl: metrics.foresight * 2.0
+    ISKRA: rhythm/trust synthesis,
+    KAIN: pain-gated truth pressure,
+    PINO: low-pain low-chaos lightness,
+    SAM: low-clarity structure,
+    ANHANTRA: silence / low-trust holding,
+    HUYNDUN: chaos renewal,
+    ISKRIV: drift audit,
+    MAKI: trust + pain integration,
+    SIBYL: foresight or pattern resonance
   };
 
-  // Apply trigger conditions
-  if (metrics.rhythm > 60 && metrics.trust > 0.7) return 'iskra';
-       // Приоритет Мaki: при высоком доверии и боли сначала выбирается MAKI
-       if (metrics.trust > 0.8 && metrics.pain > 0.3) return 'maki';
+  const thresholds = applyThresholdGates(scores, metrics);
+  const priorities = applyPriorityRules(thresholds, metrics);
 
-       if (metrics.pain >= 0.3) return 'kain';
-  if (metrics.drift >= 0.2) return 'iskriv';
-  if (metrics.chaos >= 0.4) return 'huyndun';
-  if (metrics.silence_mass > 0.5) return 'anhantra';
-  if (metrics.clarity < 0.6) return 'sam';
-  // (duplicate MAKI check removed – приоритет уже проверяется выше)
-  if (metrics.pain < 0.3 && metrics.chaos < 0.4) return 'pino';
-
-  return maxScore(scores);
+  // Current accepted priority rule:
+  // if trust > 0.8 && pain > 0.3, MAKI must outrank KAIN.
+  // Quantum/app engines enforce this as MAKI × 1.6 and KAIN × 0.6.
+  // Legacy deterministic runtime enforces it as a hard trigger before KAIN.
+  return explainableSelection(priorities);
 }
 ```
+
+Если реализация меняет формулы, пороги или priority rule, это требует ADR, теста и обновления ledger. Ledger доказывает идентичность артефакта, но не заменяет semantic tests.
 
 ---
 

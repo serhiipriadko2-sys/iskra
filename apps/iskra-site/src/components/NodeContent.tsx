@@ -9,11 +9,13 @@ import {
 import { architectureNodes, techStack } from '../lib/architecture';
 import { voices } from '../lib/voices';
 import type { TreeNodeData } from '../lib/treeData';
+import type { AudienceMode } from '../types';
 import { CognitiveCycleSimulator } from './CognitiveCycleSimulator';
-import { EcosystemMap } from './EcosystemMap';
+import { RepoAtlas } from './RepoAtlas';
 
 interface NodeContentProps {
   node: TreeNodeData;
+  audienceMode?: AudienceMode;
 }
 
 function Card({ icon, title, text }: { icon?: string; title: string; text: string }) {
@@ -192,7 +194,7 @@ function ProductContent() {
   );
 }
 
-function StartContent() {
+function StartContent({ audienceMode }: { audienceMode?: AudienceMode }) {
   return (
     <div className="space-y-8">
       <div>
@@ -228,7 +230,7 @@ function StartContent() {
 
       <div className="border-t border-white/5 pt-6">
         <h4 className="font-mono text-xs uppercase tracking-wider text-iskra-accent mb-4">Интерактивный обозреватель репозитория</h4>
-        <EcosystemMap />
+        <RepoAtlas audienceMode={audienceMode} />
       </div>
     </div>
   );
@@ -256,7 +258,7 @@ function VoiceDetail({ id }: { id: string }) {
   );
 }
 
-export function NodeContent({ node }: NodeContentProps) {
+export function NodeContent({ node, audienceMode }: NodeContentProps) {
   if (node.group === 'leaves') {
     return <VoiceDetail id={node.id} />;
   }
@@ -277,7 +279,7 @@ export function NodeContent({ node }: NodeContentProps) {
       return <ProductContent />;
     case 'start':
     case 'soil':
-      return <StartContent />;
+      return <StartContent audienceMode={audienceMode} />;
     case 'voices':
       return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

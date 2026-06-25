@@ -10,9 +10,11 @@ import { NodeOverlay } from './components/NodeOverlay';
 import { SiftLab } from './components/SiftLab';
 import { TooltipOverlay } from './components/TooltipOverlay';
 import { ReducedMotionFallback } from './components/ReducedMotionFallback';
+import { RepoAtlas } from './components/RepoAtlas';
 import { useReducedMotion } from './hooks/useReducedMotion';
 import { useHashNodeId } from './hooks/useHashNodeId';
 import { useMediaQuery } from './hooks/useMediaQuery';
+import type { AudienceMode } from './types';
 
 function Loader() {
   return (
@@ -27,6 +29,8 @@ function Loader() {
 
 export default function App() {
   const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
+  const [audienceMode, setAudienceMode] = useState<AudienceMode>('novice');
+  const [showAtlas, setShowAtlas] = useState(false);
   const reducedMotion = useReducedMotion();
   const isMobile = useMediaQuery('(max-width: 767px)');
 
@@ -55,16 +59,15 @@ export default function App() {
         >
           <CameraController activeNodeId={activeNodeId} />
           <TreeScene activeNodeId={activeNodeId} onNodeClick={setActiveNodeId} />
-          <Effects />
         </Canvas>
       </Suspense>
 
-      <NodeOverlay activeNodeId={activeNodeId} onClose={() => setActiveNodeId(null)} />
+      <NodeOverlay activeNodeId={activeNodeId} onClose={() => setActiveNodeId(null)} audienceMode={audienceMode} />
 
       <TooltipOverlay activeNodeId={activeNodeId} />
       <SiftLab activeNodeId={activeNodeId} onReplayNodeSelect={setActiveNodeId} />
 
-      <div className="fixed top-6 left-6 z-20 pointer-events-none">
+      <div className="fixed top-4 left-4 md:top-6 md:left-6 z-20 pointer-events-none">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-iskra-primary to-iskra-accent flex items-center justify-center text-black font-bold text-xs">И</div>
           <div>
@@ -73,6 +76,55 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      <div className="fixed top-4 right-4 md:top-6 md:right-6 z-30 flex items-center gap-2">
+        <div className="flex items-center bg-iskra-surface/60 backdrop-blur-md border border-white/10 rounded-lg p-1">
+          <button
+            onClick={() => setAudienceMode('novice')}
+            className={`px-3 py-1.5 rounded-md text-[10px] font-mono uppercase tracking-wider transition-colors ${
+              audienceMode === 'novice' ? 'bg-iskra-primary/20 text-iskra-primary' : 'text-iskra-muted hover:text-iskra-text'
+            }`}
+          >
+            Новичок
+          </button>
+          <button
+            onClick={() => setAudienceMode('expert')}
+            className={`px-3 py-1.5 rounded-md text-[10px] font-mono uppercase tracking-wider transition-colors ${
+              audienceMode === 'expert' ? 'bg-iskra-accent/20 text-iskra-accent' : 'text-iskra-muted hover:text-iskra-text'
+            }`}
+          >
+            Эксперт
+          </button>
+        </div>
+        <button
+          onClick={() => setShowAtlas(true)}
+          className="px-3 py-2 rounded-lg text-[10px] font-mono uppercase tracking-wider bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+        >
+          Атлас
+        </button>
+      </div>
+
+      {showAtlas && (
+        <div className="fixed inset-0 z-50 bg-iskra-bg/95 backdrop-blur-xl p-4 md:p-8 flex flex-col">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="font-serif text-2xl text-iskra-text">Атлас репозитория</h2>
+              <p className="font-mono text-[10px] text-iskra-muted uppercase tracking-wider mt-1">
+                Полный индекс tracked files · режим {audienceMode === 'novice' ? '«Новичок»' : '«Эксперт»'}
+              </p>
+            </div>
+            <button
+              onClick={() => setShowAtlas(false)}
+              className="px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider bg-iskra-surface/60 border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+            >
+              Закрыть
+            </button>
+          </div>
+          <div className="flex-1 min-h-0">
+            <RepoAtlas audienceMode={audienceMode} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

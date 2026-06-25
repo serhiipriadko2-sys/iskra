@@ -71,6 +71,25 @@ export interface Voice {
  */
 export type VoicePreferences = Partial<Record<VoiceName, number>>;
 
+function calculateSibylScore(metrics: IskraMetrics): number {
+  const foresight = metrics.foresight ?? 0;
+  let score = 0;
+
+  if (foresight >= 0.5) {
+    score = Math.max(score, foresight * 2.0);
+  }
+
+  if (metrics.echo > 0.6 && metrics.clarity > 0.4 && metrics.clarity < 0.8) {
+    score = Math.max(score, metrics.echo * 2.0);
+  }
+
+  if (metrics.mirror_sync > 0.8 && metrics.echo > 0.6) {
+    score += 0.5;
+  }
+
+  return score;
+}
+
 /**
  * Voice activation result
  */
@@ -103,7 +122,7 @@ export function calculateVoiceScores(
       metrics.trust > 0.8 && metrics.pain > 0.3
         ? metrics.trust + metrics.pain
         : 0,
-    SIBYL: 0, // Activated manually for strategic decisions
+    SIBYL: calculateSibylScore(metrics),
   };
 }
 
@@ -152,6 +171,14 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
   // Silence triggers ANHANTRA
   if (metrics.silence_mass > 0.5) {
     return { primary: 'ANHANTRA', scores, reason: 'silence_mass > 0.5' };
+  }
+
+  if (scores.SIBYL > 0) {
+    return {
+      primary: 'SIBYL',
+      scores,
+      reason: 'foresight >= 0.5 or echo-pattern / mirror-sync activation',
+    };
   }
 
   // Lack of clarity triggers SAM (structure)
@@ -256,7 +283,7 @@ export const VOICE_MANIFESTS: Record<VoiceName, Voice> = {
     symbol: '🔮',
     description: 'Сибилла - порог и переход',
     telos: 'Показать траектории и риски, не навязывая решения',
-    triggers: ['strategic decision'],
+    triggers: ['foresight >= 0.5', 'echo > 0.6 with moderate clarity', 'mirror_sync > 0.8 with echo > 0.6'],
     prohibitions: [
       'пророчества',
       'уверенность без данных',

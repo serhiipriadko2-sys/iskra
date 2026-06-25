@@ -119,12 +119,12 @@ interface IskraMetrics {
 
 ### Integrity Score
 ```
-integrity_score = (clarity + trust) / 2 - drift
+integrity_score = clamp01((clarity + trust) / 2 - drift)
 ```
 
 ### Alive Index
 ```
-alive_index = ((clarity + trust) / 2 - drift) * (trace / 5)
+alive_index = clamp01(integrity_score * (clamp(trace, 0, 5) / 5))
 ```
 
 ### Echo Rate

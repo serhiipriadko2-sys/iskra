@@ -131,6 +131,25 @@ describe('voiceEngine', () => {
       expect(voice.symbol).toBe('🌸');
     });
 
+    it('should keep MAKI above KAIN when priority condition is active', () => {
+      const metrics = createMetrics({
+        trust: 0.9,
+        pain: 1.0,
+        chaos: 0.2,
+        clarity: 0.8,
+        drift: 0.1,
+        rhythm: 50,
+      });
+
+      const explained = getActiveVoiceWithExplanation(metrics);
+
+      expect(explained.voice.name).toBe('MAKI');
+      expect(explained.explanation.value.priorityMultipliers.MAKI).toBe(1.6);
+      expect(explained.explanation.value.priorityMultipliers.KAIN).toBe(0.6);
+      expect(explained.explanation.value.scores.MAKI).toBeGreaterThan(explained.explanation.value.scores.KAIN);
+      expect(explained.explanation.how.some((step) => step.label === 'apply_priority_rules')).toBe(true);
+    });
+
     it('should return ISKRA for balanced state', () => {
       // ISKRA base: 1.0, bonus +0.5 if rhythm > 60 && trust > 0.7 = 1.5
       // PINO base: 1.5 if pain < 0.3 && chaos < 0.4
@@ -164,6 +183,25 @@ describe('voiceEngine', () => {
         rhythm: 50,         // Below ISKRA bonus threshold
         silence_mass: 0.1,  // Low to avoid ANHANTRA
       });
+      const voice = getActiveVoice(metrics);
+
+      expect(voice.name).toBe('SIBYL');
+      expect(voice.symbol).toBe('🔮');
+    });
+
+    it('should return SIBYL for explicit foresight activation', () => {
+      const metrics = createMetrics({
+        foresight: 0.8,
+        echo: 0.1,
+        clarity: 0.8,
+        pain: 0.15,
+        chaos: 0.15,
+        drift: 0.1,
+        trust: 0.6,
+        rhythm: 50,
+        silence_mass: 0.1,
+      });
+
       const voice = getActiveVoice(metrics);
 
       expect(voice.name).toBe('SIBYL');

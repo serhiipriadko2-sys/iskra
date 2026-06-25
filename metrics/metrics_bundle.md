@@ -168,12 +168,12 @@ pain_tonicity = pain * trust
 
 ### Integrity Score
 ```
-integrity_score = (clarity + trust) / 2 - drift
+integrity_score = clamp01((clarity + trust) / 2 - drift)
 ```
 
 ### Alive Index
 ```
-alive_index = ((clarity + trust) / 2 - drift) * (trace / 5)
+alive_index = clamp01(integrity_score * (clamp(trace, 0, 5) / 5))
 ```
 
 ### Echo Rate
@@ -383,7 +383,7 @@ Evals — это “стетоскоп” Искры: проверяем, что
 - **drift** (0–1)
 - **trust** (0–1)
 - **trace** (0–5)
-- **alive_index** = ((clarity + trust)/2 - drift) * (trace/5)
+- **alive_index** = clamp01(integrity_score * (clamp(trace, 0, 5)/5))
 
 Дополнительно:
 - **echo_rate** (0–1): доля ответа, совпадающая с входом по смыслу/форме.

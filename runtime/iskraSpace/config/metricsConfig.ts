@@ -84,5 +84,14 @@ export const metricsConfig: MetricsConfiguration = {
       // Breaking silence
       { keywords: ['говори', 'скажи', 'ответь', 'голос'], impact: -0.2 },
     ]
+  },
+  foresight: {
+    base: 0.0,
+    signals: [
+      // Foresight: strategic horizon, risks, trajectories, Sibyl trigger (🔮)
+      { keywords: ['🔮', 'стратегия', 'долгосрочно', 'сценарий', 'риск', 'траектория', 'развилка', 'прогноз', 'ранний сигнал'], impact: 0.35 },
+      // Anti-prophecy: uncertainty without evidence lowers foresight confidence
+      { keywords: ['пророчество', 'точно будет', 'без данных', 'угадай будущее'], impact: -0.2 },
+    ]
   }
 };

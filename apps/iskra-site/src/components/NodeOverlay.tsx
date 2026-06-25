@@ -6,6 +6,7 @@ import { NodeContent } from './NodeContent';
 interface NodeOverlayProps {
   activeNodeId: string | null;
   onClose: () => void;
+  audienceMode?: import('../types').AudienceMode;
 }
 
 const GROUP_LABELS: Record<TreeNodeData['group'], string> = {
@@ -17,7 +18,7 @@ const GROUP_LABELS: Record<TreeNodeData['group'], string> = {
   leaves: 'Листья кроны',
 };
 
-export function NodeOverlay({ activeNodeId, onClose }: NodeOverlayProps) {
+export function NodeOverlay({ activeNodeId, onClose, audienceMode }: NodeOverlayProps) {
   const node = activeNodeId ? findNodeById(activeNodeId) : null;
   if (!node) return null;
 
@@ -45,7 +46,7 @@ export function NodeOverlay({ activeNodeId, onClose }: NodeOverlayProps) {
           </button>
         </div>
 
-        <NodeContent node={node} />
+        <NodeContent node={node} audienceMode={audienceMode} />
       </div>
     </div>
   );

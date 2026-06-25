@@ -32,6 +32,65 @@ describe('selectVoice', () => {
     const activation = selectVoice(metrics);
     expect(activation.primary).toBe('MAKI');
   });
+
+  it('returns SIBYL for explicit foresight activation', () => {
+    const metrics = {
+      ...DEFAULT_METRICS,
+      rhythm: 50,
+      trust: 0.7,
+      pain: 0.1,
+      chaos: 0.1,
+      drift: 0.1,
+      clarity: 0.7,
+      foresight: 0.8,
+    };
+
+    const activation = selectVoice(metrics);
+    expect(activation.primary).toBe('SIBYL');
+  });
+
+  it('returns SIBYL for repeated-pattern echo activation', () => {
+    const metrics = {
+      ...DEFAULT_METRICS,
+      rhythm: 50,
+      trust: 0.6,
+      pain: 0.1,
+      chaos: 0.1,
+      drift: 0.1,
+      echo: 0.8,
+      clarity: 0.6,
+      mirror_sync: 0.6,
+    };
+
+    const activation = selectVoice(metrics);
+    expect(activation.primary).toBe('SIBYL');
+  });
+
+  it('boosts SIBYL for mirror-sync pattern activation', () => {
+    const metrics = {
+      ...DEFAULT_METRICS,
+      rhythm: 50,
+      trust: 0.6,
+      pain: 0.1,
+      chaos: 0.1,
+      drift: 0.1,
+      echo: 0.7,
+      clarity: 0.5,
+      mirror_sync: 0.9,
+    };
+
+    const activation = selectVoice(metrics);
+    expect(activation.primary).toBe('SIBYL');
+    expect(activation.scores.SIBYL).toBeGreaterThan(1.5);
+  });
+
+  it('treats DEFAULT_METRICS as neutral baseline, not proof of life', () => {
+    const activation = selectVoice(DEFAULT_METRICS);
+
+    expect(DEFAULT_METRICS.foresight).toBe(0);
+    expect(activation.primary).toBe('PINO');
+    expect(activation.scores.SIBYL).toBe(0);
+  });
 });
 
 describe('MAKI-KAIN collision resolution (ADR-20260201-07)', () => {

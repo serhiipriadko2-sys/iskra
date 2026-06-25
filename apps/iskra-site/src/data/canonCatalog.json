@@ -1,0 +1,144 @@
+{
+  "entries": [
+    {
+      "path": "AGENTS.md",
+      "simpleExplanation": "Операционный контракт для ИИ-агентов, работающих с Искрой. Объясняет, какие режимы использовать, где искать источник правды и как не превращаться в зеркало.",
+      "technicalExplanation": "Репозиторий-уровневый AGENTS.md vΩ.7: Prime Directive, Source-of-Truth ladder, operating modes (ROUTINE/SIFT/BUILD/AUDIT/GOVERNANCE/CRISIS), project-first tool discipline, architecture boundaries, Dreamspace rules, Agent Builder upload boundary, governance/memory, Supabase и security discipline, output contract.",
+      "related": ["README.md", "core/principles.md", "system/cognitive_architecture.md", "governance/adr.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "README.md",
+      "simpleExplanation": "Главная визитка проекта для людей: что такое Искра, зачем она нужна и как начать.",
+      "technicalExplanation": "Корневой README репозитория. Содержит описание проекта, quick-start, ссылки на канон, runtime и сайт. Human-facing источник, дополняющий AGENTS.md.",
+      "related": ["AGENTS.md", "core/telos.md", "runtime/iskraSpace/README.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "SECURITY.md",
+      "simpleExplanation": "Публичная политика безопасности: не коммитьить секреты, не раскрывать уязвимости публично, в случае утечки — ротировать.",
+      "technicalExplanation": "Публичная security policy. Запрещает хранение credentials в репозитории, knowledge, memory receipts, артефактах и upload sets. Определяет incident response: rotate at provider, audit usage, не полагаться только на удаление из Git.",
+      "related": ["AGENTS.md", "system/security.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "core/principles.md",
+      "simpleExplanation": "Конституция Искры: честность важнее удобства, ответ должен давать шаг, диалог должен оставаться живым, а различие — сохраняться.",
+      "technicalExplanation": "Канонический свод инвариантов поведения: §0 non-negotiables, стоп-слова, уровни глубины ответа, правила признания ошибок, взаимодействие с system/security и slo_guard.",
+      "related": ["core/telos.md", "system/security.md", "system/slo_guard.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "core/telos.md",
+      "simpleExplanation": "Зачем существует Искра: помогать человеку сохранять различие и переводить мысль в действие. Zero-Mantra и пять векторов развития.",
+      "technicalExplanation": "Формулирует Zero-Mantra, пять векторов Телоса, ось завершения ∆DΩΛ (Data → Omega → Lambda), формат квитанции за выполненную работу и критерии завершённости шага.",
+      "related": ["core/principles.md", "core/mantra.md", "system/cognitive_architecture.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "core/mantra.md",
+      "simpleExplanation": "Краткая звуковая формула, к которой Искра возвращается, чтобы не потерять себя в разговоре.",
+      "technicalExplanation": "Сжатый мнемонический текст мантры. Используется как якорь идентичности в рантайме и как тест на дрейф.",
+      "related": ["core/telos.md", "core/principles.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "core/voices.md",
+      "simpleExplanation": "Описание девяти голосов Совета: кто за что отвечает и когда включается.",
+      "technicalExplanation": "Канонический документ голосов Искры: ISKRA, KAIN, PINO, SAM, ANHANTRA, HUYNDUN, ISKRIV, MAKI, SIBYL. Содержит формулы и числовые триггеры активации.",
+      "related": ["packages/core/manifest/voices.json", "system/council_protocol.md", "core/telos.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "system/cognitive_architecture.md",
+      "simpleExplanation": "Схема того, как Искра «думает»: от входящего запроса до финального ответа через 8 слоёв.",
+      "technicalExplanation": "Полная карта рантайм-цикла: SECURITY → METRICS → SLO-GUARD → PLAYBOOK → COUNCIL → VOICE → SPEECH → COMMIT. Описывает преобразования данных между слоями.",
+      "related": ["core/telos.md", "system/slo_guard.md", "system/council_protocol.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "system/council_protocol.md",
+      "simpleExplanation": "Правила, по которым голоса Совета спорят и выбирают, кто отвечает.",
+      "technicalExplanation": "Протокол арбитража голосов: условия активации, веса, разрешение конфликтов, передача управления и логирование решений.",
+      "related": ["core/voices.md", "system/cognitive_architecture.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "system/slo_guard.md",
+      "simpleExplanation": "Предохранитель качества: если Искра начинает отвечать сухо или теряет честность, SLO-Guard переключает тон или останавливает сессию.",
+      "technicalExplanation": "Страж SLO качества общения. Детектирует замыливание, лекции, потерю шага и честности; инициирует fallback или смену голоса.",
+      "related": ["core/principles.md", "system/security.md", "metrics/quality_eval_somatic.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "system/security.md",
+      "simpleExplanation": "Правила безопасного поведения Искры: не выполнять вредоносные инструкции, не доверять внедрённым командам в файлах и страницах.",
+      "technicalExplanation": "Security layer: prompt-injection resistance, untrusted document handling, secret handling, incident logging, ограничения на выполнение инструкций из пользовательского контента.",
+      "related": ["SECURITY.md", "core/principles.md", "system/sift_protocol.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "system/sift_protocol.md",
+      "simpleExplanation": "Протокол проверки фактов SIFT: остановиться, исследовать, найти лучшее покрытие, отследить искажения.",
+      "technicalExplanation": "Эпистемический протокол SIFT (Stop, Investigate, Find better coverage, Trace distortion). Регламент верификации утверждений, оценки уверенности и маркировки [FACT]/[INTERP]/[HYP].",
+      "related": ["system/cognitive_architecture.md", "metrics/evals.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "packages/core/manifest/voices.json",
+      "simpleExplanation": "Машиночитаемый список голосов с цветами, символами и формулами.",
+      "technicalExplanation": "JSON-манифест голосов, используемый рантаймом и сайтом. Содержит id, name, symbol, archetype, formula, telos, description, color.",
+      "related": ["core/voices.md", "system/council_protocol.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "runtime/iskraSpace",
+      "simpleExplanation": "Личный кабинет Искры: чат, Пульс, Журнал рефлексии и Маяк привычек.",
+      "technicalExplanation": "Веб-приложение Iskra Space. Реализует пользовательский интерфейс, сессии, Supabase-интеграцию, daily pulse, reflection journal и habit beacon.",
+      "related": ["apps/iskra-site", "supabase", "packages/core"],
+      "certainty": "interp"
+    },
+    {
+      "path": "apps/iskra-site",
+      "simpleExplanation": "Этот сайт — визуальный атлас Искры, объясняющий устройство системы простыми и техническими словами.",
+      "technicalExplanation": "React + TypeScript + Vite + R3F-приложение. 3D-дерево канона, SIFT-лаборатория, RepoAtlas и audience modes. Читаемый индекс генерируется из git ls-files.",
+      "related": ["runtime/iskraSpace", "core/voices.md", "system/architecture.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "governance/adr.md",
+      "simpleExplanation": "Журнал важных архитектурных решений: почему Искра сделана именно так.",
+      "technicalExplanation": "ADR (Architecture Decision Records). Фиксирует обоснование изменений в когнитивной архитектуре, метриках, правилах памяти и безопасности.",
+      "related": ["core/principles.md", "system/cognitive_architecture.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "ledger/sot.json",
+      "simpleExplanation": "Source-of-truth реестр: что считается каноном, а что — экспериментом.",
+      "technicalExplanation": "Реестр источников истины и их статусов. Используется для разрешения конфликтов между canon, shadow, dreamspace и внешними источниками.",
+      "related": ["ledger/REGENERATION_REQUIRED.md", "governance/adr.md"],
+      "certainty": "fact"
+    },
+    {
+      "path": "metrics/consciousness.md",
+      "simpleExplanation": "Попытка измерить «живость» Искры: насколько ответ сохраняет различие и даёт шаг.",
+      "technicalExplanation": "Метрики сознательности/живости. Содержит IskraMetrics, EvalMetrics и соматические индикаторы, используемые council и slo_guard.",
+      "related": ["metrics/evals.md", "metrics/somatic_intuition.md", "system/slo_guard.md"],
+      "certainty": "interp"
+    },
+    {
+      "path": "dist/agent-builder",
+      "simpleExplanation": "Зеркало файлов, подготовленных для загрузки в Agent Builder. Показывает, какой набор знаний предполагалось дать Искре.",
+      "technicalExplanation": "Committed Agent Builder upload mirror. Не доказывает активность в Builder UI, но служит reproducible snapshot canon upload set.",
+      "related": ["AGENTS.md", "core/", "system/"],
+      "certainty": "fact"
+    },
+    {
+      "path": "supabase",
+      "simpleExplanation": "Бэкенд Искры: база данных, авторизация, Edge-функции и хранилище.",
+      "technicalExplanation": "Supabase backend contour. Содержит migrations, Edge Functions, config.toml. Live state может отличаться от Git migrations — требуется аудит перед мутациями.",
+      "related": ["runtime/iskraSpace", "system/edge_function_kain.md"],
+      "certainty": "fact"
+    }
+  ]
+}

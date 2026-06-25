@@ -35,8 +35,10 @@ export interface VoiceThresholds {
   pain?: { min?: number; max?: number };
   chaos?: { min?: number; max?: number };
   drift?: { min?: number; max?: number };
+  echo?: { min?: number; max?: number };
   clarity?: { min?: number; max?: number };
   silence_mass?: { min?: number; max?: number };
+  mirror_sync?: { min?: number; max?: number };
   foresight?: { min?: number; max?: number };
 }
 

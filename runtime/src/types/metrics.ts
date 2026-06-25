@@ -49,6 +49,9 @@ export interface IskraMetrics {
 
   /** Переключение контекста (0-1) */
   ctxSwitch: number;
+
+  /** Предвидение / стратегическая развилка (0-1) */
+  foresight?: number;
 }
 
 /**
@@ -98,13 +101,22 @@ export const DEFAULT_METRICS: IskraMetrics = {
   mirror_sync: 0.7,
   interrupt: 0.1,
   ctxSwitch: 0.2,
+  foresight: 0.0,
 };
+
+function clamp01(value: number): number {
+  return Math.max(0, Math.min(1, value));
+}
+
+function clampTrace(trace: number): number {
+  return Math.max(0, Math.min(5, trace));
+}
 
 /**
  * Calculate integrity score
  */
 export function calculateIntegrityScore(metrics: IskraMetrics): number {
-  return (metrics.clarity + metrics.trust) / 2 - metrics.drift;
+  return clamp01((metrics.clarity + metrics.trust) / 2 - metrics.drift);
 }
 
 // =============================================================================
@@ -120,7 +132,8 @@ export function calculateIntegrityScoreX(
   metrics: IskraMetrics
 ): Explainable<number> {
   const avg = (metrics.clarity + metrics.trust) / 2;
-  const value = avg - metrics.drift;
+  const rawValue = avg - metrics.drift;
+  const value = clamp01(rawValue);
 
   const sotRef: EvidenceRef = {
     kind: 'canon',
@@ -137,9 +150,9 @@ export function calculateIntegrityScoreX(
     },
     {
       label: 'integrity_score',
-      formula: 'integrity_score = avg - drift',
+      formula: 'integrity_score = clamp01(avg - drift)',
       inputs: { avg, drift: metrics.drift },
-      output: value,
+      output: { rawValue, value },
       refs: [sotRef],
     },
   ];
@@ -148,6 +161,7 @@ export function calculateIntegrityScoreX(
     '0<=clarity<=1',
     '0<=trust<=1',
     '0<=drift<=1',
+    '0<=integrity_score<=1',
     'integrity_score is finite number',
   ];
 
@@ -163,7 +177,7 @@ export function calculateAliveIndex(
   trace: number
 ): number {
   const integrity = calculateIntegrityScore(metrics);
-  return integrity * (trace / 5);
+  return clamp01(integrity * (clampTrace(trace) / 5));
 }
 
 /**
@@ -176,8 +190,10 @@ export function calculateAliveIndexX(
   trace: number
 ): Explainable<number> {
   const integrity = calculateIntegrityScore(metrics);
-  const scale = trace / 5;
-  const value = integrity * scale;
+  const boundedTrace = clampTrace(trace);
+  const scale = boundedTrace / 5;
+  const rawValue = integrity * scale;
+  const value = clamp01(rawValue);
 
   const sotRef: EvidenceRef = {
     kind: 'canon',
@@ -187,7 +203,7 @@ export function calculateAliveIndexX(
   const how: ExplainStep[] = [
     {
       label: 'integrity_score',
-      formula: 'integrity_score = (clarity + trust)/2 - drift',
+      formula: 'integrity_score = clamp01((clarity + trust)/2 - drift)',
       inputs: {
         clarity: metrics.clarity,
         trust: metrics.trust,
@@ -198,16 +214,16 @@ export function calculateAliveIndexX(
     },
     {
       label: 'trace_scale',
-      formula: 'scale = trace / 5',
+      formula: 'scale = clamp(trace, 0, 5) / 5',
       inputs: { trace },
-      output: scale,
+      output: { boundedTrace, scale },
       refs: [sotRef],
     },
     {
       label: 'alive_index',
-      formula: 'alive_index = integrity_score * scale',
+      formula: 'alive_index = clamp01(integrity_score * scale)',
       inputs: { integrity_score: integrity, scale },
-      output: value,
+      output: { rawValue, value },
       refs: [sotRef],
     },
   ];
@@ -217,6 +233,7 @@ export function calculateAliveIndexX(
     '0<=trust<=1',
     '0<=drift<=1',
     '0<=trace<=5',
+    '0<=alive_index<=1',
     'alive_index is finite number',
   ];
 
