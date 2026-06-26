@@ -1,4 +1,4 @@
-# Supabase Residual Advisors Approval Packet — 2026-06-26
+# Supabase Residual Advisors Approval Packet - 2026-06-26
 
 Status: approval packet only. No live DDL in this document.
 Project: AgiIskra / `typcvaszcfdpkzbjzuur`
@@ -57,7 +57,7 @@ Performance advisor reports Auth configured with an absolute connection count. T
 
 ## Decision Options
 
-### Option A — Preserve current API grants, accept GraphQL exposure warnings temporarily
+### Option A - Preserve current API grants, accept GraphQL exposure warnings temporarily
 
 Keep current grants. This preserves the PostgREST client path and avoids breaking runtime while the app still uses direct `.from(...)` calls.
 
@@ -68,7 +68,7 @@ PASS criteria:
 
 Rollback: not applicable; no change.
 
-### Option B — Revoke `anon` graph table `SELECT` only
+### Option B - Revoke `anon` graph table `SELECT` only
 
 Candidate SQL:
 
@@ -98,7 +98,7 @@ grant select on table public.graph_edges to anon;
 commit;
 ```
 
-### Option C — Remove direct table exposure through RPC/Edge boundary
+### Option C - Remove direct table exposure through RPC/Edge boundary
 
 Move graph reads/writes behind RPC or Edge Functions, then revoke direct table grants from `anon` and selected `authenticated` tables.
 
@@ -113,7 +113,7 @@ Required implementation steps:
 
 Rollback: restore direct grants and client `.from(...)` code path.
 
-### Option D — Move `pg_trgm` to `extensions` schema
+### Option D - Move `pg_trgm` to `extensions` schema
 
 Candidate SQL:
 
@@ -154,7 +154,7 @@ Risk:
 - Any unqualified SQL using trigram functions/operators may need `extensions` in `search_path` or schema qualification.
 - Existing GIN index must be validated after the move.
 
-### Option E — Unused index retention window
+### Option E - Unused index retention window
 
 Do not drop indexes now.
 
