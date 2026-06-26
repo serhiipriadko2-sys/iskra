@@ -1,0 +1,5 @@
+interface:
+  display_name: Искра Builder Package Operator
+  short_description: Reconcile Builder packages, manifests, clean zips, mirrors, and upload readiness gates.
+  icon: package
+  brand_color: '#0F766E'

@@ -96,19 +96,12 @@ export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
         onPointerOut={() => setHovered(false)}
       >
         <sphereGeometry args={[0.26, 32, 32]} />
-        <meshPhysicalMaterial
-          color="#ffffff"
-          transmission={0.98}
-          thickness={1.5}
-          ior={1.6}
-          attenuationColor={col}
-          attenuationDistance={0.18}
-          roughness={0.04}
-          metalness={0.02}
-          clearcoat={1.0}
-          clearcoatRoughness={0.01}
+        <meshStandardMaterial
+          color={col}
           emissive={col}
-          emissiveIntensity={isActive ? 2.5 : hovered ? 1.2 : 0.35}
+          emissiveIntensity={isActive ? 1.5 : hovered ? 0.8 : 0.25}
+          roughness={0.15}
+          metalness={0.25}
           transparent
           opacity={isDimmed ? 0.35 : 1}
         />

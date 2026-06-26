@@ -26,33 +26,36 @@ export type Database = {
           resonance_score: number | null
           metadata: Json | null
           created_at: string | null
-          user_id: string
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
-          id?: string
+          id: string
           layer: string
           type: string
           content: string
-          timestamp?: string | null
+          timestamp?: string
           metrics_snapshot?: Json | null
           related_ids?: string[] | null
           resonance_score?: number | null
           metadata?: Json | null
           created_at?: string | null
-          user_id: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           id?: string
           layer?: string
           type?: string
           content?: string
-          timestamp?: string | null
+          timestamp?: string
           metrics_snapshot?: Json | null
           related_ids?: string[] | null
           resonance_score?: number | null
           metadata?: Json | null
           created_at?: string | null
-          user_id?: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
            {
@@ -73,15 +76,17 @@ export type Database = {
           weight: number
           metadata: Json | null
           created_at: string | null
+          user_id: string | null
         }
         Insert: {
-          id?: string
+          id: string
           source: string
           target: string
           type: string
           weight?: number
           metadata?: Json | null
           created_at?: string | null
+          user_id?: string | null
         }
         Update: {
           id?: string
@@ -91,6 +96,7 @@ export type Database = {
           weight?: number
           metadata?: Json | null
           created_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
            {
@@ -527,13 +533,7 @@ export type Database = {
           layer: string
           type: string
           content: string
-          timestamp: string
-          metrics_snapshot: Json
-          related_ids: string[]
           resonance_score: number
-          metadata: Json
-          created_at: string
-          user_id: string
         }[]
       }
       graph_get_node_with_edges: {
@@ -552,7 +552,8 @@ export type Database = {
             resonance_score: number
             metadata: Json
             created_at: string
-            user_id: string
+            updated_at: string
+            user_id: string | null
           }
           outgoing_edges: {
             id: string
@@ -562,6 +563,7 @@ export type Database = {
             weight: number
             metadata: Json
             created_at: string
+            user_id: string | null
           }[]
           incoming_edges: {
             id: string
@@ -571,6 +573,7 @@ export type Database = {
             weight: number
             metadata: Json
             created_at: string
+            user_id: string | null
           }[]
         }
       }

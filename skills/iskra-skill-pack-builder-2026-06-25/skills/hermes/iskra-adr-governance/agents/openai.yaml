@@ -1,0 +1,12 @@
+interface:
+  display_name: Искра ADR Governance
+  short_description: ADR, QA, changelog, and canon-change control.
+  icon: scroll
+  brand_color: '#7C2D12'
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

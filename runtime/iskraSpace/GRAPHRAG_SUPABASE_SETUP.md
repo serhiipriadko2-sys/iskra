@@ -281,7 +281,7 @@ SELECT * FROM graph_get_node_with_edges('decision_001');
 | layer             | TEXT        | mantra / archive / shadow            |
 | type              | TEXT        | insight / decision / event / etc     |
 | content           | TEXT        | Node content/description             |
-| timestamp         | BIGINT      | Unix timestamp                       |
+| timestamp         | TIMESTAMPTZ | Node timestamp, default `now()`      |
 | metrics_snapshot  | JSONB       | IskraMetrics snapshot                |
 | related_ids       | TEXT[]      | Denormalized related node IDs        |
 | resonance_score   | REAL        | 0.0 - 1.0 (calculated from metrics)  |
@@ -297,7 +297,7 @@ SELECT * FROM graph_get_node_with_edges('decision_001');
 | id         | TEXT (PK)   | Unique edge ID                       |
 | source     | TEXT (FK)   | Source node ID                       |
 | target     | TEXT (FK)   | Target node ID                       |
-| type       | TEXT        | CAUSAL / SIMILARITY / RESONANCE / etc|
+| type       | TEXT        | CAUSAL / SIMILARITY / RESONANCE / RELATED_TO / etc |
 | weight     | REAL        | 0.0 - 1.0 (edge strength)            |
 | metadata   | JSONB       | Additional metadata                  |
 | created_at | TIMESTAMPTZ | Auto-generated                       |

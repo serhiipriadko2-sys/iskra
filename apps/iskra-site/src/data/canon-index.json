@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-06-25T18:42:53.426Z",
-  "total": 1789,
+  "generatedAt": "2026-06-26T15:05:46.756Z",
+  "total": 1817,
   "curated": 20,
   "layers": {
-    "root": 462,
+    "root": 481,
     "agents": 44,
     "devcontainer": 2,
     "ci": 9,
     "appendix": 26,
-    "site": 55,
+    "site": 62,
     "web": 13,
     "canon": 16,
     "builder": 507,
     "docs": 50,
-    "governance": 36,
+    "governance": 38,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -759,6 +759,186 @@
       "coverage": "indexed",
       "sourceRef": ".gitignore",
       "related": []
+    },
+    {
+      "path": ".playwright-mcp",
+      "name": ".playwright-mcp",
+      "kind": "directory",
+      "layer": "root",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp",
+      "related": [],
+      "children": [
+        ".playwright-mcp/page-2026-06-25T18-48-03-312Z.yml",
+        ".playwright-mcp/page-2026-06-25T18-48-11-252Z.yml",
+        ".playwright-mcp/page-2026-06-25T18-48-50-353Z.yml",
+        ".playwright-mcp/page-2026-06-25T18-50-06-652Z.yml",
+        ".playwright-mcp/page-2026-06-25T18-53-57-363Z.yml",
+        ".playwright-mcp/page-2026-06-25T18-54-07-976Z.yml",
+        ".playwright-mcp/page-2026-06-25T18-57-06-471Z.yml",
+        ".playwright-mcp/page-2026-06-25T18-57-16-844Z.yml",
+        ".playwright-mcp/page-2026-06-25T19-00-20-455Z.yml",
+        ".playwright-mcp/page-2026-06-25T19-00-31-611Z.yml",
+        ".playwright-mcp/page-2026-06-25T19-03-33-388Z.yml",
+        ".playwright-mcp/page-2026-06-25T19-03-44-425Z.yml",
+        ".playwright-mcp/page-2026-06-25T19-07-00-992Z.yml",
+        ".playwright-mcp/page-2026-06-25T19-07-16-615Z.yml"
+      ]
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T18-48-03-312Z.yml",
+      "name": "page-2026-06-25T18-48-03-312Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T18-48-03-312Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T18-48-11-252Z.yml",
+      "name": "page-2026-06-25T18-48-11-252Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T18-48-11-252Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T18-48-50-353Z.yml",
+      "name": "page-2026-06-25T18-48-50-353Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T18-48-50-353Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T18-50-06-652Z.yml",
+      "name": "page-2026-06-25T18-50-06-652Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T18-50-06-652Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T18-53-57-363Z.yml",
+      "name": "page-2026-06-25T18-53-57-363Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T18-53-57-363Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T18-54-07-976Z.yml",
+      "name": "page-2026-06-25T18-54-07-976Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T18-54-07-976Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T18-57-06-471Z.yml",
+      "name": "page-2026-06-25T18-57-06-471Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T18-57-06-471Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T18-57-16-844Z.yml",
+      "name": "page-2026-06-25T18-57-16-844Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T18-57-16-844Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T19-00-20-455Z.yml",
+      "name": "page-2026-06-25T19-00-20-455Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T19-00-20-455Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T19-00-31-611Z.yml",
+      "name": "page-2026-06-25T19-00-31-611Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T19-00-31-611Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T19-03-33-388Z.yml",
+      "name": "page-2026-06-25T19-03-33-388Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T19-03-33-388Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T19-03-44-425Z.yml",
+      "name": "page-2026-06-25T19-03-44-425Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T19-03-44-425Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T19-07-00-992Z.yml",
+      "name": "page-2026-06-25T19-07-00-992Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T19-07-00-992Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-25T19-07-16-615Z.yml",
+      "name": "page-2026-06-25T19-07-16-615Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-25T19-07-16-615Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
     },
     {
       "path": "\"ScienceAndTests",
@@ -4657,6 +4837,7 @@
       "parent": "apps",
       "children": [
         "apps/iskra-site/public",
+        "apps/iskra-site/scripts",
         "apps/iskra-site/src",
         "apps/iskra-site/index.html",
         "apps/iskra-site/package.json",
@@ -4738,6 +4919,31 @@
       "parent": "apps/iskra-site"
     },
     {
+      "path": "apps/iskra-site/scripts",
+      "name": "scripts",
+      "kind": "directory",
+      "layer": "site",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/scripts",
+      "related": [],
+      "parent": "apps/iskra-site",
+      "children": [
+        "apps/iskra-site/scripts/generate-canon-index.mjs"
+      ]
+    },
+    {
+      "path": "apps/iskra-site/scripts/generate-canon-index.mjs",
+      "name": "generate-canon-index.mjs",
+      "kind": "file",
+      "layer": "site",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/scripts/generate-canon-index.mjs",
+      "related": [],
+      "parent": "apps/iskra-site/scripts"
+    },
+    {
       "path": "apps/iskra-site/src",
       "name": "src",
       "kind": "directory",
@@ -4749,6 +4955,7 @@
       "parent": "apps/iskra-site",
       "children": [
         "apps/iskra-site/src/components",
+        "apps/iskra-site/src/data",
         "apps/iskra-site/src/hooks",
         "apps/iskra-site/src/lib",
         "apps/iskra-site/src/App.tsx",
@@ -4797,8 +5004,10 @@
         "apps/iskra-site/src/components/NodeOverlay.tsx",
         "apps/iskra-site/src/components/ParticleField.tsx",
         "apps/iskra-site/src/components/ReducedMotionFallback.tsx",
+        "apps/iskra-site/src/components/RepoAtlas.tsx",
         "apps/iskra-site/src/components/Section.tsx",
         "apps/iskra-site/src/components/SiftLab.tsx",
+        "apps/iskra-site/src/components/SimpleScene.tsx",
         "apps/iskra-site/src/components/SoilDisc.tsx",
         "apps/iskra-site/src/components/StarField.tsx",
         "apps/iskra-site/src/components/TooltipOverlay.tsx",
@@ -4997,6 +5206,17 @@
       "parent": "apps/iskra-site/src/components"
     },
     {
+      "path": "apps/iskra-site/src/components/RepoAtlas.tsx",
+      "name": "RepoAtlas.tsx",
+      "kind": "file",
+      "layer": "site",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/src/components/RepoAtlas.tsx",
+      "related": [],
+      "parent": "apps/iskra-site/src/components"
+    },
+    {
       "path": "apps/iskra-site/src/components/Section.tsx",
       "name": "Section.tsx",
       "kind": "file",
@@ -5015,6 +5235,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "apps/iskra-site/src/components/SiftLab.tsx",
+      "related": [],
+      "parent": "apps/iskra-site/src/components"
+    },
+    {
+      "path": "apps/iskra-site/src/components/SimpleScene.tsx",
+      "name": "SimpleScene.tsx",
+      "kind": "file",
+      "layer": "site",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/src/components/SimpleScene.tsx",
       "related": [],
       "parent": "apps/iskra-site/src/components"
     },
@@ -5105,6 +5336,43 @@
       "sourceRef": "apps/iskra-site/src/components/VoiceCard.tsx",
       "related": [],
       "parent": "apps/iskra-site/src/components"
+    },
+    {
+      "path": "apps/iskra-site/src/data",
+      "name": "data",
+      "kind": "directory",
+      "layer": "site",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/src/data",
+      "related": [],
+      "parent": "apps/iskra-site/src",
+      "children": [
+        "apps/iskra-site/src/data/canon-index.json",
+        "apps/iskra-site/src/data/canonCatalog.json"
+      ]
+    },
+    {
+      "path": "apps/iskra-site/src/data/canon-index.json",
+      "name": "canon-index.json",
+      "kind": "file",
+      "layer": "site",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/src/data/canon-index.json",
+      "related": [],
+      "parent": "apps/iskra-site/src/data"
+    },
+    {
+      "path": "apps/iskra-site/src/data/canonCatalog.json",
+      "name": "canonCatalog.json",
+      "kind": "file",
+      "layer": "site",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/src/data/canonCatalog.json",
+      "related": [],
+      "parent": "apps/iskra-site/src/data"
     },
     {
       "path": "apps/iskra-site/src/hooks",
@@ -13469,7 +13737,9 @@
         "governance/adr_20260618_db_proxy_governance.md",
         "governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
         "governance/adr_20260624_relational_vow.md",
+        "governance/adr_20260624_voice_arbitration_contract_v2.md",
         "governance/adr_20260624_voice_seed.md",
+        "governance/adr_20260625_kimi_audit_voice_contract_repair.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -13616,6 +13886,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260624_voice_arbitration_contract_v2.md",
+      "name": "adr_20260624_voice_arbitration_contract_v2.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260624_voice_arbitration_contract_v2.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_20260624_voice_seed.md",
       "name": "adr_20260624_voice_seed.md",
       "kind": "file",
@@ -13623,6 +13904,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/adr_20260624_voice_seed.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260625_kimi_audit_voice_contract_repair.md",
+      "name": "adr_20260625_kimi_audit_voice_contract_repair.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260625_kimi_audit_voice_contract_repair.md",
       "related": [],
       "parent": "governance"
     },
@@ -14049,6 +14341,46 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "iskra_xcode_bridge.patch",
+      "related": []
+    },
+    {
+      "path": "iskra-site-canvas-check.png",
+      "name": "iskra-site-canvas-check.png",
+      "kind": "file",
+      "layer": "root",
+      "role": "asset",
+      "coverage": "indexed",
+      "sourceRef": "iskra-site-canvas-check.png",
+      "related": []
+    },
+    {
+      "path": "iskra-site-dev.png",
+      "name": "iskra-site-dev.png",
+      "kind": "file",
+      "layer": "root",
+      "role": "asset",
+      "coverage": "indexed",
+      "sourceRef": "iskra-site-dev.png",
+      "related": []
+    },
+    {
+      "path": "iskra-site-dof-atlas.png",
+      "name": "iskra-site-dof-atlas.png",
+      "kind": "file",
+      "layer": "root",
+      "role": "asset",
+      "coverage": "indexed",
+      "sourceRef": "iskra-site-dof-atlas.png",
+      "related": []
+    },
+    {
+      "path": "iskra-site-noeffects.png",
+      "name": "iskra-site-noeffects.png",
+      "kind": "file",
+      "layer": "root",
+      "role": "asset",
+      "coverage": "indexed",
+      "sourceRef": "iskra-site-noeffects.png",
       "related": []
     },
     {

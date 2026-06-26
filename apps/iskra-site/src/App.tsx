@@ -59,6 +59,7 @@ export default function App() {
         >
           <CameraController activeNodeId={activeNodeId} />
           <TreeScene activeNodeId={activeNodeId} onNodeClick={setActiveNodeId} />
+          <Effects />
         </Canvas>
       </Suspense>
 

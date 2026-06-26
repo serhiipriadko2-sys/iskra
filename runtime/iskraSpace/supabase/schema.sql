@@ -25,12 +25,13 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS metrics_snapshots (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    rhythm REAL DEFAULT 75,
-    trust REAL DEFAULT 0.8,
-    clarity REAL DEFAULT 0.7,
+    rhythm REAL DEFAULT 60,
+    trust REAL DEFAULT 0.7,
+    clarity REAL DEFAULT 0.8,
     pain REAL DEFAULT 0.1,
     drift REAL DEFAULT 0.2,
-    chaos REAL DEFAULT 0.3,
+    chaos REAL DEFAULT 0.2,
+    foresight REAL DEFAULT 0,
     echo REAL DEFAULT 0.5,
     silence_mass REAL DEFAULT 0.1,
     mirror_sync REAL DEFAULT 0.6,
@@ -288,52 +289,163 @@ ON CONFLICT DO NOTHING;
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS graph_nodes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    layer TEXT NOT NULL,
-    type TEXT NOT NULL,
+    id TEXT PRIMARY KEY,
+    layer TEXT NOT NULL CHECK (layer IN ('mantra', 'archive', 'shadow')),
+    type TEXT NOT NULL CHECK (type IN (
+        'EVENT', 'DECISION', 'INSIGHT', 'CANON',
+        'CONFLICT', 'QUESTION', 'ACTION', 'REFLECTION',
+        'event', 'feedback', 'decision', 'insight', 'artifact'
+    )),
     content TEXT NOT NULL,
-    timestamp TIMESTAMPTZ,
-    metrics_snapshot JSONB DEFAULT '{}'::jsonb,
-    related_ids TEXT[] DEFAULT '{}',
-    resonance_score FLOAT8 DEFAULT 0,
+    timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    metrics_snapshot JSONB,
+    related_ids TEXT[],
+    resonance_score REAL CHECK (resonance_score >= 0.0 AND resonance_score <= 1.0),
     metadata JSONB DEFAULT '{}'::jsonb,
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_graph_nodes_user_id ON graph_nodes(user_id);
-CREATE INDEX idx_graph_nodes_layer ON graph_nodes(layer);
+CREATE INDEX IF NOT EXISTS idx_graph_nodes_layer_type ON graph_nodes(layer, type);
+CREATE INDEX IF NOT EXISTS idx_graph_nodes_timestamp ON graph_nodes(timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_graph_nodes_resonance ON graph_nodes(resonance_score DESC)
+    WHERE resonance_score IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_graph_nodes_user ON graph_nodes(user_id)
+    WHERE user_id IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS graph_edges (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    source UUID NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,
-    target UUID NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,
-    type TEXT NOT NULL,
-    weight FLOAT8 DEFAULT 1.0,
+    id TEXT PRIMARY KEY,
+    source TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,
+    target TEXT NOT NULL REFERENCES graph_nodes(id) ON DELETE CASCADE,
+    type TEXT NOT NULL CHECK (type IN (
+        'CAUSAL', 'SIMILARITY', 'RESONANCE', 'SUPPORTS',
+        'CONTRADICTS', 'DERIVES_FROM', 'RELATED_TO'
+    )),
+    weight REAL NOT NULL DEFAULT 0.5
+        CHECK (weight >= 0.0 AND weight <= 1.0),
     metadata JSONB DEFAULT '{}'::jsonb,
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT unique_edge UNIQUE (source, target, type)
 );
 
-CREATE INDEX idx_graph_edges_user_id ON graph_edges(user_id);
-CREATE INDEX idx_graph_edges_source ON graph_edges(source);
-CREATE INDEX idx_graph_edges_target ON graph_edges(target);
+CREATE INDEX IF NOT EXISTS idx_graph_edges_source ON graph_edges(source);
+CREATE INDEX IF NOT EXISTS idx_graph_edges_target ON graph_edges(target);
+CREATE INDEX IF NOT EXISTS idx_graph_edges_type ON graph_edges(type);
+CREATE INDEX IF NOT EXISTS idx_graph_edges_weight ON graph_edges(weight DESC);
+CREATE INDEX IF NOT EXISTS idx_graph_edges_source_type ON graph_edges(source, type);
 
 -- RLS for Graph Tables
 ALTER TABLE graph_nodes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE graph_edges ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "Allow all for graph_nodes" ON graph_nodes;
-DROP POLICY IF EXISTS "Allow all for graph_edges" ON graph_edges;
+DROP POLICY IF EXISTS graph_nodes_user_isolation ON graph_nodes;
+DROP POLICY IF EXISTS graph_edges_user_isolation ON graph_edges;
+DROP POLICY IF EXISTS graph_nodes_manage_own ON graph_nodes;
+DROP POLICY IF EXISTS graph_edges_manage_own ON graph_edges;
 
-CREATE POLICY "Users can access own graph_nodes"
+CREATE POLICY graph_nodes_manage_own
 ON graph_nodes
 FOR ALL
-USING (auth.uid() = user_id)
-WITH CHECK (auth.uid() = user_id);
+TO authenticated
+USING (user_id = auth.uid())
+WITH CHECK (user_id = auth.uid());
 
-CREATE POLICY "Users can access own graph_edges"
+CREATE POLICY graph_edges_manage_own
 ON graph_edges
 FOR ALL
-USING (auth.uid() = user_id)
-WITH CHECK (auth.uid() = user_id);
+TO authenticated
+USING (user_id = auth.uid())
+WITH CHECK (user_id = auth.uid());
+
+CREATE OR REPLACE FUNCTION update_graph_nodes_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_graph_nodes_updated_at
+    BEFORE UPDATE ON graph_nodes
+    FOR EACH ROW EXECUTE FUNCTION update_graph_nodes_updated_at();
+
+CREATE OR REPLACE FUNCTION graph_bfs_traversal(
+    start_id TEXT,
+    max_depth INT DEFAULT 3,
+    min_weight REAL DEFAULT 0.3
+)
+RETURNS TABLE (
+    node_id TEXT,
+    depth INT,
+    path TEXT[]
+) AS $$
+WITH RECURSIVE traversal AS (
+    SELECT
+        id AS node_id,
+        0 AS depth,
+        ARRAY[id] AS path
+    FROM graph_nodes
+    WHERE id = start_id
+
+    UNION
+
+    SELECT
+        e.target AS node_id,
+        t.depth + 1 AS depth,
+        t.path || e.target AS path
+    FROM traversal t
+    JOIN graph_edges e ON e.source = t.node_id
+    WHERE
+        t.depth < max_depth
+        AND e.weight >= min_weight
+        AND NOT (e.target = ANY(t.path))
+)
+SELECT DISTINCT node_id, MIN(depth) AS depth, path
+FROM traversal
+GROUP BY node_id, path
+ORDER BY depth, node_id;
+$$ LANGUAGE sql STABLE;
+
+CREATE OR REPLACE FUNCTION graph_find_resonant(
+    min_resonance REAL DEFAULT 0.3,
+    limit_count INT DEFAULT 10
+)
+RETURNS TABLE (
+    id TEXT,
+    layer TEXT,
+    type TEXT,
+    content TEXT,
+    resonance_score REAL
+) AS $$
+SELECT
+    id,
+    layer,
+    type,
+    content,
+    resonance_score
+FROM graph_nodes
+WHERE resonance_score >= min_resonance
+ORDER BY resonance_score DESC
+LIMIT limit_count;
+$$ LANGUAGE sql STABLE;
+
+CREATE OR REPLACE FUNCTION graph_get_node_with_edges(node_id TEXT)
+RETURNS JSON AS $$
+SELECT json_build_object(
+    'node', row_to_json(n.*),
+    'outgoing_edges', (
+        SELECT json_agg(row_to_json(e.*))
+        FROM graph_edges e
+        WHERE e.source = node_id
+    ),
+    'incoming_edges', (
+        SELECT json_agg(row_to_json(e.*))
+        FROM graph_edges e
+        WHERE e.target = node_id
+    )
+)
+FROM graph_nodes n
+WHERE n.id = node_id;
+$$ LANGUAGE sql STABLE;

@@ -1,6 +1,6 @@
 # iskra-site
 
-Презентационный сайт Искры — современный лендинг с WebGL-визуализациями, который рассказывает о каноне vΩ.7, архитектуре, голосах, метриках и приложении Iskra Space простым языком.
+Публичный атлас Искры — не лендинг, а карта полного устройства системы. Сайт сочетает живое 3D-дерево канона, SIFT-лабораторию и data-driven обозреватель репозитория. Работает в двух режимах — «Новичок» и «Эксперт» — и явно маркирует [FACT], [INTERP] и [HYP] там, где контент выходит за рамки прямой цитаты файла.
 
 ## Технологии
 
@@ -21,48 +21,74 @@ pnpm --filter iskra-site dev
 
 Сайт откроется на `http://localhost:5174`.
 
-## Сборка
+## Сборка и проверки
 
 ```bash
+pnpm --filter iskra-site typecheck
 pnpm --filter iskra-site build
 pnpm --filter iskra-site preview
+
+# Проверить, что репозиторный индекс актуален
+pnpm --filter iskra-site canon:index:check
+
+# Перегенерировать индекс из git ls-files
+pnpm --filter iskra-site canon:index:generate
 ```
 
 ## Структура
 
 ```
 src/
-├── components/      # Переиспользуемые компоненты и WebGL-сцены
-├── sections/        # Секции лендинга
+├── components/      # Переиспользуемые компоненты, WebGL-сцены, RepoAtlas
 ├── hooks/           # Кастомные React-хуки
-├── lib/             # Данные и контент
+├── lib/             # Данные дерева и контент
+├── data/            # Сгенерированный canon-index.json и canonCatalog.json
 ├── types.ts         # Общие TypeScript-типы
 ├── App.tsx          # Корневой layout
 ├── index.css        # Глобальные стили
 └── main.tsx         # Точка входа
+
+scripts/
+└── generate-canon-index.mjs  # Генератор репозиторного атласа
 ```
 
 ## Разделы сайта
 
-1. **Hero** — вступление и Zero-Mantra.
-2. **Что такое Искра** — простое объяснение и три базовые идеи.
-3. **Телос и Мантра** — цель Искры, пять векторов, ∆DΩΛ.
-4. **Совет из 9 голосов** — интерактивное 3D-созвездие голосов.
-5. **Архитектура** — иерархия управления и технологический стек.
-6. **Метрики** — IskraMetrics и EvalMetrics.
-7. **Iskra Space** — описание продукта.
-8. **Быстрый старт** — как запустить сайт и приложение.
+1. **Древо Искры** — интерактивное 3D-дерево канона: почва, корни, ствол, ветви, крона и голоса.
+2. **SIFT Live Lab** — эпистемический тренажёр: claim, источники, искажения, вердикт.
+3. **Атлас репозитория** — полный индекс tracked files из `git ls-files` с поиском, фильтрами по слоям, breadcrumbs и source inspector.
+4. **Режимы аудитории** — переключатель «Новичок / Эксперт» влияет на уровень детализации в атласе и панелях.
 
-## Источники контента
+## Репозиторный атлас
+
+- Индекс генерируется скриптом `scripts/generate-canon-index.mjs`.
+- В индекс попадают все tracked paths, кроме чувствительных паттернов (`.env`, ключи, secrets и т.п.).
+- Каждый узел содержит: путь, слой, роль, статус покрытия, source reference и связи.
+- Ключевые канонические файлы дополнены ручными объяснениями в `src/data/canonCatalog.json`.
+- Generated index не включает содержимое файлов, secrets и приватные данные.
+
+## Источники контента и границы достоверности
 
 Контент сайта основан на канонических файлах репозитория:
 
+- `AGENTS.md`
+- `README.md`
 - `core/mantra.md`
 - `core/telos.md`
 - `core/principles.md`
+- `core/voices.md`
 - `packages/core/manifest/voices.json`
-- `system/architecture.md`
-- `runtime/iskraSpace/README.md`
+- `system/cognitive_architecture.md`
+- `system/council_protocol.md`
+- `system/slo_guard.md`
+- `system/security.md`
+- `system/sift_protocol.md`
+- `governance/adr.md`
+- `ledger/sot.json`
+- `metrics/consciousness.md`
+- `dist/agent-builder/`
+
+Интерпретации и автоматически сгенерированные метаданные помечены как `[INTERP]` или `indexed`; ручные статьи — как `[FACT]` / `curated`.
 
 ## Примечания
 

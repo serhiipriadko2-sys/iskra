@@ -1,0 +1,12 @@
+interface:
+  display_name: Искра Memory Stack
+  short_description: Archive, Shadow, Journal records with evidence and promotion rules.
+  icon: memory
+  brand_color: '#4F46E5'
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

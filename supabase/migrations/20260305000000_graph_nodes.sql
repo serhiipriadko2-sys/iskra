@@ -19,10 +19,11 @@ CREATE TABLE IF NOT EXISTS graph_nodes (
   layer TEXT NOT NULL CHECK (layer IN ('mantra', 'archive', 'shadow')),
   type TEXT NOT NULL CHECK (type IN (
     'EVENT', 'DECISION', 'INSIGHT', 'CANON',
-    'CONFLICT', 'QUESTION', 'ACTION', 'REFLECTION'
+    'CONFLICT', 'QUESTION', 'ACTION', 'REFLECTION',
+    'event', 'feedback', 'decision', 'insight', 'artifact'
   )),
   content TEXT NOT NULL,
-  timestamp BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::BIGINT,
+  timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
   -- Metrics snapshot (optional, for resonance calculation)
   metrics_snapshot JSONB,
@@ -41,7 +42,7 @@ CREATE TABLE IF NOT EXISTS graph_nodes (
   updated_at TIMESTAMPTZ DEFAULT NOW(),
 
   -- User reference (if multi-user)
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Index for fast layer/type lookups
@@ -77,7 +78,8 @@ CREATE TABLE IF NOT EXISTS graph_edges (
     'RESONANCE',     -- A resonates with B (high affinity)
     'SUPPORTS',      -- A supports B (evidence/argument)
     'CONTRADICTS',   -- A contradicts B (conflict)
-    'DERIVES_FROM'   -- A derived from B (inference)
+    'DERIVES_FROM',  -- A derived from B (inference)
+    'RELATED_TO'     -- A is generally related to B
   )),
 
   -- Edge weight (0.0 - 1.0, for BFS traversal filtering)
@@ -91,7 +93,7 @@ CREATE TABLE IF NOT EXISTS graph_edges (
   created_at TIMESTAMPTZ DEFAULT NOW(),
 
   -- User reference (if multi-user)
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
 
   -- Unique constraint: одно ребро на пару source-target-type
   CONSTRAINT unique_edge UNIQUE (source, target, type)

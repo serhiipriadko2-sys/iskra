@@ -22,6 +22,8 @@ import type { Database } from '../types/supabase';
 // Use strict types from generated Supabase definitions
 type GraphNodeRow = Database['public']['Tables']['graph_nodes']['Row'];
 type GraphEdgeRow = Database['public']['Tables']['graph_edges']['Row'];
+type GraphNodeLike = Pick<GraphNodeRow, 'id' | 'layer' | 'type' | 'content'> & Partial<GraphNodeRow>;
+type GraphEdgeLike = Pick<GraphEdgeRow, 'id' | 'source' | 'target' | 'type' | 'weight'> & Partial<GraphEdgeRow>;
 
 export class GraphServiceSupabase {
   /**
@@ -433,7 +435,7 @@ export class GraphServiceSupabase {
   /**
    * Convert database row to MemoryNode
    */
-  private rowToNode(row: GraphNodeRow): MemoryNode {
+  private rowToNode(row: GraphNodeLike): MemoryNode {
     const metadata = (row.metadata as Record<string, unknown>) || {};
     return {
       evidence: [],
@@ -453,7 +455,7 @@ export class GraphServiceSupabase {
   /**
    * Convert database row to MemoryEdge
    */
-  private rowToEdge(row: GraphEdgeRow): MemoryEdge {
+  private rowToEdge(row: GraphEdgeLike): MemoryEdge {
     return {
 
 

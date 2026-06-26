@@ -1,0 +1,180 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - button "✦ Древо Искры" [ref=e5] [cursor=pointer]:
+      - generic [ref=e6]: ✦
+      - generic [ref=e7]: Древо Искры
+    - button "❖ Почва" [ref=e8] [cursor=pointer]:
+      - generic [ref=e9]: ❖
+      - generic [ref=e10]: Почва
+    - button "△ Корни" [ref=e11] [cursor=pointer]:
+      - generic [ref=e12]: △
+      - generic [ref=e13]: Корни
+    - button "◈ Ствол" [ref=e14] [cursor=pointer]:
+      - generic [ref=e15]: ◈
+      - generic [ref=e16]: Ствол
+    - button "✦ Ветви" [ref=e17] [cursor=pointer]:
+      - generic [ref=e18]: ✦
+      - generic [ref=e19]: Ветви
+    - button "◉ Крона" [ref=e20] [cursor=pointer]:
+      - generic [ref=e21]: ◉
+      - generic [ref=e22]: Крона
+  - paragraph [ref=e26]: Пробуждение Искры
+  - generic:
+    - generic:
+      - paragraph: Наведите или кликните узел • Используйте панель слева
+  - complementary [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - paragraph [ref=e31]: SIFT live lab
+          - paragraph [ref=e32]: Древо Искры · no node
+        - generic [ref=e33]:
+          - generic [ref=e34]:
+            - generic [ref=e35]: Q 0%
+            - generic [ref=e36]: Ω 22%
+          - button "Свернуть SIFT" [ref=e37] [cursor=pointer]:
+            - img [ref=e38]
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - button "Claim" [ref=e42] [cursor=pointer]
+          - button "Stop" [ref=e43] [cursor=pointer]
+          - button "Investigate" [ref=e44] [cursor=pointer]
+          - button "Find" [ref=e45] [cursor=pointer]
+          - button "Trace" [ref=e46] [cursor=pointer]
+          - button "∆DΩΛ" [ref=e47] [cursor=pointer]
+        - generic [ref=e48]:
+          - generic [ref=e49]: Claim
+          - textbox "Claim" [ref=e50]: Правда ли, что этот вывод подтвержден свежими источниками?
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - generic [ref=e53]: Claim type
+            - combobox "Claim type" [ref=e54]:
+              - option "current_event" [selected]
+              - option "statistic"
+              - option "quote"
+              - option "scientific"
+              - option "historical"
+              - option "general"
+          - generic [ref=e55]:
+            - paragraph [ref=e56]: Verdict
+            - paragraph [ref=e57]: BLOCKER
+        - generic [ref=e58]:
+          - generic "вопрос, прогноз или недоказанное предположение" [ref=e59]: "[HYP] Правда ли"
+          - generic "вывод, причинность или оценка" [ref=e60]: "[INTERP] что этот вывод подтвержден свежими источниками?"
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]:
+              - generic [ref=e64]: Поддерживает
+              - generic [ref=e65]: Q 0%
+            - textbox "Источник или URL" [ref=e66]
+            - generic [ref=e67]:
+              - combobox [ref=e68]:
+                - option "unknown" [selected]
+                - option "primary"
+                - option "secondary"
+                - option "tertiary"
+                - option "anecdotal"
+              - textbox [ref=e69]
+            - generic [ref=e70]:
+              - slider [ref=e71]: "55"
+              - generic [ref=e72]: "55"
+            - textbox "Короткое наблюдение" [ref=e73]
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - generic [ref=e76]: Противоречит
+              - generic [ref=e77]: Q 0%
+            - textbox "Источник или URL" [ref=e78]
+            - generic [ref=e79]:
+              - combobox [ref=e80]:
+                - option "unknown" [selected]
+                - option "primary"
+                - option "secondary"
+                - option "tertiary"
+                - option "anecdotal"
+              - textbox [ref=e81]
+            - generic [ref=e82]:
+              - slider [ref=e83]: "55"
+              - generic [ref=e84]: "55"
+            - textbox "Короткое наблюдение" [ref=e85]
+          - generic [ref=e86]:
+            - generic [ref=e87]:
+              - generic [ref=e88]: Контекст
+              - generic [ref=e89]: Q 0%
+            - textbox "Источник или URL" [ref=e90]
+            - generic [ref=e91]:
+              - combobox [ref=e92]:
+                - option "unknown" [selected]
+                - option "primary"
+                - option "secondary"
+                - option "tertiary"
+                - option "anecdotal"
+              - textbox [ref=e93]
+            - generic [ref=e94]:
+              - slider [ref=e95]: "55"
+              - generic [ref=e96]: "55"
+            - textbox "Короткое наблюдение" [ref=e97]
+        - generic [ref=e98]:
+          - paragraph [ref=e99]: Trace graph
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - generic [ref=e102]: Поддерживает source · Q 0%
+              - generic [ref=e103]: →
+              - generic [ref=e104]: supports / narrows
+              - generic [ref=e105]: →
+              - generic [ref=e106]: "[HYP] Правда ли"
+            - generic [ref=e107]:
+              - generic [ref=e108]: Противоречит source · Q 0%
+              - generic [ref=e109]: →
+              - generic [ref=e110]: challenges / falsifies
+              - generic [ref=e111]: →
+              - generic [ref=e112]: "[HYP] Правда ли"
+            - generic [ref=e113]:
+              - generic [ref=e114]: Контекст source · Q 0%
+              - generic [ref=e115]: →
+              - generic [ref=e116]: bounds context
+              - generic [ref=e117]: →
+              - generic [ref=e118]: "[INTERP] что этот вывод подтвержден свежими источниками?"
+          - generic [ref=e119]:
+            - generic "контекст слабый или отсутствует" [ref=e120]: context_loss · 72%
+            - generic "claim может звучать сильнее evidence" [ref=e121]: amplification · 58%
+            - generic "current_event требует свежей даты источника" [ref=e122]: temporal_drift · 68%
+        - generic [ref=e123]:
+          - paragraph [ref=e124]: "∆ Claim связан с узлом: Древо Искры."
+          - paragraph [ref=e125]: "D source → transformation → claim; distortions: context_loss, amplification, temporal_drift."
+          - paragraph [ref=e126]: Ω 22% по source quality; live-source confidence не заявлен.
+          - paragraph [ref=e127]: Λ Добавить primary/context source или пересмотреть verdict.
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - paragraph [ref=e130]: SIFT Receipt
+            - button "copy json" [ref=e131] [cursor=pointer]
+          - generic [ref=e132]:
+            - generic [ref=e133]:
+              - text: id
+              - generic [ref=e134]: sift-f0f572d0
+            - generic [ref=e135]:
+              - text: node
+              - generic [ref=e136]: tree
+            - generic [ref=e137]:
+              - text: lanes
+              - generic [ref=e138]: "3"
+          - group [ref=e139]:
+            - generic "receipt payload" [ref=e140] [cursor=pointer]
+        - generic [ref=e141]:
+          - paragraph [ref=e143]: Replay receipt
+          - textbox "Paste SIFT Receipt JSON" [ref=e144]
+          - generic [ref=e145]:
+            - generic [ref=e146]: Restores claim, lanes, stage, and node focus.
+            - generic [ref=e147]:
+              - button "clear" [ref=e148] [cursor=pointer]
+              - button "load" [disabled] [ref=e149]
+  - generic:
+    - generic:
+      - generic: И
+      - generic:
+        - heading "Древо Искры" [level=1]
+        - paragraph: vΩ.7 · Full Canon
+  - generic [ref=e150]:
+    - generic [ref=e151]:
+      - button "Новичок" [ref=e152] [cursor=pointer]
+      - button "Эксперт" [ref=e153] [cursor=pointer]
+    - button "Атлас" [ref=e154] [cursor=pointer]

@@ -1,0 +1,58 @@
+name: Supabase schema contract
+
+on:
+  pull_request:
+    paths:
+      - "supabase/**"
+      - "runtime/iskraSpace/supabase/schema.sql"
+      - "runtime/iskraSpace/supabase_graphrag_migration.sql"
+      - "tools/verify_supabase_voice_metrics_contract.ts"
+      - "tools/verify_supabase_graph_contract.ts"
+      - "package.json"
+      - "CONTRIBUTING.md"
+      - ".github/workflows/supabase_schema_contract.yml"
+  workflow_dispatch:
+
+jobs:
+  voice-metrics-contract:
+    runs-on: ubuntu-latest
+    env:
+      AGIISKRA_SUPABASE_DB_URL: ${{ secrets.AGIISKRA_SUPABASE_DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify repo schema contract
+        run: |
+          pnpm check:supabase-voice-metrics-contract:repo
+          pnpm check:supabase-graph-contract:repo
+
+      - name: Report skipped live gate
+        if: ${{ env.AGIISKRA_SUPABASE_DB_URL == '' }}
+        run: echo "::notice::Live Supabase schema contract gate skipped because AGIISKRA_SUPABASE_DB_URL is not configured."
+
+      - name: Install PostgreSQL client for live gate
+        if: ${{ env.AGIISKRA_SUPABASE_DB_URL != '' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Verify live Supabase schema contract
+        if: ${{ env.AGIISKRA_SUPABASE_DB_URL != '' }}
+        env:
+          SUPABASE_DB_URL: ${{ env.AGIISKRA_SUPABASE_DB_URL }}
+        run: |
+          pnpm check:supabase-voice-metrics-contract
+          pnpm check:supabase-graph-contract

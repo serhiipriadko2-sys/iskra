@@ -135,6 +135,36 @@ Required before live change:
 4. Record migration evidence and any drift.
 5. Treat live schema changes without Git migration path as HIGH-RISK DRIFT.
 
+Voice/metrics schema drift gate:
+
+```bash
+pnpm check:supabase-voice-metrics-contract:repo
+pnpm check:supabase-voice-metrics-contract
+```
+
+The repo-only gate verifies the canonical schema mirrors agree. The live gate compares those repo mirrors to the live database using `SUPABASE_DB_URL`/`DATABASE_URL`, or a JSON snapshot produced by:
+
+```bash
+npx tsx tools/verify_supabase_voice_metrics_contract.ts --print-sql
+```
+
+Graph schema drift gate:
+
+```bash
+pnpm check:supabase-graph-contract:repo
+pnpm check:supabase-graph-contract
+```
+
+The graph gate verifies the GraphRAG table contract: text node/edge IDs, allowed node and edge types, required indexes, RPC signatures, and RLS-enabled metadata. It intentionally does not treat current graph policy names as the semantic contract; RLS hardening remains a separate security-change review.
+
+To capture a live graph snapshot without a database URL in the local shell:
+
+```bash
+npx tsx tools/verify_supabase_graph_contract.ts --print-sql
+```
+
+Do not commit database URLs, passwords, service-role keys, or live snapshots containing sensitive data.
+
 ### Security-Sensitive Changes
 
 Security-sensitive changes include auth, RLS, Edge Functions, CSP, dependency upgrades, token handling, environment loading, logging, webhooks, and Agent Builder connector behavior.
