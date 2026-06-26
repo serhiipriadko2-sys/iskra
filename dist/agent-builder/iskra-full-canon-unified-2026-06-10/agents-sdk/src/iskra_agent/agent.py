@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -18,7 +17,9 @@ class IskraAgent:
     def __init__(self, *, name: str = "Искра vΩ.7 — Full Canon") -> None:
         self.name = name
 
-    def inspect(self, context: Mapping[str, Any]) -> AgentResult:
+    def inspect(self, context: Mapping[str, Any] | None = None) -> AgentResult:
+        if context is None:
+            context = {}
         source = str(context.get("source", "unknown"))
         if source == "chat":
             return AgentResult("PARTIAL", "Chat context is continuity, not source of truth.", ["truth-ladder"])
