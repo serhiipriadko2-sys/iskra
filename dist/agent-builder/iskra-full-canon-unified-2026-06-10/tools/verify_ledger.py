@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 from __future__ import annotations
 
@@ -15,13 +14,25 @@ def main() -> int:
     if not qc.exists():
         print("UNIFIED_QC_RECEIPT.json missing")
         return 1
-    data = json.loads(qc.read_text(encoding="utf-8"))
+
+    try:
+        data = json.loads(qc.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"failed to read or parse UNIFIED_QC_RECEIPT.json: {exc}")
+        return 1
+
+    if not isinstance(data, dict):
+        print("UNIFIED_QC_RECEIPT.json is not a valid JSON object")
+        return 1
     if data.get("verdict") not in {"PASS", "PARTIAL"}:
         print("unexpected verdict")
         return 1
-    if data.get("manifest", {}).get("missing") not in ([], None):
-        print("manifest missing entries recorded")
+
+    manifest = data.get("manifest")
+    if not isinstance(manifest, dict) or manifest.get("missing") not in ([], None):
+        print("manifest missing entries recorded or invalid manifest structure")
         return 1
+
     print("ledger smoke PASS")
     return 0
 
