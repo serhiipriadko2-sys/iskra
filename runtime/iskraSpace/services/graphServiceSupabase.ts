@@ -1,14 +1,12 @@
 /**
  * Graph Service Implementation for Supabase
  *
- * Stores nodes and edges in Supabase tables:
- * - graph_nodes
- * - graph_edges
- *
- * Uses RPC functions for graph traversal.
+ * The runtime talks to graph_nodes / graph_edges through authenticated RPC
+ * functions. Keeping table access behind this boundary lets us later revoke
+ * direct authenticated table grants without changing the service API.
  */
 
-import { getUserId, supabase as supabaseClient } from './supabaseClient';
+import { supabase as supabaseClient } from './supabaseClient';
 import type {
   MemoryNode,
   MemoryEdge,
@@ -22,12 +20,41 @@ import type { Database } from '../types/supabase';
 // Use strict types from generated Supabase definitions
 type GraphNodeRow = Database['public']['Tables']['graph_nodes']['Row'];
 type GraphEdgeRow = Database['public']['Tables']['graph_edges']['Row'];
+type GraphNodeInsert = Database['public']['Tables']['graph_nodes']['Insert'];
+type GraphNodeUpdate = Database['public']['Tables']['graph_nodes']['Update'];
 type GraphNodeLike = Pick<GraphNodeRow, 'id' | 'layer' | 'type' | 'content'> & Partial<GraphNodeRow>;
 type GraphEdgeLike = Pick<GraphEdgeRow, 'id' | 'source' | 'target' | 'type' | 'weight'> & Partial<GraphEdgeRow>;
 
+type SupabaseRpcError = {
+  message: string;
+  code?: string;
+};
+
+type GraphRpcClient = {
+  rpc<T>(fn: string, args?: Record<string, unknown>): Promise<{
+    data: T | null;
+    error: SupabaseRpcError | null;
+  }>;
+};
+
+type NodeWithEdgesResponse = {
+  node: GraphNodeRow | null;
+  outgoing_edges?: GraphEdgeRow[] | null;
+  incoming_edges?: GraphEdgeRow[] | null;
+};
+
+type GraphStatsResponse = {
+  totalNodes?: number;
+  totalEdges?: number;
+  nodesByLayer?: Record<string, number>;
+  nodesByType?: Record<string, number>;
+};
+
+const graphRpcClient = supabaseClient as unknown as GraphRpcClient;
+
 export class GraphServiceSupabase {
   /**
-   * Add node to Supabase
+   * Add node to Supabase through the authenticated RPC boundary.
    */
   public async addNode(
     layer: string,
@@ -42,34 +69,27 @@ export class GraphServiceSupabase {
       ? this.calculateResonance(metrics)
       : undefined;
 
-    const node: Database['public']['Tables']['graph_nodes']['Insert'] = {
-      id: nodeId,
-      layer: layer.toLowerCase(),
-      type: type.toLowerCase(),
-      content,
-      timestamp: new Date().toISOString(), // Use ISO string for Supabase
-      metrics_snapshot: metrics as unknown as Database['public']['Tables']['graph_nodes']['Insert']['metrics_snapshot'],
-      resonance_score,
-      metadata: {},
-      related_ids: [],
-      user_id: await getUserId()
-    };
+    const { data, error } = await graphRpcClient.rpc<GraphNodeRow>('graph_create_node', {
+      p_id: nodeId,
+      p_layer: layer.toLowerCase(),
+      p_type: type.toLowerCase(),
+      p_content: content,
+      p_timestamp: new Date().toISOString(),
+      p_metrics_snapshot: metrics as unknown as GraphNodeInsert['metrics_snapshot'],
+      p_related_ids: [],
+      p_resonance_score: resonance_score,
+      p_metadata: {}
+    });
 
-    const { data, error } = await supabaseClient
-      .from('graph_nodes')
-      .insert(node)
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(`GraphService: Failed to add node - ${error.message}`);
+    if (error || !data) {
+      throw new Error(`GraphService: Failed to add node - ${error?.message || 'No data returned'}`);
     }
 
     return this.rowToNode(data);
   }
 
   /**
-   * Add edge to Supabase
+   * Add edge to Supabase through the authenticated RPC boundary.
    */
   public async addEdge(
     source: string,
@@ -79,41 +99,17 @@ export class GraphServiceSupabase {
   ): Promise<MemoryEdge> {
     const edgeId = `edge_${source}_${target}_${type}`;
 
-    const edge: Database['public']['Tables']['graph_edges']['Insert'] = {
-      id: edgeId,
-      source,
-      target,
-      type,
-      weight,
-      metadata: {}
-    };
+    const { data, error } = await graphRpcClient.rpc<GraphEdgeRow>('graph_create_edge', {
+      p_id: edgeId,
+      p_source: source,
+      p_target: target,
+      p_type: type,
+      p_weight: weight,
+      p_metadata: {}
+    });
 
-    const { data, error } = await supabaseClient
-      .from('graph_edges')
-      .insert(edge)
-      .select()
-      .single();
-
-    if (error) {
-      // If unique constraint violation, update existing edge
-      if (error.code === '23505') {
-        const { data: updated, error: updateError } = await supabaseClient
-          .from('graph_edges')
-          .update({ weight })
-          .eq('source', source)
-          .eq('target', target)
-          .eq('type', type)
-          .select()
-          .single();
-
-        if (updateError) {
-          throw new Error(`GraphService: Failed to update edge - ${updateError.message}`);
-        }
-
-        return this.rowToEdge(updated);
-      }
-
-      throw new Error(`GraphService: Failed to add edge - ${error.message}`);
+    if (error || !data) {
+      throw new Error(`GraphService: Failed to add edge - ${error?.message || 'No data returned'}`);
     }
 
     return this.rowToEdge(data);
@@ -127,35 +123,18 @@ export class GraphServiceSupabase {
     maxDepth: number = 3,
     minWeight: number = 0.3
   ): Promise<MemoryNode[]> {
-    const { data, error } = await supabaseClient
-      .rpc('graph_bfs_traversal', {
-        start_id: startId,
-        max_depth: maxDepth,
-        min_weight: minWeight
-      });
+    const { data, error } = await graphRpcClient.rpc<GraphNodeRow[]>('graph_traverse_bfs_nodes', {
+      p_start_id: startId,
+      p_max_depth: maxDepth,
+      p_min_weight: minWeight
+    });
 
     if (error) {
       console.error('BFS traversal failed:', error);
       return [];
     }
 
-    if (!data || data.length === 0) {
-      return [];
-    }
-
-    // Get full node data for each node_id
-    const nodeIds = data.map((row: { node_id: string }) => row.node_id);
-    const { data: nodes, error: nodesError } = await supabaseClient
-      .from('graph_nodes')
-      .select('*')
-      .in('id', nodeIds);
-
-    if (nodesError) {
-      console.error('Failed to fetch nodes:', nodesError);
-      return [];
-    }
-
-    return (nodes || []).map(this.rowToNode);
+    return (data || []).map(this.rowToNode);
   }
 
   /**
@@ -165,11 +144,10 @@ export class GraphServiceSupabase {
     minResonance: number = 0.3,
     limit: number = 10
   ): Promise<MemoryNode[]> {
-    const { data, error } = await supabaseClient
-      .rpc('graph_find_resonant', {
-        min_resonance: minResonance,
-        limit_count: limit
-      });
+    const { data, error } = await graphRpcClient.rpc<GraphNodeRow[]>('graph_find_resonant_nodes', {
+      p_min_resonance: minResonance,
+      p_limit_count: limit
+    });
 
     if (error) {
       console.error('Find resonant nodes failed:', error);
@@ -187,27 +165,20 @@ export class GraphServiceSupabase {
     outgoing: MemoryEdge[];
     incoming: MemoryEdge[];
   }> {
-    const { data, error } = await supabaseClient
-      .rpc('graph_get_node_with_edges', {
-        node_id: nodeId
-      });
+    const { data, error } = await graphRpcClient.rpc<NodeWithEdgesResponse>('graph_get_node_with_edges', {
+      node_id: nodeId
+    });
 
     if (error) {
       console.error('Get node with edges failed:', error);
-      return {
-
-       node: null, outgoing: [], incoming: [] };
+      return { node: null, outgoing: [], incoming: [] };
     }
 
     if (!data || !data.node) {
-      return {
-
-       node: null, outgoing: [], incoming: [] };
+      return { node: null, outgoing: [], incoming: [] };
     }
 
     return {
-
-
       node: this.rowToNode(data.node),
       outgoing: (data.outgoing_edges || []).map(this.rowToEdge),
       incoming: (data.incoming_edges || []).map(this.rowToEdge)
@@ -218,11 +189,12 @@ export class GraphServiceSupabase {
    * Get all nodes by layer
    */
   public async getNodesByLayer(layer: MemoryLayer): Promise<MemoryNode[]> {
-    const { data, error } = await supabaseClient
-      .from('graph_nodes')
-      .select('*')
-      .eq('layer', layer.toLowerCase())
-      .order('timestamp', { ascending: false });
+    const { data, error } = await graphRpcClient.rpc<GraphNodeRow[]>('graph_get_user_nodes', {
+      p_layer: layer.toLowerCase(),
+      p_type: null,
+      p_node_ids: null,
+      p_limit_count: null
+    });
 
     if (error) {
       console.error('Get nodes by layer failed:', error);
@@ -236,11 +208,12 @@ export class GraphServiceSupabase {
    * Get all nodes by type
    */
   public async getNodesByType(type: MemoryNodeType): Promise<MemoryNode[]> {
-    const { data, error } = await supabaseClient
-      .from('graph_nodes')
-      .select('*')
-      .eq('type', type.toLowerCase())
-      .order('timestamp', { ascending: false });
+    const { data, error } = await graphRpcClient.rpc<GraphNodeRow[]>('graph_get_user_nodes', {
+      p_layer: null,
+      p_type: type.toLowerCase(),
+      p_node_ids: null,
+      p_limit_count: null
+    });
 
     if (error) {
       console.error('Get nodes by type failed:', error);
@@ -254,14 +227,10 @@ export class GraphServiceSupabase {
    * Search nodes by content (full-text search)
    */
   public async searchNodes(query: string, limit: number = 10): Promise<MemoryNode[]> {
-    const { data, error } = await supabaseClient
-      .from('graph_nodes')
-      .select('*')
-      .textSearch('content', query, {
-        type: 'websearch',
-        config: 'english'
-      })
-      .limit(limit);
+    const { data, error } = await graphRpcClient.rpc<GraphNodeRow[]>('graph_search_nodes', {
+      p_query: query,
+      p_limit_count: limit
+    });
 
     if (error) {
       console.error('Search nodes failed:', error);
@@ -275,11 +244,10 @@ export class GraphServiceSupabase {
    * Delete node and all its edges
    */
   public async deleteNode(nodeId: string): Promise<void> {
-    // Edges will be deleted automatically due to CASCADE
-    const { error } = await supabaseClient
-      .from('graph_nodes')
-      .delete()
-      .eq('id', nodeId);
+    // Edges are deleted automatically by graph_edges FK cascade.
+    const { error } = await graphRpcClient.rpc<null>('graph_delete_node', {
+      p_node_id: nodeId
+    });
 
     if (error) {
       console.error('Delete node failed:', error);
@@ -296,13 +264,11 @@ export class GraphServiceSupabase {
   ): Promise<void> {
     const resonance_score = this.calculateResonance(metrics);
 
-    const { error } = await supabaseClient
-      .from('graph_nodes')
-      .update({
-        resonance_score,
-        metrics_snapshot: metrics as unknown as Database['public']['Tables']['graph_nodes']['Update']['metrics_snapshot']
-      })
-      .eq('id', nodeId);
+    const { error } = await graphRpcClient.rpc<GraphNodeRow>('graph_update_node_resonance', {
+      p_node_id: nodeId,
+      p_metrics_snapshot: metrics as unknown as GraphNodeUpdate['metrics_snapshot'],
+      p_resonance_score: resonance_score
+    });
 
     if (error) {
       console.error('Update node resonance failed:', error);
@@ -315,25 +281,18 @@ export class GraphServiceSupabase {
    * Finds similar nodes and creates edges
    */
   public async buildConnections(nodeId: string): Promise<MemoryEdge[]> {
-    // Get the node
-    const { data: node, error: nodeError } = await supabaseClient
-      .from('graph_nodes')
-      .select('*')
-      .eq('id', nodeId)
-      .single();
+    const nodeWithEdges = await this.getNodeWithEdges(nodeId);
+    const node = nodeWithEdges.node;
 
-    if (nodeError || !node) {
-      console.error('Failed to fetch node for building connections:', nodeError);
+    if (!node) {
+      console.error('Failed to fetch node for building connections');
       return [];
     }
 
-    // Find similar nodes (same layer or type)
-    const { data: candidates, error: candidatesError } = await supabaseClient
-      .from('graph_nodes')
-      .select('*')
-      .or(`layer.eq.${node.layer},type.eq.${node.type}`)
-      .neq('id', nodeId)
-      .limit(20);
+    const { data: candidates, error: candidatesError } = await graphRpcClient.rpc<GraphNodeRow[]>('graph_get_connection_candidates', {
+      p_node_id: nodeId,
+      p_limit_count: 20
+    });
 
     if (candidatesError || !candidates) {
       console.error('Failed to find candidate nodes:', candidatesError);
@@ -342,7 +301,8 @@ export class GraphServiceSupabase {
 
     const edges: MemoryEdge[] = [];
 
-    for (const candidate of candidates) {
+    for (const candidateRow of candidates) {
+      const candidate = this.rowToNode(candidateRow);
       // Calculate similarity (simple: based on layer/type match)
       let edgeType: EdgeType;
       let weight = 0.3;
@@ -388,15 +348,9 @@ export class GraphServiceSupabase {
     nodesByLayer: Record<string, number>;
     nodesByType: Record<string, number>;
   }> {
-    const { data: nodes, error: nodesError } = await supabaseClient
-      .from('graph_nodes')
-      .select('id, layer, type');
+    const { data, error } = await graphRpcClient.rpc<GraphStatsResponse>('graph_get_stats');
 
-    const { data: edges, error: edgesError } = await supabaseClient
-      .from('graph_edges')
-      .select('id');
-
-    if (nodesError || edgesError) {
+    if (error || !data) {
       return {
         totalNodes: 0,
         totalEdges: 0,
@@ -405,19 +359,11 @@ export class GraphServiceSupabase {
       };
     }
 
-    const nodesByLayer: Record<string, number> = {};
-    const nodesByType: Record<string, number> = {};
-
-    (nodes || []).forEach((node: { id: string; layer: string; type: string }) => {
-      nodesByLayer[node.layer] = (nodesByLayer[node.layer] || 0) + 1;
-      nodesByType[node.type] = (nodesByType[node.type] || 0) + 1;
-    });
-
     return {
-      totalNodes: nodes?.length || 0,
-      totalEdges: edges?.length || 0,
-      nodesByLayer,
-      nodesByType
+      totalNodes: Number(data.totalNodes || 0),
+      totalEdges: Number(data.totalEdges || 0),
+      nodesByLayer: this.toCountRecord(data.nodesByLayer),
+      nodesByType: this.toCountRecord(data.nodesByType)
     };
   }
 
@@ -457,8 +403,6 @@ export class GraphServiceSupabase {
    */
   private rowToEdge(row: GraphEdgeLike): MemoryEdge {
     return {
-
-
       id: row.id,
       source: row.source,
       target: row.target,
@@ -466,6 +410,19 @@ export class GraphServiceSupabase {
       weight: row.weight,
       metadata: (row.metadata as Record<string, unknown>) || {}
     };
+  }
+
+  private toCountRecord(value: unknown): Record<string, number> {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      return {};
+    }
+
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, count]) => [
+        key,
+        Number(count || 0)
+      ])
+    );
   }
 }
 
