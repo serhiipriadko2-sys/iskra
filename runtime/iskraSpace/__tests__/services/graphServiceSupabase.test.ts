@@ -7,7 +7,7 @@ const mockSupabase = vi.hoisted(() => ({
   rpc: vi.fn(),
 }));
 
-// Mock Supabase client and getUserId
+// Mock Supabase client
 vi.mock('../../services/supabaseClient', () => {
   return {
     supabase: mockSupabase,
@@ -16,25 +16,18 @@ vi.mock('../../services/supabaseClient', () => {
   };
 });
 
-function makeInsertChain(result: any) {
-  const single = vi.fn().mockResolvedValue(result);
-  const select = vi.fn().mockReturnValue({ single });
-  const insert = vi.fn().mockReturnValue({ select });
-  return { insert, select, single };
-}
-
 describe('GraphServiceSupabase', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('addNode(): inserts lowercased layer and returns a normalized node', async () => {
+  it('addNode(): creates a node through the RPC boundary and returns a normalized node', async () => {
     const svc = new GraphServiceSupabase();
 
     const row = {
       id: 'node-1',
-      layer: 'core',
-      type: 'fact',
+      layer: 'archive',
+      type: 'event',
       content: 'C',
       timestamp: new Date().toISOString(),
       resonance_score: 0.77,
@@ -42,50 +35,43 @@ describe('GraphServiceSupabase', () => {
       created_at: new Date('2026-01-01T00:00:00Z').toISOString(),
       updated_at: new Date('2026-01-02T00:00:00Z').toISOString(),
       metrics_snapshot: null,
-      related_ids: []
+      related_ids: [],
+      user_id: 'test-user-id'
     };
 
-    const chain = makeInsertChain({ data: row, error: null });
-    mockSupabase.from.mockReturnValue(chain);
+    mockSupabase.rpc.mockResolvedValue({ data: row, error: null });
 
     const node = await svc.addNode(
-      'CORE', // layer
-      'FACT', // type
+      'ARCHIVE', // layer
+      'EVENT', // type
       'C', // content
       undefined // metrics
     );
 
-    // DB insert payload should use lowercased layer
-    expect(mockSupabase.from).toHaveBeenCalledWith('graph_nodes');
-    expect(chain.insert).toHaveBeenCalled();
-    const payload = chain.insert.mock.calls[0][0];
-    expect(payload.layer).toBe('core');
-    expect(payload.type).toBe('fact');
-    expect(payload.content).toBe('C');
-
-    // Check user_id directly if it's already resolved in the payload
-    if (payload.user_id instanceof Promise) {
-      await expect(payload.user_id).resolves.toBe('test-user-id');
-    } else {
-      expect(payload.user_id).toBe('test-user-id');
-    }
+    expect(mockSupabase.from).not.toHaveBeenCalled();
+    expect(mockSupabase.rpc).toHaveBeenCalledWith('graph_create_node', expect.objectContaining({
+      p_layer: 'archive',
+      p_type: 'event',
+      p_content: 'C',
+      p_related_ids: [],
+      p_metadata: {}
+    }));
 
     // Result should normalize layer casing back to enum-like form
     expect(node.id).toBe('node-1');
-    expect(node.layer).toBe('CORE');
-    expect(node.type).toBe('fact');
+    expect(node.layer).toBe('ARCHIVE');
+    expect(node.type).toBe('event');
   });
 
-  it('addNode(): throws on Supabase error', async () => {
+  it('addNode(): throws on Supabase RPC error', async () => {
     const svc = new GraphServiceSupabase();
 
-    const chain = makeInsertChain({ data: null, error: { message: 'boom' } });
-    mockSupabase.from.mockReturnValue(chain);
+    mockSupabase.rpc.mockResolvedValue({ data: null, error: { message: 'boom' } });
 
     await expect(
       svc.addNode(
-        'CORE',
-        'FACT',
+        'ARCHIVE',
+        'EVENT',
         'C',
         undefined
       )
