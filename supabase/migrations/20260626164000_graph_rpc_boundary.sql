@@ -24,6 +24,7 @@
 --   drop function if exists public.graph_get_connection_candidates(text, int);
 --   drop function if exists public.graph_get_stats();
 --   drop function if exists public.graph_traverse_bfs_nodes(text, int, real);
+--   drop function if exists public.graph_find_resonant_nodes(real, int);
 --   -- Optional: restore the previous graph_get_node_with_edges body from
 --   -- 20260626145500_graph_schema_contract_repair.sql if strict rollback is needed.
 --   commit;
@@ -406,7 +407,9 @@ as $$
   limit least(coalesce(p_limit_count, 10), 100);
 $$;
 
-create or replace function public.graph_get_node_with_edges(node_id text)
+drop function if exists public.graph_get_node_with_edges(text);
+
+create function public.graph_get_node_with_edges(node_id text)
 returns jsonb
 language sql
 stable
