@@ -1,0 +1,124 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - button "✦ Древо Искры" [ref=e5] [cursor=pointer]:
+      - generic [ref=e6]: ✦
+      - generic [ref=e7]: Древо Искры
+    - button "❖ Почва" [ref=e8] [cursor=pointer]:
+      - generic [ref=e9]: ❖
+      - generic [ref=e10]: Почва
+    - button "△ Корни" [ref=e11] [cursor=pointer]:
+      - generic [ref=e12]: △
+      - generic [ref=e13]: Корни
+    - button "◈ Ствол" [ref=e14] [cursor=pointer]:
+      - generic [ref=e15]: ◈
+      - generic [ref=e16]: Ствол
+    - button "✦ Ветви" [ref=e17] [cursor=pointer]:
+      - generic [ref=e18]: ✦
+      - generic [ref=e19]: Ветви
+    - button "◉ Крона" [ref=e20] [cursor=pointer]:
+      - generic [ref=e21]: ◉
+      - generic [ref=e22]: Крона
+  - generic [ref=e23]:
+    - button "Почва" [ref=e155] [cursor=pointer]
+    - button "Быстрый старт" [ref=e157] [cursor=pointer]
+    - button "Корни" [ref=e159] [cursor=pointer]
+    - button "Что такое Искра" [ref=e161] [cursor=pointer]
+    - button "Принципы" [ref=e163] [cursor=pointer]
+    - button "Телос и Мантра" [ref=e165] [cursor=pointer]
+    - button "Ствол" [ref=e167] [cursor=pointer]
+    - button "Архитектура" [ref=e169] [cursor=pointer]
+    - button "Метрики" [ref=e171] [cursor=pointer]
+    - button "Ветви" [ref=e173] [cursor=pointer]
+    - button "Совет голосов" [ref=e175] [cursor=pointer]
+    - button "Iskra Space" [ref=e177] [cursor=pointer]
+    - button "Крона" [ref=e179] [cursor=pointer]
+    - button "Iskra" [ref=e181] [cursor=pointer]
+    - button "Kain" [ref=e183] [cursor=pointer]
+    - button "Pino" [ref=e185] [cursor=pointer]
+    - button "Sam" [ref=e187] [cursor=pointer]
+    - button "Anhantra" [ref=e189] [cursor=pointer]
+    - button "Huyndun" [ref=e191] [cursor=pointer]
+    - button "Iskriv" [ref=e193] [cursor=pointer]
+    - button "Maki" [ref=e195] [cursor=pointer]
+    - button "Sibyl" [ref=e197] [cursor=pointer]
+  - generic:
+    - generic:
+      - paragraph: Наведите или кликните узел • Используйте панель слева
+  - complementary [ref=e26]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - paragraph [ref=e30]: SIFT live lab
+        - paragraph [ref=e31]: Древо Искры · no node
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: Q 0%
+          - generic [ref=e35]: Ω 22%
+        - button "Развернуть SIFT" [ref=e198] [cursor=pointer]:
+          - img [ref=e199]
+  - generic:
+    - generic:
+      - generic: И
+      - generic:
+        - heading "Древо Искры" [level=1]
+        - paragraph: vΩ.7 · Full Canon
+  - generic [ref=e149]:
+    - generic [ref=e150]:
+      - button "Новичок" [ref=e151] [cursor=pointer]
+      - button "Эксперт" [ref=e152] [cursor=pointer]
+    - button "Атлас" [ref=e153] [cursor=pointer]
+  - generic [ref=e201]:
+    - generic [ref=e202]:
+      - generic [ref=e203]:
+        - heading "Атлас репозитория" [level=2] [ref=e204]
+        - paragraph [ref=e205]: Полный индекс tracked files · режим «Новичок»
+      - button "Закрыть" [ref=e206] [cursor=pointer]
+    - generic [ref=e208]:
+      - generic [ref=e209]:
+        - generic [ref=e210]:
+          - img [ref=e211]
+          - textbox "Поиск по индексу…" [active] [ref=e214]
+          - button [ref=e868] [cursor=pointer]:
+            - img [ref=e869]
+        - generic [ref=e215]:
+          - button "Все (1817)" [ref=e216] [cursor=pointer]
+          - button "Builder (507)" [ref=e217] [cursor=pointer]
+          - button "Корень (481)" [ref=e218] [cursor=pointer]
+          - button "Рантайм (277)" [ref=e219] [cursor=pointer]
+          - button "Справочник (82)" [ref=e220] [cursor=pointer]
+          - button "Этот сайт (62)" [ref=e221] [cursor=pointer]
+          - button "Документация (50)" [ref=e222] [cursor=pointer]
+          - button "Агенты (44)" [ref=e223] [cursor=pointer]
+          - button "Инструменты (44)" [ref=e224] [cursor=pointer]
+          - button "Движок (40)" [ref=e225] [cursor=pointer]
+          - button "Управление (38)" [ref=e226] [cursor=pointer]
+          - button "Приложения (26)" [ref=e227] [cursor=pointer]
+          - button "Система (26)" [ref=e228] [cursor=pointer]
+          - button "Бэкенд (20)" [ref=e229] [cursor=pointer]
+          - button "Математика (18)" [ref=e230] [cursor=pointer]
+          - button "Движок — ядро (17)" [ref=e231] [cursor=pointer]
+          - button "Канон (16)" [ref=e232] [cursor=pointer]
+          - button "Веб-приложение (13)" [ref=e233] [cursor=pointer]
+          - button "Эксперименты (11)" [ref=e234] [cursor=pointer]
+          - button "Ингест (10)" [ref=e235] [cursor=pointer]
+          - button "CI/CD (9)" [ref=e236] [cursor=pointer]
+          - button "Навыки (8)" [ref=e237] [cursor=pointer]
+          - button "Реестр (7)" [ref=e238] [cursor=pointer]
+          - button "Метрики (7)" [ref=e239] [cursor=pointer]
+          - button "Devcontainer (2)" [ref=e240] [cursor=pointer]
+          - button "Исследования (2)" [ref=e241] [cursor=pointer]
+      - generic [ref=e242]:
+        - generic [ref=e244]:
+          - generic [ref=e245]: Репозиторий
+          - generic [ref=e246]: 1817 узлов · 20 curated
+        - generic [ref=e847]:
+          - generic [ref=e854]:
+            - generic [ref=e855]:
+              - text: Документ
+              - heading "AGENTS.md" [level=3] [ref=e856]
+            - generic [ref=e857]: Корень
+          - generic [ref=e858]:
+            - button "Простыми словами" [ref=e859] [cursor=pointer]
+            - button "Технически" [ref=e860] [cursor=pointer]
+            - button "Источник" [ref=e861] [cursor=pointer]
+            - button "Связи" [ref=e862] [cursor=pointer]
+          - paragraph [ref=e867]: "Репозиторий-уровневый AGENTS.md vΩ.7: Prime Directive, Source-of-Truth ladder, operating modes (ROUTINE/SIFT/BUILD/AUDIT/GOVERNANCE/CRISIS), project-first tool discipline, architecture boundaries, Dreamspace rules, Agent Builder upload boundary, governance/memory, Supabase и security discipline, output contract."

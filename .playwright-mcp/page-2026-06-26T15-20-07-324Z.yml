@@ -1,0 +1,438 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - button "✦ Древо Искры" [ref=e5] [cursor=pointer]:
+      - generic [ref=e6]: ✦
+      - generic [ref=e7]: Древо Искры
+    - button "❖ Почва" [ref=e8] [cursor=pointer]:
+      - generic [ref=e9]: ❖
+      - generic [ref=e10]: Почва
+    - button "△ Корни" [ref=e11] [cursor=pointer]:
+      - generic [ref=e12]: △
+      - generic [ref=e13]: Корни
+    - button "◈ Ствол" [ref=e14] [cursor=pointer]:
+      - generic [ref=e15]: ◈
+      - generic [ref=e16]: Ствол
+    - button "✦ Ветви" [ref=e17] [cursor=pointer]:
+      - generic [ref=e18]: ✦
+      - generic [ref=e19]: Ветви
+    - button "◉ Крона" [ref=e20] [cursor=pointer]:
+      - generic [ref=e21]: ◉
+      - generic [ref=e22]: Крона
+  - generic [ref=e23]:
+    - button "Почва" [ref=e155] [cursor=pointer]
+    - button "Быстрый старт" [ref=e157] [cursor=pointer]
+    - button "Корни" [ref=e159] [cursor=pointer]
+    - button "Что такое Искра" [ref=e161] [cursor=pointer]
+    - button "Принципы" [ref=e163] [cursor=pointer]
+    - button "Телос и Мантра" [ref=e165] [cursor=pointer]
+    - button "Ствол" [ref=e167] [cursor=pointer]
+    - button "Архитектура" [ref=e169] [cursor=pointer]
+    - button "Метрики" [ref=e171] [cursor=pointer]
+    - button "Ветви" [ref=e173] [cursor=pointer]
+    - button "Совет голосов" [ref=e175] [cursor=pointer]
+    - button "Iskra Space" [ref=e177] [cursor=pointer]
+    - button "Крона" [ref=e179] [cursor=pointer]
+    - button "Iskra" [ref=e181] [cursor=pointer]
+    - button "Kain" [ref=e183] [cursor=pointer]
+    - button "Pino" [ref=e185] [cursor=pointer]
+    - button "Sam" [ref=e187] [cursor=pointer]
+    - button "Anhantra" [ref=e189] [cursor=pointer]
+    - button "Huyndun" [ref=e191] [cursor=pointer]
+    - button "Iskriv" [ref=e193] [cursor=pointer]
+    - button "Maki" [ref=e195] [cursor=pointer]
+    - button "Sibyl" [ref=e197] [cursor=pointer]
+  - generic:
+    - generic:
+      - paragraph: Наведите или кликните узел • Используйте панель слева
+  - complementary [ref=e26]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - paragraph [ref=e30]: SIFT live lab
+        - paragraph [ref=e31]: Древо Искры · no node
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: Q 0%
+          - generic [ref=e35]: Ω 22%
+        - button "Развернуть SIFT" [ref=e198] [cursor=pointer]:
+          - img [ref=e199]
+  - generic:
+    - generic:
+      - generic: И
+      - generic:
+        - heading "Древо Искры" [level=1]
+        - paragraph: vΩ.7 · Full Canon
+  - generic [ref=e149]:
+    - generic [ref=e150]:
+      - button "Новичок" [ref=e151] [cursor=pointer]
+      - button "Эксперт" [ref=e152] [cursor=pointer]
+    - button "Атлас" [ref=e153] [cursor=pointer]
+  - generic [ref=e201]:
+    - generic [ref=e202]:
+      - generic [ref=e203]:
+        - heading "Атлас репозитория" [level=2] [ref=e204]
+        - paragraph [ref=e205]: Полный индекс tracked files · режим «Новичок»
+      - button "Закрыть" [ref=e206] [cursor=pointer]
+    - generic [ref=e208]:
+      - generic [ref=e209]:
+        - generic [ref=e210]:
+          - img [ref=e211]
+          - textbox "Поиск по индексу…" [active] [ref=e214]
+        - generic [ref=e215]:
+          - button "Все (1817)" [ref=e216] [cursor=pointer]
+          - button "Builder (507)" [ref=e217] [cursor=pointer]
+          - button "Корень (481)" [ref=e218] [cursor=pointer]
+          - button "Рантайм (277)" [ref=e219] [cursor=pointer]
+          - button "Справочник (82)" [ref=e220] [cursor=pointer]
+          - button "Этот сайт (62)" [ref=e221] [cursor=pointer]
+          - button "Документация (50)" [ref=e222] [cursor=pointer]
+          - button "Агенты (44)" [ref=e223] [cursor=pointer]
+          - button "Инструменты (44)" [ref=e224] [cursor=pointer]
+          - button "Движок (40)" [ref=e225] [cursor=pointer]
+          - button "Управление (38)" [ref=e226] [cursor=pointer]
+          - button "Приложения (26)" [ref=e227] [cursor=pointer]
+          - button "Система (26)" [ref=e228] [cursor=pointer]
+          - button "Бэкенд (20)" [ref=e229] [cursor=pointer]
+          - button "Математика (18)" [ref=e230] [cursor=pointer]
+          - button "Движок — ядро (17)" [ref=e231] [cursor=pointer]
+          - button "Канон (16)" [ref=e232] [cursor=pointer]
+          - button "Веб-приложение (13)" [ref=e233] [cursor=pointer]
+          - button "Эксперименты (11)" [ref=e234] [cursor=pointer]
+          - button "Ингест (10)" [ref=e235] [cursor=pointer]
+          - button "CI/CD (9)" [ref=e236] [cursor=pointer]
+          - button "Навыки (8)" [ref=e237] [cursor=pointer]
+          - button "Реестр (7)" [ref=e238] [cursor=pointer]
+          - button "Метрики (7)" [ref=e239] [cursor=pointer]
+          - button "Devcontainer (2)" [ref=e240] [cursor=pointer]
+          - button "Исследования (2)" [ref=e241] [cursor=pointer]
+      - generic [ref=e242]:
+        - generic [ref=e243]:
+          - generic [ref=e244]:
+            - generic [ref=e245]: Репозиторий
+            - generic [ref=e246]: 1817 узлов · 20 curated
+          - generic [ref=e247]:
+            - button ".agents Корень" [ref=e249] [cursor=pointer]:
+              - img [ref=e251]
+              - img [ref=e253]
+              - generic [ref=e255]: .agents
+              - generic [ref=e256]: Корень
+            - button ".devcontainer Корень" [ref=e258] [cursor=pointer]:
+              - img [ref=e260]
+              - img [ref=e262]
+              - generic [ref=e264]: .devcontainer
+              - generic [ref=e265]: Корень
+            - button ".dockerignore Корень" [ref=e267] [cursor=pointer]:
+              - img [ref=e269]
+              - generic [ref=e272]: .dockerignore
+              - generic [ref=e273]: Корень
+            - button ".github Корень" [ref=e275] [cursor=pointer]:
+              - img [ref=e277]
+              - img [ref=e279]
+              - generic [ref=e281]: .github
+              - generic [ref=e282]: Корень
+            - button ".gitignore Корень" [ref=e284] [cursor=pointer]:
+              - img [ref=e286]
+              - generic [ref=e289]: .gitignore
+              - generic [ref=e290]: Корень
+            - button ".playwright-mcp Корень" [ref=e292] [cursor=pointer]:
+              - img [ref=e294]
+              - img [ref=e296]
+              - generic [ref=e298]: .playwright-mcp
+              - generic [ref=e299]: Корень
+            - button "\"ScienceAndTests Корень" [ref=e301] [cursor=pointer]:
+              - img [ref=e303]
+              - img [ref=e305]
+              - generic [ref=e307]: "\"ScienceAndTests"
+              - generic [ref=e308]: Корень
+            - button "\"ScienceAndTests Корень" [ref=e310] [cursor=pointer]:
+              - img [ref=e312]
+              - img [ref=e314]
+              - generic [ref=e316]: "\"ScienceAndTests"
+              - generic [ref=e317]: Корень
+            - button "adr-log.md Корень" [ref=e319] [cursor=pointer]:
+              - img [ref=e321]
+              - generic [ref=e324]: adr-log.md
+              - generic [ref=e325]: Корень
+            - button "AGENTS.md Корень" [ref=e327] [cursor=pointer]:
+              - img [ref=e329]
+              - generic [ref=e332]: AGENTS.md
+              - generic [ref=e333]: Корень
+            - button "appendix Корень" [ref=e335] [cursor=pointer]:
+              - img [ref=e337]
+              - img [ref=e339]
+              - generic [ref=e341]: appendix
+              - generic [ref=e342]: Корень
+            - button "apps Корень" [ref=e344] [cursor=pointer]:
+              - img [ref=e346]
+              - img [ref=e348]
+              - generic [ref=e350]: apps
+              - generic [ref=e351]: Корень
+            - button "canon Корень" [ref=e353] [cursor=pointer]:
+              - img [ref=e355]
+              - img [ref=e357]
+              - generic [ref=e359]: canon
+              - generic [ref=e360]: Корень
+            - button "CLAUDE.md Корень" [ref=e362] [cursor=pointer]:
+              - img [ref=e364]
+              - generic [ref=e367]: CLAUDE.md
+              - generic [ref=e368]: Корень
+            - button "CONTRIBUTING.md Корень" [ref=e370] [cursor=pointer]:
+              - img [ref=e372]
+              - generic [ref=e375]: CONTRIBUTING.md
+              - generic [ref=e376]: Корень
+            - button "core Корень" [ref=e378] [cursor=pointer]:
+              - img [ref=e380]
+              - img [ref=e382]
+              - generic [ref=e384]: core
+              - generic [ref=e385]: Корень
+            - button "DEEP_AUDIT_REPORT_v5.md Корень" [ref=e387] [cursor=pointer]:
+              - img [ref=e389]
+              - generic [ref=e392]: DEEP_AUDIT_REPORT_v5.md
+              - generic [ref=e393]: Корень
+            - button "development-diary.md Корень" [ref=e395] [cursor=pointer]:
+              - img [ref=e397]
+              - generic [ref=e400]: development-diary.md
+              - generic [ref=e401]: Корень
+            - button "dist Корень" [ref=e403] [cursor=pointer]:
+              - img [ref=e405]
+              - img [ref=e407]
+              - generic [ref=e409]: dist
+              - generic [ref=e410]: Корень
+            - button "docker-compose.yml Корень" [ref=e412] [cursor=pointer]:
+              - img [ref=e414]
+              - generic [ref=e417]: docker-compose.yml
+              - generic [ref=e418]: Корень
+            - button "Dockerfile Корень" [ref=e420] [cursor=pointer]:
+              - img [ref=e422]
+              - generic [ref=e425]: Dockerfile
+              - generic [ref=e426]: Корень
+            - button "docs Корень" [ref=e428] [cursor=pointer]:
+              - img [ref=e430]
+              - img [ref=e432]
+              - generic [ref=e434]: docs
+              - generic [ref=e435]: Корень
+            - button "ECOSYSTEM_AUDIT_2025.md Корень" [ref=e437] [cursor=pointer]:
+              - img [ref=e439]
+              - generic [ref=e442]: ECOSYSTEM_AUDIT_2025.md
+              - generic [ref=e443]: Корень
+            - button "evidence-index.md Корень" [ref=e445] [cursor=pointer]:
+              - img [ref=e447]
+              - generic [ref=e450]: evidence-index.md
+              - generic [ref=e451]: Корень
+            - button "FINAL_SUMMARY.md Корень" [ref=e453] [cursor=pointer]:
+              - img [ref=e455]
+              - generic [ref=e458]: FINAL_SUMMARY.md
+              - generic [ref=e459]: Корень
+            - button "FULL_CHECK_REPORT_2026-03-01.md Корень" [ref=e461] [cursor=pointer]:
+              - img [ref=e463]
+              - generic [ref=e466]: FULL_CHECK_REPORT_2026-03-01.md
+              - generic [ref=e467]: Корень
+            - button "governance Корень" [ref=e469] [cursor=pointer]:
+              - img [ref=e471]
+              - img [ref=e473]
+              - generic [ref=e475]: governance
+              - generic [ref=e476]: Корень
+            - button "ingest Корень" [ref=e478] [cursor=pointer]:
+              - img [ref=e480]
+              - img [ref=e482]
+              - generic [ref=e484]: ingest
+              - generic [ref=e485]: Корень
+            - button "ISKRA_MANIFEST.md Корень" [ref=e487] [cursor=pointer]:
+              - img [ref=e489]
+              - generic [ref=e492]: ISKRA_MANIFEST.md
+              - generic [ref=e493]: Корень
+            - button "iskra_xcode_bridge.patch Корень" [ref=e495] [cursor=pointer]:
+              - img [ref=e497]
+              - generic [ref=e500]: iskra_xcode_bridge.patch
+              - generic [ref=e501]: Корень
+            - button "iskra-site-canvas-check.png Корень" [ref=e503] [cursor=pointer]:
+              - img [ref=e505]
+              - generic [ref=e508]: iskra-site-canvas-check.png
+              - generic [ref=e509]: Корень
+            - button "iskra-site-dev.png Корень" [ref=e511] [cursor=pointer]:
+              - img [ref=e513]
+              - generic [ref=e516]: iskra-site-dev.png
+              - generic [ref=e517]: Корень
+            - button "iskra-site-dof-atlas.png Корень" [ref=e519] [cursor=pointer]:
+              - img [ref=e521]
+              - generic [ref=e524]: iskra-site-dof-atlas.png
+              - generic [ref=e525]: Корень
+            - button "iskra-site-noeffects.png Корень" [ref=e527] [cursor=pointer]:
+              - img [ref=e529]
+              - generic [ref=e532]: iskra-site-noeffects.png
+              - generic [ref=e533]: Корень
+            - button "IskraSpace_Presentation.html Корень" [ref=e535] [cursor=pointer]:
+              - img [ref=e537]
+              - generic [ref=e540]: IskraSpace_Presentation.html
+              - generic [ref=e541]: Корень
+            - button "ledger Корень" [ref=e543] [cursor=pointer]:
+              - img [ref=e545]
+              - img [ref=e547]
+              - generic [ref=e549]: ledger
+              - generic [ref=e550]: Корень
+            - button "LIBER_INITIUM.md Корень" [ref=e552] [cursor=pointer]:
+              - img [ref=e554]
+              - generic [ref=e557]: LIBER_INITIUM.md
+              - generic [ref=e558]: Корень
+            - button "LICENSE Корень" [ref=e560] [cursor=pointer]:
+              - img [ref=e562]
+              - generic [ref=e565]: LICENSE
+              - generic [ref=e566]: Корень
+            - button "manifest.yml Корень" [ref=e568] [cursor=pointer]:
+              - img [ref=e570]
+              - generic [ref=e573]: manifest.yml
+              - generic [ref=e574]: Корень
+            - button "metrics Корень" [ref=e576] [cursor=pointer]:
+              - img [ref=e578]
+              - img [ref=e580]
+              - generic [ref=e582]: metrics
+              - generic [ref=e583]: Корень
+            - button "mind Корень" [ref=e585] [cursor=pointer]:
+              - img [ref=e587]
+              - img [ref=e589]
+              - generic [ref=e591]: mind
+              - generic [ref=e592]: Корень
+            - button "nginx.conf Корень" [ref=e594] [cursor=pointer]:
+              - img [ref=e596]
+              - generic [ref=e599]: nginx.conf
+              - generic [ref=e600]: Корень
+            - button "open-loops.md Корень" [ref=e602] [cursor=pointer]:
+              - img [ref=e604]
+              - generic [ref=e607]: open-loops.md
+              - generic [ref=e608]: Корень
+            - button "output Корень" [ref=e610] [cursor=pointer]:
+              - img [ref=e612]
+              - img [ref=e614]
+              - generic [ref=e616]: output
+              - generic [ref=e617]: Корень
+            - button "package-lock.json Корень" [ref=e619] [cursor=pointer]:
+              - img [ref=e621]
+              - generic [ref=e624]: package-lock.json
+              - generic [ref=e625]: Корень
+            - button "package.json Корень" [ref=e627] [cursor=pointer]:
+              - img [ref=e629]
+              - generic [ref=e632]: package.json
+              - generic [ref=e633]: Корень
+            - button "packages Корень" [ref=e635] [cursor=pointer]:
+              - img [ref=e637]
+              - img [ref=e639]
+              - generic [ref=e641]: packages
+              - generic [ref=e642]: Корень
+            - button "plugins Корень" [ref=e644] [cursor=pointer]:
+              - img [ref=e646]
+              - img [ref=e648]
+              - generic [ref=e650]: plugins
+              - generic [ref=e651]: Корень
+            - button "pnpm-workspace.yaml Корень" [ref=e653] [cursor=pointer]:
+              - img [ref=e655]
+              - generic [ref=e658]: pnpm-workspace.yaml
+              - generic [ref=e659]: Корень
+            - button "production_transition.md Корень" [ref=e661] [cursor=pointer]:
+              - img [ref=e663]
+              - generic [ref=e666]: production_transition.md
+              - generic [ref=e667]: Корень
+            - button "project-memory.md Корень" [ref=e669] [cursor=pointer]:
+              - img [ref=e671]
+              - generic [ref=e674]: project-memory.md
+              - generic [ref=e675]: Корень
+            - button "projects Корень" [ref=e677] [cursor=pointer]:
+              - img [ref=e679]
+              - img [ref=e681]
+              - generic [ref=e683]: projects
+              - generic [ref=e684]: Корень
+            - button "README.md Корень" [ref=e686] [cursor=pointer]:
+              - img [ref=e688]
+              - generic [ref=e691]: README.md
+              - generic [ref=e692]: Корень
+            - button "reference Корень" [ref=e694] [cursor=pointer]:
+              - img [ref=e696]
+              - img [ref=e698]
+              - generic [ref=e700]: reference
+              - generic [ref=e701]: Корень
+            - button "requirements.txt Корень" [ref=e703] [cursor=pointer]:
+              - img [ref=e705]
+              - generic [ref=e708]: requirements.txt
+              - generic [ref=e709]: Корень
+            - button "ROADMAP_2025_2026.md Корень" [ref=e711] [cursor=pointer]:
+              - img [ref=e713]
+              - generic [ref=e716]: ROADMAP_2025_2026.md
+              - generic [ref=e717]: Корень
+            - button "ROADMAP_SCIENTIFIC_TURN.md Корень" [ref=e719] [cursor=pointer]:
+              - img [ref=e721]
+              - generic [ref=e724]: ROADMAP_SCIENTIFIC_TURN.md
+              - generic [ref=e725]: Корень
+            - button "runtime Корень" [ref=e727] [cursor=pointer]:
+              - img [ref=e729]
+              - img [ref=e731]
+              - generic [ref=e733]: runtime
+              - generic [ref=e734]: Корень
+            - button "ScienceAndTests Корень" [ref=e736] [cursor=pointer]:
+              - img [ref=e738]
+              - img [ref=e740]
+              - generic [ref=e742]: ScienceAndTests
+              - generic [ref=e743]: Корень
+            - button "SCIENTIFIC_ANALYSIS_ISKRA.md Корень" [ref=e745] [cursor=pointer]:
+              - img [ref=e747]
+              - generic [ref=e750]: SCIENTIFIC_ANALYSIS_ISKRA.md
+              - generic [ref=e751]: Корень
+            - button "SECURITY.md Корень" [ref=e753] [cursor=pointer]:
+              - img [ref=e755]
+              - generic [ref=e758]: SECURITY.md
+              - generic [ref=e759]: Корень
+            - button "skills Корень" [ref=e761] [cursor=pointer]:
+              - img [ref=e763]
+              - img [ref=e765]
+              - generic [ref=e767]: skills
+              - generic [ref=e768]: Корень
+            - button "skills-lock.json Корень" [ref=e770] [cursor=pointer]:
+              - img [ref=e772]
+              - generic [ref=e775]: skills-lock.json
+              - generic [ref=e776]: Корень
+            - button "SPRINT_0_SECURITY_REPORT.md Корень" [ref=e778] [cursor=pointer]:
+              - img [ref=e780]
+              - generic [ref=e783]: SPRINT_0_SECURITY_REPORT.md
+              - generic [ref=e784]: Корень
+            - button "supabase Корень" [ref=e786] [cursor=pointer]:
+              - img [ref=e788]
+              - img [ref=e790]
+              - generic [ref=e792]: supabase
+              - generic [ref=e793]: Корень
+            - button "system Корень" [ref=e795] [cursor=pointer]:
+              - img [ref=e797]
+              - img [ref=e799]
+              - generic [ref=e801]: system
+              - generic [ref=e802]: Корень
+            - button "tests Корень" [ref=e804] [cursor=pointer]:
+              - img [ref=e806]
+              - img [ref=e808]
+              - generic [ref=e810]: tests
+              - generic [ref=e811]: Корень
+            - button "tools Корень" [ref=e813] [cursor=pointer]:
+              - img [ref=e815]
+              - img [ref=e817]
+              - generic [ref=e819]: tools
+              - generic [ref=e820]: Корень
+            - button "tsconfig.json Корень" [ref=e822] [cursor=pointer]:
+              - img [ref=e824]
+              - generic [ref=e827]: tsconfig.json
+              - generic [ref=e828]: Корень
+            - button "vercel.json Корень" [ref=e830] [cursor=pointer]:
+              - img [ref=e832]
+              - generic [ref=e835]: vercel.json
+              - generic [ref=e836]: Корень
+            - button "Versions Корень" [ref=e838] [cursor=pointer]:
+              - img [ref=e840]
+              - img [ref=e842]
+              - generic [ref=e844]: Versions
+              - generic [ref=e845]: Корень
+        - generic [ref=e847]:
+          - generic [ref=e854]:
+            - generic [ref=e855]:
+              - text: Документ
+              - heading "AGENTS.md" [level=3] [ref=e856]
+            - generic [ref=e857]: Корень
+          - generic [ref=e858]:
+            - button "Простыми словами" [ref=e859] [cursor=pointer]
+            - button "Технически" [ref=e860] [cursor=pointer]
+            - button "Источник" [ref=e861] [cursor=pointer]
+            - button "Связи" [ref=e862] [cursor=pointer]
+          - paragraph [ref=e867]: "Репозиторий-уровневый AGENTS.md vΩ.7: Prime Directive, Source-of-Truth ladder, operating modes (ROUTINE/SIFT/BUILD/AUDIT/GOVERNANCE/CRISIS), project-first tool discipline, architecture boundaries, Dreamspace rules, Agent Builder upload boundary, governance/memory, Supabase и security discipline, output contract."
