@@ -38,8 +38,7 @@ runtime-surface-map-v1, `SURFACE_INVENTORY.json`, manifest/QC/receipt, Builder
 acceptance C2/C3.
 
 Batch 2 - Audit tooling:
-workspace surface audit, GitHub recursive tree index status, zip-vs-GitHub-vs-
-workspace diff basis, hook smoke receipt.
+workspace surface audit, GitHub recursive tree index status, zip-vs-GitHub-vs-workspace diff basis, hook smoke receipt.
 
 Batch 3 - Live systems:
 Supabase advisor migration plan, post-upload Builder verification, Memory/
