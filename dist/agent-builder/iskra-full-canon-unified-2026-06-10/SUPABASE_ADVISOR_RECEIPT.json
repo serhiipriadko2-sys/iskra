@@ -1,0 +1,100 @@
+{
+  "status": "PASS_READ_ONLY_ADVISORS_OBSERVED_WITH_WARNINGS",
+  "generated_at": "2026-06-26T16:41:30Z",
+  "surface": "supabase_live_advisors",
+  "project_url": "https://typcvaszcfdpkzbjzuur.supabase.co",
+  "connector": "Supabase advisor tool",
+  "read_only": true,
+  "security": {
+    "status": "WARNINGS_PRESENT",
+    "count": 12,
+    "levels": {
+      "WARN": 12
+    },
+    "items": [
+      {
+        "name": "extension_in_public",
+        "level": "WARN",
+        "object": "public.pg_trgm",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public"
+      },
+      {
+        "name": "pg_graphql_authenticated_table_exposed",
+        "level": "WARN",
+        "count": 11,
+        "objects": [
+          "public.audit_log",
+          "public.chat_history",
+          "public.graph_edges",
+          "public.graph_nodes",
+          "public.habits",
+          "public.journal_entries",
+          "public.memory_nodes",
+          "public.metrics_snapshots",
+          "public.tasks",
+          "public.users",
+          "public.voice_preferences"
+        ],
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0027_pg_graphql_authenticated_table_exposed"
+      }
+    ]
+  },
+  "performance": {
+    "status": "INFO_ITEMS_PRESENT",
+    "count": 29,
+    "levels": {
+      "INFO": 29
+    },
+    "items": [
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "count": 28,
+        "indexes": [
+          "idx_graph_edges_source",
+          "idx_graph_edges_source_type",
+          "idx_graph_edges_target",
+          "idx_graph_edges_weight",
+          "idx_graph_edges_user",
+          "canon_chunks_document_id_idx",
+          "canon_memory_nodes_chunk_id_idx",
+          "idx_metrics_created_at",
+          "idx_memory_type",
+          "idx_memory_tags",
+          "idx_journal_created_at",
+          "idx_tasks_date",
+          "idx_tasks_done",
+          "idx_audit_action",
+          "idx_audit_created_at",
+          "canon_documents_doc_id_idx",
+          "canon_documents_layer_idx",
+          "canon_documents_metadata_gin",
+          "canon_chunks_doc_id_idx",
+          "canon_chunks_tags_gin",
+          "canon_chunks_metadata_gin",
+          "canon_chunks_content_trgm",
+          "canon_memory_nodes_tags_gin",
+          "canon_memory_nodes_content_gin",
+          "canon_chunks_embedding_hnsw",
+          "canon_memory_nodes_embedding_hnsw",
+          "idx_graph_nodes_timestamp",
+          "idx_graph_nodes_user"
+        ],
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index"
+      },
+      {
+        "name": "auth_db_connections_absolute",
+        "level": "INFO",
+        "count": 1,
+        "object": "Auth",
+        "remediation": "https://supabase.com/docs/guides/deployment/going-into-prod"
+      }
+    ]
+  },
+  "non_claims": [
+    "No Supabase live mutation was performed.",
+    "Advisor warnings are live-read evidence, not a migration plan applied to the database.",
+    "Counts should be refreshed after every DDL/migration change."
+  ],
+  "next": "Batch 3 should turn these advisor findings into a migration-backed repair plan with approval before live changes."
+}

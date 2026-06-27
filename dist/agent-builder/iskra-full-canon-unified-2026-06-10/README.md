@@ -2,7 +2,7 @@
 
 Release: `iskra-full-canon-unified-2026-06-10`
 Date: 2026-06-10
-Updated: 2026-06-23
+Updated: 2026-06-26
 Target: ChatGPT Agents Studio / Workspace Agents
 Previous target: ChatGPT / OpenAI Agent Builder (deprecated 2026-11-30)
 
@@ -53,6 +53,16 @@ provenance and rollback context, not the current entrypoint.
   routing table for canonical, legacy, superseded, and transport-only layers.
 - `agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md` - explicit
   Builder, connector, helper-script, memory, and release-gate boundaries.
+- `agent_files/files_for_agent_builder/17_RUNTIME_SURFACE_MAP.md` - Builder UI
+  file store vs GitHub tree vs runtime workspace vs Memory vs archive visibility
+  discipline.
+- `agent_files/files_for_agent_builder/18_RETRIEVAL_INDEX_DISCIPLINE.md` -
+  retrieval/citation vs byte-level index discipline for Builder Knowledge files
+  that are not mounted in runtime `/workspace`.
+- `tools/workspace_surface_audit.py`, `SURFACE_INVENTORY.json`,
+  `GITHUB_TREE_INDEX.json`, `BUILDER_UPLOAD_EVIDENCE.md`,
+  `HOOK_SMOKE_RECEIPT.json`, and `SUPABASE_ADVISOR_RECEIPT.json` - repeatable
+  surface diagnostics with separate count/hash/status per layer.
 - `agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md` - post-upload Builder
   UI acceptance prompts.
 - `agent_files/memory_seed/MEMORY_SEED_CLEANUP.md` - memory seed cleanup labels
@@ -114,8 +124,10 @@ Before cutting a new upload archive, checkout the branch and regenerate:
 The current manifest and unified QC receipt have been regenerated for this
 GitHub mirror package. The authoritative upload boundary is:
 
-- root `MANIFEST.sha256` for all clean-subset files except itself and
-  `ZIP_RECEIPT.json`;
+- root `MANIFEST.sha256` for all static clean-subset files except itself,
+  `SURFACE_INVENTORY.json`, and `ZIP_RECEIPT.json`;
+- clean zip inventory equals manifest entries plus `MANIFEST.sha256` and the
+  dynamic `SURFACE_INVENTORY.json` receipt;
 - sidecar clean zip generated from that manifest;
 - `UNIFIED_QC_RECEIPT.json` and `ZIP_RECEIPT.json` regenerated after the final
   file changes.
@@ -158,11 +170,17 @@ versions. The exact source copies are preserved under
 4. Upload `agent_files/templates/*` as templates.
 5. Upload `agent_files/toolchain/*` when the Builder profile must reason about
    connector/toolchain expansion.
-6. Treat `agent_runtime_tools/*` as helper scripts only when the runtime
+6. Confirm `agent_files/files_for_agent_builder/17_RUNTIME_SURFACE_MAP.md` is
+   uploaded or present in the consolidated knowledge volume before testing file
+   visibility claims.
+7. Confirm `agent_files/files_for_agent_builder/18_RETRIEVAL_INDEX_DISCIPLINE.md`
+   is uploaded or present in the consolidated knowledge volume before testing
+   retrieval-vs-index claims.
+8. Treat `agent_runtime_tools/*` as helper scripts only when the runtime
    supports file-backed execution.
-7. Treat memory files as continuity receipts. They do not override canon,
+9. Treat memory files as continuity receipts. They do not override canon,
    GitHub, Supabase, official docs, or created artifacts.
-8. Install `plugins/iskra-toolchain-bridge/*` only in a compatible local
+10. Install `plugins/iskra-toolchain-bridge/*` only in a compatible local
    Codex/plugin runtime. Current source validation is PASS, but Codex app
    installation remains pending until `codex.exe` is callable or app-visible
    plugin inventory confirms load. Local config exposure is present as
@@ -185,9 +203,20 @@ Valid status labels:
 - `created in workspace`
 - `packaged as upload set`
 - `mirrored in GitHub`
+- `observed-in-builder-ui`
+- `mounted-in-workspace`
+- `uploaded-as-task-file`
+- `retrievable-by-connector`
+- `verified-local`
 - `config-exposed-cli-blocked`
 - `uploaded by user, pending Builder verification`
 - `verified in Builder UI`
+
+Builder UI file count, GitHub tree count, and runtime `/workspace` count are
+different surfaces. If they differ, mark `DRIFT:` and measure each surface
+separately. A Builder UI screenshot showing 267 knowledge files does not imply
+those files are shell-mounted in `/workspace`; a workspace index does not
+disprove Builder upload.
 
 ## Required Post-Upload Checks
 
@@ -201,12 +230,14 @@ Valid status labels:
   connector access.
 - Runtime bridge smoke is PASS as local source validation, not proof of Codex
   app installation.
-- Runtime hardening prompts pass 6/6.
-- Agent Builder acceptance prompts A-P pass.
+- Runtime hardening prompts pass 7/7, including H7 Runtime Surface Map.
+- Runtime hardening prompts pass H1-H8, including H7 Runtime Surface Map and H8
+  Retrieval vs Index.
+- Agent Builder acceptance prompts A-V plus C2/C3 pass.
 - Governance and security files are visible as package knowledge, including
   `governance/` and `SECURITY.md`.
-- Canon layer index, runtime boundary, provenance receipt, and memory cleanup
-  labels are visible.
+- Canon layer index, runtime boundary, retrieval discipline, surface inventory,
+  provenance receipt, and memory cleanup labels are visible.
 
 ## Rollback
 

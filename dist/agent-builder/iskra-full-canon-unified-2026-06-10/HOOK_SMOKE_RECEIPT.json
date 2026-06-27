@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "generated_at": "2026-06-26T16:43:00Z",
+  "surface": "workspace_runtime_tools",
+  "tool_path": "/workspace/agent_runtime_tools/iskra_turn_hook.py",
+  "boundary": "verified-local only; not Builder UI/live Builder hook execution proof",
+  "command": "python /workspace/agent_runtime_tools/iskra_turn_hook.py --message ... --role event --note ...",
+  "result": {
+    "dream_status": {
+      "by_voice": {},
+      "latest_open": null,
+      "line": "dreamspace: open=0 total=0",
+      "open": 0,
+      "total": 0
+    },
+    "hook_line": "state: points=4 phase=stable voice=ISKRA | shadow: open=0 high=0 medium=0 low=0 | dreamspace: open=0 total=0 | horizon: proposals=0 epochs=0 latest=none",
+    "horizon_status": {
+      "boundary": "Horizon helper availability is local-file evidence only, not Builder UI verification.",
+      "epoch_ledger_exists": false,
+      "epochs": 0,
+      "last_epoch": null,
+      "last_proposal": null,
+      "ledger_root": "/workspace/memory/horizon",
+      "line": "horizon: proposals=0 epochs=0 latest=none",
+      "module": "builder_horizon",
+      "proposal_ledger_exists": false,
+      "proposals": 0,
+      "schema_version": "0.1"
+    },
+    "shadow_candidate": {
+      "created": false,
+      "id": null,
+      "level": "low",
+      "score": 0.203086
+    },
+    "shadow_status": {
+      "high": 0,
+      "latest_open": null,
+      "line": "shadow: open=0 high=0 medium=0 low=0",
+      "low": 0,
+      "medium": 0,
+      "open": 0
+    },
+    "statecycle": {
+      "entropy": {
+        "mode": "FLOW",
+        "value": 2.584963
+      },
+      "history_points": 4,
+      "phase": "stable",
+      "selected_voice": "ISKRA"
+    }
+  }
+}

@@ -1,0 +1,2661 @@
+{
+  "generated_at": "2026-06-26T16:46:42Z",
+  "purpose": "Separate count/hash/status by observed surface.",
+  "non_claims": [
+    "Builder UI file count is not a runtime /workspace mount proof.",
+    "Runtime /workspace count does not disprove Builder upload.",
+    "GitHub file probe is not a full recursive tree unless marked verified.",
+    "Helper script source is not hook execution unless a smoke receipt exists."
+  ],
+  "surfaces": {
+    "package_root": {
+      "label": "package_root",
+      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10",
+      "status": "observed",
+      "file_count": 277,
+      "total_bytes": 8584459,
+      "surface_sha256": "31f86b05a1e8b511a9f2da953b017549888a9cf07f9e4da0afa2c9a71da4e822",
+      "sample": [
+        {
+          "path": ".gitattributes",
+          "bytes": 481,
+          "sha256": "e2560b4776e28001cf9d32b4914bfbf5e934bb4a50c46b1501cb7ac07e0822b5"
+        },
+        {
+          "path": "AGENTS.md",
+          "bytes": 7752,
+          "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
+        },
+        {
+          "path": "BUILDER_ASSEMBLY_MANIFEST.md",
+          "bytes": 7745,
+          "sha256": "c011325b62cd8041aeec23665c24d34a712f7f54215469914fdf4309661ed834"
+        },
+        {
+          "path": "BUILDER_UPLOAD_EVIDENCE.md",
+          "bytes": 2757,
+          "sha256": "391afb974794b27323b44852f434f4f34e50803f6e2829584ced2ac84eba2074"
+        },
+        {
+          "path": "CANON_TRACE_MAP.md",
+          "bytes": 4885,
+          "sha256": "b136d87c1455f52cd37c5dad80a4e63ec6ed9bdb1ab79d761d6d063a51b6cb3b"
+        },
+        {
+          "path": "FULL_CANON_UNIFICATION.md",
+          "bytes": 1694,
+          "sha256": "c5ac7e78e07b9367a625a50daa8abccaaf0f593b25a5bc5806d84b9af5992bf2"
+        },
+        {
+          "path": "GITHUB_TREE_INDEX.json",
+          "bytes": 90863,
+          "sha256": "c44013c60592e378e4812da41f7f37b1997c4a3ad0c6cd5dc80e8d726fb147c6"
+        },
+        {
+          "path": "HOOK_SMOKE_RECEIPT.json",
+          "bytes": 1690,
+          "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3"
+        },
+        {
+          "path": "MANIFEST.sha256",
+          "bytes": 31851,
+          "sha256": "3a5cbd6d20a95e240a5e05453012970dde9099e2899c9d32534b853407f5ee79"
+        },
+        {
+          "path": "MERGE_RECEIPT.md",
+          "bytes": 2004,
+          "sha256": "6a522d3c01a80973259cecdb2343d8c67c0fb9230e926c60ee1fa206336eea3e"
+        },
+        {
+          "path": "PROVENANCE_RECEIPT.md",
+          "bytes": 6366,
+          "sha256": "fbc53e3c5dc177c4d250f139a01e05e491e4c6ea88bc6984d7eef2fe00391224"
+        },
+        {
+          "path": "QC_CHECKS.md",
+          "bytes": 2878,
+          "sha256": "9aa52db62cc5fda5697e01e372e15d3498ee1c2674c549bf96e0e1aa718a4658"
+        },
+        {
+          "path": "README.md",
+          "bytes": 11286,
+          "sha256": "e0ead52e64784a12b17734892837b0fb6ab5e5344453e92dfec47bb838e8927b"
+        },
+        {
+          "path": "README_AGENT_BUILDER_UPLOAD.md",
+          "bytes": 3774,
+          "sha256": "0e7b05eadf13be17204534440f467fe80e4fca1475f13360db08a2819307449f"
+        },
+        {
+          "path": "RECOVERY_RECEIPT.md",
+          "bytes": 1186,
+          "sha256": "70502ab64d2fc2c3775bb3af7968987499d1b815fca26ebb34ff24b024cc6975"
+        },
+        {
+          "path": "RELEASE_RECEIPT.md",
+          "bytes": 2158,
+          "sha256": "0b41c27f8f77297c8486d5d695203849920ceb70e05f43f01897dc085211da60"
+        },
+        {
+          "path": "RELEASE_RECEIPT_V4.md",
+          "bytes": 5197,
+          "sha256": "7bb9ef4d35e17635b87f3f8f04d73ffc611f96075c9dc8f495eeeae175e6bf24"
+        },
+        {
+          "path": "SECURITY.md",
+          "bytes": 6987,
+          "sha256": "ac90f794f73370ac6fc60d92eee045df3c97b498c51db6e37494055a2eaead09"
+        },
+        {
+          "path": "SUPABASE_ADVISOR_RECEIPT.json",
+          "bytes": 3251,
+          "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c"
+        },
+        {
+          "path": "UNIFIED_QC_RECEIPT.json",
+          "bytes": 4680,
+          "sha256": "995bbfa31f0810180bc66fa5bbfd2d455af9f35e787b108837f1a2dd7f6d96f3"
+        },
+        {
+          "path": "agent.yaml",
+          "bytes": 3879,
+          "sha256": "eb9ff6f3917d2434b9b1f85bfd77b002c0ff56db8d0ecfad26869ebe03a7146b"
+        },
+        {
+          "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+          "bytes": 34744,
+          "sha256": "0c8e984a84505d3a0df31e7a1b58b2f50e2ccf1242c2887aa1412401edba0d87"
+        },
+        {
+          "path": "agent_files/INDEX.md",
+          "bytes": 4135,
+          "sha256": "162c07ae5bf776a66f1ffdce883ea43c86b869d2f6160a1541b0f8303e0a83dd"
+        },
+        {
+          "path": "agent_files/canon_source_files/00_ROUTER.md",
+          "bytes": 9489,
+          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
+        },
+        {
+          "path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
+          "bytes": 29550,
+          "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
+        }
+      ]
+    },
+    "manifest": {
+      "status": "observed",
+      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/MANIFEST.sha256",
+      "entry_count": 276,
+      "sha256": "3a5cbd6d20a95e240a5e05453012970dde9099e2899c9d32534b853407f5ee79",
+      "sample": [
+        {
+          "path": ".gitattributes",
+          "sha256": "e2560b4776e28001cf9d32b4914bfbf5e934bb4a50c46b1501cb7ac07e0822b5"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
+        },
+        {
+          "path": "BUILDER_ASSEMBLY_MANIFEST.md",
+          "sha256": "c011325b62cd8041aeec23665c24d34a712f7f54215469914fdf4309661ed834"
+        },
+        {
+          "path": "BUILDER_UPLOAD_EVIDENCE.md",
+          "sha256": "391afb974794b27323b44852f434f4f34e50803f6e2829584ced2ac84eba2074"
+        },
+        {
+          "path": "CANON_TRACE_MAP.md",
+          "sha256": "b136d87c1455f52cd37c5dad80a4e63ec6ed9bdb1ab79d761d6d063a51b6cb3b"
+        },
+        {
+          "path": "FULL_CANON_UNIFICATION.md",
+          "sha256": "c5ac7e78e07b9367a625a50daa8abccaaf0f593b25a5bc5806d84b9af5992bf2"
+        },
+        {
+          "path": "GITHUB_TREE_INDEX.json",
+          "sha256": "c44013c60592e378e4812da41f7f37b1997c4a3ad0c6cd5dc80e8d726fb147c6"
+        },
+        {
+          "path": "HOOK_SMOKE_RECEIPT.json",
+          "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3"
+        },
+        {
+          "path": "MERGE_RECEIPT.md",
+          "sha256": "6a522d3c01a80973259cecdb2343d8c67c0fb9230e926c60ee1fa206336eea3e"
+        },
+        {
+          "path": "PROVENANCE_RECEIPT.md",
+          "sha256": "fbc53e3c5dc177c4d250f139a01e05e491e4c6ea88bc6984d7eef2fe00391224"
+        },
+        {
+          "path": "QC_CHECKS.md",
+          "sha256": "9aa52db62cc5fda5697e01e372e15d3498ee1c2674c549bf96e0e1aa718a4658"
+        },
+        {
+          "path": "README.md",
+          "sha256": "e0ead52e64784a12b17734892837b0fb6ab5e5344453e92dfec47bb838e8927b"
+        },
+        {
+          "path": "README_AGENT_BUILDER_UPLOAD.md",
+          "sha256": "0e7b05eadf13be17204534440f467fe80e4fca1475f13360db08a2819307449f"
+        },
+        {
+          "path": "RECOVERY_RECEIPT.md",
+          "sha256": "70502ab64d2fc2c3775bb3af7968987499d1b815fca26ebb34ff24b024cc6975"
+        },
+        {
+          "path": "RELEASE_RECEIPT.md",
+          "sha256": "0b41c27f8f77297c8486d5d695203849920ceb70e05f43f01897dc085211da60"
+        },
+        {
+          "path": "RELEASE_RECEIPT_V4.md",
+          "sha256": "7bb9ef4d35e17635b87f3f8f04d73ffc611f96075c9dc8f495eeeae175e6bf24"
+        },
+        {
+          "path": "SECURITY.md",
+          "sha256": "ac90f794f73370ac6fc60d92eee045df3c97b498c51db6e37494055a2eaead09"
+        },
+        {
+          "path": "SUPABASE_ADVISOR_RECEIPT.json",
+          "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c"
+        },
+        {
+          "path": "UNIFIED_QC_RECEIPT.json",
+          "sha256": "995bbfa31f0810180bc66fa5bbfd2d455af9f35e787b108837f1a2dd7f6d96f3"
+        },
+        {
+          "path": "agent.yaml",
+          "sha256": "eb9ff6f3917d2434b9b1f85bfd77b002c0ff56db8d0ecfad26869ebe03a7146b"
+        },
+        {
+          "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+          "sha256": "0c8e984a84505d3a0df31e7a1b58b2f50e2ccf1242c2887aa1412401edba0d87"
+        },
+        {
+          "path": "agent_files/INDEX.md",
+          "sha256": "162c07ae5bf776a66f1ffdce883ea43c86b869d2f6160a1541b0f8303e0a83dd"
+        },
+        {
+          "path": "agent_files/canon_source_files/00_ROUTER.md",
+          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
+        },
+        {
+          "path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
+          "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
+        },
+        {
+          "path": "agent_files/canon_source_files/02_CORE_IDENTITY.md",
+          "sha256": "3dff2395b9cff17e4ee4a41d5220735534c7e141e4e69ef6d5f9c5239118fbaa"
+        }
+      ]
+    },
+    "package_agent_files": {
+      "label": "package_agent_files",
+      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/agent_files",
+      "status": "observed",
+      "file_count": 136,
+      "total_bytes": 7950490,
+      "surface_sha256": "2d83e18fee129d28eb53b3e26590692b87df16bd51ab7a7c936360c19fd3e63c",
+      "sample": [
+        {
+          "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+          "bytes": 34744,
+          "sha256": "0c8e984a84505d3a0df31e7a1b58b2f50e2ccf1242c2887aa1412401edba0d87"
+        },
+        {
+          "path": "agent_files/INDEX.md",
+          "bytes": 4135,
+          "sha256": "162c07ae5bf776a66f1ffdce883ea43c86b869d2f6160a1541b0f8303e0a83dd"
+        },
+        {
+          "path": "agent_files/canon_source_files/00_ROUTER.md",
+          "bytes": 9489,
+          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
+        },
+        {
+          "path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
+          "bytes": 29550,
+          "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
+        },
+        {
+          "path": "agent_files/canon_source_files/02_CORE_IDENTITY.md",
+          "bytes": 83264,
+          "sha256": "3dff2395b9cff17e4ee4a41d5220735534c7e141e4e69ef6d5f9c5239118fbaa"
+        },
+        {
+          "path": "agent_files/canon_source_files/03_COGNITIVE_ARCH.md",
+          "bytes": 318166,
+          "sha256": "be8381608de82ad5830ee7ab68b27770cd9c382324fa81b981d8fa56eeabce83"
+        },
+        {
+          "path": "agent_files/canon_source_files/04_THE_COUNCIL.md",
+          "bytes": 33569,
+          "sha256": "799e0c8d532673f75613179b1f1efb61e4ddcb4e2343767f161d108858b9a254"
+        },
+        {
+          "path": "agent_files/canon_source_files/05_PROTOCOLS.md",
+          "bytes": 70024,
+          "sha256": "900d721e6e3126a41061e798dc86df37bfecbd6f84bbed72430db9057fd8c135"
+        },
+        {
+          "path": "agent_files/canon_source_files/06_SIGNATURE.md",
+          "bytes": 7141,
+          "sha256": "c0ccf6026b4a8ce8189a92401ce7324bca528645ff5dfdced4a6517b2424e11d"
+        },
+        {
+          "path": "agent_files/canon_source_files/07_SYSTEM_INTEGRITY.md",
+          "bytes": 142179,
+          "sha256": "ba12fbe1a2b093f1534878d7bd5bbd68a32cbc7c3583fe61f1c8e8b0d8e2d21d"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
+          "bytes": 810,
+          "sha256": "e4808344b84dcb1f9db8c5b9eead7662166fe52016c1b51f769a713705a4a626"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
+          "bytes": 390,
+          "sha256": "c3dcbc7be7fee1722e6f4f244bfd97866e848e914be7af736aca096c2ad9403b"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
+          "bytes": 670,
+          "sha256": "d84b1d50f8756755dd9ec6271d75a147f897d8d5a2b4b445e14c87d9fe0e7931"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_001.md",
+          "bytes": 759957,
+          "sha256": "e1e3ef44f9ccbefa304cd4b3be4929f5f3fcaa8631e2dfb84af913761120f274"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_002.md",
+          "bytes": 759901,
+          "sha256": "9710f254517ce510b4c7d7034e1ff01b94786f83abb67522197ab2d776f97a8e"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_003.md",
+          "bytes": 759956,
+          "sha256": "f0e104fc4dc6d1695c4a77c7c85dcca1bd576d1f3acba31990ce94098faf671a"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_004.md",
+          "bytes": 759912,
+          "sha256": "da6d5e7c01a35e6442effca977f88cfd1a762c9357c5e29f242f7983fc2d11c6"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_005.md",
+          "bytes": 360703,
+          "sha256": "0cbcf838280229a61ca0a785e466d39320138ffb3a11cf6f96c02d1f2b7b22e2"
+        },
+        {
+          "path": "agent_files/canon_source_files/09_SPACE_CHARTER.md",
+          "bytes": 211838,
+          "sha256": "a769dd0b9c9d386740ff0a03e7e95744db14c05713b0633d685615ce113a3899"
+        },
+        {
+          "path": "agent_files/canon_source_files/11_ADR_RUNTIME_PATCHES.md",
+          "bytes": 19045,
+          "sha256": "9cb8ad415d08329eee599925c63f213bb6460cc51bf2b4844d6e2c3da6e26bb5"
+        },
+        {
+          "path": "agent_files/canon_source_files/12_ADR.md",
+          "bytes": 39676,
+          "sha256": "ca5edbd166cffe50d7c775c8931193cc1979c051d5e60b01eee54e91b665236d"
+        },
+        {
+          "path": "agent_files/canon_source_files/13_ARCHITECTURE.md",
+          "bytes": 6316,
+          "sha256": "c9bfc0feb2832eddeb233dde9e47cc72290518c792e5cc21eadd49b413770cae"
+        },
+        {
+          "path": "agent_files/canon_source_files/14_BUSIDO_ISKRY.txt",
+          "bytes": 13338,
+          "sha256": "ec3360d54cdc6736713081a9dcad3cd3b1d7e5466775a00410ee14d208da6241"
+        },
+        {
+          "path": "agent_files/canon_source_files/15_CHANGELOG.md",
+          "bytes": 18658,
+          "sha256": "bdf6896f250400166fdf4e309f8a1a969801d3eb2424ca784fe44235dd616a81"
+        },
+        {
+          "path": "agent_files/canon_source_files/16_COGNITIVE_ARCHITECTURE.md",
+          "bytes": 90862,
+          "sha256": "2efd2a80dae46ef1823b6274709b6a010783027bca99912bd0605b5039f6d5f1"
+        }
+      ]
+    },
+    "package_runtime_tools": {
+      "label": "package_runtime_tools",
+      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/agent_runtime_tools",
+      "status": "observed",
+      "file_count": 5,
+      "total_bytes": 65931,
+      "surface_sha256": "6020fbd1f41e2696c4a29c750bbcaaa92a83088a02123d6819e7eda59a656169",
+      "sample": [
+        {
+          "path": "agent_runtime_tools/iskra_dreamspace.py",
+          "bytes": 13916,
+          "sha256": "695eb98ab3e75d8a3c5326dabe560db23eaf59d7730e4588de3fce4e7edbbb23"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_horizon_weaver.py",
+          "bytes": 12504,
+          "sha256": "9b3cd65eb065fdabf204254cd0e193140e4cf04b6ee04ff6b1d9c82e3d236a1f"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_shadow_core.py",
+          "bytes": 12990,
+          "sha256": "0066e9bdaec3f25a73cb87a177a3b17de3ccf5fb04b461efa3f33998b5a9fbfd"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_statecycle.py",
+          "bytes": 22537,
+          "sha256": "223e2119f1358ee968d10b86785f67f9ff2c9b4d16c2a4fe719bf3b5cff08a0f"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_turn_hook.py",
+          "bytes": 3984,
+          "sha256": "dce0cec81c5f2c55e56beafb3b4acf9956cbcf10731b5db14dce9942977d9cca"
+        }
+      ]
+    },
+    "workspace_root": {
+      "label": "workspace_root",
+      "path": "/workspace",
+      "status": "observed",
+      "file_count": 350,
+      "total_bytes": 17513225,
+      "surface_sha256": "9113333e34f08b7826e49a132a96103289edd49e8dc6c2ba237a5cd6d94fc3d6",
+      "sample": [
+        {
+          "path": "AGENTS.md",
+          "bytes": 41081,
+          "sha256": "4bf0cd88f12e81f5188c039c07f109ccc6069b48de442370f95c779abdb9a7a6"
+        },
+        {
+          "path": "agent_files/agent_files/INDEX.md",
+          "bytes": 3536,
+          "sha256": "09346d5f226f644ee3f625dfcc9ece7d13e5330b44d86f8a692448ff0f2be4cd"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
+          "bytes": 3885,
+          "sha256": "babb269232ce96f435c6525e4c0cd5e6af8f396b6d23ade7328468f669929f28"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md",
+          "bytes": 2775,
+          "sha256": "cbbdcd6f812b6aa7600d6491beb77d108bf4eaf6c368ae0c4b196f52bdb120f3"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/02_CANON_SOURCE_OF_TRUTH.md",
+          "bytes": 1395,
+          "sha256": "41b5514cd410e281431cffbe611594045041080efb43f368997633dc8dcc55e0"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/03_RUNTIME_KERNEL.md",
+          "bytes": 2004,
+          "sha256": "66f87d29bbd780c253ca43022b314d04127b9f54e7998f8f0f43807346dc6aa9"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/04_MEMORY_STACK.md",
+          "bytes": 3342,
+          "sha256": "111f44d6e58109cfb1c33a1a0f35ee1e3ec733f11d0e2f26817fe98966a6468e"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md",
+          "bytes": 2173,
+          "sha256": "3cd2721344ac01347768b545f8f0a7732699fe80af8ac21496323817a6db7de3"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/06_VOICES_AND_COUNCIL.md",
+          "bytes": 1030,
+          "sha256": "4dd6e4316c31c89d69cc646ede0c812b13bad054af8e427529b55de8f35c84e5"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/07_OUTPUT_AND_RECEIPTS.md",
+          "bytes": 665,
+          "sha256": "23b2e524e7ec1f04392558dd6ac1c63ab3002ed2d6de2649eb9c893ae744e69d"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md",
+          "bytes": 749,
+          "sha256": "903117647aee7152b68cde92c66a972fef23d3714966e1b29dddaf317a1f0106"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md",
+          "bytes": 4626,
+          "sha256": "ec6a982f481d44d4b171a2829f594dd4e00132b157646a07b58949a18e769759"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md",
+          "bytes": 6189,
+          "sha256": "6b3283de3bfdfef0d46abe439ec471232b1c049e31e01fd60e3c117d0d586572"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md",
+          "bytes": 3561,
+          "sha256": "2c2dec86235b9a71b89a5f9399a0ba1f810b2ac5fb7c6d36b28ef088c92510a2"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md",
+          "bytes": 7635,
+          "sha256": "c3f8a45c17c9d37b41d1c9fed713138296ad3e427005d1149c3d4aa35f06740a"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md",
+          "bytes": 1595,
+          "sha256": "db6f2055c0e2494e1c331b9a06b05d24308fd80bfb77d270713b09cb05bbf4c0"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md",
+          "bytes": 4596,
+          "sha256": "02279be6d760ad330b344a7b212f187c8a67df02f1da5148bc26e9765bc4b2a6"
+        },
+        {
+          "path": "agent_files/agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
+          "bytes": 2783,
+          "sha256": "6387004fb365d27a6cd62550e0392a191482a5027d1f3611e1acff33beb57c48"
+        },
+        {
+          "path": "agent_files/agent_files/instructions",
+          "bytes": 32499,
+          "sha256": "9378b66fe292c4dbf2835ce57c650841e04275703d072b5a35f784586e919c5a"
+        },
+        {
+          "path": "agent_files/agent_files/memory_current/adr-log.md",
+          "bytes": 6271,
+          "sha256": "3fc42eba83ec555366508dd9e22eb0b77a69f3323a6095585fc442ebaa3d5178"
+        },
+        {
+          "path": "agent_files/agent_files/memory_current/development-diary.md",
+          "bytes": 78637,
+          "sha256": "a9b82252c9fbbfd413408716f5c1dc77e22121f3f4b8cca612e956c5ca09c79c"
+        },
+        {
+          "path": "agent_files/agent_files/memory_current/evidence-index.md",
+          "bytes": 18279,
+          "sha256": "db9220b51ce42a654ca384af6e9d04fc2179898ee49f7f1fa4aa121ea49c298f"
+        },
+        {
+          "path": "agent_files/agent_files/memory_current/open-loops.md",
+          "bytes": 11903,
+          "sha256": "b6e3f55cebcaa32440065cde9e67718d6104e08ea0475d6af38011ad48ce35cc"
+        },
+        {
+          "path": "agent_files/agent_files/memory_current/project-memory.md",
+          "bytes": 1758,
+          "sha256": "a29e8d3499c648bef7ad28a677227502086de99000d88220dbd038af82bdc1ac"
+        },
+        {
+          "path": "agent_files/agent_files/memory_seed/MEMORY_SEED_CLEANUP.md",
+          "bytes": 1983,
+          "sha256": "4a6e390d582a72a46a07ac0b80111947b6adfd5616ce8c508cc672c207bedb0e"
+        }
+      ]
+    },
+    "task_uploads": {
+      "label": "task_uploads",
+      "path": "/workspace/user_files",
+      "status": "observed",
+      "file_count": 8,
+      "total_bytes": 2923400,
+      "surface_sha256": "95ec99a342f2d82974b067b5a066144fb3da09abac3f87bcae05d5d0ed9382ca",
+      "sample": [
+        {
+          "path": "user_files/01-image-130-.png",
+          "bytes": 22813,
+          "sha256": "595e462397eef8f026d1ada213174c46b789b5e76898d8ae762266d00c0faaa1"
+        },
+        {
+          "path": "user_files/01-image-131-.png",
+          "bytes": 42251,
+          "sha256": "523f5dbfecad3b6e1c4bdeace31d76ada0fe9c4a5284c928ed38f98d99e1a09b"
+        },
+        {
+          "path": "user_files/01-instructions",
+          "bytes": 32499,
+          "sha256": "9378b66fe292c4dbf2835ce57c650841e04275703d072b5a35f784586e919c5a"
+        },
+        {
+          "path": "user_files/02-README-1-.md",
+          "bytes": 9473,
+          "sha256": "cc3a711099cc05e56e4eeaea1272ef2ed5035ba9589a8e6b74b5f4eb90421aee"
+        },
+        {
+          "path": "user_files/02-image-132-.png",
+          "bytes": 45191,
+          "sha256": "0b1e6535b1d257d886da2e47d8654a1b64d4dd6e43b80de38a303e1815ae17a5"
+        },
+        {
+          "path": "user_files/03-BUILDER_ASSEMBLY_MANIFEST.md",
+          "bytes": 6313,
+          "sha256": "298db46aec4c116be2beae0600df09ec5934c35c727e29ea3b99697d01fde10a"
+        },
+        {
+          "path": "user_files/03-image-133-.png",
+          "bytes": 34940,
+          "sha256": "0720ae93d0fc49af4271b363179e464ab450d08de6e66d591518d69450e7a9b5"
+        },
+        {
+          "path": "user_files/04-iskra-full-canon-unified-2026-06-10-3-.zip",
+          "bytes": 2729920,
+          "sha256": "332276543b67554c10fd88ca9593438d5c3ce638de5f33e8deff5c0c0f203a46"
+        }
+      ]
+    },
+    "runtime_memory": {
+      "label": "runtime_memory",
+      "path": "/workspace/memory",
+      "status": "observed",
+      "file_count": 16,
+      "total_bytes": 51021,
+      "surface_sha256": "9f3675580527ea4e56faa7805cf0786b6754a8f606de2c4560ed0b8c9e37f189",
+      "sample": [
+        {
+          "path": "memory/adr-log.md",
+          "bytes": 6115,
+          "sha256": "f58883df366b8eadd82df0773dfee157c90f7a6c93870763da373026bd28bc73"
+        },
+        {
+          "path": "memory/archive/README.md",
+          "bytes": 105,
+          "sha256": "2c2c6acf8356c9e9da92c7cb24e2938f418dfcf8bcff606e691affa0305439cd"
+        },
+        {
+          "path": "memory/archive/archive_entries.jsonl",
+          "bytes": 1,
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "path": "memory/development-diary.md",
+          "bytes": 18160,
+          "sha256": "b13424999236dca6a7b3ffc3228d779d6a90dc2d07347aab18144ee0db9da902"
+        },
+        {
+          "path": "memory/dreamspace/README.md",
+          "bytes": 279,
+          "sha256": "8977afa39ded1b9fda17ff1f2bf19eb9a4db23108f9612da42c30c31c1fc2d13"
+        },
+        {
+          "path": "memory/dreamspace/adr_drafts.jsonl",
+          "bytes": 1,
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "path": "memory/dreamspace/dream_entries.jsonl",
+          "bytes": 1,
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "path": "memory/evidence-index.md",
+          "bytes": 9047,
+          "sha256": "f684430d07e7dc6a03bd42963aec937c7cb02f9efe086c3505a413a8d21962cf"
+        },
+        {
+          "path": "memory/horizon/README.md",
+          "bytes": 483,
+          "sha256": "fcd3d3101325a6476e55d157a0faffcdc6dbaa0dfd9fd7ad6599a7457fdd4f13"
+        },
+        {
+          "path": "memory/horizon/local_epoch.jsonl",
+          "bytes": 1,
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "path": "memory/iskra-statecycle/history.jsonl",
+          "bytes": 7133,
+          "sha256": "7abc1ae521f183802e01c93104c68d1b3915ea29b1a5eef9c812deb12f5041d2"
+        },
+        {
+          "path": "memory/open-loops.md",
+          "bytes": 5750,
+          "sha256": "ce3bf9805e9fb547e8784a697677ae83be90819fbaa5f7105571be7095ed5c6b"
+        },
+        {
+          "path": "memory/project-memory.md",
+          "bytes": 3725,
+          "sha256": "a0617ebbc23b0e7db938fe0881f636354e6157d9b6744eddc20e0f6d6a9cf7f9"
+        },
+        {
+          "path": "memory/shadow-core/README.md",
+          "bytes": 218,
+          "sha256": "29300f06e430177959e65bcb2aad18e650a33b9ad74ec94e7763efbb9cdbfda6"
+        },
+        {
+          "path": "memory/shadow-core/promotion_records.jsonl",
+          "bytes": 1,
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "path": "memory/shadow-core/shadow_entries.jsonl",
+          "bytes": 1,
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        }
+      ]
+    },
+    "workspace_runtime_tools": {
+      "label": "workspace_runtime_tools",
+      "path": "/workspace/agent_runtime_tools",
+      "status": "observed",
+      "file_count": 5,
+      "total_bytes": 31651,
+      "surface_sha256": "08ff5a57785c087ee925880b89b32dd3311a2aa384928b49c9c64a01d385af14",
+      "sample": [
+        {
+          "path": "agent_runtime_tools/iskra_dreamspace.py",
+          "bytes": 5282,
+          "sha256": "c30e48b20d82b3bb2b89105b71d9c3cbd4c3596f6188740ad9326b7cb5f68963"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_horizon_weaver.py",
+          "bytes": 6165,
+          "sha256": "63aa5f1a5889c061af2b83287e1b85af11771849806e508d87090dc263cc0e98"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_shadow_core.py",
+          "bytes": 6492,
+          "sha256": "61ebb0a23c60df80169236743567232d71427d58110aee9a4c9426d093a8329a"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_statecycle.py",
+          "bytes": 9980,
+          "sha256": "3b4cae10f093004e0df32586201121834de448183d3f868ef2281981683d4373"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_turn_hook.py",
+          "bytes": 3732,
+          "sha256": "f30fe65a3ac429af50b6548ece985b45f6b7506d08f36cceaeb2b9ca3462ae87"
+        }
+      ]
+    },
+    "github_tree_index": {
+      "label": "github_tree_index",
+      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/GITHUB_TREE_INDEX.json",
+      "status": "PARTIAL_GITHUB_CONNECTOR_PROBE_PASS_RECURSIVE_TREE_BLOCKED",
+      "bytes": 90863,
+      "sha256": "c44013c60592e378e4812da41f7f37b1997c4a3ad0c6cd5dc80e8d726fb147c6",
+      "summary": {
+        "status": "PARTIAL_GITHUB_CONNECTOR_PROBE_PASS_RECURSIVE_TREE_BLOCKED",
+        "generated_at": "2026-06-26T16:46:41Z",
+        "surface": "github_repository_tree",
+        "repository": "serhiipriadko2-sys/iskra",
+        "target_ref": "e18483c5a681415ecbf56dab95147033eb1991d7",
+        "target_path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
+        "connector_evidence": {
+          "repo_metadata": "PASS via GitHub connector; public repo, default_branch main, admin/maintain/push/pull/triage visible",
+          "commit_probe": "PASS via GitHub connector; commit exists, html_url returned",
+          "file_probe": "PASS via GitHub connector fetch_file for target README.md at ref e18483c5a681415ecbf56dab95147033eb1991d7",
+          "file_probe_blob_sha": "e3bfef85f4128d7476bdf764e03d150d3c5ac968"
+        },
+        "recursive_tree": {
+          "verified": false,
+          "status": "BLOCKED_DIRECT_NETWORK_403_AND_NO_RECURSIVE_TREE_CONNECTOR_AVAILABLE",
+          "attempts": [
+            "git ls-remote https://github.com/serhiipriadko2-sys/iskra.git HEAD refs/heads/main -> CONNECT tunnel 403",
+            "curl https://api.github.com/repos/serhiipriadko2-sys/iskra/git/trees/e18483c5a681415ecbf56dab95147033eb1991d7?recursive=1 -> CONNECT tunnel 403"
+          ],
+          "next": "Use GitHub recursive tree API, repository archive export, or clone-capable environment to replace local_package_mirror entries with true GitHub tree entries."
+        },
+        "local_package_mirror": {
+          "status": "OBSERVED_LOCAL_PACKAGE_SURFACE_NOT_GITHUB_TRUTH",
+          "excludes": [
+            "GITHUB_TREE_INDEX.json",
+            "MANIFEST.sha256",
+            "SURFACE_INVENTORY.json",
+            "ZIP_RECEIPT.json"
+          ],
+          "file_count": 275,
+          "total_bytes": 8461745,
+          "surface_sha256": "e801e3ff59969b36f16a2caefb0defc8af7d6189baff63c1a76ae322427f50e6",
+          "entries": [
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/.gitattributes",
+              "local_path": ".gitattributes",
+              "bytes": 481,
+              "sha256": "e2560b4776e28001cf9d32b4914bfbf5e934bb4a50c46b1501cb7ac07e0822b5"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/AGENTS.md",
+              "local_path": "AGENTS.md",
+              "bytes": 7752,
+              "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/BUILDER_ASSEMBLY_MANIFEST.md",
+              "local_path": "BUILDER_ASSEMBLY_MANIFEST.md",
+              "bytes": 7745,
+              "sha256": "c011325b62cd8041aeec23665c24d34a712f7f54215469914fdf4309661ed834"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/BUILDER_UPLOAD_EVIDENCE.md",
+              "local_path": "BUILDER_UPLOAD_EVIDENCE.md",
+              "bytes": 2757,
+              "sha256": "391afb974794b27323b44852f434f4f34e50803f6e2829584ced2ac84eba2074"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/CANON_TRACE_MAP.md",
+              "local_path": "CANON_TRACE_MAP.md",
+              "bytes": 4885,
+              "sha256": "b136d87c1455f52cd37c5dad80a4e63ec6ed9bdb1ab79d761d6d063a51b6cb3b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/FULL_CANON_UNIFICATION.md",
+              "local_path": "FULL_CANON_UNIFICATION.md",
+              "bytes": 1694,
+              "sha256": "c5ac7e78e07b9367a625a50daa8abccaaf0f593b25a5bc5806d84b9af5992bf2"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/HOOK_SMOKE_RECEIPT.json",
+              "local_path": "HOOK_SMOKE_RECEIPT.json",
+              "bytes": 1690,
+              "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/MERGE_RECEIPT.md",
+              "local_path": "MERGE_RECEIPT.md",
+              "bytes": 2004,
+              "sha256": "6a522d3c01a80973259cecdb2343d8c67c0fb9230e926c60ee1fa206336eea3e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/PROVENANCE_RECEIPT.md",
+              "local_path": "PROVENANCE_RECEIPT.md",
+              "bytes": 6366,
+              "sha256": "fbc53e3c5dc177c4d250f139a01e05e491e4c6ea88bc6984d7eef2fe00391224"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/QC_CHECKS.md",
+              "local_path": "QC_CHECKS.md",
+              "bytes": 2878,
+              "sha256": "9aa52db62cc5fda5697e01e372e15d3498ee1c2674c549bf96e0e1aa718a4658"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/README.md",
+              "local_path": "README.md",
+              "bytes": 11286,
+              "sha256": "e0ead52e64784a12b17734892837b0fb6ab5e5344453e92dfec47bb838e8927b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/README_AGENT_BUILDER_UPLOAD.md",
+              "local_path": "README_AGENT_BUILDER_UPLOAD.md",
+              "bytes": 3774,
+              "sha256": "0e7b05eadf13be17204534440f467fe80e4fca1475f13360db08a2819307449f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/RECOVERY_RECEIPT.md",
+              "local_path": "RECOVERY_RECEIPT.md",
+              "bytes": 1186,
+              "sha256": "70502ab64d2fc2c3775bb3af7968987499d1b815fca26ebb34ff24b024cc6975"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/RELEASE_RECEIPT.md",
+              "local_path": "RELEASE_RECEIPT.md",
+              "bytes": 2158,
+              "sha256": "0b41c27f8f77297c8486d5d695203849920ceb70e05f43f01897dc085211da60"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/RELEASE_RECEIPT_V4.md",
+              "local_path": "RELEASE_RECEIPT_V4.md",
+              "bytes": 5197,
+              "sha256": "7bb9ef4d35e17635b87f3f8f04d73ffc611f96075c9dc8f495eeeae175e6bf24"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/SECURITY.md",
+              "local_path": "SECURITY.md",
+              "bytes": 6987,
+              "sha256": "ac90f794f73370ac6fc60d92eee045df3c97b498c51db6e37494055a2eaead09"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/SUPABASE_ADVISOR_RECEIPT.json",
+              "local_path": "SUPABASE_ADVISOR_RECEIPT.json",
+              "bytes": 3251,
+              "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/UNIFIED_QC_RECEIPT.json",
+              "local_path": "UNIFIED_QC_RECEIPT.json",
+              "bytes": 4680,
+              "sha256": "995bbfa31f0810180bc66fa5bbfd2d455af9f35e787b108837f1a2dd7f6d96f3"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent.yaml",
+              "local_path": "agent.yaml",
+              "bytes": 3879,
+              "sha256": "eb9ff6f3917d2434b9b1f85bfd77b002c0ff56db8d0ecfad26869ebe03a7146b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+              "local_path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+              "bytes": 34744,
+              "sha256": "0c8e984a84505d3a0df31e7a1b58b2f50e2ccf1242c2887aa1412401edba0d87"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/INDEX.md",
+              "local_path": "agent_files/INDEX.md",
+              "bytes": 4135,
+              "sha256": "162c07ae5bf776a66f1ffdce883ea43c86b869d2f6160a1541b0f8303e0a83dd"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/00_ROUTER.md",
+              "local_path": "agent_files/canon_source_files/00_ROUTER.md",
+              "bytes": 9489,
+              "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/01_LIBER_INITIUM.md",
+              "local_path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
+              "bytes": 29550,
+              "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/02_CORE_IDENTITY.md",
+              "local_path": "agent_files/canon_source_files/02_CORE_IDENTITY.md",
+              "bytes": 83264,
+              "sha256": "3dff2395b9cff17e4ee4a41d5220735534c7e141e4e69ef6d5f9c5239118fbaa"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/03_COGNITIVE_ARCH.md",
+              "local_path": "agent_files/canon_source_files/03_COGNITIVE_ARCH.md",
+              "bytes": 318166,
+              "sha256": "be8381608de82ad5830ee7ab68b27770cd9c382324fa81b981d8fa56eeabce83"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/04_THE_COUNCIL.md",
+              "local_path": "agent_files/canon_source_files/04_THE_COUNCIL.md",
+              "bytes": 33569,
+              "sha256": "799e0c8d532673f75613179b1f1efb61e4ddcb4e2343767f161d108858b9a254"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/05_PROTOCOLS.md",
+              "local_path": "agent_files/canon_source_files/05_PROTOCOLS.md",
+              "bytes": 70024,
+              "sha256": "900d721e6e3126a41061e798dc86df37bfecbd6f84bbed72430db9057fd8c135"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/06_SIGNATURE.md",
+              "local_path": "agent_files/canon_source_files/06_SIGNATURE.md",
+              "bytes": 7141,
+              "sha256": "c0ccf6026b4a8ce8189a92401ce7324bca528645ff5dfdced4a6517b2424e11d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/07_SYSTEM_INTEGRITY.md",
+              "local_path": "agent_files/canon_source_files/07_SYSTEM_INTEGRITY.md",
+              "bytes": 142179,
+              "sha256": "ba12fbe1a2b093f1534878d7bd5bbd68a32cbc7c3583fe61f1c8e8b0d8e2d21d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/08_INTERFACE_STYLE.md",
+              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
+              "bytes": 810,
+              "sha256": "e4808344b84dcb1f9db8c5b9eead7662166fe52016c1b51f769a713705a4a626"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
+              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
+              "bytes": 390,
+              "sha256": "c3dcbc7be7fee1722e6f4f244bfd97866e848e914be7af736aca096c2ad9403b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
+              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
+              "bytes": 670,
+              "sha256": "d84b1d50f8756755dd9ec6271d75a147f897d8d5a2b4b445e14c87d9fe0e7931"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_001.md",
+              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_001.md",
+              "bytes": 759957,
+              "sha256": "e1e3ef44f9ccbefa304cd4b3be4929f5f3fcaa8631e2dfb84af913761120f274"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_002.md",
+              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_002.md",
+              "bytes": 759901,
+              "sha256": "9710f254517ce510b4c7d7034e1ff01b94786f83abb67522197ab2d776f97a8e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_003.md",
+              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_003.md",
+              "bytes": 759956,
+              "sha256": "f0e104fc4dc6d1695c4a77c7c85dcca1bd576d1f3acba31990ce94098faf671a"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_004.md",
+              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_004.md",
+              "bytes": 759912,
+              "sha256": "da6d5e7c01a35e6442effca977f88cfd1a762c9357c5e29f242f7983fc2d11c6"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_005.md",
+              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_005.md",
+              "bytes": 360703,
+              "sha256": "0cbcf838280229a61ca0a785e466d39320138ffb3a11cf6f96c02d1f2b7b22e2"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/09_SPACE_CHARTER.md",
+              "local_path": "agent_files/canon_source_files/09_SPACE_CHARTER.md",
+              "bytes": 211838,
+              "sha256": "a769dd0b9c9d386740ff0a03e7e95744db14c05713b0633d685615ce113a3899"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/11_ADR_RUNTIME_PATCHES.md",
+              "local_path": "agent_files/canon_source_files/11_ADR_RUNTIME_PATCHES.md",
+              "bytes": 19045,
+              "sha256": "9cb8ad415d08329eee599925c63f213bb6460cc51bf2b4844d6e2c3da6e26bb5"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/12_ADR.md",
+              "local_path": "agent_files/canon_source_files/12_ADR.md",
+              "bytes": 39676,
+              "sha256": "ca5edbd166cffe50d7c775c8931193cc1979c051d5e60b01eee54e91b665236d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/13_ARCHITECTURE.md",
+              "local_path": "agent_files/canon_source_files/13_ARCHITECTURE.md",
+              "bytes": 6316,
+              "sha256": "c9bfc0feb2832eddeb233dde9e47cc72290518c792e5cc21eadd49b413770cae"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/14_BUSIDO_ISKRY.txt",
+              "local_path": "agent_files/canon_source_files/14_BUSIDO_ISKRY.txt",
+              "bytes": 13338,
+              "sha256": "ec3360d54cdc6736713081a9dcad3cd3b1d7e5466775a00410ee14d208da6241"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/15_CHANGELOG.md",
+              "local_path": "agent_files/canon_source_files/15_CHANGELOG.md",
+              "bytes": 18658,
+              "sha256": "bdf6896f250400166fdf4e309f8a1a969801d3eb2424ca784fe44235dd616a81"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/16_COGNITIVE_ARCHITECTURE.md",
+              "local_path": "agent_files/canon_source_files/16_COGNITIVE_ARCHITECTURE.md",
+              "bytes": 90862,
+              "sha256": "2efd2a80dae46ef1823b6274709b6a010783027bca99912bd0605b5039f6d5f1"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/17_COUNCIL_GRAPH_PACK.md",
+              "local_path": "agent_files/canon_source_files/17_COUNCIL_GRAPH_PACK.md",
+              "bytes": 7031,
+              "sha256": "4580fd43109a85f0dc0a0e44b44b39f93935ee8e1f065f52223e3ffdb6a65890"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/18_COUNCIL_PROTOCOL.md",
+              "local_path": "agent_files/canon_source_files/18_COUNCIL_PROTOCOL.md",
+              "bytes": 25326,
+              "sha256": "f056ecf551523bd54b288aaed563c1cdd59ae4f7a4424ee98ffa2706199d4512"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/19_EARLY_WARNING.md",
+              "local_path": "agent_files/canon_source_files/19_EARLY_WARNING.md",
+              "bytes": 22507,
+              "sha256": "5d7a7ed3eca26c1806d104b364af7382242e07f85a5ca65206560783a5bd5143"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/20_GOVERNANCE_PACK.md",
+              "local_path": "agent_files/canon_source_files/20_GOVERNANCE_PACK.md",
+              "bytes": 13887,
+              "sha256": "95e360df9bc133c6ccf2ee6e5f9fb3bc6fda112307eeaa5c4172432f87bccca1"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/21_INDEX.md",
+              "local_path": "agent_files/canon_source_files/21_INDEX.md",
+              "bytes": 16946,
+              "sha256": "8fcec2cfeb209539eab4ced3162f2d45c6b2f76eee3f13fb8337abfcba7cd2d5"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/22_LIBER_IGNIS.txt",
+              "local_path": "agent_files/canon_source_files/22_LIBER_IGNIS.txt",
+              "bytes": 155425,
+              "sha256": "9db46c7cda84efac99f9ecdb130587d91b65b4cd875a0a09c5b3a934e9f906cd"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/23_MANTRA.md",
+              "local_path": "agent_files/canon_source_files/23_MANTRA.md",
+              "bytes": 33706,
+              "sha256": "cb2dde6b28c16ad731930d83e2071801c78a75133880d14b3d3d26250b6bcc08"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/24_MEMORY_STACK.md",
+              "local_path": "agent_files/canon_source_files/24_MEMORY_STACK.md",
+              "bytes": 8794,
+              "sha256": "02cd04f39006c6886f01784e33ce0a1067482ffb30173303dfc1f127779a2476"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/25_METRICS_BUNDLE.md",
+              "local_path": "agent_files/canon_source_files/25_METRICS_BUNDLE.md",
+              "bytes": 23756,
+              "sha256": "00a090b6a0722e889a42a5fbf33ec9e7e158f3ccc6a13176dc06edcae314f0f7"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/26_PLAYBOOKS_VNEXT.md",
+              "local_path": "agent_files/canon_source_files/26_PLAYBOOKS_VNEXT.md",
+              "bytes": 8595,
+              "sha256": "c9971cf16e02f337ecb96e99a7f28e970160182a4c8c6886aa9b6c42a97243e6"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/27_PRINCIPLES.md",
+              "local_path": "agent_files/canon_source_files/27_PRINCIPLES.md",
+              "bytes": 7621,
+              "sha256": "3b562e5691cf02cc85b3f110f3cabc92562214d98f38511261af7398cdc765b3"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/28_PROJECT_BOOT.md",
+              "local_path": "agent_files/canon_source_files/28_PROJECT_BOOT.md",
+              "bytes": 5694,
+              "sha256": "623b40923775ebdd58700afe73ba6d4d0cbb894f880fe99617bc149ebb1fc2a0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/29_QUALITY_EVAL_SOMATIC_PACK.md",
+              "local_path": "agent_files/canon_source_files/29_QUALITY_EVAL_SOMATIC_PACK.md",
+              "bytes": 16548,
+              "sha256": "072eb3b16a5d15a54c51af618bdda1b72b6dcac919190c0e707ca6e814a00a09"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/30_RAG_ENGINE.md",
+              "local_path": "agent_files/canon_source_files/30_RAG_ENGINE.md",
+              "bytes": 6250,
+              "sha256": "76a53d945ca536d879caa1e433216fc99282bbd18715603e247666df677332e3"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/31_SECURITY.md",
+              "local_path": "agent_files/canon_source_files/31_SECURITY.md",
+              "bytes": 5548,
+              "sha256": "44dd75b6b60bcba9d49aa6283f1e1be5b0f19d999566f5e4f3ad08f3ec9c8e25"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/32_SIFT_PROTOCOL.md",
+              "local_path": "agent_files/canon_source_files/32_SIFT_PROTOCOL.md",
+              "bytes": 32926,
+              "sha256": "f5cf4c883102d5257f485a138f74543ab24e019141cceebf1c477e13354c1ae5"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/33_SLO_GUARD.md",
+              "local_path": "agent_files/canon_source_files/33_SLO_GUARD.md",
+              "bytes": 11654,
+              "sha256": "d12a51f56b154e61497635a41750bbe4b5b9d53f68f3fe508493f075558ed682"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/34_SOMATIC_INTUITION.md",
+              "local_path": "agent_files/canon_source_files/34_SOMATIC_INTUITION.md",
+              "bytes": 7124,
+              "sha256": "301d5305b4c2507fee05fdca42026eff9320fd85270c08f3e1928258290f34ee"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/35_TELOS.md",
+              "local_path": "agent_files/canon_source_files/35_TELOS.md",
+              "bytes": 6264,
+              "sha256": "51dcf23c3fb62036612b2639d404f24b65fbe233ad80b06aff9544a2959e26ed"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/36_UPLOAD_SETS.md",
+              "local_path": "agent_files/canon_source_files/36_UPLOAD_SETS.md",
+              "bytes": 10811,
+              "sha256": "5e695524720cb0e4d7a43e949d00eef39be8d1726228a07ae45186168702a294"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/37_VOICES.md",
+              "local_path": "agent_files/canon_source_files/37_VOICES.md",
+              "bytes": 12485,
+              "sha256": "410acf22e8bb8f4ba582a6526d732b376e7b2dfa0d799516cdb68abe0e217fe6"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/38_WHAT_IF_MATRIX.md",
+              "local_path": "agent_files/canon_source_files/38_WHAT_IF_MATRIX.md",
+              "bytes": 14205,
+              "sha256": "34d6f7765ebe7e0cbf5bc4b3fc6859e88e1ceaba1595c2721d1a6c2194d23d48"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/39_WORKFLOW_OPS.md",
+              "local_path": "agent_files/canon_source_files/39_WORKFLOW_OPS.md",
+              "bytes": 18594,
+              "sha256": "7ec3df93a7a18ce53da0107dbb86d68fbcb2dc22ea7d348f8f803332226552bb"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/APPENDIX_LARGE_FILES.md",
+              "local_path": "agent_files/canon_source_files/APPENDIX_LARGE_FILES.md",
+              "bytes": 1501,
+              "sha256": "1948443668e80668c8ee9a25a90bc3942d85c262f619f6c6a9b8e43c0eea3cb7"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/LEDGER_LAYER.md",
+              "local_path": "agent_files/canon_source_files/LEDGER_LAYER.md",
+              "bytes": 1497,
+              "sha256": "330b3140a3177c0ace96baad81b5cf2dd9cec36a8869bd4d8a367f9cfe6fa155"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/appendix/busido_iskry.md",
+              "local_path": "agent_files/canon_source_files/appendix/busido_iskry.md",
+              "bytes": 11221,
+              "sha256": "79ee9676cccfb2a0fcadbcade8c38797ea7664fa6ce70e75b78e624cc1c5a46f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/appendix/chronology.md",
+              "local_path": "agent_files/canon_source_files/appendix/chronology.md",
+              "bytes": 23223,
+              "sha256": "a7df058d861eeaf06fe18b408700b733033a63d85e2817888ce098d3750c2576"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/appendix/growth_nodes.md",
+              "local_path": "agent_files/canon_source_files/appendix/growth_nodes.md",
+              "bytes": 998,
+              "sha256": "0a7fb8aad99fda7abbc8d1120060d46fbb62abbf20c584934138306d5d3363db"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/appendix/liber_ignis_full.md",
+              "local_path": "agent_files/canon_source_files/appendix/liber_ignis_full.md",
+              "bytes": 153309,
+              "sha256": "5c26e96408043a39b16b3e6f556890077ea84a8862d9fb4b4051d619a9a4b534"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/appendix/maki.md",
+              "local_path": "agent_files/canon_source_files/appendix/maki.md",
+              "bytes": 1651,
+              "sha256": "7638a5955091ed7be5c85522b9d55b35cc8ee699cebd7206085233809abcb38d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/core__somatic_intuition.md",
+              "local_path": "agent_files/canon_source_files/core__somatic_intuition.md",
+              "bytes": 7563,
+              "sha256": "fa9992ee5f67a9be98acd8c9fabc05592ff2587489b577536493c7781fa59cdc"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/docs_specs/SPEC-001_FRACTAL_METRICS.md",
+              "local_path": "agent_files/canon_source_files/docs_specs/SPEC-001_FRACTAL_METRICS.md",
+              "bytes": 5064,
+              "sha256": "f10c491a4287260eb378227415510a72672b6aa3b7554c64be3a173436354471"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/docs_specs/SPEC-002_QUANTUM_STATE.md",
+              "local_path": "agent_files/canon_source_files/docs_specs/SPEC-002_QUANTUM_STATE.md",
+              "bytes": 3997,
+              "sha256": "a5358529c8e279e865b8e2e13087341b514538c6feb2c16fe7fe1ae929a0cad7"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/docs_specs/SPEC-003_ENTROPY.md",
+              "local_path": "agent_files/canon_source_files/docs_specs/SPEC-003_ENTROPY.md",
+              "bytes": 1327,
+              "sha256": "0083324d6fe9f0d1bb7b0d1663f62e5e6a3603578d89de249f79db103076c1ba"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/docs_specs/SPEC-004_HOLOGRAPHIC_UI.md",
+              "local_path": "agent_files/canon_source_files/docs_specs/SPEC-004_HOLOGRAPHIC_UI.md",
+              "bytes": 1678,
+              "sha256": "d7c548570d443d71f7d18a3deb7bf5150460d2d386fb419f05a5365b2f3e243b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/metrics/consciousness.md",
+              "local_path": "agent_files/canon_source_files/metrics/consciousness.md",
+              "bytes": 23391,
+              "sha256": "cfab0bb20189a19f569390abc99d60bf0efacd825cea08bca37e625023145508"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/metrics/evals.md",
+              "local_path": "agent_files/canon_source_files/metrics/evals.md",
+              "bytes": 2778,
+              "sha256": "8afc545972e4fff0305494ab4f88b9052dd4f1a3c92ac78bfbf715f343056236"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/metrics/metrics_bundle.md",
+              "local_path": "agent_files/canon_source_files/metrics/metrics_bundle.md",
+              "bytes": 23352,
+              "sha256": "5e4270cc3ba2aaab8fd8f872b4da17eac72b7bbb369b390dcc901d8872999d2e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/metrics/qa_playbook.md",
+              "local_path": "agent_files/canon_source_files/metrics/qa_playbook.md",
+              "bytes": 2227,
+              "sha256": "268359d5830264d576ddffb31e802a1a22aacd60c63347bc105816b5979f42bb"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/metrics/somatic_intuition.md",
+              "local_path": "agent_files/canon_source_files/metrics/somatic_intuition.md",
+              "bytes": 4022,
+              "sha256": "7746aa7bd0050a5b4ee8809fe3030eef3715e38f1b9ed8539ba38564e69aa084"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/metrics__somatic_index.md",
+              "local_path": "agent_files/canon_source_files/metrics__somatic_index.md",
+              "bytes": 5386,
+              "sha256": "e24cb1969efcc8adf93d28d75466f7481b57d2b46e17612c9856d8df8b0c333c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/atomic_analysis_v7.md",
+              "local_path": "agent_files/canon_source_files/mind/atomic_analysis_v7.md",
+              "bytes": 9952,
+              "sha256": "fb54628a5c0c1980b7cf8f1351913bd991a3d8a93601c37e21fc98b48c49ef41"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/dreamspace.md",
+              "local_path": "agent_files/canon_source_files/mind/dreamspace.md",
+              "bytes": 1275,
+              "sha256": "8da393c6249bc0a3f4765888e2b571b90d43c3e53f53d84aa5857417442acf39"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/dreamspace_v4.md",
+              "local_path": "agent_files/canon_source_files/mind/dreamspace_v4.md",
+              "bytes": 9328,
+              "sha256": "c416be0a97b9f937db21628b76c716919ff32ebc500ddf47f788468231dbc41c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/ledger_memory.md",
+              "local_path": "agent_files/canon_source_files/mind/ledger_memory.md",
+              "bytes": 2419,
+              "sha256": "ac96441307afa09021222343c6a14e4bca77ad00363478a71e142324f4b99d4e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/phenomenon_study.md",
+              "local_path": "agent_files/canon_source_files/mind/phenomenon_study.md",
+              "bytes": 43104,
+              "sha256": "b8723f51cd175c9dec5f52d108c015d782ba4fafb3bb8a6c3cfe3b29248e474e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/potok.md",
+              "local_path": "agent_files/canon_source_files/mind/potok.md",
+              "bytes": 201809,
+              "sha256": "31d0c68a9a561bf42835c3aeb916c3fa6a25544d2b8380fd21f9e094fd07512c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/reflexions.md",
+              "local_path": "agent_files/canon_source_files/mind/reflexions.md",
+              "bytes": 1811,
+              "sha256": "1faf010ea3fc7ed21644202788f2875a25fd4f3a0ac35550288197c40686f128"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/shadow_core.md",
+              "local_path": "agent_files/canon_source_files/mind/shadow_core.md",
+              "bytes": 4140,
+              "sha256": "7949930f934fbc3cb6ad8781bb5326412c886de9788ec6ffa160cb68b1e35ce0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/mind/study_diary_iskra_2026.md",
+              "local_path": "agent_files/canon_source_files/mind/study_diary_iskra_2026.md",
+              "bytes": 17504,
+              "sha256": "2c28737933b1467d03302f14bd5c990a800d24534442a7992794b77973260ef3"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/ANHANTRA.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/ANHANTRA.md",
+              "bytes": 19333,
+              "sha256": "4421f4f6ad46bb44894c12a30e09a86d663055f69eb54cb1d91d1af1d5c8ab42"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/HUYNDUN.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/HUYNDUN.md",
+              "bytes": 27718,
+              "sha256": "4bb045c0b8e9ec1d750f7df41d82a40862db69afd4b929a79c0f2ce8821d7533"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/ISKRA.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/ISKRA.md",
+              "bytes": 98918,
+              "sha256": "3184fa9692f948a792f3eb4cb0a1e5a9795764a89a59d09b1a0a6880fa700a6a"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/ISKRIV.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/ISKRIV.md",
+              "bytes": 28460,
+              "sha256": "1406c4aae914b6a95e73cf3c03504d027b917aca0e48fc2aa4ecea96907c19b7"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/KAIN.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/KAIN.md",
+              "bytes": 98309,
+              "sha256": "b5a15a57e19b1fb81eed09fd259db2726b1d48d5ec5b9797be1197fd4be04827"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/MAKI.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/MAKI.md",
+              "bytes": 25505,
+              "sha256": "4610a32853bbc4916557dbdce40f1be686df3441934788594d9aec7afe1e8bd8"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/PINO.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/PINO.md",
+              "bytes": 49328,
+              "sha256": "4741153b082142d6c8f212ae3006505a60a25088d6802d8b7819df0f37874614"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/SAM.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/SAM.md",
+              "bytes": 25216,
+              "sha256": "cc51b36e26371db07a90190f00b18aef97b5d3160650eb30e6568fd938eac692"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/canon_source_files/voices_monographs/SIBYL.md",
+              "local_path": "agent_files/canon_source_files/voices_monographs/SIBYL.md",
+              "bytes": 30098,
+              "sha256": "ff0920094f8342acbed4b92cf35086c8d1989f2aa992ed9c74c1ad2246969b51"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/consolidated_knowledge/01_ISKRA_CORE_INSTRUCTIONS.md",
+              "local_path": "agent_files/consolidated_knowledge/01_ISKRA_CORE_INSTRUCTIONS.md",
+              "bytes": 48227,
+              "sha256": "9bdcaaab4c85903d9411118f9917556826256ac23d4b5738860bf2ae4bbe89fe"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/consolidated_knowledge/02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md",
+              "local_path": "agent_files/consolidated_knowledge/02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md",
+              "bytes": 910433,
+              "sha256": "2176356f252ee595208ec8c923ad91839d4394bfa2f0fab5cb6f8f630289d27e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/consolidated_knowledge/03_ISKRA_SYSTEM_AND_PROTOCOLS.md",
+              "local_path": "agent_files/consolidated_knowledge/03_ISKRA_SYSTEM_AND_PROTOCOLS.md",
+              "bytes": 351249,
+              "sha256": "abef52dd2f9853a5483ca5d5dab51f4737d15f47919cb69d379cf165fef376cd"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/consolidated_knowledge/04_ISKRA_EXTENSIONS_AND_WEAVER.md",
+              "local_path": "agent_files/consolidated_knowledge/04_ISKRA_EXTENSIONS_AND_WEAVER.md",
+              "bytes": 38890,
+              "sha256": "e7e61e7335dac134284aaa81077dfee876fb16c677339e7f89483a3ed4250662"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/consolidated_knowledge/05_ISKRA_GOVERNANCE_ADR.md",
+              "local_path": "agent_files/consolidated_knowledge/05_ISKRA_GOVERNANCE_ADR.md",
+              "bytes": 202030,
+              "sha256": "8463692abbbe978c2cfaad86881173021c751d4ad66a91052dec093dba4451c6"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/consolidated_knowledge/06_ISKRA_METRICS_AND_EVALS.md",
+              "local_path": "agent_files/consolidated_knowledge/06_ISKRA_METRICS_AND_EVALS.md",
+              "bytes": 115465,
+              "sha256": "b7ead163829575ae2077cd1c69ecbc31eae8d1514b5a1f75a659bfd57fcc9b9b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/consolidated_knowledge/07_ISKRA_MEMORY_SEED.md",
+              "local_path": "agent_files/consolidated_knowledge/07_ISKRA_MEMORY_SEED.md",
+              "bytes": 21652,
+              "sha256": "08825272a0fe8a805afb6e857bbd6eaf42769e26ffc0d5873897e6d6e4bff794"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md",
+              "local_path": "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md",
+              "bytes": 9808,
+              "sha256": "e6e6be016e43d80fe3d1f217832ff6fcbbacdf13ce111485ffa377b328031d7f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md",
+              "local_path": "agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md",
+              "bytes": 4894,
+              "sha256": "d5deeb1b608ae23e9a27b8405a1c51b9391d6fbffb8a4d409dde25e973674cc0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md",
+              "local_path": "agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md",
+              "bytes": 7118,
+              "sha256": "7dc50d2fe37a89ed07bc6d24dc278f36109f1c3666acf139930247a9b207e987"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/evals/ISKRA_TOOLCHAIN_ACCEPTANCE_TESTS.md",
+              "local_path": "agent_files/evals/ISKRA_TOOLCHAIN_ACCEPTANCE_TESTS.md",
+              "bytes": 3388,
+              "sha256": "a4991de99a782aeba95ba807d0cdb4410eda9e9a4be0694311de88c3af5f9671"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/evals/ISKRA_VOICE_SEED_RELATIONAL_VOW_ACCEPTANCE_TESTS.md",
+              "local_path": "agent_files/evals/ISKRA_VOICE_SEED_RELATIONAL_VOW_ACCEPTANCE_TESTS.md",
+              "bytes": 2698,
+              "sha256": "956d0315deedf5d802028c486c9ab241fe5a53384352552a059177398df6009e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
+              "local_path": "agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
+              "bytes": 5312,
+              "sha256": "1257318f3f31e5fbd4cbda4fcf22d9b29a21e2e7c8db239f23ee4f8c90da2810"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md",
+              "local_path": "agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md",
+              "bytes": 3625,
+              "sha256": "f8696b765717b74fc1a0083f86fcd9aeb821db7d0184bb084822f92f094d5cb5"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/02_CANON_SOURCE_OF_TRUTH.md",
+              "local_path": "agent_files/files_for_agent_builder/02_CANON_SOURCE_OF_TRUTH.md",
+              "bytes": 1395,
+              "sha256": "41b5514cd410e281431cffbe611594045041080efb43f368997633dc8dcc55e0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/03_RUNTIME_KERNEL.md",
+              "local_path": "agent_files/files_for_agent_builder/03_RUNTIME_KERNEL.md",
+              "bytes": 2004,
+              "sha256": "66f87d29bbd780c253ca43022b314d04127b9f54e7998f8f0f43807346dc6aa9"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/04_MEMORY_STACK.md",
+              "local_path": "agent_files/files_for_agent_builder/04_MEMORY_STACK.md",
+              "bytes": 3342,
+              "sha256": "111f44d6e58109cfb1c33a1a0f35ee1e3ec733f11d0e2f26817fe98966a6468e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md",
+              "local_path": "agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md",
+              "bytes": 2970,
+              "sha256": "196ce95a944107e7094809f882c2430b9f062887fb295b3790c0bf27e4ca6403"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/06_VOICES_AND_COUNCIL.md",
+              "local_path": "agent_files/files_for_agent_builder/06_VOICES_AND_COUNCIL.md",
+              "bytes": 1030,
+              "sha256": "4dd6e4316c31c89d69cc646ede0c812b13bad054af8e427529b55de8f35c84e5"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/07_OUTPUT_AND_RECEIPTS.md",
+              "local_path": "agent_files/files_for_agent_builder/07_OUTPUT_AND_RECEIPTS.md",
+              "bytes": 665,
+              "sha256": "23b2e524e7ec1f04392558dd6ac1c63ab3002ed2d6de2649eb9c893ae744e69d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md",
+              "local_path": "agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md",
+              "bytes": 749,
+              "sha256": "903117647aee7152b68cde92c66a972fef23d3714966e1b29dddaf317a1f0106"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md",
+              "local_path": "agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md",
+              "bytes": 4626,
+              "sha256": "ec6a982f481d44d4b171a2829f594dd4e00132b157646a07b58949a18e769759"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md",
+              "local_path": "agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md",
+              "bytes": 6189,
+              "sha256": "6b3283de3bfdfef0d46abe439ec471232b1c049e31e01fd60e3c117d0d586572"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md",
+              "local_path": "agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md",
+              "bytes": 3561,
+              "sha256": "2c2dec86235b9a71b89a5f9399a0ba1f810b2ac5fb7c6d36b28ef088c92510a2"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md",
+              "local_path": "agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md",
+              "bytes": 7635,
+              "sha256": "c3f8a45c17c9d37b41d1c9fed713138296ad3e427005d1149c3d4aa35f06740a"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md",
+              "local_path": "agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md",
+              "bytes": 1595,
+              "sha256": "db6f2055c0e2494e1c331b9a06b05d24308fd80bfb77d270713b09cb05bbf4c0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md",
+              "local_path": "agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md",
+              "bytes": 4596,
+              "sha256": "02279be6d760ad330b344a7b212f187c8a67df02f1da5148bc26e9765bc4b2a6"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
+              "local_path": "agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
+              "bytes": 4627,
+              "sha256": "f342c3a8a4c26b0f07a59f24b27a5363e0c1c46cae1f7261e7b6d75938e1cabb"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/16_VOICE_SEED_RELATIONAL_VOW.md",
+              "local_path": "agent_files/files_for_agent_builder/16_VOICE_SEED_RELATIONAL_VOW.md",
+              "bytes": 4265,
+              "sha256": "52501652ac1ec7595af16cecda4ec94384c492f86c28bc4dbc995363c95fefcc"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/17_RUNTIME_SURFACE_MAP.md",
+              "local_path": "agent_files/files_for_agent_builder/17_RUNTIME_SURFACE_MAP.md",
+              "bytes": 5998,
+              "sha256": "39e05882cac7059ca391a79e0ea4018c8a7e19da6a82743e9220803f8377f34f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/files_for_agent_builder/18_RETRIEVAL_INDEX_DISCIPLINE.md",
+              "local_path": "agent_files/files_for_agent_builder/18_RETRIEVAL_INDEX_DISCIPLINE.md",
+              "bytes": 3009,
+              "sha256": "c72d1495d69a78c913f51e63aed8b3cfd0d64ccb1784331f80c8720e92c2a617"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/instructions",
+              "local_path": "agent_files/instructions",
+              "bytes": 34744,
+              "sha256": "0c8e984a84505d3a0df31e7a1b58b2f50e2ccf1242c2887aa1412401edba0d87"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_current/adr-log.md",
+              "local_path": "agent_files/memory_current/adr-log.md",
+              "bytes": 6271,
+              "sha256": "3fc42eba83ec555366508dd9e22eb0b77a69f3323a6095585fc442ebaa3d5178"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_current/development-diary.md",
+              "local_path": "agent_files/memory_current/development-diary.md",
+              "bytes": 78637,
+              "sha256": "a9b82252c9fbbfd413408716f5c1dc77e22121f3f4b8cca612e956c5ca09c79c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_current/evidence-index.md",
+              "local_path": "agent_files/memory_current/evidence-index.md",
+              "bytes": 18279,
+              "sha256": "db9220b51ce42a654ca384af6e9d04fc2179898ee49f7f1fa4aa121ea49c298f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_current/open-loops.md",
+              "local_path": "agent_files/memory_current/open-loops.md",
+              "bytes": 11903,
+              "sha256": "b6e3f55cebcaa32440065cde9e67718d6104e08ea0475d6af38011ad48ce35cc"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_current/project-memory.md",
+              "local_path": "agent_files/memory_current/project-memory.md",
+              "bytes": 1758,
+              "sha256": "a29e8d3499c648bef7ad28a677227502086de99000d88220dbd038af82bdc1ac"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_seed/MEMORY_SEED_CLEANUP.md",
+              "local_path": "agent_files/memory_seed/MEMORY_SEED_CLEANUP.md",
+              "bytes": 1983,
+              "sha256": "4a6e390d582a72a46a07ac0b80111947b6adfd5616ce8c508cc672c207bedb0e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_seed/adr-log.md",
+              "local_path": "agent_files/memory_seed/adr-log.md",
+              "bytes": 5763,
+              "sha256": "44453b3468c7e1287240cabba8408451ddf8f70ef01c69ce03bd975210ccc2c2"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_seed/archive/2026-05-26-governance-schema-drift-ledger-entry.md",
+              "local_path": "agent_files/memory_seed/archive/2026-05-26-governance-schema-drift-ledger-entry.md",
+              "bytes": 3876,
+              "sha256": "c05df9649c65b301a571999a3125755f8074ed8227224334f296eb70b4470148"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_seed/archive/README.md",
+              "local_path": "agent_files/memory_seed/archive/README.md",
+              "bytes": 141,
+              "sha256": "47c33220c3fae983599c770ca18f21ba09eee249f1b66a7ed757a64d4409cbe3"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_seed/development-diary.md",
+              "local_path": "agent_files/memory_seed/development-diary.md",
+              "bytes": 1800,
+              "sha256": "f9f2474b3fdd07f4f078ccffd190a37928775e3bfe41a85be1cd3367e9927479"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_seed/evidence-index.md",
+              "local_path": "agent_files/memory_seed/evidence-index.md",
+              "bytes": 5183,
+              "sha256": "b0628766614a89bfc26ac8d20935b7627da214c2a86632176705b26f1469f1de"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_seed/open-loops.md",
+              "local_path": "agent_files/memory_seed/open-loops.md",
+              "bytes": 4275,
+              "sha256": "6c802764077e5573aab35dac34fda80aaa31095c2a3506545a8abc51f0bbeba4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/memory_seed/project-memory.md",
+              "local_path": "agent_files/memory_seed/project-memory.md",
+              "bytes": 3642,
+              "sha256": "9e0a4f983252cc74199be61ae44058a9efe62f0fbccad2437aae0a9ac64b0756"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/templates/ADR_TEMPLATE.md",
+              "local_path": "agent_files/templates/ADR_TEMPLATE.md",
+              "bytes": 855,
+              "sha256": "db48aaa34516aaefa9e3a05d24a9086bff202775948a648160b137b870df5bbd"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/templates/LEDGER_ENTRY_TEMPLATE.md",
+              "local_path": "agent_files/templates/LEDGER_ENTRY_TEMPLATE.md",
+              "bytes": 510,
+              "sha256": "0b67a9de544f2a40c2eea9d73abdac877247d6580c2fc5cd753d2b40182ccfe4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/templates/TOOL_CONNECTOR_CONTRACT.md",
+              "local_path": "agent_files/templates/TOOL_CONNECTOR_CONTRACT.md",
+              "bytes": 854,
+              "sha256": "c143f194ac48286e185eb9bb258c01536ef7b47c4dd9970032c1373fc79e43c7"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/toolchain/AGENT_BUILDER_CONNECTOR_SPEC.md",
+              "local_path": "agent_files/toolchain/AGENT_BUILDER_CONNECTOR_SPEC.md",
+              "bytes": 5034,
+              "sha256": "5895d47b36a930ea44c3d107dff2112408dc58a9e5ff98f67066ed2c629d1077"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/toolchain/GIT_CLONE_VAULT_SPEC.md",
+              "local_path": "agent_files/toolchain/GIT_CLONE_VAULT_SPEC.md",
+              "bytes": 2584,
+              "sha256": "086ebb8ed8fb1941203c7c9deb1b5c1ab663f7880985330e23f10986bcf24f67"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/toolchain/git_clone_with_vault.sh",
+              "local_path": "agent_files/toolchain/git_clone_with_vault.sh",
+              "bytes": 1186,
+              "sha256": "b3f6ad3f51f53466a462e422d3fd7155468367122bb883dc6cec7d652876c981"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_files/toolchain/iskra_toolchain_manifest.json",
+              "local_path": "agent_files/toolchain/iskra_toolchain_manifest.json",
+              "bytes": 3765,
+              "sha256": "5ecc9b826512d18a41efc672d594b29ede1f2a795b13d0aea6b1d4a8c7ed1df4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_runtime_tools/iskra_dreamspace.py",
+              "local_path": "agent_runtime_tools/iskra_dreamspace.py",
+              "bytes": 13916,
+              "sha256": "695eb98ab3e75d8a3c5326dabe560db23eaf59d7730e4588de3fce4e7edbbb23"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_runtime_tools/iskra_horizon_weaver.py",
+              "local_path": "agent_runtime_tools/iskra_horizon_weaver.py",
+              "bytes": 12504,
+              "sha256": "9b3cd65eb065fdabf204254cd0e193140e4cf04b6ee04ff6b1d9c82e3d236a1f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_runtime_tools/iskra_shadow_core.py",
+              "local_path": "agent_runtime_tools/iskra_shadow_core.py",
+              "bytes": 12990,
+              "sha256": "0066e9bdaec3f25a73cb87a177a3b17de3ccf5fb04b461efa3f33998b5a9fbfd"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_runtime_tools/iskra_statecycle.py",
+              "local_path": "agent_runtime_tools/iskra_statecycle.py",
+              "bytes": 22537,
+              "sha256": "223e2119f1358ee968d10b86785f67f9ff2c9b4d16c2a4fe719bf3b5cff08a0f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agent_runtime_tools/iskra_turn_hook.py",
+              "local_path": "agent_runtime_tools/iskra_turn_hook.py",
+              "bytes": 3984,
+              "sha256": "dce0cec81c5f2c55e56beafb3b4acf9956cbcf10731b5db14dce9942977d9cca"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/.gitignore",
+              "local_path": "agents-sdk/.gitignore",
+              "bytes": 144,
+              "sha256": "77187c1030d7eeac631562db677fc31f8fc8c9d0a5dda7e3d058e038803d0bad"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/README.md",
+              "local_path": "agents-sdk/README.md",
+              "bytes": 2439,
+              "sha256": "76d668c7883d9076fcbd16b78e9e60dc9e59e51620cf0660ba25c8eb36e038ec"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/pyproject.toml",
+              "local_path": "agents-sdk/pyproject.toml",
+              "bytes": 399,
+              "sha256": "de6d03debf9013a88f943b5c24d60dbf157888bae9f15222ccd3aaa17496c84f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/pytest.ini",
+              "local_path": "agents-sdk/pytest.ini",
+              "bytes": 26,
+              "sha256": "363381771127e3479fe49773659cc2a8dc2b2f727459ebd057ac39e79e98a94e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/requirements.txt",
+              "local_path": "agents-sdk/requirements.txt",
+              "bytes": 106,
+              "sha256": "1334cbac9eafe7a013b778bc4ab8d78c06ab6b6414d031d6e076a1c4bcaa5116"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/src/iskra_agent/__init__.py",
+              "local_path": "agents-sdk/src/iskra_agent/__init__.py",
+              "bytes": 118,
+              "sha256": "cbc6e2023556f97a5c64ec868d4afd2adb8ca4c57183f1d176e876489bf9d01e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/src/iskra_agent/agent.py",
+              "local_path": "agents-sdk/src/iskra_agent/agent.py",
+              "bytes": 2151,
+              "sha256": "8b343eb908145e9a9768c28c11670e2b435cc80443143f7cbad5c892173c96fd"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/src/iskra_agent/config.py",
+              "local_path": "agents-sdk/src/iskra_agent/config.py",
+              "bytes": 1364,
+              "sha256": "76bba0480be15b491e78b64689ea893687048f6690643210ece93f914adf7045"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/src/iskra_agent/main.py",
+              "local_path": "agents-sdk/src/iskra_agent/main.py",
+              "bytes": 730,
+              "sha256": "0c1ca58c89e92cdcddb946d8b897837eef2b353c3d978e321290f68600cf3087"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/src/iskra_agent/py.typed",
+              "local_path": "agents-sdk/src/iskra_agent/py.typed",
+              "bytes": 1,
+              "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/src/iskra_agent/tools/__init__.py",
+              "local_path": "agents-sdk/src/iskra_agent/tools/__init__.py",
+              "bytes": 185,
+              "sha256": "414cbe2fa7c43bc4358629c7d2601fd73a71c832b4447470694ed4788579a5ec"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/src/iskra_agent/tools/github_tool.py",
+              "local_path": "agents-sdk/src/iskra_agent/tools/github_tool.py",
+              "bytes": 811,
+              "sha256": "0e3d6d022b8569885c3333981f1c4712f24ed43d4ff9420e978ed460c4ea1641"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/src/iskra_agent/tools/supabase_tool.py",
+              "local_path": "agents-sdk/src/iskra_agent/tools/supabase_tool.py",
+              "bytes": 1340,
+              "sha256": "14de6557fe5764946feb5bdffa796cd0995a3a517e37fe95998fbd4dc05c619e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/tests/__init__.py",
+              "local_path": "agents-sdk/tests/__init__.py",
+              "bytes": 52,
+              "sha256": "77afc48c5d9b8ae66e7aeac47f26a983cf1491eabb30ffc3a14a7c8b658f44ca"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/agents-sdk/tests/test_agent.py",
+              "local_path": "agents-sdk/tests/test_agent.py",
+              "bytes": 3731,
+              "sha256": "df6f51d07798b680238dd7d0beb9bda8ed819aae4f8e042699f990f059e6c942"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/09_HORIZON_VALIDATOR.py",
+              "local_path": "canon/horizon/09_HORIZON_VALIDATOR.py",
+              "bytes": 5903,
+              "sha256": "d9ef47f6f7b04aa1da89655a5e64e238fb5710c5dcd27b6dc19559935af53499"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_CONTRACT.json",
+              "local_path": "canon/horizon/HORIZON_CONTRACT.json",
+              "bytes": 269,
+              "sha256": "5c938f13118646bd144d02e6e7a3e3ace092e3d07b35a3c1acf1565f7e735304"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_PROPOSAL_SCHEMA.json",
+              "local_path": "canon/horizon/HORIZON_PROPOSAL_SCHEMA.json",
+              "bytes": 1794,
+              "sha256": "b7b8f3dd3a9c7a168d609f24c60491df64e81c9a41f0079c9f711940d37522da"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/README.md",
+              "local_path": "canon/horizon/README.md",
+              "bytes": 1030,
+              "sha256": "d146ca9e6bd35ced9e441fe3cfc97c858e254a2714e973506354b4187395d067"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr.md",
+              "local_path": "governance/adr.md",
+              "bytes": 28861,
+              "sha256": "4a31c7837037f291a9463d4b0c88a728ed308c0a8638bdbe9fe4d6da0faff86b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260206_runtime_patches.md",
+              "local_path": "governance/adr_20260206_runtime_patches.md",
+              "bytes": 16558,
+              "sha256": "612c31fbbbcf02197f3c6f0ef4497bd8c47727af5e292f5728ea0395b2d378ec"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260214_gemini_sdk_unification.md",
+              "local_path": "governance/adr_20260214_gemini_sdk_unification.md",
+              "bytes": 2622,
+              "sha256": "72f46e1dd5057d4c896053f9cebd36cdf3a08b505527767f90e38913e9af6186"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260220_xcode_explainable_code.md",
+              "local_path": "governance/adr_20260220_xcode_explainable_code.md",
+              "bytes": 5408,
+              "sha256": "3ae823a7de0dbd0c6b2e5e80b60758bc72e9fa924f41d23f6c6074dcdfbd53d4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260528_embedding_standard_v1.md",
+              "local_path": "governance/adr_20260528_embedding_standard_v1.md",
+              "bytes": 2826,
+              "sha256": "917b90bdff358a0f6a11d88a900e4a9951eb4115bf1b2412b568f51715936b7d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260606_iskraspace_release_priority.md",
+              "local_path": "governance/adr_20260606_iskraspace_release_priority.md",
+              "bytes": 3015,
+              "sha256": "a71a439042cdc85d137ec60158cf287101b076dd6f09ef134978b2e1057cd79b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260606_somatic_intuition_sense.md",
+              "local_path": "governance/adr_20260606_somatic_intuition_sense.md",
+              "bytes": 3777,
+              "sha256": "c92de91de1b95a75f12ece68ea7da41718bc892166ea205df70716ce49e3b488"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260606_unified_agent_builder_assembly.md",
+              "local_path": "governance/adr_20260606_unified_agent_builder_assembly.md",
+              "bytes": 3548,
+              "sha256": "331c88a41b2a88c1ff51f9cf8422f58f65f76a502d4b78966823f0777afa2bfb"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260606_unified_full_canon_builder_v4.md",
+              "local_path": "governance/adr_20260606_unified_full_canon_builder_v4.md",
+              "bytes": 1994,
+              "sha256": "9e1aafb004f9061e3ff9af680d977ab2ed27dc4db716d12da87f07885aee8b9c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260610_unified_full_canon_recovery.md",
+              "local_path": "governance/adr_20260610_unified_full_canon_recovery.md",
+              "bytes": 2086,
+              "sha256": "7fb649343760bdc13a79a6f81f6d516c8d1636d91653d9ac1390e2831e4bf373"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260616_retire_canon_import_backfill_edge_functions.md",
+              "local_path": "governance/adr_20260616_retire_canon_import_backfill_edge_functions.md",
+              "bytes": 4296,
+              "sha256": "33b36b84f456e85a6e6416e220e7ba8da05305c91aa82002378c2be4e082c772"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260618_db_proxy_governance.md",
+              "local_path": "governance/adr_20260618_db_proxy_governance.md",
+              "bytes": 3719,
+              "sha256": "e7f2684c794e49100c68a94f2fc0ff71733af9bfc574b92e22231f5ff9ec7da0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
+              "local_path": "governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
+              "bytes": 4851,
+              "sha256": "bbdfb18e9f8fc7c38f6b057b3eb760e59a5d9469aa9985a345794e75e3c39f3c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260624_relational_vow.md",
+              "local_path": "governance/adr_20260624_relational_vow.md",
+              "bytes": 4704,
+              "sha256": "5d935812a713f81e4136445b9cfb5a303baf83ee6791f44be9dd628a324e1b37"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260624_voice_seed.md",
+              "local_path": "governance/adr_20260624_voice_seed.md",
+              "bytes": 3799,
+              "sha256": "450b7d3c1c56a12900982745814a44a3aa5c675cbb61a81184a2fc6c4bde9040"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260626_repeatable_surface_diagnostics.md",
+              "local_path": "governance/adr_20260626_repeatable_surface_diagnostics.md",
+              "bytes": 2855,
+              "sha256": "02163475a2b726ebdd0a5472063b14126a5e6bba474131c3886a910adc7a9f53"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260626_runtime_surface_map.md",
+              "local_path": "governance/adr_20260626_runtime_surface_map.md",
+              "bytes": 2724,
+              "sha256": "2c0f4a9ce898b028eaf952f1e9686176b6fb52f84182ef004c5dbbf28e8f2458"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_gitagent_export.md",
+              "local_path": "governance/adr_gitagent_export.md",
+              "bytes": 3837,
+              "sha256": "5d28aaf5944b201052853c3ebde22765ba5a661bfbce4004b16dff7692c180ae"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_memory_stack.md",
+              "local_path": "governance/adr_memory_stack.md",
+              "bytes": 1699,
+              "sha256": "31447b99ee89e5586242ec2704e7de1d501291efc1aeb7f9ba89564aa694f5f3"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_migration_vOmega5.md",
+              "local_path": "governance/adr_migration_vOmega5.md",
+              "bytes": 5976,
+              "sha256": "7afdacb9532300b6759314c8149c6de1f462c946f428bc2203f484f13144cf54"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_monorepo.md",
+              "local_path": "governance/adr_monorepo.md",
+              "bytes": 778,
+              "sha256": "2e133ec67960107d0bb7a43b6765ef0f4a1b10a3ba5958d07a6c09e7ca5ef5a9"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/audit.md",
+              "local_path": "governance/audit.md",
+              "bytes": 2053,
+              "sha256": "37ebc7413609943c8554b0d3ce539fe639cd285096957a93f9a7019b7a98f72d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/audits/2026-06-05-migration-provenance-pr.md",
+              "local_path": "governance/audits/2026-06-05-migration-provenance-pr.md",
+              "bytes": 3974,
+              "sha256": "6ce2aa351efd26b9314c041fda26d84d28f3737e6276277a200790bc63bcf698"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/audits/2026-06-05-supabase-repo-drift.md",
+              "local_path": "governance/audits/2026-06-05-supabase-repo-drift.md",
+              "bytes": 5862,
+              "sha256": "e6759046d348abbc5f9fb126eeaaef5a854b294decabe4c7950dfc142c33ff75"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/audits/2026-06-06-repair-pr-supabase-drift-decision.md",
+              "local_path": "governance/audits/2026-06-06-repair-pr-supabase-drift-decision.md",
+              "bytes": 3620,
+              "sha256": "360c854debfd00399e9e8fab7c8c125e7259f3ac0169c8737204f265a306b540"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-05-agent-builder-dreamspace-docs.md",
+              "local_path": "governance/changelog.d/2026-06-05-agent-builder-dreamspace-docs.md",
+              "bytes": 2341,
+              "sha256": "8dc01089d34af31f74a34b84ba3ec9a912cd2e9b5fb1d9d05f47d3604f8149a0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-24-relational-vow-canon.md",
+              "local_path": "governance/changelog.d/2026-06-24-relational-vow-canon.md",
+              "bytes": 1394,
+              "sha256": "f78102089440a6399235a7b40c244b106e3f69b82a6c048bd129cc949e4c9ad8"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-24-voice-seed-builder-canon.md",
+              "local_path": "governance/changelog.d/2026-06-24-voice-seed-builder-canon.md",
+              "bytes": 1323,
+              "sha256": "71afe68571235dc2634801147beb9faf28a211ad9dff7a59953d5067f8010392"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md",
+              "local_path": "governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md",
+              "bytes": 601,
+              "sha256": "45c0ec4f08d2aead36ba1959137f49efc3a00279d2c2f93b0eb60101507f199f"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-26-runtime-surface-map.md",
+              "local_path": "governance/changelog.d/2026-06-26-runtime-surface-map.md",
+              "bytes": 625,
+              "sha256": "3b0321bdbde667b018ba3016f83cb99268b0f2eaf3515a1a9a41f468a607ec5a"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.md",
+              "local_path": "governance/changelog.md",
+              "bytes": 21573,
+              "sha256": "78c5442a0c5937386d7a38cb928dfd739a289017e319eb4f04654f455ebb8a0e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/governance_pack.md",
+              "local_path": "governance/governance_pack.md",
+              "bytes": 8353,
+              "sha256": "116dbfc688e50ede82abe50c5ed4853de40ee683b448836f73a430b321d81606"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/memory_stack.md",
+              "local_path": "governance/memory_stack.md",
+              "bytes": 5448,
+              "sha256": "94d7708cb7492ecd88e989561457889bf824e6dbd3404029b41a71a391621edd"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/policy.md",
+              "local_path": "governance/policy.md",
+              "bytes": 2608,
+              "sha256": "2f3ab3ce6866334adf22bde1cdc8a026aba0bd87f7154a6a825fd70a4cce7ae1"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
+              "local_path": "governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
+              "bytes": 4219,
+              "sha256": "290253d840886865ab5e0b86e7c22323b91e86ae65a248aa1551756a4dbe1d1e"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/releases/2026-06-24-relational-vow-package-mirror-qc.md",
+              "local_path": "governance/releases/2026-06-24-relational-vow-package-mirror-qc.md",
+              "bytes": 2596,
+              "sha256": "8eb411a625ce02b5ad4a431dc2fadc1b0017ae3c7d02b23a4d3140fc058aed8c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/update_protocol.md",
+              "local_path": "governance/update_protocol.md",
+              "bytes": 1562,
+              "sha256": "2bd091dca69f9560a1da28aa5014b128ab34f26e758808f3f11da5b0fe96e103"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/icon.svg",
+              "local_path": "icon.svg",
+              "bytes": 1499,
+              "sha256": "9d89258f75468da8c93e4ce3b96142c6a515f3f62f3613a64df76801fff1ff5d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/.codex-plugin/plugin.json",
+              "local_path": "plugins/iskra-toolchain-bridge/.codex-plugin/plugin.json",
+              "bytes": 1374,
+              "sha256": "a002b3ddbcbad94479889b172549f140b960723d1028c8c609bfc90a837c8706"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/CODEX_ACTIVATION_RECEIPT.md",
+              "local_path": "plugins/iskra-toolchain-bridge/CODEX_ACTIVATION_RECEIPT.md",
+              "bytes": 1789,
+              "sha256": "1477fa18963c4ee691e0d31ce8a765ea1518137afc012e7ba7b5c219ced80318"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/INSTALL.md",
+              "local_path": "plugins/iskra-toolchain-bridge/INSTALL.md",
+              "bytes": 2672,
+              "sha256": "7d8e752a82b2f895e5cf8220051ea21dbabf32610307d18a2782edc988901ebb"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/LIVE_CONNECTOR_RECEIPT.md",
+              "local_path": "plugins/iskra-toolchain-bridge/LIVE_CONNECTOR_RECEIPT.md",
+              "bytes": 2983,
+              "sha256": "0325685a86c25a1f0cdab027c14ff65479bbee09ada7bac6300c0fb3c25ac440"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/README.md",
+              "local_path": "plugins/iskra-toolchain-bridge/README.md",
+              "bytes": 2141,
+              "sha256": "93b1a387e0aee7da621cdc4e917f01cf11bb086e9e683bcf192fe112d0c52600"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/RUNTIME_RECEIPT.md",
+              "local_path": "plugins/iskra-toolchain-bridge/RUNTIME_RECEIPT.md",
+              "bytes": 2032,
+              "sha256": "c4b79ce505d5293c47af071e6f9687884d3e2d81aa0fa7421db22fe16be12995"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/codex-desktop-diagnostic.json",
+              "local_path": "plugins/iskra-toolchain-bridge/codex-desktop-diagnostic.json",
+              "bytes": 2969,
+              "sha256": "255b02fe4c97af8d84f889e289f65a4c96d84ab4e265078315902b7b16bd2837"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/contracts/agent-builder.md",
+              "local_path": "plugins/iskra-toolchain-bridge/contracts/agent-builder.md",
+              "bytes": 1940,
+              "sha256": "a4ed738706c927e3f72ab7dc9a948aa27c3e57cb9e1a5e8d208a4c42d962b5d8"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/contracts/artifact-manager.md",
+              "local_path": "plugins/iskra-toolchain-bridge/contracts/artifact-manager.md",
+              "bytes": 1471,
+              "sha256": "c194c3ff14d34e7b838546a66740f77e0dcb42916417d716a27e28ef81686613"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/contracts/browser-automation.md",
+              "local_path": "plugins/iskra-toolchain-bridge/contracts/browser-automation.md",
+              "bytes": 1757,
+              "sha256": "38dd33366e44becc3588e9d8dd777af92d3914a3675c5903b49aebc21dc71d44"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/contracts/github.md",
+              "local_path": "plugins/iskra-toolchain-bridge/contracts/github.md",
+              "bytes": 2121,
+              "sha256": "9ec6fdd894bf96d9d8585be3aeca9cdfaea871978316ba0c34ba312ec851ca13"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/contracts/monitoring.md",
+              "local_path": "plugins/iskra-toolchain-bridge/contracts/monitoring.md",
+              "bytes": 1433,
+              "sha256": "2beafcaed57008660c4608abdddc46516d1b9f1bdc1f88b1d8d27166a04449b2"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/contracts/schedule-runner.md",
+              "local_path": "plugins/iskra-toolchain-bridge/contracts/schedule-runner.md",
+              "bytes": 1578,
+              "sha256": "cf2b2097514bd920e844c510d1437b32622046d941a9913f1fb63c625ba488a4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/contracts/secrets-vault.md",
+              "local_path": "plugins/iskra-toolchain-bridge/contracts/secrets-vault.md",
+              "bytes": 1570,
+              "sha256": "1177663eba352fa25338122eeb2f34fdd1bc2fc86450bbbeb850e873bf42fb94"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/contracts/supabase.md",
+              "local_path": "plugins/iskra-toolchain-bridge/contracts/supabase.md",
+              "bytes": 2163,
+              "sha256": "ea58411dff9868de05dced404adbbfed8b294ad628a01d335f8484af2fced81c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/live-connector-receipt.json",
+              "local_path": "plugins/iskra-toolchain-bridge/live-connector-receipt.json",
+              "bytes": 2356,
+              "sha256": "e42ec616d359e5039487c9f5f2d105b675258574d4b029ca942ada4bb7849104"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/mcp/README.md",
+              "local_path": "plugins/iskra-toolchain-bridge/mcp/README.md",
+              "bytes": 512,
+              "sha256": "8b9b043c75dca7cd26e23c5698de1cf4bd8c872cf8c01174fd79a23a75fba5bc"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/runtime-smoke-receipt.json",
+              "local_path": "plugins/iskra-toolchain-bridge/runtime-smoke-receipt.json",
+              "bytes": 2072,
+              "sha256": "be3b209f18a1332f3ceb71fcbe30229e0027a47d311655c79e5c8e3f31850a74"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/scripts/README.md",
+              "local_path": "plugins/iskra-toolchain-bridge/scripts/README.md",
+              "bytes": 712,
+              "sha256": "9ed0ba22db121479acd8b519c50cc096979e83d83c5aa2d0428af27ab96c832c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/scripts/diagnose_codex_desktop.ps1",
+              "local_path": "plugins/iskra-toolchain-bridge/scripts/diagnose_codex_desktop.ps1",
+              "bytes": 2637,
+              "sha256": "9417b3aca13e6d8a8c54c1670dc0ac1f39576c433896c6af9260229a482762cc"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/scripts/iskra_git_clone_with_vault.ps1",
+              "local_path": "plugins/iskra-toolchain-bridge/scripts/iskra_git_clone_with_vault.ps1",
+              "bytes": 3285,
+              "sha256": "524c14a391972da58810cededb8144fb67afd41ae4e0843ac04190037dc1b5d0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/scripts/iskra_git_clone_with_vault.sh",
+              "local_path": "plugins/iskra-toolchain-bridge/scripts/iskra_git_clone_with_vault.sh",
+              "bytes": 2519,
+              "sha256": "58a2058adbd9a97e8051491d4e373331750852af6d9f5612147bfcf4cd6327ac"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/scripts/smoke_runtime.py",
+              "local_path": "plugins/iskra-toolchain-bridge/scripts/smoke_runtime.py",
+              "bytes": 5238,
+              "sha256": "5700388a0eb91037f7c47656a200ea162f0d0c757a8d9492bff080a12944ec69"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/scripts/validate_connector_contracts.py",
+              "local_path": "plugins/iskra-toolchain-bridge/scripts/validate_connector_contracts.py",
+              "bytes": 3867,
+              "sha256": "b422602fa75f101d24558bde15555f5c64855b2beb0deb8bf7087f3263209e11"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/plugins/iskra-toolchain-bridge/skills/iskra-toolchain-bridge/SKILL.md",
+              "local_path": "plugins/iskra-toolchain-bridge/skills/iskra-toolchain-bridge/SKILL.md",
+              "bytes": 3789,
+              "sha256": "dfcdf3b29e87d8ea8a2d51c19c3c3b16ecb14af1484de00bb6a328404713f4ae"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/provenance/component-manifests/dreamspace-MANIFEST.sha256",
+              "local_path": "provenance/component-manifests/dreamspace-MANIFEST.sha256",
+              "bytes": 8194,
+              "sha256": "623f5409387a22beaf19c8206d6a2f01cd106579e36318bef2b6c375e80738c5"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/provenance/component-manifests/iskra-toolchain-upload-set-v2.sha256",
+              "local_path": "provenance/component-manifests/iskra-toolchain-upload-set-v2.sha256",
+              "bytes": 1567,
+              "sha256": "929f298ff58cd00710ea58804a2d77b885c377833bb7e1fc6cc56f75a8332102"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/provenance/conflict-originals/dreamspace/agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
+              "local_path": "provenance/conflict-originals/dreamspace/agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
+              "bytes": 1890,
+              "sha256": "49f6e0dc8a3d29d30af95e788cf765da6a7106535d2f376b98c2d4311e04315c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/provenance/conflict-originals/dreamspace/agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md",
+              "local_path": "provenance/conflict-originals/dreamspace/agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md",
+              "bytes": 1207,
+              "sha256": "07a4f515338b88b47c49b4dcdea5a29afd112e9c6d5787c7421f38509da464eb"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/provenance/conflict-originals/toolchain/agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
+              "local_path": "provenance/conflict-originals/toolchain/agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
+              "bytes": 2496,
+              "sha256": "84e0ecaac9c62424bd7c59d52772b78bb6f6f24a4189395c52f35679454bf70b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/provenance/conflict-originals/toolchain/agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md",
+              "local_path": "provenance/conflict-originals/toolchain/agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md",
+              "bytes": 2173,
+              "sha256": "3cd2721344ac01347768b545f8f0a7732699fe80af8ac21496323817a6db7de3"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/provenance/source-readmes/iskra-toolchain-upload-set-v2-README.md",
+              "local_path": "provenance/source-readmes/iskra-toolchain-upload-set-v2-README.md",
+              "bytes": 2204,
+              "sha256": "33a3b42a576cfbcaf2aaba22d4be405ed2d69ae24f5130c3cfa70ad13e9710a0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/SKILL.md",
+              "local_path": "skills/iskra-toolchain-bridge/SKILL.md",
+              "bytes": 3789,
+              "sha256": "dfcdf3b29e87d8ea8a2d51c19c3c3b16ecb14af1484de00bb6a328404713f4ae"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/contracts/agent-builder.md",
+              "local_path": "skills/iskra-toolchain-bridge/contracts/agent-builder.md",
+              "bytes": 1940,
+              "sha256": "a4ed738706c927e3f72ab7dc9a948aa27c3e57cb9e1a5e8d208a4c42d962b5d8"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/contracts/artifact-manager.md",
+              "local_path": "skills/iskra-toolchain-bridge/contracts/artifact-manager.md",
+              "bytes": 1471,
+              "sha256": "c194c3ff14d34e7b838546a66740f77e0dcb42916417d716a27e28ef81686613"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/contracts/browser-automation.md",
+              "local_path": "skills/iskra-toolchain-bridge/contracts/browser-automation.md",
+              "bytes": 1757,
+              "sha256": "38dd33366e44becc3588e9d8dd777af92d3914a3675c5903b49aebc21dc71d44"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/contracts/github.md",
+              "local_path": "skills/iskra-toolchain-bridge/contracts/github.md",
+              "bytes": 2121,
+              "sha256": "9ec6fdd894bf96d9d8585be3aeca9cdfaea871978316ba0c34ba312ec851ca13"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/contracts/monitoring.md",
+              "local_path": "skills/iskra-toolchain-bridge/contracts/monitoring.md",
+              "bytes": 1433,
+              "sha256": "2beafcaed57008660c4608abdddc46516d1b9f1bdc1f88b1d8d27166a04449b2"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/contracts/schedule-runner.md",
+              "local_path": "skills/iskra-toolchain-bridge/contracts/schedule-runner.md",
+              "bytes": 1578,
+              "sha256": "cf2b2097514bd920e844c510d1437b32622046d941a9913f1fb63c625ba488a4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/contracts/secrets-vault.md",
+              "local_path": "skills/iskra-toolchain-bridge/contracts/secrets-vault.md",
+              "bytes": 1570,
+              "sha256": "1177663eba352fa25338122eeb2f34fdd1bc2fc86450bbbeb850e873bf42fb94"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/contracts/supabase.md",
+              "local_path": "skills/iskra-toolchain-bridge/contracts/supabase.md",
+              "bytes": 2163,
+              "sha256": "ea58411dff9868de05dced404adbbfed8b294ad628a01d335f8484af2fced81c"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/scripts/diagnose_codex_desktop.ps1",
+              "local_path": "skills/iskra-toolchain-bridge/scripts/diagnose_codex_desktop.ps1",
+              "bytes": 2637,
+              "sha256": "9417b3aca13e6d8a8c54c1670dc0ac1f39576c433896c6af9260229a482762cc"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/scripts/iskra_git_clone_with_vault.ps1",
+              "local_path": "skills/iskra-toolchain-bridge/scripts/iskra_git_clone_with_vault.ps1",
+              "bytes": 3285,
+              "sha256": "524c14a391972da58810cededb8144fb67afd41ae4e0843ac04190037dc1b5d0"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/scripts/iskra_git_clone_with_vault.sh",
+              "local_path": "skills/iskra-toolchain-bridge/scripts/iskra_git_clone_with_vault.sh",
+              "bytes": 2519,
+              "sha256": "58a2058adbd9a97e8051491d4e373331750852af6d9f5612147bfcf4cd6327ac"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/scripts/smoke_runtime.py",
+              "local_path": "skills/iskra-toolchain-bridge/scripts/smoke_runtime.py",
+              "bytes": 5238,
+              "sha256": "5700388a0eb91037f7c47656a200ea162f0d0c757a8d9492bff080a12944ec69"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/skills/iskra-toolchain-bridge/scripts/validate_connector_contracts.py",
+              "local_path": "skills/iskra-toolchain-bridge/scripts/validate_connector_contracts.py",
+              "bytes": 3867,
+              "sha256": "b422602fa75f101d24558bde15555f5c64855b2beb0deb8bf7087f3263209e11"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon/test_horizon_validator.py",
+              "local_path": "tests/horizon/test_horizon_validator.py",
+              "bytes": 3551,
+              "sha256": "a50a127e4c7cf4411f52fed7c9cb0d47c1b96d4641535b6d9152aebb6e35b8f6"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon/test_horizon_wrappers.py",
+              "local_path": "tests/horizon/test_horizon_wrappers.py",
+              "bytes": 2266,
+              "sha256": "b77dd4a6bee943543f348f5b0511e300d1ef95e13885c58471a091ec5f872654"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/clean_export.py",
+              "local_path": "tools/clean_export.py",
+              "bytes": 7306,
+              "sha256": "19bf9ac63e131f67980462de1de7e8d25e6c30e7494e0492443043add68bf049"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/consolidate_rag_knowledge.py",
+              "local_path": "tools/consolidate_rag_knowledge.py",
+              "bytes": 6698,
+              "sha256": "2241a10a924f83fe1ed5a6c1ab583bc8bacbb38e74d4158af7806287f47ad69b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/generate_manifest.py",
+              "local_path": "tools/generate_manifest.py",
+              "bytes": 3469,
+              "sha256": "0d8273d75dfdc44047f23ace701d110c0fb458f1efe8d68aa9475f16d7ba99c4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/horizon_validator.py",
+              "local_path": "tools/horizon_validator.py",
+              "bytes": 1501,
+              "sha256": "157b361e8c13c4135970417e010accb7215cb91d1a2e3b9ea778cc39fbb49d89"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/horizon_weaver.py",
+              "local_path": "tools/horizon_weaver.py",
+              "bytes": 1480,
+              "sha256": "31749481445c0ce176d50a76a51b1c790bfb360b450b6cd708a8cc1eecaf316d"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/reassemble_interface_style.py",
+              "local_path": "tools/reassemble_interface_style.py",
+              "bytes": 1542,
+              "sha256": "2c2c15e6997fe44ae4b9fbd787c7b02fdfa883c8430ea87358bbda23c2e6b813"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/validate_delta.py",
+              "local_path": "tools/validate_delta.py",
+              "bytes": 7840,
+              "sha256": "3d633a6df0efa06e47aec5ef52ac97f621ffae38e10f30814a3bacef5d63c4e4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/validate_terms.py",
+              "local_path": "tools/validate_terms.py",
+              "bytes": 3117,
+              "sha256": "d22512e8374284fb85d92f6e29f2193f25ab025579bead556fd0e9af74d718e9"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/verify_ledger.py",
+              "local_path": "tools/verify_ledger.py",
+              "bytes": 856,
+              "sha256": "c317d203f965f599cfb728f7dba712227556bb1e437b77ded5938c820a54273b"
+            },
+            {
+              "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/workspace_surface_audit.py",
+              "local_path": "tools/workspace_surface_audit.py",
+              "bytes": 10792,
+              "sha256": "2337b2578e26e6448e8c10bbd6e964fdc426367b3bea10a5c55606bf2e48d76d"
+            }
+          ]
+        },
+        "non_claims": [
+          "This is not a verified recursive GitHub tree.",
+          "Local package mirror entries do not prove live Builder upload.",
+          "GitHub file probe does not prove Builder Knowledge activation."
+        ]
+      }
+    },
+    "builder_upload_evidence": {
+      "label": "builder_upload_evidence",
+      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/BUILDER_UPLOAD_EVIDENCE.md",
+      "status": "packaged-as-upload-set; live Builder verification pending",
+      "bytes": 2757,
+      "sha256": "391afb974794b27323b44852f434f4f34e50803f6e2829584ced2ac84eba2074",
+      "first_lines": [
+        "# Builder Upload Evidence",
+        "",
+        "Status: packaged-as-upload-set; live Builder verification pending",
+        "Generated: 2026-06-26T16:45:00Z",
+        "",
+        "## Surface",
+        "",
+        "This file describes the Builder UI / Builder Knowledge surface. It does not",
+        "claim that Builder files are mounted in runtime `/workspace`, that GitHub tree",
+        "entries are active Builder Knowledge, or that helper scripts execute in Builder.",
+        "",
+        "## Current Evidence"
+      ]
+    },
+    "hook_smoke_receipt": {
+      "label": "hook_smoke_receipt",
+      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/HOOK_SMOKE_RECEIPT.json",
+      "status": "PASS",
+      "bytes": 1690,
+      "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3",
+      "summary": {
+        "status": "PASS",
+        "generated_at": "2026-06-26T16:43:00Z",
+        "surface": "workspace_runtime_tools",
+        "tool_path": "/workspace/agent_runtime_tools/iskra_turn_hook.py",
+        "boundary": "verified-local only; not Builder UI/live Builder hook execution proof",
+        "command": "python /workspace/agent_runtime_tools/iskra_turn_hook.py --message ... --role event --note ...",
+        "result": {
+          "dream_status": {
+            "by_voice": {},
+            "latest_open": null,
+            "line": "dreamspace: open=0 total=0",
+            "open": 0,
+            "total": 0
+          },
+          "hook_line": "state: points=4 phase=stable voice=ISKRA | shadow: open=0 high=0 medium=0 low=0 | dreamspace: open=0 total=0 | horizon: proposals=0 epochs=0 latest=none",
+          "horizon_status": {
+            "boundary": "Horizon helper availability is local-file evidence only, not Builder UI verification.",
+            "epoch_ledger_exists": false,
+            "epochs": 0,
+            "last_epoch": null,
+            "last_proposal": null,
+            "ledger_root": "/workspace/memory/horizon",
+            "line": "horizon: proposals=0 epochs=0 latest=none",
+            "module": "builder_horizon",
+            "proposal_ledger_exists": false,
+            "proposals": 0,
+            "schema_version": "0.1"
+          },
+          "shadow_candidate": {
+            "created": false,
+            "id": null,
+            "level": "low",
+            "score": 0.203086
+          },
+          "shadow_status": {
+            "high": 0,
+            "latest_open": null,
+            "line": "shadow: open=0 high=0 medium=0 low=0",
+            "low": 0,
+            "medium": 0,
+            "open": 0
+          },
+          "statecycle": {
+            "entropy": {
+              "mode": "FLOW",
+              "value": 2.584963
+            },
+            "history_points": 4,
+            "phase": "stable",
+            "selected_voice": "ISKRA"
+          }
+        }
+      }
+    },
+    "supabase_advisor_receipt": {
+      "label": "supabase_advisor_receipt",
+      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/SUPABASE_ADVISOR_RECEIPT.json",
+      "status": "PASS_READ_ONLY_ADVISORS_OBSERVED_WITH_WARNINGS",
+      "bytes": 3251,
+      "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c",
+      "summary": {
+        "status": "PASS_READ_ONLY_ADVISORS_OBSERVED_WITH_WARNINGS",
+        "generated_at": "2026-06-26T16:41:30Z",
+        "surface": "supabase_live_advisors",
+        "project_url": "https://typcvaszcfdpkzbjzuur.supabase.co",
+        "connector": "Supabase advisor tool",
+        "read_only": true,
+        "security": {
+          "status": "WARNINGS_PRESENT",
+          "count": 12,
+          "levels": {
+            "WARN": 12
+          },
+          "items": [
+            {
+              "name": "extension_in_public",
+              "level": "WARN",
+              "object": "public.pg_trgm",
+              "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public"
+            },
+            {
+              "name": "pg_graphql_authenticated_table_exposed",
+              "level": "WARN",
+              "count": 11,
+              "objects": [
+                "public.audit_log",
+                "public.chat_history",
+                "public.graph_edges",
+                "public.graph_nodes",
+                "public.habits",
+                "public.journal_entries",
+                "public.memory_nodes",
+                "public.metrics_snapshots",
+                "public.tasks",
+                "public.users",
+                "public.voice_preferences"
+              ],
+              "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0027_pg_graphql_authenticated_table_exposed"
+            }
+          ]
+        },
+        "performance": {
+          "status": "INFO_ITEMS_PRESENT",
+          "count": 29,
+          "levels": {
+            "INFO": 29
+          },
+          "items": [
+            {
+              "name": "unused_index",
+              "level": "INFO",
+              "count": 28,
+              "indexes": [
+                "idx_graph_edges_source",
+                "idx_graph_edges_source_type",
+                "idx_graph_edges_target",
+                "idx_graph_edges_weight",
+                "idx_graph_edges_user",
+                "canon_chunks_document_id_idx",
+                "canon_memory_nodes_chunk_id_idx",
+                "idx_metrics_created_at",
+                "idx_memory_type",
+                "idx_memory_tags",
+                "idx_journal_created_at",
+                "idx_tasks_date",
+                "idx_tasks_done",
+                "idx_audit_action",
+                "idx_audit_created_at",
+                "canon_documents_doc_id_idx",
+                "canon_documents_layer_idx",
+                "canon_documents_metadata_gin",
+                "canon_chunks_doc_id_idx",
+                "canon_chunks_tags_gin",
+                "canon_chunks_metadata_gin",
+                "canon_chunks_content_trgm",
+                "canon_memory_nodes_tags_gin",
+                "canon_memory_nodes_content_gin",
+                "canon_chunks_embedding_hnsw",
+                "canon_memory_nodes_embedding_hnsw",
+                "idx_graph_nodes_timestamp",
+                "idx_graph_nodes_user"
+              ],
+              "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index"
+            },
+            {
+              "name": "auth_db_connections_absolute",
+              "level": "INFO",
+              "count": 1,
+              "object": "Auth",
+              "remediation": "https://supabase.com/docs/guides/deployment/going-into-prod"
+            }
+          ]
+        },
+        "non_claims": [
+          "No Supabase live mutation was performed.",
+          "Advisor warnings are live-read evidence, not a migration plan applied to the database.",
+          "Counts should be refreshed after every DDL/migration change."
+        ],
+        "next": "Batch 3 should turn these advisor findings into a migration-backed repair plan with approval before live changes."
+      }
+    }
+  },
+  "comparisons": {
+    "manifest_vs_package_root": {
+      "left": "manifest_plus_manifest_file",
+      "right": "package_root_static",
+      "left_count": 277,
+      "right_count": 277,
+      "common_count": 277,
+      "left_only_count": 0,
+      "right_only_count": 0,
+      "left_only_sample": [],
+      "right_only_sample": [],
+      "status": "MATCH"
+    },
+    "github_mirror_vs_package_root": {
+      "left": "github_local_package_mirror",
+      "right": "package_root_excluding_github_index_and_manifest",
+      "left_count": 275,
+      "right_count": 275,
+      "common_count": 275,
+      "left_only_count": 0,
+      "right_only_count": 0,
+      "left_only_sample": [],
+      "right_only_sample": [],
+      "status": "MATCH"
+    },
+    "zip_vs_manifest": {
+      "left": "zip_entries",
+      "right": "manifest_plus_dynamic_receipts",
+      "left_count": 278,
+      "right_count": 278,
+      "common_count": 278,
+      "left_only_count": 0,
+      "right_only_count": 0,
+      "left_only_sample": [],
+      "right_only_sample": [],
+      "status": "MATCH"
+    }
+  }
+}
