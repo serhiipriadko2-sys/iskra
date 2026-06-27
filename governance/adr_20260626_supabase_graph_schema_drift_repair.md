@@ -29,7 +29,7 @@ Repair source truth first and add a dedicated graph contract gate:
 
 - align `runtime/iskraSpace/supabase/schema.sql` with the live GraphRAG table/RPC shape;
 - align the standalone GraphRAG migration snapshot with the same structural contract;
-- add `supabase/migrations/20260626145500_graph_schema_contract_repair.sql` as an idempotent future-environment repair path;
+- add `supabase/migrations/20260626153642_graph_schema_contract_repair.sql` as an idempotent future-environment repair path aligned with the observed live migration history;
 - add `tools/verify_supabase_graph_contract.ts`;
 - wire package scripts and CI workflow alongside the existing voice/metrics gate.
 
@@ -43,13 +43,22 @@ The graph gate does not declare the current live graph policy names to be canon.
 - `runtime/iskraSpace/supabase/schema.sql` previously had `graph_nodes.id UUID`, `graph_edges.source UUID`, and `graph_edges.target UUID`.
 - `runtime/iskraSpace/supabase_graphrag_migration.sql` and `supabase/migrations/20260305000000_graph_nodes.sql` previously lacked `RELATED_TO` and lowercase memory-node graph types.
 - `docs/operations/iskraspace_minimal_memory_write_protocol_2026-06-26.md` records the rolled-back failed attempts and corrected text-ID live write.
-- Supabase CLI was unavailable in this workspace (`supabase` command not found), so the new migration filename was created manually using the repo timestamp convention rather than `supabase migration new`.
+- Supabase CLI was unavailable in this workspace (`supabase` command not found), so the initial migration filename was created manually using the repo timestamp convention rather than `supabase migration new`.
+- Read-only live verification on `AgiIskra / typcvaszcfdpkzbjzuur` at `2026-06-27T11:51:37.408193+00:00` observed `graph_schema_contract_repair` in `supabase_migrations.schema_migrations` with version `20260626153642`.
+- The repo migration receipt was renamed from `20260626145500_graph_schema_contract_repair.sql` to `20260626153642_graph_schema_contract_repair.sql` so source history, gate expectations, and live history use the same version.
+- Read-only live verification at `2026-06-27T12:10:52.763806+00:00` also observed later graph history already applied live:
+  `graph_schema_contract_hardening` version `20260626153934`,
+  `graph_anon_select_revoke` version `20260626161747`,
+  `graph_rpc_boundary` version `20260626164633`, and
+  `graph_rpc_boundary_acl_hardening` version `20260626164745`.
+- The corresponding repo receipt files were renamed to those live versions. The graph gate now requires those exact versions when `--require-migration-history` is used.
+- `graph_rpc_boundary` intentionally changes authenticated graph RPC access: `graph_get_node_with_edges(text)` is `SECURITY DEFINER`, pins `search_path`, and scopes visible rows with `auth.uid()`. The graph gate treats that as the current RPC boundary contract rather than failing on the older invoker-only assumption.
 
 ## Risk
 
-This step is source-only. It does not apply live DDL.
+This CI/ledger repair step is source-only. It does not apply live DDL.
 
-The added migration is intentionally idempotent for future environments, but applying it to live is still a live DDL operation and requires separate explicit approval naming `AgiIskra / typcvaszcfdpkzbjzuur`.
+The migrations are intentionally idempotent for future environments. Live `AgiIskra / typcvaszcfdpkzbjzuur` was observed already carrying the listed graph migration versions; no new live mutation is performed by this receipt alignment.
 
 The remaining known risk is policy/access drift: live graph policies are not the desired long-term security posture. That belongs to a separate graph RLS hardening pass so it can be reviewed with auth, public canonical nodes, and app read requirements together.
 
@@ -68,8 +77,8 @@ The live gate needs either `SUPABASE_DB_URL` / `DATABASE_URL` or a read-only JSO
 npx tsx tools/verify_supabase_graph_contract.ts --print-sql
 ```
 
-Use `--require-migration-history` only after `graph_schema_contract_repair` is explicitly approved and applied live.
+Use `--require-migration-history` for live verification so the gate fails if any expected graph migration receipt version disappears from Supabase migration history.
 
 ## Status
 
-Source repair prepared. Live DDL not applied in this step.
+Source repair and live migration receipt aligned. Live DDL was not applied in this CI/ledger repair step.

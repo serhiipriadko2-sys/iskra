@@ -2,6 +2,7 @@
 -- ISKRA SPACE - GRAPH RPC BOUNDARY ACL HARDENING
 -- =============================================================================
 -- Migration name: graph_rpc_boundary_acl_hardening
+-- Live migration version observed: 20260626164745
 --
 -- Purpose:
 --   Remove explicit anon EXECUTE grants that Supabase default function grants

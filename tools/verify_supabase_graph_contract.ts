@@ -48,6 +48,12 @@ type LiveSnapshot = {
   migration_history?: Array<{ version?: string; name?: string }>;
 };
 
+type ExpectedMigration = {
+  name: string;
+  version: string;
+  file: string;
+};
+
 type ExpectedColumn = {
   table: string;
   name: string;
@@ -62,8 +68,36 @@ const GRAPH_CONTRACT_FILES = [
   'runtime/iskraSpace/supabase_graphrag_migration.sql',
   'supabase/migrations/20260305000000_graph_nodes.sql',
 ];
-const REPAIR_MIGRATION_FILE = 'supabase/migrations/20260626145500_graph_schema_contract_repair.sql';
-const REPAIR_MIGRATION_NAME = 'graph_schema_contract_repair';
+const GRAPH_LIVE_MIGRATION_RECEIPTS: ExpectedMigration[] = [
+  {
+    name: 'graph_schema_contract_repair',
+    version: '20260626153642',
+    file: 'supabase/migrations/20260626153642_graph_schema_contract_repair.sql',
+  },
+  {
+    name: 'graph_schema_contract_hardening',
+    version: '20260626153934',
+    file: 'supabase/migrations/20260626153934_graph_schema_contract_hardening.sql',
+  },
+  {
+    name: 'graph_anon_select_revoke',
+    version: '20260626161747',
+    file: 'supabase/migrations/20260626161747_graph_anon_select_revoke.sql',
+  },
+  {
+    name: 'graph_rpc_boundary',
+    version: '20260626164633',
+    file: 'supabase/migrations/20260626164633_graph_rpc_boundary.sql',
+  },
+  {
+    name: 'graph_rpc_boundary_acl_hardening',
+    version: '20260626164745',
+    file: 'supabase/migrations/20260626164745_graph_rpc_boundary_acl_hardening.sql',
+  },
+];
+
+const REPAIR_MIGRATION_FILE = GRAPH_LIVE_MIGRATION_RECEIPTS[0].file;
+const REPAIR_MIGRATION_VERSION = GRAPH_LIVE_MIGRATION_RECEIPTS[0].version;
 
 const GRAPH_NODE_LAYERS = ['archive', 'mantra', 'shadow'].sort();
 const GRAPH_NODE_TYPES = [
@@ -126,11 +160,12 @@ const REQUIRED_INDEXES = [
   'idx_graph_nodes_user',
 ].sort();
 
-const REQUIRED_FUNCTIONS = [
-  'graph_bfs_traversal',
-  'graph_find_resonant',
-  'graph_get_node_with_edges',
-].sort();
+const REQUIRED_FUNCTION_SECURITY_DEFINER: Record<string, boolean> = {
+  graph_bfs_traversal: false,
+  graph_find_resonant: false,
+  graph_get_node_with_edges: true,
+};
+const REQUIRED_FUNCTIONS = Object.keys(REQUIRED_FUNCTION_SECURITY_DEFINER).sort();
 
 const LIVE_SQL = `
 select jsonb_build_object(
@@ -200,8 +235,22 @@ select jsonb_build_object(
   'migration_history', coalesce((
     select jsonb_agg(jsonb_build_object('version', version, 'name', name) order by version desc)
     from supabase_migrations.schema_migrations
-    where name in ('graph_schema_contract_repair', 'graph_nodes')
-       or version in ('20260305000000', '20260626145500')
+    where name in (
+        'graph_schema_contract_repair',
+        'graph_schema_contract_hardening',
+        'graph_anon_select_revoke',
+        'graph_rpc_boundary',
+        'graph_rpc_boundary_acl_hardening',
+        'graph_nodes'
+      )
+       or version in (
+        '20260305000000',
+        '20260626153642',
+        '20260626153934',
+        '20260626161747',
+        '20260626164633',
+        '20260626164745'
+      )
   ), '[]'::jsonb)
 )::text as graph_snapshot;
 `.trim();
@@ -229,7 +278,7 @@ Options:
   --repo-only                  Verify repo graph contract files only.
   --snapshot                   Compare repo graph contract to a live snapshot JSON file.
   --print-sql                  Print the read-only SQL used to produce a live snapshot.
-  --require-migration-history  Fail live check unless graph_schema_contract_repair is in Supabase migration history.
+  --require-migration-history  Fail live check unless expected graph migration receipt versions are in Supabase migration history.
 
 Env:
   SUPABASE_DB_URL or DATABASE_URL
@@ -397,10 +446,17 @@ function verifyRepoGraphContractFile(file: string): void {
 function verifyRepoContract(): void {
   for (const file of GRAPH_CONTRACT_FILES) verifyRepoGraphContractFile(file);
 
-  const migration = readText(REPAIR_MIGRATION_FILE);
-  const normalized = normalizeSql(migration);
-  for (const token of ['graph_schema_contract_repair', 'related_to', 'timestamptz', 'references public.users']) {
-    if (!normalized.includes(token)) fail(`${REPAIR_MIGRATION_FILE}: missing repair marker ${token}`);
+  for (const receipt of GRAPH_LIVE_MIGRATION_RECEIPTS) {
+    const migration = readText(receipt.file);
+    const normalized = normalizeSql(migration);
+    for (const token of [receipt.name, receipt.version]) {
+      if (!normalized.includes(token)) fail(`${receipt.file}: missing live migration receipt marker ${token}`);
+    }
+  }
+
+  const repairMigration = normalizeSql(readText(REPAIR_MIGRATION_FILE));
+  for (const token of ['related_to', 'timestamptz', 'references public.users']) {
+    if (!repairMigration.includes(token)) fail(`${REPAIR_MIGRATION_FILE}: missing repair marker ${token}`);
   }
 
   ok(`repo graph contract files agree: ${GRAPH_CONTRACT_FILES.join(', ')}`);
@@ -534,14 +590,15 @@ function verifyLiveIndexes(snapshot: LiveSnapshot): void {
 }
 
 function verifyLiveFunctions(snapshot: LiveSnapshot): void {
-  const liveFunctions = new Set((snapshot.functions ?? []).map((row) => row.name));
-  for (const functionName of REQUIRED_FUNCTIONS) {
-    if (!liveFunctions.has(functionName)) fail(`Live graph snapshot missing RPC ${functionName}`);
-  }
-
-  for (const fn of snapshot.functions ?? []) {
-    if (REQUIRED_FUNCTIONS.includes(fn.name) && fn.security_definer) {
-      fail(`Live graph RPC ${fn.name} is SECURITY DEFINER`);
+  for (const [functionName, expectedSecurityDefiner] of Object.entries(REQUIRED_FUNCTION_SECURITY_DEFINER)) {
+    const fn = (snapshot.functions ?? []).find((row) => row.name === functionName);
+    if (!fn) fail(`Live graph snapshot missing RPC ${functionName}`);
+    if (fn.security_definer !== expectedSecurityDefiner) {
+      fail(
+        `Live graph RPC ${functionName} security_definer is ${String(fn.security_definer)}, expected ${String(
+          expectedSecurityDefiner,
+        )}`,
+      );
     }
   }
 }
@@ -555,11 +612,15 @@ function verifyLiveRls(snapshot: LiveSnapshot): void {
 }
 
 function verifyMigrationHistory(snapshot: LiveSnapshot, requireMigrationHistory: boolean): void {
-  const names = new Set((snapshot.migration_history ?? []).map((row) => row.name).filter(Boolean));
-  if (!names.has(REPAIR_MIGRATION_NAME)) {
-    const message = `Live migration history does not include ${REPAIR_MIGRATION_NAME}`;
-    if (requireMigrationHistory) fail(message);
-    warn(`${message}; structural graph contract still matched live snapshot`);
+  for (const expected of GRAPH_LIVE_MIGRATION_RECEIPTS) {
+    const migration = (snapshot.migration_history ?? []).find(
+      (row) => row.name === expected.name && row.version === expected.version,
+    );
+    if (!migration) {
+      const message = `Live migration history does not include ${expected.name} version ${expected.version}`;
+      if (requireMigrationHistory) fail(message);
+      warn(`${message}; structural graph contract still matched live snapshot`);
+    }
   }
 }
 

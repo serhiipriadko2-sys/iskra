@@ -2,6 +2,7 @@
 -- ISKRA SPACE - GRAPH RPC BOUNDARY
 -- =============================================================================
 -- Migration name: graph_rpc_boundary
+-- Live migration version observed: 20260626164633
 --
 -- Purpose:
 --   Add an authenticated RPC boundary for graph_nodes / graph_edges before any
@@ -26,7 +27,7 @@
 --   drop function if exists public.graph_traverse_bfs_nodes(text, int, real);
 --   drop function if exists public.graph_find_resonant_nodes(real, int);
 --   -- Optional: restore the previous graph_get_node_with_edges body from
---   -- 20260626145500_graph_schema_contract_repair.sql if strict rollback is needed.
+--   -- 20260626153642_graph_schema_contract_repair.sql if strict rollback is needed.
 --   commit;
 -- =============================================================================
 
