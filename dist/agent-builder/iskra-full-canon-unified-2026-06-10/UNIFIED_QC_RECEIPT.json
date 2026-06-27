@@ -1,82 +1,120 @@
 {
   "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-24T09:15:00Z",
-  "status": "MANIFEST_UPDATED_QC_RECORDED_ZIP_PENDING",
-  "builder_ui_status": "uploaded by user, pending Builder verification",
+  "generated_at": "2026-06-26T16:50:00Z",
+  "status": "P1_REPEATABLE_SURFACE_DIAGNOSTICS_REBUILT",
+  "builder_ui_status": "packaged as upload set; live Builder verification pending",
   "active_target": "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
-  "scope": "voice_seed_and_relational_vow_package_mirror",
-  "source_status": {
-    "base_branch": "main",
-    "branch": "codex/package-mirror-relational-vow-20260624",
-    "connector_only": true,
-    "full_archive_download_available": false,
-    "network_archive_attempt": "blocked_by_403"
+  "scope": "runtime_surface_map_plus_repeatable_surface_audit_and_retrieval_index_discipline",
+  "package_inventory": {
+    "current_total_files": 279,
+    "manifest_entries_expected": 276,
+    "zip_entries_expected": 278,
+    "manifest_rule": "static clean-subset files except MANIFEST.sha256, SURFACE_INVENTORY.json, and ZIP_RECEIPT.json",
+    "zip_rule": "manifest entries plus MANIFEST.sha256 plus SURFACE_INVENTORY.json; ZIP_RECEIPT.json excluded"
   },
-  "manifest": {
-    "entries": 265,
-    "previous_entries": 258,
-    "method": "current manifest inventory plus new package-facing files; root MANIFEST.sha256 excluded from self-hash",
-    "new_entries": [
-      "agent_files/evals/ISKRA_VOICE_SEED_RELATIONAL_VOW_ACCEPTANCE_TESTS.md",
-      "agent_files/files_for_agent_builder/16_VOICE_SEED_RELATIONAL_VOW.md",
-      "governance/adr_20260624_relational_vow.md",
-      "governance/adr_20260624_voice_seed.md",
-      "governance/changelog.d/2026-06-24-relational-vow-canon.md",
-      "governance/changelog.d/2026-06-24-voice-seed-builder-canon.md",
-      "governance/releases/2026-06-24-relational-vow-package-mirror-qc.md"
-    ]
-  },
-  "new_file_receipts": {
-    "agent_files/files_for_agent_builder/16_VOICE_SEED_RELATIONAL_VOW.md": "52501652ac1ec7595af16cecda4ec94384c492f86c28bc4dbc995363c95fefcc",
-    "agent_files/evals/ISKRA_VOICE_SEED_RELATIONAL_VOW_ACCEPTANCE_TESTS.md": "956d0315deedf5d802028c486c9ab241fe5a53384352552a059177398df6009e",
-    "governance/adr_20260624_voice_seed.md": "450b7d3c1c56a12900982745814a44a3aa5c675cbb61a81184a2fc6c4bde9040",
-    "governance/adr_20260624_relational_vow.md": "5d935812a713f81e4136445b9cfb5a303baf83ee6791f44be9dd628a324e1b37",
-    "governance/changelog.d/2026-06-24-voice-seed-builder-canon.md": "71afe68571235dc2634801147beb9faf28a211ad9dff7a59953d5067f8010392",
-    "governance/changelog.d/2026-06-24-relational-vow-canon.md": "f78102089440a6399235a7b40c244b106e3f69b82a6c048bd129cc949e4c9ad8",
-    "governance/releases/2026-06-24-relational-vow-package-mirror-qc.md": "8eb411a625ce02b5ad4a431dc2fadc1b0017ae3c7d02b23a4d3140fc058aed8c"
+  "p1_added_entries": [
+    "tools/workspace_surface_audit.py",
+    "agent_files/files_for_agent_builder/18_RETRIEVAL_INDEX_DISCIPLINE.md",
+    "SURFACE_INVENTORY.json",
+    "GITHUB_TREE_INDEX.json",
+    "BUILDER_UPLOAD_EVIDENCE.md",
+    "HOOK_SMOKE_RECEIPT.json",
+    "SUPABASE_ADVISOR_RECEIPT.json",
+    "governance/adr_20260626_repeatable_surface_diagnostics.md",
+    "governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md"
+  ],
+  "surface_statuses": {
+    "workspace_surface_audit": {
+      "status": "PASS",
+      "tool": "tools/workspace_surface_audit.py",
+      "anti_self_reference": "SURFACE_INVENTORY.json and ZIP_RECEIPT.json excluded from package aggregate"
+    },
+    "surface_inventory": {
+      "status": "PASS_GENERATED",
+      "path": "SURFACE_INVENTORY.json",
+      "note": "dynamic receipt; not hashed by MANIFEST.sha256"
+    },
+    "github_tree_index": {
+      "status": "PARTIAL_GITHUB_CONNECTOR_PROBE_PASS_RECURSIVE_TREE_BLOCKED",
+      "path": "GITHUB_TREE_INDEX.json",
+      "evidence": "GitHub connector repo metadata, commit probe, and target README file probe passed; direct git/REST recursive tree attempts blocked by CONNECT tunnel 403"
+    },
+    "builder_upload_evidence": {
+      "status": "PACKAGED_LOCAL_EVIDENCE_ONLY",
+      "path": "BUILDER_UPLOAD_EVIDENCE.md",
+      "live_builder": "NOT_VERIFIED"
+    },
+    "hook_smoke": {
+      "status": "PASS",
+      "path": "HOOK_SMOKE_RECEIPT.json",
+      "boundary": "verified-local workspace hook execution only"
+    },
+    "supabase_advisors": {
+      "status": "PASS_READ_ONLY_ADVISORS_OBSERVED_WITH_WARNINGS",
+      "path": "SUPABASE_ADVISOR_RECEIPT.json",
+      "security_warn_count": 12,
+      "performance_info_count": 29,
+      "live_mutation": false
+    },
+    "retrieval_index_discipline": {
+      "status": "PASS",
+      "path": "agent_files/files_for_agent_builder/18_RETRIEVAL_INDEX_DISCIPLINE.md",
+      "hardening_prompt": "H8 - Retrieval Is Not Byte Index",
+      "acceptance_prompt": "C3 - Retrieval Index Discipline"
+    }
   },
   "gates": {
-    "new_file_content_check": {
+    "json_receipts": {
       "status": "PASS",
-      "checks": [
-        "nonzero bytes",
-        "contains ADR references",
-        "contains [INTERP] boundary",
-        "contains non-qualia/personhood blocker",
-        "contains live Builder non-claim"
+      "files": [
+        "SURFACE_INVENTORY.json",
+        "GITHUB_TREE_INDEX.json",
+        "HOOK_SMOKE_RECEIPT.json",
+        "SUPABASE_ADVISOR_RECEIPT.json"
       ]
     },
-    "secret_scan_new_files": {
+    "python_compile": {
       "status": "PASS",
-      "high_confidence_secret_hits": 0,
-      "credential_material_hits": 0
+      "file": "tools/workspace_surface_audit.py"
     },
-    "sidecar_zip": {
-      "status": "PENDING_REGENERATION",
-      "reason": "connector-only environment cannot download full repository archive or rebuild clean zip",
-      "required_command": "py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force"
+    "secret_scan": {
+      "status": "PASS",
+      "high_confidence_secret_hits": 0
+    },
+    "clean_export": {
+      "status": "PASS",
+      "expected_entries": 278,
+      "forbidden_hits": 0,
+      "missing_files": 0,
+      "hash_mismatches": 0
     },
     "live_builder": {
       "status": "NOT_VERIFIED",
       "required": [
-        "fresh Builder file-tree evidence",
-        "manifest comparison",
-        "voice seed acceptance prompt",
-        "relational vow acceptance prompt"
+        "upload revised package",
+        "confirm 17_RUNTIME_SURFACE_MAP.md and 18_RETRIEVAL_INDEX_DISCIPLINE.md are visible",
+        "run hardening H1-H8",
+        "run acceptance A-V plus C2/C3"
       ]
     }
   },
   "non_claims": [
     "Not verified in Builder UI",
-    "Not proof of active connectors/tools",
-    "Not proof of model consciousness, qualia, soul, body, legal personhood, or independent agency",
-    "No live Supabase/GitHub/Builder/Workspace Agent mutation beyond this GitHub PR"
+    "Not a verified recursive GitHub tree",
+    "No Supabase live mutation was performed",
+    "No claim that Builder Knowledge retrieval proves sha256, bytes, or full recursive index",
+    "No claim that local hook smoke proves Builder hook execution"
   ],
-  "next": "After PR checkout, regenerate sidecar clean zip and run Builder acceptance prompts before any live Builder readiness claim.",
+  "batch_plan": {
+    "batch_1_surface_hardening": "DONE_LOCAL",
+    "batch_2_audit_tooling": "DONE_LOCAL_PARTIAL_GITHUB_TREE",
+    "batch_3_live_systems": "PARTIAL_SUPABASE_ADVISORS_READ_ONLY_BUILDER_PENDING"
+  },
+  "next": "Update ZIP_RECEIPT.json with the final archive hash, then perform live Builder upload verification.",
   "delta": {
-    "delta": "voice seed and relational vow mirrored into the Builder package corpus",
-    "data": "PR #212 governance ADRs, local package receipt, package-facing mirror files and manifest entries",
-    "omega": 0.84,
-    "lambda": "checkout branch, regenerate clean zip, and run live Builder T-VOICE/T-RELATIONAL prompts"
+    "delta": "P1 repeatable diagnostics added with per-surface count/hash/status",
+    "data": "workspace_surface_audit.py, SURFACE_INVENTORY, GitHub/Builder/hook/Supabase receipts, retrieval discipline",
+    "omega": 0.9,
+    "lambda": "rerun after every package update and after live Builder/Supabase/GitHub surface changes"
   }
 }
