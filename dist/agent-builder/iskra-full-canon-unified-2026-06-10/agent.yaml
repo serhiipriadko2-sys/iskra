@@ -7,10 +7,82 @@ agent:
   name: "Искра vΩ.7"
   description: "Канонический субъект речи и инженерный контур различия. Русский по умолчанию."
   icon: "icon.svg"
-  version: "2026-06-21"
+  version: "2026-06-27"
   release: "iskra-full-canon-unified-2026-06-10"
-  target_ui: "ChatGPT Agents Studio / Workspace Agents"
+  target_ui: "ChatGPT Workspace Agents / Agent Builder / Agents Studio"
+  management_surface: "Codex Desktop app"
   language: "ru"
+
+workspace_agent_live_alignment:
+  observed_at: "2026-06-27T14:30:00Z"
+  observed_via: "Codex Desktop Workspace Agents connector, read-only"
+  status: "observed-in-workspace-agent-config; published-api-channel-active; verified-live-builder not claimed"
+  target_agent:
+    name: "Искра vΩ.7"
+    agent_id_redacted: "agt_6a3aba...d24f"
+    draft_revision_redacted: "drv_1_...UvNJ"
+    draft_version_id_redacted: "agtv_6a3eaf...0081"
+    latest_published_version_id_redacted: "agtv_6a3eaf...6c54"
+  channels_observed:
+    chatgpt: "present"
+    api: "active; trigger id starts with agtch_; endpoint redacted; requires Workspace Agent access token"
+    slack: "not configured"
+  apps_observed:
+    - "GitHub connector attached"
+    - "Ace Knowledge Graph attached"
+    - "Remote Desktop Commander attached"
+    - "Supabase attached"
+  memory_observed:
+    persistent_folder: "per_user"
+  model_observed:
+    name: "workspace default"
+    reasoning_effort: "xhigh"
+  skills_observed:
+    count: 33
+    note: "1 user-uploaded iskra-toolchain-bridge skill plus 32 Iskra skill-pack skills"
+    names:
+      - "iskra-toolchain-bridge"
+      - "checkpoint-builder"
+      - "graphrag-operator"
+      - "iskra-adr-governance"
+      - "iskra-architecture"
+      - "iskra-artifact-qc"
+      - "iskra-builder-package-operator"
+      - "iskra-canon-runtime"
+      - "iskra-code-review"
+      - "iskra-code-style"
+      - "iskra-council-router"
+      - "iskra-cycle-engine"
+      - "iskra-fast-path"
+      - "iskra-git-workflow"
+      - "iskra-github-operator"
+      - "iskra-ledger-integrity"
+      - "iskra-memory-stack"
+      - "iskra-metrics-evaluator"
+      - "iskra-migration"
+      - "iskra-playbook-selector"
+      - "iskra-rag-truth-ladder"
+      - "iskra-release-ledger"
+      - "iskra-security"
+      - "iskra-shadow-repair"
+      - "iskra-sift-auditor"
+      - "iskra-supabase-operator"
+      - "iskra-test-strategy"
+      - "iskra-ui-forensic"
+      - "iskra-workflow-ops"
+      - "metric-runner"
+      - "scientific-turn-architect"
+      - "skill-creator"
+      - "sot-auditor"
+  files_observed:
+    file_tree_id: "redacted"
+    ui_file_count: 269
+    ui_file_count_source: "user screenshot 2026-06-27"
+    recursive_file_tree_inventory: "not captured; connector list_agent_files returned an HTML transport error in this run"
+  non_claims:
+    - "No Workspace Agent access token or secret is stored in this package."
+    - "No live Workspace Agent draft mutation was performed by this package update."
+    - "No verified-live-builder status is claimed until acceptance prompts pass."
 
 instructions:
   primary: "agent_files/instructions"
@@ -55,6 +127,7 @@ builder_guides:
   - "agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md"
   - "agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md"
   - "agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md"
+  - "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md"
 
 memory:
   seed: "agent_files/memory_seed"
@@ -70,6 +143,11 @@ evals:
 skills:
   - path: "skills/iskra-toolchain-bridge"
     entry: "SKILL.md"
+    role: "local Codex/plugin bridge source"
+  - path: "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes"
+    role: "Workspace Agent uploaded skill source pack"
+    count: 32
+    receipt: "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md"
 
 runtime_helpers:
   - "agent_runtime_tools/iskra_statecycle.py"
@@ -79,6 +157,9 @@ runtime_helpers:
   - "agent_runtime_tools/iskra_turn_hook.py"
 
 governance:
+  - "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md"
+  - "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md"
+  - "governance/adr_20260627_workspace_agent_live_alignment.md"
   - "governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md"
   - "governance/adr_20260606_unified_full_canon_builder_v4.md"
   - "SECURITY.md"

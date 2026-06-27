@@ -56,6 +56,8 @@ def iter_files(root: Path) -> list[Path]:
     for path in root.rglob("*"):
         if any(part in SKIP_DIRS for part in path.parts):
             continue
+        if any(part.endswith(".egg-info") for part in path.parts):
+            continue
         if path.name in SKIP_FILES:
             continue
         if path.is_file():
@@ -275,7 +277,7 @@ def main(argv: list[str] | None = None) -> int:
         },
     }
 
-    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({"status": "PASS", "output": str(output_path), "sha256": sha256_file(output_path)}, indent=2))
     return 0
 

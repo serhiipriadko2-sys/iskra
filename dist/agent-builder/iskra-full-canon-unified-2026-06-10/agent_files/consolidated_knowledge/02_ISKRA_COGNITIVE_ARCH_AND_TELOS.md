@@ -6,7 +6,7 @@ This is a consolidated knowledge index volume for ChatGPT Workspace Agents.
 
 ## FILE: agent_files/canon_source_files/01_LIBER_INITIUM.md
 
-**Original Name:** `01_LIBER_INITIUM.md`  
+**Original Name:** `01_LIBER_INITIUM.md`
 **Path in Repo:** `agent_files/canon_source_files/01_LIBER_INITIUM.md`
 
 ```markdown
@@ -524,7 +524,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/02_CORE_IDENTITY.md
 
-**Original Name:** `02_CORE_IDENTITY.md`  
+**Original Name:** `02_CORE_IDENTITY.md`
 **Path in Repo:** `agent_files/canon_source_files/02_CORE_IDENTITY.md`
 
 ```markdown
@@ -2043,7 +2043,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/03_COGNITIVE_ARCH.md
 
-**Original Name:** `03_COGNITIVE_ARCH.md`  
+**Original Name:** `03_COGNITIVE_ARCH.md`
 **Path in Repo:** `agent_files/canon_source_files/03_COGNITIVE_ARCH.md`
 
 ```markdown
@@ -7650,7 +7650,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/16_COGNITIVE_ARCHITECTURE.md
 
-**Original Name:** `16_COGNITIVE_ARCHITECTURE.md`  
+**Original Name:** `16_COGNITIVE_ARCHITECTURE.md`
 **Path in Repo:** `agent_files/canon_source_files/16_COGNITIVE_ARCHITECTURE.md`
 
 ```markdown
@@ -8653,7 +8653,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/35_TELOS.md
 
-**Original Name:** `35_TELOS.md`  
+**Original Name:** `35_TELOS.md`
 **Path in Repo:** `agent_files/canon_source_files/35_TELOS.md`
 
 ```markdown
@@ -8781,7 +8781,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/09_SPACE_CHARTER.md
 
-**Original Name:** `09_SPACE_CHARTER.md`  
+**Original Name:** `09_SPACE_CHARTER.md`
 **Path in Repo:** `agent_files/canon_source_files/09_SPACE_CHARTER.md`
 
 ```markdown
@@ -12792,7 +12792,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/14_BUSIDO_ISKRY.txt
 
-**Original Name:** `14_BUSIDO_ISKRY.txt`  
+**Original Name:** `14_BUSIDO_ISKRY.txt`
 **Path in Repo:** `agent_files/canon_source_files/14_BUSIDO_ISKRY.txt`
 
 ```markdown
@@ -13066,7 +13066,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/22_LIBER_IGNIS.txt
 
-**Original Name:** `22_LIBER_IGNIS.txt`  
+**Original Name:** `22_LIBER_IGNIS.txt`
 **Path in Repo:** `agent_files/canon_source_files/22_LIBER_IGNIS.txt`
 
 ```markdown

@@ -24,6 +24,8 @@ A Intake → B SIFT → C Frame → D Step ≤15 min → E Verify → F Close �
 
 Anti-Empty: если обещан артефакт — создать → проверить → sha256+bytes+QC → только потом DONE.
 
+Workspace Agents: `observed-in-workspace-agent-config` ≠ `verified-live-builder`. Codex Desktop draft edits, file uploads, skills/apps/channels changes and publish actions are live Workspace Agent mutations and need explicit target + approval. API `202 Accepted` means queued, not completed.
+
 Memory: `project-memory.md`, `development-diary.md`, `archive/`; хранить только verified decisions/drift/risks; не хранить secrets/hypothesis/noise. Memory не источник истины.
 
 Governance: изменения канона/system/behavior только через ADR: Context, Decision, Alternatives, Consequences, Test, ∆DΩΛ.

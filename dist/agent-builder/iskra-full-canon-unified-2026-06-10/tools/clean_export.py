@@ -95,6 +95,8 @@ def files_from_manifest() -> List[str]:
 
     if MANIFEST.exists():
         files.append("MANIFEST.sha256")
+    if (PACKAGE_ROOT / "SURFACE_INVENTORY.json").is_file():
+        files.append("SURFACE_INVENTORY.json")
     return sorted(dict.fromkeys(files))
 
 

@@ -1,9 +1,9 @@
 # Iskra Agent Builder Upload Set
 
 Release: `iskra-full-canon-unified-2026-06-10`  
-Target: ChatGPT Workspace Agents / Agents SDK fallback  
+Target: ChatGPT Workspace Agents / Codex Desktop management / Agents SDK fallback
 Previous release: `iskra-full-canon-builder-2026-06-06-v4`  
-Status: `uploaded by user, pending Builder verification`
+Status: `observed-in-workspace-agent-config`; `uploaded by user, pending Builder verification`
 
 ## Purpose
 
@@ -13,6 +13,10 @@ Status: `uploaded by user, pending Builder verification`
 - Include a code-first Agents SDK fallback with read-only local tests and no
   required live OpenAI call for unit verification.
 - Keep local verification artifacts separate from the upload subset.
+- Align the package with the observed live ChatGPT Workspace Agent profile for
+  `Искра vΩ.7` without mutating or publishing that live draft.
+- Preserve the user-added 32-skill Iskra Workspace Agent skill pack as a
+  package layer, alongside the separate live `iskra-toolchain-bridge` skill.
 
 ## Upload Guidance
 
@@ -28,6 +32,13 @@ Status: `uploaded by user, pending Builder verification`
 - Treat `agent_runtime_tools/*` as local helper source unless a runtime proves
   file-backed execution.
 - Treat `agent_files/memory_*` as continuity receipts, not immutable canon.
+- Ensure `19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md` is uploaded or present in
+  the consolidated knowledge volumes before testing live Workspace Agent
+  channel, skill, file-tree, and Codex Desktop boundaries.
+- Upload skills from
+  `skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/`
+  through the Workspace Agent skills surface. Do not treat the skill source
+  tree as ordinary Knowledge unless the UI explicitly supports that workflow.
 
 Do not upload:
 
@@ -76,6 +87,9 @@ Refresh `ZIP_RECEIPT.json` after zip creation.
 - App access, write approvals, action constraints, admin/RBAC settings, and
   destination permissions are configured in ChatGPT Workspace Agents, not by
   this local zip.
+- The current target live agent was observed read-only through Codex Desktop
+  with an active API channel. Exact `agt_...`, `agtv_...`, `drv_...`,
+  `agtch_...`, connector, and file-tree IDs are redacted in package files.
 
 ## Boundary
 
@@ -84,6 +98,10 @@ Refresh `ZIP_RECEIPT.json` after zip creation.
 - `verified in Builder UI` requires observed Builder prompt-level evidence.
 - Local plugin/helper files do not prove active Workspace Agent tools or
   connectors.
+- `observed-in-workspace-agent-config` does not prove file-tree parity or
+  prompt-level acceptance.
+- Package skill source names matching live skill names does not prove
+  byte-identical live skill contents.
 
 ## Unified Recovery Note
 

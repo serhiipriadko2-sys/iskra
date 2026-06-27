@@ -26,6 +26,7 @@ TEXT_SUFFIXES = {
 
 IGNORE_ROOT_FILES = {
     "MANIFEST.sha256",
+    "SURFACE_INVENTORY.json",
     "ZIP_RECEIPT.json",
 }
 

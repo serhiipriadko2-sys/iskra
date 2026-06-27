@@ -1,0 +1,12 @@
+interface:
+  display_name: Искра Release Ledger
+  short_description: Release manifests, checksums, upload sets, smoke tests, and traceable delivery.
+  icon: clipboard-check
+  brand_color: '#0369A1'
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

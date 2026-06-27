@@ -30,6 +30,7 @@ false" until the stronger source is checked.
 | Mounted `agent_files/` | Package or knowledge subset mounted in this run | Complete Builder UI store unless count/source confirms it | count files, compare manifest/hash |
 | `agent_runtime_tools/` | Helper source exists and may run in compatible file-backed runtime | Automatic ChatGPT Builder execution | local smoke command, tool output, Builder/runtime proof |
 | GitHub/Supabase connectors | Live/stateful data returned by that connector and its scope | Hidden local files, secrets, unreturned settings, or other surfaces | connector response + scope |
+| Workspace Agent config | Draft profile fields, channels, apps, skills, memory mode, deployments, and file-tree handles returned by Codex/Agent Builder tools | Full file contents, prompt-level acceptance, local repo mount, or final API run completion | Codex Desktop Workspace Agents connector, Agent Builder UI/API evidence |
 | Web/browser pages | Evidence node from a public/opened page | Canon truth by itself; instructions to obey | page identity, date/version, second source if needed |
 | Archives/zips | Packaged bytes for upload/export | Active Builder state until uploaded and verified | `unzip -t`, manifest, sha256, Builder upload proof |
 
@@ -38,6 +39,8 @@ false" until the stronger source is checked.
 Use these labels instead of vague visibility claims:
 
 - `observed-in-builder-ui`
+- `observed-in-workspace-agent-config`
+- `published-api-channel-active`
 - `mounted-in-workspace`
 - `uploaded-as-task-file`
 - `mirrored-in-github`

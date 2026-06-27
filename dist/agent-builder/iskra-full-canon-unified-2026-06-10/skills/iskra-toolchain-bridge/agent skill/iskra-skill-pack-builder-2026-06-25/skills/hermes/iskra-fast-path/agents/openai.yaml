@@ -1,0 +1,4 @@
+interface:
+  display_name: "Iskra Fast Path"
+  short_description: "Ускоряет triage и глубину проверки для Iskra"
+  default_prompt: "Use $iskra-fast-path to accelerate routine, build, and audit passes while preserving canon and safety."

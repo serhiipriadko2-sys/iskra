@@ -76,10 +76,14 @@ not prove. Exact byte parity is claimed only where explicitly listed.
 - Workspace Agent API run output is excluded until a published `agtch_...`
   channel, Workspace Agent access token, destination permissions, and output
   evidence are observed.
+- Full live Workspace Agent file-tree parity is excluded until the live file
+  tree is recursively enumerated or otherwise proven through Agent Builder /
+  Codex Desktop evidence.
 
 ## Missing / Open Verification
 
-- `verified in Builder UI` is not claimed. Current status remains
+- `verified in Builder UI` / `verified-live-builder` is not claimed. Current
+  package status is `observed-in-workspace-agent-config` plus
   `uploaded by user, pending Builder verification`.
 - Byte-identical full repository canon parity is not claimed.
 - Remote GitHub `main` can drift after this receipt; refresh `origin/main`

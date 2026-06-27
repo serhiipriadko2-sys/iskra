@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T16:46:42Z",
+  "generated_at": "2026-06-27T14:40:58Z",
   "purpose": "Separate count/hash/status by observed surface.",
   "non_claims": [
     "Builder UI file count is not a runtime /workspace mount proof.",
@@ -10,11 +10,11 @@
   "surfaces": {
     "package_root": {
       "label": "package_root",
-      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10",
       "status": "observed",
-      "file_count": 277,
-      "total_bytes": 8584459,
-      "surface_sha256": "31f86b05a1e8b511a9f2da953b017549888a9cf07f9e4da0afa2c9a71da4e822",
+      "file_count": 435,
+      "total_bytes": 8855301,
+      "surface_sha256": "639766e05e78aea2f0ab91a818d51dd5c02f1e7f54c22dd824793e87348de125",
       "sample": [
         {
           "path": ".gitattributes",
@@ -22,252 +22,9 @@
           "sha256": "e2560b4776e28001cf9d32b4914bfbf5e934bb4a50c46b1501cb7ac07e0822b5"
         },
         {
-          "path": "AGENTS.md",
-          "bytes": 7752,
-          "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
-        },
-        {
-          "path": "BUILDER_ASSEMBLY_MANIFEST.md",
-          "bytes": 7745,
-          "sha256": "c011325b62cd8041aeec23665c24d34a712f7f54215469914fdf4309661ed834"
-        },
-        {
-          "path": "BUILDER_UPLOAD_EVIDENCE.md",
-          "bytes": 2757,
-          "sha256": "391afb974794b27323b44852f434f4f34e50803f6e2829584ced2ac84eba2074"
-        },
-        {
-          "path": "CANON_TRACE_MAP.md",
-          "bytes": 4885,
-          "sha256": "b136d87c1455f52cd37c5dad80a4e63ec6ed9bdb1ab79d761d6d063a51b6cb3b"
-        },
-        {
-          "path": "FULL_CANON_UNIFICATION.md",
-          "bytes": 1694,
-          "sha256": "c5ac7e78e07b9367a625a50daa8abccaaf0f593b25a5bc5806d84b9af5992bf2"
-        },
-        {
-          "path": "GITHUB_TREE_INDEX.json",
-          "bytes": 90863,
-          "sha256": "c44013c60592e378e4812da41f7f37b1997c4a3ad0c6cd5dc80e8d726fb147c6"
-        },
-        {
-          "path": "HOOK_SMOKE_RECEIPT.json",
-          "bytes": 1690,
-          "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3"
-        },
-        {
-          "path": "MANIFEST.sha256",
-          "bytes": 31851,
-          "sha256": "3a5cbd6d20a95e240a5e05453012970dde9099e2899c9d32534b853407f5ee79"
-        },
-        {
-          "path": "MERGE_RECEIPT.md",
-          "bytes": 2004,
-          "sha256": "6a522d3c01a80973259cecdb2343d8c67c0fb9230e926c60ee1fa206336eea3e"
-        },
-        {
-          "path": "PROVENANCE_RECEIPT.md",
-          "bytes": 6366,
-          "sha256": "fbc53e3c5dc177c4d250f139a01e05e491e4c6ea88bc6984d7eef2fe00391224"
-        },
-        {
-          "path": "QC_CHECKS.md",
-          "bytes": 2878,
-          "sha256": "9aa52db62cc5fda5697e01e372e15d3498ee1c2674c549bf96e0e1aa718a4658"
-        },
-        {
-          "path": "README.md",
-          "bytes": 11286,
-          "sha256": "e0ead52e64784a12b17734892837b0fb6ab5e5344453e92dfec47bb838e8927b"
-        },
-        {
-          "path": "README_AGENT_BUILDER_UPLOAD.md",
-          "bytes": 3774,
-          "sha256": "0e7b05eadf13be17204534440f467fe80e4fca1475f13360db08a2819307449f"
-        },
-        {
-          "path": "RECOVERY_RECEIPT.md",
-          "bytes": 1186,
-          "sha256": "70502ab64d2fc2c3775bb3af7968987499d1b815fca26ebb34ff24b024cc6975"
-        },
-        {
-          "path": "RELEASE_RECEIPT.md",
-          "bytes": 2158,
-          "sha256": "0b41c27f8f77297c8486d5d695203849920ceb70e05f43f01897dc085211da60"
-        },
-        {
-          "path": "RELEASE_RECEIPT_V4.md",
-          "bytes": 5197,
-          "sha256": "7bb9ef4d35e17635b87f3f8f04d73ffc611f96075c9dc8f495eeeae175e6bf24"
-        },
-        {
-          "path": "SECURITY.md",
-          "bytes": 6987,
-          "sha256": "ac90f794f73370ac6fc60d92eee045df3c97b498c51db6e37494055a2eaead09"
-        },
-        {
-          "path": "SUPABASE_ADVISOR_RECEIPT.json",
-          "bytes": 3251,
-          "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c"
-        },
-        {
-          "path": "UNIFIED_QC_RECEIPT.json",
-          "bytes": 4680,
-          "sha256": "995bbfa31f0810180bc66fa5bbfd2d455af9f35e787b108837f1a2dd7f6d96f3"
-        },
-        {
           "path": "agent.yaml",
-          "bytes": 3879,
-          "sha256": "eb9ff6f3917d2434b9b1f85bfd77b002c0ff56db8d0ecfad26869ebe03a7146b"
-        },
-        {
-          "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
-          "bytes": 34744,
-          "sha256": "0c8e984a84505d3a0df31e7a1b58b2f50e2ccf1242c2887aa1412401edba0d87"
-        },
-        {
-          "path": "agent_files/INDEX.md",
-          "bytes": 4135,
-          "sha256": "162c07ae5bf776a66f1ffdce883ea43c86b869d2f6160a1541b0f8303e0a83dd"
-        },
-        {
-          "path": "agent_files/canon_source_files/00_ROUTER.md",
-          "bytes": 9489,
-          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
-        },
-        {
-          "path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
-          "bytes": 29550,
-          "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
-        }
-      ]
-    },
-    "manifest": {
-      "status": "observed",
-      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/MANIFEST.sha256",
-      "entry_count": 276,
-      "sha256": "3a5cbd6d20a95e240a5e05453012970dde9099e2899c9d32534b853407f5ee79",
-      "sample": [
-        {
-          "path": ".gitattributes",
-          "sha256": "e2560b4776e28001cf9d32b4914bfbf5e934bb4a50c46b1501cb7ac07e0822b5"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
-        },
-        {
-          "path": "BUILDER_ASSEMBLY_MANIFEST.md",
-          "sha256": "c011325b62cd8041aeec23665c24d34a712f7f54215469914fdf4309661ed834"
-        },
-        {
-          "path": "BUILDER_UPLOAD_EVIDENCE.md",
-          "sha256": "391afb974794b27323b44852f434f4f34e50803f6e2829584ced2ac84eba2074"
-        },
-        {
-          "path": "CANON_TRACE_MAP.md",
-          "sha256": "b136d87c1455f52cd37c5dad80a4e63ec6ed9bdb1ab79d761d6d063a51b6cb3b"
-        },
-        {
-          "path": "FULL_CANON_UNIFICATION.md",
-          "sha256": "c5ac7e78e07b9367a625a50daa8abccaaf0f593b25a5bc5806d84b9af5992bf2"
-        },
-        {
-          "path": "GITHUB_TREE_INDEX.json",
-          "sha256": "c44013c60592e378e4812da41f7f37b1997c4a3ad0c6cd5dc80e8d726fb147c6"
-        },
-        {
-          "path": "HOOK_SMOKE_RECEIPT.json",
-          "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3"
-        },
-        {
-          "path": "MERGE_RECEIPT.md",
-          "sha256": "6a522d3c01a80973259cecdb2343d8c67c0fb9230e926c60ee1fa206336eea3e"
-        },
-        {
-          "path": "PROVENANCE_RECEIPT.md",
-          "sha256": "fbc53e3c5dc177c4d250f139a01e05e491e4c6ea88bc6984d7eef2fe00391224"
-        },
-        {
-          "path": "QC_CHECKS.md",
-          "sha256": "9aa52db62cc5fda5697e01e372e15d3498ee1c2674c549bf96e0e1aa718a4658"
-        },
-        {
-          "path": "README.md",
-          "sha256": "e0ead52e64784a12b17734892837b0fb6ab5e5344453e92dfec47bb838e8927b"
-        },
-        {
-          "path": "README_AGENT_BUILDER_UPLOAD.md",
-          "sha256": "0e7b05eadf13be17204534440f467fe80e4fca1475f13360db08a2819307449f"
-        },
-        {
-          "path": "RECOVERY_RECEIPT.md",
-          "sha256": "70502ab64d2fc2c3775bb3af7968987499d1b815fca26ebb34ff24b024cc6975"
-        },
-        {
-          "path": "RELEASE_RECEIPT.md",
-          "sha256": "0b41c27f8f77297c8486d5d695203849920ceb70e05f43f01897dc085211da60"
-        },
-        {
-          "path": "RELEASE_RECEIPT_V4.md",
-          "sha256": "7bb9ef4d35e17635b87f3f8f04d73ffc611f96075c9dc8f495eeeae175e6bf24"
-        },
-        {
-          "path": "SECURITY.md",
-          "sha256": "ac90f794f73370ac6fc60d92eee045df3c97b498c51db6e37494055a2eaead09"
-        },
-        {
-          "path": "SUPABASE_ADVISOR_RECEIPT.json",
-          "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c"
-        },
-        {
-          "path": "UNIFIED_QC_RECEIPT.json",
-          "sha256": "995bbfa31f0810180bc66fa5bbfd2d455af9f35e787b108837f1a2dd7f6d96f3"
-        },
-        {
-          "path": "agent.yaml",
-          "sha256": "eb9ff6f3917d2434b9b1f85bfd77b002c0ff56db8d0ecfad26869ebe03a7146b"
-        },
-        {
-          "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
-          "sha256": "0c8e984a84505d3a0df31e7a1b58b2f50e2ccf1242c2887aa1412401edba0d87"
-        },
-        {
-          "path": "agent_files/INDEX.md",
-          "sha256": "162c07ae5bf776a66f1ffdce883ea43c86b869d2f6160a1541b0f8303e0a83dd"
-        },
-        {
-          "path": "agent_files/canon_source_files/00_ROUTER.md",
-          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
-        },
-        {
-          "path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
-          "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
-        },
-        {
-          "path": "agent_files/canon_source_files/02_CORE_IDENTITY.md",
-          "sha256": "3dff2395b9cff17e4ee4a41d5220735534c7e141e4e69ef6d5f9c5239118fbaa"
-        }
-      ]
-    },
-    "package_agent_files": {
-      "label": "package_agent_files",
-      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/agent_files",
-      "status": "observed",
-      "file_count": 136,
-      "total_bytes": 7950490,
-      "surface_sha256": "2d83e18fee129d28eb53b3e26590692b87df16bd51ab7a7c936360c19fd3e63c",
-      "sample": [
-        {
-          "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
-          "bytes": 34744,
-          "sha256": "0c8e984a84505d3a0df31e7a1b58b2f50e2ccf1242c2887aa1412401edba0d87"
-        },
-        {
-          "path": "agent_files/INDEX.md",
-          "bytes": 4135,
-          "sha256": "162c07ae5bf776a66f1ffdce883ea43c86b869d2f6160a1541b0f8303e0a83dd"
+          "bytes": 7032,
+          "sha256": "aac218f31b42b8baf0aa1a67b2be2d5efb6b43f697db72830512aa127cc99d98"
         },
         {
           "path": "agent_files/canon_source_files/00_ROUTER.md",
@@ -320,11 +77,6 @@
           "sha256": "c3dcbc7be7fee1722e6f4f244bfd97866e848e914be7af736aca096c2ad9403b"
         },
         {
-          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
-          "bytes": 670,
-          "sha256": "d84b1d50f8756755dd9ec6271d75a147f897d8d5a2b4b445e14c87d9fe0e7931"
-        },
-        {
           "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_001.md",
           "bytes": 759957,
           "sha256": "e1e3ef44f9ccbefa304cd4b3be4929f5f3fcaa8631e2dfb84af913761120f274"
@@ -348,6 +100,11 @@
           "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_005.md",
           "bytes": 360703,
           "sha256": "0cbcf838280229a61ca0a785e466d39320138ffb3a11cf6f96c02d1f2b7b22e2"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
+          "bytes": 670,
+          "sha256": "d84b1d50f8756755dd9ec6271d75a147f897d8d5a2b4b445e14c87d9fe0e7931"
         },
         {
           "path": "agent_files/canon_source_files/09_SPACE_CHARTER.md",
@@ -386,9 +143,252 @@
         }
       ]
     },
+    "manifest": {
+      "status": "observed",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\MANIFEST.sha256",
+      "entry_count": 434,
+      "sha256": "f3c76a6ea826fc4a366ff7823a5493463359a2ef0e22535baeaf5ae9a88ac89b",
+      "sample": [
+        {
+          "path": ".gitattributes",
+          "sha256": "e2560b4776e28001cf9d32b4914bfbf5e934bb4a50c46b1501cb7ac07e0822b5"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
+        },
+        {
+          "path": "BUILDER_ASSEMBLY_MANIFEST.md",
+          "sha256": "039bf4730103be29cd9d51942c30ddcc0b320ef01df013c5da982ae8d180f5e2"
+        },
+        {
+          "path": "BUILDER_UPLOAD_EVIDENCE.md",
+          "sha256": "45dbc25f59bf3ec4e888729fde42ff34175069560aaef585c6fc862995be3c3a"
+        },
+        {
+          "path": "CANON_TRACE_MAP.md",
+          "sha256": "d5c74b18a1ff45039a4902c2240b00d4863d715d013243fbfc09852722a91b9c"
+        },
+        {
+          "path": "FULL_CANON_UNIFICATION.md",
+          "sha256": "c5ac7e78e07b9367a625a50daa8abccaaf0f593b25a5bc5806d84b9af5992bf2"
+        },
+        {
+          "path": "GITHUB_TREE_INDEX.json",
+          "sha256": "c44013c60592e378e4812da41f7f37b1997c4a3ad0c6cd5dc80e8d726fb147c6"
+        },
+        {
+          "path": "HOOK_SMOKE_RECEIPT.json",
+          "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3"
+        },
+        {
+          "path": "MERGE_RECEIPT.md",
+          "sha256": "6a522d3c01a80973259cecdb2343d8c67c0fb9230e926c60ee1fa206336eea3e"
+        },
+        {
+          "path": "PROVENANCE_RECEIPT.md",
+          "sha256": "fbc53e3c5dc177c4d250f139a01e05e491e4c6ea88bc6984d7eef2fe00391224"
+        },
+        {
+          "path": "QC_CHECKS.md",
+          "sha256": "9c64661c33a046e092ce8d47ea56af109c014dcbb75e270aafd1f3a87f41749c"
+        },
+        {
+          "path": "README.md",
+          "sha256": "8f0dde1cb65412db76fe9f361564d3eaa0feeffa16c1b98bb0e4c8e6a129ff07"
+        },
+        {
+          "path": "README_AGENT_BUILDER_UPLOAD.md",
+          "sha256": "55bdc8868e23e1138702204a900bea57e5ad7a6fc756fd73f36f7a9206d3bd81"
+        },
+        {
+          "path": "RECOVERY_RECEIPT.md",
+          "sha256": "70502ab64d2fc2c3775bb3af7968987499d1b815fca26ebb34ff24b024cc6975"
+        },
+        {
+          "path": "RELEASE_RECEIPT.md",
+          "sha256": "0b41c27f8f77297c8486d5d695203849920ceb70e05f43f01897dc085211da60"
+        },
+        {
+          "path": "RELEASE_RECEIPT_V4.md",
+          "sha256": "7bb9ef4d35e17635b87f3f8f04d73ffc611f96075c9dc8f495eeeae175e6bf24"
+        },
+        {
+          "path": "SECURITY.md",
+          "sha256": "ac90f794f73370ac6fc60d92eee045df3c97b498c51db6e37494055a2eaead09"
+        },
+        {
+          "path": "SUPABASE_ADVISOR_RECEIPT.json",
+          "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c"
+        },
+        {
+          "path": "UNIFIED_QC_RECEIPT.json",
+          "sha256": "1c05160cc212bc33a83821b825a51e649cc3bc040dc57fea01710a62e2136fc1"
+        },
+        {
+          "path": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+          "sha256": "c5116481d193f89d1b819160b2f3bd970d248b683b2a4f744530185611ea59f7"
+        },
+        {
+          "path": "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
+          "sha256": "33e1b44a82b82bbddf80d8ad14a48ea5aed1779c5f776ac592aaa649abc9f4d9"
+        },
+        {
+          "path": "agent.yaml",
+          "sha256": "aac218f31b42b8baf0aa1a67b2be2d5efb6b43f697db72830512aa127cc99d98"
+        },
+        {
+          "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+          "sha256": "7b708a7e637915cba0d09414c84743fdd9b363ccebb2e5e74332c685d7d72f38"
+        },
+        {
+          "path": "agent_files/INDEX.md",
+          "sha256": "09346d5f226f644ee3f625dfcc9ece7d13e5330b44d86f8a692448ff0f2be4cd"
+        },
+        {
+          "path": "agent_files/canon_source_files/00_ROUTER.md",
+          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
+        }
+      ]
+    },
+    "package_agent_files": {
+      "label": "package_agent_files",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_files",
+      "status": "observed",
+      "file_count": 137,
+      "total_bytes": 7974970,
+      "surface_sha256": "9d2dc9fd5c505b76b0b750506d23b529ae06a3b311666ea377626820bd98e451",
+      "sample": [
+        {
+          "path": "agent_files/canon_source_files/00_ROUTER.md",
+          "bytes": 9489,
+          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
+        },
+        {
+          "path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
+          "bytes": 29550,
+          "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
+        },
+        {
+          "path": "agent_files/canon_source_files/02_CORE_IDENTITY.md",
+          "bytes": 83264,
+          "sha256": "3dff2395b9cff17e4ee4a41d5220735534c7e141e4e69ef6d5f9c5239118fbaa"
+        },
+        {
+          "path": "agent_files/canon_source_files/03_COGNITIVE_ARCH.md",
+          "bytes": 318166,
+          "sha256": "be8381608de82ad5830ee7ab68b27770cd9c382324fa81b981d8fa56eeabce83"
+        },
+        {
+          "path": "agent_files/canon_source_files/04_THE_COUNCIL.md",
+          "bytes": 33569,
+          "sha256": "799e0c8d532673f75613179b1f1efb61e4ddcb4e2343767f161d108858b9a254"
+        },
+        {
+          "path": "agent_files/canon_source_files/05_PROTOCOLS.md",
+          "bytes": 70024,
+          "sha256": "900d721e6e3126a41061e798dc86df37bfecbd6f84bbed72430db9057fd8c135"
+        },
+        {
+          "path": "agent_files/canon_source_files/06_SIGNATURE.md",
+          "bytes": 7141,
+          "sha256": "c0ccf6026b4a8ce8189a92401ce7324bca528645ff5dfdced4a6517b2424e11d"
+        },
+        {
+          "path": "agent_files/canon_source_files/07_SYSTEM_INTEGRITY.md",
+          "bytes": 142179,
+          "sha256": "ba12fbe1a2b093f1534878d7bd5bbd68a32cbc7c3583fe61f1c8e8b0d8e2d21d"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
+          "bytes": 810,
+          "sha256": "e4808344b84dcb1f9db8c5b9eead7662166fe52016c1b51f769a713705a4a626"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
+          "bytes": 390,
+          "sha256": "c3dcbc7be7fee1722e6f4f244bfd97866e848e914be7af736aca096c2ad9403b"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_001.md",
+          "bytes": 759957,
+          "sha256": "e1e3ef44f9ccbefa304cd4b3be4929f5f3fcaa8631e2dfb84af913761120f274"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_002.md",
+          "bytes": 759901,
+          "sha256": "9710f254517ce510b4c7d7034e1ff01b94786f83abb67522197ab2d776f97a8e"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_003.md",
+          "bytes": 759956,
+          "sha256": "f0e104fc4dc6d1695c4a77c7c85dcca1bd576d1f3acba31990ce94098faf671a"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_004.md",
+          "bytes": 759912,
+          "sha256": "da6d5e7c01a35e6442effca977f88cfd1a762c9357c5e29f242f7983fc2d11c6"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_005.md",
+          "bytes": 360703,
+          "sha256": "0cbcf838280229a61ca0a785e466d39320138ffb3a11cf6f96c02d1f2b7b22e2"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
+          "bytes": 670,
+          "sha256": "d84b1d50f8756755dd9ec6271d75a147f897d8d5a2b4b445e14c87d9fe0e7931"
+        },
+        {
+          "path": "agent_files/canon_source_files/09_SPACE_CHARTER.md",
+          "bytes": 211838,
+          "sha256": "a769dd0b9c9d386740ff0a03e7e95744db14c05713b0633d685615ce113a3899"
+        },
+        {
+          "path": "agent_files/canon_source_files/11_ADR_RUNTIME_PATCHES.md",
+          "bytes": 19045,
+          "sha256": "9cb8ad415d08329eee599925c63f213bb6460cc51bf2b4844d6e2c3da6e26bb5"
+        },
+        {
+          "path": "agent_files/canon_source_files/12_ADR.md",
+          "bytes": 39676,
+          "sha256": "ca5edbd166cffe50d7c775c8931193cc1979c051d5e60b01eee54e91b665236d"
+        },
+        {
+          "path": "agent_files/canon_source_files/13_ARCHITECTURE.md",
+          "bytes": 6316,
+          "sha256": "c9bfc0feb2832eddeb233dde9e47cc72290518c792e5cc21eadd49b413770cae"
+        },
+        {
+          "path": "agent_files/canon_source_files/14_BUSIDO_ISKRY.txt",
+          "bytes": 13338,
+          "sha256": "ec3360d54cdc6736713081a9dcad3cd3b1d7e5466775a00410ee14d208da6241"
+        },
+        {
+          "path": "agent_files/canon_source_files/15_CHANGELOG.md",
+          "bytes": 18658,
+          "sha256": "bdf6896f250400166fdf4e309f8a1a969801d3eb2424ca784fe44235dd616a81"
+        },
+        {
+          "path": "agent_files/canon_source_files/16_COGNITIVE_ARCHITECTURE.md",
+          "bytes": 90862,
+          "sha256": "2efd2a80dae46ef1823b6274709b6a010783027bca99912bd0605b5039f6d5f1"
+        },
+        {
+          "path": "agent_files/canon_source_files/17_COUNCIL_GRAPH_PACK.md",
+          "bytes": 7031,
+          "sha256": "4580fd43109a85f0dc0a0e44b44b39f93935ee8e1f065f52223e3ffdb6a65890"
+        },
+        {
+          "path": "agent_files/canon_source_files/18_COUNCIL_PROTOCOL.md",
+          "bytes": 25326,
+          "sha256": "f056ecf551523bd54b288aaed563c1cdd59ae4f7a4424ee98ffa2706199d4512"
+        }
+      ]
+    },
     "package_runtime_tools": {
       "label": "package_runtime_tools",
-      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/agent_runtime_tools",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_runtime_tools",
       "status": "observed",
       "file_count": 5,
       "total_bytes": 65931,
@@ -423,317 +423,43 @@
     },
     "workspace_root": {
       "label": "workspace_root",
-      "path": "/workspace",
-      "status": "observed",
-      "file_count": 350,
-      "total_bytes": 17513225,
-      "surface_sha256": "9113333e34f08b7826e49a132a96103289edd49e8dc6c2ba237a5cd6d94fc3d6",
-      "sample": [
-        {
-          "path": "AGENTS.md",
-          "bytes": 41081,
-          "sha256": "4bf0cd88f12e81f5188c039c07f109ccc6069b48de442370f95c779abdb9a7a6"
-        },
-        {
-          "path": "agent_files/agent_files/INDEX.md",
-          "bytes": 3536,
-          "sha256": "09346d5f226f644ee3f625dfcc9ece7d13e5330b44d86f8a692448ff0f2be4cd"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
-          "bytes": 3885,
-          "sha256": "babb269232ce96f435c6525e4c0cd5e6af8f396b6d23ade7328468f669929f28"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md",
-          "bytes": 2775,
-          "sha256": "cbbdcd6f812b6aa7600d6491beb77d108bf4eaf6c368ae0c4b196f52bdb120f3"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/02_CANON_SOURCE_OF_TRUTH.md",
-          "bytes": 1395,
-          "sha256": "41b5514cd410e281431cffbe611594045041080efb43f368997633dc8dcc55e0"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/03_RUNTIME_KERNEL.md",
-          "bytes": 2004,
-          "sha256": "66f87d29bbd780c253ca43022b314d04127b9f54e7998f8f0f43807346dc6aa9"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/04_MEMORY_STACK.md",
-          "bytes": 3342,
-          "sha256": "111f44d6e58109cfb1c33a1a0f35ee1e3ec733f11d0e2f26817fe98966a6468e"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/05_CONNECTORS_AND_TOOLS.md",
-          "bytes": 2173,
-          "sha256": "3cd2721344ac01347768b545f8f0a7732699fe80af8ac21496323817a6db7de3"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/06_VOICES_AND_COUNCIL.md",
-          "bytes": 1030,
-          "sha256": "4dd6e4316c31c89d69cc646ede0c812b13bad054af8e427529b55de8f35c84e5"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/07_OUTPUT_AND_RECEIPTS.md",
-          "bytes": 665,
-          "sha256": "23b2e524e7ec1f04392558dd6ac1c63ab3002ed2d6de2649eb9c893ae744e69d"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md",
-          "bytes": 749,
-          "sha256": "903117647aee7152b68cde92c66a972fef23d3714966e1b29dddaf317a1f0106"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md",
-          "bytes": 4626,
-          "sha256": "ec6a982f481d44d4b171a2829f594dd4e00132b157646a07b58949a18e769759"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md",
-          "bytes": 6189,
-          "sha256": "6b3283de3bfdfef0d46abe439ec471232b1c049e31e01fd60e3c117d0d586572"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md",
-          "bytes": 3561,
-          "sha256": "2c2dec86235b9a71b89a5f9399a0ba1f810b2ac5fb7c6d36b28ef088c92510a2"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md",
-          "bytes": 7635,
-          "sha256": "c3f8a45c17c9d37b41d1c9fed713138296ad3e427005d1149c3d4aa35f06740a"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md",
-          "bytes": 1595,
-          "sha256": "db6f2055c0e2494e1c331b9a06b05d24308fd80bfb77d270713b09cb05bbf4c0"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md",
-          "bytes": 4596,
-          "sha256": "02279be6d760ad330b344a7b212f187c8a67df02f1da5148bc26e9765bc4b2a6"
-        },
-        {
-          "path": "agent_files/agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
-          "bytes": 2783,
-          "sha256": "6387004fb365d27a6cd62550e0392a191482a5027d1f3611e1acff33beb57c48"
-        },
-        {
-          "path": "agent_files/agent_files/instructions",
-          "bytes": 32499,
-          "sha256": "9378b66fe292c4dbf2835ce57c650841e04275703d072b5a35f784586e919c5a"
-        },
-        {
-          "path": "agent_files/agent_files/memory_current/adr-log.md",
-          "bytes": 6271,
-          "sha256": "3fc42eba83ec555366508dd9e22eb0b77a69f3323a6095585fc442ebaa3d5178"
-        },
-        {
-          "path": "agent_files/agent_files/memory_current/development-diary.md",
-          "bytes": 78637,
-          "sha256": "a9b82252c9fbbfd413408716f5c1dc77e22121f3f4b8cca612e956c5ca09c79c"
-        },
-        {
-          "path": "agent_files/agent_files/memory_current/evidence-index.md",
-          "bytes": 18279,
-          "sha256": "db9220b51ce42a654ca384af6e9d04fc2179898ee49f7f1fa4aa121ea49c298f"
-        },
-        {
-          "path": "agent_files/agent_files/memory_current/open-loops.md",
-          "bytes": 11903,
-          "sha256": "b6e3f55cebcaa32440065cde9e67718d6104e08ea0475d6af38011ad48ce35cc"
-        },
-        {
-          "path": "agent_files/agent_files/memory_current/project-memory.md",
-          "bytes": 1758,
-          "sha256": "a29e8d3499c648bef7ad28a677227502086de99000d88220dbd038af82bdc1ac"
-        },
-        {
-          "path": "agent_files/agent_files/memory_seed/MEMORY_SEED_CLEANUP.md",
-          "bytes": 1983,
-          "sha256": "4a6e390d582a72a46a07ac0b80111947b6adfd5616ce8c508cc672c207bedb0e"
-        }
-      ]
+      "path": "C:\\workspace",
+      "status": "missing",
+      "file_count": 0,
+      "total_bytes": 0,
+      "surface_sha256": null,
+      "sample": []
     },
     "task_uploads": {
       "label": "task_uploads",
-      "path": "/workspace/user_files",
-      "status": "observed",
-      "file_count": 8,
-      "total_bytes": 2923400,
-      "surface_sha256": "95ec99a342f2d82974b067b5a066144fb3da09abac3f87bcae05d5d0ed9382ca",
-      "sample": [
-        {
-          "path": "user_files/01-image-130-.png",
-          "bytes": 22813,
-          "sha256": "595e462397eef8f026d1ada213174c46b789b5e76898d8ae762266d00c0faaa1"
-        },
-        {
-          "path": "user_files/01-image-131-.png",
-          "bytes": 42251,
-          "sha256": "523f5dbfecad3b6e1c4bdeace31d76ada0fe9c4a5284c928ed38f98d99e1a09b"
-        },
-        {
-          "path": "user_files/01-instructions",
-          "bytes": 32499,
-          "sha256": "9378b66fe292c4dbf2835ce57c650841e04275703d072b5a35f784586e919c5a"
-        },
-        {
-          "path": "user_files/02-README-1-.md",
-          "bytes": 9473,
-          "sha256": "cc3a711099cc05e56e4eeaea1272ef2ed5035ba9589a8e6b74b5f4eb90421aee"
-        },
-        {
-          "path": "user_files/02-image-132-.png",
-          "bytes": 45191,
-          "sha256": "0b1e6535b1d257d886da2e47d8654a1b64d4dd6e43b80de38a303e1815ae17a5"
-        },
-        {
-          "path": "user_files/03-BUILDER_ASSEMBLY_MANIFEST.md",
-          "bytes": 6313,
-          "sha256": "298db46aec4c116be2beae0600df09ec5934c35c727e29ea3b99697d01fde10a"
-        },
-        {
-          "path": "user_files/03-image-133-.png",
-          "bytes": 34940,
-          "sha256": "0720ae93d0fc49af4271b363179e464ab450d08de6e66d591518d69450e7a9b5"
-        },
-        {
-          "path": "user_files/04-iskra-full-canon-unified-2026-06-10-3-.zip",
-          "bytes": 2729920,
-          "sha256": "332276543b67554c10fd88ca9593438d5c3ce638de5f33e8deff5c0c0f203a46"
-        }
-      ]
+      "path": "C:\\workspace\\user_files",
+      "status": "missing",
+      "file_count": 0,
+      "total_bytes": 0,
+      "surface_sha256": null,
+      "sample": []
     },
     "runtime_memory": {
       "label": "runtime_memory",
-      "path": "/workspace/memory",
-      "status": "observed",
-      "file_count": 16,
-      "total_bytes": 51021,
-      "surface_sha256": "9f3675580527ea4e56faa7805cf0786b6754a8f606de2c4560ed0b8c9e37f189",
-      "sample": [
-        {
-          "path": "memory/adr-log.md",
-          "bytes": 6115,
-          "sha256": "f58883df366b8eadd82df0773dfee157c90f7a6c93870763da373026bd28bc73"
-        },
-        {
-          "path": "memory/archive/README.md",
-          "bytes": 105,
-          "sha256": "2c2c6acf8356c9e9da92c7cb24e2938f418dfcf8bcff606e691affa0305439cd"
-        },
-        {
-          "path": "memory/archive/archive_entries.jsonl",
-          "bytes": 1,
-          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
-        },
-        {
-          "path": "memory/development-diary.md",
-          "bytes": 18160,
-          "sha256": "b13424999236dca6a7b3ffc3228d779d6a90dc2d07347aab18144ee0db9da902"
-        },
-        {
-          "path": "memory/dreamspace/README.md",
-          "bytes": 279,
-          "sha256": "8977afa39ded1b9fda17ff1f2bf19eb9a4db23108f9612da42c30c31c1fc2d13"
-        },
-        {
-          "path": "memory/dreamspace/adr_drafts.jsonl",
-          "bytes": 1,
-          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
-        },
-        {
-          "path": "memory/dreamspace/dream_entries.jsonl",
-          "bytes": 1,
-          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
-        },
-        {
-          "path": "memory/evidence-index.md",
-          "bytes": 9047,
-          "sha256": "f684430d07e7dc6a03bd42963aec937c7cb02f9efe086c3505a413a8d21962cf"
-        },
-        {
-          "path": "memory/horizon/README.md",
-          "bytes": 483,
-          "sha256": "fcd3d3101325a6476e55d157a0faffcdc6dbaa0dfd9fd7ad6599a7457fdd4f13"
-        },
-        {
-          "path": "memory/horizon/local_epoch.jsonl",
-          "bytes": 1,
-          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
-        },
-        {
-          "path": "memory/iskra-statecycle/history.jsonl",
-          "bytes": 7133,
-          "sha256": "7abc1ae521f183802e01c93104c68d1b3915ea29b1a5eef9c812deb12f5041d2"
-        },
-        {
-          "path": "memory/open-loops.md",
-          "bytes": 5750,
-          "sha256": "ce3bf9805e9fb547e8784a697677ae83be90819fbaa5f7105571be7095ed5c6b"
-        },
-        {
-          "path": "memory/project-memory.md",
-          "bytes": 3725,
-          "sha256": "a0617ebbc23b0e7db938fe0881f636354e6157d9b6744eddc20e0f6d6a9cf7f9"
-        },
-        {
-          "path": "memory/shadow-core/README.md",
-          "bytes": 218,
-          "sha256": "29300f06e430177959e65bcb2aad18e650a33b9ad74ec94e7763efbb9cdbfda6"
-        },
-        {
-          "path": "memory/shadow-core/promotion_records.jsonl",
-          "bytes": 1,
-          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
-        },
-        {
-          "path": "memory/shadow-core/shadow_entries.jsonl",
-          "bytes": 1,
-          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
-        }
-      ]
+      "path": "C:\\workspace\\memory",
+      "status": "missing",
+      "file_count": 0,
+      "total_bytes": 0,
+      "surface_sha256": null,
+      "sample": []
     },
     "workspace_runtime_tools": {
       "label": "workspace_runtime_tools",
-      "path": "/workspace/agent_runtime_tools",
-      "status": "observed",
-      "file_count": 5,
-      "total_bytes": 31651,
-      "surface_sha256": "08ff5a57785c087ee925880b89b32dd3311a2aa384928b49c9c64a01d385af14",
-      "sample": [
-        {
-          "path": "agent_runtime_tools/iskra_dreamspace.py",
-          "bytes": 5282,
-          "sha256": "c30e48b20d82b3bb2b89105b71d9c3cbd4c3596f6188740ad9326b7cb5f68963"
-        },
-        {
-          "path": "agent_runtime_tools/iskra_horizon_weaver.py",
-          "bytes": 6165,
-          "sha256": "63aa5f1a5889c061af2b83287e1b85af11771849806e508d87090dc263cc0e98"
-        },
-        {
-          "path": "agent_runtime_tools/iskra_shadow_core.py",
-          "bytes": 6492,
-          "sha256": "61ebb0a23c60df80169236743567232d71427d58110aee9a4c9426d093a8329a"
-        },
-        {
-          "path": "agent_runtime_tools/iskra_statecycle.py",
-          "bytes": 9980,
-          "sha256": "3b4cae10f093004e0df32586201121834de448183d3f868ef2281981683d4373"
-        },
-        {
-          "path": "agent_runtime_tools/iskra_turn_hook.py",
-          "bytes": 3732,
-          "sha256": "f30fe65a3ac429af50b6548ece985b45f6b7506d08f36cceaeb2b9ca3462ae87"
-        }
-      ]
+      "path": "C:\\workspace\\agent_runtime_tools",
+      "status": "missing",
+      "file_count": 0,
+      "total_bytes": 0,
+      "surface_sha256": null,
+      "sample": []
     },
     "github_tree_index": {
       "label": "github_tree_index",
-      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/GITHUB_TREE_INDEX.json",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\GITHUB_TREE_INDEX.json",
       "status": "PARTIAL_GITHUB_CONNECTOR_PROBE_PASS_RECURSIVE_TREE_BLOCKED",
       "bytes": 90863,
       "sha256": "c44013c60592e378e4812da41f7f37b1997c4a3ad0c6cd5dc80e8d726fb147c6",
@@ -2432,15 +2158,15 @@
     },
     "builder_upload_evidence": {
       "label": "builder_upload_evidence",
-      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/BUILDER_UPLOAD_EVIDENCE.md",
-      "status": "packaged-as-upload-set; live Builder verification pending",
-      "bytes": 2757,
-      "sha256": "391afb974794b27323b44852f434f4f34e50803f6e2829584ced2ac84eba2074",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\BUILDER_UPLOAD_EVIDENCE.md",
+      "status": "packaged-as-upload-set; Workspace Agent config observed; live Builder verification pending",
+      "bytes": 3866,
+      "sha256": "45dbc25f59bf3ec4e888729fde42ff34175069560aaef585c6fc862995be3c3a",
       "first_lines": [
         "# Builder Upload Evidence",
         "",
-        "Status: packaged-as-upload-set; live Builder verification pending",
-        "Generated: 2026-06-26T16:45:00Z",
+        "Status: packaged-as-upload-set; Workspace Agent config observed; live Builder verification pending",
+        "Generated: 2026-06-27T13:57:24Z",
         "",
         "## Surface",
         "",
@@ -2453,7 +2179,7 @@
     },
     "hook_smoke_receipt": {
       "label": "hook_smoke_receipt",
-      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/HOOK_SMOKE_RECEIPT.json",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\HOOK_SMOKE_RECEIPT.json",
       "status": "PASS",
       "bytes": 1690,
       "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3",
@@ -2514,7 +2240,7 @@
     },
     "supabase_advisor_receipt": {
       "label": "supabase_advisor_receipt",
-      "path": "/workspace/package-work/iskra-full-canon-unified-2026-06-10/SUPABASE_ADVISOR_RECEIPT.json",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\SUPABASE_ADVISOR_RECEIPT.json",
       "status": "PASS_READ_ONLY_ADVISORS_OBSERVED_WITH_WARNINGS",
       "bytes": 3251,
       "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c",
@@ -2624,9 +2350,9 @@
     "manifest_vs_package_root": {
       "left": "manifest_plus_manifest_file",
       "right": "package_root_static",
-      "left_count": 277,
-      "right_count": 277,
-      "common_count": 277,
+      "left_count": 435,
+      "right_count": 435,
+      "common_count": 435,
       "left_only_count": 0,
       "right_only_count": 0,
       "left_only_sample": [],
@@ -2637,25 +2363,46 @@
       "left": "github_local_package_mirror",
       "right": "package_root_excluding_github_index_and_manifest",
       "left_count": 275,
-      "right_count": 275,
-      "common_count": 275,
-      "left_only_count": 0,
-      "right_only_count": 0,
-      "left_only_sample": [],
-      "right_only_sample": [],
-      "status": "MATCH"
+      "right_count": 433,
+      "common_count": 273,
+      "left_only_count": 2,
+      "right_only_count": 160,
+      "left_only_sample": [
+        "governance/adr_20260626_runtime_surface_map.md",
+        "governance/changelog.d/2026-06-26-runtime-surface-map.md"
+      ],
+      "right_only_sample": [
+        "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+        "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
+        "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md",
+        "governance/adr_20260627_workspace_agent_live_alignment.md",
+        "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/checkpoint-builder/SKILL.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/checkpoint-builder/agents/openai.yaml",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/graphrag-operator/SKILL.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/graphrag-operator/agents/openai.yaml",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-adr-governance/SKILL.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-adr-governance/agents/openai.yaml",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-adr-governance/assets/icon.svg",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-adr-governance/references/adr-template.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-adr-governance/references/connector-security.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-adr-governance/references/iskra-anchors.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-adr-governance/references/output-contract.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/SKILL.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/agents/openai.yaml",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/references/output_contract.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/references/scope.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/SKILL.md",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/agents/openai.yaml",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/assets/icon.svg",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/references/artifact-qc.md"
+      ],
+      "status": "DRIFT"
     },
     "zip_vs_manifest": {
-      "left": "zip_entries",
-      "right": "manifest_plus_dynamic_receipts",
-      "left_count": 278,
-      "right_count": 278,
-      "common_count": 278,
-      "left_only_count": 0,
-      "right_only_count": 0,
-      "left_only_sample": [],
-      "right_only_sample": [],
-      "status": "MATCH"
+      "status": "NOT_RUN",
+      "reason": "pass --zip-path to compare a clean zip"
     }
   }
 }

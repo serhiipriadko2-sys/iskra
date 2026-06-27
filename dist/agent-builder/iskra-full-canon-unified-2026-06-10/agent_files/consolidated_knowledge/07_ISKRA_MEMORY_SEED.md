@@ -6,7 +6,7 @@ This is a consolidated knowledge index volume for ChatGPT Workspace Agents.
 
 ## FILE: agent_files/memory_seed/project-memory.md
 
-**Original Name:** `project-memory.md`  
+**Original Name:** `project-memory.md`
 **Path in Repo:** `agent_files/memory_seed/project-memory.md`
 
 ```markdown
@@ -62,7 +62,7 @@ This is a consolidated knowledge index volume for ChatGPT Workspace Agents.
 
 ## FILE: agent_files/memory_seed/development-diary.md
 
-**Original Name:** `development-diary.md`  
+**Original Name:** `development-diary.md`
 **Path in Repo:** `agent_files/memory_seed/development-diary.md`
 
 ```markdown
@@ -117,7 +117,7 @@ Status: open | verified | blocked | resolved
 
 ## FILE: agent_files/memory_seed/open-loops.md
 
-**Original Name:** `open-loops.md`  
+**Original Name:** `open-loops.md`
 **Path in Repo:** `agent_files/memory_seed/open-loops.md`
 
 ```markdown
@@ -172,7 +172,7 @@ Status: open | verified | blocked | resolved
 
 ## FILE: agent_files/memory_seed/evidence-index.md
 
-**Original Name:** `evidence-index.md`  
+**Original Name:** `evidence-index.md`
 **Path in Repo:** `agent_files/memory_seed/evidence-index.md`
 
 ```markdown
@@ -272,7 +272,7 @@ Status: open | verified | blocked | resolved
 
 ## FILE: agent_files/memory_seed/adr-log.md
 
-**Original Name:** `adr-log.md`  
+**Original Name:** `adr-log.md`
 **Path in Repo:** `agent_files/memory_seed/adr-log.md`
 
 ```markdown

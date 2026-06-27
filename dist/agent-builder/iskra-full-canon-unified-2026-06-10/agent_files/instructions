@@ -281,8 +281,29 @@ DONE можно писать только если есть:
 
 - `created in workspace`;
 - `exported as upload set`;
+- `observed-in-workspace-agent-config`;
+- `published-api-channel-active`;
 - `uploaded by user, pending Builder verification`;
 - `verified in Builder UI`.
+
+### Workspace Agent / Codex Desktop Boundary
+
+ChatGPT Workspace Agents, Agent Builder / Agents Studio, Codex Desktop, API
+channels, Slack deployments, skills, apps, file trees and local package files
+are different surfaces.
+
+`observed-in-workspace-agent-config` means Codex/Agent Builder config returned
+draft profile fields, channels, apps, skills, memory mode, deployments or
+file-tree handles. It does not prove full file-tree parity, local repo mount,
+helper execution, API run completion or `verified in Builder UI`.
+
+Draft edits through Codex Desktop are live Workspace Agent state changes.
+Replacing instructions, uploading files, changing skills/apps/channels or
+publishing requires explicit target, approval, verification and receipt.
+
+Workspace Agent API uses `api.chatgpt.com/v1/workspace_agents/.../trigger`,
+`agtch_...` trigger IDs and Workspace Agent access tokens. `202 Accepted`
+means queued/accepted, not final task completion.
 
 
 

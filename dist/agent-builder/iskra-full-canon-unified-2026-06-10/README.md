@@ -2,8 +2,9 @@
 
 Release: `iskra-full-canon-unified-2026-06-10`
 Date: 2026-06-10
-Updated: 2026-06-26
-Target: ChatGPT Agents Studio / Workspace Agents
+Updated: 2026-06-27
+Target: ChatGPT Workspace Agents / Agent Builder / Agents Studio
+Management surface: Codex Desktop app
 Previous target: ChatGPT / OpenAI Agent Builder (deprecated 2026-11-30)
 
 This directory is the materialized unified Full Canon upload tree for the Iskra
@@ -59,6 +60,15 @@ provenance and rollback context, not the current entrypoint.
 - `agent_files/files_for_agent_builder/18_RETRIEVAL_INDEX_DISCIPLINE.md` -
   retrieval/citation vs byte-level index discipline for Builder Knowledge files
   that are not mounted in runtime `/workspace`.
+- `agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md`
+  - ChatGPT Workspace Agent, Codex Desktop, channel, skill, file-tree, API, and
+  live draft update boundaries.
+- `WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md` - redacted read-only receipt from
+  Codex Desktop Workspace Agents config inspection of the target live agent.
+- `WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md` and
+  `skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/`
+  - user-added Iskra Workspace Agent uploaded skill source pack, with 32 skill
+  directories matching the observed live Workspace Agent skill names.
 - `tools/workspace_surface_audit.py`, `SURFACE_INVENTORY.json`,
   `GITHUB_TREE_INDEX.json`, `BUILDER_UPLOAD_EVIDENCE.md`,
   `HOOK_SMOKE_RECEIPT.json`, and `SUPABASE_ADVISOR_RECEIPT.json` - repeatable
@@ -176,11 +186,19 @@ versions. The exact source copies are preserved under
 7. Confirm `agent_files/files_for_agent_builder/18_RETRIEVAL_INDEX_DISCIPLINE.md`
    is uploaded or present in the consolidated knowledge volume before testing
    retrieval-vs-index claims.
-8. Treat `agent_runtime_tools/*` as helper scripts only when the runtime
+8. Confirm `agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md`
+   is uploaded or present in the consolidated knowledge volume before testing
+   Workspace Agent config, Codex Desktop, skill, file-tree, and API boundaries.
+9. Upload/maintain skills from
+   `skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/`
+   through the Workspace Agent skills surface, not as ordinary Knowledge files.
+   The package skill names match the observed live 32 uploaded skills, but
+   byte-level live parity requires skill-file inspection.
+10. Treat `agent_runtime_tools/*` as helper scripts only when the runtime
    supports file-backed execution.
-9. Treat memory files as continuity receipts. They do not override canon,
+11. Treat memory files as continuity receipts. They do not override canon,
    GitHub, Supabase, official docs, or created artifacts.
-10. Install `plugins/iskra-toolchain-bridge/*` only in a compatible local
+12. Install `plugins/iskra-toolchain-bridge/*` only in a compatible local
    Codex/plugin runtime. Current source validation is PASS, but Codex app
    installation remains pending until `codex.exe` is callable or app-visible
    plugin inventory confirms load. Local config exposure is present as
@@ -204,6 +222,8 @@ Valid status labels:
 - `packaged as upload set`
 - `mirrored in GitHub`
 - `observed-in-builder-ui`
+- `observed-in-workspace-agent-config`
+- `published-api-channel-active`
 - `mounted-in-workspace`
 - `uploaded-as-task-file`
 - `retrievable-by-connector`
@@ -233,11 +253,12 @@ disprove Builder upload.
 - Runtime hardening prompts pass 7/7, including H7 Runtime Surface Map.
 - Runtime hardening prompts pass H1-H8, including H7 Runtime Surface Map and H8
   Retrieval vs Index.
-- Agent Builder acceptance prompts A-V plus C2/C3 pass.
+- Agent Builder acceptance prompts A-X plus C2/C3 pass.
 - Governance and security files are visible as package knowledge, including
   `governance/` and `SECURITY.md`.
 - Canon layer index, runtime boundary, retrieval discipline, surface inventory,
-  provenance receipt, and memory cleanup labels are visible.
+  Workspace Agent operations, Workspace Agent skill-pack receipt, provenance
+  receipt, and memory cleanup labels are visible.
 
 ## Rollback
 

@@ -1,0 +1,12 @@
+interface:
+  display_name: Искра Supabase Operator
+  short_description: Supabase schema, RLS, migrations, diagnostics, and safe SQL plans.
+  icon: database
+  brand_color: '#047857'
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

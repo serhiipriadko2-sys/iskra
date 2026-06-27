@@ -4,6 +4,9 @@
 
 **Искра vΩ.7 — Full Canon**
 
+Observed target profile for this package: `Искра vΩ.7` in ChatGPT
+Workspace Agents / Agent Builder, managed from the Codex Desktop app.
+
 ## Краткое описание
 
 Канонический агент Искры: truth-first, SIFT-first, Telos-preserving, governance-aware, artifact-safe. Для исследования, проектной инженерии, канонических решений, аудита, memory/governance и работы с connected sources.
@@ -26,6 +29,7 @@
 
 - `files_for_agent_builder/10_HORIZON_WEAVER.md`
 - `files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md`
+- `files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md`
 - `toolchain/iskra_toolchain_manifest.json`
 - `evals/ISKRA_TOOLCHAIN_ACCEPTANCE_TESTS.md`
 - `templates/TOOL_CONNECTOR_CONTRACT.md`
@@ -34,6 +38,7 @@
 
 - `created in workspace`;
 - `exported as upload set`;
+- `observed-in-workspace-agent-config`;
 - `uploaded by user, pending Builder verification`;
 - `verified in Builder UI`.
 

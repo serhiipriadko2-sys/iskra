@@ -89,8 +89,9 @@ This manifest does not claim:
 - Horizon proves consciousness, semantic truth, or auto-evolution;
 - plugin files are installable in every OpenAI Builder surface;
 - local runtime helpers will execute in cloud-only Builder profiles.
-- Codex app installation has not been verified while `codex.exe` is blocked by
-  `Access is denied`.
+- Codex Desktop Workspace Agent management is observed through connector
+  config; local plugin installation still requires separate app/plugin
+  inventory evidence.
 - this package mirrors the entire repository byte for byte.
 - sidecar zip creation proves Builder UI verification.
 - Workspace Agent API trigger success proves final task completion; `202

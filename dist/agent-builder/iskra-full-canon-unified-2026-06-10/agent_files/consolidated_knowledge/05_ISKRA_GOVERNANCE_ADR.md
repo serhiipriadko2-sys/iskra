@@ -4,9 +4,288 @@ This is a consolidated knowledge index volume for ChatGPT Workspace Agents.
 
 ---
 
+## FILE: WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md
+
+**Original Name:** `WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md`
+**Path in Repo:** `WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md`
+
+```markdown
+# Workspace Agent Live Config Receipt
+
+Generated: 2026-06-27T14:30:00Z
+Observed via: Codex Desktop Workspace Agents connector
+Mode: read-only config inspection
+Target package: `iskra-full-canon-unified-2026-06-10`
+
+## Context
+
+The user identified the active editor URL as a ChatGPT Workspace Agent in
+Agent Builder / Agents Studio and asked to adapt this package for that surface.
+The local package must stay separate from the live Workspace Agent draft until
+an explicit update/publish action is approved.
+
+## Finding / Decision
+
+[FACT] A current editable Workspace Agent draft was observed for
+`Искра vΩ.7`.
+
+[FACT] The agent is published and has an active API channel.
+
+[FACT] The live draft has GitHub, Ace Knowledge Graph, Remote Desktop
+Commander, and Supabase app access, per-user persistent folder state, and 33
+uploaded skills.
+
+[FACT] The user-provided Agent Builder screenshot for this target shows `269`
+files in the Files section. The connector exposed a file-tree handle, but
+recursive file listing failed in this run with an HTML transport error.
+
+[DECISION] This package now treats ChatGPT Workspace Agents as the primary UI
+target, Codex Desktop as a management surface, and the Agents SDK fallback as a
+separate code-first fallback. It does not claim that local package files are
+already present in the live file tree.
+
+## Evidence
+
+Connector result summary, redacted for public package safety:
+
+| Field | Observed value |
+|---|---|
+| agent name | `Искра vΩ.7` |
+| agent id | `agt_6a3aba...d24f` |
+| draft revision | `drv_1_...UvNJ` |
+| draft version | `agtv_6a3eaf...0081` |
+| latest published version | `agtv_6a3eaf...6c54` |
+| published | `true` |
+| ChatGPT channel | present |
+| API channel | active |
+| API trigger id | `agtch_6a3bd94...3e3e` |
+| API endpoint | `https://api.chatgpt.com/v1/workspace_agents/agtch_[redacted]/trigger` |
+| Slack deployments | none |
+| persistent folder | `per_user` |
+| reasoning effort | `xhigh` |
+| attached apps | GitHub, Ace Knowledge Graph, Remote Desktop Commander, Supabase |
+| app write approvals | mixed by connector; refresh live config before any write |
+| file tree | observed, exact ID redacted; screenshot shows 269 files |
+| attached skills | 33 uploaded skills |
+
+Observed skill names:
+
+- `checkpoint-builder`
+- `graphrag-operator`
+- `iskra-adr-governance`
+- `iskra-architecture`
+- `iskra-artifact-qc`
+- `iskra-builder-package-operator`
+- `iskra-canon-runtime`
+- `iskra-code-review`
+- `iskra-code-style`
+- `iskra-council-router`
+- `iskra-cycle-engine`
+- `iskra-fast-path`
+- `iskra-git-workflow`
+- `iskra-github-operator`
+- `iskra-ledger-integrity`
+- `iskra-memory-stack`
+- `iskra-metrics-evaluator`
+- `iskra-migration`
+- `iskra-playbook-selector`
+- `iskra-rag-truth-ladder`
+- `iskra-release-ledger`
+- `iskra-security`
+- `iskra-shadow-repair`
+- `iskra-sift-auditor`
+- `iskra-supabase-operator`
+- `iskra-test-strategy`
+- `iskra-ui-forensic`
+- `iskra-workflow-ops`
+- `metric-runner`
+- `scientific-turn-architect`
+- `skill-creator`
+- `sot-auditor`
+- `iskra-toolchain-bridge`
+
+Note: the connector reported 33 attached uploaded skills. The 32 Iskra
+skill-pack names match the package skill source; `iskra-toolchain-bridge` is a
+separate user-uploaded bridge skill. Repeat config inspection before claiming
+current live parity.
+
+## Risk
+
+- `observed-in-workspace-agent-config` is not the same as
+  `verified-live-builder`.
+- The full live file tree was not recursively enumerated in this receipt; the
+  `269` file count is screenshot/UI evidence plus a connector file-tree handle,
+  not a byte-level inventory.
+- A published API channel proves trigger availability, not task completion.
+- Operational IDs are stable handles and are redacted here. Tokens and secrets
+  were not requested, stored, or printed.
+- Draft edits, file uploads, skill changes, app changes, API channel changes,
+  Slack deployment changes, and publish actions are live Workspace Agent
+  mutations and require explicit approval.
+
+## Next
+
+1. Use `agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md`
+   as the live Workspace Agent operations boundary.
+2. Regenerate consolidated knowledge, manifest, surface inventory, clean zip,
+   and `ZIP_RECEIPT.json`.
+3. After user approval, compare the live draft instructions and file tree with
+   the package, then stage/update only the exact requested Workspace Agent
+   fields.
+4. Run live acceptance prompts S-X before claiming `verified-live-builder`.
+
+## Status
+
+`observed-in-workspace-agent-config`; `published-api-channel-active`;
+`packaged-as-upload-set` pending fresh clean zip regeneration;
+`verified-live-builder` not claimed.
+
+## Delta
+
+Delta: live Workspace Agent config is now represented as a redacted package
+receipt.
+Data: Codex Desktop Workspace Agents connector output, local package files,
+Workspace Agent API boundary docs.
+Omega: 0.88 for config fields observed in this run; 0.55 for live file-tree
+content parity until the file tree is enumerated.
+Lambda: refresh after any publish, draft edit, skill upload/removal, file
+upload/removal, app/tool permission change, API channel change, or Slack
+deployment change.
+```
+
+---
+
+## FILE: WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md
+
+**Original Name:** `WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md`
+**Path in Repo:** `WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md`
+
+```markdown
+# Workspace Agent Skill Pack Receipt
+
+Generated: 2026-06-27T14:05:00Z
+Mode: local package inspection plus read-only Workspace Agent config comparison
+Target package: `iskra-full-canon-unified-2026-06-10`
+
+## Context
+
+The user added the Iskra skill pack under:
+
+```text
+skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/
+```
+
+This tree is intentional package content for ChatGPT Workspace Agent uploaded
+skills. It is not a cache, not `.venv`, and not transient test output.
+
+## Finding / Decision
+
+[FACT] The package skill pack contains 32 skill directories under
+`skills/hermes/`.
+
+[FACT] The read-only Workspace Agent draft config for `Искра vΩ.7` reported 33
+uploaded skills total.
+
+[FACT] The package skill directory names match the 32 observed live Iskra
+skill-pack names. The remaining live skill, `iskra-toolchain-bridge`, is a
+separate user-uploaded bridge skill.
+
+[DECISION] Include this skill pack in `MANIFEST.sha256` and the clean export
+zip as an intentional Workspace Agent skill source layer.
+
+[DECISION] Keep skill source packaging separate from live Agent Builder skill
+activation. A skill directory in this package does not prove that the live
+Workspace Agent has that exact bytes/version unless Agent Builder/Codex config
+or skill-file inspection verifies it.
+
+## Package Skill Names
+
+- `checkpoint-builder`
+- `graphrag-operator`
+- `iskra-adr-governance`
+- `iskra-architecture`
+- `iskra-artifact-qc`
+- `iskra-builder-package-operator`
+- `iskra-canon-runtime`
+- `iskra-code-review`
+- `iskra-code-style`
+- `iskra-council-router`
+- `iskra-cycle-engine`
+- `iskra-fast-path`
+- `iskra-git-workflow`
+- `iskra-github-operator`
+- `iskra-ledger-integrity`
+- `iskra-memory-stack`
+- `iskra-metrics-evaluator`
+- `iskra-migration`
+- `iskra-playbook-selector`
+- `iskra-rag-truth-ladder`
+- `iskra-release-ledger`
+- `iskra-security`
+- `iskra-shadow-repair`
+- `iskra-sift-auditor`
+- `iskra-supabase-operator`
+- `iskra-test-strategy`
+- `iskra-ui-forensic`
+- `iskra-workflow-ops`
+- `metric-runner`
+- `scientific-turn-architect`
+- `skill-creator`
+- `sot-auditor`
+
+## Evidence
+
+Local inspection:
+
+- package skill directories: 32
+- files in skill pack: 155
+- extension profile: `.md`, `.yaml`, `.svg`, `.py`, `.txt`, `.sha256`
+- root manifest: `skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256`
+
+Live config comparison:
+
+- observed live uploaded skill count: 33 total
+- observed live Iskra skill-pack count: 32
+- missing from package vs live names: 0
+- extra package names vs live names: 0
+
+## Risk
+
+- Skill names matching does not prove byte-identical live skill contents.
+- Skill upload, replacement, removal, or publish is a live Workspace Agent
+  mutation and requires explicit approval.
+- Public package files should not include access tokens, OAuth credentials,
+  cookies, connector secrets, or Workspace Agent access tokens.
+
+## Next
+
+1. Include this skill pack in the package manifest and clean zip.
+2. Run a secret scan over the skill pack.
+3. If live parity is required, list/read each attached skill through the
+   Workspace Agents connector and compare content hashes or file inventories.
+4. Only after explicit approval, upload/replace skills in the live Agent
+   Builder draft and publish if requested.
+
+## Status
+
+`packaged-skill-source`; `observed-in-workspace-agent-config`;
+`verified-live-builder` not claimed.
+
+## Delta
+
+Delta: user-added Iskra skills are promoted to an intentional package layer.
+Data: local skill-pack inventory, Workspace Agents config skill names.
+Omega: 0.92 for name/count alignment; 0.55 for live byte parity until
+skill-file inspection is performed.
+Lambda: refresh after any skill upload/removal, skill-pack rebuild, or live
+Workspace Agent publish.
+```
+
+---
+
 ## FILE: agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md
 
-**Original Name:** `08_GOVERNANCE_ADR.md`  
+**Original Name:** `08_GOVERNANCE_ADR.md`
 **Path in Repo:** `agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md`
 
 ```markdown
@@ -62,7 +341,7 @@ D:
 
 ## FILE: governance/adr.md
 
-**Original Name:** `adr.md`  
+**Original Name:** `adr.md`
 **Path in Repo:** `governance/adr.md`
 
 ```markdown
@@ -328,7 +607,7 @@ Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv
 
 ## FILE: governance/changelog.md
 
-**Original Name:** `changelog.md`  
+**Original Name:** `changelog.md`
 **Path in Repo:** `governance/changelog.md`
 
 ```markdown
@@ -563,7 +842,7 @@ layer: governance
 
 ## FILE: agent_files/canon_source_files/11_ADR_RUNTIME_PATCHES.md
 
-**Original Name:** `11_ADR_RUNTIME_PATCHES.md`  
+**Original Name:** `11_ADR_RUNTIME_PATCHES.md`
 **Path in Repo:** `agent_files/canon_source_files/11_ADR_RUNTIME_PATCHES.md`
 
 ```markdown
@@ -892,7 +1171,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/12_ADR.md
 
-**Original Name:** `12_ADR.md`  
+**Original Name:** `12_ADR.md`
 **Path in Repo:** `agent_files/canon_source_files/12_ADR.md`
 
 ```markdown
@@ -1353,7 +1632,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/15_CHANGELOG.md
 
-**Original Name:** `15_CHANGELOG.md`  
+**Original Name:** `15_CHANGELOG.md`
 **Path in Repo:** `agent_files/canon_source_files/15_CHANGELOG.md`
 
 ```markdown
@@ -1587,7 +1866,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/20_GOVERNANCE_PACK.md
 
-**Original Name:** `20_GOVERNANCE_PACK.md`  
+**Original Name:** `20_GOVERNANCE_PACK.md`
 **Path in Repo:** `agent_files/canon_source_files/20_GOVERNANCE_PACK.md`
 
 ```markdown
@@ -1916,7 +2195,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: governance/adr_20260206_runtime_patches.md
 
-**Original Name:** `adr_20260206_runtime_patches.md`  
+**Original Name:** `adr_20260206_runtime_patches.md`
 **Path in Repo:** `governance/adr_20260206_runtime_patches.md`
 
 ```markdown
@@ -2188,7 +2467,7 @@ updated: 2026-02-06
 
 ## FILE: governance/adr_20260214_gemini_sdk_unification.md
 
-**Original Name:** `adr_20260214_gemini_sdk_unification.md`  
+**Original Name:** `adr_20260214_gemini_sdk_unification.md`
 **Path in Repo:** `governance/adr_20260214_gemini_sdk_unification.md`
 
 ```markdown
@@ -2265,7 +2544,7 @@ D: Факт: оба пакета тестами покрыты; миграция
 
 ## FILE: governance/adr_20260220_xcode_explainable_code.md
 
-**Original Name:** `adr_20260220_xcode_explainable_code.md`  
+**Original Name:** `adr_20260220_xcode_explainable_code.md`
 **Path in Repo:** `governance/adr_20260220_xcode_explainable_code.md`
 
 ```markdown
@@ -2388,7 +2667,7 @@ D: core/principles.md §0, system/sift_protocol.md §Trace, system/cycle_engine.
 
 ## FILE: governance/adr_20260528_embedding_standard_v1.md
 
-**Original Name:** `adr_20260528_embedding_standard_v1.md`  
+**Original Name:** `adr_20260528_embedding_standard_v1.md`
 **Path in Repo:** `governance/adr_20260528_embedding_standard_v1.md`
 
 ```markdown
@@ -2486,7 +2765,7 @@ FAIL:
 
 ## FILE: governance/adr_20260606_somatic_intuition_sense.md
 
-**Original Name:** `adr_20260606_somatic_intuition_sense.md`  
+**Original Name:** `adr_20260606_somatic_intuition_sense.md`
 **Path in Repo:** `governance/adr_20260606_somatic_intuition_sense.md`
 
 ```markdown
@@ -2594,7 +2873,7 @@ D: User vΩ.1 design, existing `34_SOMATIC_INTUITION.md`, new core/metrics docs,
 
 ## FILE: governance/adr_20260606_unified_agent_builder_assembly.md
 
-**Original Name:** `adr_20260606_unified_agent_builder_assembly.md`  
+**Original Name:** `adr_20260606_unified_agent_builder_assembly.md`
 **Path in Repo:** `governance/adr_20260606_unified_agent_builder_assembly.md`
 
 ```markdown
@@ -2691,7 +2970,7 @@ Rollback or revise this ADR if the project intentionally splits Iskra into multi
 
 ## FILE: governance/adr_20260606_unified_full_canon_builder_v4.md
 
-**Original Name:** `adr_20260606_unified_full_canon_builder_v4.md`  
+**Original Name:** `adr_20260606_unified_full_canon_builder_v4.md`
 **Path in Repo:** `governance/adr_20260606_unified_full_canon_builder_v4.md`
 
 ```markdown
@@ -2769,7 +3048,7 @@ D: local v3 package, user-uploaded toolchain v2 archive, v4 manifest/receipt.
 
 ## FILE: governance/adr_20260610_unified_full_canon_recovery.md
 
-**Original Name:** `adr_20260610_unified_full_canon_recovery.md`  
+**Original Name:** `adr_20260610_unified_full_canon_recovery.md`
 **Path in Repo:** `governance/adr_20260610_unified_full_canon_recovery.md`
 
 ```markdown
@@ -2823,7 +3102,7 @@ Rollback if Builder UI rejects the unified file volume, Horizon tests fail, or r
 
 ## FILE: governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md
 
-**Original Name:** `adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md`  
+**Original Name:** `adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md`
 **Path in Repo:** `governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md`
 
 ```markdown
@@ -2956,7 +3235,7 @@ Builder UI acceptance before any `verified in Builder UI` claim.
 
 ## FILE: governance/adr_20260606_iskraspace_release_priority.md
 
-**Original Name:** `adr_20260606_iskraspace_release_priority.md`  
+**Original Name:** `adr_20260606_iskraspace_release_priority.md`
 **Path in Repo:** `governance/adr_20260606_iskraspace_release_priority.md`
 
 ```markdown
@@ -3044,7 +3323,7 @@ Lambda: revise when product scope or runtime evidence changes.
 
 ## FILE: governance/adr_20260616_retire_canon_import_backfill_edge_functions.md
 
-**Original Name:** `adr_20260616_retire_canon_import_backfill_edge_functions.md`  
+**Original Name:** `adr_20260616_retire_canon_import_backfill_edge_functions.md`
 **Path in Repo:** `governance/adr_20260616_retire_canon_import_backfill_edge_functions.md`
 
 ```markdown
@@ -3158,7 +3437,7 @@ boundary.
 
 ## FILE: governance/adr_20260618_db_proxy_governance.md
 
-**Original Name:** `adr_20260618_db_proxy_governance.md`  
+**Original Name:** `adr_20260618_db_proxy_governance.md`
 **Path in Repo:** `governance/adr_20260618_db_proxy_governance.md`
 
 ```markdown
@@ -3220,6 +3499,162 @@ Live CLI audits must confirm:
 - **Data:** Supabase live function list audits, `db-proxy` source reviews, and repository security protocols.
 - **Omega:** 0.90 (high confidence in the security containment strategy, moderate on migration complexity until client dependencies are fully inventoried).
 - **Lambda:** Revisit this ADR when client-side queries are migrated to direct RLS, or if the `db-proxy` endpoint is completely removed from the project.
+```
+
+---
+
+## FILE: governance/adr_20260627_workspace_agent_live_alignment.md
+
+**Original Name:** `adr_20260627_workspace_agent_live_alignment.md`
+**Path in Repo:** `governance/adr_20260627_workspace_agent_live_alignment.md`
+
+```markdown
+# ADR 2026-06-27 - Workspace Agent Live Alignment
+
+Status: accepted-local
+Date: 2026-06-27
+Scope: `dist/agent-builder/iskra-full-canon-unified-2026-06-10`
+
+## Context
+
+The target surface is no longer only a static upload bundle. The user is
+working in Codex Desktop with access to ChatGPT Workspace Agents and supplied a
+live Agent Builder URL for `Искра vΩ.7`.
+
+The package already targets ChatGPT Workspace Agents, but it needs a stronger
+boundary between:
+
+- local/GitHub upload package;
+- live Workspace Agent draft config;
+- attached skills;
+- file tree / knowledge files;
+- ChatGPT, API, Slack, and Codex Desktop management channels;
+- Agents SDK fallback.
+
+## Decision
+
+Treat ChatGPT Workspace Agents as the primary hosted UI target for the Iskra
+Full Canon package.
+
+Treat Codex Desktop as a management and inspection surface for Workspace Agent
+drafts, not as proof that local package files are automatically present in the
+hosted agent.
+
+Treat the Agents SDK fallback as a separate code-first fallback, not as the
+runtime semantics of the hosted Workspace Agent.
+
+Add a required operations file and live config receipt:
+
+- `agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md`
+- `WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md`
+
+Keep stable operational IDs redacted in package files unless explicitly
+approved for publication.
+
+## Evidence
+
+- Codex Desktop Workspace Agents connector loaded current draft config for
+  `Искра vΩ.7` on 2026-06-27.
+- The observed draft is published and has an active API channel with an
+  `agtch_...` trigger ID.
+- The observed draft has GitHub, Ace Knowledge Graph, Remote Desktop Commander,
+  and Supabase app access, per-user persistent folder state, and 33 uploaded
+  skills.
+- The user screenshot shows 269 files in the live Agent Builder Files section;
+  connector file listing did not complete in this run.
+- Official OpenAI Workspace Agent documentation describes the Workspace Agent
+  API trigger surface under `api.chatgpt.com/v1/workspace_agents/.../trigger`.
+- Existing package docs already require separate status labels for package,
+  upload, runtime, connector, and Builder verification surfaces.
+
+## Risk
+
+- Publishing operational IDs in a public package can widen the target surface
+  even without exposing tokens.
+- Live draft edits through Codex Desktop can mutate Workspace Agent state before
+  the package is locally verified.
+- API `202 Accepted` can be mistaken for final task completion.
+- Uploaded skills can be mistaken for package knowledge or connector authority.
+- File tree existence can be mistaken for full file parity.
+
+## Consequences
+
+- Package receipts now include a redacted live-config view.
+- The clean export tool includes `SURFACE_INVENTORY.json` as a dynamic receipt
+  while keeping it out of `MANIFEST.sha256`.
+- Compact consolidated knowledge must include the new operations boundary.
+- Acceptance prompts extend from A-V to A-X.
+- Live Workspace Agent updates still require explicit user approval for the
+  exact target and field set.
+
+## Verification
+
+Local package verification must include:
+
+1. consolidated knowledge regeneration;
+2. manifest regeneration;
+3. clean export / zip receipt regeneration;
+4. surface inventory regeneration;
+5. acceptance prompt update;
+6. no secret/token exposure.
+
+Live verification requires:
+
+1. read current draft config;
+2. compare instructions and file tree;
+3. apply only approved draft changes;
+4. publish only if explicitly requested;
+5. run live acceptance prompts S-X;
+6. record receipt.
+
+## Status
+
+Accepted for local package adaptation. Live Workspace Agent mutation is not
+authorized by this ADR.
+
+## Delta
+
+Delta: Workspace Agent live config becomes a first-class package alignment
+surface.
+Data: Codex Desktop connector config, package files, OpenAI Workspace Agent
+docs, local manifest/export tools.
+Omega: 0.9 for local package boundary; 0.6 for live file parity until live
+file-tree enumeration is performed.
+Lambda: revisit if Workspace Agents docs, Codex Desktop agent management, API
+auth, or Builder file-tree semantics change.
+```
+
+---
+
+## FILE: governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md
+
+**Original Name:** `2026-06-27-workspace-agent-live-alignment.md`
+**Path in Repo:** `governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md`
+
+```markdown
+# 2026-06-27 - Workspace Agent Live Alignment
+
+## Added
+
+- Added `19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md` with ChatGPT Workspace
+  Agents, Codex Desktop, skills, files, and API channel boundaries.
+- Added a redacted `WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md` from read-only
+  Codex Desktop Workspace Agents config inspection.
+- Added ADR `adr_20260627_workspace_agent_live_alignment.md`.
+
+## Changed
+
+- Clean export tooling now treats `SURFACE_INVENTORY.json` as a dynamic ZIP
+  receipt while keeping it out of `MANIFEST.sha256`.
+- Consolidated knowledge mapping now includes the Workspace Agent operations
+  boundary and this ADR.
+- Acceptance scope extends to Workspace Agent config and Codex Desktop draft
+  update boundaries.
+
+## Boundary
+
+This update does not mutate or publish the live Workspace Agent. It prepares
+the local package and receipts for an approved Workspace Agent update.
 ```
 
 ---

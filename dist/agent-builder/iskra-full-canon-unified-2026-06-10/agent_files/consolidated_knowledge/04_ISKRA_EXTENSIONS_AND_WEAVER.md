@@ -6,7 +6,7 @@ This is a consolidated knowledge index volume for ChatGPT Workspace Agents.
 
 ## FILE: agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md
 
-**Original Name:** `10_HORIZON_WEAVER.md`  
+**Original Name:** `10_HORIZON_WEAVER.md`
 **Path in Repo:** `agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md`
 
 ```markdown
@@ -177,7 +177,7 @@ Lambda: revise when a live Agent Builder connector can read/write project config
 
 ## FILE: agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md
 
-**Original Name:** `11_DREAMSPACE_LAYER.md`  
+**Original Name:** `11_DREAMSPACE_LAYER.md`
 **Path in Repo:** `agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md`
 
 ```markdown
@@ -305,7 +305,7 @@ FAIL if:
 
 ## FILE: agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md
 
-**Original Name:** `12_TOOLCHAIN_EXPANSION.md`  
+**Original Name:** `12_TOOLCHAIN_EXPANSION.md`
 **Path in Repo:** `agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md`
 
 ```markdown
@@ -536,7 +536,7 @@ Lambda: revise when a live Agent Builder connector or official project-managemen
 
 ## FILE: agent_files/canon_source_files/core__somatic_intuition.md
 
-**Original Name:** `core__somatic_intuition.md`  
+**Original Name:** `core__somatic_intuition.md`
 **Path in Repo:** `agent_files/canon_source_files/core__somatic_intuition.md`
 
 ```markdown
@@ -813,7 +813,7 @@ D: User-provided vΩ.1 concept, existing SoT40 `34_SOMATIC_INTUITION.md`, and cu
 
 ## FILE: agent_files/canon_source_files/34_SOMATIC_INTUITION.md
 
-**Original Name:** `34_SOMATIC_INTUITION.md`  
+**Original Name:** `34_SOMATIC_INTUITION.md`
 **Path in Repo:** `agent_files/canon_source_files/34_SOMATIC_INTUITION.md`
 
 ```markdown
@@ -952,7 +952,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/metrics__somatic_index.md
 
-**Original Name:** `metrics__somatic_index.md`  
+**Original Name:** `metrics__somatic_index.md`
 **Path in Repo:** `agent_files/canon_source_files/metrics__somatic_index.md`
 
 ```markdown

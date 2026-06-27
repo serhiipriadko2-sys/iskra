@@ -14,6 +14,8 @@ Valid status labels:
 - `created in workspace`
 - `packaged as upload set`
 - `mirrored in GitHub`
+- `observed-in-workspace-agent-config`
+- `published-api-channel-active`
 - `uploaded by user, pending Builder verification`
 - `verified in Builder UI`
 

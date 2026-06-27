@@ -21,6 +21,7 @@ VOLUMES = {
         "agent_files/canon_source_files/37_VOICES.md",
         "agent_files/files_for_agent_builder/06_VOICES_AND_COUNCIL.md",
         "agent_files/files_for_agent_builder/07_OUTPUT_AND_RECEIPTS.md",
+        "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md",
         "AGENTS.md"
     ],
     "02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md": [
@@ -55,6 +56,8 @@ VOLUMES = {
         "agent_files/canon_source_files/metrics__somatic_index.md"
     ],
     "05_ISKRA_GOVERNANCE_ADR.md": [
+        "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+        "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
         "agent_files/files_for_agent_builder/08_GOVERNANCE_ADR.md",
         "governance/adr.md",
         "governance/changelog.md",
@@ -73,7 +76,9 @@ VOLUMES = {
         "governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
         "governance/adr_20260606_iskraspace_release_priority.md",
         "governance/adr_20260616_retire_canon_import_backfill_edge_functions.md",
-        "governance/adr_20260618_db_proxy_governance.md"
+        "governance/adr_20260618_db_proxy_governance.md",
+        "governance/adr_20260627_workspace_agent_live_alignment.md",
+        "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md"
     ],
     "06_ISKRA_METRICS_AND_EVALS.md": [
         "agent_files/canon_source_files/25_METRICS_BUNDLE.md",
@@ -126,7 +131,7 @@ def main() -> None:
             rel_name = f_rel
 
             content_parts.append(f"## FILE: {rel_name}\n")
-            content_parts.append(f"**Original Name:** `{basename}`  ")
+            content_parts.append(f"**Original Name:** `{basename}`")
             content_parts.append(f"**Path in Repo:** `{rel_name}`\n")
             content_parts.append("```markdown")
             content_parts.append(clean_text)

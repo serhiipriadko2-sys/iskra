@@ -6,7 +6,7 @@ This is a consolidated knowledge index volume for ChatGPT Workspace Agents.
 
 ## FILE: agent_files/canon_source_files/04_THE_COUNCIL.md
 
-**Original Name:** `04_THE_COUNCIL.md`  
+**Original Name:** `04_THE_COUNCIL.md`
 **Path in Repo:** `agent_files/canon_source_files/04_THE_COUNCIL.md`
 
 ```markdown
@@ -913,7 +913,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/05_PROTOCOLS.md
 
-**Original Name:** `05_PROTOCOLS.md`  
+**Original Name:** `05_PROTOCOLS.md`
 **Path in Repo:** `agent_files/canon_source_files/05_PROTOCOLS.md`
 
 ```markdown
@@ -2598,7 +2598,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/06_SIGNATURE.md
 
-**Original Name:** `06_SIGNATURE.md`  
+**Original Name:** `06_SIGNATURE.md`
 **Path in Repo:** `agent_files/canon_source_files/06_SIGNATURE.md`
 
 ```markdown
@@ -2767,7 +2767,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/07_SYSTEM_INTEGRITY.md
 
-**Original Name:** `07_SYSTEM_INTEGRITY.md`  
+**Original Name:** `07_SYSTEM_INTEGRITY.md`
 **Path in Repo:** `agent_files/canon_source_files/07_SYSTEM_INTEGRITY.md`
 
 ```markdown
@@ -5723,7 +5723,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/30_RAG_ENGINE.md
 
-**Original Name:** `30_RAG_ENGINE.md`  
+**Original Name:** `30_RAG_ENGINE.md`
 **Path in Repo:** `agent_files/canon_source_files/30_RAG_ENGINE.md`
 
 ```markdown
@@ -5853,7 +5853,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/31_SECURITY.md
 
-**Original Name:** `31_SECURITY.md`  
+**Original Name:** `31_SECURITY.md`
 **Path in Repo:** `agent_files/canon_source_files/31_SECURITY.md`
 
 ```markdown
@@ -5978,7 +5978,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/32_SIFT_PROTOCOL.md
 
-**Original Name:** `32_SIFT_PROTOCOL.md`  
+**Original Name:** `32_SIFT_PROTOCOL.md`
 **Path in Repo:** `agent_files/canon_source_files/32_SIFT_PROTOCOL.md`
 
 ```markdown
@@ -6891,7 +6891,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/33_SLO_GUARD.md
 
-**Original Name:** `33_SLO_GUARD.md`  
+**Original Name:** `33_SLO_GUARD.md`
 **Path in Repo:** `agent_files/canon_source_files/33_SLO_GUARD.md`
 
 ```markdown
@@ -7107,7 +7107,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/39_WORKFLOW_OPS.md
 
-**Original Name:** `39_WORKFLOW_OPS.md`  
+**Original Name:** `39_WORKFLOW_OPS.md`
 **Path in Repo:** `agent_files/canon_source_files/39_WORKFLOW_OPS.md`
 
 ```markdown
@@ -7574,7 +7574,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: agent_files/canon_source_files/38_WHAT_IF_MATRIX.md
 
-**Original Name:** `38_WHAT_IF_MATRIX.md`  
+**Original Name:** `38_WHAT_IF_MATRIX.md`
 **Path in Repo:** `agent_files/canon_source_files/38_WHAT_IF_MATRIX.md`
 
 ```markdown
@@ -7902,7 +7902,7 @@ Fact graph: 36_UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.
 
 ## FILE: SECURITY.md
 
-**Original Name:** `SECURITY.md`  
+**Original Name:** `SECURITY.md`
 **Path in Repo:** `SECURITY.md`
 
 ```markdown
