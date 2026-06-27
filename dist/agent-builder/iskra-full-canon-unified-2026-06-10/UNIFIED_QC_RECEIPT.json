@@ -1,8 +1,8 @@
 {
   "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-27T14:32:53Z",
+  "generated_at": "2026-06-27T15:34:18Z",
   "status": "WORKSPACE_AGENT_ALIGNMENT_REBUILT_LOCAL_PASS",
-  "builder_ui_status": "observed-in-workspace-agent-config; uploaded by user, pending Builder verification; verified-live-builder not claimed",
+  "builder_ui_status": "observed-in-workspace-agent-config; live-draft-prompt-stale-vs-local-package; uploaded by user, pending Builder verification; verified-live-builder not claimed",
   "active_target": "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
   "scope": "chatgpt_workspace_agent_alignment_plus_user_added_skill_pack",
   "package_inventory": {
@@ -21,14 +21,49 @@
     "status": "PASS_LOCAL_AND_READ_ONLY_CONFIG",
     "live_agent_name": "Искра vΩ.7",
     "observed_via": "Codex Desktop Workspace Agents connector plus user screenshot",
-    "observed_at": "2026-06-27T14:30:00Z",
+    "observed_at": "2026-06-27T15:34:18Z",
     "chatgpt_channel": "present",
     "api_channel": "active; published; trigger id redacted",
     "slack_channel": "not configured",
-    "memory": "per_user",
+    "memory": "per_user; platform-managed Workspace Agent Memory surface",
+    "memory_surface": {
+      "status": "OBSERVED_BY_USER_SCREENSHOT_NOT_ENUMERATED",
+      "folders_observed": [
+        "ChatGPT",
+        "API"
+      ],
+      "sample_paths_observed": [
+        "archive/",
+        "dreamspace/",
+        "horizon/",
+        "imports/",
+        "shadow-core/",
+        "project-memory.md",
+        "development-diary.md",
+        "open-loops.md",
+        "adr-log.md",
+        "evidence-index.md"
+      ],
+      "boundary": "separate from Builder Files and package agent_files/memory_*; ordinary file upload does not populate Workspace Agent Memory"
+    },
     "app_connectors": "GitHub, Ace Knowledge Graph, Remote Desktop Commander, Supabase observed",
     "skills": "33 uploaded skills observed; package 32-skill source names match the Iskra skill-pack subset; iskra-toolchain-bridge observed separately",
-    "file_tree": "handle observed; screenshot shows 269 files; recursive file-tree inventory not captured"
+    "file_tree": "handle observed; screenshot shows 269 files; connector list_agent_file_tree loaded root metadata plus depth=2 snapshot, tree_revision=1139; byte-level parity not captured",
+    "prompt_alignment": "live draft prompt is stale relative to local corrected Memory-boundary package instructions",
+    "official_docs_alignment": {
+      "status": "PASS_WITH_BOUNDED_TERMS",
+      "sources_checked": [
+        "help.openai.com ChatGPT Workspace Agents for Enterprise and Business",
+        "developers.openai.com/workspace-agents/trigger-runs",
+        "developers.openai.com/workspace-agents/authentication"
+      ],
+      "boundaries": [
+        "research-preview / workspace-scoped availability only",
+        "202 Accepted means accepted or queued, not completed",
+        "Workspace Agent access token is distinct from OpenAI Platform API key",
+        "no public official 2026-11-30 deprecation claim retained as current fact"
+      ]
+    }
   },
   "added_or_promoted_entries": [
     "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md",
@@ -62,12 +97,22 @@
     "workspace_agent_config": {
       "status": "OBSERVED_READ_ONLY",
       "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-      "boundary": "config evidence only; not file-tree parity or prompt-level verification"
+      "boundary": "config evidence only; partial file-tree metadata observed; not byte-level file parity or prompt-level verification"
+    },
+    "workspace_agent_prompt_alignment": {
+      "status": "DRIFT_LIVE_DRAFT_PROMPT_STALE_VS_LOCAL_PACKAGE",
+      "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+      "boundary": "local package contains corrected Memory boundary; live draft prompt has not been updated or published"
     },
     "workspace_agent_skill_pack": {
       "status": "PASS_NAME_COUNT_ALIGNMENT",
       "receipt": "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
       "boundary": "package 32-skill source; not byte-identical live skill proof and not the separate iskra-toolchain-bridge skill"
+    },
+    "workspace_agent_memory": {
+      "status": "OBSERVED_UI_NOT_WRITE_TESTED",
+      "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+      "boundary": "platform-managed per-user Memory; not populated by Builder file upload and not proven by package memory_seed/current files"
     },
     "workspace_surface_audit": {
       "status": "PASS_REGENERATED",
@@ -90,8 +135,10 @@
       "required": [
         "apply/upload the revised package or selected fields to the live Workspace Agent",
         "confirm 19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md is visible through the selected knowledge/file path",
+        "apply approved corrected instructions to live draft before claiming prompt parity",
         "confirm user-added skills and iskra-toolchain-bridge are active at the intended versions",
-        "run acceptance A-X plus C2/C3",
+        "confirm Workspace Agent Memory write/read behavior separately from Builder Files",
+        "run acceptance A-Y plus C2/C3",
         "record prompt-level live Builder evidence"
       ]
     }
@@ -139,16 +186,19 @@
   "non_claims": [
     "Not verified in Builder UI",
     "No live Workspace Agent mutation was performed",
+    "Live draft prompt is not claimed to include this local package's corrected Memory boundary",
     "No Workspace Agent access token or secret is stored",
+    "Builder file upload does not prove live Workspace Agent Memory contents",
+    "Package agent_files/memory_* files are seed/reference receipts, not live Memory proof",
     "Skill name/count alignment is not byte-identical live skill proof",
     "API channel active does not mean any API-triggered task has completed",
     "Local helper files do not prove hosted Builder execution"
   ],
   "next": "Local manifest, surface inventory, clean zip, and ZIP receipt are regenerated. Run live Builder verification only after explicit approval for the exact Workspace Agent target.",
   "delta": {
-    "delta": "ChatGPT Workspace Agent live config and user-added Iskra skill pack are now explicit package surfaces",
+    "delta": "ChatGPT Workspace Agent live config, live prompt drift, platform-managed Memory, and user-added Iskra skill pack are explicit package surfaces",
     "data": "Codex Desktop Workspace Agents config, local skill-pack inventory, manifest policy, clean export tooling",
     "omega": 0.9,
-    "lambda": "rerun after any package update, skill-pack rebuild, live Workspace Agent publish, or Workspace Agent API/auth change"
+    "lambda": "rerun after any package update, skill-pack rebuild, live Workspace Agent publish, Memory write/read claim, or Workspace Agent API/auth change"
   }
 }

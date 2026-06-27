@@ -1,5 +1,5 @@
 # Iskra vΩ.7 Workspace Agent manifest
-# This file documents the intended ChatGPT Agents Studio / Workspace Agents
+# This file documents the intended ChatGPT Workspace Agents / Agent Builder
 # configuration. The actual creation still happens through the UI at
 # https://chatgpt.com/agents/studio/new
 
@@ -9,14 +9,15 @@ agent:
   icon: "icon.svg"
   version: "2026-06-27"
   release: "iskra-full-canon-unified-2026-06-10"
-  target_ui: "ChatGPT Workspace Agents / Agent Builder / Agents Studio"
+  target_ui: "ChatGPT Workspace Agents / Agent Builder"
+  editor_url_pattern: "https://chatgpt.com/agents/studio/..."
   management_surface: "Codex Desktop app"
   language: "ru"
 
 workspace_agent_live_alignment:
-  observed_at: "2026-06-27T14:30:00Z"
+  observed_at: "2026-06-27T15:34:18Z"
   observed_via: "Codex Desktop Workspace Agents connector, read-only"
-  status: "observed-in-workspace-agent-config; published-api-channel-active; verified-live-builder not claimed"
+  status: "observed-in-workspace-agent-config; published-api-channel-active; live-draft-prompt-stale-vs-local-package; verified-live-builder not claimed"
   target_agent:
     name: "Искра vΩ.7"
     agent_id_redacted: "agt_6a3aba...d24f"
@@ -34,6 +35,11 @@ workspace_agent_live_alignment:
     - "Supabase attached"
   memory_observed:
     persistent_folder: "per_user"
+    platform_managed: true
+    folders_observed:
+      - "ChatGPT"
+      - "API"
+    note: "User screenshots show a separate file-based Memory UI; ordinary Builder file upload does not populate this Memory surface."
   model_observed:
     name: "workspace default"
     reasoning_effort: "xhigh"
@@ -78,7 +84,12 @@ workspace_agent_live_alignment:
     file_tree_id: "redacted"
     ui_file_count: 269
     ui_file_count_source: "user screenshot 2026-06-27"
-    recursive_file_tree_inventory: "not captured; connector list_agent_files returned an HTML transport error in this run"
+    file_tree_metadata: "connector list_agent_file_tree loaded root metadata and depth=2 snapshot; tree_revision=1139"
+    recursive_file_tree_inventory: "partial metadata only; full byte-level parity and all file hashes not captured"
+  prompt_alignment:
+    live_draft_prompt: "stale relative to local package; get_current_agent_config still shows older Memory instructions"
+    local_package_prompt: "agent_files/instructions now contains the corrected Workspace Agent Memory Surface boundary"
+    required_before_live_parity_claim: "apply approved instruction update, publish only if requested, then run acceptance prompts A-Y"
   non_claims:
     - "No Workspace Agent access token or secret is stored in this package."
     - "No live Workspace Agent draft mutation was performed by this package update."
@@ -132,7 +143,11 @@ builder_guides:
 memory:
   seed: "agent_files/memory_seed"
   current: "agent_files/memory_current"
-  note: "Memory files are continuity receipts, not immutable canon. Review for PII before sharing the agent."
+  workspace_agent_surface: "platform-managed per-user Memory; written during supported ChatGPT/API runs when Memory is enabled"
+  upload_boundary: "Do not treat package memory_seed/current files or Builder Files as live Workspace Agent Memory contents."
+  runtime_helper_boundary: "Paths under /workspace/memory are local helper ledgers unless the runtime confirms platform Memory mapping."
+  user_upload_boundary: "The user cannot manually upload arbitrary files into Workspace Agent Memory through + Upload files / + Загрузить файлы."
+  note: "Package memory files are continuity seed/reference receipts, not immutable canon and not live Memory proof. Review for PII before sharing the agent."
 
 evals:
   - "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md"

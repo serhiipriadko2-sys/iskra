@@ -50,14 +50,19 @@ config is observed, but Builder prompt verification remains pending.
   profile fields, channels, apps, skills, memory mode, deployments, and
   file-tree handles. It does not prove file-tree parity or prompt-level Builder
   verification.
+- Workspace Agent `Память` is a separate platform-managed surface. Builder
+  file uploads and package `agent_files/memory_*` receipts do not prove live
+  Memory contents or write/read behavior.
 
 ## Builder UI Gate
 
 The package is not `verified in Builder UI` until after upload and prompt-level
 evidence from:
 
-- `agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md` prompts A-X.
+- `agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md` prompts A-Y.
 - `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md`.
+- Workspace Agent Memory write/read behavior checked separately from Builder
+  Files before any live Memory parity claim.
 - Canon, governance, security, Dreamspace, Horizon, memory, and toolchain
   boundary prompts.
 

@@ -26,7 +26,7 @@ ChatGPT / OpenAI Agent Builder.
 | Somatic Intuition | `agent_files/canon_source_files/core__somatic_intuition.md`, `agent_files/canon_source_files/metrics__somatic_index.md` | included |
 | Shadow Core | `agent_runtime_tools/iskra_shadow_core.py` | included |
 | StateCycle | `agent_runtime_tools/iskra_statecycle.py`, `agent_runtime_tools/iskra_turn_hook.py` | included |
-| Memory | `agent_files/memory_seed/`, `agent_files/memory_current/` | included |
+| Memory seed/reference | `agent_files/memory_seed/`, `agent_files/memory_current/` | included as package continuity receipts; not proof of live Workspace Agent Memory contents |
 | Toolchain | `agent_files/toolchain/`, `agent_files/files_for_agent_builder/12_TOOLCHAIN_EXPANSION.md` | included |
 | Plugins | `plugins/iskra-toolchain-bridge/` | included and locally source-validated |
 | Evals | `agent_files/evals/` | included |

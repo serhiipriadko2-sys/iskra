@@ -17,6 +17,7 @@ boundary between:
 - live Workspace Agent draft config;
 - attached skills;
 - file tree / knowledge files;
+- platform-managed Workspace Agent Memory / `Память`;
 - ChatGPT, API, Slack, and Codex Desktop management channels;
 - Agents SDK fallback.
 
@@ -47,10 +48,16 @@ approved for publication.
 - The observed draft is published and has an active API channel with an
   `agtch_...` trigger ID.
 - The observed draft has GitHub, Ace Knowledge Graph, Remote Desktop Commander,
-  and Supabase app access, per-user persistent folder state, and 33 uploaded
-  skills.
+  and Supabase app access, a platform-managed per-user Memory surface, and 33
+  uploaded skills.
 - The user screenshot shows 269 files in the live Agent Builder Files section;
-  connector file listing did not complete in this run.
+  a later read-only `list_agent_file_tree` call loaded root metadata and a
+  depth=2 snapshot with tree revision `1139`, but not byte-level full parity.
+- A read-only `get_current_agent_config` call showed the live draft prompt is
+  stale relative to the local package Memory-boundary update.
+- User screenshots show separate `Память` folders for `ChatGPT` and `API` plus
+  memory files/folders such as `project-memory.md`, `open-loops.md`,
+  `adr-log.md`, `archive/`, `dreamspace/`, `horizon/`, and `shadow-core/`.
 - Official OpenAI Workspace Agent documentation describes the Workspace Agent
   API trigger surface under `api.chatgpt.com/v1/workspace_agents/.../trigger`.
 - Existing package docs already require separate status labels for package,
@@ -65,6 +72,9 @@ approved for publication.
 - API `202 Accepted` can be mistaken for final task completion.
 - Uploaded skills can be mistaken for package knowledge or connector authority.
 - File tree existence can be mistaken for full file parity.
+- Package `agent_files/memory_*` files or Builder file uploads can be mistaken
+  for live Workspace Agent Memory contents.
+- Local package instruction updates can be mistaken for live draft prompt parity.
 
 ## Consequences
 
@@ -72,7 +82,10 @@ approved for publication.
 - The clean export tool includes `SURFACE_INVENTORY.json` as a dynamic receipt
   while keeping it out of `MANIFEST.sha256`.
 - Compact consolidated knowledge must include the new operations boundary.
-- Acceptance prompts extend from A-V to A-X.
+- Workspace Agent Memory is treated as a separate platform-managed surface, not
+  as a file upload destination.
+- Live prompt drift must be recorded separately from local package readiness.
+- Acceptance prompts extend from A-V to A-Y.
 - Live Workspace Agent updates still require explicit user approval for the
   exact target and field set.
 
@@ -85,16 +98,20 @@ Local package verification must include:
 3. clean export / zip receipt regeneration;
 4. surface inventory regeneration;
 5. acceptance prompt update;
-6. no secret/token exposure.
+6. Memory boundary check in `17_RUNTIME_SURFACE_MAP.md` and
+   `19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md`;
+7. no secret/token exposure.
 
 Live verification requires:
 
 1. read current draft config;
 2. compare instructions and file tree;
-3. apply only approved draft changes;
-4. publish only if explicitly requested;
-5. run live acceptance prompts S-X;
-6. record receipt.
+3. apply approved corrected instructions before claiming prompt parity;
+4. verify Memory write/read behavior separately from Builder Files;
+5. apply only approved draft changes;
+6. publish only if explicitly requested;
+7. run live acceptance prompts S-Y;
+8. record receipt.
 
 ## Status
 
@@ -103,11 +120,13 @@ authorized by this ADR.
 
 ## Delta
 
-Delta: Workspace Agent live config becomes a first-class package alignment
-surface.
+Delta: Workspace Agent live config, live prompt drift, and platform-managed
+Memory become first-class package alignment surfaces.
 Data: Codex Desktop connector config, package files, OpenAI Workspace Agent
 docs, local manifest/export tools.
-Omega: 0.9 for local package boundary; 0.6 for live file parity until live
-file-tree enumeration is performed.
+Omega: 0.9 for local package boundary; 0.65 for live file metadata after depth=2
+listing; 0.6 for live file and Memory parity until those surfaces are fully
+enumerated or write/read tested; 0.45 for live prompt parity until approved
+draft update and acceptance.
 Lambda: revisit if Workspace Agents docs, Codex Desktop agent management, API
-auth, or Builder file-tree semantics change.
+auth, Builder file-tree semantics, or Memory semantics change.

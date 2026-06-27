@@ -11,9 +11,9 @@ Before claiming "I see", "I do not see", "there are N files", "the file is
 loaded", or "the hook runs", name the observed surface.
 
 Different surfaces can all be true at the same time. A Builder UI screenshot
-showing 267 knowledge files does not mean those 267 files are mounted in the
-current `/workspace`. A `/workspace` index with fewer files does not disprove
-the Builder UI count.
+showing knowledge files does not mean those files are mounted in the current
+`/workspace` or written into Workspace Agent `Память`. A `/workspace` index
+with fewer files does not disprove the Builder UI count.
 
 If surfaces disagree, write `DRIFT: surface A vs surface B`, not "one side is
 false" until the stronger source is checked.
@@ -27,6 +27,7 @@ false" until the stronger source is checked.
 | Runtime `/workspace` container | Files mounted or created in the current run and visible to shell tools | Builder UI file count, user local filesystem, complete GitHub repo unless cloned | `find`, `rg`, `sha256sum`, workspace artifact receipts |
 | `/workspace/user_files` | User-uploaded task attachments for this run | Permanent Builder knowledge or durable memory | file inventory and hashes in current run |
 | `/workspace/memory` | Runtime continuity receipts and open loops | Canon truth over GitHub/Supabase/canon files; Builder UI knowledge inventory | memory file read/write receipts |
+| Workspace Agent Memory / `Память` | Platform-managed per-user ChatGPT/API memory folders and entries when observed or write-tested | Builder Files contents, package `agent_files/memory_*`, clean zip entries, or `/workspace/memory` helper ledgers | Workspace Agent Memory UI/API evidence; explicit write/read receipt |
 | Mounted `agent_files/` | Package or knowledge subset mounted in this run | Complete Builder UI store unless count/source confirms it | count files, compare manifest/hash |
 | `agent_runtime_tools/` | Helper source exists and may run in compatible file-backed runtime | Automatic ChatGPT Builder execution | local smoke command, tool output, Builder/runtime proof |
 | GitHub/Supabase connectors | Live/stateful data returned by that connector and its scope | Hidden local files, secrets, unreturned settings, or other surfaces | connector response + scope |
@@ -41,6 +42,7 @@ Use these labels instead of vague visibility claims:
 - `observed-in-builder-ui`
 - `observed-in-workspace-agent-config`
 - `published-api-channel-active`
+- `observed-in-workspace-agent-memory`
 - `mounted-in-workspace`
 - `uploaded-as-task-file`
 - `mirrored-in-github`

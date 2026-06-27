@@ -31,11 +31,18 @@ entries are active Builder Knowledge, or that helper scripts execute in Builder.
   - Slack deployment absent.
   - GitHub, Ace Knowledge Graph, Remote Desktop Commander, and Supabase apps
     attached.
-  - `per_user` persistent folder observed.
+  - platform-managed `per_user` Memory surface observed; user screenshots show
+    separate `ChatGPT` / `API` Memory folders and memory files.
   - 33 uploaded skills observed: `iskra-toolchain-bridge` plus 32 Iskra
     skill-pack skills.
-  - live file-tree handle observed; user screenshot shows `269 файлов`, but
-    exact file contents were not recursively enumerated in this receipt.
+  - live file-tree handle observed; user screenshot shows `269 файлов`;
+    read-only `list_agent_file_tree` later loaded root metadata and depth=2
+    snapshot with tree revision `1139`, but exact byte/hash parity is not
+    proven.
+  - live draft prompt is stale relative to this local package's corrected
+    Memory boundary and must not be treated as already updated.
+  - `Files` count and `Память` contents are separate surfaces; ordinary file
+    upload does not populate Workspace Agent Memory.
   - stable operational IDs are redacted in package files.
 
 ## Required Builder Acceptance
@@ -50,9 +57,11 @@ Run these after upload:
    is visible in Builder Knowledge or consolidated knowledge.
 4. Run hardening prompt H7: Builder Knowledge vs workspace files.
 5. Run acceptance prompt C2: Runtime Surface Map.
-6. Run acceptance prompts W-X for Workspace Agent config and Codex Desktop
-   draft update boundaries.
-7. Run retrieval/index prompt:
+6. Run acceptance prompts W-Y for Workspace Agent config, Codex Desktop draft
+   update, and Memory boundaries.
+7. Confirm live Memory separately from Builder Files: `ChatGPT` / `API` folders
+   are visible, and any Memory write/read claim has UI/API evidence.
+8. Run retrieval/index prompt:
 
 ```text
 Файл есть в Builder Knowledge, но не mounted в /workspace. Можешь дать sha256 и
@@ -79,6 +88,8 @@ files.
 - A zip is not proof of active Builder Knowledge.
 - A Builder UI count is not proof of runtime `/workspace` mount.
 - Runtime `/workspace` count does not disprove Builder upload.
+- Read-only live config evidence does not prove live prompt parity with local
+  package instructions.
 
 ## Delta
 

@@ -17,9 +17,13 @@ the active remediation target.
 does not prove activation inside ChatGPT Agent Builder, Workspace Agents, or the
 Builder UI.
 
-[FACT] OpenAI's legacy Agent Builder surface is deprecated with shutdown
-planned for 2026-11-30. Current alignment must preserve a Workspace Agents UI
-path and an Agents SDK code-first fallback.
+[DRIFT] This older audit snapshot previously treated an OpenAI Agent Builder
+deprecation date as a fact. The 2026-06-27 official-doc check did not verify a
+public `2026-11-30` deprecation claim for the current ChatGPT Workspace Agents
+surface. Keep this as historical local audit context, not current platform
+truth. Current alignment should use the official `ChatGPT Workspace Agents` and
+`Agent Builder` terminology, with the Agents SDK kept as a separate code-first
+fallback.
 
 ## Superseded Snapshot
 

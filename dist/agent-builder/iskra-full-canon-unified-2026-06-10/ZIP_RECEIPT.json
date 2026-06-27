@@ -1,18 +1,18 @@
 {
   "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-27T14:41:17Z",
+  "generated_at": "2026-06-27T15:39:50Z",
   "status": "PASS",
   "archive_kind": "sidecar_clean_export_zip",
   "archive_path": "../iskra-full-canon-unified-2026-06-10-clean.zip",
-  "archive_sha256": "81eed81896afcab6994925012906e1aeaca4883a8319231f42b504148029c278",
-  "archive_bytes": 3006896,
+  "archive_sha256": "00837976c973f1dc653964979344f9d56f58d0312ea09959ca3dc5c3d2361950",
+  "archive_bytes": 3017410,
   "entries": 436,
   "manifest_entries": 434,
   "inventory_rule": "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
   "clean_export": {
     "command": "py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force",
     "file_count": 436,
-    "total_bytes": 8986482,
+    "total_bytes": 9015423,
     "forbidden_hits": 0,
     "missing_files": 0,
     "hash_mismatches": 0
@@ -36,8 +36,11 @@
     "A clean zip proves transport readiness only",
     "No live Workspace Agent mutation was performed",
     "No Workspace Agent access token or secret is stored",
+    "Live draft prompt is stale relative to the corrected local package instructions",
+    "Builder file upload does not prove live Workspace Agent Memory contents",
+    "Package agent_files/memory_* files are seed/reference receipts, not live Memory proof",
     "Skill name/count alignment is not byte-identical live skill proof",
     "Builder UI readiness remains unverified until acceptance prompts pass"
   ],
-  "next": "Use this sidecar clean zip or selected package files for the approved Workspace Agent update, then run acceptance prompts A-X plus C2/C3 before claiming verified-live-builder."
+  "next": "Use this sidecar clean zip or selected package files for an approved Workspace Agent update, apply corrected instructions before claiming live prompt parity, then run acceptance prompts A-Y plus C2/C3 before claiming verified-live-builder or live Memory parity."
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T14:40:58Z",
+  "generated_at": "2026-06-27T15:39:26Z",
   "purpose": "Separate count/hash/status by observed surface.",
   "non_claims": [
     "Builder UI file count is not a runtime /workspace mount proof.",
@@ -13,8 +13,8 @@
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10",
       "status": "observed",
       "file_count": 435,
-      "total_bytes": 8855301,
-      "surface_sha256": "639766e05e78aea2f0ab91a818d51dd5c02f1e7f54c22dd824793e87348de125",
+      "total_bytes": 8884242,
+      "surface_sha256": "e73234404e73d619ef584d17e7e9e69f16daf7cdbc668a93405a74016b062b99",
       "sample": [
         {
           "path": ".gitattributes",
@@ -23,8 +23,8 @@
         },
         {
           "path": "agent.yaml",
-          "bytes": 7032,
-          "sha256": "aac218f31b42b8baf0aa1a67b2be2d5efb6b43f697db72830512aa127cc99d98"
+          "bytes": 8444,
+          "sha256": "562260f9bd23b469109c3ab6cb28f727b98a6dcd9b508ba6bdd3c45de358ee72"
         },
         {
           "path": "agent_files/canon_source_files/00_ROUTER.md",
@@ -147,7 +147,7 @@
       "status": "observed",
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\MANIFEST.sha256",
       "entry_count": 434,
-      "sha256": "f3c76a6ea826fc4a366ff7823a5493463359a2ef0e22535baeaf5ae9a88ac89b",
+      "sha256": "cbe1e5ab6addb932c612b7ec7de0cde32a72d313c5bbcf2c7d8db8c0d98629da",
       "sample": [
         {
           "path": ".gitattributes",
@@ -159,11 +159,11 @@
         },
         {
           "path": "BUILDER_ASSEMBLY_MANIFEST.md",
-          "sha256": "039bf4730103be29cd9d51942c30ddcc0b320ef01df013c5da982ae8d180f5e2"
+          "sha256": "6a634237d5ffcb0133dcd11f19c91f855d3295a905fafe81f0bd39cc6902fc07"
         },
         {
           "path": "BUILDER_UPLOAD_EVIDENCE.md",
-          "sha256": "45dbc25f59bf3ec4e888729fde42ff34175069560aaef585c6fc862995be3c3a"
+          "sha256": "36a0d88440fb865d683c96fff49178e9c1bf541228fe4a2ca661394951d08f7b"
         },
         {
           "path": "CANON_TRACE_MAP.md",
@@ -191,15 +191,15 @@
         },
         {
           "path": "QC_CHECKS.md",
-          "sha256": "9c64661c33a046e092ce8d47ea56af109c014dcbb75e270aafd1f3a87f41749c"
+          "sha256": "d10f778446e47a98d1a673b0d6097d37414b814fd76a81cfdf13285a985c164b"
         },
         {
           "path": "README.md",
-          "sha256": "8f0dde1cb65412db76fe9f361564d3eaa0feeffa16c1b98bb0e4c8e6a129ff07"
+          "sha256": "86f360fc3e66145a818438b74373deecf28aede42af02f12a5fb725aabd94ddb"
         },
         {
           "path": "README_AGENT_BUILDER_UPLOAD.md",
-          "sha256": "55bdc8868e23e1138702204a900bea57e5ad7a6fc756fd73f36f7a9206d3bd81"
+          "sha256": "c56d6db4abe9c19e47b7caddccf25f98fa116fc6093c303b8dba43cf559e4794"
         },
         {
           "path": "RECOVERY_RECEIPT.md",
@@ -223,11 +223,11 @@
         },
         {
           "path": "UNIFIED_QC_RECEIPT.json",
-          "sha256": "1c05160cc212bc33a83821b825a51e649cc3bc040dc57fea01710a62e2136fc1"
+          "sha256": "269e59db78b5970fd24b86f6a025f0f30ff76732936f96497eb9929cbf06cf56"
         },
         {
           "path": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-          "sha256": "c5116481d193f89d1b819160b2f3bd970d248b683b2a4f744530185611ea59f7"
+          "sha256": "df45468c72d1eb14b8fe86d96ff36a88530a462d93c560e9e4913fe60b96f33e"
         },
         {
           "path": "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
@@ -235,11 +235,11 @@
         },
         {
           "path": "agent.yaml",
-          "sha256": "aac218f31b42b8baf0aa1a67b2be2d5efb6b43f697db72830512aa127cc99d98"
+          "sha256": "562260f9bd23b469109c3ab6cb28f727b98a6dcd9b508ba6bdd3c45de358ee72"
         },
         {
           "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
-          "sha256": "7b708a7e637915cba0d09414c84743fdd9b363ccebb2e5e74332c685d7d72f38"
+          "sha256": "16b1842ccb209a452e65ef16deb70392cca3be7327eb2ade7fe11a876a3bcb55"
         },
         {
           "path": "agent_files/INDEX.md",
@@ -256,8 +256,8 @@
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_files",
       "status": "observed",
       "file_count": 137,
-      "total_bytes": 7974970,
-      "surface_sha256": "9d2dc9fd5c505b76b0b750506d23b529ae06a3b311666ea377626820bd98e451",
+      "total_bytes": 7992747,
+      "surface_sha256": "6e7c3e80eecbf02b5a53bc51b5440f2211e2c3b5a25bcf6482d4cad9e639e5c1",
       "sample": [
         {
           "path": "agent_files/canon_source_files/00_ROUTER.md",
@@ -2160,8 +2160,8 @@
       "label": "builder_upload_evidence",
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\BUILDER_UPLOAD_EVIDENCE.md",
       "status": "packaged-as-upload-set; Workspace Agent config observed; live Builder verification pending",
-      "bytes": 3866,
-      "sha256": "45dbc25f59bf3ec4e888729fde42ff34175069560aaef585c6fc862995be3c3a",
+      "bytes": 4585,
+      "sha256": "36a0d88440fb865d683c96fff49178e9c1bf541228fe4a2ca661394951d08f7b",
       "first_lines": [
         "# Builder Upload Evidence",
         "",

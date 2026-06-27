@@ -31,7 +31,11 @@ Status: `observed-in-workspace-agent-config`; `uploaded by user, pending Builder
 - Добавьте `agent_files/evals/*` в качестве тестового материала.
 - Treat `agent_runtime_tools/*` as local helper source unless a runtime proves
   file-backed execution.
-- Treat `agent_files/memory_*` as continuity receipts, not immutable canon.
+- Treat `agent_files/memory_*` as continuity seed/reference receipts, not
+  immutable canon and not proof of live Workspace Agent Memory contents.
+- Do not try to populate the live `Память` surface through ordinary file upload:
+  Workspace Agent Memory is platform-managed and written by supported
+  ChatGPT/API runs when Memory is enabled.
 - Ensure `19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md` is uploaded or present in
   the consolidated knowledge volumes before testing live Workspace Agent
   channel, skill, file-tree, and Codex Desktop boundaries.
@@ -87,6 +91,8 @@ Refresh `ZIP_RECEIPT.json` after zip creation.
 - App access, write approvals, action constraints, admin/RBAC settings, and
   destination permissions are configured in ChatGPT Workspace Agents, not by
   this local zip.
+- `Files` count and `Память` contents are separate surfaces. Verify Memory
+  folders/read-write behavior separately from the Builder file tree.
 - The current target live agent was observed read-only through Codex Desktop
   with an active API channel. Exact `agt_...`, `agtv_...`, `drv_...`,
   `agtch_...`, connector, and file-tree IDs are redacted in package files.
@@ -100,6 +106,7 @@ Refresh `ZIP_RECEIPT.json` after zip creation.
   connectors.
 - `observed-in-workspace-agent-config` does not prove file-tree parity or
   prompt-level acceptance.
+- Builder file upload does not prove live Workspace Agent Memory contents.
 - Package skill source names matching live skill names does not prove
   byte-identical live skill contents.
 
@@ -111,4 +118,4 @@ the same Builder full-canon corpus. Use `FULL_CANON_UNIFICATION.md`,
 `governance/adr_20260610_unified_full_canon_recovery.md` for layer ordering and
 claim boundaries.
 
-∆DΩΛ: Delta = upload instructions now use clean-export and Builder-verification boundaries; Data = package layout, manifest policy, local SDK fallback; Omega = 0.9 before Builder Preview; Lambda = upload only the clean subset and run acceptance prompts A-P.
+∆DΩΛ: Delta = upload instructions now use clean-export, Workspace Agent, Memory, and Builder-verification boundaries; Data = package layout, manifest policy, official Workspace Agents docs, live read-only config, local SDK fallback; Omega = 0.9 before live Builder acceptance; Lambda = upload only the clean subset and run acceptance prompts A-Y plus C2/C3.

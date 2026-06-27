@@ -3,7 +3,8 @@
 ## Added
 
 - Added `19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md` with ChatGPT Workspace
-  Agents, Codex Desktop, skills, files, and API channel boundaries.
+  Agents, Codex Desktop, skills, files, platform-managed Memory, and API
+  channel boundaries.
 - Added a redacted `WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md` from read-only
   Codex Desktop Workspace Agents config inspection.
 - Added ADR `adr_20260627_workspace_agent_live_alignment.md`.
@@ -16,6 +17,9 @@
   boundary and this ADR.
 - Acceptance scope extends to Workspace Agent config and Codex Desktop draft
   update boundaries.
+- Runtime surface mapping now separates Builder Files, runtime `/workspace`
+  files, package memory seed/current receipts, and live Workspace Agent
+  `Память`.
 
 ## Boundary
 

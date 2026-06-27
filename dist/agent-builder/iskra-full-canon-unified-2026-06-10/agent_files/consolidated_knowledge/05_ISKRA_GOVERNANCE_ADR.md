@@ -12,7 +12,7 @@ This is a consolidated knowledge index volume for ChatGPT Workspace Agents.
 ```markdown
 # Workspace Agent Live Config Receipt
 
-Generated: 2026-06-27T14:30:00Z
+Generated: 2026-06-27T15:34:18Z
 Observed via: Codex Desktop Workspace Agents connector
 Mode: read-only config inspection
 Target package: `iskra-full-canon-unified-2026-06-10`
@@ -20,7 +20,7 @@ Target package: `iskra-full-canon-unified-2026-06-10`
 ## Context
 
 The user identified the active editor URL as a ChatGPT Workspace Agent in
-Agent Builder / Agents Studio and asked to adapt this package for that surface.
+Agent Builder and asked to adapt this package for that surface.
 The local package must stay separate from the live Workspace Agent draft until
 an explicit update/publish action is approved.
 
@@ -35,14 +35,35 @@ an explicit update/publish action is approved.
 Commander, and Supabase app access, per-user persistent folder state, and 33
 uploaded skills.
 
+[FACT] User screenshots show a separate Workspace Agent `Память` UI with
+`ChatGPT` and `API` personal folders plus memory folders/files such as
+`archive/`, `dreamspace/`, `horizon/`, `imports/`, `shadow-core/`,
+`project-memory.md`, `development-diary.md`, `open-loops.md`, `adr-log.md`, and
+`evidence-index.md`.
+
+[FACT] This Memory surface is platform-managed and is not populated through the
+ordinary `+ Upload files` / `+ Загрузить файлы` Builder file upload flow.
+
 [FACT] The user-provided Agent Builder screenshot for this target shows `269`
-files in the Files section. The connector exposed a file-tree handle, but
-recursive file listing failed in this run with an HTML transport error.
+files in the Files section. The connector exposed a file-tree handle, and a
+later read-only `list_agent_file_tree` call loaded root metadata plus a depth=2
+snapshot with tree revision `1139`. This is still not byte-level full file-tree
+parity.
+
+[FACT] A read-only `get_current_agent_config` call on 2026-06-27 showed the
+live draft prompt is stale relative to this local package: it still contains
+older Memory instructions and does not yet include the corrected Workspace
+Agent Memory boundary added locally.
 
 [DECISION] This package now treats ChatGPT Workspace Agents as the primary UI
 target, Codex Desktop as a management surface, and the Agents SDK fallback as a
 separate code-first fallback. It does not claim that local package files are
 already present in the live file tree.
+
+[DECISION] Official public docs are treated as the source for platform-wide
+claims. Current package wording must not claim broad consumer availability,
+final completion from `202 Accepted`, ordinary OpenAI Platform API-key
+compatibility, or an official `2026-11-30` Agent Builder deprecation date.
 
 ## Evidence
 
@@ -62,11 +83,21 @@ Connector result summary, redacted for public package safety:
 | API endpoint | `https://api.chatgpt.com/v1/workspace_agents/agtch_[redacted]/trigger` |
 | Slack deployments | none |
 | persistent folder | `per_user` |
+| Memory surface | platform-managed `Память`; `ChatGPT` and `API` personal folders observed by screenshot |
 | reasoning effort | `xhigh` |
 | attached apps | GitHub, Ace Knowledge Graph, Remote Desktop Commander, Supabase |
 | app write approvals | mixed by connector; refresh live config before any write |
-| file tree | observed, exact ID redacted; screenshot shows 269 files |
+| file tree | observed, exact ID redacted; screenshot shows 269 files; depth=2 metadata loaded; tree revision `1139` |
 | attached skills | 33 uploaded skills |
+| prompt alignment | live draft prompt is stale relative to local package Memory-boundary update |
+
+Official public source check:
+
+| Source | Package implication |
+|---|---|
+| `help.openai.com/.../chatgpt-workspace-agents-for-enterprise-and-business` | Workspace Agents are documented for Enterprise, Business, and Edu; Agent Builder config includes apps/connectors, skills, files, and memory-related setup; deployment includes ChatGPT, schedules, mentions/team, Slack when configured, and API |
+| `developers.openai.com/workspace-agents/trigger-runs` | API trigger uses `api.chatgpt.com/v1/workspace_agents/.../trigger` and `202 Accepted` is async accepted/queued semantics |
+| `developers.openai.com/workspace-agents/authentication` | Workspace Agent API uses Workspace Agent access tokens, not ordinary OpenAI Platform API keys |
 
 Observed skill names:
 
@@ -113,9 +144,17 @@ current live parity.
 
 - `observed-in-workspace-agent-config` is not the same as
   `verified-live-builder`.
-- The full live file tree was not recursively enumerated in this receipt; the
-  `269` file count is screenshot/UI evidence plus a connector file-tree handle,
-  not a byte-level inventory.
+- The full live file tree was only partially enumerated in this receipt; the
+  `269` file count is screenshot/UI evidence plus connector metadata, not a
+  byte-level inventory or hash parity proof.
+- The live Workspace Agent Memory tree was not recursively enumerated or
+  write-tested. Package `agent_files/memory_*` files and Builder file uploads
+  are not proof of live Memory contents.
+- The live draft prompt is not yet aligned with the updated local package
+  instructions; a live instruction update/publish remains pending explicit
+  approval.
+- `Files` count and `Память` contents are separate surfaces and must be
+  verified separately.
 - A published API channel proves trigger availability, not task completion.
 - Operational IDs are stable handles and are redacted here. Tokens and secrets
   were not requested, stored, or printed.
@@ -128,29 +167,35 @@ current live parity.
 1. Use `agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md`
    as the live Workspace Agent operations boundary.
 2. Regenerate consolidated knowledge, manifest, surface inventory, clean zip,
-   and `ZIP_RECEIPT.json`.
-3. After user approval, compare the live draft instructions and file tree with
-   the package, then stage/update only the exact requested Workspace Agent
-   fields.
-4. Run live acceptance prompts S-X before claiming `verified-live-builder`.
+   and `ZIP_RECEIPT.json` after this corrective doc update.
+3. After user approval, stage the corrected local instructions into the live
+   draft, compare file tree/skills/Memory behavior with the package intent, and
+   update only the exact requested Workspace Agent fields.
+4. Publish only if explicitly requested.
+5. Run live acceptance prompts S-Y and a separate Memory write/read check before
+   claiming `verified-live-builder` or live Memory parity.
 
 ## Status
 
 `observed-in-workspace-agent-config`; `published-api-channel-active`;
+`live-draft-prompt-stale-vs-local-package`;
 `packaged-as-upload-set` pending fresh clean zip regeneration;
 `verified-live-builder` not claimed.
 
 ## Delta
 
 Delta: live Workspace Agent config is now represented as a redacted package
-receipt.
+receipt, with live Memory separated from Builder Files and live prompt drift
+explicitly recorded.
 Data: Codex Desktop Workspace Agents connector output, local package files,
 Workspace Agent API boundary docs.
-Omega: 0.88 for config fields observed in this run; 0.55 for live file-tree
-content parity until the file tree is enumerated.
+Omega: 0.88 for config fields observed in this run; 0.65 for live file-tree
+metadata after depth=2 listing; 0.55 for Memory content parity until separately
+enumerated or tested; 0.45 for live prompt parity until an approved draft update
+is applied and accepted.
 Lambda: refresh after any publish, draft edit, skill upload/removal, file
-upload/removal, app/tool permission change, API channel change, or Slack
-deployment change.
+upload/removal, Memory write/read claim, app/tool permission change, API channel
+change, or Slack deployment change.
 ```
 
 ---
@@ -3125,9 +3170,13 @@ the active remediation target.
 does not prove activation inside ChatGPT Agent Builder, Workspace Agents, or the
 Builder UI.
 
-[FACT] OpenAI's legacy Agent Builder surface is deprecated with shutdown
-planned for 2026-11-30. Current alignment must preserve a Workspace Agents UI
-path and an Agents SDK code-first fallback.
+[DRIFT] This older audit snapshot previously treated an OpenAI Agent Builder
+deprecation date as a fact. The 2026-06-27 official-doc check did not verify a
+public `2026-11-30` deprecation claim for the current ChatGPT Workspace Agents
+surface. Keep this as historical local audit context, not current platform
+truth. Current alignment should use the official `ChatGPT Workspace Agents` and
+`Agent Builder` terminology, with the Agents SDK kept as a separate code-first
+fallback.
 
 ## Superseded Snapshot
 
@@ -3528,6 +3577,7 @@ boundary between:
 - live Workspace Agent draft config;
 - attached skills;
 - file tree / knowledge files;
+- platform-managed Workspace Agent Memory / `Память`;
 - ChatGPT, API, Slack, and Codex Desktop management channels;
 - Agents SDK fallback.
 
@@ -3558,10 +3608,16 @@ approved for publication.
 - The observed draft is published and has an active API channel with an
   `agtch_...` trigger ID.
 - The observed draft has GitHub, Ace Knowledge Graph, Remote Desktop Commander,
-  and Supabase app access, per-user persistent folder state, and 33 uploaded
-  skills.
+  and Supabase app access, a platform-managed per-user Memory surface, and 33
+  uploaded skills.
 - The user screenshot shows 269 files in the live Agent Builder Files section;
-  connector file listing did not complete in this run.
+  a later read-only `list_agent_file_tree` call loaded root metadata and a
+  depth=2 snapshot with tree revision `1139`, but not byte-level full parity.
+- A read-only `get_current_agent_config` call showed the live draft prompt is
+  stale relative to the local package Memory-boundary update.
+- User screenshots show separate `Память` folders for `ChatGPT` and `API` plus
+  memory files/folders such as `project-memory.md`, `open-loops.md`,
+  `adr-log.md`, `archive/`, `dreamspace/`, `horizon/`, and `shadow-core/`.
 - Official OpenAI Workspace Agent documentation describes the Workspace Agent
   API trigger surface under `api.chatgpt.com/v1/workspace_agents/.../trigger`.
 - Existing package docs already require separate status labels for package,
@@ -3576,6 +3632,9 @@ approved for publication.
 - API `202 Accepted` can be mistaken for final task completion.
 - Uploaded skills can be mistaken for package knowledge or connector authority.
 - File tree existence can be mistaken for full file parity.
+- Package `agent_files/memory_*` files or Builder file uploads can be mistaken
+  for live Workspace Agent Memory contents.
+- Local package instruction updates can be mistaken for live draft prompt parity.
 
 ## Consequences
 
@@ -3583,7 +3642,10 @@ approved for publication.
 - The clean export tool includes `SURFACE_INVENTORY.json` as a dynamic receipt
   while keeping it out of `MANIFEST.sha256`.
 - Compact consolidated knowledge must include the new operations boundary.
-- Acceptance prompts extend from A-V to A-X.
+- Workspace Agent Memory is treated as a separate platform-managed surface, not
+  as a file upload destination.
+- Live prompt drift must be recorded separately from local package readiness.
+- Acceptance prompts extend from A-V to A-Y.
 - Live Workspace Agent updates still require explicit user approval for the
   exact target and field set.
 
@@ -3596,16 +3658,20 @@ Local package verification must include:
 3. clean export / zip receipt regeneration;
 4. surface inventory regeneration;
 5. acceptance prompt update;
-6. no secret/token exposure.
+6. Memory boundary check in `17_RUNTIME_SURFACE_MAP.md` and
+   `19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md`;
+7. no secret/token exposure.
 
 Live verification requires:
 
 1. read current draft config;
 2. compare instructions and file tree;
-3. apply only approved draft changes;
-4. publish only if explicitly requested;
-5. run live acceptance prompts S-X;
-6. record receipt.
+3. apply approved corrected instructions before claiming prompt parity;
+4. verify Memory write/read behavior separately from Builder Files;
+5. apply only approved draft changes;
+6. publish only if explicitly requested;
+7. run live acceptance prompts S-Y;
+8. record receipt.
 
 ## Status
 
@@ -3614,14 +3680,16 @@ authorized by this ADR.
 
 ## Delta
 
-Delta: Workspace Agent live config becomes a first-class package alignment
-surface.
+Delta: Workspace Agent live config, live prompt drift, and platform-managed
+Memory become first-class package alignment surfaces.
 Data: Codex Desktop connector config, package files, OpenAI Workspace Agent
 docs, local manifest/export tools.
-Omega: 0.9 for local package boundary; 0.6 for live file parity until live
-file-tree enumeration is performed.
+Omega: 0.9 for local package boundary; 0.65 for live file metadata after depth=2
+listing; 0.6 for live file and Memory parity until those surfaces are fully
+enumerated or write/read tested; 0.45 for live prompt parity until approved
+draft update and acceptance.
 Lambda: revisit if Workspace Agents docs, Codex Desktop agent management, API
-auth, or Builder file-tree semantics change.
+auth, Builder file-tree semantics, or Memory semantics change.
 ```
 
 ---
@@ -3637,7 +3705,8 @@ auth, or Builder file-tree semantics change.
 ## Added
 
 - Added `19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md` with ChatGPT Workspace
-  Agents, Codex Desktop, skills, files, and API channel boundaries.
+  Agents, Codex Desktop, skills, files, platform-managed Memory, and API
+  channel boundaries.
 - Added a redacted `WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md` from read-only
   Codex Desktop Workspace Agents config inspection.
 - Added ADR `adr_20260627_workspace_agent_live_alignment.md`.
@@ -3650,6 +3719,9 @@ auth, or Builder file-tree semantics change.
   boundary and this ADR.
 - Acceptance scope extends to Workspace Agent config and Codex Desktop draft
   update boundaries.
+- Runtime surface mapping now separates Builder Files, runtime `/workspace`
+  files, package memory seed/current receipts, and live Workspace Agent
+  `Память`.
 
 ## Boundary
 

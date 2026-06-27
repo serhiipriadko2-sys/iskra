@@ -883,13 +883,33 @@ Use these names precisely:
 
 - Product surface: `ChatGPT Workspace Agents`.
 - ChatGPT navigation label: `Agents` / `Агенты`.
-- Editor surface: `Agent Builder` or `Agents Studio` when referring to the
-  `chatgpt.com/agents/studio/...` UI.
+- Editor surface: `Agent Builder`; `chatgpt.com/agents/studio/...` is the
+  observed editor URL path. Do not present `Agents Studio` as the primary
+  official product name unless the UI itself uses that label.
 - Desktop management surface: `Codex app` / `Codex Desktop app`.
 - API channel: `Workspace Agent API channel` with an `agtch_...` trigger ID.
 
 Do not call this a Custom GPT, GPT Builder, Claude Agent SDK app, or OpenAI
 Agents SDK runtime unless that exact surface is being discussed.
+
+## Official Source Alignment
+
+Public OpenAI documentation checked on 2026-06-27 supports these boundaries:
+
+- Workspace Agents are documented for ChatGPT Enterprise, Business, and Edu as
+  a research-preview capability.
+- Agents are created from the `Agents` sidebar and configured in Agent Builder
+  with profile details, instructions, model choice, apps/connectors, skills,
+  files, and memory-related controls.
+- Publishing can make the agent available in ChatGPT; deployment can also use
+  schedules, mentions/team targeting, Slack when configured, and an API channel.
+- The Workspace Agent API trigger is asynchronous: `202 Accepted` means the run
+  was accepted/queued, not completed.
+- Workspace Agent API access uses Workspace Agent access tokens, not ordinary
+  OpenAI Platform API keys.
+
+Do not claim broad consumer availability, final API-run completion, or OpenAI
+Platform API-key compatibility unless newer official docs prove it.
 
 ## Current Target Profile
 
@@ -903,7 +923,8 @@ Workspace Agents connector:
 - ChatGPT channel: present.
 - API channel: active and published.
 - Slack channel: not configured.
-- Persistent folder / memory mode: `per_user`.
+- Workspace Agent Memory surface: platform-managed file-based Memory observed
+  with `per_user` behavior and separate `ChatGPT` / `API` personal folders.
 - Attached apps: GitHub, Ace Knowledge Graph, Remote Desktop Commander, and
   Supabase.
 - Attached skills: 33 uploaded skills total: `iskra-toolchain-bridge` plus 32
@@ -911,8 +932,18 @@ Workspace Agents connector:
 - Package skill source:
   `skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/`
   contains 32 user-added Iskra skills matching observed live skill names.
-- File tree: live file-tree ID observed; user screenshot shows `269 файлов`,
-  but file contents were not recursively enumerated in this receipt.
+- File tree: live file-tree ID observed; user screenshot shows `269 файлов`;
+  Codex Desktop `list_agent_file_tree` loaded root metadata and a depth=2
+  snapshot with tree revision `1139`; full byte-level parity is still not
+  proven.
+- Draft instructions: current live draft prompt was read through
+  `get_current_agent_config` and is stale relative to this local package's
+  corrected Memory boundary. Do not claim the live draft already contains the
+  updated local instructions.
+- Memory tree: user screenshots show folders/files such as `archive/`,
+  `dreamspace/`, `horizon/`, `imports/`, `shadow-core/`, `project-memory.md`,
+  `development-diary.md`, `open-loops.md`, `adr-log.md`, and
+  `evidence-index.md`; this surface is not populated by ordinary file upload.
 
 Operational identifiers such as full `agt_...`, `agtv_...`, `drv_...`,
 `agtch_...`, connector IDs, and file-tree IDs should be redacted in public
@@ -958,13 +989,15 @@ verification.
 
 ## File And Knowledge Boundary
 
-The package has three different file meanings:
+The package has four different file/state meanings:
 
 1. **Upload package files**: local/GitHub files under this directory.
 2. **Workspace Agent files**: files attached to the live Agent Builder file
    tree.
 3. **Runtime-visible files**: files mounted into a specific execution/runtime
    context.
+4. **Workspace Agent Memory**: platform-managed per-user file-based Memory
+   written during ChatGPT/API runs when Memory is enabled.
 
 These surfaces are not interchangeable. If a user asks whether the agent "has"
 the files, answer with the surface:
@@ -973,9 +1006,35 @@ the files, answer with the surface:
 [FACT] The local package contains X files according to MANIFEST.sha256.
 [FACT] The Workspace Agent draft has a file tree, but this run did not
 recursively enumerate its contents.
+[FACT] Workspace Agent Memory is a separate platform-managed surface; Builder
+file upload does not populate it.
 [HYP] The live agent may retrieve uploaded knowledge semantically after publish,
 but byte-level hashes require package/archive/GitHub evidence.
 ```
+
+## Workspace Agent Memory Boundary
+
+The live `Память` surface is not an upload target. The user cannot manually move
+arbitrary package files into that Memory tree through `+ Upload files` /
+`+ Загрузить файлы`. Memory writes are produced by the agent during supported
+ChatGPT/API runs, and only when Memory is enabled for that agent and channel.
+
+Treat `agent_files/memory_seed/` and `agent_files/memory_current/` as package
+seed/reference receipts. They can teach the agent the intended memory structure,
+but they are not proof that the same content exists in live Workspace Agent
+Memory.
+
+Treat runtime helper paths such as `/workspace/memory/dreamspace` and
+`/workspace/memory/shadow-core` as local execution ledgers unless the runtime
+explicitly confirms that those paths are mapped to the platform Memory surface.
+
+Required answer discipline:
+
+- Use `[FACT]` only for observed Memory UI/API state or a performed write.
+- Use `[HYP] memory write unavailable` when the current surface cannot write or
+  confirm Memory.
+- Never merge `Files: 269` with Memory contents; count and verify them
+  separately.
 
 ## Draft Update Boundary
 
@@ -1025,22 +1084,26 @@ After applying this package to the live agent:
 3. Confirm the skills list still includes the Iskra runtime, builder package,
    artifact QC, SIFT, GitHub, Supabase, and workflow skills expected by the
    target profile.
-4. Run acceptance prompts S-X from
+4. Confirm live Memory behavior separately from Builder Files: `ChatGPT` and
+   `API` Memory folders are visible, and any write/read claim has UI/API
+   evidence.
+5. Run acceptance prompts S-Y from
    `agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md`.
-5. If API is used, trigger only with a Workspace Agent access token and treat
+6. If API is used, trigger only with a Workspace Agent access token and treat
    `202 Accepted` as queued/accepted, not complete.
 
 ## Delta
 
 Delta: the package now distinguishes Workspace Agent product surface, Codex
-Desktop management, live draft config, API channel, skills, and file-tree
-boundaries.
+Desktop management, live draft config, API channel, skills, file-tree, and
+platform-managed Memory boundaries.
 Data: Codex Desktop Workspace Agents connector read-only config, package files,
-official Workspace Agent docs, and current acceptance prompts.
+official Workspace Agents Help/API docs, and current acceptance prompts.
 Omega: 0.9 for local package alignment; lower for live file-tree completeness
 until the live file tree is recursively inspected.
 Lambda: revise after any Workspace Agents API/auth change, Agent Builder UI
-file model change, skill list change, or live prompt acceptance failure.
+file model change, Memory surface change, skill list change, or live prompt
+acceptance failure.
 ```
 
 ---

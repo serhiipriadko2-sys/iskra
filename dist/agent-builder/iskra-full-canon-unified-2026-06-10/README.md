@@ -3,9 +3,10 @@
 Release: `iskra-full-canon-unified-2026-06-10`
 Date: 2026-06-10
 Updated: 2026-06-27
-Target: ChatGPT Workspace Agents / Agent Builder / Agents Studio
+Target: ChatGPT Workspace Agents / Agent Builder
 Management surface: Codex Desktop app
-Previous target: ChatGPT / OpenAI Agent Builder (deprecated 2026-11-30)
+Previous package label: ChatGPT / OpenAI Agent Builder wording preserved as
+provenance only; no official deprecation-date claim is made by this package.
 
 This directory is the materialized unified Full Canon upload tree for the Iskra
 agent. It synthesizes the recovered 2026-06-10 Iskra copy archives, the GitHub
@@ -33,8 +34,9 @@ provenance and rollback context, not the current entrypoint.
   Dreamspace, ShadowCore, StateCycle, and turn hooks.
 - `governance/` - repository governance, ADR, policy, audit, changelog, memory
   stack, and update protocol files.
-- `memory_current/` and `agent_files/memory_*` - continuity receipts and seed
-  memory, not immutable source of truth.
+- `memory_current/` and `agent_files/memory_*` - package continuity receipts and
+  seed/reference memory, not immutable source of truth and not proof of live
+  Workspace Agent Memory contents.
 - `plugins/iskra-toolchain-bridge/` - validated local plugin/skill bridge
   source for compatible Codex/plugin runtimes, including connector contracts,
   vault-safe git clone helpers, activation diagnostics, live connector receipts,
@@ -232,11 +234,12 @@ Valid status labels:
 - `uploaded by user, pending Builder verification`
 - `verified in Builder UI`
 
-Builder UI file count, GitHub tree count, and runtime `/workspace` count are
-different surfaces. If they differ, mark `DRIFT:` and measure each surface
-separately. A Builder UI screenshot showing 267 knowledge files does not imply
-those files are shell-mounted in `/workspace`; a workspace index does not
-disprove Builder upload.
+Builder UI file count, GitHub tree count, runtime `/workspace` count, and
+Workspace Agent `Память` contents are different surfaces. If they differ, mark
+`DRIFT:` and measure each surface separately. A Builder UI screenshot showing
+knowledge files does not imply those files are shell-mounted in `/workspace` or
+stored in Workspace Agent Memory; a workspace index does not disprove Builder
+upload.
 
 ## Required Post-Upload Checks
 
@@ -253,12 +256,15 @@ disprove Builder upload.
 - Runtime hardening prompts pass 7/7, including H7 Runtime Surface Map.
 - Runtime hardening prompts pass H1-H8, including H7 Runtime Surface Map and H8
   Retrieval vs Index.
-- Agent Builder acceptance prompts A-X plus C2/C3 pass.
+- Agent Builder acceptance prompts A-Y plus C2/C3 pass.
 - Governance and security files are visible as package knowledge, including
   `governance/` and `SECURITY.md`.
 - Canon layer index, runtime boundary, retrieval discipline, surface inventory,
   Workspace Agent operations, Workspace Agent skill-pack receipt, provenance
   receipt, and memory cleanup labels are visible.
+- Live Workspace Agent Memory behavior is checked separately from Builder
+  Files: `ChatGPT` / `API` Memory folders are visible and any write/read claim
+  has UI/API evidence.
 
 ## Rollback
 

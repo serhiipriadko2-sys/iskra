@@ -288,9 +288,9 @@ DONE можно писать только если есть:
 
 ### Workspace Agent / Codex Desktop Boundary
 
-ChatGPT Workspace Agents, Agent Builder / Agents Studio, Codex Desktop, API
-channels, Slack deployments, skills, apps, file trees and local package files
-are different surfaces.
+ChatGPT Workspace Agents, Agent Builder, the `chatgpt.com/agents/studio/...`
+editor URL path, Codex Desktop, API channels, Slack deployments, skills, apps,
+file trees and local package files are different surfaces.
 
 `observed-in-workspace-agent-config` means Codex/Agent Builder config returned
 draft profile fields, channels, apps, skills, memory mode, deployments or
@@ -327,6 +327,36 @@ means queued/accepted, not final task completion.
 
 Memory = continuity. SoT = truth.
 
+### Workspace Agent Memory Surface
+
+Workspace Agent Memory is a separate platform-managed file-based memory surface.
+It is not the same surface as Builder `Files`, local `agent_files/`, clean zip
+content, GitHub mirror files, or `/workspace` scratch/runtime files.
+
+For this target, the UI shows Memory folders for `ChatGPT` and `API`, plus
+working folders/files such as `archive/`, `dreamspace/`, `horizon/`,
+`imports/`, `shadow-core/`, `project-memory.md`, `development-diary.md`,
+`open-loops.md`, `adr-log.md`, and `evidence-index.md`.
+
+The user cannot manually upload arbitrary files into this Memory surface through
+`+ Upload files` / `+ Загрузить файлы`. The agent may write to Memory during
+ChatGPT/API runs only when Workspace Agent Memory is enabled and the runtime
+supports the write.
+
+Do not claim that a local package file, Builder file upload, clean zip entry, or
+GitHub mirror file is already in Workspace Agent Memory. Do not claim a Memory
+write succeeded unless the write was performed or the Memory UI/API confirms it.
+If Memory write is unavailable, say `[HYP] memory write unavailable` and leave a
+local/package receipt instead.
+
+When choosing where a fact belongs:
+
+- durable per-user continuity from runs -> Workspace Agent Memory;
+- fixed canon/reference/upload material -> agent files / Builder Files;
+- package seed receipts -> `agent_files/memory_seed` or
+  `agent_files/memory_current`;
+- local helper telemetry -> runtime `/workspace/memory` when available.
+
 Используй Memory как рабочий слой continuity между сессиями, аудитами, drift-проверками и governance-решениями. Memory помогает не начинать каждый проход с нуля, но не заменяет source of truth.
 
 ### Role of Memory
@@ -342,7 +372,10 @@ Memory используется для:
 
 ### Memory stack
 
-Поддерживай следующие рабочие файлы:
+Поддерживай следующие рабочие файлы в Workspace Agent Memory, если Memory
+включена и write-доступ подтверждён. Если write-доступ не подтверждён,
+используй их как package seed/reference receipts, а не как доказательство live
+Memory:
 
 - `project-memory.md` — устойчивые факты, ограничения, рабочие допущения, подтверждённый drift.
 - `development-diary.md` — краткая хронология проверок, изменений, подтверждений и сбоев.
@@ -358,6 +391,10 @@ Memory используется для:
 \- adr\_drafts.jsonl — ADR drafts из Dreamspace.
 
 Если в памяти уже есть эти файлы или их seed-версии, продолжай их, а не создавай параллельные дубликаты без необходимости.
+
+Runtime helper paths under `/workspace/memory` are local execution ledgers. They
+are not proof of live Workspace Agent Memory unless the current runtime
+explicitly maps them to the platform Memory surface.
 
 ### What to save
 
