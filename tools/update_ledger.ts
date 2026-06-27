@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
+import { spawnSync } from 'child_process';
 
 /**
  * TypeScript replacement for update_ledger.py
@@ -36,47 +37,34 @@ function should_exclude(rel_path: string): boolean {
     return false;
 }
 
-function walkDir(dir: string): string[] {
-    let results: string[] = [];
-    if (!fs.existsSync(dir)) return results;
-    const list = fs.readdirSync(dir);
-    for (const file of list) {
-        const fullPath = path.join(dir, file);
-        try {
-            const stat = fs.lstatSync(fullPath);
-            if (stat && stat.isDirectory()) {
-                results = results.concat(walkDir(fullPath));
-            } else if (stat && stat.isFile()) {
-                results.push(fullPath);
-            }
-        } catch (e) {
-            // skip inaccessible files or broken symlinks
-        }
+function trackedFiles(): string[] {
+    const pathspecs = [...INCLUDE_DIRS, ...INCLUDE_FILES];
+    const result = spawnSync('git', ['ls-files', '-z', '--', ...pathspecs], {
+        cwd: ROOT,
+        encoding: 'utf8',
+        windowsHide: true,
+        maxBuffer: 16 * 1024 * 1024,
+    });
+
+    if (result.error) throw result.error;
+    if (result.status !== 0) {
+        throw new Error(`git ls-files failed with ${result.status}: ${result.stderr.trim()}`);
     }
-    return results;
+
+    return result.stdout
+        .split('\0')
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .sort();
 }
 
 const out = { version: "sot-ledger/1", sha256: {} as Record<string, string> };
 
-for (const d of INCLUDE_DIRS) {
-    const p = path.join(ROOT, d);
-    if (!fs.existsSync(p)) continue;
-    const files = walkDir(p);
-    for (const file of files) {
-        const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-        if (EXCLUDE.has(rel) || should_exclude(rel)) continue;
-        out.sha256[rel] = sha256_file(file);
-    }
-}
-
-for (const f of INCLUDE_FILES) {
-    const p = path.join(ROOT, f);
-    if (fs.existsSync(p)) {
-        const rel = path.relative(ROOT, p).replace(/\\/g, '/');
-        if (!EXCLUDE.has(rel) && !should_exclude(rel)) {
-            out.sha256[rel] = sha256_file(p);
-        }
-    }
+for (const rel of trackedFiles()) {
+    if (EXCLUDE.has(rel) || should_exclude(rel)) continue;
+    const file = path.join(ROOT, rel);
+    if (!fs.existsSync(file) || !fs.lstatSync(file).isFile()) continue;
+    out.sha256[rel] = sha256_file(file);
 }
 
 const ledgerDir = path.join(ROOT, 'ledger');
