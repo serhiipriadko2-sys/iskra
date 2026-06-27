@@ -2,6 +2,7 @@
 -- ISKRA SPACE - GRAPH SCHEMA CONTRACT REPAIR
 -- =============================================================================
 -- Migration name: graph_schema_contract_repair
+-- Live migration version observed: 20260626153642
 --
 -- Purpose:
 --   Align graph_nodes / graph_edges with the live GraphRAG contract surfaced by

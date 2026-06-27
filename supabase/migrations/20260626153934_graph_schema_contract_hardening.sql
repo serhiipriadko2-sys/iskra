@@ -2,6 +2,7 @@
 -- ISKRA SPACE - GRAPH SCHEMA CONTRACT HARDENING
 -- =============================================================================
 -- Migration name: graph_schema_contract_hardening
+-- Live migration version observed: 20260626153934
 --
 -- Purpose:
 --   Follow-up hardening for graph_schema_contract_repair:

@@ -2,6 +2,7 @@
 -- ISKRA SPACE - RESIDUAL ADVISOR RLS/FK HARDENING
 -- =============================================================================
 -- Migration name: residual_advisors_rls_fk_hardening
+-- Live migration version observed: 20260626155850
 --
 -- Purpose:
 --   Address low-blast-radius residual Supabase performance advisors:
