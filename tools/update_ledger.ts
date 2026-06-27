@@ -8,8 +8,8 @@ import * as crypto from 'crypto';
  */
 
 const ROOT = process.cwd();
-const INCLUDE_DIRS = ["core","system","governance","metrics","mind","appendix","canon","runtime","tools",".github","docs"];
-const INCLUDE_FILES = ["manifest.yml","README.md","CONTRIBUTING.md","ISKRA_MANIFEST.md","LIBER_INITIUM.md"];
+const INCLUDE_DIRS = ["core","system","governance","metrics","mind","appendix","canon","runtime","tools",".github","docs","supabase"];
+const INCLUDE_FILES = ["manifest.yml","README.md","CONTRIBUTING.md","ISKRA_MANIFEST.md","LIBER_INITIUM.md","pnpm-lock.yaml"];
 const EXCLUDE = new Set(["ledger/sot.json", "ledger/checksum.asc"]);
 
 const CHECKSUM_DEFAULTS = {

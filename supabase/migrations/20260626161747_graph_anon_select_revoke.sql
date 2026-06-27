@@ -2,6 +2,7 @@
 -- ISKRA SPACE - GRAPH ANON SELECT REVOKE
 -- =============================================================================
 -- Migration name: graph_anon_select_revoke
+-- Live migration version observed: 20260626161747
 --
 -- Purpose:
 --   Reduce public GraphQL/PostgREST exposure for graph tables while preserving
