@@ -36,7 +36,13 @@ The following local files represented the same logical receipts as remote versio
 - `20260308000000_legacy_data_migration.sql` → archived
 - `20260308000001_rate_limiting.sql` → archived
 
-The archived legacy-data file restricts `claim_legacy_data` to `service_role`; the live function currently allows `authenticated`. This security gap is documented in `governance/audits/2026-06-27-supabase-non-graph-migration-drift-audit.md` and can be closed by a future pending migration.
+## Pending Security Hardening
+
+`claim_legacy_data` is currently executable by `authenticated` on live. The repo-intended service-role-only posture is captured as a pending migration:
+
+- `20260627000000_claim_legacy_data_service_role_only.sql`
+
+Apply this migration live only after confirming no runtime path calls `claim_legacy_data` from an anonymous/authenticated client.
 
 ## Intentional Pending / Local-Only Migrations
 
@@ -64,4 +70,4 @@ Expected: all `Remote` entries have a matching `Local` entry; the only `Local`-o
 Δ: Remote-only non-graph migration receipts are now committed in Git; migration-history drift for non-graph receipts is eliminated.  
 D: Management API read-only query of `supabase_migrations.schema_migrations.statements`, `supabase migration list --linked`, repo migration files.  
 Ω: 0.96 for migration inventory alignment; 0.70 for full schema reproducibility because pending/superseded local migrations and the `claim_legacy_data` security gap remain.  
-Λ: Revise after closing the service-role hardening gap or applying the pending RLS/security migrations.
+Λ: Revise after applying `20260627000000_claim_legacy_data_service_role_only.sql` live or applying the pending RLS/security migrations.

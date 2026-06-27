@@ -63,9 +63,22 @@ This is a consolidated knowledge index volume for ChatGPT Workspace Agents.
 
 ## Что загрузить как Knowledge
 
-1. Все файлы из `files_for_agent_builder/`, including `10_HORIZON_WEAVER.md`, `11_DREAMSPACE_LAYER.md`, and `12_TOOLCHAIN_EXPANSION.md`.
-2. Все файлы из `canon_source_files/` — полный канон.
-3. По желанию: `templates/`, `evals/`, `memory_seed/`.
+Вы можете выбрать один из двух вариантов загрузки знаний в зависимости от ограничений интерфейса:
+
+**Вариант А (Рекомендуемый для обхода лимита в 20 файлов):**
+Загрузите 7 консолидированных томов из директории `agent_files/consolidated_knowledge/`:
+1. `01_ISKRA_CORE_INSTRUCTIONS.md`
+2. `02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md`
+3. `03_ISKRA_SYSTEM_AND_PROTOCOLS.md`
+4. `04_ISKRA_EXTENSIONS_AND_WEAVER.md`
+5. `05_ISKRA_GOVERNANCE_ADR.md`
+6. `06_ISKRA_METRICS_AND_EVALS.md`
+7. `07_ISKRA_MEMORY_SEED.md`
+
+**Вариант Б (Для сред без лимита на количество файлов, например, Assistants API / Agents SDK):**
+1. Все файлы из `files_for_agent_builder/`
+2. Все файлы из `canon_source_files/`
+3. По желанию: `templates/`, `evals/`, `memory_seed/`
 
 ## Runtime helpers
 

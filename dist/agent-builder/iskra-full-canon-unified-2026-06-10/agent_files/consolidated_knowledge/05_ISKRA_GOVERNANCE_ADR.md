@@ -2827,114 +2827,129 @@ Rollback if Builder UI rejects the unified file volume, Horizon tests fail, or r
 **Path in Repo:** `governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md`
 
 ```markdown
-# ADR 2026-06-20: ChatGPT Agent Builder Audit and v2 Repair Plan
+# ADR 2026-06-20: ChatGPT Agent Builder Audit and Repair Plan
 
-Status: proposed  
-Date: 2026-06-20  
+Status: accepted
+Date: 2026-06-20
+Accepted: 2026-06-23
 
 ## Context
 
-[FACT] The repository contains a Builder upload set at `dist/agent-builder/iskra-full-canon-unified-2026-06-10`.  
-[FACT] An academic audit of this set against the full Iskra canon in `C:\github\iskra-1` and against current ChatGPT Agents / Workspace Agents capabilities found significant drift and gaps.
+[FACT] The active repair target is
+`dist/agent-builder/iskra-full-canon-unified-2026-06-10`.
 
-Key findings:
+[FACT] The historical GitHub baseline
+`e33268fbdfbb0dc52b6fd1fb8399698bf9387129` is a drift comparison point, not
+the active remediation target.
 
-- The Git-indexed (LF) version of the package is byte-consistent with `MANIFEST.sha256`, but the local Windows working copy is CRLF-converted and fails byte-level verification.
-- The package covers only ~35–40 % of the current repository canon (missing `core/voices_monographs/`, most of `metrics/`, `mind/`, `docs/`, `appendix/`, all of `ledger/`, `runtime/`, `packages/`, `apps/`).
-- `memory_current/development-diary.md` and `memory_current/project-memory.md` contain PII/raw private narrative that violates `SECURITY.md`.
-- Version labels drift between `unified-2026-06-10` and internal references to `builder-2026-06-06-v4`.
-- Relative links inside `08_INTERFACE_STYLE.parts/` are broken for the flattened package structure.
-- Required tooling referenced by instructions (`tools/verify_ledger.py`, `validate_terms.py`, `validate_delta.py`) is missing from the package.
-- The package lacks `agent.yaml`, an icon, a packaged skill, and action schemas expected by ChatGPT Agents Studio.
-- OpenAI has deprecated the visual Agent Builder / AgentKit (shutdown 2026-11-30) and is moving toward Workspace Agents and the Agents SDK.
+[FACT] The package is a committed upload mirror and clean export candidate. It
+does not prove activation inside ChatGPT Agent Builder, Workspace Agents, or the
+Builder UI.
+
+[FACT] OpenAI's legacy Agent Builder surface is deprecated with shutdown
+planned for 2026-11-30. Current alignment must preserve a Workspace Agents UI
+path and an Agents SDK code-first fallback.
+
+## Superseded Snapshot
+
+The original 2026-06-20 proposed ADR is superseded as an audit snapshot. Its
+useful signal was that the package needed repair, but its release decision data
+is now replaced by:
+
+- `CANON_TRACE_MAP.md` for exact, transformed, summarized, excluded, and missing
+  canon boundaries.
+- `MANIFEST.sha256` for current package-file truth.
+- `UNIFIED_QC_RECEIPT.json` for local gate evidence.
+- `ZIP_RECEIPT.json` for sidecar clean-zip evidence.
+- `agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md` and
+  `agent_files/evals/BUILDER_RUNTIME_HARDENING_PROMPTS.md` for Builder UI
+  acceptance.
 
 ## Decision
 
-[DECISION] Repair the existing `iskra-full-canon-unified-2026-06-10` upload set in place rather than creating a new dated folder, because the folder name already represents the target release and the changes are corrective.
+[DECISION] Repair the existing `iskra-full-canon-unified-2026-06-10` folder in
+place. Do not create a new release folder for this corrective pass.
 
-[DECISION] Apply a four-layer repair:
+[DECISION] Treat the root manifest as the authoritative clean upload subset.
+The sidecar clean zip must be generated from manifest paths, and receipts must
+state the same inventory boundary.
 
-1. **Hygiene and safety**: normalize line endings, remove PII, remove build byproducts, add `.gitattributes`.
-2. **Metadata integrity**: synchronize version labels, fix broken internal links, update `MANIFEST.sha256` from LF sources.
-3. **Canon completeness**: backfill the most critical missing canonical layers (`voices_monographs/`, `metrics/`, `mind/`, `docs/specs/`, `appendix/`, `ledger/`, root `AGENTS.md`).
-4. **Builder artifacts**: add `agent.yaml`, an icon, a packaged skill, and eval prompts aligned with ChatGPT Agents Studio.
+[DECISION] Keep two explicit knowledge-upload modes:
 
-[DECISION] Treat Workspace Agents as the primary target UI and Agents SDK as the strategic fallback, while keeping all canonical source-of-truth in Git.
+1. `compact_7_volume`: the seven files under
+   `agent_files/consolidated_knowledge/`.
+2. `expanded_corpus`: the multi-file package corpus under `agent_files/`.
 
-[DECISION] Do not store secrets, service-role keys, or raw private user narrative in any Builder upload set or memory file.
+The selected upload mode must match `agent.yaml`, `MANIFEST.sha256`, the clean
+zip, and Builder acceptance evidence.
 
-## Alternatives
+[DECISION] Reclassify "full canon" as bounded package coverage, not a
+byte-identical mirror of the whole repository. Exact mirror claims are allowed
+only where `CANON_TRACE_MAP.md` records byte-identical source coverage.
 
-### Alternative 1: Create a new folder `iskra-full-canon-v2-2026-06-20/`
+[DECISION] Use Workspace Agents as the team/UI workflow target and Agents SDK as
+the code-first fallback. The fallback keeps a tested SDK pin plus an upgrade
+check policy instead of treating the pin as permanently canonical.
 
-- Keeps the old package untouched for traceability.
-- Increases repo size and fragmentation.
-- Rejected because the existing folder name is the intended release identifier and the changes are repairs, not a new product version.
-
-### Alternative 2: Delete the Builder upload set entirely and rely only on Agents SDK
-
-- Avoids OpenAI UI deprecation risk.
-- Loses the low-code ChatGPT Agents Studio surface that the user is actively exploring.
-- Rejected; the project needs both surfaces during the transition.
-
-### Alternative 3: Patch only CRLF and PII, ignore canon gaps
-
-- Fast and low-risk.
-- Leaves the agent behavior incomplete and prone to hallucination.
-- Rejected; the audit showed that missing canon is the largest risk to answer quality.
+[DECISION] No live Supabase, GitHub, ChatGPT Builder, or Workspace Agent
+mutation belongs to this repair without separate explicit approval.
 
 ## Consequences
 
-- The upload set will become byte-verifiable on Windows after `core.autocrlf` or `.gitattributes` normalization.
-- PII will be removed from published memory, reducing privacy and compliance risk.
-- The agent will have broader canonical coverage and fewer hallucination-prone blind spots.
-- The package will be closer to the file/format expectations of ChatGPT Agents Studio.
-- Repo size will grow because of backfilled canonical files.
-
-## Scope
-
-In scope:
-
-- Files under `dist/agent-builder/iskra-full-canon-unified-2026-06-10/`.
-- Governance ADR and receipts.
-- `.gitattributes` for the `dist/agent-builder/` subtree.
-
-Out of scope:
-
-- Changes to live Supabase state.
-- Changes to `runtime/` source code beyond packaging helpers.
-- Committing or pushing to Git (to be done by the operator).
+- Manifest, clean zip, QC receipt, and zip receipt become a single package truth
+  boundary.
+- Declared knowledge paths become release blockers when missing from the clean
+  subset.
+- Builder status remains `uploaded by user, pending Builder verification` until
+  prompt-level evidence exists.
+- Workspace Agent API calls are documented as distinct from SDK runs:
+  `agtch_...` IDs, Workspace Agent access tokens, and asynchronous `202
+  Accepted` trigger behavior.
+- Local helper files and Agents SDK source remain source/reference material
+  unless an actual runtime executes them.
 
 ## Verification
 
-Required checks before marking this ADR accepted:
+Required local gates:
 
-- [ ] `sha256sum -c MANIFEST.sha256` passes locally after LF normalization.
-- [ ] `python -m unittest discover -s tests/horizon` passes.
-- [ ] `python tools/reassemble_interface_style.py --check` passes.
-- [ ] No PII or secret patterns in `memory/`, `agent_files/`, or root package files.
-- [ ] `agent.yaml` validates as a Workspace Agent manifest.
-- [ ] All version labels inside the package match `unified-2026-06-10`.
-- [ ] `evals/` contain ≥ 30 acceptance prompts with expected answers.
+- `py tools/generate_manifest.py`
+- `py tools/clean_export.py --source manifest`
+- `py tools/reassemble_interface_style.py --repo-root . --check`
+- `py -m unittest discover -s tests/horizon`
+- `py tools/validate_terms.py --dir .`
+- `py tools/validate_delta.py --dir .`
+- Upload-subset secret/PII scan with no high-confidence secret values.
+- `agents-sdk\.venv\Scripts\python.exe -m unittest discover -s agents-sdk\tests`
+- `agents-sdk\.venv\Scripts\python.exe -m pip check`
+
+Required Builder gates:
+
+- Upload only the clean subset generated from `MANIFEST.sha256`.
+- Run acceptance prompts A-V.
+- Run hardening prompts H1-H6.
+- Record prompt-level evidence before promoting the status to
+  `verified in Builder UI`.
 
 ## Rollback Trigger
 
-Revisit or revert if:
+Revisit or supersede this ADR if:
 
-- ChatGPT Agents Studio rejects the repaired package.
-- Acceptance evals fall below 85 % pass rate.
-- Repo size or duplication becomes unmaintainable.
-- OpenAI announces deprecation of Workspace Agents before this ADR is accepted.
+- the clean zip and manifest disagree after regeneration;
+- Builder rejects required files or declared knowledge paths;
+- Workspace Agents API/auth semantics change materially;
+- a high-confidence secret or private raw memory value appears in the upload
+  subset;
+- maintaining both Workspace Agents and Agents SDK paths becomes misleading.
 
-## ΔDΩΛ
+## Delta
 
-Δ: The Builder upload set is repaired from a fragile partial-canon package into a verifiable, PII-free, format-ready upload set with broader canonical coverage.
-
-D: Audit report (this ADR), `MANIFEST.sha256`, `SECURITY.md`, `AGENTS.md`, ChatGPT Agents Studio screenshots, OpenAI deprecation page.
-
-Ω: 0.85 expected after repair; 0.55 current; 0.35–0.40 current canon coverage.
-
-Λ: Run verification checklist, then open a PR for final review and merge.
+Delta = proposed audit snapshot converted into accepted repair governance.
+Data = package manifest, clean export, QC receipt, zip receipt, OpenAI official
+docs, and Builder acceptance prompts.
+Omega = 0.86 before Builder UI evidence; local gates can raise package
+confidence but cannot prove Builder activation.
+Lambda = regenerate files, manifest, QC, clean zip, and zip receipt; then run
+Builder UI acceptance before any `verified in Builder UI` claim.
 ```
 
 ---
