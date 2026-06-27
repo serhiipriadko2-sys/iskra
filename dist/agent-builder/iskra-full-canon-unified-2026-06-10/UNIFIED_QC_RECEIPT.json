@@ -1,13 +1,13 @@
 {
   "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-27T15:34:18Z",
-  "status": "WORKSPACE_AGENT_ALIGNMENT_REBUILT_LOCAL_PASS",
-  "builder_ui_status": "observed-in-workspace-agent-config; live-draft-prompt-stale-vs-local-package; uploaded by user, pending Builder verification; verified-live-builder not claimed",
+  "generated_at": "2026-06-27T16:08:44Z",
+  "status": "WORKSPACE_AGENT_FILE_OVERLAY_PUBLISHED_WITH_PROMPT_SAVE_BLOCKER",
+  "builder_ui_status": "published-file-overlay-version-51; live-prompt-save-blocked; verified-live-builder not claimed",
   "active_target": "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
   "scope": "chatgpt_workspace_agent_alignment_plus_user_added_skill_pack",
   "package_inventory": {
-    "manifest_entries_expected_after_final_regeneration": 434,
-    "zip_entries_expected_after_final_regeneration": 436,
+    "manifest_entries_expected_after_final_regeneration": 435,
+    "zip_entries_expected_after_final_regeneration": 437,
     "manifest_rule": "static clean-subset files except MANIFEST.sha256, SURFACE_INVENTORY.json, and ZIP_RECEIPT.json",
     "zip_rule": "manifest entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json excluded",
     "skill_pack": {
@@ -18,10 +18,10 @@
     }
   },
   "workspace_agent_alignment": {
-    "status": "PASS_LOCAL_AND_READ_ONLY_CONFIG",
+    "status": "PASS_LOCAL_AND_PARTIAL_LIVE_FILE_OVERLAY",
     "live_agent_name": "Искра vΩ.7",
     "observed_via": "Codex Desktop Workspace Agents connector plus user screenshot",
-    "observed_at": "2026-06-27T15:34:18Z",
+    "observed_at": "2026-06-27T16:08:44Z",
     "chatgpt_channel": "present",
     "api_channel": "active; published; trigger id redacted",
     "slack_channel": "not configured",
@@ -48,8 +48,13 @@
     },
     "app_connectors": "GitHub, Ace Knowledge Graph, Remote Desktop Commander, Supabase observed",
     "skills": "33 uploaded skills observed; package 32-skill source names match the Iskra skill-pack subset; iskra-toolchain-bridge observed separately",
-    "file_tree": "handle observed; screenshot shows 269 files; connector list_agent_file_tree loaded root metadata plus depth=2 snapshot, tree_revision=1139; byte-level parity not captured",
-    "prompt_alignment": "live draft prompt is stale relative to local corrected Memory-boundary package instructions",
+    "file_tree": "handle observed; screenshot shows 269 files before overlay; draft list_agent_file_tree loaded root metadata after overlay with tree_revision=1147; immutable published-version query returned tree_revision=1147 but did not enumerate child nodes; byte-level parity not captured",
+    "published_overlay_files": [
+      "2026-06-27-instructions-full.md",
+      "2026-06-27-official-platform-and-memory-boundary.md"
+    ],
+    "published_overlay_version": 51,
+    "prompt_alignment": "live prompt remains stale relative to local corrected Memory-boundary package instructions; prompt/profile/API-channel draft-save calls failed with Workspace Agents draft save request failed",
     "official_docs_alignment": {
       "status": "PASS_WITH_BOUNDED_TERMS",
       "sources_checked": [
@@ -71,7 +76,8 @@
     "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
     "governance/adr_20260627_workspace_agent_live_alignment.md",
     "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
-    "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/"
+    "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/",
+    "agent_files/live_update_receipts/2026-06-27-official-platform-and-memory-boundary.md"
   ],
   "updated_entries": [
     "agent.yaml",
@@ -95,14 +101,23 @@
   ],
   "surface_statuses": {
     "workspace_agent_config": {
-      "status": "OBSERVED_READ_ONLY",
+      "status": "OBSERVED_AND_FILE_OVERLAY_PUBLISHED",
       "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
       "boundary": "config evidence only; partial file-tree metadata observed; not byte-level file parity or prompt-level verification"
     },
     "workspace_agent_prompt_alignment": {
-      "status": "DRIFT_LIVE_DRAFT_PROMPT_STALE_VS_LOCAL_PACKAGE",
+      "status": "DRIFT_LIVE_PROMPT_SAVE_BLOCKED",
       "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-      "boundary": "local package contains corrected Memory boundary; live draft prompt has not been updated or published"
+      "boundary": "local package contains corrected Memory boundary and published overlay files; live main prompt remains stale because connector prompt/profile/API-channel save calls failed"
+    },
+    "workspace_agent_file_overlay": {
+      "status": "PUBLISHED_VERSION_51",
+      "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+      "files": [
+        "2026-06-27-instructions-full.md",
+        "2026-06-27-official-platform-and-memory-boundary.md"
+      ],
+      "boundary": "files were uploaded and readable in draft before publishing version 51; publish output used the updated file tree revision, but immutable published node listing did not enumerate child nodes; ordinary files do not override main prompt by themselves and do not prove Workspace Agent Memory contents"
     },
     "workspace_agent_skill_pack": {
       "status": "PASS_NAME_COUNT_ALIGNMENT",
@@ -133,9 +148,9 @@
     "live_builder": {
       "status": "NOT_VERIFIED",
       "required": [
-        "apply/upload the revised package or selected fields to the live Workspace Agent",
+        "prompt bootstrap still must be applied through Builder UI or a repaired Workspace Agents save path",
         "confirm 19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md is visible through the selected knowledge/file path",
-        "apply approved corrected instructions to live draft before claiming prompt parity",
+        "do not claim live prompt parity until get_current_agent_config shows the corrected prompt or prompt-level Builder evidence is captured",
         "confirm user-added skills and iskra-toolchain-bridge are active at the intended versions",
         "confirm Workspace Agent Memory write/read behavior separately from Builder Files",
         "run acceptance A-Y plus C2/C3",
@@ -176,7 +191,7 @@
       "checks": [
         "reassemble_interface_style PASS",
         "validate_terms PASS",
-        "validate_delta PASS checked=78 skipped=246 failed=0",
+        "validate_delta PASS checked=78 skipped=247 failed=0",
         "horizon unit tests PASS ran=9",
         "agents-sdk fallback tests PASS ran=9",
         "skill-pack name alignment PASS package=32 live_skill_pack_subset=32 missing=0 extra=0; live_total_skills=33"
@@ -185,7 +200,8 @@
   },
   "non_claims": [
     "Not verified in Builder UI",
-    "No live Workspace Agent mutation was performed",
+    "Live Workspace Agent mutation was performed: two overlay files were published as version 51",
+    "Main prompt/profile/API-channel instructions were not updated because Workspace Agents draft save request failed",
     "Live draft prompt is not claimed to include this local package's corrected Memory boundary",
     "No Workspace Agent access token or secret is stored",
     "Builder file upload does not prove live Workspace Agent Memory contents",

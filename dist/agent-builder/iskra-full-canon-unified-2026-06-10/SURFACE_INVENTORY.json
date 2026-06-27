@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T15:39:26Z",
+  "generated_at": "2026-06-27T16:16:56Z",
   "purpose": "Separate count/hash/status by observed surface.",
   "non_claims": [
     "Builder UI file count is not a runtime /workspace mount proof.",
@@ -12,9 +12,9 @@
       "label": "package_root",
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10",
       "status": "observed",
-      "file_count": 435,
-      "total_bytes": 8884242,
-      "surface_sha256": "e73234404e73d619ef584d17e7e9e69f16daf7cdbc668a93405a74016b062b99",
+      "file_count": 436,
+      "total_bytes": 8894590,
+      "surface_sha256": "c57d3e178075337bff3bcf16199410a907ca92fd1230321e199b5f1c95392cb3",
       "sample": [
         {
           "path": ".gitattributes",
@@ -146,8 +146,8 @@
     "manifest": {
       "status": "observed",
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\MANIFEST.sha256",
-      "entry_count": 434,
-      "sha256": "cbe1e5ab6addb932c612b7ec7de0cde32a72d313c5bbcf2c7d8db8c0d98629da",
+      "entry_count": 435,
+      "sha256": "0a9b3de14ddf9a82161cec866525f042d542c05723b7136004081ac009204631",
       "sample": [
         {
           "path": ".gitattributes",
@@ -223,11 +223,11 @@
         },
         {
           "path": "UNIFIED_QC_RECEIPT.json",
-          "sha256": "269e59db78b5970fd24b86f6a025f0f30ff76732936f96497eb9929cbf06cf56"
+          "sha256": "560a6c200fd35b93d5d466e9327a28ab301b5800b681f6d4ef3eaf105a086785"
         },
         {
           "path": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-          "sha256": "df45468c72d1eb14b8fe86d96ff36a88530a462d93c560e9e4913fe60b96f33e"
+          "sha256": "2ad736bd1059a21d78830eef2488ce428250e7c1b704ce42e0299a0960fcaeda"
         },
         {
           "path": "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
@@ -239,7 +239,7 @@
         },
         {
           "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
-          "sha256": "16b1842ccb209a452e65ef16deb70392cca3be7327eb2ade7fe11a876a3bcb55"
+          "sha256": "9b5b832c56cdb88d877c6d197c1756ec9affe02411fb12895db8357e6b0de1df"
         },
         {
           "path": "agent_files/INDEX.md",
@@ -255,9 +255,9 @@
       "label": "package_agent_files",
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_files",
       "status": "observed",
-      "file_count": 137,
-      "total_bytes": 7992747,
-      "surface_sha256": "6e7c3e80eecbf02b5a53bc51b5440f2211e2c3b5a25bcf6482d4cad9e639e5c1",
+      "file_count": 138,
+      "total_bytes": 7999925,
+      "surface_sha256": "40c691c95a9d7294d76e532ae8d77bbbd835ab3cafebf95ba1301baf2e38fba2",
       "sample": [
         {
           "path": "agent_files/canon_source_files/00_ROUTER.md",
@@ -2350,9 +2350,9 @@
     "manifest_vs_package_root": {
       "left": "manifest_plus_manifest_file",
       "right": "package_root_static",
-      "left_count": 435,
-      "right_count": 435,
-      "common_count": 435,
+      "left_count": 436,
+      "right_count": 436,
+      "common_count": 436,
       "left_only_count": 0,
       "right_only_count": 0,
       "left_only_sample": [],
@@ -2363,10 +2363,10 @@
       "left": "github_local_package_mirror",
       "right": "package_root_excluding_github_index_and_manifest",
       "left_count": 275,
-      "right_count": 433,
+      "right_count": 434,
       "common_count": 273,
       "left_only_count": 2,
-      "right_only_count": 160,
+      "right_only_count": 161,
       "left_only_sample": [
         "governance/adr_20260626_runtime_surface_map.md",
         "governance/changelog.d/2026-06-26-runtime-surface-map.md"
@@ -2375,6 +2375,7 @@
         "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
         "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
         "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md",
+        "agent_files/live_update_receipts/2026-06-27-official-platform-and-memory-boundary.md",
         "governance/adr_20260627_workspace_agent_live_alignment.md",
         "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256",
@@ -2395,8 +2396,7 @@
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/references/scope.md",
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/SKILL.md",
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/agents/openai.yaml",
-        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/assets/icon.svg",
-        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/references/artifact-qc.md"
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/assets/icon.svg"
       ],
       "status": "DRIFT"
     },

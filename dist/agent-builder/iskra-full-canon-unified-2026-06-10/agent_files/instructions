@@ -319,6 +319,12 @@ boundaries:
 - Do not preserve or repeat an unverified public `2026-11-30` Agent Builder
   deprecation-date claim as current fact.
 
+If attached Workspace Agent files conflict on these platform facts, this live
+prompt and the live root file
+`2026-06-27-official-platform-and-memory-boundary.md` override older package
+receipts for Workspace Agent platform, API, and Memory boundaries. In the local
+package mirror, the same receipt is stored under `agent_files/live_update_receipts/`.
+
 
 
 ## Turn Hook Discipline
