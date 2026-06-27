@@ -62,11 +62,7 @@ replacement.
 
 ## Delta
 
-Delta: GitHub now has a repo-level receipt explaining the Builder Knowledge vs
-runtime mount drift and preserving the P1 archive import evidence.
-Data: user Builder UI screenshot, runtime file inventories, memory import
-manifest, GitHub connector reads.
-Omega: 0.86 for the surface distinction and archive import evidence; lower for
-live Builder state because Builder UI post-upload verification is still pending.
-Lambda: revise after a full atomic package mirror update or confirmed Builder UI
-file-store listing/export.
+- Delta: GitHub now has a repo-level receipt explaining the Builder Knowledge vs runtime mount drift and preserving the P1 archive import evidence.
+- Data: User Builder UI screenshot, runtime file inventories, memory import manifest, GitHub connector reads.
+- Omega: 0.86 for the surface distinction and archive import evidence; lower for live Builder state because Builder UI post-upload verification is still pending.
+- Lambda: Revise after a full atomic package mirror update or confirmed Builder UI file-store listing/export.
