@@ -69,10 +69,7 @@ regenerated during package releases.
 
 ## Delta
 
-Delta: surface diagnostics became repeatable and machine-readable.
-Data: audit tool, inventory, GitHub/Supabase/hook/Builder receipts, retrieval
-discipline.
-Omega: 0.9 for local repeatability; lower for live Builder until post-upload
-verification.
-Lambda: run after every package update and after any live GitHub/Supabase/Builder
-surface change.
+- Delta: Surface diagnostics became repeatable and machine-readable.
+- Data: Audit tool, inventory, GitHub/Supabase/hook/Builder receipts, retrieval discipline.
+- Omega: 0.9 for local repeatability; lower for live Builder until post-upload verification.
+- Lambda: Run after every package update and after any live GitHub/Supabase/Builder surface change.
