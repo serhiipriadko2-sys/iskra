@@ -10,8 +10,10 @@ import { architectureNodes, techStack } from '../lib/architecture';
 import { voices } from '../lib/voices';
 import type { TreeNodeData } from '../lib/treeData';
 import type { AudienceMode } from '../types';
+import { lazy, Suspense } from 'react';
 import { CognitiveCycleSimulator } from './CognitiveCycleSimulator';
-import { RepoAtlas } from './RepoAtlas';
+
+const RepoAtlas = lazy(() => import('./RepoAtlas').then((m) => ({ default: m.RepoAtlas })));
 
 interface NodeContentProps {
   node: TreeNodeData;
@@ -230,7 +232,16 @@ function StartContent({ audienceMode }: { audienceMode?: AudienceMode }) {
 
       <div className="border-t border-white/5 pt-6">
         <h4 className="font-mono text-xs uppercase tracking-wider text-iskra-accent mb-4">Интерактивный обозреватель репозитория</h4>
-        <RepoAtlas audienceMode={audienceMode} />
+        <Suspense fallback={
+          <div className="h-40 flex items-center justify-center text-iskra-muted">
+            <div className="text-center">
+              <div className="w-8 h-8 border-2 border-iskra-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+              <p className="font-mono text-[10px] uppercase tracking-wider">Загрузка Атласа…</p>
+            </div>
+          </div>
+        }>
+          <RepoAtlas audienceMode={audienceMode} />
+        </Suspense>
       </div>
     </div>
   );

@@ -1,0 +1,70 @@
+[
+  {
+    "version": "20260309091308",
+    "name": "20260308000000_legacy_data_migration"
+  },
+  {
+    "version": "20260309091342",
+    "name": "20260308000001_rate_limiting"
+  },
+  {
+    "version": "20260509073756",
+    "name": "iskra_canon_schema_1536_v2"
+  },
+  {
+    "version": "20260509073916",
+    "name": "iskra_temp_import_window_open"
+  },
+  {
+    "version": "20260509074021",
+    "name": "iskra_canon_import_helpers"
+  },
+  {
+    "version": "20260509074235",
+    "name": "iskra_temp_import_window_close"
+  },
+  {
+    "version": "20260509074300",
+    "name": "iskra_backfill_status_helpers"
+  },
+  {
+    "version": "20260509092738",
+    "name": "iskra_temp_rpc_import_open"
+  },
+  {
+    "version": "20260509092953",
+    "name": "enable_pg_net_for_iskra_import"
+  },
+  {
+    "version": "20260509093312",
+    "name": "iskra_temp_rpc_import_close_again"
+  },
+  {
+    "version": "20260626141034",
+    "name": "voice_metrics_drift_repair"
+  },
+  {
+    "version": "20260626153642",
+    "name": "graph_schema_contract_repair"
+  },
+  {
+    "version": "20260626153934",
+    "name": "graph_schema_contract_hardening"
+  },
+  {
+    "version": "20260626155850",
+    "name": "residual_advisors_rls_fk_hardening"
+  },
+  {
+    "version": "20260626161747",
+    "name": "graph_anon_select_revoke"
+  },
+  {
+    "version": "20260626164633",
+    "name": "graph_rpc_boundary"
+  },
+  {
+    "version": "20260626164745",
+    "name": "graph_rpc_boundary_acl_hardening"
+  }
+]

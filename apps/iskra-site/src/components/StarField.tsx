@@ -84,7 +84,7 @@ export function StarField() {
   });
 
   return (
-    <points geometry={geometry}>
+    <points geometry={geometry} raycast={() => null}>
       <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}

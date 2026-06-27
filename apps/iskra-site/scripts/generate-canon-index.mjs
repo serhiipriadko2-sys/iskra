@@ -113,7 +113,7 @@ function loadCatalog() {
 
 function main() {
   const isCheck = process.argv.includes('--check');
-  const raw = execSync('git ls-files', { cwd: repoRoot, encoding: 'utf-8' });
+  const raw = execSync('git -c core.quotePath=0 ls-files', { cwd: repoRoot, encoding: 'utf-8' });
   const trackedPaths = raw
     .split('\n')
     .map((p) => p.trim())

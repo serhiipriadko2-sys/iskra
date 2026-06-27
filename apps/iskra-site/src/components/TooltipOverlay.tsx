@@ -11,7 +11,7 @@ export function TooltipOverlay({ activeNodeId }: TooltipOverlayProps) {
       <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none hidden md:block">
         <div className="glass-card px-6 py-3 text-center">
           <p className="font-mono text-xs text-iskra-muted uppercase tracking-wider">
-            Наведите или кликните узел • Используйте панель слева
+            Наведите или кликните узел • ← → ↑ ↓ • Home • Esc
           </p>
         </div>
       </div>

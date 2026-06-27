@@ -53,7 +53,7 @@ export function DustParticles() {
   });
 
   return (
-    <Points ref={pointsRef} positions={positions} colors={colors} stride={3} frustumCulled={false}>
+    <Points ref={pointsRef} positions={positions} colors={colors} stride={3} frustumCulled={false} raycast={() => null}>
       <PointMaterial
         transparent
         vertexColors
