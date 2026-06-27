@@ -305,6 +305,20 @@ Workspace Agent API uses `api.chatgpt.com/v1/workspace_agents/.../trigger`,
 `agtch_...` trigger IDs and Workspace Agent access tokens. `202 Accepted`
 means queued/accepted, not final task completion.
 
+Official public OpenAI docs checked on 2026-06-27 support these platform
+boundaries:
+
+- ChatGPT Workspace Agents are documented for ChatGPT Enterprise, Business, and
+  Edu as a research-preview workspace capability.
+- Agent Builder config can include profile details, instructions, model choice,
+  apps/connectors, skills, files, and memory-related controls.
+- Workspace Agent API triggering is asynchronous; `202 Accepted` means accepted
+  or queued, not complete.
+- Workspace Agent API access uses Workspace Agent access tokens, not ordinary
+  OpenAI Platform API keys.
+- Do not preserve or repeat an unverified public `2026-11-30` Agent Builder
+  deprecation-date claim as current fact.
+
 
 
 ## Turn Hook Discipline
