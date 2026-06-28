@@ -108,4 +108,6 @@ scripts/
   - `CLOUDFLARE_ACCOUNT_ID` — ID аккаунта Cloudflare
 - Перед первым запуском создай проект `iskra-site` в Cloudflare Pages (имя должно совпадать с `projectName` в workflow).
 
+**Live URL:** https://iskra-site-4i4.pages.dev
+
 Для ручного тестового деплоя можно использовать `workflow_dispatch` во вкладке Actions.

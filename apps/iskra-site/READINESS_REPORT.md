@@ -26,7 +26,7 @@
 | Unit / e2e тесты | [FAIL] | Тестов нет. |
 | Lint / code style | [FAIL] | ESLint не настроен, скрипта `lint` нет. TypeScript `strict: true` частично компенсирует. |
 | CI/CD для `apps/iskra-site` | [PASS] | Добавлены `.github/workflows/iskra-site_ci.yml` (typecheck, build, artifact) и `.github/workflows/iskra-site_deploy.yml` (Cloudflare Pages). |
-| Хостинг / деплой | [PASS pending secrets] | Выбран Cloudflare Pages. Workflow `.github/workflows/iskra-site_deploy.yml` готов. Остаётся создать проект `iskra-site` в Cloudflare и добавить секреты `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` в GitHub. |
+| Хостинг / деплой | [PASS] | Cloudflare Pages. Workflow `.github/workflows/iskra-site_deploy.yml` работает. Live URL: https://iskra-site-4i4.pages.dev |
 
 ## Что изменено в ходе аудита
 
