@@ -1,0 +1,59 @@
+name: iskra-site CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/iskra-site/**"
+      - ".github/workflows/iskra-site_ci.yml"
+      - "pnpm-lock.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "apps/iskra-site/**"
+      - ".github/workflows/iskra-site_ci.yml"
+      - "pnpm-lock.yaml"
+  workflow_dispatch:
+
+jobs:
+  build-and-verify:
+    name: Build and verify iskra-site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install pnpm workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck iskra-site
+        working-directory: apps/iskra-site
+        run: pnpm typecheck
+
+      - name: Check canon index freshness
+        working-directory: apps/iskra-site
+        run: pnpm canon:index:check
+
+      - name: Build iskra-site
+        working-directory: apps/iskra-site
+        run: pnpm build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iskra-site-dist
+          path: apps/iskra-site/dist/
+          retention-days: 7
