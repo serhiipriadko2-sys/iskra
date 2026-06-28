@@ -1,0 +1,48 @@
+name: Deploy iskra-site to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/iskra-site/**"
+      - ".github/workflows/iskra-site_deploy.yml"
+      - "pnpm-lock.yaml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build and deploy iskra-site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install pnpm workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build iskra-site
+        run: pnpm --filter iskra-site build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: iskra-site
+          directory: apps/iskra-site/dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

@@ -95,3 +95,17 @@ scripts/
 - WebGL-сцены автоматически отключаются при `prefers-reduced-motion`.
 - Сайт адаптирован под десктоп и мобильные устройства.
 - API-ключи и secrets не используются.
+
+## Деплой
+
+Сайт разворачивается на **Cloudflare Pages**.
+
+- Workflow: `.github/workflows/iskra-site_deploy.yml`
+- Build command: `pnpm --filter iskra-site build`
+- Output directory: `apps/iskra-site/dist`
+- Требуемые секреты репозитория:
+  - `CLOUDFLARE_API_TOKEN` — токен с правами `Cloudflare Pages:Edit`
+  - `CLOUDFLARE_ACCOUNT_ID` — ID аккаунта Cloudflare
+- Перед первым запуском создай проект `iskra-site` в Cloudflare Pages (имя должно совпадать с `projectName` в workflow).
+
+Для ручного тестового деплоя можно использовать `workflow_dispatch` во вкладке Actions.

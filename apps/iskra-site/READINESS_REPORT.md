@@ -25,8 +25,8 @@
 | Performance | [PASS] | `RepoAtlas` lazy-loaded, `three` выделен в отдельный чанк, sourcemaps включены, шрифты preload. |
 | Unit / e2e тесты | [FAIL] | Тестов нет. |
 | Lint / code style | [FAIL] | ESLint не настроен, скрипта `lint` нет. TypeScript `strict: true` частично компенсирует. |
-| CI/CD для `apps/iskra-site` | [FAIL → FIXED] | Ранее CI/CD был только для `runtime/iskraSpace`. Добавлен `.github/workflows/iskra-site_ci.yml` для typecheck, `canon:index:check` и build + артефакт. **Деплой остаётся ненастроенным**, т.к. GitHub Pages уже занят `runtime/iskraSpace`. |
-| Хостинг / деплой | [BLOCKER] | `dist/` игнорируется корневым `.gitignore`. Для публикации нужен отдельный хостинг (Vercel, Cloudflare Pages, Netlify, второй домен) или отдельный workflow с деплоем артефакта. |
+| CI/CD для `apps/iskra-site` | [PASS] | Добавлены `.github/workflows/iskra-site_ci.yml` (typecheck, build, artifact) и `.github/workflows/iskra-site_deploy.yml` (Cloudflare Pages). |
+| Хостинг / деплой | [PASS pending secrets] | Выбран Cloudflare Pages. Workflow `.github/workflows/iskra-site_deploy.yml` готов. Остаётся создать проект `iskra-site` в Cloudflare и добавить секреты `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` в GitHub. |
 
 ## Что изменено в ходе аудита
 
@@ -43,7 +43,7 @@
 
 ## Рекомендации
 
-1. Настроить деплой на отдельный хостинг (например, Vercel или Cloudflare Pages) и добавить workflow-шаг `deploy` при наличии секретов.
+1. ✅ Деплой: выбран Cloudflare Pages, workflow готов. Осталось создать проект и добавить секреты.
 2. Добавить минимальный ESLint конфиг (`@typescript-eslint`, `eslint-plugin-react`, `eslint-plugin-react-hooks`) и скрипт `lint`.
 3. Добавить хотя бы smoke e2e-тест (Playwright) на открытие дерева и переключение аудитории.
 4. Улучшить a11y в `NodeOverlay` (`role="dialog"`, `aria-modal`, фокус-ловушка) и `RepoAtlas` (`role="tree"` с `aria-expanded`).
