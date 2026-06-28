@@ -18,7 +18,7 @@ begin;
 -- 0. Helper hardening
 -- =============================================================================
 
-alter function if exists public.update_updated_at()
+alter function public.update_updated_at()
   set search_path = public, extensions, pg_temp;
 
 -- =============================================================================

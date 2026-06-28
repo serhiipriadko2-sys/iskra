@@ -1,9 +1,9 @@
 # Supabase Migration Provenance Map — 2026-06-27
 
-Status: reconciled-non-graph + service-role hardening applied live
+Status: reconciled-non-graph + RLS/security hardening applied live
 Mode: AUDIT / GOVERNANCE
 Project: `AgiIskra` / `typcvaszcfdpkzbjzuur`
-Scope: migration-history receipts for non-graph objects; `claim_legacy_data` hardening applied live
+Scope: migration-history receipts for non-graph objects; selected RLS/security hardening applied live
 
 ## Reconciliation Result
 
@@ -27,6 +27,8 @@ All **remote-only non-graph migration receipts** are now mirrored in `supabase/m
 | `20260626141034` | `voice_metrics_drift_repair` | `supabase/migrations/20260626141034_voice_metrics_drift_repair.sql` | matched |
 | `20260626155850` | `residual_advisors_rls_fk_hardening` | `supabase/migrations/20260626155850_residual_advisors_rls_fk_hardening.sql` | matched |
 | `20260628175506` | `claim_legacy_data_service_role_only` | `supabase/migrations/20260628175506_claim_legacy_data_service_role_only.sql` | matched |
+| `20260628180542` | `fix_rls_policies` | `supabase/migrations/20260628180542_fix_rls_policies.sql` | matched |
+| `20260628180654` | `truth_boundary_p0_security_hardening` | `supabase/migrations/20260628180654_truth_boundary_p0_security_hardening.sql` | matched |
 
 Graph-specific receipts (`graph_schema_contract_*`, `graph_anon_select_revoke`, `graph_rpc_boundary*`) are matched and tracked separately; they were already in repo.
 
@@ -50,9 +52,7 @@ These files remain in `supabase/migrations/` but are not yet recorded live. They
 |---|---|---|
 | `20260101000000_schema.sql` | pending/bootstrap | Base public app tables; live tables exist but were created before consistent migration tracking. |
 | `20260305000000_graph_nodes.sql` | graph-scope / historical | Original graph schema; graph contract repairs brought it up to date. |
-| `20260307_fix_rls_policies.sql` | pending | RLS hardening not yet applied live. |
-| `20260528182000_truth_boundary_p0_security_hardening.sql` | pending | Sprint 2 hardening not yet applied live. |
-| `20260528_release_auth_rls_hardening.sql` | pending | Release auth/RLS hardening not yet applied live. |
+| `20260528_release_auth_rls_hardening.sql` | pending | Skipped: массово сбрасывает graph-политики и удаляет `user_id IS NULL` для seed-узлов; требует отдельного решения. |
 
 ## Verification
 
@@ -67,4 +67,4 @@ Expected: all `Remote` entries have a matching `Local` entry; the only `Local`-o
 Δ: Remote-only non-graph migration receipts are now committed in Git; migration-history drift for non-graph receipts is eliminated.  
 D: Management API read-only query of `supabase_migrations.schema_migrations.statements`, `supabase migration list --linked`, repo migration files.  
 Ω: 0.97 for migration inventory alignment; 0.75 for full schema reproducibility because pending/superseded local migrations remain.  
-Λ: Revise after applying the pending RLS/security migrations or documenting why they remain pending.
+Λ: Revise after resolving `20260528_release_auth_rls_hardening.sql` graph conflict or applying a graph-safe replacement.
