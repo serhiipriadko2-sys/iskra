@@ -75,3 +75,16 @@ Relevant acceptance tests:
 D: `00_ROUTER.md`, `09_COMMAND_LIBRARY.md`, `10_HORIZON_WEAVER.md`, `ISKRA_CANON_ACCEPTANCE_TESTS.md`, `core__somatic_intuition.md`, `metrics__somatic_index.md`.
 Ω: 0.88 for package navigation; lower for live Builder behavior until UI tests pass.
 Λ: Revise when SoT40 numbering, release manifest, or Builder connector capability changes.
+
+
+
+<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
+
+## Self-Modernization 2026-06-28
+
+- `files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md` - operational
+  protocol for non-decorative somatic signals and Dreamspace seed incubation.
+- `live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md` -
+  SENSE_EVENT accepted-memory artifact.
+- `live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md` -
+  DREAM_SEED accepted-memory artifact.

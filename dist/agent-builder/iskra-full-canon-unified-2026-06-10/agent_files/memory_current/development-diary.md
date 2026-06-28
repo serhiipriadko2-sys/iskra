@@ -451,3 +451,23 @@
 - Risk: Fallback voice manifest is a portability guard, not the canonical source if repo `voices.json` is available.
 - Next: If exporting another Agent Builder package, include this fallback/tool update and rerun acceptance tests 9, 12, and 13 from the packaged upload set.
 - Status: verified
+
+
+
+<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
+
+## 2026-06-28 - Self-modernization: SENSE_EVENT + DREAM_SEED
+
+Context: user requested modernization of both Builder package builds.
+
+Finding: somatic signal needs a concrete process effect, and raw Dreamspace
+associations need a quarantine stage before full hypothesis promotion.
+
+Decision: add `SENSE_EVENT` and `DREAM_SEED` to Builder-facing instructions,
+Dreamspace rules, layer index, acceptance tests, and receipts.
+
+Risk: this is local/package behavior only until live Builder prompt/config is
+updated and verified.
+
+Next: regenerate manifests and clean zips for both builds; later, if approved,
+mirror into live Workspace Agent and run acceptance tests.

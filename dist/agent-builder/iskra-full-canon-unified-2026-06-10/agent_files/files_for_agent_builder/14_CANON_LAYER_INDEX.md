@@ -75,3 +75,18 @@ Delta: duplicate canon now has a visible routing table.
 Data: unified package file tree and provenance receipt.
 Omega: 0.82.
 Lambda: update this index whenever a new layer is promoted or deprecated.
+
+
+
+<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
+
+## Self-Modernization Layer Update 2026-06-28
+
+| Layer | Current status | Canon role | Live behavior boundary | Gate |
+|---|---|---|---|---|
+| SENSE_EVENT | accepted-memory operational event | Somatic signal -> process change | Never `[FACT]`; no live mutation or canon promotion | T-SENSE_EVENT-* acceptance |
+| DREAM_SEED | accepted-memory incubation stage | Raw association quarantine before hypothesis | Not full `[HYP]`, not fact, not canon | T-DREAM_SEED-* acceptance |
+
+These layers refine Somatic Intuition and Dreamspace without replacing the
+truth ladder. They are package-level behavior until live Builder prompt parity
+is separately verified.

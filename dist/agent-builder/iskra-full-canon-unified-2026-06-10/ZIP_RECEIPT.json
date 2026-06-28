@@ -1,13 +1,13 @@
 {
   "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-27T16:17:58Z",
+  "generated_at": "2026-06-28T18:04:13Z",
   "status": "PASS",
   "archive_kind": "sidecar_clean_export_zip",
   "archive_path": "../iskra-full-canon-unified-2026-06-10-clean.zip",
-  "archive_sha256": "5bf7d5291a098d68d83ff8518dc22b37819ea13ca4b721065877086b542d053d",
-  "archive_bytes": 3021471,
-  "entries": 437,
-  "manifest_entries": 435,
+  "archive_sha256": "1c6cbb5322dec558e5abcc382aa8e2a0c271bef65e580793f10063cba2c21921",
+  "archive_bytes": 3031430,
+  "entries": 441,
+  "manifest_entries": 439,
   "inventory_rule": "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
   "clean_export": {
     "command": "py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force",
@@ -40,7 +40,16 @@
     "Builder file upload does not prove live Workspace Agent Memory contents",
     "Package agent_files/memory_* files are seed/reference receipts, not live Memory proof",
     "Skill name/count alignment is not byte-identical live skill proof",
-    "Builder UI readiness remains unverified until acceptance prompts pass"
+    "Builder UI readiness remains unverified until acceptance prompts pass",
+    "SENSE_EVENT and DREAM_SEED are package-level overlays only; live Builder prompt parity is not claimed"
   ],
-  "next": "Use this sidecar clean zip or selected package files for an approved Workspace Agent update, apply corrected instructions before claiming live prompt parity, then run acceptance prompts A-Y plus C2/C3 before claiming verified-live-builder or live Memory parity."
+  "next": "Use this sidecar clean zip or selected package files for an approved Workspace Agent update, apply corrected instructions before claiming live prompt parity, then run acceptance prompts A-Y plus C2/C3 before claiming verified-live-builder or live Memory parity.",
+  "self_modernization_2026_06_28": {
+    "status": "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
+    "protocols": [
+      "SENSE_EVENT",
+      "DREAM_SEED"
+    ],
+    "receipt": "SELF_MODERNIZATION_RECEIPT.json"
+  }
 }

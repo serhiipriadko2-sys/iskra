@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Iterable
 
+from apply_workspace_agent_modernization import apply_modernization_overlay
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DIST_ROOT = REPO_ROOT / "dist" / "agent-builder"
@@ -882,6 +884,7 @@ def main(argv: list[str]) -> int:
         conflicts=conflicts,
     )
     write_docs(target, archive_inventory, records, conflicts)
+    modernization = apply_modernization_overlay(target)
 
     print(
         json.dumps(
@@ -891,6 +894,7 @@ def main(argv: list[str]) -> int:
                 "agent_files_entries": agent_inventory["entry_count"],
                 "supplemental_sources": len(supplemental),
                 "conflicts": len(conflicts),
+                "modernization_status": modernization["status"],
                 "status": "assembled",
             },
             ensure_ascii=False,

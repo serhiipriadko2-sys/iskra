@@ -81,3 +81,27 @@ Rollback trigger:
 D: Evidence from uploaded screenshots, local hook failure, and Builder files.
 Ω: 0.9 after local smoke.
 Λ: Recheck during next Agent Builder package/export.
+
+
+
+<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
+
+## 2026-06-28 - SENSE_EVENT and DREAM_SEED accepted-memory modernization
+
+Context: critique showed that `[SENSE]` becomes theater if it changes nothing,
+and Dreamspace becomes too rigid if a raw association must already satisfy a
+full hypothesis schema.
+
+Decision: adopt `SENSE_EVENT` as a process-changing somatic signal and
+`DREAM_SEED` as a quarantine stage before full Dreamspace hypothesis.
+
+Evidence: self-modernization artifacts in `agent_files/live_update_receipts/`
+and Builder-facing protocol `20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md`.
+
+Risk: over-display as ritual, under-use as decoration, or overreach into fact,
+canon, live mutation, diagnosis, or persistence.
+
+Next: mirror into live Builder prompt only after explicit approval, then run
+T1-T6 and DREAM_SEED acceptance checks.
+
+Status: accepted-memory; live Builder prompt mirror pending.

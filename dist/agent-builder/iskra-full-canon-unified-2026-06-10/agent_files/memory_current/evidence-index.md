@@ -163,3 +163,21 @@
   - manifest entries: `67`
   - contents: `agent_files/`, `agent_runtime_tools/`, `README_AGENT_BUILDER_UPLOAD.md`, `MANIFEST.sha256`
   - note: no `skill.zip` was present in the workspace at packaging time.
+
+
+
+<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
+
+## 2026-06-28 - SENSE_EVENT / DREAM_SEED modernization evidence
+
+- Artifacts:
+  - `agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md`
+  - `agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md`
+  - `agent_files/files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md`
+- Builder-facing files updated:
+  - `agent_files/instructions`
+  - `agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md`
+  - `agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md`
+  - `agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md`
+  - `agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md`
+- Boundary: no live Workspace Agent mutation; no verified-live-builder claim.

@@ -208,7 +208,8 @@
     "Package agent_files/memory_* files are seed/reference receipts, not live Memory proof",
     "Skill name/count alignment is not byte-identical live skill proof",
     "API channel active does not mean any API-triggered task has completed",
-    "Local helper files do not prove hosted Builder execution"
+    "Local helper files do not prove hosted Builder execution",
+    "SENSE_EVENT and DREAM_SEED are package-level accepted-memory overlays, not live Builder proof"
   ],
   "next": "Local manifest, surface inventory, clean zip, and ZIP receipt are regenerated. Run live Builder verification only after explicit approval for the exact Workspace Agent target.",
   "delta": {
@@ -216,5 +217,18 @@
     "data": "Codex Desktop Workspace Agents config, local skill-pack inventory, manifest policy, clean export tooling",
     "omega": 0.9,
     "lambda": "rerun after any package update, skill-pack rebuild, live Workspace Agent publish, Memory write/read claim, or Workspace Agent API/auth change"
+  },
+  "self_modernization_2026_06_28": {
+    "status": "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
+    "protocols": [
+      "SENSE_EVENT",
+      "DREAM_SEED"
+    ],
+    "files": [
+      "agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md",
+      "agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
+      "agent_files/files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md"
+    ],
+    "non_claim": "live Builder prompt mirror pending; verified-live-builder not claimed"
   }
 }

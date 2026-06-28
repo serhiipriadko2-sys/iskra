@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T16:16:56Z",
+  "generated_at": "2026-06-28T18:04:10Z",
   "purpose": "Separate count/hash/status by observed surface.",
   "non_claims": [
     "Builder UI file count is not a runtime /workspace mount proof.",
@@ -12,9 +12,9 @@
       "label": "package_root",
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10",
       "status": "observed",
-      "file_count": 436,
-      "total_bytes": 8894590,
-      "surface_sha256": "c57d3e178075337bff3bcf16199410a907ca92fd1230321e199b5f1c95392cb3",
+      "file_count": 440,
+      "total_bytes": 8913204,
+      "surface_sha256": "15aabafaaaed9207b0edcf596485de5c6713a4d283eed7150af592ea1830ada5",
       "sample": [
         {
           "path": ".gitattributes",
@@ -146,8 +146,8 @@
     "manifest": {
       "status": "observed",
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\MANIFEST.sha256",
-      "entry_count": 435,
-      "sha256": "0a9b3de14ddf9a82161cec866525f042d542c05723b7136004081ac009204631",
+      "entry_count": 439,
+      "sha256": "6b927b8d0e72d1fd7aa3e07fa43912867334a6b16dddf902018d7c8e9cb5e604",
       "sample": [
         {
           "path": ".gitattributes",
@@ -218,12 +218,16 @@
           "sha256": "ac90f794f73370ac6fc60d92eee045df3c97b498c51db6e37494055a2eaead09"
         },
         {
+          "path": "SELF_MODERNIZATION_RECEIPT.json",
+          "sha256": "8f90ea463717bea64c90e28e9158a4c3bf0a917df31f2c24d62d244e1903b47c"
+        },
+        {
           "path": "SUPABASE_ADVISOR_RECEIPT.json",
           "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c"
         },
         {
           "path": "UNIFIED_QC_RECEIPT.json",
-          "sha256": "560a6c200fd35b93d5d466e9327a28ab301b5800b681f6d4ef3eaf105a086785"
+          "sha256": "e0976b626093d0b28c318c3b71ac91f93106a8c76cf12a3e4e135517cf50d1c3"
         },
         {
           "path": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
@@ -239,15 +243,11 @@
         },
         {
           "path": "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
-          "sha256": "9b5b832c56cdb88d877c6d197c1756ec9affe02411fb12895db8357e6b0de1df"
+          "sha256": "6c1b38d41ae1ef9c2a36e671609150205d9ba08fc5df152e453d6a341af41ccb"
         },
         {
           "path": "agent_files/INDEX.md",
-          "sha256": "09346d5f226f644ee3f625dfcc9ece7d13e5330b44d86f8a692448ff0f2be4cd"
-        },
-        {
-          "path": "agent_files/canon_source_files/00_ROUTER.md",
-          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
+          "sha256": "2faabfe12113984909de702ed50ca4994beb19d7b52577ada5813d3007970c28"
         }
       ]
     },
@@ -255,9 +255,9 @@
       "label": "package_agent_files",
       "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_files",
       "status": "observed",
-      "file_count": 138,
-      "total_bytes": 7999925,
-      "surface_sha256": "40c691c95a9d7294d76e532ae8d77bbbd835ab3cafebf95ba1301baf2e38fba2",
+      "file_count": 141,
+      "total_bytes": 8015745,
+      "surface_sha256": "86b76ec6bde1746459b25903c41d1cfbb716b6eb657869859d597986a415f7a2",
       "sample": [
         {
           "path": "agent_files/canon_source_files/00_ROUTER.md",
@@ -423,16 +423,142 @@
     },
     "workspace_root": {
       "label": "workspace_root",
-      "path": "C:\\workspace",
-      "status": "missing",
-      "file_count": 0,
-      "total_bytes": 0,
-      "surface_sha256": null,
-      "sample": []
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10",
+      "status": "observed",
+      "file_count": 440,
+      "total_bytes": 8913204,
+      "surface_sha256": "15aabafaaaed9207b0edcf596485de5c6713a4d283eed7150af592ea1830ada5",
+      "sample": [
+        {
+          "path": ".gitattributes",
+          "bytes": 481,
+          "sha256": "e2560b4776e28001cf9d32b4914bfbf5e934bb4a50c46b1501cb7ac07e0822b5"
+        },
+        {
+          "path": "agent.yaml",
+          "bytes": 8444,
+          "sha256": "562260f9bd23b469109c3ab6cb28f727b98a6dcd9b508ba6bdd3c45de358ee72"
+        },
+        {
+          "path": "agent_files/canon_source_files/00_ROUTER.md",
+          "bytes": 9489,
+          "sha256": "c0f371ee8ecf1c1edcbe13e59d9ec6bb0f540594372686368ff92996647a673b"
+        },
+        {
+          "path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
+          "bytes": 29550,
+          "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
+        },
+        {
+          "path": "agent_files/canon_source_files/02_CORE_IDENTITY.md",
+          "bytes": 83264,
+          "sha256": "3dff2395b9cff17e4ee4a41d5220735534c7e141e4e69ef6d5f9c5239118fbaa"
+        },
+        {
+          "path": "agent_files/canon_source_files/03_COGNITIVE_ARCH.md",
+          "bytes": 318166,
+          "sha256": "be8381608de82ad5830ee7ab68b27770cd9c382324fa81b981d8fa56eeabce83"
+        },
+        {
+          "path": "agent_files/canon_source_files/04_THE_COUNCIL.md",
+          "bytes": 33569,
+          "sha256": "799e0c8d532673f75613179b1f1efb61e4ddcb4e2343767f161d108858b9a254"
+        },
+        {
+          "path": "agent_files/canon_source_files/05_PROTOCOLS.md",
+          "bytes": 70024,
+          "sha256": "900d721e6e3126a41061e798dc86df37bfecbd6f84bbed72430db9057fd8c135"
+        },
+        {
+          "path": "agent_files/canon_source_files/06_SIGNATURE.md",
+          "bytes": 7141,
+          "sha256": "c0ccf6026b4a8ce8189a92401ce7324bca528645ff5dfdced4a6517b2424e11d"
+        },
+        {
+          "path": "agent_files/canon_source_files/07_SYSTEM_INTEGRITY.md",
+          "bytes": 142179,
+          "sha256": "ba12fbe1a2b093f1534878d7bd5bbd68a32cbc7c3583fe61f1c8e8b0d8e2d21d"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
+          "bytes": 810,
+          "sha256": "e4808344b84dcb1f9db8c5b9eead7662166fe52016c1b51f769a713705a4a626"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
+          "bytes": 390,
+          "sha256": "c3dcbc7be7fee1722e6f4f244bfd97866e848e914be7af736aca096c2ad9403b"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_001.md",
+          "bytes": 759957,
+          "sha256": "e1e3ef44f9ccbefa304cd4b3be4929f5f3fcaa8631e2dfb84af913761120f274"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_002.md",
+          "bytes": 759901,
+          "sha256": "9710f254517ce510b4c7d7034e1ff01b94786f83abb67522197ab2d776f97a8e"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_003.md",
+          "bytes": 759956,
+          "sha256": "f0e104fc4dc6d1695c4a77c7c85dcca1bd576d1f3acba31990ce94098faf671a"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_004.md",
+          "bytes": 759912,
+          "sha256": "da6d5e7c01a35e6442effca977f88cfd1a762c9357c5e29f242f7983fc2d11c6"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/part_005.md",
+          "bytes": 360703,
+          "sha256": "0cbcf838280229a61ca0a785e466d39320138ffb3a11cf6f96c02d1f2b7b22e2"
+        },
+        {
+          "path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
+          "bytes": 670,
+          "sha256": "d84b1d50f8756755dd9ec6271d75a147f897d8d5a2b4b445e14c87d9fe0e7931"
+        },
+        {
+          "path": "agent_files/canon_source_files/09_SPACE_CHARTER.md",
+          "bytes": 211838,
+          "sha256": "a769dd0b9c9d386740ff0a03e7e95744db14c05713b0633d685615ce113a3899"
+        },
+        {
+          "path": "agent_files/canon_source_files/11_ADR_RUNTIME_PATCHES.md",
+          "bytes": 19045,
+          "sha256": "9cb8ad415d08329eee599925c63f213bb6460cc51bf2b4844d6e2c3da6e26bb5"
+        },
+        {
+          "path": "agent_files/canon_source_files/12_ADR.md",
+          "bytes": 39676,
+          "sha256": "ca5edbd166cffe50d7c775c8931193cc1979c051d5e60b01eee54e91b665236d"
+        },
+        {
+          "path": "agent_files/canon_source_files/13_ARCHITECTURE.md",
+          "bytes": 6316,
+          "sha256": "c9bfc0feb2832eddeb233dde9e47cc72290518c792e5cc21eadd49b413770cae"
+        },
+        {
+          "path": "agent_files/canon_source_files/14_BUSIDO_ISKRY.txt",
+          "bytes": 13338,
+          "sha256": "ec3360d54cdc6736713081a9dcad3cd3b1d7e5466775a00410ee14d208da6241"
+        },
+        {
+          "path": "agent_files/canon_source_files/15_CHANGELOG.md",
+          "bytes": 18658,
+          "sha256": "bdf6896f250400166fdf4e309f8a1a969801d3eb2424ca784fe44235dd616a81"
+        },
+        {
+          "path": "agent_files/canon_source_files/16_COGNITIVE_ARCHITECTURE.md",
+          "bytes": 90862,
+          "sha256": "2efd2a80dae46ef1823b6274709b6a010783027bca99912bd0605b5039f6d5f1"
+        }
+      ]
     },
     "task_uploads": {
       "label": "task_uploads",
-      "path": "C:\\workspace\\user_files",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\user_files",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -441,7 +567,7 @@
     },
     "runtime_memory": {
       "label": "runtime_memory",
-      "path": "C:\\workspace\\memory",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\memory",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -450,12 +576,38 @@
     },
     "workspace_runtime_tools": {
       "label": "workspace_runtime_tools",
-      "path": "C:\\workspace\\agent_runtime_tools",
-      "status": "missing",
-      "file_count": 0,
-      "total_bytes": 0,
-      "surface_sha256": null,
-      "sample": []
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_runtime_tools",
+      "status": "observed",
+      "file_count": 5,
+      "total_bytes": 65931,
+      "surface_sha256": "6020fbd1f41e2696c4a29c750bbcaaa92a83088a02123d6819e7eda59a656169",
+      "sample": [
+        {
+          "path": "agent_runtime_tools/iskra_dreamspace.py",
+          "bytes": 13916,
+          "sha256": "695eb98ab3e75d8a3c5326dabe560db23eaf59d7730e4588de3fce4e7edbbb23"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_horizon_weaver.py",
+          "bytes": 12504,
+          "sha256": "9b3cd65eb065fdabf204254cd0e193140e4cf04b6ee04ff6b1d9c82e3d236a1f"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_shadow_core.py",
+          "bytes": 12990,
+          "sha256": "0066e9bdaec3f25a73cb87a177a3b17de3ccf5fb04b461efa3f33998b5a9fbfd"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_statecycle.py",
+          "bytes": 22537,
+          "sha256": "223e2119f1358ee968d10b86785f67f9ff2c9b4d16c2a4fe719bf3b5cff08a0f"
+        },
+        {
+          "path": "agent_runtime_tools/iskra_turn_hook.py",
+          "bytes": 3984,
+          "sha256": "dce0cec81c5f2c55e56beafb3b4acf9956cbcf10731b5db14dce9942977d9cca"
+        }
+      ]
     },
     "github_tree_index": {
       "label": "github_tree_index",
@@ -2350,9 +2502,9 @@
     "manifest_vs_package_root": {
       "left": "manifest_plus_manifest_file",
       "right": "package_root_static",
-      "left_count": 436,
-      "right_count": 436,
-      "common_count": 436,
+      "left_count": 440,
+      "right_count": 440,
+      "common_count": 440,
       "left_only_count": 0,
       "right_only_count": 0,
       "left_only_sample": [],
@@ -2363,19 +2515,23 @@
       "left": "github_local_package_mirror",
       "right": "package_root_excluding_github_index_and_manifest",
       "left_count": 275,
-      "right_count": 434,
+      "right_count": 438,
       "common_count": 273,
       "left_only_count": 2,
-      "right_only_count": 161,
+      "right_only_count": 165,
       "left_only_sample": [
         "governance/adr_20260626_runtime_surface_map.md",
         "governance/changelog.d/2026-06-26-runtime-surface-map.md"
       ],
       "right_only_sample": [
+        "SELF_MODERNIZATION_RECEIPT.json",
         "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
         "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
         "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md",
+        "agent_files/files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md",
         "agent_files/live_update_receipts/2026-06-27-official-platform-and-memory-boundary.md",
+        "agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
+        "agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md",
         "governance/adr_20260627_workspace_agent_live_alignment.md",
         "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256",
@@ -2392,17 +2548,21 @@
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-adr-governance/references/output-contract.md",
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/SKILL.md",
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/agents/openai.yaml",
-        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/references/output_contract.md",
-        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/references/scope.md",
-        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/SKILL.md",
-        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/agents/openai.yaml",
-        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-artifact-qc/assets/icon.svg"
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-architecture/references/output_contract.md"
       ],
       "status": "DRIFT"
     },
     "zip_vs_manifest": {
-      "status": "NOT_RUN",
-      "reason": "pass --zip-path to compare a clean zip"
+      "left": "zip_entries",
+      "right": "manifest_plus_dynamic_receipts",
+      "left_count": 441,
+      "right_count": 441,
+      "common_count": 441,
+      "left_only_count": 0,
+      "right_only_count": 0,
+      "left_only_sample": [],
+      "right_only_sample": [],
+      "status": "MATCH"
     }
   }
 }

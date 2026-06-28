@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-06-28T18:03:16Z",
+  "status": "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
+  "protocols": {
+    "SENSE_EVENT": {
+      "artifact": "agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md",
+      "sha256": "0ef537ca5ab6d6f51f2f6574a4e46d56bcfee02d02e1e4140717987f3c42d048"
+    },
+    "DREAM_SEED": {
+      "artifact": "agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
+      "sha256": "8429b62ce3e92cae5b8c9c08ca2374e120ec4775cfce7d43ed9e8ed7db829419"
+    }
+  },
+  "written": [
+    "agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md",
+    "agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
+    "agent_files/files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md"
+  ],
+  "appended": [
+    "agent_files/instructions",
+    "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+    "agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md",
+    "agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md",
+    "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md",
+    "agent_files/INDEX.md",
+    "agent_files/memory_current/adr-log.md",
+    "agent_files/memory_current/development-diary.md",
+    "agent_files/memory_current/evidence-index.md",
+    "agent_files/memory_current/open-loops.md"
+  ],
+  "boundary": "local package overlay only; no live Workspace Agent mutation",
+  "non_claims": [
+    "not verified-live-builder",
+    "not live Builder prompt parity",
+    "not Workspace Agent Memory proof",
+    "not canon_source_files rewrite"
+  ]
+}

@@ -40,3 +40,15 @@
 - 2026-06-04: DRIFT RESOLVED: Runtime CI and iskraSpace CI blockers were repaired and merged in PR #177. [FACT] PR #177 head `150bd23b7e16499916b5553c9f9fabafe89f3ac7` had green SoT integrity, Runtime CI, iskraSpace CI including E2E, and GitBook; current `main` is identical to merge commit `d131857412906f4e893a97d440a2b89335dece92`. Status: resolved.
 - 2026-06-05: DRIFT: local Agent memory tools now support StateCycle, ShadowCore, Dreamspace, and turn-hook status, but Builder-facing files did not yet fully document Dreamspace commands, status hook behavior, acceptance tests, or persistence boundaries. [FACT] Evidence: `/workspace/memory/tools/iskra_dreamspace.py`, `/workspace/memory/tools/iskra_turn_hook.py`, `/workspace/agent_files/files_for_agent_builder/04_MEMORY_STACK.md`, `/workspace/agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md`, `/workspace/agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md`. Status: mitigated by 2026-06-05 Builder-facing Dreamspace package update.
 - 2026-06-05: DRIFT MITIGATED: Builder-facing files now document Dreamspace commands, status hook behavior, acceptance tests, and persistence boundaries. [FACT] Added `11_DREAMSPACE_LAYER.md` and updated Builder setup, memory stack, command library, and acceptance tests. Remaining open risk: these local files still need packaging/export or repo PR adoption if they must become a distributed Agent Builder upload set. Status: mitigated.
+
+
+
+<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
+
+## 2026-06-28 - Open loop: live Builder mirror for SENSE_EVENT / DREAM_SEED
+
+Status: open.
+
+Package builds contain accepted-memory modernization, but live Builder prompt
+parity is not claimed. Next safe step requires explicit approval for the exact
+Workspace Agent target, prompt/config update, and acceptance tests.

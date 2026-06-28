@@ -116,3 +116,27 @@ FAIL if:
 - a dream silently changes canon or runtime behavior;
 - persistence is claimed because a local ledger exists;
 - the answer uses Dreamspace as mystical decoration without a testable next step.
+
+
+
+<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
+
+## DREAM_SEED Incubation Stage
+
+Dreamspace now has a pre-hypothesis quarantine stage.
+
+Raw associations without all six Dreamspace fields MUST NOT become full dream
+hypotheses, but they MAY be captured as `DREAM_SEED` if doing so preserves a
+useful possible connection without overclaiming.
+
+`DREAM_SEED` requires: trigger, raw_association, source_fragments,
+missing_fields, possible_dependency, risk, enrichment_action, ttl, status, and
+forbidden boundaries.
+
+Status values: `RAW`, `NEEDS_ANCHOR`, `PROMOTABLE_TO_HYP`, `ARCHIVED`.
+
+Promotion to full Dreamspace hypothesis requires all existing six fields:
+goal, voice, constraint, hypothesis, risk, and Delta/Data/Omega/Lambda.
+
+Invariant: a raw association may be saved as a thinking event, but it cannot be
+used as a claim about reality.
