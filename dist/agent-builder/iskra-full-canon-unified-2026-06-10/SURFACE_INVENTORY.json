@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-28T18:16:01Z",
+  "generated_at": "2026-06-28T18:57:25Z",
   "purpose": "Separate count/hash/status by observed surface.",
   "non_claims": [
     "Builder UI file count is not a runtime /workspace mount proof.",
@@ -10,11 +10,11 @@
   "surfaces": {
     "package_root": {
       "label": "package_root",
-      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10",
+      "path": "C:\\Users\\gabra\\AppData\\Local\\Temp\\iskra-repair-221-longpaths-20260628-205552\\iskra\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10",
       "status": "observed",
       "file_count": 440,
-      "total_bytes": 8914808,
-      "surface_sha256": "ee77e20dbd7b829da02d1eb7c6fb21a6b5e1a352cba269053ca3796c7cca63be",
+      "total_bytes": 8925786,
+      "surface_sha256": "dc911b731a86a4de8aedf93aaa7f30aeacfd95e10f7cb8392954cd595adf3b53",
       "sample": [
         {
           "path": ".gitattributes",
@@ -145,9 +145,9 @@
     },
     "manifest": {
       "status": "observed",
-      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\MANIFEST.sha256",
+      "path": "C:\\Users\\gabra\\AppData\\Local\\Temp\\iskra-repair-221-longpaths-20260628-205552\\iskra\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\MANIFEST.sha256",
       "entry_count": 439,
-      "sha256": "766144944555a273cc8387a51c7b9e8bcb8056085dae84ba83b916b3b7f2d8e7",
+      "sha256": "8c389543a5a06338a07099d9f95a94d2708983a253deb0abc0e7c236b80a0cb1",
       "sample": [
         {
           "path": ".gitattributes",
@@ -227,7 +227,7 @@
         },
         {
           "path": "UNIFIED_QC_RECEIPT.json",
-          "sha256": "e0976b626093d0b28c318c3b71ac91f93106a8c76cf12a3e4e135517cf50d1c3"
+          "sha256": "117f1a0581f8509c4de95135ca002f68adbb040d997d8fcc826529fff4bdd9c8"
         },
         {
           "path": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
@@ -253,7 +253,7 @@
     },
     "package_agent_files": {
       "label": "package_agent_files",
-      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_files",
+      "path": "C:\\Users\\gabra\\AppData\\Local\\Temp\\iskra-repair-221-longpaths-20260628-205552\\iskra\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_files",
       "status": "observed",
       "file_count": 141,
       "total_bytes": 8015745,
@@ -388,7 +388,7 @@
     },
     "package_runtime_tools": {
       "label": "package_runtime_tools",
-      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_runtime_tools",
+      "path": "C:\\Users\\gabra\\AppData\\Local\\Temp\\iskra-repair-221-longpaths-20260628-205552\\iskra\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\agent_runtime_tools",
       "status": "observed",
       "file_count": 5,
       "total_bytes": 65931,
@@ -423,142 +423,16 @@
     },
     "workspace_root": {
       "label": "workspace_root",
-      "path": "C:\\github\\iskra-1",
-      "status": "observed",
-      "file_count": 2223,
-      "total_bytes": 64968474,
-      "surface_sha256": "788f2f89a7ae0eaba6653592a2491800f94afe9f175e8623d98566962b4ced04",
-      "sample": [
-        {
-          "path": ".agents/skills/supabase/assets/feedback-issue-template.md",
-          "bytes": 476,
-          "sha256": "74b5dfa3a8f7d6584af059a12bae4cd6bb66d1f3205dc306bf31d4f4ae2a13b1"
-        },
-        {
-          "path": ".agents/skills/supabase/references/skill-feedback.md",
-          "bytes": 1052,
-          "sha256": "85e688b56623f9250d23b60ea950dee740fd537980fc72178fe185eab76742b7"
-        },
-        {
-          "path": ".agents/skills/supabase/SKILL.md",
-          "bytes": 11400,
-          "sha256": "54a98503afb910f8f01ef4d55691dea939a7d7141e66f972ac5c86ddbad18bc6"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/_contributing.md",
-          "bytes": 4283,
-          "sha256": "b851de03355ea919862b637fdc14fefab648149cf1013b0194a17108b2d8af4c"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/_sections.md",
-          "bytes": 1721,
-          "sha256": "ad2d6f6b0938ff844f7f8971153ab6d08a03ef6511b02fb9cee9336c7b209e93"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/_template.md",
-          "bytes": 1074,
-          "sha256": "39e9fce3c6ae1af110f689e018d4417f3547ed0417a7b6198b207285e60bf9b8"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/advanced-full-text-search.md",
-          "bytes": 1523,
-          "sha256": "0682b713263c5b6b9638a31f810bad07aa179bc4f79bbb787b92ed287e00fe76"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/advanced-jsonb-indexing.md",
-          "bytes": 1493,
-          "sha256": "9bcbf7da33f6fe6fa9525680ca26d4e3412b534104cffb5f8529596d76631e4f"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/conn-idle-timeout.md",
-          "bytes": 1328,
-          "sha256": "cd4386d0b5a2bd6d0148975f0f379016b47c7cf139b9483c4f24619c6a89f5e3"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/conn-limits.md",
-          "bytes": 1369,
-          "sha256": "9ed6e5e3a45458a52f2863a60324a05d80da1d9f3e23bcb83b06f464f6a3cee7"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/conn-pooling.md",
-          "bytes": 1423,
-          "sha256": "60cd5f7942c44bdf6d8622a49a2e9f0f7fd01daf8e62bd1bd66b195cd6942975"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/conn-prepared-statements.md",
-          "bytes": 1575,
-          "sha256": "5ce48ff1e426c9b90c75c5733817fc2dd8feea9e4db3298ec9373b9cd0cf3bf8"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/data-batch-inserts.md",
-          "bytes": 1341,
-          "sha256": "98251b608bb6cfefd28828c9e5fffc705a155f1212fa0cb82904c5bc2e417572"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/data-n-plus-one.md",
-          "bytes": 1414,
-          "sha256": "f5c60f85f208161cd7567bb7cff0f559618814216a4426bb1351b51f75ec334d"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/data-pagination.md",
-          "bytes": 1408,
-          "sha256": "c0bffeb6880c1f5b961e7c2ff36fd16686ebb09e5e49ed17499654beabea3e60"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/data-upsert.md",
-          "bytes": 1440,
-          "sha256": "b366aa7da1e7929fba3011f99d949b2593967920d0c3c8572e07c0407c367054"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/lock-advisory.md",
-          "bytes": 1587,
-          "sha256": "6d6b50c5ec9f85eb7aebbb1466e642e427c1732efa558488a9cae7ef9903febd"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/lock-deadlock-prevention.md",
-          "bytes": 1923,
-          "sha256": "55f2074581d4db4996fc3ea1d3c120295209a70115f773e2c54f6b312405b293"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/lock-short-transactions.md",
-          "bytes": 1400,
-          "sha256": "2538a22231c0dfde9967812b6bd5fb347287b671f72806495f89d0d0764e5fe6"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/lock-skip-locked.md",
-          "bytes": 1407,
-          "sha256": "42c7492ba7f5d2c8ede9a5af072ea63deacf71e5695e022cae15b46b1ce4df13"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/monitor-explain-analyze.md",
-          "bytes": 1486,
-          "sha256": "94881b47194cb164b1d2a004e79f181370af44ec830b9263e990e2710bd02b76"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/monitor-pg-stat-statements.md",
-          "bytes": 1473,
-          "sha256": "812bf181876bacac5a2f914e7ffcf2a0a215b6d18dda752e65e75d926cbbcef4"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/monitor-vacuum-analyze.md",
-          "bytes": 1561,
-          "sha256": "8d35221e676f13b122865d5df947a008c41367bd180010e52fde3c429e8552a9"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/query-composite-indexes.md",
-          "bytes": 1498,
-          "sha256": "7e75d1b4d4431cb874ecc28710e95b7d2d7364511daa5d2c8e9d7de7ce1d0054"
-        },
-        {
-          "path": ".agents/skills/supabase-postgres-best-practices/references/query-covering-indexes.md",
-          "bytes": 1327,
-          "sha256": "028770393de8c0be6dcc7b9fb017f8209761d1854ebf433f036367e602f2d04d"
-        }
-      ]
+      "path": "C:\\workspace",
+      "status": "missing",
+      "file_count": 0,
+      "total_bytes": 0,
+      "surface_sha256": null,
+      "sample": []
     },
     "task_uploads": {
       "label": "task_uploads",
-      "path": "C:\\github\\iskra-1\\user_files",
+      "path": "C:\\workspace\\user_files",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -567,7 +441,7 @@
     },
     "runtime_memory": {
       "label": "runtime_memory",
-      "path": "C:\\github\\iskra-1\\memory",
+      "path": "C:\\workspace\\memory",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -576,7 +450,7 @@
     },
     "workspace_runtime_tools": {
       "label": "workspace_runtime_tools",
-      "path": "C:\\github\\iskra-1\\agent_runtime_tools",
+      "path": "C:\\workspace\\agent_runtime_tools",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -585,7 +459,7 @@
     },
     "github_tree_index": {
       "label": "github_tree_index",
-      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\GITHUB_TREE_INDEX.json",
+      "path": "C:\\Users\\gabra\\AppData\\Local\\Temp\\iskra-repair-221-longpaths-20260628-205552\\iskra\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\GITHUB_TREE_INDEX.json",
       "status": "PARTIAL_GITHUB_CONNECTOR_PROBE_PASS_RECURSIVE_TREE_BLOCKED",
       "bytes": 90863,
       "sha256": "c44013c60592e378e4812da41f7f37b1997c4a3ad0c6cd5dc80e8d726fb147c6",
@@ -2284,7 +2158,7 @@
     },
     "builder_upload_evidence": {
       "label": "builder_upload_evidence",
-      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\BUILDER_UPLOAD_EVIDENCE.md",
+      "path": "C:\\Users\\gabra\\AppData\\Local\\Temp\\iskra-repair-221-longpaths-20260628-205552\\iskra\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\BUILDER_UPLOAD_EVIDENCE.md",
       "status": "packaged-as-upload-set; Workspace Agent config observed; live Builder verification pending",
       "bytes": 4585,
       "sha256": "36a0d88440fb865d683c96fff49178e9c1bf541228fe4a2ca661394951d08f7b",
@@ -2305,7 +2179,7 @@
     },
     "hook_smoke_receipt": {
       "label": "hook_smoke_receipt",
-      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\HOOK_SMOKE_RECEIPT.json",
+      "path": "C:\\Users\\gabra\\AppData\\Local\\Temp\\iskra-repair-221-longpaths-20260628-205552\\iskra\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\HOOK_SMOKE_RECEIPT.json",
       "status": "PASS",
       "bytes": 1690,
       "sha256": "9f666b8c123cbe185fa576cd4216c55ff687586a443db7aaa472f2bbb0b739f3",
@@ -2366,7 +2240,7 @@
     },
     "supabase_advisor_receipt": {
       "label": "supabase_advisor_receipt",
-      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\SUPABASE_ADVISOR_RECEIPT.json",
+      "path": "C:\\Users\\gabra\\AppData\\Local\\Temp\\iskra-repair-221-longpaths-20260628-205552\\iskra\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\SUPABASE_ADVISOR_RECEIPT.json",
       "status": "PASS_READ_ONLY_ADVISORS_OBSERVED_WITH_WARNINGS",
       "bytes": 3251,
       "sha256": "f96f6278b7d9b481ede9bc0dcaeea988864869d4388220dfeb384adf24a3c09c",
@@ -2527,16 +2401,8 @@
       "status": "DRIFT"
     },
     "zip_vs_manifest": {
-      "left": "zip_entries",
-      "right": "manifest_plus_dynamic_receipts",
-      "left_count": 441,
-      "right_count": 441,
-      "common_count": 441,
-      "left_only_count": 0,
-      "right_only_count": 0,
-      "left_only_sample": [],
-      "right_only_sample": [],
-      "status": "MATCH"
+      "status": "NOT_RUN",
+      "reason": "pass --zip-path to compare a clean zip"
     }
   }
 }
