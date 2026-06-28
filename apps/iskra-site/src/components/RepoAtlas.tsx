@@ -185,6 +185,10 @@ export function RepoAtlas({ audienceMode = 'novice' }: RepoAtlasProps) {
       return (
         <div key={node.path}>
           <button
+            role="treeitem"
+            aria-expanded={hasChildren ? expandedState : undefined}
+            aria-level={depth + 1}
+            aria-selected={isSelected}
             onClick={() => handleSelect(node.path)}
             className={`w-full flex items-center gap-2 text-left px-2 py-1.5 rounded-lg transition-colors ${
               isSelected ? 'bg-iskra-primary/15 text-iskra-text' : 'hover:bg-white/5 text-iskra-muted'
@@ -209,7 +213,7 @@ export function RepoAtlas({ audienceMode = 'novice' }: RepoAtlasProps) {
             </span>
           </button>
           {hasChildren && expandedState && (
-            <div>{renderTree(node.children!.map((p) => nodeMap.get(p)!).filter(Boolean), depth + 1)}</div>
+            <div role="group">{renderTree(node.children!.map((p) => nodeMap.get(p)!).filter(Boolean), depth + 1)}</div>
           )}
         </div>
       );
@@ -410,11 +414,13 @@ export function RepoAtlas({ audienceMode = 'novice' }: RepoAtlasProps) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Поиск по индексу…"
+            aria-label="Поиск по индексу"
             className="w-full bg-iskra-surface/50 border border-white/10 rounded-lg pl-9 pr-8 py-2 text-xs text-iskra-text placeholder:text-iskra-muted focus:outline-none focus:border-iskra-primary/50"
           />
           {search && (
             <button
               onClick={() => setSearch('')}
+              aria-label="Очистить поиск"
               className="absolute right-2 top-1/2 -translate-y-1/2 text-iskra-muted hover:text-iskra-text"
             >
               <X className="w-3.5 h-3.5" />
@@ -456,7 +462,7 @@ export function RepoAtlas({ audienceMode = 'novice' }: RepoAtlasProps) {
               {canonIndex.total} узлов · {canonIndex.curated} curated
             </span>
           </div>
-          <div className="flex-1 overflow-y-auto p-2 scrollbar-thin">{renderTree(rootNodes)}</div>
+          <div role="tree" aria-label="Репозиторий" className="flex-1 overflow-y-auto p-2 scrollbar-thin">{renderTree(rootNodes)}</div>
         </div>
 
         {!isMobile && (
@@ -470,7 +476,7 @@ export function RepoAtlas({ audienceMode = 'novice' }: RepoAtlasProps) {
         <div className="fixed inset-0 z-40 bg-iskra-bg/95 backdrop-blur-md p-4 flex flex-col">
           <div className="flex items-center justify-between mb-3">
             <span className="font-mono text-[10px] uppercase tracking-wider text-iskra-muted">Детали узла</span>
-            <button onClick={() => setSelectedPath(null)} className="p-1 rounded-lg hover:bg-white/10">
+            <button onClick={() => setSelectedPath(null)} aria-label="Закрыть" className="p-1 rounded-lg hover:bg-white/10">
               <X className="w-5 h-5 text-iskra-muted" />
             </button>
           </div>

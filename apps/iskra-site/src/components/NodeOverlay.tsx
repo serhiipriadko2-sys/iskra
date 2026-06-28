@@ -1,5 +1,6 @@
 import { findNodeById, allTreeNodes } from '../lib/treeData';
 import type { TreeNodeData } from '../lib/treeData';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import { X } from './icons';
 import { NodeContent } from './NodeContent';
 
@@ -21,6 +22,7 @@ const GROUP_LABELS: Record<TreeNodeData['group'], string> = {
 
 export function NodeOverlay({ activeNodeId, onClose, onNavigate, audienceMode }: NodeOverlayProps) {
   const node = activeNodeId ? findNodeById(activeNodeId) : null;
+  const containerRef = useFocusTrap<HTMLDivElement>({ active: !!node });
   if (!node) return null;
 
   const currentIndex = activeNodeId ? allTreeNodes.findIndex((n) => n.id === activeNodeId) : -1;
@@ -33,14 +35,21 @@ export function NodeOverlay({ activeNodeId, onClose, onNavigate, audienceMode }:
     : 'md:w-[28rem] lg:w-[32rem]';
 
   return (
-    <div className={`fixed top-16 left-2 right-2 bottom-2 md:inset-auto md:right-4 md:top-20 md:bottom-4 z-40 ${widthClass} flex flex-col transition-all duration-300 pointer-events-none`}>
+    <div
+      ref={containerRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="node-overlay-title"
+      tabIndex={-1}
+      className={`fixed top-16 left-2 right-2 bottom-2 md:inset-auto md:right-4 md:top-20 md:bottom-4 z-40 ${widthClass} flex flex-col transition-all duration-300 pointer-events-none`}
+    >
       <div className="glass-card flex-1 overflow-y-auto p-4 md:p-8 pointer-events-auto animate-in zoom-in-95 md:slide-in-from-right duration-300">
         <div className="flex items-start justify-between mb-4 md:mb-5">
           <div>
             <span className="font-mono text-xs uppercase tracking-wider text-iskra-primary">
               {GROUP_LABELS[node.group]}
             </span>
-            <h2 className="font-serif text-xl md:text-3xl text-iskra-text mt-1">{node.label}</h2>
+            <h2 id="node-overlay-title" className="font-serif text-xl md:text-3xl text-iskra-text mt-1">{node.label}</h2>
           </div>
           <div className="flex items-center gap-2">
             {onNavigate && (

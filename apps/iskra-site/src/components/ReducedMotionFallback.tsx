@@ -50,7 +50,11 @@ export function ReducedMotionFallback() {
       </div>
 
       {activeNode && (
-        <div className="max-w-6xl mx-auto mt-12 p-6 md:p-8 rounded-2xl border border-white/10 bg-iskra-surface/40">
+        <div
+          role="region"
+          aria-label="Описание узла"
+          className="max-w-6xl mx-auto mt-12 p-6 md:p-8 rounded-2xl border border-white/10 bg-iskra-surface/40"
+        >
           <h3 className="font-serif text-2xl md:text-3xl text-iskra-text mb-2">{activeNode.label}</h3>
           <p className="text-iskra-muted leading-relaxed whitespace-pre-line">{activeNode.description}</p>
         </div>

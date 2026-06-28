@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-28T18:35:16.269Z",
-  "total": 2608,
+  "generatedAt": "2026-06-28T19:27:43.102Z",
+  "total": 2611,
   "curated": 20,
   "layers": {
     "root": 319,
     "agents": 44,
     "devcontainer": 2,
-    "ci": 10,
+    "ci": 12,
     "appendix": 26,
-    "site": 61,
+    "site": 62,
     "web": 13,
     "canon": 16,
     "builder": 1143,
@@ -689,6 +689,8 @@
       "parent": ".github",
       "children": [
         ".github/workflows/github_pages.yml",
+        ".github/workflows/iskra-site_ci.yml",
+        ".github/workflows/iskra-site_deploy.yml",
         ".github/workflows/iskraspace_ci.yml",
         ".github/workflows/production_deploy.yml",
         ".github/workflows/runtime_ci.yml",
@@ -704,6 +706,28 @@
       "role": "config",
       "coverage": "indexed",
       "sourceRef": ".github/workflows/github_pages.yml",
+      "related": [],
+      "parent": ".github/workflows"
+    },
+    {
+      "path": ".github/workflows/iskra-site_ci.yml",
+      "name": "iskra-site_ci.yml",
+      "kind": "file",
+      "layer": "ci",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".github/workflows/iskra-site_ci.yml",
+      "related": [],
+      "parent": ".github/workflows"
+    },
+    {
+      "path": ".github/workflows/iskra-site_deploy.yml",
+      "name": "iskra-site_deploy.yml",
+      "kind": "file",
+      "layer": "ci",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".github/workflows/iskra-site_deploy.yml",
       "related": [],
       "parent": ".github/workflows"
     },
@@ -2166,6 +2190,7 @@
         "apps/iskra-site/index.html",
         "apps/iskra-site/package.json",
         "apps/iskra-site/postcss.config.js",
+        "apps/iskra-site/READINESS_REPORT.md",
         "apps/iskra-site/README.md",
         "apps/iskra-site/tailwind.config.js",
         "apps/iskra-site/tsconfig.json",
@@ -2230,6 +2255,17 @@
       "sourceRef": "apps/iskra-site/public/iskra-v3.png",
       "related": [],
       "parent": "apps/iskra-site/public"
+    },
+    {
+      "path": "apps/iskra-site/READINESS_REPORT.md",
+      "name": "READINESS_REPORT.md",
+      "kind": "file",
+      "layer": "site",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/READINESS_REPORT.md",
+      "related": [],
+      "parent": "apps/iskra-site"
     },
     {
       "path": "apps/iskra-site/README.md",
