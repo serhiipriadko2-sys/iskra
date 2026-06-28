@@ -1,6 +1,6 @@
 # Supabase Non-Graph Migration-History Drift Audit — 2026-06-27
 
-Status: reconciled (no live DDL)  
+Status: reconciled + `claim_legacy_data` service-role hardening applied live
 Mode: AUDIT / GOVERNANCE  
 Repository: `serhiipriadko2-sys/iskra`  
 Project: `AgiIskra / typcvaszcfdpkzbjzuur`
@@ -18,51 +18,42 @@ This audit focuses on **migration-history receipts** that are **not graph-specif
 
 ## Current Migration Inventory
 
-### Remote-only (missing from repo)
-
-| Version | Name | Provenance note |
-|---|---|---|
-| `20260309091308` | `20260308000000_legacy_data_migration` | Legacy claim RPC; remote grants `EXECUTE` to `authenticated`, repo file grants only `service_role` |
-| `20260309091342` | `20260308000001_rate_limiting` | `public.rate_limits` + `check_rate_limit` RPC; content matches repo file |
-| `20260509073756` | `iskra_canon_schema_1536_v2` | Creates `iskra.*` canon schema, 1536-dim vector tables, RLS, helper function |
-| `20260509073916` | `iskra_temp_import_window_open` | Temporary anon grants/policies for canon import |
-| `20260509074021` | `iskra_canon_import_helpers` | Import RPCs for `canon_documents/chunks/memory_nodes` |
-| `20260509074235` | `iskra_temp_import_window_close` | Revokes temporary anon access |
-| `20260509074300` | `iskra_backfill_status_helpers` | Backfill status view + RPC |
-| `20260509092738` | `iskra_temp_rpc_import_open` | Temporary anon execute on import RPCs |
-| `20260509092953` | `enable_pg_net_for_iskra_import` | Creates `pg_net` extension |
-| `20260509093312` | `iskra_temp_rpc_import_close_again` | Revokes anon execute on import RPCs |
-
 ### Matched (live == repo)
 
-All 2026-06-26 migrations:
+All remote non-graph receipts are now mirrored in repo:
 
+- `20260309091308_20260308000000_legacy_data_migration`
+- `20260309091342_20260308000001_rate_limiting`
+- `20260509073756_iskra_canon_schema_1536_v2`
+- `20260509073916_iskra_temp_import_window_open`
+- `20260509074021_iskra_canon_import_helpers`
+- `20260509074235_iskra_temp_import_window_close`
+- `20260509074300_iskra_backfill_status_helpers`
+- `20260509092738_iskra_temp_rpc_import_open`
+- `20260509092953_enable_pg_net_for_iskra_import`
+- `20260509093312_iskra_temp_rpc_import_close_again`
 - `20260626141034_voice_metrics_drift_repair`
-- `20260626153642_graph_schema_contract_repair`
-- `20260626153934_graph_schema_contract_hardening`
 - `20260626155850_residual_advisors_rls_fk_hardening`
-- `20260626161747_graph_anon_select_revoke`
-- `20260626164633_graph_rpc_boundary`
-- `20260626164745_graph_rpc_boundary_acl_hardening`
+- `20260628175506_claim_legacy_data_service_role_only`
+
+Graph-specific receipts (`graph_schema_contract_*`, `graph_anon_select_revoke`, `graph_rpc_boundary*`) are also matched.
 
 ### Local-only (not recorded live)
 
 | Local file | Status / interpretation |
 |---|---|
 | `20260101000000_schema.sql` | Base public app tables; likely created before migration tracking was consistent. |
-| `20260301141500_memory_nodes_pgvector_hnsw.sql` | Superseded legacy `public.memory_nodes` shape (384-dim); live shape differs. |
 | `20260305000000_graph_nodes.sql` | Graph schema; graph receipts are out of scope for this pass. |
 | `20260307_fix_rls_policies.sql` | Pending RLS hardening. |
-| `20260308000000_legacy_data_migration.sql` | **Conflicts** with remote `20260309091308` version; repo version is more restrictive (service_role only). |
-| `20260308000001_rate_limiting.sql` | **Conflicts** with remote `20260309091342` version; content is equivalent. |
 | `20260528182000_truth_boundary_p0_security_hardening.sql` | Pending security hardening. |
 | `20260528_release_auth_rls_hardening.sql` | Pending auth/RLS hardening. |
 
 ## Key Drift Findings
 
-1. **Remote receipts missing from repo** — 10 non-graph migrations are live but have no Git source. This breaks reproducibility.
-2. **Local legacy/rate-limiting receipts conflict with remote** — same logical migration exists in repo with a different version and (for legacy) different security posture.
-3. **Pending local migrations remain** — base schema, RLS/security hardening, and legacy superseded files are not applied live. These are intentional pending/superseded, not missing receipts.
+1. **Remote receipts missing from repo** — resolved: 10 non-graph migrations now mirrored in repo.
+2. **Local legacy/rate-limiting receipts conflict with remote** — resolved: conflicting local files archived; remote versions are source of truth.
+3. **`claim_legacy_data` security gap** — resolved live via Management API migration endpoint as `20260628175506_claim_legacy_data_service_role_only`.
+4. **Pending local migrations remain** — base schema, RLS/security hardening are intentional pending; not migration-history drift.
 
 ## Proposed Reconciliation (Recommended)
 
@@ -71,9 +62,9 @@ Goal: eliminate remote-only receipt drift while preserving repo intent and avoid
 1. **Add 10 remote-only migration files** to `supabase/migrations/` using the exact remote `version_name.sql` format and the SQL retrieved from `schema_migrations.statements`.  
    These files represent the actual live history; adding them to repo does **not** mutate live state.
 2. **Resolve the conflicting legacy/rate-limiting pair**:
-   - Delete (or archive under `supabase/migrations/archive/`) the local `20260308000000_legacy_data_migration.sql` and `20260308000001_rate_limiting.sql`.
+   - Move the local `20260308000000_legacy_data_migration.sql`, `20260308000001_rate_limiting.sql`, and superseded `20260301141500_memory_nodes_pgvector_hnsw.sql` out of the scanned migration path to `supabase/migration_archive/`.
    - The remote versions now become the source of truth for those receipts.
-   - The repo's service-role-only hardening for `claim_legacy_data` is **not** applied live. Capture it as a new pending migration `20260627_claim_legacy_data_service_role_only.sql` if the team wants to apply it later.
+   - Capture the repo's service-role-only hardening for `claim_legacy_data` as a new migration, apply it live via Management API, and rename the local file to match the generated remote version.
 3. **Leave other local-only migrations as pending/superseded** with explicit classification in the provenance update.
 4. **Update `supabase/migrations/PROVENANCE_2026-06-05.md`** (or create `PROVENANCE_2026-06-27.md`) with the new matched table and classification.
 5. **Verify** with `npx supabase migration list --linked`; all remote-only entries should be matched.
@@ -81,32 +72,36 @@ Goal: eliminate remote-only receipt drift while preserving repo intent and avoid
 ## Implementation
 
 1. [FACT] Added 10 remote-only migration files to `supabase/migrations/` using exact `version_name.sql` naming and the SQL retrieved from `supabase_migrations.schema_migrations.statements`.
-2. [FACT] Moved conflicting local files `20260308000000_legacy_data_migration.sql` and `20260308000001_rate_limiting.sql` to `supabase/migrations/archive/`.
+2. [FACT] Moved conflicting local files `20260308000000_legacy_data_migration.sql` and `20260308000001_rate_limiting.sql` to `supabase/migration_archive/` (outside the migration path scanned by the CLI).
 3. [FACT] Created `tools/fetch_supabase_migration_statements.ts` for repeatable evidence collection.
 4. [FACT] Created `supabase/migrations/PROVENANCE_2026-06-27.md` with matched inventory and pending/superseded classification.
-5. [FACT] Verified with `npx supabase migration list --linked`: all remote entries now have matching local entries.
-6. [FACT] Repo contract gates `check:supabase-voice-metrics-contract:repo` and `check:supabase-graph-contract:repo` still pass.
+5. [FACT] Verified with `npx supabase migration list --linked`: all remote entries have matching local entries, and the archived conflicting files no longer appear in the local list.
+6. [FACT] Archived superseded `20260301141500_memory_nodes_pgvector_hnsw.sql` to `supabase/migration_archive/`.
+7. [FACT] Applied `claim_legacy_data` hardening live via Management API migration endpoint; remote version `20260628175506`. Renamed local file to `supabase/migrations/20260628175506_claim_legacy_data_service_role_only.sql`.
+8. [FACT] Verified live `proacl`: `claim_legacy_data` executable only by `postgres` and `service_role`.
+9. [FACT] Repo contract gates `check:supabase-voice-metrics-contract:repo` and `check:supabase-graph-contract:repo` still pass.
 
 ## Blast Radius
 
-- No live DDL, function deploy, secret, or data mutation.
-- Repo changes: new migration files, possible deletion/archival of 2 local files, provenance doc update.
-- Fresh local DB (`supabase start`) will now apply the full matched remote history.
+- One small live DDL: `claim_legacy_data` hardened to `service_role` only; no data mutation.
+- Repo changes: new migration files, archival of 3 local files, provenance doc update.
+- Fresh local DB (`supabase start`) will now apply the full matched remote history including the hardening migration.
 - `db-proxy` and Edge Function drift are out of scope for this migration-history audit.
 
 ## Rollback
 
-- Revert the Git commit / restore archived files.
-- Since no live changes are made, rollback is repo-only.
+- Rollback repo: revert the Git commit / restore archived files.
+- Rollback live: redeploy the previous `claim_legacy_data` definition (remote `20260309091308` version) via a new migration or manual DDL.
 
 ## Risk / Residual
 
-- [HIGH-RISK DRIFT] The live `claim_legacy_data` function is currently executable by `authenticated`, while the repo intended `service_role` only. This security gap remains unless a follow-up migration is applied.
+- `claim_legacy_data` hardening is now applied live; confirm no runtime callers were affected.
+- Pending RLS/security hardening migrations (`20260307_fix_rls_policies.sql`, `20260528182000_truth_boundary_p0_security_hardening.sql`, `20260528_release_auth_rls_hardening.sql`) remain unapplied; they have wider blast radius and need separate approval.
 - The temporary import-window migrations (`iskra_temp_*`) contain broad anon grants that are later revoked in subsequent remote migrations. On a fresh local DB they will be applied in order and leave the intended final state.
 
 ## ΔDΩΛ
 
-Δ: Remote migration receipts are fetched and ready to be committed into the Git migration path.  
-D: Management API read-only query, `supabase_migrations.schema_migrations`, repo migration files.  
-Ω: 0.94 for live inventory and statements; 0.78 for reconciliation because pending local migrations and security-posture gap still need decisions.  
-Λ: Revise after implementing the recommended reconciliation or after applying the service-role hardening migration.
+Δ: Remote-only non-graph migration receipts are committed in Git, conflicting local files archived, superseded file archived, and `claim_legacy_data` hardened live.  
+D: Management API read-only/write migration endpoints, `supabase_migrations.schema_migrations`, `supabase migration list --linked`, `pg_proc.proacl`, repo migration files.  
+Ω: 0.98 for migration inventory and security posture; 0.78 for full schema reproducibility because pending RLS/security migrations remain.  
+Λ: Revise after applying the pending RLS/security migrations or documenting why they remain pending.

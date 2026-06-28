@@ -26,12 +26,22 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DIST_ROOT = REPO_ROOT / "dist" / "agent-builder"
 TARGET_NAME = "iskra-workspace-agent-full-canon-synthesis-2026-06-27"
 CURRENT_PACKAGE = DIST_ROOT / "iskra-full-canon-unified-2026-06-10"
-CANON_ZIP = Path(
-    r"C:\Users\gabra\Desktop\Новая папка\iskra\iskra-full-canon-unified-2026-06-10\agent_files\canon.zip"
+DESKTOP_SOURCE_ROOT = (
+    Path.home()
+    / "Desktop"
+    / "\u041d\u043e\u0432\u0430\u044f \u043f\u0430\u043f\u043a\u0430"
+    / "iskra"
+    / "iskra-full-canon-unified-2026-06-10"
+    / "agent_files"
 )
-AGENT_FILES_ZIP = Path(
-    r"C:\Users\gabra\Desktop\Новая папка\iskra\iskra-full-canon-unified-2026-06-10\agent_files\agent_files.zip"
-)
+CANON_ZIP_CANDIDATES = [
+    DESKTOP_SOURCE_ROOT / "canon.zip",
+    DIST_ROOT / "iskra-full-canon-unified-2026-06-10" / "agent_files" / "canon.zip",
+]
+AGENT_FILES_ZIP_CANDIDATES = [
+    DESKTOP_SOURCE_ROOT / "agent_files.zip",
+    DIST_ROOT / "iskra-full-canon-unified-2026-06-10" / "agent_files" / "agent_files.zip",
+]
 
 AGENT_FILES_LAYER_ROOTS = {
     "consolidated_knowledge",
@@ -102,6 +112,14 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: fh.read(1024 * 1024), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def resolve_existing_path(candidates: list[Path], label: str) -> Path:
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    searched = "\n".join(f"- {candidate}" for candidate in candidates)
+    raise FileNotFoundError(f"{label} not found. Checked:\n{searched}")
 
 
 def safe_zip_rel(name: str) -> PurePosixPath:
@@ -818,20 +836,26 @@ non_claims:
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--canon-zip", default=str(CANON_ZIP))
-    parser.add_argument("--agent-files-zip", default=str(AGENT_FILES_ZIP))
+    parser.add_argument("--canon-zip", default=None)
+    parser.add_argument("--agent-files-zip", default=None)
     parser.add_argument("--target", default=str(DIST_ROOT / TARGET_NAME))
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args(argv)
 
     target = Path(args.target)
     ensure_target(target, args.force)
+    canon_zip = Path(args.canon_zip) if args.canon_zip else resolve_existing_path(CANON_ZIP_CANDIDATES, "canon.zip")
+    agent_files_zip = (
+        Path(args.agent_files_zip)
+        if args.agent_files_zip
+        else resolve_existing_path(AGENT_FILES_ZIP_CANDIDATES, "agent_files.zip")
+    )
 
     records: list[WriteRecord] = []
     conflicts: list[dict[str, object]] = []
 
     canon_inventory = copy_zip(
-        Path(args.canon_zip),
+        canon_zip,
         target,
         source_label="canon_zip",
         mapper=map_canon_entry,
@@ -839,7 +863,7 @@ def main(argv: list[str]) -> int:
         conflicts=conflicts,
     )
     agent_inventory = copy_zip(
-        Path(args.agent_files_zip),
+        agent_files_zip,
         target,
         source_label="agent_files_zip",
         mapper=map_agent_entry,
