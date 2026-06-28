@@ -1,234 +1,247 @@
 {
-  "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-27T16:08:44Z",
-  "status": "WORKSPACE_AGENT_FILE_OVERLAY_PUBLISHED_WITH_PROMPT_SAVE_BLOCKER",
-  "builder_ui_status": "published-file-overlay-version-51; live-prompt-save-blocked; verified-live-builder not claimed",
-  "active_target": "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
-  "scope": "chatgpt_workspace_agent_alignment_plus_user_added_skill_pack",
-  "package_inventory": {
-    "manifest_entries_expected_after_final_regeneration": 435,
-    "zip_entries_expected_after_final_regeneration": 437,
-    "manifest_rule": "static clean-subset files except MANIFEST.sha256, SURFACE_INVENTORY.json, and ZIP_RECEIPT.json",
-    "zip_rule": "manifest entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json excluded",
-    "skill_pack": {
-      "path": "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes",
-      "package_skill_count": 32,
-      "observed_live_skill_count": 32,
-      "name_alignment": "PASS"
-    }
-  },
-  "workspace_agent_alignment": {
-    "status": "PASS_LOCAL_AND_PARTIAL_LIVE_FILE_OVERLAY",
-    "live_agent_name": "Искра vΩ.7",
-    "observed_via": "Codex Desktop Workspace Agents connector plus user screenshot",
-    "observed_at": "2026-06-27T16:08:44Z",
-    "chatgpt_channel": "present",
-    "api_channel": "active; published; trigger id redacted",
-    "slack_channel": "not configured",
-    "memory": "per_user; platform-managed Workspace Agent Memory surface",
-    "memory_surface": {
-      "status": "OBSERVED_BY_USER_SCREENSHOT_NOT_ENUMERATED",
-      "folders_observed": [
-        "ChatGPT",
-        "API"
-      ],
-      "sample_paths_observed": [
-        "archive/",
-        "dreamspace/",
-        "horizon/",
-        "imports/",
-        "shadow-core/",
-        "project-memory.md",
-        "development-diary.md",
-        "open-loops.md",
-        "adr-log.md",
-        "evidence-index.md"
-      ],
-      "boundary": "separate from Builder Files and package agent_files/memory_*; ordinary file upload does not populate Workspace Agent Memory"
-    },
-    "app_connectors": "GitHub, Ace Knowledge Graph, Remote Desktop Commander, Supabase observed",
-    "skills": "33 uploaded skills observed; package 32-skill source names match the Iskra skill-pack subset; iskra-toolchain-bridge observed separately",
-    "file_tree": "handle observed; screenshot shows 269 files before overlay; draft list_agent_file_tree loaded root metadata after overlay with tree_revision=1147; immutable published-version query returned tree_revision=1147 but did not enumerate child nodes; byte-level parity not captured",
-    "published_overlay_files": [
-      "2026-06-27-instructions-full.md",
-      "2026-06-27-official-platform-and-memory-boundary.md"
-    ],
-    "published_overlay_version": 51,
-    "prompt_alignment": "live prompt remains stale relative to local corrected Memory-boundary package instructions; prompt/profile/API-channel draft-save calls failed with Workspace Agents draft save request failed",
-    "official_docs_alignment": {
-      "status": "PASS_WITH_BOUNDED_TERMS",
-      "sources_checked": [
-        "help.openai.com ChatGPT Workspace Agents for Enterprise and Business",
-        "developers.openai.com/workspace-agents/trigger-runs",
-        "developers.openai.com/workspace-agents/authentication"
-      ],
-      "boundaries": [
-        "research-preview / workspace-scoped availability only",
-        "202 Accepted means accepted or queued, not completed",
-        "Workspace Agent access token is distinct from OpenAI Platform API key",
-        "no public official 2026-11-30 deprecation claim retained as current fact"
-      ]
-    }
-  },
-  "added_or_promoted_entries": [
-    "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md",
-    "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-    "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
-    "governance/adr_20260627_workspace_agent_live_alignment.md",
-    "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
-    "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/",
-    "agent_files/live_update_receipts/2026-06-27-official-platform-and-memory-boundary.md"
-  ],
-  "updated_entries": [
-    "agent.yaml",
-    "README.md",
-    "README_AGENT_BUILDER_UPLOAD.md",
-    "QC_CHECKS.md",
-    "CANON_TRACE_MAP.md",
-    "BUILDER_ASSEMBLY_MANIFEST.md",
-    "BUILDER_UPLOAD_EVIDENCE.md",
-    "agent_files/instructions",
-    "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
-    "agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
-    "agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md",
-    "agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
-    "agent_files/files_for_agent_builder/17_RUNTIME_SURFACE_MAP.md",
-    "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md",
-    "tools/clean_export.py",
-    "tools/consolidate_rag_knowledge.py",
-    "tools/generate_manifest.py",
-    "tools/workspace_surface_audit.py"
-  ],
-  "surface_statuses": {
-    "workspace_agent_config": {
-      "status": "OBSERVED_AND_FILE_OVERLAY_PUBLISHED",
-      "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-      "boundary": "config evidence only; partial file-tree metadata observed; not byte-level file parity or prompt-level verification"
-    },
-    "workspace_agent_prompt_alignment": {
-      "status": "DRIFT_LIVE_PROMPT_SAVE_BLOCKED",
-      "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-      "boundary": "local package contains corrected Memory boundary and published overlay files; live main prompt remains stale because connector prompt/profile/API-channel save calls failed"
-    },
-    "workspace_agent_file_overlay": {
-      "status": "PUBLISHED_VERSION_51",
-      "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-      "files": [
-        "2026-06-27-instructions-full.md",
-        "2026-06-27-official-platform-and-memory-boundary.md"
-      ],
-      "boundary": "files were uploaded and readable in draft before publishing version 51; publish output used the updated file tree revision, but immutable published node listing did not enumerate child nodes; ordinary files do not override main prompt by themselves and do not prove Workspace Agent Memory contents"
-    },
-    "workspace_agent_skill_pack": {
-      "status": "PASS_NAME_COUNT_ALIGNMENT",
-      "receipt": "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
-      "boundary": "package 32-skill source; not byte-identical live skill proof and not the separate iskra-toolchain-bridge skill"
-    },
-    "workspace_agent_memory": {
-      "status": "OBSERVED_UI_NOT_WRITE_TESTED",
-      "receipt": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-      "boundary": "platform-managed per-user Memory; not populated by Builder file upload and not proven by package memory_seed/current files"
-    },
-    "workspace_surface_audit": {
-      "status": "PASS_REGENERATED",
-      "tool": "tools/workspace_surface_audit.py",
-      "anti_self_reference": "SURFACE_INVENTORY.json and ZIP_RECEIPT.json excluded from package aggregate"
-    },
-    "surface_inventory": {
-      "status": "PASS_GENERATED",
-      "path": "SURFACE_INVENTORY.json",
-      "note": "dynamic receipt; not hashed by MANIFEST.sha256"
-    },
-    "clean_export": {
-      "status": "PASS",
-      "forbidden_hits": 0,
-      "missing_files": 0,
-      "hash_mismatches": 0
-    },
-    "live_builder": {
-      "status": "NOT_VERIFIED",
-      "required": [
-        "prompt bootstrap still must be applied through Builder UI or a repaired Workspace Agents save path",
-        "confirm 19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md is visible through the selected knowledge/file path",
-        "do not claim live prompt parity until get_current_agent_config shows the corrected prompt or prompt-level Builder evidence is captured",
-        "confirm user-added skills and iskra-toolchain-bridge are active at the intended versions",
-        "confirm Workspace Agent Memory write/read behavior separately from Builder Files",
-        "run acceptance A-Y plus C2/C3",
-        "record prompt-level live Builder evidence"
-      ]
-    }
-  },
-  "gates": {
-    "json_receipts": {
-      "status": "PASS",
-      "files": [
-        "SURFACE_INVENTORY.json",
-        "GITHUB_TREE_INDEX.json",
-        "HOOK_SMOKE_RECEIPT.json",
-        "SUPABASE_ADVISOR_RECEIPT.json",
-        "UNIFIED_QC_RECEIPT.json",
-        "ZIP_RECEIPT.json"
-      ]
-    },
-    "python_compile": {
-      "status": "PASS",
-      "files": [
-        "tools/clean_export.py",
-        "tools/consolidate_rag_knowledge.py",
-        "tools/generate_manifest.py",
-        "tools/workspace_surface_audit.py"
-      ]
-    },
-    "secret_scan": {
-      "status": "PASS_NO_HIGH_CONFIDENCE_SECRET_VALUES",
-      "policy_or_placeholder_hits": [
-        "GEMINI_API_KEY environment variable references",
-        "your-gemini-api-key-here placeholder"
-      ]
-    },
-    "local_tests": {
-      "status": "PASS",
-      "checks": [
-        "reassemble_interface_style PASS",
-        "validate_terms PASS",
-        "validate_delta PASS checked=78 skipped=247 failed=0",
-        "horizon unit tests PASS ran=9",
-        "agents-sdk fallback tests PASS ran=9",
-        "skill-pack name alignment PASS package=32 live_skill_pack_subset=32 missing=0 extra=0; live_total_skills=33"
-      ]
-    }
-  },
-  "non_claims": [
-    "Not verified in Builder UI",
-    "Live Workspace Agent mutation was performed: two overlay files were published as version 51",
-    "Main prompt/profile/API-channel instructions were not updated because Workspace Agents draft save request failed",
-    "Live draft prompt is not claimed to include this local package's corrected Memory boundary",
-    "No Workspace Agent access token or secret is stored",
-    "Builder file upload does not prove live Workspace Agent Memory contents",
-    "Package agent_files/memory_* files are seed/reference receipts, not live Memory proof",
-    "Skill name/count alignment is not byte-identical live skill proof",
-    "API channel active does not mean any API-triggered task has completed",
-    "Local helper files do not prove hosted Builder execution",
-    "SENSE_EVENT and DREAM_SEED are package-level accepted-memory overlays, not live Builder proof"
-  ],
-  "next": "Local manifest, surface inventory, clean zip, and ZIP receipt are regenerated. Run live Builder verification only after explicit approval for the exact Workspace Agent target.",
-  "delta": {
-    "delta": "ChatGPT Workspace Agent live config, live prompt drift, platform-managed Memory, and user-added Iskra skill pack are explicit package surfaces",
-    "data": "Codex Desktop Workspace Agents config, local skill-pack inventory, manifest policy, clean export tooling",
-    "omega": 0.9,
-    "lambda": "rerun after any package update, skill-pack rebuild, live Workspace Agent publish, Memory write/read claim, or Workspace Agent API/auth change"
-  },
-  "self_modernization_2026_06_28": {
-    "status": "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
-    "protocols": [
-      "SENSE_EVENT",
-      "DREAM_SEED"
-    ],
-    "files": [
-      "agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md",
-      "agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
-      "agent_files/files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md"
-    ],
-    "non_claim": "live Builder prompt mirror pending; verified-live-builder not claimed"
-  }
+    "release":  "iskra-full-canon-unified-2026-06-10",
+    "generated_at":  "2026-06-28T18:57:23Z",
+    "status":  "WORKSPACE_AGENT_FILE_OVERLAY_PUBLISHED_WITH_PROMPT_SAVE_BLOCKER",
+    "builder_ui_status":  "published-file-overlay-version-51; live-prompt-save-blocked; verified-live-builder not claimed",
+    "active_target":  "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
+    "scope":  "chatgpt_workspace_agent_alignment_plus_user_added_skill_pack",
+    "package_inventory":  {
+                              "manifest_entries_expected_after_final_regeneration":  439,
+                              "zip_entries_expected_after_final_regeneration":  441,
+                              "manifest_rule":  "static clean-subset files except MANIFEST.sha256, SURFACE_INVENTORY.json, and ZIP_RECEIPT.json",
+                              "zip_rule":  "manifest entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json excluded",
+                              "skill_pack":  {
+                                                 "path":  "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes",
+                                                 "package_skill_count":  32,
+                                                 "observed_live_skill_count":  32,
+                                                 "name_alignment":  "PASS"
+                                             }
+                          },
+    "workspace_agent_alignment":  {
+                                      "status":  "PASS_LOCAL_AND_PARTIAL_LIVE_FILE_OVERLAY",
+                                      "live_agent_name":  "РСЃРєСЂР° vО©.7",
+                                      "observed_via":  "Codex Desktop Workspace Agents connector plus user screenshot",
+                                      "observed_at":  "2026-06-27T16:08:44Z",
+                                      "chatgpt_channel":  "present",
+                                      "api_channel":  "active; published; trigger id redacted",
+                                      "slack_channel":  "not configured",
+                                      "memory":  "per_user; platform-managed Workspace Agent Memory surface",
+                                      "memory_surface":  {
+                                                             "status":  "OBSERVED_BY_USER_SCREENSHOT_NOT_ENUMERATED",
+                                                             "folders_observed":  [
+                                                                                      "ChatGPT",
+                                                                                      "API"
+                                                                                  ],
+                                                             "sample_paths_observed":  [
+                                                                                           "archive/",
+                                                                                           "dreamspace/",
+                                                                                           "horizon/",
+                                                                                           "imports/",
+                                                                                           "shadow-core/",
+                                                                                           "project-memory.md",
+                                                                                           "development-diary.md",
+                                                                                           "open-loops.md",
+                                                                                           "adr-log.md",
+                                                                                           "evidence-index.md"
+                                                                                       ],
+                                                             "boundary":  "separate from Builder Files and package agent_files/memory_*; ordinary file upload does not populate Workspace Agent Memory"
+                                                         },
+                                      "app_connectors":  "GitHub, Ace Knowledge Graph, Remote Desktop Commander, Supabase observed",
+                                      "skills":  "33 uploaded skills observed; package 32-skill source names match the Iskra skill-pack subset; iskra-toolchain-bridge observed separately",
+                                      "file_tree":  "handle observed; screenshot shows 269 files before overlay; draft list_agent_file_tree loaded root metadata after overlay with tree_revision=1147; immutable published-version query returned tree_revision=1147 but did not enumerate child nodes; byte-level parity not captured",
+                                      "published_overlay_files":  [
+                                                                      "2026-06-27-instructions-full.md",
+                                                                      "2026-06-27-official-platform-and-memory-boundary.md"
+                                                                  ],
+                                      "published_overlay_version":  51,
+                                      "prompt_alignment":  "live prompt remains stale relative to local corrected Memory-boundary package instructions; prompt/profile/API-channel draft-save calls failed with Workspace Agents draft save request failed",
+                                      "official_docs_alignment":  {
+                                                                      "status":  "PASS_WITH_BOUNDED_TERMS",
+                                                                      "sources_checked":  [
+                                                                                              "help.openai.com ChatGPT Workspace Agents for Enterprise and Business",
+                                                                                              "developers.openai.com/workspace-agents/trigger-runs",
+                                                                                              "developers.openai.com/workspace-agents/authentication"
+                                                                                          ],
+                                                                      "boundaries":  [
+                                                                                         "research-preview / workspace-scoped availability only",
+                                                                                         "202 Accepted means accepted or queued, not completed",
+                                                                                         "Workspace Agent access token is distinct from OpenAI Platform API key",
+                                                                                         "no public official 2026-11-30 deprecation claim retained as current fact"
+                                                                                     ]
+                                                                  }
+                                  },
+    "added_or_promoted_entries":  [
+                                      "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md",
+                                      "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+                                      "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
+                                      "governance/adr_20260627_workspace_agent_live_alignment.md",
+                                      "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
+                                      "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/",
+                                      "agent_files/live_update_receipts/2026-06-27-official-platform-and-memory-boundary.md"
+                                  ],
+    "updated_entries":  [
+                            "agent.yaml",
+                            "README.md",
+                            "README_AGENT_BUILDER_UPLOAD.md",
+                            "QC_CHECKS.md",
+                            "CANON_TRACE_MAP.md",
+                            "BUILDER_ASSEMBLY_MANIFEST.md",
+                            "BUILDER_UPLOAD_EVIDENCE.md",
+                            "agent_files/instructions",
+                            "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+                            "agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
+                            "agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md",
+                            "agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
+                            "agent_files/files_for_agent_builder/17_RUNTIME_SURFACE_MAP.md",
+                            "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md",
+                            "tools/clean_export.py",
+                            "tools/consolidate_rag_knowledge.py",
+                            "tools/generate_manifest.py",
+                            "tools/workspace_surface_audit.py"
+                        ],
+    "surface_statuses":  {
+                             "workspace_agent_config":  {
+                                                            "status":  "OBSERVED_AND_FILE_OVERLAY_PUBLISHED",
+                                                            "receipt":  "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+                                                            "boundary":  "config evidence only; partial file-tree metadata observed; not byte-level file parity or prompt-level verification"
+                                                        },
+                             "workspace_agent_prompt_alignment":  {
+                                                                      "status":  "DRIFT_LIVE_PROMPT_SAVE_BLOCKED",
+                                                                      "receipt":  "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+                                                                      "boundary":  "local package contains corrected Memory boundary and published overlay files; live main prompt remains stale because connector prompt/profile/API-channel save calls failed"
+                                                                  },
+                             "workspace_agent_file_overlay":  {
+                                                                  "status":  "PUBLISHED_VERSION_51",
+                                                                  "receipt":  "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+                                                                  "files":  [
+                                                                                "2026-06-27-instructions-full.md",
+                                                                                "2026-06-27-official-platform-and-memory-boundary.md"
+                                                                            ],
+                                                                  "boundary":  "files were uploaded and readable in draft before publishing version 51; publish output used the updated file tree revision, but immutable published node listing did not enumerate child nodes; ordinary files do not override main prompt by themselves and do not prove Workspace Agent Memory contents"
+                                                              },
+                             "workspace_agent_skill_pack":  {
+                                                                "status":  "PASS_NAME_COUNT_ALIGNMENT",
+                                                                "receipt":  "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
+                                                                "boundary":  "package 32-skill source; not byte-identical live skill proof and not the separate iskra-toolchain-bridge skill"
+                                                            },
+                             "workspace_agent_memory":  {
+                                                            "status":  "OBSERVED_UI_NOT_WRITE_TESTED",
+                                                            "receipt":  "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+                                                            "boundary":  "platform-managed per-user Memory; not populated by Builder file upload and not proven by package memory_seed/current files"
+                                                        },
+                             "workspace_surface_audit":  {
+                                                             "status":  "PASS_REGENERATED",
+                                                             "tool":  "tools/workspace_surface_audit.py",
+                                                             "anti_self_reference":  "SURFACE_INVENTORY.json and ZIP_RECEIPT.json excluded from package aggregate"
+                                                         },
+                             "surface_inventory":  {
+                                                       "status":  "PASS_GENERATED",
+                                                       "path":  "SURFACE_INVENTORY.json",
+                                                       "note":  "dynamic receipt; not hashed by MANIFEST.sha256"
+                                                   },
+                             "clean_export":  {
+                                                  "status":  "PASS",
+                                                  "forbidden_hits":  0,
+                                                  "missing_files":  0,
+                                                  "hash_mismatches":  0
+                                              },
+                             "live_builder":  {
+                                                  "status":  "NOT_VERIFIED",
+                                                  "required":  [
+                                                                   "prompt bootstrap still must be applied through Builder UI or a repaired Workspace Agents save path",
+                                                                   "confirm 19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md is visible through the selected knowledge/file path",
+                                                                   "do not claim live prompt parity until get_current_agent_config shows the corrected prompt or prompt-level Builder evidence is captured",
+                                                                   "confirm user-added skills and iskra-toolchain-bridge are active at the intended versions",
+                                                                   "confirm Workspace Agent Memory write/read behavior separately from Builder Files",
+                                                                   "run acceptance A-Y plus C2/C3",
+                                                                   "record prompt-level live Builder evidence"
+                                                               ]
+                                              }
+                         },
+    "gates":  {
+                  "json_receipts":  {
+                                        "status":  "PASS",
+                                        "files":  [
+                                                      "SURFACE_INVENTORY.json",
+                                                      "GITHUB_TREE_INDEX.json",
+                                                      "HOOK_SMOKE_RECEIPT.json",
+                                                      "SUPABASE_ADVISOR_RECEIPT.json",
+                                                      "UNIFIED_QC_RECEIPT.json",
+                                                      "ZIP_RECEIPT.json"
+                                                  ]
+                                    },
+                  "python_compile":  {
+                                         "status":  "PASS",
+                                         "files":  [
+                                                       "tools/clean_export.py",
+                                                       "tools/consolidate_rag_knowledge.py",
+                                                       "tools/generate_manifest.py",
+                                                       "tools/workspace_surface_audit.py"
+                                                   ]
+                                     },
+                  "secret_scan":  {
+                                      "status":  "PASS_NO_HIGH_CONFIDENCE_SECRET_VALUES",
+                                      "policy_or_placeholder_hits":  [
+                                                                         "GEMINI_API_KEY environment variable references",
+                                                                         "your-gemini-api-key-here placeholder"
+                                                                     ]
+                                  },
+                  "local_tests":  {
+                                      "status":  "PASS",
+                                      "checks":  [
+                                                     "reassemble_interface_style PASS",
+                                                     "validate_terms PASS",
+                                                     "validate_delta PASS checked=78 skipped=247 failed=0",
+                                                     "horizon unit tests PASS ran=9",
+                                                     "agents-sdk fallback tests PASS ran=9",
+                                                     "skill-pack name alignment PASS package=32 live_skill_pack_subset=32 missing=0 extra=0; live_total_skills=33"
+                                                 ]
+                                  }
+              },
+    "non_claims":  [
+                       "Not verified in Builder UI",
+                       "Live Workspace Agent mutation was performed: two overlay files were published as version 51",
+                       "Main prompt/profile/API-channel instructions were not updated because Workspace Agents draft save request failed",
+                       "Live draft prompt is not claimed to include this local package\u0027s corrected Memory boundary",
+                       "No Workspace Agent access token or secret is stored",
+                       "Builder file upload does not prove live Workspace Agent Memory contents",
+                       "Package agent_files/memory_* files are seed/reference receipts, not live Memory proof",
+                       "Skill name/count alignment is not byte-identical live skill proof",
+                       "API channel active does not mean any API-triggered task has completed",
+                       "Local helper files do not prove hosted Builder execution",
+                       "SENSE_EVENT and DREAM_SEED are package-level accepted-memory overlays, not live Builder proof"
+                   ],
+    "next":  "Local manifest, surface inventory, clean zip, and ZIP receipt are regenerated. Run live Builder verification only after explicit approval for the exact Workspace Agent target.",
+    "delta":  {
+                  "delta":  "ChatGPT Workspace Agent live config, live prompt drift, platform-managed Memory, and user-added Iskra skill pack are explicit package surfaces",
+                  "data":  "Codex Desktop Workspace Agents config, local skill-pack inventory, manifest policy, clean export tooling",
+                  "omega":  0.9,
+                  "lambda":  "rerun after any package update, skill-pack rebuild, live Workspace Agent publish, Memory write/read claim, or Workspace Agent API/auth change"
+              },
+    "self_modernization_2026_06_28":  {
+                                          "status":  "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
+                                          "protocols":  [
+                                                            "SENSE_EVENT",
+                                                            "DREAM_SEED"
+                                                        ],
+                                          "files":  [
+                                                        "agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md",
+                                                        "agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
+                                                        "agent_files/files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md"
+                                                    ],
+                                          "non_claim":  "live Builder prompt mirror pending; verified-live-builder not claimed"
+                                      },
+    "post_ledger_builder_mirror_2026_06_28":  {
+                                                  "status":  "PASS_PACKAGE_RECEIPTS_REGENERATED_NO_LIVE_MUTATION",
+                                                  "base_main":  "7fd8d18f0255bce2cdfd0e618749a9adc84f71ab",
+                                                  "clean_export":  {
+                                                                       "manifest_entries":  439,
+                                                                       "file_count":  441,
+                                                                       "forbidden_hits":  0,
+                                                                       "missing_files":  0,
+                                                                       "hash_mismatch_count":  0
+                                                                   },
+                                                  "clean_zip_receipt":  "ZIP_RECEIPT.json holds exact archive sha256/bytes because ZIP_RECEIPT.json is excluded from MANIFEST.sha256 and from the clean zip.",
+                                                  "boundary":  "No live Workspace Agent mutation, no Builder UI upload proof, no live prompt parity claim."
+                                              }
 }
