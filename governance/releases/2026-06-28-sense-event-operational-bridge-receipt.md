@@ -3,7 +3,7 @@
 Date: 2026-06-28
 Scope: GitHub governance mirror for Iskra vOmega7 behavior
 Mode: GOVERNANCE / AUDIT / WORKFLOW_OPS
-Status: GITHUB PR PREPARED / LIVE BUILDER NOT VERIFIED
+Status: GITHUB PR OPEN / LIVE BUILDER NOT VERIFIED
 
 ## Intake
 
@@ -68,6 +68,7 @@ These tests are required before marking Builder prompt mirror as active.
 - Local artifact bytes: `5128`.
 - Local artifact sha256: `a2f4fba39d6d22d2f81f2a63f1e9f0a06320ce7a12c56cad9f2c46d91b835e73`.
 - GitHub branch: `codex/sense-event-operational-bridge-20260628`.
+- GitHub PR: `https://github.com/serhiipriadko2-sys/iskra/pull/220`.
 
 ## Verification
 
@@ -77,12 +78,15 @@ PASS:
 - Default branch verified: `main`.
 - No existing `SENSE_EVENT` file found by repository search before the write.
 - No open PR from the current connector user was present before the write.
-- Change-set is docs/governance only.
+- GitHub compare before PR: 3 files added, 0 modified/deleted, 386 additions.
+- PR #220 opened against `main` and rechecked as mergeable.
+- Patch inspection matched the expected three-file docs/governance change-set.
 - No secrets, credentials, tokens, service-role values, or private keys added.
 
 PENDING:
 
 - GitHub PR review/merge.
+- Pending Netlify/GitBook statuses on PR head, if repository policy requires them.
 - Builder-facing package mirror.
 - Manifest and zip regeneration.
 - Live Builder prompt parity test.
@@ -96,11 +100,11 @@ Correct status after this PR is `accepted GitHub governance mirror`.
 
 ## Next Step
 
-Open a focused PR from `codex/sense-event-operational-bridge-20260628` into `main`, then run review/CI. After merge, create a separate package-mirror pass for Builder-facing files and acceptance prompts.
+Review PR #220. After merge, create a separate package-mirror pass for Builder-facing files, regenerated manifests/receipts, and live acceptance prompts T1-T6.
 
 ## ∆DΩΛ
 
 ∆: SENSE_EVENT is recorded as a governance-level operational bridge instead of an ambiguous somatic metaphor.
-D: Debate critique, local modernization artifact, ADR, protocol doc, this receipt, GitHub connector verification.
+D: Debate critique, local modernization artifact, ADR, protocol doc, this receipt, GitHub connector verification, PR #220.
 Ω: 0.9 for GitHub governance mirror after PR creation; 0.45 for live Builder activation.
 Λ: Revisit when PR merges, package mirror is regenerated, or live Builder T1-T6 results are available.
