@@ -1,0 +1,12 @@
+interface:
+  display_name: Искра GitHub Operator
+  short_description: Repository inspection, PR planning, diffs, and safe GitHub actions.
+  icon: code
+  brand_color: '#111827'
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

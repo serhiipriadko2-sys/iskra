@@ -1,0 +1,54 @@
+{
+  "release": "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+  "generated_at": "2026-06-28T18:16:40Z",
+  "status": "PASS",
+  "archive_kind": "sidecar_clean_export_zip",
+  "archive_path": "../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
+  "archive_sha256": "552ff0e05235ddb4807c77110f43f1cef4b93f47356d3dd04be5c17102d804e6",
+  "archive_bytes": 2915594,
+  "entries": 394,
+  "manifest_entries": 392,
+  "inventory_rule": "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
+  "clean_export": {
+    "command": "py tools/clean_export.py --source manifest --zip ../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip --force",
+    "file_count": 394,
+    "total_bytes": 8868635,
+    "forbidden_hits": 0,
+    "missing_files": 0,
+    "hash_mismatches": 0
+  },
+  "source_archive_parity": {
+    "canon_zip_entries": 86,
+    "agent_files_zip_entries": 266,
+    "source_inventory": "SOURCE_ARCHIVE_INVENTORY.json"
+  },
+  "included_dynamic_receipts": [
+    "SURFACE_INVENTORY.json"
+  ],
+  "included_qc_receipts": [
+    "UNIFIED_QC_RECEIPT.json",
+    "WORKSPACE_AGENT_READONLY_RECEIPT.json"
+  ],
+  "workspace_agent_boundary": {
+    "delivery_boundary": "package-first; no live Workspace Agent mutation performed",
+    "target_candidate": "Iskra vOmega.7 / agt_6a3aba...d24f",
+    "verified_live_builder": false
+  },
+  "non_claims": [
+    "A clean zip proves local transport readiness only",
+    "No Workspace Agent files, instructions, skills, apps, Memory, API channel, Slack channel, schedules, or publish state were changed by this package build",
+    "Workspace Agent Memory parity is not proven by package memory_seed/current files",
+    "API 202 Accepted remains queued/accepted semantics, not final task completion",
+    "verified-live-builder is not claimed",
+    "SENSE_EVENT and DREAM_SEED are package-level overlays only; live Builder prompt parity is not claimed"
+  ],
+  "next": "Request explicit approval before any Workspace Agent upload, prompt replacement, skill change, app change, API/Slack channel change, Memory write/read test, or publish.",
+  "self_modernization_2026_06_28": {
+    "status": "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
+    "protocols": [
+      "SENSE_EVENT",
+      "DREAM_SEED"
+    ],
+    "receipt": "SELF_MODERNIZATION_RECEIPT.json"
+  }
+}

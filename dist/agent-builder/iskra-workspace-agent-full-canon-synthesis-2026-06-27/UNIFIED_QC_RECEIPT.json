@@ -1,0 +1,89 @@
+{
+  "release": "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+  "generated_at": "2026-06-27T19:35:25Z",
+  "status": "PASS_LOCAL_QC_NO_LIVE_MUTATION",
+  "source_archive_parity": {
+    "canon_zip_entries": "PASS 86/86",
+    "agent_files_zip_entries": "PASS 266/266",
+    "conflicts": 0,
+    "inventory": "SOURCE_ARCHIVE_INVENTORY.json"
+  },
+  "local_gates": [
+    {
+      "name": "manifest_generation",
+      "status": "PASS",
+      "detail": "Generated MANIFEST.sha256 entries before QC receipts: 386; regenerated after QC receipts in final pass"
+    },
+    {
+      "name": "reassemble_interface_style",
+      "status": "PASS",
+      "detail": "parts=5 bytes=3400429 sha256=6fc341ac84df29e64b4dd51c0a05608d83b4e798fc4db6b1b5a09353412de345"
+    },
+    {
+      "name": "validate_terms",
+      "status": "PASS",
+      "detail": "PASS terminology"
+    },
+    {
+      "name": "validate_delta",
+      "status": "PASS",
+      "detail": "checked=57 skipped=215 failed=0"
+    },
+    {
+      "name": "horizon_unit_tests",
+      "status": "PASS",
+      "detail": "Ran 9 tests OK"
+    },
+    {
+      "name": "agents_sdk_fallback_tests",
+      "status": "PASS_WITH_EXTERNAL_PINNED_VENV",
+      "detail": "Ran 9 tests OK using current package pinned .venv; clean package intentionally excludes .venv"
+    },
+    {
+      "name": "connector_contracts",
+      "status": "PASS",
+      "detail": "contracts=8"
+    },
+    {
+      "name": "skill_pack_count",
+      "status": "PASS",
+      "detail": "package hermes skill directories=32"
+    },
+    {
+      "name": "secret_scan",
+      "status": "PASS_NO_HIGH_CONFIDENCE_SECRET_VALUES",
+      "detail": "strict boundary patterns; URL false positive risk-sk excluded"
+    },
+    {
+      "name": "json_receipts",
+      "status": "PASS",
+      "detail": "SOURCE_ARCHIVE_INVENTORY, SURFACE_INVENTORY, ZIP_RECEIPT parsed before final receipt regeneration"
+    }
+  ],
+  "read_only_workspace_agent": {
+    "status": "OBSERVED_READONLY_NO_MUTATION",
+    "receipt": "WORKSPACE_AGENT_READONLY_RECEIPT.json",
+    "boundary": "observed config/API/root file metadata only; not live byte parity and not Builder behavioral acceptance"
+  },
+  "non_claims": [
+    "verified-live-builder not claimed",
+    "Workspace Agent Memory parity not claimed",
+    "No Workspace Agent files, skills, prompt, apps, API channel, Slack channel, schedules, or publish state were changed",
+    "API 202 Accepted remains accepted/queued semantics only",
+    "SENSE_EVENT and DREAM_SEED are package-level accepted-memory overlays, not live Builder proof"
+  ],
+  "next": "Regenerate manifest, surface inventory, clean zip, and ZIP_RECEIPT after this QC receipt, then run any live upload only after explicit approval.",
+  "self_modernization_2026_06_28": {
+    "status": "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
+    "protocols": [
+      "SENSE_EVENT",
+      "DREAM_SEED"
+    ],
+    "files": [
+      "agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md",
+      "agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
+      "agent_files/files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md"
+    ],
+    "non_claim": "live Builder prompt mirror pending; verified-live-builder not claimed"
+  }
+}

@@ -1,0 +1,12 @@
+name: Iskra vOmega.7 Workspace Agent Full Canon Synthesis
+version: 2026-06-27
+status: packaged-as-upload-set
+target_surface: ChatGPT Workspace Agents
+live_mutation: false
+instructions: agent_files/instructions
+canon_source: agent_files/canon_source_files
+acceptance_tests: agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md
+non_claims:
+  - not verified-live-builder
+  - not live Workspace Agent Memory proof
+  - not API task completion proof

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="sparkCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff7e6"/>
+      <stop offset="40%" stop-color="#ffcc00"/>
+      <stop offset="80%" stop-color="#ff6600"/>
+      <stop offset="100%" stop-color="#cc2200"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="#1a1a2e"/>
+  <!-- Outer flame rays -->
+  <g fill="url(#sparkCore)" filter="url(#glow)" opacity="0.9">
+    <path d="M256 60 L280 180 L256 220 L232 180 Z"/>
+    <path d="M256 452 L280 332 L256 292 L232 332 Z"/>
+    <path d="M60 256 L180 280 L220 256 L180 232 Z"/>
+    <path d="M452 256 L332 280 L292 256 L332 232 Z"/>
+    <path d="M118 118 L200 200 L220 180 L180 118 Z" transform="rotate(0 256 256)"/>
+    <path d="M394 118 L312 200 L292 180 L332 118 Z"/>
+    <path d="M118 394 L200 312 L220 332 L180 394 Z"/>
+    <path d="M394 394 L312 312 L292 332 L332 394 Z"/>
+  </g>
+  <!-- Inner spark core -->
+  <circle cx="256" cy="256" r="64" fill="#fff7e6" filter="url(#glow)"/>
+  <circle cx="256" cy="256" r="36" fill="#ffcc00"/>
+  <!-- Center point / difference symbol -->
+  <circle cx="256" cy="256" r="12" fill="#1a1a2e"/>
+</svg>

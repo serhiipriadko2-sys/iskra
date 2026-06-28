@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iskra-agent"
+version = "0.1.0"
+description = "Iskra vOmega.7 code-first fallback agent for the OpenAI Agents SDK"
+requires-python = ">=3.12"
+dependencies = [
+  "openai-agents==0.17.6",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+iskra_agent = ["py.typed"]

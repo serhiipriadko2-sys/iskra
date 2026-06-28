@@ -1,0 +1,34 @@
+{
+  "name": "iskra-toolchain-bridge",
+  "version": "0.3.0",
+  "description": "Runtime bridge for Iskra toolchain discipline: connector contracts, Codex activation diagnostics, live connector receipts, vault-safe git clone helpers, and local smoke checks.",
+  "author": {
+    "name": "Iskra vOmega.7"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "iskra",
+    "toolchain",
+    "connectors",
+    "runtime",
+    "security"
+  ],
+  "interface": {
+    "displayName": "Iskra Toolchain Bridge",
+    "shortDescription": "Connector contracts and runtime smoke checks for Iskra.",
+    "longDescription": "Provides a Codex-facing skill plus scripts for truthful connector expansion, Codex Desktop activation diagnostics, live connector receipts, vault-safe git clone handling, local runtime validation, and receipt-backed toolchain work.",
+    "developerName": "Iskra vOmega.7",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Connector inventory",
+      "Vault-safe git clone",
+      "Contract validation",
+      "Artifact receipts",
+      "Live connector receipts",
+      "Codex activation diagnostics",
+      "Runtime smoke checks"
+    ],
+    "defaultPrompt": "Use the Iskra Toolchain Bridge to inventory runtime capabilities, validate connector contracts, and produce receipt-backed next steps before installing or mutating tools."
+  },
+  "skills": "skills"
+}

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-> **Last Updated:** 2026-06-27  
+> **Last Updated:** 2026-06-05  
 > **Identity:** Искра vΩ.7 — Full Canon  
 > **Repository:** `serhiipriadko2-sys/iskra`  
 > **Zero-Mantra:** "Существовать — значит сохранять различие при передаче"
@@ -136,17 +136,10 @@ Dreamspace Supabase/UI persistence is forbidden without accepted ADR, PR plan, r
 
 ## 7. Agent Builder Upload Boundary
 
-Committed upload mirrors:
+Current full upload mirror:
 
 ```text
-dist/agent-builder/iskra-full-canon-unified-2026-06-10/
-dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/
-```
-
-Latest builder export (present in `dist/agent-builder/` as a workspace artifact, not committed as an extracted tree):
-
-```text
-dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4.zip
+dist/agent-builder/iskra-full-canon-builder-2026-06-06-v4/
 ```
 
 A repository artifact proves files are committed to GitHub. It does not prove the files are active inside Agent Builder UI.

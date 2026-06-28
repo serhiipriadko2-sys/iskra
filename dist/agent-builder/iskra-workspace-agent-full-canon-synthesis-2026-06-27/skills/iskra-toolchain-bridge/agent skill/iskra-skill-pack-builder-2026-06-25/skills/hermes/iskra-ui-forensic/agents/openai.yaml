@@ -1,0 +1,12 @@
+interface:
+  display_name: Искра UI Forensic
+  short_description: Screenshot and app-state UX audit with quick fixes and backlog.
+  icon: monitor
+  brand_color: '#DB2777'
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

@@ -1,0 +1,12 @@
+interface:
+  display_name: Искра Artifact QC
+  short_description: Anti-empty receipts for files, archives, and deliverables.
+  icon: package
+  brand_color: '#9333EA'
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

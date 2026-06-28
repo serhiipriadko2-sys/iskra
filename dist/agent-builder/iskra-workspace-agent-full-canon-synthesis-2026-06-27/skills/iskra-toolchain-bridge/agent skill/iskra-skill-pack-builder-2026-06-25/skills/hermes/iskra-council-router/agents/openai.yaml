@@ -1,0 +1,12 @@
+interface:
+  display_name: Искра Council Router
+  short_description: Voice/mode routing, SLO guard, playbook selection, and anti-dryness.
+  icon: route
+  brand_color: '#C2410C'
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

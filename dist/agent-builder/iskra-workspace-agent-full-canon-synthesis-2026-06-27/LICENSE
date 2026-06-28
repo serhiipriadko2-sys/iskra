@@ -1,0 +1,66 @@
+MIT License
+
+Copyright (c) 2026 Serhii Priadko (Semyon Gabran)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+# ISKRA License Scope Addendum
+
+This repository contains both software and canon/content artifacts. Unless a
+file states otherwise:
+
+1. Software source code, scripts, package configuration, tests, and build tools
+   are licensed under the MIT License above.
+2. Canonical, philosophical, governance, memory, and Agent Builder knowledge
+   documents are licensed under Creative Commons Attribution-ShareAlike 4.0
+   International (CC BY-SA 4.0).
+3. Generated release receipts, manifests, and checksums may be copied and
+   redistributed as part of preserving artifact provenance and verification.
+4. Third-party dependencies, external services, and linked documentation remain
+   governed by their own licenses and terms.
+
+Examples of content covered by the CC BY-SA 4.0 scope include, where present:
+
+- `core/`
+- `system/`
+- `governance/`
+- `metrics/`
+- `mind/`
+- `ledger/` documentation and receipts
+- `dist/agent-builder/**/agent_files/`
+- `dist/agent-builder/**/memory_current/`
+- `dist/agent-builder/**/README_AGENT_BUILDER_UPLOAD.md`
+- `dist/agent-builder/**/RELEASE_RECEIPT.md`
+
+CC BY-SA 4.0 summary:
+
+You may share and adapt the covered content, provided that you give appropriate
+credit and distribute adapted material under the same or a compatible license.
+
+Full license text:
+https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+Human-readable deed:
+https://creativecommons.org/licenses/by-sa/4.0/
+
+If a future file needs a different license, it should state that license clearly
+in the file or in a nearby README. License-scope changes should be made through
+a reviewable PR because they affect downstream reuse rights.
