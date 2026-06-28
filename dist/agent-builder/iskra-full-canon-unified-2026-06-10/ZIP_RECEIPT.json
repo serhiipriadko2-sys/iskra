@@ -1,18 +1,18 @@
 {
   "release": "iskra-full-canon-unified-2026-06-10",
-  "generated_at": "2026-06-28T18:04:13Z",
+  "generated_at": "2026-06-28T18:16:40Z",
   "status": "PASS",
   "archive_kind": "sidecar_clean_export_zip",
   "archive_path": "../iskra-full-canon-unified-2026-06-10-clean.zip",
-  "archive_sha256": "1c6cbb5322dec558e5abcc382aa8e2a0c271bef65e580793f10063cba2c21921",
-  "archive_bytes": 3031430,
+  "archive_sha256": "1c4a76aeb5a1ae7b30a9a48702b591b0350b79ca776733172dfe9dd52d64e34d",
+  "archive_bytes": 3033699,
   "entries": 441,
   "manifest_entries": 439,
   "inventory_rule": "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
   "clean_export": {
     "command": "py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force",
-    "file_count": 437,
-    "total_bytes": 9025720,
+    "file_count": 441,
+    "total_bytes": 9051785,
     "forbidden_hits": 0,
     "missing_files": 0,
     "hash_mismatches": 0

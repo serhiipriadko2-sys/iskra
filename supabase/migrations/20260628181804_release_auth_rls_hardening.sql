@@ -7,6 +7,11 @@
 --   3. Keep service_role server-side access explicit.
 --   4. Fix mutable search_path on public.update_updated_at().
 --
+-- Graph tables (public.graph_nodes, public.graph_edges) are intentionally
+-- preserved as-is because their policies were already hardened by the
+-- graph_schema_contract_* / graph_rpc_boundary_* migrations and must keep
+-- the user_id IS NULL allowance for canonical seed nodes.
+--
 -- Release order:
 --   A. Enable Supabase Anonymous Sign-Ins or another auth provider.
 --   B. Deploy frontend patch that calls signInAnonymously and sends the user JWT.
@@ -32,7 +37,7 @@ end;
 $$;
 
 -- -----------------------------------------------------------------------------
--- 1. Drop known permissive policies and legacy policies
+-- 1. Drop known permissive policies and legacy policies on app tables only
 -- -----------------------------------------------------------------------------
 do $$
 declare
@@ -49,8 +54,6 @@ begin
     'voice_preferences',
     'chat_history',
     'audit_log',
-    'graph_nodes',
-    'graph_edges',
     'rate_limits'
   ] loop
     if to_regclass('public.' || table_name) is not null then
@@ -84,16 +87,6 @@ grant select, insert, update, delete on public.habits to authenticated;
 grant select, insert, update, delete on public.voice_preferences to authenticated;
 grant select, insert, update, delete on public.chat_history to authenticated;
 grant select, insert on public.audit_log to authenticated;
-
-do $$
-begin
-  if to_regclass('public.graph_nodes') is not null then
-    grant select, insert, update, delete on public.graph_nodes to authenticated;
-  end if;
-  if to_regclass('public.graph_edges') is not null then
-    grant select, insert, update, delete on public.graph_edges to authenticated;
-  end if;
-end $$;
 
 grant all on all tables in schema public to service_role;
 grant all on all sequences in schema public to service_role;
@@ -188,35 +181,7 @@ to authenticated
 with check (user_id = auth.uid());
 
 -- -----------------------------------------------------------------------------
--- 6. Optional graph tables
--- -----------------------------------------------------------------------------
-do $$
-begin
-  if to_regclass('public.graph_nodes') is not null then
-    execute '
-      create policy "graph_nodes_manage_own"
-      on public.graph_nodes
-      for all
-      to authenticated
-      using (user_id = auth.uid())
-      with check (user_id = auth.uid())
-    ';
-  end if;
-
-  if to_regclass('public.graph_edges') is not null then
-    execute '
-      create policy "graph_edges_manage_own"
-      on public.graph_edges
-      for all
-      to authenticated
-      using (user_id = auth.uid())
-      with check (user_id = auth.uid())
-    ';
-  end if;
-end $$;
-
--- -----------------------------------------------------------------------------
--- 7. Rate limits are server-owned. Browser clients must not manage them directly.
+-- 6. Rate limits are server-owned. Browser clients must not manage them directly.
 -- -----------------------------------------------------------------------------
 do $$
 begin
@@ -234,7 +199,7 @@ begin
 end $$;
 
 -- -----------------------------------------------------------------------------
--- 8. Verification helper
+-- 7. Verification helper
 -- -----------------------------------------------------------------------------
 comment on schema public is 'IskraSpace public app schema hardened on 2026-05-28: authenticated own-row RLS, no direct anon table access.';
 

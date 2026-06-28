@@ -34,5 +34,31 @@
     "not live Builder prompt parity",
     "not Workspace Agent Memory proof",
     "not canon_source_files rewrite"
-  ]
+  ],
+  "verification_2026_06_28": {
+    "generated_at": "2026-06-28T18:15:42Z",
+    "status": "PASS_LOCAL_PACKAGE_GATES_NO_LIVE_MUTATION",
+    "gates": [
+      "py_compile PASS for tools/apply_workspace_agent_modernization.py and tools/build_workspace_agent_synthesis.py",
+      "clean_export --source manifest PASS with hash_mismatch_count=0",
+      "zip integrity PASS via tools/check_zip_integrity.py",
+      "JSON receipts parse PASS",
+      "SURFACE_INVENTORY comparisons MATCH for manifest_vs_package_root and zip_vs_manifest",
+      "targeted modernization secret scan PASS no secret-like hits",
+      "reassemble_interface_style PASS",
+      "validate_terms PASS",
+      "agents-sdk fallback pytest PASS 9 tests in temporary venv with openai-agents==0.17.6",
+      "horizon pytest PASS 9 tests and 1 subtest",
+      "validate_delta PASS checked=81 skipped=247 failed=0",
+      "connector_contracts PASS contracts=8 when run from plugins/iskra-toolchain-bridge",
+      "skill-pack local count PASS 32"
+    ],
+    "zip_snapshot_before_receipt_refresh": {
+      "sha256": "6de2c57d652075eba4fc55266e44cf2d090d17cc12fbf1503afcc65a5e032a2e",
+      "entries": 441,
+      "manifest_entries": 439
+    },
+    "operator_note": "Running validate_connector_contracts.py from skills/iskra-toolchain-bridge is an invalid entrypoint for this check because .codex-plugin/plugin.json belongs to plugins/iskra-toolchain-bridge.",
+    "live_boundary": "No Workspace Agent files, instructions, skills, apps, Memory, API channel, Slack channel, schedules, or publish state were mutated by these local package gates."
+  }
 }
