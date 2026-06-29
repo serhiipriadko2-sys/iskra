@@ -17,21 +17,38 @@
     "check:supabase-voice-metrics-contract:repo": "npx tsx tools/verify_supabase_voice_metrics_contract.ts --repo-only",
     "check:supabase-graph-contract": "npx tsx tools/verify_supabase_graph_contract.ts",
     "check:supabase-graph-contract:repo": "npx tsx tools/verify_supabase_graph_contract.ts --repo-only",
-    "check:imports": "python tools/check_no_src_imports.py",
-    "check:sensitive-status": "python tools/check_no_sensitive_status_dumps.py",
-    "sot40:build": "python tools/build_sot40_artifact.py --out-dir dist/sot40",
-    "sot40:verify": "python tools/verify_sot40_receipt.py --receipt dist/sot40/receipt.json",
-    "ingest:phase1": "python tools/build_phase1_classification.py",
-    "check:adr-gate": "python tools/check_core_adr_gate.py",
-    "check:shard-registry": "python tools/check_shard_registry_consistency.py",
-    "import:shard1": "python tools/import_phase1_shard1.py",
-    "import:shard2": "python tools/import_phase1_shard2.py",
-    "import:shard3": "python tools/import_phase1_shard3.py",
-    "import:shard": "python tools/import_phase1_shard.py"
+    "check:imports": "node tools/run_python.mjs tools/check_no_src_imports.py",
+    "check:sensitive-status": "node tools/run_python.mjs tools/check_no_sensitive_status_dumps.py",
+    "sot40:build": "node tools/run_python.mjs tools/build_sot40_artifact.py --out-dir dist/sot40",
+    "sot40:verify": "node tools/run_python.mjs tools/verify_sot40_receipt.py --receipt dist/sot40/receipt.json",
+    "ingest:phase1": "node tools/run_python.mjs tools/build_phase1_classification.py",
+    "check:adr-gate": "node tools/run_python.mjs tools/check_core_adr_gate.py",
+    "check:shard-registry": "node tools/run_python.mjs tools/check_shard_registry_consistency.py",
+    "import:shard1": "node tools/run_python.mjs tools/import_phase1_shard1.py",
+    "import:shard2": "node tools/run_python.mjs tools/import_phase1_shard2.py",
+    "import:shard3": "node tools/run_python.mjs tools/import_phase1_shard3.py",
+    "import:shard": "node tools/run_python.mjs tools/import_phase1_shard.py"
   },
   "devDependencies": {
-    "tsx": "^4.7.1",
-    "typescript": "^5.0.0",
-    "vitest": "^2.0.0"
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/core": "7.29.7",
+      "@protobufjs/utf8": "1.1.1",
+      "brace-expansion@^1.1.7": "1.1.15",
+      "brace-expansion@^2.0.1": "2.1.1",
+      "brace-expansion@^5.0.0": "5.0.7",
+      "flatted": "3.4.2",
+      "js-yaml@^4.1.0": "4.3.0",
+      "picomatch@^2.0.0": "2.3.2",
+      "picomatch@^4.0.0": "4.0.4",
+      "postcss": "8.5.16",
+      "protobufjs": "7.6.4",
+      "vite": "6.4.3",
+      "ws": "8.21.0"
+    }
   }
 }

@@ -1,0 +1,75 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - heading "Древо Искры" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Когнитивный AI-спутник и среда рефлексии, которая не подыгрывает вашим иллюзиям, а помогает нащупать честные ориентиры и перевести мысли в реальные шаги.
+    - paragraph [ref=e7]: Активирован упрощённый режим — без анимации и 3D-камеры.
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - heading "Почва" [level=2] [ref=e10]
+      - list [ref=e11]:
+        - listitem [ref=e12]:
+          - button "Почва" [ref=e13] [cursor=pointer]
+        - listitem [ref=e14]:
+          - button "Быстрый старт" [ref=e15] [cursor=pointer]
+        - listitem [ref=e16]:
+          - button "Источник" [ref=e17] [cursor=pointer]
+        - listitem [ref=e18]:
+          - button "Сообщество" [ref=e19] [cursor=pointer]
+    - generic [ref=e20]:
+      - heading "Корни" [level=2] [ref=e21]
+      - list [ref=e22]:
+        - listitem [ref=e23]:
+          - button "Корни" [ref=e24] [cursor=pointer]
+        - listitem [ref=e25]:
+          - button "Что такое Искра" [ref=e26] [cursor=pointer]
+        - listitem [ref=e27]:
+          - button "Принципы" [ref=e28] [cursor=pointer]
+        - listitem [ref=e29]:
+          - button "Телос и Мантра" [ref=e30] [cursor=pointer]
+        - listitem [ref=e31]:
+          - button "Бусидо Искры" [ref=e32] [cursor=pointer]
+        - listitem [ref=e33]:
+          - button "Протокол Repair" [ref=e34] [cursor=pointer]
+        - listitem [ref=e35]:
+          - button "Безопасность" [ref=e36] [cursor=pointer]
+    - generic [ref=e37]:
+      - heading "Ствол" [level=2] [ref=e38]
+      - list [ref=e39]:
+        - listitem [ref=e40]:
+          - button "Ствол" [ref=e41] [cursor=pointer]
+        - listitem [ref=e42]:
+          - button "Архитектура" [ref=e43] [cursor=pointer]
+        - listitem [ref=e44]:
+          - button "Метрики" [ref=e45] [cursor=pointer]
+        - listitem [ref=e46]:
+          - button "Когнитивная архитектура" [ref=e47] [cursor=pointer]
+        - listitem [ref=e48]:
+          - button "SLO-Guard" [ref=e49] [cursor=pointer]
+        - listitem [ref=e50]:
+          - button "SIFT" [ref=e51] [cursor=pointer]
+        - listitem [ref=e52]:
+          - button "Протокол Совета" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - heading "Ветви" [level=2] [ref=e55]
+      - list [ref=e56]:
+        - listitem [ref=e57]:
+          - button "Ветви" [ref=e58] [cursor=pointer]
+        - listitem [ref=e59]:
+          - button "Совет голосов" [ref=e60] [cursor=pointer]
+        - listitem [ref=e61]:
+          - button "Iskra Space" [ref=e62] [cursor=pointer]
+        - listitem [ref=e63]:
+          - button "Этот сайт" [ref=e64] [cursor=pointer]
+        - listitem [ref=e65]:
+          - button "Agent Builder" [ref=e66] [cursor=pointer]
+        - listitem [ref=e67]:
+          - button "Рантайм" [ref=e68] [cursor=pointer]
+    - generic [ref=e69]:
+      - heading "Крона" [level=2] [ref=e70]
+      - list [ref=e71]:
+        - listitem [ref=e72]:
+          - button "Крона" [ref=e73] [cursor=pointer]
+        - listitem [ref=e74]:
+          - button "Сознание" [ref=e75] [cursor=pointer]
+        - listitem [ref=e76]:
+          - button "Горизонт" [ref=e77] [cursor=pointer]

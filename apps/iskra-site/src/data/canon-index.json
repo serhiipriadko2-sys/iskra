@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-06-28T19:27:43.102Z",
-  "total": 2611,
+  "generatedAt": "2026-06-29T14:05:03.896Z",
+  "total": 2619,
   "curated": 20,
   "layers": {
-    "root": 319,
+    "root": 320,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
     "appendix": 26,
-    "site": 62,
+    "site": 68,
     "web": 13,
     "canon": 16,
-    "builder": 1143,
+    "builder": 1144,
     "docs": 54,
     "governance": 46,
     "ingest": 10,
@@ -887,7 +887,8 @@
         ".playwright-mcp/page-2026-06-27T13-08-48-362Z.yml",
         ".playwright-mcp/page-2026-06-27T13-13-24-125Z.yml",
         ".playwright-mcp/page-2026-06-27T13-13-39-811Z.yml",
-        ".playwright-mcp/page-2026-06-27T16-05-19-109Z.yml"
+        ".playwright-mcp/page-2026-06-27T16-05-19-109Z.yml",
+        ".playwright-mcp/page-2026-06-28T19-16-08-640Z.yml"
       ]
     },
     {
@@ -1793,6 +1794,17 @@
       "parent": ".playwright-mcp"
     },
     {
+      "path": ".playwright-mcp/page-2026-06-28T19-16-08-640Z.yml",
+      "name": "page-2026-06-28T19-16-08-640Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-28T19-16-08-640Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
       "path": "adr-log.md",
       "name": "adr-log.md",
       "kind": "file",
@@ -2184,11 +2196,15 @@
       "technicalExplanation": "React + TypeScript + Vite + R3F-приложение. 3D-дерево канона, SIFT-лаборатория, RepoAtlas и audience modes. Читаемый индекс генерируется из git ls-files.",
       "parent": "apps",
       "children": [
+        "apps/iskra-site/e2e",
         "apps/iskra-site/public",
         "apps/iskra-site/scripts",
         "apps/iskra-site/src",
+        "apps/iskra-site/.gitignore",
+        "apps/iskra-site/eslint.config.js",
         "apps/iskra-site/index.html",
         "apps/iskra-site/package.json",
+        "apps/iskra-site/playwright.config.ts",
         "apps/iskra-site/postcss.config.js",
         "apps/iskra-site/READINESS_REPORT.md",
         "apps/iskra-site/README.md",
@@ -2197,6 +2213,53 @@
         "apps/iskra-site/tsconfig.node.json",
         "apps/iskra-site/vite.config.ts"
       ]
+    },
+    {
+      "path": "apps/iskra-site/.gitignore",
+      "name": ".gitignore",
+      "kind": "file",
+      "layer": "site",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/.gitignore",
+      "related": [],
+      "parent": "apps/iskra-site"
+    },
+    {
+      "path": "apps/iskra-site/e2e",
+      "name": "e2e",
+      "kind": "directory",
+      "layer": "site",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/e2e",
+      "related": [],
+      "parent": "apps/iskra-site",
+      "children": [
+        "apps/iskra-site/e2e/smoke.spec.ts"
+      ]
+    },
+    {
+      "path": "apps/iskra-site/e2e/smoke.spec.ts",
+      "name": "smoke.spec.ts",
+      "kind": "file",
+      "layer": "site",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/e2e/smoke.spec.ts",
+      "related": [],
+      "parent": "apps/iskra-site/e2e"
+    },
+    {
+      "path": "apps/iskra-site/eslint.config.js",
+      "name": "eslint.config.js",
+      "kind": "file",
+      "layer": "site",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/eslint.config.js",
+      "related": [],
+      "parent": "apps/iskra-site"
     },
     {
       "path": "apps/iskra-site/index.html",
@@ -2217,6 +2280,17 @@
       "role": "config",
       "coverage": "indexed",
       "sourceRef": "apps/iskra-site/package.json",
+      "related": [],
+      "parent": "apps/iskra-site"
+    },
+    {
+      "path": "apps/iskra-site/playwright.config.ts",
+      "name": "playwright.config.ts",
+      "kind": "file",
+      "layer": "site",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/playwright.config.ts",
       "related": [],
       "parent": "apps/iskra-site"
     },
@@ -2721,12 +2795,24 @@
       "related": [],
       "parent": "apps/iskra-site/src",
       "children": [
+        "apps/iskra-site/src/hooks/useFocusTrap.ts",
         "apps/iskra-site/src/hooks/useHashNodeId.ts",
         "apps/iskra-site/src/hooks/useKeyboardNavigation.ts",
         "apps/iskra-site/src/hooks/useMediaQuery.ts",
         "apps/iskra-site/src/hooks/useReducedMotion.ts",
         "apps/iskra-site/src/hooks/useScrollSection.ts"
       ]
+    },
+    {
+      "path": "apps/iskra-site/src/hooks/useFocusTrap.ts",
+      "name": "useFocusTrap.ts",
+      "kind": "file",
+      "layer": "site",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/src/hooks/useFocusTrap.ts",
+      "related": [],
+      "parent": "apps/iskra-site/src/hooks"
     },
     {
       "path": "apps/iskra-site/src/hooks/useHashNodeId.ts",
@@ -3498,6 +3584,7 @@
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27",
         "dist/agent-builder/ISKRA_FULL_CANON_BUILDER_MANIFEST.md",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10-clean.zip",
         "dist/agent-builder/README.md"
       ]
     },
@@ -3561,6 +3648,17 @@
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/ZIP_RECEIPT.json"
       ]
+    },
+    {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10-clean.zip",
+      "name": "iskra-full-canon-unified-2026-06-10-clean.zip",
+      "kind": "file",
+      "layer": "builder",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10-clean.zip",
+      "related": [],
+      "parent": "dist/agent-builder"
     },
     {
       "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/.gitattributes",
