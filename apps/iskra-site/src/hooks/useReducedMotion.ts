@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react';
 
-function getInitialReducedMotion(): boolean {
+function getReducedMotionFromQuery(): boolean {
   if (typeof window === 'undefined') return false;
   const params = new URLSearchParams(window.location.search);
-  if (params.get('reduced-motion') === '1') return true;
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return params.get('reduced-motion') === '1';
 }
 
 export function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(getInitialReducedMotion);
+  const [reduced, setReduced] = useState(getReducedMotionFromQuery);
 
   useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    media.addEventListener('change', handler);
-    return () => media.removeEventListener('change', handler);
+    setReduced(getReducedMotionFromQuery());
   }, []);
 
   return reduced;
