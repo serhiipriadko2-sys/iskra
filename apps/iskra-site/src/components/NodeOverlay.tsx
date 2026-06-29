@@ -3,6 +3,7 @@ import type { TreeNodeData } from '../lib/treeData';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { X } from './icons';
 import { NodeContent } from './NodeContent';
+import { NodeDeepDive } from './NodeDeepDive';
 
 interface NodeOverlayProps {
   activeNodeId: string | null;
@@ -82,6 +83,7 @@ export function NodeOverlay({ activeNodeId, onClose, onNavigate, onOpenAtlas, au
         </div>
 
         <NodeContent node={node} audienceMode={audienceMode} onOpenAtlas={onOpenAtlas} />
+        <NodeDeepDive node={node} audienceMode={audienceMode} onOpenAtlas={onOpenAtlas} />
       </div>
     </div>
   );
