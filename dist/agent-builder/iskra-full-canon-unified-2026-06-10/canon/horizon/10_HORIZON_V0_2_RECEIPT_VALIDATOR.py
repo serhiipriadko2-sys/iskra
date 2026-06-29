@@ -102,7 +102,15 @@ def require_string_array(record: dict[str, Any], field: str, errors: list[str]) 
 def validate_common(record: dict[str, Any], errors: list[str]) -> None:
     if record.get("schema_version") != "0.2-proposal":
         errors.append("schema_version must be 0.2-proposal")
-    forbidden = set(record.get("forbidden") or [])
+    forbidden_value = record.get("forbidden")
+    if not isinstance(forbidden_value, list):
+        errors.append("forbidden: required list")
+        forbidden = set()
+    elif not all(isinstance(item, str) for item in forbidden_value):
+        errors.append("forbidden: required string array")
+        forbidden = {item for item in forbidden_value if isinstance(item, str)}
+    else:
+        forbidden = set(forbidden_value)
     missing = sorted(REQUIRED_FORBIDDEN - forbidden)
     if missing:
         errors.append(f"forbidden missing required boundary values: {missing}")
