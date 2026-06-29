@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Horizon Proposal Event v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_type",
+    "id",
+    "created_at",
+    "trigger",
+    "current_frame",
+    "proposed_frame_shift",
+    "why_now",
+    "evidence_available",
+    "missing_evidence",
+    "expected_discomfort",
+    "operator_bias_risk",
+    "safety_scope",
+    "proposed_action",
+    "rejected_alternatives",
+    "review_status",
+    "forbidden",
+    "autonomy_level",
+    "linked_adr",
+    "adoml"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2-proposal"
+    },
+    "event_type": {
+      "const": "HORIZON_PROPOSAL_EVENT"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^HORIZON-PROP-[0-9]{8}-[0-9]{3}$"
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "trigger": {
+      "type": "string",
+      "minLength": 10
+    },
+    "current_frame": {
+      "type": "string",
+      "minLength": 10
+    },
+    "proposed_frame_shift": {
+      "type": "string",
+      "minLength": 10
+    },
+    "why_now": {
+      "type": "string",
+      "minLength": 10
+    },
+    "evidence_available": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "missing_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "expected_discomfort": {
+      "type": "string",
+      "minLength": 10
+    },
+    "operator_bias_risk": {
+      "type": "string",
+      "minLength": 40
+    },
+    "safety_scope": {
+      "type": "string",
+      "minLength": 10
+    },
+    "proposed_action": {
+      "type": "string",
+      "minLength": 10
+    },
+    "rejected_alternatives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "review_status": {
+      "enum": [
+        "DRAFT",
+        "SIMULATED",
+        "NEEDS_EVIDENCE",
+        "ADR_CANDIDATE",
+        "REJECTED_WITH_REASON",
+        "REOPEN_ON_NEW_EVIDENCE"
+      ]
+    },
+    "forbidden": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "enum": [
+          "DIRECT_CANON_MUTATION",
+          "SILENT_LEDGER_WRITE",
+          "LIVE_SECURITY_POLICY_CHANGE"
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "DIRECT_CANON_MUTATION"
+          }
+        },
+        {
+          "contains": {
+            "const": "SILENT_LEDGER_WRITE"
+          }
+        },
+        {
+          "contains": {
+            "const": "LIVE_SECURITY_POLICY_CHANGE"
+          }
+        }
+      ]
+    },
+    "autonomy_level": {
+      "enum": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ]
+    },
+    "linked_adr": {
+      "type": "string",
+      "pattern": "^governance/adr_[0-9]{8}_[a-z0-9_]+\\.md$"
+    },
+    "adoml": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "delta",
+        "D",
+        "omega",
+        "lambda"
+      ],
+      "properties": {
+        "delta": {
+          "type": "string",
+          "minLength": 3
+        },
+        "D": {
+          "type": "string",
+          "minLength": 3
+        },
+        "omega": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "lambda": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    }
+  }
+}

@@ -7978,7 +7978,7 @@ Never commit:
 
 Allowed:
 
-- `.env.example` with stand-in values.
+- `.env.example` with placeholder values.
 - Public Supabase anon key only when intentionally documented as public client configuration.
 - Synthetic fixtures and mock data.
 

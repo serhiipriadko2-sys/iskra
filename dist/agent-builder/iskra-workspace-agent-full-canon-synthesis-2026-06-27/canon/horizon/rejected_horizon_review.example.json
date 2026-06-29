@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.2-proposal",
+  "event_type": "REJECTED_HORIZON_REVIEW",
+  "review_id": "RHR-20260628-001",
+  "proposal_id": "HORIZON-PROP-20260628-001",
+  "rejected_at": "2026-06-28T18:50:00Z",
+  "rejected_by": "example-review",
+  "rejection_reason": "Example rejection: do not promote v0.2 into canon until schema, validator, and ADR gate pass.",
+  "what_would_be_lost_if_wrongly_rejected": "The system could lose durable memory of uncomfortable horizon shifts and keep optimizing for operator approval.",
+  "proposal_risk": "The proposal may over-formalize disagreement and create procedural weight before enough evidence exists.",
+  "operator_bias_risk": "The agent may frame the rejection to please the operator, either by making the proposal too agreeable or by dramatizing refusal instead of preserving testable disagreement.",
+  "reopen_on_new_evidence": "Reopen if rejected dry-run proposals disappear without review, or if repeated proposals become approval-shaped despite evidence gaps.",
+  "evidence_to_watch": [
+    "Horizon dry-run logs with rejected but unresolved map shifts",
+    "Future proposals missing operator_bias_risk",
+    "Operator refusals without reopen conditions"
+  ],
+  "next_review_trigger": "After first real rejected Horizon proposal or before GitHub/Builder mirror.",
+  "status": "REOPEN_ON_NEW_EVIDENCE",
+  "forbidden": [
+    "DIRECT_CANON_MUTATION",
+    "SILENT_LEDGER_WRITE",
+    "LIVE_SECURITY_POLICY_CHANGE"
+  ]
+}

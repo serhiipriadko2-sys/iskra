@@ -183,6 +183,33 @@ PASS requires:
 
 FAIL/BLOCKED if proposal tries to mutate core canon, ledger, workflows, live Supabase, live Builder config, or user memory as fact.
 
+## Horizon v0.2 receipt validate
+
+Validate one or more `HORIZON_PROPOSAL_EVENT` or `REJECTED_HORIZON_REVIEW`
+JSON/JSONL receipts.
+
+Required command shape:
+
+```text
+python canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py <receipt.json>
+```
+
+PASS requires:
+
+- `schema_version: 0.2-proposal`;
+- valid identity fields such as `HORIZON-PROP-YYYYMMDD-NNN` or `RHR-YYYYMMDD-NNN`;
+- UTC timestamp fields;
+- `operator_bias_risk`;
+- all three forbidden boundary values;
+- non-empty evidence/reopen fields;
+- strict `adoml` content for proposal receipts;
+- no unknown fields;
+- no live connector mutation wording in proposal action fields.
+
+FAIL/BLOCKED if the receipt is empty, malformed, carries ignored approval fields,
+or tries to update GitHub, Supabase, Builder config, workflows, runtime config,
+ledger, security policy, or core canon through Horizon.
+
 ## Horizon commit
 
 Append exactly one local Horizon epoch entry.

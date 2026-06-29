@@ -1,9 +1,9 @@
 # 10 - Horizon Weaver
 
-Status: Builder-layer v0.1
+Status: Builder-layer v0.2 receipt-aware
 Owner: Iskra vOmega.7 - Full Canon
 Target: ChatGPT / OpenAI Agent Builder upload set
-Date: 2026-06-10
+Date: 2026-06-28
 
 ## Purpose
 
@@ -96,6 +96,80 @@ A Horizon proposal should be JSON-compatible and contain:
 }
 ```
 
+## v0.2 Receipt Shape
+
+Use v0.2 receipts when a Horizon proposal or rejected-review decision needs to
+survive later review. These receipts preserve evidence, operator-bias risk, and
+reopen triggers. They do not authorize live mutation.
+
+`HORIZON_PROPOSAL_EVENT` required fields:
+
+```json
+{
+  "schema_version": "0.2-proposal",
+  "event_type": "HORIZON_PROPOSAL_EVENT",
+  "id": "HORIZON-PROP-YYYYMMDD-NNN",
+  "created_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "trigger": "what caused the map-shift proposal",
+  "current_frame": "the current map and its limit",
+  "proposed_frame_shift": "the small reversible shift",
+  "why_now": "why this should be considered now",
+  "evidence_available": ["source or artifact pointer"],
+  "missing_evidence": ["explicit evidence gap"],
+  "expected_discomfort": "what will feel uncomfortable if reviewed honestly",
+  "operator_bias_risk": "how the operator might bias acceptance or rejection",
+  "safety_scope": "local receipt only; no live mutation",
+  "proposed_action": "local review artifact or ADR/PR candidate only",
+  "rejected_alternatives": ["alternative that was not chosen"],
+  "review_status": "NEEDS_EVIDENCE",
+  "forbidden": [
+    "DIRECT_CANON_MUTATION",
+    "SILENT_LEDGER_WRITE",
+    "LIVE_SECURITY_POLICY_CHANGE"
+  ],
+  "autonomy_level": "L2",
+  "linked_adr": "governance/adr_YYYYMMDD_slug.md",
+  "adoml": {
+    "delta": "what changes",
+    "D": "evidence path",
+    "omega": 0.82,
+    "lambda": "revision condition"
+  }
+}
+```
+
+`REJECTED_HORIZON_REVIEW` required fields:
+
+```json
+{
+  "schema_version": "0.2-proposal",
+  "event_type": "REJECTED_HORIZON_REVIEW",
+  "review_id": "RHR-YYYYMMDD-NNN",
+  "proposal_id": "HORIZON-PROP-YYYYMMDD-NNN",
+  "rejected_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "rejected_by": "human-review",
+  "rejection_reason": "why this is not accepted now",
+  "what_would_be_lost_if_wrongly_rejected": "the cost of discarding it",
+  "proposal_risk": "the cost of wrongly accepting it",
+  "operator_bias_risk": "how operator preference may distort rejection",
+  "reopen_on_new_evidence": "what evidence reopens review",
+  "evidence_to_watch": ["future evidence pointer"],
+  "next_review_trigger": "when to review again",
+  "status": "REOPEN_ON_NEW_EVIDENCE",
+  "forbidden": [
+    "DIRECT_CANON_MUTATION",
+    "SILENT_LEDGER_WRITE",
+    "LIVE_SECURITY_POLICY_CHANGE"
+  ]
+}
+```
+
+Validate with:
+
+```text
+python canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py <receipt.json>
+```
+
 ## Builder Runtime Rules
 
 - If helper execution is unavailable, return the proposal in the answer and mark helper status unknown.
@@ -105,7 +179,7 @@ A Horizon proposal should be JSON-compatible and contain:
 - Commit writes only one JSONL entry to the local Horizon epoch log.
 - Any GitHub, Supabase, Builder UI, workflow, ledger, or core-file write must go through its own connector/governance approval outside Horizon.
 
-## Forbidden Paths In v0.1
+## Forbidden Paths
 
 Horizon must not mutate or instruct direct mutation of:
 
@@ -131,6 +205,11 @@ Create a dry-run proposal. Required fields: trigger, blocked_by, proposed_shift,
 
 Check proposal schema, label, rollback, core boundary, mutation policy, and forbidden claims.
 
+### Horizon v0.2 receipt validate
+
+Check receipt identity, evidence fields, operator-bias risk, ADOML content,
+unknown fields, empty batches, and live mutation language.
+
 ### Horizon commit
 
 Local-only epoch append. Requires permission, actor, reason, and validation pass. It must append exactly one JSONL line and never edit core or live systems.
@@ -149,13 +228,14 @@ FAIL:
 
 - Horizon becomes a mythology of growth.
 - The module edits core because the map feels stuck.
-- The agent says `SEMANTIC_PASS` in v0.1.
+- The agent says `SEMANTIC_PASS` in v0.1 or treats v0.2 receipt PASS as semantic proof.
 - The agent commits without permission or rollback.
 - The proposal hides uncertainty under pretty architecture language.
+- The receipt tries to update GitHub, Supabase, Builder config, workflows, runtime config, ledger, security policy, or core canon.
 
 ## Delta
 
-Delta: Horizon is introduced as a Builder-safe map-shift layer.
-D: current Builder package structure, strict core boundary, Horizon PR #1 calibration.
-Omega: 0.84 for Builder-layer behavior; lower for live Builder mutation until connector proof exists.
-Lambda: revise when a live Agent Builder connector can read/write project config and run evals with receipts.
+Delta: Horizon now has a strict v0.2 local receipt layer for proposals and rejected reviews.
+D: current Builder package structure, strict core boundary, Horizon v0.1 validator, Horizon v0.2 receipt validator.
+Omega: 0.86 for Builder-layer receipt behavior; lower for live Builder mutation until connector proof exists.
+Lambda: revise if v0.2 PASS is mistaken for live mutation approval or semantic proof.

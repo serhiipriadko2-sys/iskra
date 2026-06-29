@@ -1,18 +1,19 @@
 {
   "release": "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
-  "generated_at": "2026-06-28T18:16:40Z",
+  "generated_at": "2026-06-29T17:10:39Z",
   "status": "PASS",
   "archive_kind": "sidecar_clean_export_zip",
   "archive_path": "../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
-  "archive_sha256": "552ff0e05235ddb4807c77110f43f1cef4b93f47356d3dd04be5c17102d804e6",
-  "archive_bytes": 2915594,
-  "entries": 394,
-  "manifest_entries": 392,
+  "archive_sha256": "a8a6650ba0618c68f18e87d1941e2273b075a65f52122f9246d0a8a239fbb12b",
+  "archive_bytes": 3040406,
+  "entries": 423,
+  "manifest_entries": 421,
+  "manifest_sha256": "f0f7c63e93fdcb4d6b2abce28a3ae5c099352b65fa52b2a01ac32647a4a42bfd",
   "inventory_rule": "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
   "clean_export": {
     "command": "py tools/clean_export.py --source manifest --zip ../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip --force",
-    "file_count": 394,
-    "total_bytes": 8868635,
+    "file_count": 423,
+    "total_bytes": 9410504,
     "forbidden_hits": 0,
     "missing_files": 0,
     "hash_mismatches": 0
@@ -27,28 +28,22 @@
   ],
   "included_qc_receipts": [
     "UNIFIED_QC_RECEIPT.json",
-    "WORKSPACE_AGENT_READONLY_RECEIPT.json"
+    "WORKSPACE_AGENT_READONLY_RECEIPT.json",
+    "GITHUB_TREE_INDEX.json"
   ],
+  "surface_inventory": {
+    "status": "PASS",
+    "output": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\SURFACE_INVENTORY.json",
+    "sha256": "1d7d973e8033573d8a9c965d16cfb62fb962a296d97e2718e294bec3943c34c0"
+  },
   "workspace_agent_boundary": {
     "delivery_boundary": "package-first; no live Workspace Agent mutation performed",
-    "target_candidate": "Iskra vOmega.7 / agt_6a3aba...d24f",
     "verified_live_builder": false
   },
   "non_claims": [
     "A clean zip proves local transport readiness only",
-    "No Workspace Agent files, instructions, skills, apps, Memory, API channel, Slack channel, schedules, or publish state were changed by this package build",
-    "Workspace Agent Memory parity is not proven by package memory_seed/current files",
-    "API 202 Accepted remains queued/accepted semantics, not final task completion",
     "verified-live-builder is not claimed",
-    "SENSE_EVENT and DREAM_SEED are package-level overlays only; live Builder prompt parity is not claimed"
+    "Workspace Agent Memory parity is not proven by package memory_seed/current files"
   ],
-  "next": "Request explicit approval before any Workspace Agent upload, prompt replacement, skill change, app change, API/Slack channel change, Memory write/read test, or publish.",
-  "self_modernization_2026_06_28": {
-    "status": "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
-    "protocols": [
-      "SENSE_EVENT",
-      "DREAM_SEED"
-    ],
-    "receipt": "SELF_MODERNIZATION_RECEIPT.json"
-  }
+  "next": "Request explicit approval before any Workspace Agent upload, prompt replacement, skill/app/channel change, Memory write/read test, or publish."
 }
