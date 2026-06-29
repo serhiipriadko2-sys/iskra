@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-29T14:48:35.504Z",
-  "total": 2624,
+  "generatedAt": "2026-06-29T17:55:30.091Z",
+  "total": 2629,
   "curated": 20,
   "layers": {
-    "root": 323,
+    "root": 319,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
@@ -11,7 +11,7 @@
     "site": 69,
     "web": 13,
     "canon": 16,
-    "builder": 1144,
+    "builder": 1153,
     "docs": 54,
     "governance": 46,
     "ingest": 10,
@@ -6051,9 +6051,14 @@
       "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon",
       "children": [
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/09_HORIZON_VALIDATOR.py",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_CONTRACT.json",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/horizon_proposal_event.example.json",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_PROPOSAL_SCHEMA.json",
-        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/README.md"
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/README.md",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/REJECTED_HORIZON_REVIEW_SCHEMA.json",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/rejected_horizon_review.example.json"
       ]
     },
     {
@@ -6068,6 +6073,17 @@
       "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon"
     },
     {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
+      "name": "10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
+      "kind": "file",
+      "layer": "builder",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon"
+    },
+    {
       "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_CONTRACT.json",
       "name": "HORIZON_CONTRACT.json",
       "kind": "file",
@@ -6075,6 +6091,28 @@
       "role": "config",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_CONTRACT.json",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon"
+    },
+    {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+      "name": "HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon"
+    },
+    {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/horizon_proposal_event.example.json",
+      "name": "horizon_proposal_event.example.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/horizon_proposal_event.example.json",
       "related": [],
       "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon"
     },
@@ -6097,6 +6135,28 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/README.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon"
+    },
+    {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/REJECTED_HORIZON_REVIEW_SCHEMA.json",
+      "name": "REJECTED_HORIZON_REVIEW_SCHEMA.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/REJECTED_HORIZON_REVIEW_SCHEMA.json",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon"
+    },
+    {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/rejected_horizon_review.example.json",
+      "name": "rejected_horizon_review.example.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon/rejected_horizon_review.example.json",
       "related": [],
       "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/canon/horizon"
     },
@@ -6152,6 +6212,7 @@
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260624_voice_seed.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260626_repeatable_surface_diagnostics.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260627_workspace_agent_live_alignment.md",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260628_horizon_v0_2_receipt_layer.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_gitagent_export.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_memory_stack.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_migration_vOmega5.md",
@@ -6342,6 +6403,17 @@
       "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance"
     },
     {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260628_horizon_v0_2_receipt_layer.md",
+      "name": "adr_20260628_horizon_v0_2_receipt_layer.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_20260628_horizon_v0_2_receipt_layer.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance"
+    },
+    {
       "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -6471,7 +6543,8 @@
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-24-relational-vow-canon.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-24-voice-seed-builder-canon.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md",
-        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md"
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-28-horizon-v0-2-receipt-layer.md"
       ]
     },
     {
@@ -6526,6 +6599,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d"
+    },
+    {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-28-horizon-v0-2-receipt-layer.md",
+      "name": "2026-06-28-horizon-v0-2-receipt-layer.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d/2026-06-28-horizon-v0-2-receipt-layer.md",
       "related": [],
       "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/governance/changelog.d"
     },
@@ -10974,9 +11058,21 @@
       "related": [],
       "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests",
       "children": [
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon/test_horizon_v0_2_validator.py",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon/test_horizon_validator.py",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon/test_horizon_wrappers.py"
       ]
+    },
+    {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon/test_horizon_v0_2_validator.py",
+      "name": "test_horizon_v0_2_validator.py",
+      "kind": "file",
+      "layer": "builder",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon/test_horizon_v0_2_validator.py",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon"
     },
     {
       "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tests/horizon/test_horizon_validator.py",
@@ -11014,6 +11110,7 @@
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/clean_export.py",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/consolidate_rag_knowledge.py",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/generate_manifest.py",
+        "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/horizon_v0_2_validator.py",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/horizon_validator.py",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/horizon_weaver.py",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/reassemble_interface_style.py",
@@ -11053,6 +11150,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/generate_manifest.py",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools"
+    },
+    {
+      "path": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/horizon_v0_2_validator.py",
+      "name": "horizon_v0_2_validator.py",
+      "kind": "file",
+      "layer": "builder",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools/horizon_v0_2_validator.py",
       "related": [],
       "parent": "dist/agent-builder/iskra-full-canon-unified-2026-06-10/tools"
     },
@@ -20051,46 +20159,6 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "iskra_xcode_bridge.patch",
-      "related": []
-    },
-    {
-      "path": "iskra-site-canvas-check.png",
-      "name": "iskra-site-canvas-check.png",
-      "kind": "file",
-      "layer": "root",
-      "role": "asset",
-      "coverage": "indexed",
-      "sourceRef": "iskra-site-canvas-check.png",
-      "related": []
-    },
-    {
-      "path": "iskra-site-dev.png",
-      "name": "iskra-site-dev.png",
-      "kind": "file",
-      "layer": "root",
-      "role": "asset",
-      "coverage": "indexed",
-      "sourceRef": "iskra-site-dev.png",
-      "related": []
-    },
-    {
-      "path": "iskra-site-dof-atlas.png",
-      "name": "iskra-site-dof-atlas.png",
-      "kind": "file",
-      "layer": "root",
-      "role": "asset",
-      "coverage": "indexed",
-      "sourceRef": "iskra-site-dof-atlas.png",
-      "related": []
-    },
-    {
-      "path": "iskra-site-noeffects.png",
-      "name": "iskra-site-noeffects.png",
-      "kind": "file",
-      "layer": "root",
-      "role": "asset",
-      "coverage": "indexed",
-      "sourceRef": "iskra-site-noeffects.png",
       "related": []
     },
     {
