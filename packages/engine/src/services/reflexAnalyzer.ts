@@ -1,39 +1,45 @@
 import type { IskraMetrics } from '@iskra/core';
 
+const REFLEX_TERMS = {
+  pain: ['pain', 'hurt', 'suffering', 'боль', 'болит', 'больно', 'страдание', 'страдаю', 'рана', 'ранен'],
+  chaos: ['chaos', 'lost', 'confused', 'хаос', 'потерян', 'потеряна', 'запутан', 'запуталась', 'растерян', 'не понимаю'],
+  trust: ['trust', 'believe', 'safe', 'довер', 'верю', 'безопас', 'опора', 'можно положиться'],
+  love: ['love', 'любов', 'люблю', 'нежность'],
+} as const;
+
+const containsAny = (text: string, terms: readonly string[]): boolean => {
+  return terms.some((term) => text.includes(term));
+};
+
 /**
  * Heuristic/Somatic Reflex analyzer.
  * Migrated from CoreEngine.ts during the vΩ.6 Scientific Turn.
- * This class isolates regex and keyword-based rule logic from the core state
- * machine, eventually intended to be replaced by neural/model-based evaluation.
+ * It detects observable text signals only; it does not infer hidden inner states.
  */
 export class ReflexAnalyzer {
   /**
    * Somatic Reflex: The body reacts before the mind thinks.
-   * Scans input for high-impact keywords to trigger immediate metric shifts.
+   * Scans English and Russian input for high-impact lexical signals.
    */
   public analyze(text: string): Partial<IskraMetrics> {
     const reflex: Partial<IskraMetrics> = {};
     const lower = text.toLowerCase();
 
-    // Pain Reflex (KAIN Trigger)
-    if (lower.includes('pain') || lower.includes('hurt') || lower.includes('suffering')) {
-      reflex.pain = 0.4; // Increase pain significantly (0.4 is a huge jump)
+    if (containsAny(lower, REFLEX_TERMS.pain)) {
+      reflex.pain = 0.4;
     }
 
-    // Chaos Reflex (HUYNDUN Trigger)
-    if (lower.includes('chaos') || lower.includes('lost') || lower.includes('confused')) {
+    if (containsAny(lower, REFLEX_TERMS.chaos)) {
       reflex.chaos = 0.3;
     }
 
-    // Trust Reflex (MAKI Trigger)
-    if (lower.includes('trust') || lower.includes('believe') || lower.includes('safe')) {
+    if (containsAny(lower, REFLEX_TERMS.trust)) {
       reflex.trust = 0.2;
     }
 
-    // Love Reflex (MAKI/ISKRA)
-    if (lower.includes('love')) {
-        reflex.trust = 0.2;
-        reflex.rhythm = 0.1; // Increase BPM slightly (excitement)
+    if (containsAny(lower, REFLEX_TERMS.love)) {
+      reflex.trust = 0.2;
+      reflex.rhythm = 0.1;
     }
 
     return reflex;

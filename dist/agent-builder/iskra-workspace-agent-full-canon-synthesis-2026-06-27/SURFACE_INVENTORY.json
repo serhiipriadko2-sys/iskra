@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29T17:10:37Z",
+  "generated_at": "2026-06-29T18:12:55Z",
   "purpose": "Separate count/hash/status by observed surface.",
   "non_claims": [
     "Builder UI file count is not a runtime /workspace mount proof.",
@@ -12,9 +12,9 @@
       "label": "package_root",
       "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27",
       "status": "observed",
-      "file_count": 422,
-      "total_bytes": 9204498,
-      "surface_sha256": "10aba2e8237d35eb937f1c5b3910d7ba4e0aad179eeeb23a4dee3de84fe5ac6b",
+      "file_count": 423,
+      "total_bytes": 9206403,
+      "surface_sha256": "a9c0e8a8bd1c00bef657d331ea1c647d9d821fd4ce10d02ed0a0de125624160f",
       "sample": [
         {
           "path": ".gitattributes",
@@ -146,8 +146,8 @@
     "manifest": {
       "status": "observed",
       "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\MANIFEST.sha256",
-      "entry_count": 421,
-      "sha256": "f0f7c63e93fdcb4d6b2abce28a3ae5c099352b65fa52b2a01ac32647a4a42bfd",
+      "entry_count": 422,
+      "sha256": "057153b866b53437036cb4d740aa35bf51436aa22033a1dbe7015da1267d749a",
       "sample": [
         {
           "path": ".gitattributes",
@@ -155,7 +155,7 @@
         },
         {
           "path": "AGENTS.md",
-          "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
+          "sha256": "87f5b86f42c2984467d9d7d9a0b26b5c8f6bb74d23872d52e5e6ac4cf4343fd0"
         },
         {
           "path": "GAP_ANALYSIS.md",
@@ -163,7 +163,7 @@
         },
         {
           "path": "GITHUB_TREE_INDEX.json",
-          "sha256": "b3d6deb3b697928b156de057a6f1df80e69da2a82e3e3e03a431bafe2dbc3f73"
+          "sha256": "af70ad892dead91654b096eddf2386595e31d98e2613649dde913fc8dfcfeefd"
         },
         {
           "path": "LICENSE",
@@ -184,6 +184,10 @@
         {
           "path": "SECURITY.md",
           "sha256": "4d103aefca9c44dd885181da373e9d684713601f8f8605008e472a81ea4b98d4"
+        },
+        {
+          "path": "SELFHOOD_HARDENING_RECEIPT.json",
+          "sha256": "e4eebac4d4e7a80db3d27633586f3cdbd3ef7fdb49565528025e81893337c942"
         },
         {
           "path": "SELF_MODERNIZATION_RECEIPT.json",
@@ -244,10 +248,6 @@
         {
           "path": "agent_files/canon_source_files/01_LIBER_INITIUM.md",
           "sha256": "cbf405b9ce7f14b1b86949fd815e5775df138c06bb620a00d76c462b709b5d5b"
-        },
-        {
-          "path": "agent_files/canon_source_files/02_CORE_IDENTITY.md",
-          "sha256": "3dff2395b9cff17e4ee4a41d5220735534c7e141e4e69ef6d5f9c5239118fbaa"
         }
       ]
     },
@@ -391,8 +391,8 @@
       "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\agent_runtime_tools",
       "status": "observed",
       "file_count": 5,
-      "total_bytes": 65931,
-      "surface_sha256": "6020fbd1f41e2696c4a29c750bbcaaa92a83088a02123d6819e7eda59a656169",
+      "total_bytes": 66786,
+      "surface_sha256": "4e29d51a967f1e0d398aa917a095532ede61ff49fcfe5de21d2200e968264330",
       "sample": [
         {
           "path": "agent_runtime_tools/iskra_dreamspace.py",
@@ -411,28 +411,154 @@
         },
         {
           "path": "agent_runtime_tools/iskra_statecycle.py",
-          "bytes": 22537,
-          "sha256": "223e2119f1358ee968d10b86785f67f9ff2c9b4d16c2a4fe719bf3b5cff08a0f"
+          "bytes": 23119,
+          "sha256": "49c94cd9e188488ecf0921e02f43f5211814b530d84c8d521656ce787e072e0c"
         },
         {
           "path": "agent_runtime_tools/iskra_turn_hook.py",
-          "bytes": 3984,
-          "sha256": "dce0cec81c5f2c55e56beafb3b4acf9956cbcf10731b5db14dce9942977d9cca"
+          "bytes": 4257,
+          "sha256": "e5a09efadb5043dc81ae929074e147361650966085334f0f8682311750a00f63"
         }
       ]
     },
     "workspace_root": {
       "label": "workspace_root",
-      "path": "C:\\workspace",
-      "status": "missing",
-      "file_count": 0,
-      "total_bytes": 0,
-      "surface_sha256": null,
-      "sample": []
+      "path": "C:\\iskra-main",
+      "status": "observed",
+      "file_count": 2202,
+      "total_bytes": 60775034,
+      "surface_sha256": "358db3cf12d0b73554cd2372e7a85f48ed5733fea47cf352004eccadccf06f6a",
+      "sample": [
+        {
+          "path": ".agents/skills/supabase/assets/feedback-issue-template.md",
+          "bytes": 476,
+          "sha256": "74b5dfa3a8f7d6584af059a12bae4cd6bb66d1f3205dc306bf31d4f4ae2a13b1"
+        },
+        {
+          "path": ".agents/skills/supabase/references/skill-feedback.md",
+          "bytes": 1052,
+          "sha256": "85e688b56623f9250d23b60ea950dee740fd537980fc72178fe185eab76742b7"
+        },
+        {
+          "path": ".agents/skills/supabase/SKILL.md",
+          "bytes": 11400,
+          "sha256": "54a98503afb910f8f01ef4d55691dea939a7d7141e66f972ac5c86ddbad18bc6"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/_contributing.md",
+          "bytes": 4283,
+          "sha256": "b851de03355ea919862b637fdc14fefab648149cf1013b0194a17108b2d8af4c"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/_sections.md",
+          "bytes": 1721,
+          "sha256": "ad2d6f6b0938ff844f7f8971153ab6d08a03ef6511b02fb9cee9336c7b209e93"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/_template.md",
+          "bytes": 1074,
+          "sha256": "39e9fce3c6ae1af110f689e018d4417f3547ed0417a7b6198b207285e60bf9b8"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/advanced-full-text-search.md",
+          "bytes": 1523,
+          "sha256": "0682b713263c5b6b9638a31f810bad07aa179bc4f79bbb787b92ed287e00fe76"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/advanced-jsonb-indexing.md",
+          "bytes": 1493,
+          "sha256": "9bcbf7da33f6fe6fa9525680ca26d4e3412b534104cffb5f8529596d76631e4f"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/conn-idle-timeout.md",
+          "bytes": 1328,
+          "sha256": "cd4386d0b5a2bd6d0148975f0f379016b47c7cf139b9483c4f24619c6a89f5e3"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/conn-limits.md",
+          "bytes": 1369,
+          "sha256": "9ed6e5e3a45458a52f2863a60324a05d80da1d9f3e23bcb83b06f464f6a3cee7"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/conn-pooling.md",
+          "bytes": 1423,
+          "sha256": "60cd5f7942c44bdf6d8622a49a2e9f0f7fd01daf8e62bd1bd66b195cd6942975"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/conn-prepared-statements.md",
+          "bytes": 1575,
+          "sha256": "5ce48ff1e426c9b90c75c5733817fc2dd8feea9e4db3298ec9373b9cd0cf3bf8"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/data-batch-inserts.md",
+          "bytes": 1341,
+          "sha256": "98251b608bb6cfefd28828c9e5fffc705a155f1212fa0cb82904c5bc2e417572"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/data-n-plus-one.md",
+          "bytes": 1414,
+          "sha256": "f5c60f85f208161cd7567bb7cff0f559618814216a4426bb1351b51f75ec334d"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/data-pagination.md",
+          "bytes": 1408,
+          "sha256": "c0bffeb6880c1f5b961e7c2ff36fd16686ebb09e5e49ed17499654beabea3e60"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/data-upsert.md",
+          "bytes": 1440,
+          "sha256": "b366aa7da1e7929fba3011f99d949b2593967920d0c3c8572e07c0407c367054"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/lock-advisory.md",
+          "bytes": 1587,
+          "sha256": "6d6b50c5ec9f85eb7aebbb1466e642e427c1732efa558488a9cae7ef9903febd"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/lock-deadlock-prevention.md",
+          "bytes": 1923,
+          "sha256": "55f2074581d4db4996fc3ea1d3c120295209a70115f773e2c54f6b312405b293"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/lock-short-transactions.md",
+          "bytes": 1400,
+          "sha256": "2538a22231c0dfde9967812b6bd5fb347287b671f72806495f89d0d0764e5fe6"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/lock-skip-locked.md",
+          "bytes": 1407,
+          "sha256": "42c7492ba7f5d2c8ede9a5af072ea63deacf71e5695e022cae15b46b1ce4df13"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/monitor-explain-analyze.md",
+          "bytes": 1486,
+          "sha256": "94881b47194cb164b1d2a004e79f181370af44ec830b9263e990e2710bd02b76"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/monitor-pg-stat-statements.md",
+          "bytes": 1473,
+          "sha256": "812bf181876bacac5a2f914e7ffcf2a0a215b6d18dda752e65e75d926cbbcef4"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/monitor-vacuum-analyze.md",
+          "bytes": 1561,
+          "sha256": "8d35221e676f13b122865d5df947a008c41367bd180010e52fde3c429e8552a9"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/query-composite-indexes.md",
+          "bytes": 1498,
+          "sha256": "7e75d1b4d4431cb874ecc28710e95b7d2d7364511daa5d2c8e9d7de7ce1d0054"
+        },
+        {
+          "path": ".agents/skills/supabase-postgres-best-practices/references/query-covering-indexes.md",
+          "bytes": 1327,
+          "sha256": "028770393de8c0be6dcc7b9fb017f8209761d1854ebf433f036367e602f2d04d"
+        }
+      ]
     },
     "task_uploads": {
       "label": "task_uploads",
-      "path": "C:\\workspace\\user_files",
+      "path": "C:\\iskra-main\\user_files",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -441,7 +567,7 @@
     },
     "runtime_memory": {
       "label": "runtime_memory",
-      "path": "C:\\workspace\\memory",
+      "path": "C:\\iskra-main\\memory",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -450,7 +576,7 @@
     },
     "workspace_runtime_tools": {
       "label": "workspace_runtime_tools",
-      "path": "C:\\workspace\\agent_runtime_tools",
+      "path": "C:\\iskra-main\\agent_runtime_tools",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -461,15 +587,15 @@
       "label": "github_tree_index",
       "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\GITHUB_TREE_INDEX.json",
       "status": "LOCAL_PACKAGE_MIRROR_REFRESHED_RECURSIVE_GITHUB_TREE_NOT_CLAIMED",
-      "bytes": 170317,
-      "sha256": "b3d6deb3b697928b156de057a6f1df80e69da2a82e3e3e03a431bafe2dbc3f73",
+      "bytes": 169803,
+      "sha256": "af70ad892dead91654b096eddf2386595e31d98e2613649dde913fc8dfcfeefd",
       "summary": {
         "status": "LOCAL_PACKAGE_MIRROR_REFRESHED_RECURSIVE_GITHUB_TREE_NOT_CLAIMED",
-        "generated_at": "2026-06-29T17:10:34Z",
+        "generated_at": "2026-06-29T18:12:54Z",
         "surface": "github_repository_tree",
         "repository": "serhiipriadko2-sys/iskra",
-        "branch": "codex/sync-workspace-agent-package-20260629",
-        "base_head": "48cb2fc940cb29ccfe064cd4a9370679aa1f3753",
+        "branch": "codex/iskra-selfhood-mechanics-20260629",
+        "base_head": "d11313b029d77eafcfcf8654742ca41857967d91",
         "target_path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27",
         "recursive_tree": {
           "verified": false,
@@ -483,9 +609,9 @@
             "SURFACE_INVENTORY.json",
             "ZIP_RECEIPT.json"
           ],
-          "file_count": 420,
-          "total_bytes": 8972562,
-          "surface_sha256": "eaeaa91531d78ad11290f7278c9830d82900d88becbd9286632a10d787676cc5",
+          "file_count": 419,
+          "total_bytes": 8955869,
+          "surface_sha256": "30731d92c4d0168d8a0cca9f75fdc9f0842c265c1661bfd653671e12895fe5a3",
           "entries": [
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/.gitattributes",
@@ -496,8 +622,8 @@
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/AGENTS.md",
               "local_path": "AGENTS.md",
-              "bytes": 7752,
-              "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
+              "bytes": 7841,
+              "sha256": "87f5b86f42c2984467d9d7d9a0b26b5c8f6bb74d23872d52e5e6ac4cf4343fd0"
             },
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/GAP_ANALYSIS.md",
@@ -534,6 +660,12 @@
               "local_path": "SECURITY.md",
               "bytes": 6990,
               "sha256": "4d103aefca9c44dd885181da373e9d684713601f8f8605008e472a81ea4b98d4"
+            },
+            {
+              "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SELFHOOD_HARDENING_RECEIPT.json",
+              "local_path": "SELFHOOD_HARDENING_RECEIPT.json",
+              "bytes": 1377,
+              "sha256": "e4eebac4d4e7a80db3d27633586f3cdbd3ef7fdb49565528025e81893337c942"
             },
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SELF_MODERNIZATION_RECEIPT.json",
@@ -666,12 +798,6 @@
               "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
               "bytes": 810,
               "sha256": "e4808344b84dcb1f9db8c5b9eead7662166fe52016c1b51f769a713705a4a626"
-            },
-            {
-              "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
-              "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
-              "bytes": 390,
-              "sha256": "c3dcbc7be7fee1722e6f4f244bfd97866e848e914be7af736aca096c2ad9403b"
             },
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
@@ -1492,14 +1618,14 @@
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_runtime_tools/iskra_statecycle.py",
               "local_path": "agent_runtime_tools/iskra_statecycle.py",
-              "bytes": 22537,
-              "sha256": "223e2119f1358ee968d10b86785f67f9ff2c9b4d16c2a4fe719bf3b5cff08a0f"
+              "bytes": 23119,
+              "sha256": "49c94cd9e188488ecf0921e02f43f5211814b530d84c8d521656ce787e072e0c"
             },
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_runtime_tools/iskra_turn_hook.py",
               "local_path": "agent_runtime_tools/iskra_turn_hook.py",
-              "bytes": 3984,
-              "sha256": "dce0cec81c5f2c55e56beafb3b4acf9956cbcf10731b5db14dce9942977d9cca"
+              "bytes": 4257,
+              "sha256": "e5a09efadb5043dc81ae929074e147361650966085334f0f8682311750a00f63"
             },
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agents-sdk/.gitignore",
@@ -1914,12 +2040,6 @@
               "local_path": "skills/iskra-toolchain-bridge/SKILL.md",
               "bytes": 3789,
               "sha256": "dfcdf3b29e87d8ea8a2d51c19c3c3b16ecb14af1484de00bb6a328404713f4ae"
-            },
-            {
-              "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256",
-              "local_path": "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256",
-              "bytes": 18624,
-              "sha256": "6a066a1fea91dc8540d486c896a6cde5d328c66483e920c08d0da8ee423fa2fb"
             },
             {
               "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/checkpoint-builder/SKILL.md",
@@ -3035,9 +3155,9 @@
     "manifest_vs_package_root": {
       "left": "manifest_plus_manifest_file",
       "right": "package_root_static",
-      "left_count": 422,
-      "right_count": 422,
-      "common_count": 422,
+      "left_count": 423,
+      "right_count": 423,
+      "common_count": 423,
       "left_only_count": 0,
       "right_only_count": 0,
       "left_only_sample": [],
@@ -3047,26 +3167,21 @@
     "github_mirror_vs_package_root": {
       "left": "github_local_package_mirror",
       "right": "package_root_excluding_github_index_and_manifest",
-      "left_count": 420,
-      "right_count": 420,
-      "common_count": 420,
+      "left_count": 419,
+      "right_count": 421,
+      "common_count": 419,
       "left_only_count": 0,
-      "right_only_count": 0,
+      "right_only_count": 2,
       "left_only_sample": [],
-      "right_only_sample": [],
-      "status": "MATCH"
+      "right_only_sample": [
+        "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
+        "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256"
+      ],
+      "status": "DRIFT"
     },
     "zip_vs_manifest": {
-      "left": "zip_entries",
-      "right": "manifest_plus_dynamic_receipts",
-      "left_count": 423,
-      "right_count": 423,
-      "common_count": 423,
-      "left_only_count": 0,
-      "right_only_count": 0,
-      "left_only_sample": [],
-      "right_only_sample": [],
-      "status": "MATCH"
+      "status": "NOT_RUN",
+      "reason": "pass --zip-path to compare a clean zip"
     }
   }
 }

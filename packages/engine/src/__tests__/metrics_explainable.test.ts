@@ -21,4 +21,16 @@ describe('MetricsEngine.updateExplainable', () => {
 
     expect(explainable.value).toEqual(plain);
   });
+
+  it('preserves the rhythm 0-100 domain while clamping ordinary metrics to 0-1', () => {
+    const engine = new MetricsEngine(DEFAULT_METRICS);
+
+    const next = engine.update({ rhythm: 0.1, trust: 0.5, pain: 2 });
+    expect(next.rhythm).toBeCloseTo(60.1);
+    expect(next.trust).toBe(1);
+    expect(next.pain).toBe(1);
+
+    const capped = engine.update({ rhythm: 100 });
+    expect(capped.rhythm).toBe(100);
+  });
 });
