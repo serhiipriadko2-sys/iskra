@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { TREE_NODES, allTreeNodes, findNodeById } from '../lib/treeData';
 import type { TreeNodeData } from '../lib/treeData';
 import { heroContent } from '../lib/content';
-import { Dice, Copy } from './icons';
+import { Dice, Copy, Box } from './icons';
 
 const GROUP_ORDER: { key: TreeNodeData['group']; title: string }[] = [
   { key: 'soil', title: 'Почва' },
@@ -12,7 +12,11 @@ const GROUP_ORDER: { key: TreeNodeData['group']; title: string }[] = [
   { key: 'crown', title: 'Крона' },
 ];
 
-export function ReducedMotionFallback() {
+interface ReducedMotionFallbackProps {
+  onExit?: () => void;
+}
+
+export function ReducedMotionFallback({ onExit }: ReducedMotionFallbackProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const activeNode = activeId ? findNodeById(activeId) : null;
 
@@ -30,13 +34,25 @@ export function ReducedMotionFallback() {
             <h1 className="font-serif text-4xl md:text-6xl text-iskra-text mb-4">Древо Искры</h1>
             <p className="text-iskra-muted text-lg max-w-2xl">{heroContent.description}</p>
           </div>
-          <button
-            onClick={handleRandom}
-            className="self-start md:self-auto flex items-center gap-2 px-4 py-2 rounded-lg bg-iskra-primary/10 border border-iskra-primary/30 text-iskra-primary hover:bg-iskra-primary/20 transition-colors font-mono text-xs uppercase tracking-wider"
-          >
-            <Dice className="w-4 h-4" />
-            Случайный узел
-          </button>
+          <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
+            <button
+              onClick={handleRandom}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-iskra-primary/10 border border-iskra-primary/30 text-iskra-primary hover:bg-iskra-primary/20 transition-colors font-mono text-xs uppercase tracking-wider"
+            >
+              <Dice className="w-4 h-4" />
+              Случайный узел
+            </button>
+            {onExit && (
+              <button
+                onClick={onExit}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-iskra-surface/60 border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors font-mono text-xs uppercase tracking-wider"
+              >
+                <Box className="w-4 h-4" />
+                <span className="hidden sm:inline">3D вид</span>
+                <span className="sm:hidden">3D</span>
+              </button>
+            )}
+          </div>
         </div>
         <p className="mt-4 text-sm text-iskra-accent font-mono">
           Активирован упрощённый режим — без анимации и 3D-камеры. Каждый узел — дверь. Выбери ту, от которой хочется убежать.

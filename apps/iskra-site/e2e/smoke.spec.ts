@@ -52,4 +52,23 @@ test.describe('iskra-site smoke', () => {
 
     await expect(page.getByRole('dialog', { name: 'Архитектура' })).toBeVisible();
   });
+
+  test('toggles between 3D and reduced-motion fallback from the header', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'desktop-only toggle labels');
+
+    await page.goto('/');
+    await expect(page.locator('canvas')).toBeVisible({ timeout: 10000 });
+
+    const toggle = page.getByRole('button', { name: 'Упрощённый режим' });
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+
+    await expect(page.getByText('Активирован упрощённый режим')).toBeVisible();
+
+    const back = page.getByRole('button', { name: '3D вид' });
+    await expect(back).toBeVisible();
+    await back.click();
+
+    await expect(page.locator('canvas')).toBeVisible({ timeout: 10000 });
+  });
 });

@@ -17,7 +17,7 @@ import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { useMediaQuery } from './hooks/useMediaQuery';
 import { allTreeNodes } from './lib/treeData';
 import type { AudienceMode } from './types';
-import { Maximize, Minimize, Dice } from './components/icons';
+import { Maximize, Minimize, Dice, List } from './components/icons';
 
 function Loader() {
   return (
@@ -35,7 +35,8 @@ export default function App() {
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [audienceMode, setAudienceMode] = useState<AudienceMode>('novice');
   const [showAtlas, setShowAtlas] = useState(false);
-  const reducedMotion = useReducedMotion();
+  const queryReducedMotion = useReducedMotion();
+  const [reducedMotion, setReducedMotion] = useState(queryReducedMotion);
   const isMobile = useMediaQuery('(max-width: 767px)');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const appRef = useRef<HTMLDivElement>(null);
@@ -76,7 +77,7 @@ export default function App() {
   });
 
   if (reducedMotion) {
-    return <ReducedMotionFallback />;
+    return <ReducedMotionFallback onExit={() => setReducedMotion(false)} />;
   }
 
   return (
@@ -177,6 +178,16 @@ export default function App() {
               className="px-3 py-2 rounded-lg text-[10px] font-mono uppercase tracking-wider bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
             >
               Атлас
+            </button>
+            <button
+              onClick={() => setReducedMotion(true)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-mono uppercase tracking-wider bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+              aria-label="Упрощённый режим"
+              title="Упрощённый режим"
+            >
+              <List className="w-4 h-4" />
+              <span className="hidden sm:inline">Упрощённый</span>
+              <span className="sm:hidden">2D</span>
             </button>
           </div>
         </>
