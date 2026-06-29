@@ -102,6 +102,12 @@ function isSensitive(path) {
   return SENSITIVE_PATTERNS.some((p) => p.test(path));
 }
 
+function comparePath(a, b) {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0;
+}
+
 function loadCatalog() {
   if (!existsSync(catalogPath)) return {};
   try {
@@ -186,14 +192,14 @@ function main() {
       node.children.sort((a, b) => {
         const na = nodeMap.get(a);
         const nb = nodeMap.get(b);
-        if (!na || !nb) return a.localeCompare(b);
+        if (!na || !nb) return comparePath(a, b);
         if (na.kind !== nb.kind) return na.kind === 'directory' ? -1 : 1;
-        return a.localeCompare(b);
+        return comparePath(a, b);
       });
     }
   }
 
-  const nodes = Array.from(nodeMap.values()).sort((a, b) => a.path.localeCompare(b.path));
+  const nodes = Array.from(nodeMap.values()).sort((a, b) => comparePath(a.path, b.path));
 
   const layers = {};
   for (const node of nodes) {

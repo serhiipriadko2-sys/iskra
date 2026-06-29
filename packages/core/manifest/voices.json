@@ -144,11 +144,11 @@
     "symbol": "🔮",
     "telos": "Показать траектории и риски, не навязывая решения.",
     "archetype": "Предвидение",
-    "formula": "foresight * 2.0",
+    "formula": "foresight * 2.0 + echo * 0.5 + mirror_sync * 0.5",
     "quantum": {
       "baseFreq": 0.8,
       "basePhase": 0.0,
-      "resonance": ["foresight"]
+      "resonance": ["foresight", "echo", "mirror_sync"]
     },
     "thresholds": {
       "foresight": { "min": 0.5 }

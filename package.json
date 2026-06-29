@@ -10,8 +10,8 @@
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm run build:runtime && pnpm -r --if-present typecheck",
-    "build:runtime": "pnpm --dir runtime build",
-    "verify": "cd runtime && npm run build && cd .. && npm run check:shard-registry && npm run check:sensitive-status && npm run typecheck && pnpm test && npx tsx tools/verify_ledger.ts",
+    "build:runtime": "pnpm run prepare:legacy-runtime && cd runtime && npm run build",
+    "verify": "pnpm run build:runtime && npm run check:shard-registry && npm run check:sensitive-status && npm run typecheck && pnpm test && npx tsx tools/verify_ledger.ts",
     "ledger:update": "npx tsx tools/update_ledger.ts",
     "check:supabase-voice-metrics-contract": "npx tsx tools/verify_supabase_voice_metrics_contract.ts",
     "check:supabase-voice-metrics-contract:repo": "npx tsx tools/verify_supabase_voice_metrics_contract.ts --repo-only",
@@ -27,7 +27,8 @@
     "import:shard1": "node tools/run_python.mjs tools/import_phase1_shard1.py",
     "import:shard2": "node tools/run_python.mjs tools/import_phase1_shard2.py",
     "import:shard3": "node tools/run_python.mjs tools/import_phase1_shard3.py",
-    "import:shard": "node tools/run_python.mjs tools/import_phase1_shard.py"
+    "import:shard": "node tools/run_python.mjs tools/import_phase1_shard.py",
+    "prepare:legacy-runtime": "node tools/ensure_runtime_deps.mjs"
   },
   "devDependencies": {
     "tsx": "^4.22.4",

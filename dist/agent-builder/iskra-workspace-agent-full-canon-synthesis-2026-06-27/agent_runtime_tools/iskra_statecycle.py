@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -18,8 +19,26 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_HISTORY = Path("/workspace/memory/iskra-statecycle/history.jsonl")
-DEFAULT_VOICES = Path("/workspace/iskra-main/packages/core/manifest/voices.json")
+def env_path(name: str, default: Path) -> Path:
+    return Path(os.environ.get(name, str(default)))
+
+
+DEFAULT_MEMORY_ROOT = env_path("ISKRA_MEMORY_ROOT", Path("/workspace/memory"))
+DEFAULT_HISTORY = env_path("ISKRA_STATE_HISTORY", DEFAULT_MEMORY_ROOT / "iskra-statecycle/history.jsonl")
+
+
+def default_voices_path() -> Path:
+    explicit = os.environ.get("ISKRA_VOICES_PATH")
+    if explicit:
+        return Path(explicit)
+    for parent in Path(__file__).resolve().parents:
+        candidate = parent / "packages" / "core" / "manifest" / "voices.json"
+        if candidate.exists():
+            return candidate
+    return Path("/workspace/iskra-main/packages/core/manifest/voices.json")
+
+
+DEFAULT_VOICES = default_voices_path()
 
 FALLBACK_VOICES = [
     {

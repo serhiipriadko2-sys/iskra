@@ -1,19 +1,19 @@
 {
   "release": "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
-  "generated_at": "2026-06-29T17:10:39Z",
+  "generated_at": "2026-06-29T18:13:06Z",
   "status": "PASS",
   "archive_kind": "sidecar_clean_export_zip",
   "archive_path": "../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
-  "archive_sha256": "a8a6650ba0618c68f18e87d1941e2273b075a65f52122f9246d0a8a239fbb12b",
-  "archive_bytes": 3040406,
-  "entries": 423,
-  "manifest_entries": 421,
-  "manifest_sha256": "f0f7c63e93fdcb4d6b2abce28a3ae5c099352b65fa52b2a01ac32647a4a42bfd",
+  "archive_sha256": "2d824882414841b2649fe1daf73420c9efada30275a264b223bbd6c7ae78ceed",
+  "archive_bytes": 3043273,
+  "entries": 424,
+  "manifest_entries": 422,
+  "manifest_sha256": "057153b866b53437036cb4d740aa35bf51436aa22033a1dbe7015da1267d749a",
   "inventory_rule": "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
   "clean_export": {
     "command": "py tools/clean_export.py --source manifest --zip ../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip --force",
-    "file_count": 423,
-    "total_bytes": 9410504,
+    "file_count": 424,
+    "total_bytes": 9417677,
     "forbidden_hits": 0,
     "missing_files": 0,
     "hash_mismatches": 0
@@ -29,12 +29,13 @@
   "included_qc_receipts": [
     "UNIFIED_QC_RECEIPT.json",
     "WORKSPACE_AGENT_READONLY_RECEIPT.json",
-    "GITHUB_TREE_INDEX.json"
+    "GITHUB_TREE_INDEX.json",
+    "SELFHOOD_HARDENING_RECEIPT.json"
   ],
   "surface_inventory": {
     "status": "PASS",
     "output": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\SURFACE_INVENTORY.json",
-    "sha256": "1d7d973e8033573d8a9c965d16cfb62fb962a296d97e2718e294bec3943c34c0"
+    "sha256": "fa492a90db91a61f9d7edf23f7d447944563ec9627fed16b53758e8445647a5a"
   },
   "workspace_agent_boundary": {
     "delivery_boundary": "package-first; no live Workspace Agent mutation performed",

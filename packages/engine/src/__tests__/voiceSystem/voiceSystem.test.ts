@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { VoiceQuantumField } from '../../services/voiceSystem.js'
-import { DEFAULT_METRICS } from '@iskra/core'
+import { DEFAULT_METRICS, VOICES } from '@iskra/core'
 import type { IskraMetrics } from '@iskra/core'
 
 type VoiceGateCase = {
@@ -19,6 +19,29 @@ describe('VoiceQuantumField', () => {
   it('should initialize with 9 voices', () => {
     const superposition = vs.getSuperposition(9)
     expect(superposition).toHaveLength(9)
+  })
+
+  it('aligns SIBYL resonance with foresight, echo, and mirror_sync contract', () => {
+    const sibyl = VOICES.find((voice) => voice.id === 'SIBYL')
+    expect(sibyl?.quantum.resonance).toEqual(['foresight', 'echo', 'mirror_sync'])
+
+    const metrics: IskraMetrics = {
+      ...DEFAULT_METRICS,
+      foresight: 0.8,
+      echo: 0.9,
+      mirror_sync: 0.9,
+      chaos: 0.1,
+      drift: 0.1,
+    }
+    vs.update(metrics)
+
+    const sibylTrace = vs.getLastTrace()?.voices.find((voice) => voice.id === 'SIBYL')
+    expect(sibylTrace?.thresholdMatched).toBe(true)
+    expect(sibylTrace?.resonanceContributions.map((item) => item.metric)).toEqual([
+      'foresight',
+      'echo',
+      'mirror_sync',
+    ])
   })
 
   it('should amplify KAIN when pain is high', () => {

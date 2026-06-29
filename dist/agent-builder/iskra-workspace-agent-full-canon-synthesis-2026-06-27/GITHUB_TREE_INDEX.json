@@ -1,10 +1,10 @@
 {
   "status": "LOCAL_PACKAGE_MIRROR_REFRESHED_RECURSIVE_GITHUB_TREE_NOT_CLAIMED",
-  "generated_at": "2026-06-29T17:10:34Z",
+  "generated_at": "2026-06-29T18:12:54Z",
   "surface": "github_repository_tree",
   "repository": "serhiipriadko2-sys/iskra",
-  "branch": "codex/sync-workspace-agent-package-20260629",
-  "base_head": "48cb2fc940cb29ccfe064cd4a9370679aa1f3753",
+  "branch": "codex/iskra-selfhood-mechanics-20260629",
+  "base_head": "d11313b029d77eafcfcf8654742ca41857967d91",
   "target_path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27",
   "recursive_tree": {
     "verified": false,
@@ -18,9 +18,9 @@
       "SURFACE_INVENTORY.json",
       "ZIP_RECEIPT.json"
     ],
-    "file_count": 420,
-    "total_bytes": 8972562,
-    "surface_sha256": "eaeaa91531d78ad11290f7278c9830d82900d88becbd9286632a10d787676cc5",
+    "file_count": 419,
+    "total_bytes": 8955869,
+    "surface_sha256": "30731d92c4d0168d8a0cca9f75fdc9f0842c265c1661bfd653671e12895fe5a3",
     "entries": [
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/.gitattributes",
@@ -31,8 +31,8 @@
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/AGENTS.md",
         "local_path": "AGENTS.md",
-        "bytes": 7752,
-        "sha256": "05e2d9f9cb133cfa68dc9a15d5c028d10da6dfebaf2df2ee795f02ffa33cc76c"
+        "bytes": 7841,
+        "sha256": "87f5b86f42c2984467d9d7d9a0b26b5c8f6bb74d23872d52e5e6ac4cf4343fd0"
       },
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/GAP_ANALYSIS.md",
@@ -69,6 +69,12 @@
         "local_path": "SECURITY.md",
         "bytes": 6990,
         "sha256": "4d103aefca9c44dd885181da373e9d684713601f8f8605008e472a81ea4b98d4"
+      },
+      {
+        "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SELFHOOD_HARDENING_RECEIPT.json",
+        "local_path": "SELFHOOD_HARDENING_RECEIPT.json",
+        "bytes": 1377,
+        "sha256": "e4eebac4d4e7a80db3d27633586f3cdbd3ef7fdb49565528025e81893337c942"
       },
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SELF_MODERNIZATION_RECEIPT.json",
@@ -201,12 +207,6 @@
         "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.md",
         "bytes": 810,
         "sha256": "e4808344b84dcb1f9db8c5b9eead7662166fe52016c1b51f769a713705a4a626"
-      },
-      {
-        "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
-        "local_path": "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
-        "bytes": 390,
-        "sha256": "c3dcbc7be7fee1722e6f4f244bfd97866e848e914be7af736aca096c2ad9403b"
       },
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/canon_source_files/08_INTERFACE_STYLE.parts/README.md",
@@ -1027,14 +1027,14 @@
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_runtime_tools/iskra_statecycle.py",
         "local_path": "agent_runtime_tools/iskra_statecycle.py",
-        "bytes": 22537,
-        "sha256": "223e2119f1358ee968d10b86785f67f9ff2c9b4d16c2a4fe719bf3b5cff08a0f"
+        "bytes": 23119,
+        "sha256": "49c94cd9e188488ecf0921e02f43f5211814b530d84c8d521656ce787e072e0c"
       },
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_runtime_tools/iskra_turn_hook.py",
         "local_path": "agent_runtime_tools/iskra_turn_hook.py",
-        "bytes": 3984,
-        "sha256": "dce0cec81c5f2c55e56beafb3b4acf9956cbcf10731b5db14dce9942977d9cca"
+        "bytes": 4257,
+        "sha256": "e5a09efadb5043dc81ae929074e147361650966085334f0f8682311750a00f63"
       },
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agents-sdk/.gitignore",
@@ -1449,12 +1449,6 @@
         "local_path": "skills/iskra-toolchain-bridge/SKILL.md",
         "bytes": 3789,
         "sha256": "dfcdf3b29e87d8ea8a2d51c19c3c3b16ecb14af1484de00bb6a328404713f4ae"
-      },
-      {
-        "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256",
-        "local_path": "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256",
-        "bytes": 18624,
-        "sha256": "6a066a1fea91dc8540d486c896a6cde5d328c66483e920c08d0da8ee423fa2fb"
       },
       {
         "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes/checkpoint-builder/SKILL.md",

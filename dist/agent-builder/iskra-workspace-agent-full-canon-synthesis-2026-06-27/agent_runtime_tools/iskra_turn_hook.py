@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -23,10 +24,15 @@ STATECYCLE_PATH = TOOLS_DIR / "iskra_statecycle.py"
 SHADOW_PATH = TOOLS_DIR / "iskra_shadow_core.py"
 DREAM_PATH = TOOLS_DIR / "iskra_dreamspace.py"
 HORIZON_PATH = TOOLS_DIR / "iskra_horizon_weaver.py"
-STATE_HISTORY = Path("/workspace/memory/iskra-statecycle/history.jsonl")
-SHADOW_LEDGER = Path("/workspace/memory/shadow-core/shadow_entries.jsonl")
-DREAM_LEDGER = Path("/workspace/memory/dreamspace/dream_entries.jsonl")
-HORIZON_ROOT = Path("/workspace/memory/horizon")
+def env_path(name: str, default: Path) -> Path:
+    return Path(os.environ.get(name, str(default)))
+
+
+MEMORY_ROOT = env_path("ISKRA_MEMORY_ROOT", Path("/workspace/memory"))
+STATE_HISTORY = env_path("ISKRA_STATE_HISTORY", MEMORY_ROOT / "iskra-statecycle/history.jsonl")
+SHADOW_LEDGER = env_path("ISKRA_SHADOW_LEDGER", MEMORY_ROOT / "shadow-core/shadow_entries.jsonl")
+DREAM_LEDGER = env_path("ISKRA_DREAM_LEDGER", MEMORY_ROOT / "dreamspace/dream_entries.jsonl")
+HORIZON_ROOT = env_path("ISKRA_HORIZON_ROOT", MEMORY_ROOT / "horizon")
 
 
 def load_module(path: Path, name: str) -> Any:
