@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Rejected Horizon Review v0.2 Proposal",
+  "title": "Rejected Horizon Review v0.2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -33,11 +33,11 @@
     },
     "proposal_id": {
       "type": "string",
-      "minLength": 8
+      "pattern": "^HORIZON-PROP-[0-9]{8}-[0-9]{3}$"
     },
     "rejected_at": {
       "type": "string",
-      "minLength": 10
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
     },
     "rejected_by": {
       "type": "string",

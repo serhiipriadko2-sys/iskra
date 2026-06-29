@@ -70,6 +70,24 @@ class HorizonV02ValidatorTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1)
             self.assertIn("record must be object", result.stdout)
 
+    def test_empty_json_array_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "empty.json"
+            tmp_path.write_text("[]", encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("receipt batch is empty", result.stdout)
+
+    def test_empty_jsonl_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "empty.jsonl"
+            tmp_path.write_text("", encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("receipt batch is empty", result.stdout)
+
     def test_non_object_jsonl_record_fails_without_crash(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp) / "bad-record.jsonl"
@@ -111,6 +129,66 @@ class HorizonV02ValidatorTests(unittest.TestCase):
             result = run_validator(tmp_path)
             self.assertEqual(result.returncode, 1)
             self.assertIn("forbidden mutation phrase", result.stdout)
+
+    def test_live_connector_mutation_phrase_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "live_mutation_action.json"
+            proposal = json.loads(PROPOSAL_EXAMPLE.read_text(encoding="utf-8"))
+            proposal["proposed_action"] = "update GitHub and Supabase immediately after this proposal"
+            tmp_path.write_text(json.dumps(proposal), encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("forbidden mutation phrase", result.stdout)
+
+    def test_proposal_identity_fields_are_validated(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "bad-identity.json"
+            proposal = json.loads(PROPOSAL_EXAMPLE.read_text(encoding="utf-8"))
+            proposal["id"] = "bad"
+            proposal["created_at"] = "x"
+            proposal["linked_adr"] = ""
+            tmp_path.write_text(json.dumps(proposal), encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("id", result.stdout)
+            self.assertIn("created_at", result.stdout)
+            self.assertIn("linked_adr", result.stdout)
+
+    def test_rejected_review_id_is_validated(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "bad-review-id.json"
+            rejected = json.loads(REJECTED_EXAMPLE.read_text(encoding="utf-8"))
+            rejected["review_id"] = "bad"
+            tmp_path.write_text(json.dumps(rejected), encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("review_id", result.stdout)
+
+    def test_extra_receipt_fields_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "extra-field.json"
+            proposal = json.loads(PROPOSAL_EXAMPLE.read_text(encoding="utf-8"))
+            proposal["live_mutation_approval"] = True
+            tmp_path.write_text(json.dumps(proposal), encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("unknown fields are not allowed", result.stdout)
+
+    def test_adoml_contents_are_validated(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "bad-adoml.json"
+            proposal = json.loads(PROPOSAL_EXAMPLE.read_text(encoding="utf-8"))
+            proposal["adoml"] = {"delta": "", "D": "", "omega": True, "lambda": ""}
+            tmp_path.write_text(json.dumps(proposal), encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("adoml.delta", result.stdout)
+            self.assertIn("adoml.omega", result.stdout)
 
 
 if __name__ == "__main__":

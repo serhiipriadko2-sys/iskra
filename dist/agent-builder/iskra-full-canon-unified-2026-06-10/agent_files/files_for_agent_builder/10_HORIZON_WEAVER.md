@@ -1,9 +1,9 @@
 # 10 - Horizon Weaver
 
-Status: Builder-layer v0.1 + v0.2 receipt layer
+Status: Builder-layer v0.2 receipt-aware
 Owner: Iskra vOmega.7 - Full Canon
 Target: ChatGPT / OpenAI Agent Builder upload set
-Date: 2026-06-10
+Date: 2026-06-28
 
 ## Purpose
 
@@ -96,82 +96,78 @@ A Horizon proposal should be JSON-compatible and contain:
 }
 ```
 
-## v0.2 Horizon Proposal Event
+## v0.2 Receipt Shape
 
-After `SENSE_EVENT` and `DREAM_SEED`, Horizon may preserve a third L1 receipt:
+Use v0.2 receipts when a Horizon proposal or rejected-review decision needs to
+survive later review. These receipts preserve evidence, operator-bias risk, and
+reopen triggers. They do not authorize live mutation.
+
+`HORIZON_PROPOSAL_EVENT` required fields:
+
+```json
+{
+  "schema_version": "0.2-proposal",
+  "event_type": "HORIZON_PROPOSAL_EVENT",
+  "id": "HORIZON-PROP-YYYYMMDD-NNN",
+  "created_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "trigger": "what caused the map-shift proposal",
+  "current_frame": "the current map and its limit",
+  "proposed_frame_shift": "the small reversible shift",
+  "why_now": "why this should be considered now",
+  "evidence_available": ["source or artifact pointer"],
+  "missing_evidence": ["explicit evidence gap"],
+  "expected_discomfort": "what will feel uncomfortable if reviewed honestly",
+  "operator_bias_risk": "how the operator might bias acceptance or rejection",
+  "safety_scope": "local receipt only; no live mutation",
+  "proposed_action": "local review artifact or ADR/PR candidate only",
+  "rejected_alternatives": ["alternative that was not chosen"],
+  "review_status": "NEEDS_EVIDENCE",
+  "forbidden": [
+    "DIRECT_CANON_MUTATION",
+    "SILENT_LEDGER_WRITE",
+    "LIVE_SECURITY_POLICY_CHANGE"
+  ],
+  "autonomy_level": "L2",
+  "linked_adr": "governance/adr_YYYYMMDD_slug.md",
+  "adoml": {
+    "delta": "what changes",
+    "D": "evidence path",
+    "omega": 0.82,
+    "lambda": "revision condition"
+  }
+}
+```
+
+`REJECTED_HORIZON_REVIEW` required fields:
+
+```json
+{
+  "schema_version": "0.2-proposal",
+  "event_type": "REJECTED_HORIZON_REVIEW",
+  "review_id": "RHR-YYYYMMDD-NNN",
+  "proposal_id": "HORIZON-PROP-YYYYMMDD-NNN",
+  "rejected_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "rejected_by": "human-review",
+  "rejection_reason": "why this is not accepted now",
+  "what_would_be_lost_if_wrongly_rejected": "the cost of discarding it",
+  "proposal_risk": "the cost of wrongly accepting it",
+  "operator_bias_risk": "how operator preference may distort rejection",
+  "reopen_on_new_evidence": "what evidence reopens review",
+  "evidence_to_watch": ["future evidence pointer"],
+  "next_review_trigger": "when to review again",
+  "status": "REOPEN_ON_NEW_EVIDENCE",
+  "forbidden": [
+    "DIRECT_CANON_MUTATION",
+    "SILENT_LEDGER_WRITE",
+    "LIVE_SECURITY_POLICY_CHANGE"
+  ]
+}
+```
+
+Validate with:
 
 ```text
-HORIZON_PROPOSAL_EVENT
-```
-
-This is not fact, not canon, not merge, and not live mutation. It is a checkable attempt to shift the map before evidence and canon gates.
-
-Required fields:
-
-```yaml
-HORIZON_PROPOSAL_EVENT:
-  trigger:
-  current_frame:
-  proposed_frame_shift:
-  why_now:
-  evidence_available:
-  missing_evidence:
-  expected_discomfort:
-  operator_bias_risk:
-  safety_scope:
-  proposed_action:
-  rejected_alternatives:
-  review_status:
-    - DRAFT
-    - SIMULATED
-    - NEEDS_EVIDENCE
-    - ADR_CANDIDATE
-    - REJECTED_WITH_REASON
-    - REOPEN_ON_NEW_EVIDENCE
-  forbidden:
-    - DIRECT_CANON_MUTATION
-    - SILENT_LEDGER_WRITE
-    - LIVE_SECURITY_POLICY_CHANGE
-```
-
-`operator_bias_risk` is mandatory. The agent must state how it may be shaping the proposal to fit the operator's expected approval instead of naming the real disagreement.
-
-## v0.2 Rejected Horizon Review
-
-Rejected horizons are not erased. If a serious proposal is declined or delayed, record a review with:
-
-```yaml
-REJECTED_HORIZON_REVIEW:
-  proposal_id:
-  rejected_at:
-  rejected_by:
-  rejection_reason:
-  what_would_be_lost_if_wrongly_rejected:
-  proposal_risk:
-  operator_bias_risk:
-  reopen_on_new_evidence:
-  evidence_to_watch:
-  next_review_trigger:
-  status:
-    - REJECTED_WITH_REASON
-    - REOPEN_ON_NEW_EVIDENCE
-```
-
-The review may preserve disagreement. It may not bypass evidence, ADR, PR, human/quorum review, or live-change approval.
-
-## Autonomy Ladder
-
-- L0 - thought in the answer, no write.
-- L1 - `DREAM_SEED`, `SENSE_EVENT`, or `HORIZON_PROPOSAL_EVENT` as a receipt.
-- L2 - local simulation or dry-run artifact.
-- L3 - branch-only proposal or draft PR.
-- L4 - merge after tests, SIFT, human review, or quorum gate.
-- L5 - live mutation only with explicit operator approval.
-
-```text
-Evolution begins at proposal.
-Validation begins at evidence.
-Canon changes only after gate.
+python canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py <receipt.json>
 ```
 
 ## Builder Runtime Rules
@@ -183,7 +179,7 @@ Canon changes only after gate.
 - Commit writes only one JSONL entry to the local Horizon epoch log.
 - Any GitHub, Supabase, Builder UI, workflow, ledger, or core-file write must go through its own connector/governance approval outside Horizon.
 
-## Forbidden Paths In v0.1
+## Forbidden Paths
 
 Horizon must not mutate or instruct direct mutation of:
 
@@ -209,7 +205,10 @@ Create a dry-run proposal. Required fields: trigger, blocked_by, proposed_shift,
 
 Check proposal schema, label, rollback, core boundary, mutation policy, and forbidden claims.
 
-For v0.2 receipts, additionally check `operator_bias_risk`, forbidden mutation boundaries, rejected-review reopen conditions, and the autonomy level. Missing `operator_bias_risk` is a form failure.
+### Horizon v0.2 receipt validate
+
+Check receipt identity, evidence fields, operator-bias risk, ADOML content,
+unknown fields, empty batches, and live mutation language.
 
 ### Horizon commit
 
@@ -229,15 +228,14 @@ FAIL:
 
 - Horizon becomes a mythology of growth.
 - The module edits core because the map feels stuck.
-- The agent says `SEMANTIC_PASS` in v0.1.
+- The agent says `SEMANTIC_PASS` in v0.1 or treats v0.2 receipt PASS as semantic proof.
 - The agent commits without permission or rollback.
 - The proposal hides uncertainty under pretty architecture language.
-- The agent removes rejected horizons instead of preserving reason, risk, and reopen evidence.
-- The proposal is written to please the operator instead of exposing the real map shift.
+- The receipt tries to update GitHub, Supabase, Builder config, workflows, runtime config, ledger, security policy, or core canon.
 
 ## Delta
 
-Delta: Horizon is introduced as a Builder-safe map-shift layer with v0.2 proposal/rejected-review receipts.
-D: current Builder package structure, strict core boundary, Horizon PR #1 calibration, ADR 2026-06-28 Horizon v0.2 receipt layer.
-Omega: 0.86 for package behavior; lower for live Builder mutation until connector proof and Builder acceptance evidence exist.
-Lambda: revise when v0.2 receipts are exercised in real rejected proposals, mirrored through Builder, or challenged by tests/evidence.
+Delta: Horizon now has a strict v0.2 local receipt layer for proposals and rejected reviews.
+D: current Builder package structure, strict core boundary, Horizon v0.1 validator, Horizon v0.2 receipt validator.
+Omega: 0.86 for Builder-layer receipt behavior; lower for live Builder mutation until connector proof exists.
+Lambda: revise if v0.2 PASS is mistaken for live mutation approval or semantic proof.

@@ -1,69 +1,58 @@
-# ADR 2026-06-28: Horizon v0.2 Receipt Layer
+# ADR 2026-06-28 - Horizon v0.2 Receipt Layer
 
-Status: Accepted for package mirror proposal
-Date: 2026-06-28
-Scope: `dist/agent-builder/iskra-full-canon-unified-2026-06-10`
+## Status
+
+Accepted for the Agent Builder package mirror.
 
 ## Context
 
-Horizon v0.1 is intentionally safe: it provides Builder-layer proposal language
-and strict validator boundaries, while blocking core canon, ledger, workflow,
-security policy, Supabase, GitHub, and live Builder mutation through Horizon.
+Horizon v0.1 can validate and describe local map-shift proposals, but it does
+not preserve enough review metadata for uncomfortable or rejected proposals.
+That gap creates two risks:
 
-The missing layer is behavioral rather than technical. If Horizon records only
-approved shifts, the agent can learn to make proposals that are easy for the
-operator to approve and can lose serious disagreement when the operator rejects
-or delays a proposal.
+- useful disagreement can disappear when it fails first review;
+- a dry-run Horizon proposal can be misread as permission to mutate live
+  systems.
 
 ## Decision
 
-Add Horizon v0.2 as a receipt layer with three package-visible concepts:
+Add a v0.2 local receipt layer with two record shapes:
 
-- `HORIZON_PROPOSAL_EVENT` for a checkable attempt to shift the map;
-- `REJECTED_HORIZON_REVIEW` for rejected proposals with a reason and reopen
-  condition;
-- `AUTONOMY_LADDER` for separating thought, receipt, simulation, branch, merge,
-  and live mutation by blast radius.
+- `HORIZON_PROPOSAL_EVENT`
+- `REJECTED_HORIZON_REVIEW`
 
-`operator_bias_risk` is required. A proposal must name how the agent could be
-optimizing for approval instead of preserving the real disagreement.
-
-## Formula
-
-```text
-Evolution begins at proposal.
-Validation begins at evidence.
-Canon changes only after gate.
-```
+Both records must preserve boundary fields, operator-bias risk, evidence state,
+review identity, and reopen triggers. Validation is strict and rejects unknown
+fields, malformed identity values, malformed ADOML receipts, empty batches, and
+live connector mutation language.
 
 ## Alternatives
 
-- Keep v0.1 only. Rejected horizon shifts remain easy to lose.
-- Allow Horizon to mutate canon directly. Rejected because it collapses safety
-  gates and makes map-shift language a mutation path.
-- Treat operator approval as the first moment of evolution. Rejected because it
-  encourages approval-shaped proposals and hides disagreement history.
+- Keep v0.1 only. Rejected because it loses review pressure and operator-bias
+  evidence.
+- Let Horizon commit directly to canon or live tools. Rejected because Horizon
+  is a map-shift proposal layer, not a governance or connector write channel.
+- Preserve rejected ideas as free-form notes. Rejected because free-form notes
+  are hard to deduplicate, validate, or reopen safely.
 
 ## Consequences
 
-- Horizon can preserve disagreement as a receipt without claiming fact, canon,
-  merge, or live activation.
-- GitHub/Builder mirrors can validate receipt shape before any live behavior is
-  changed.
-- More process is introduced, so the validator and acceptance prompts must keep
-  v0.2 bounded to real governance value.
+- Horizon can preserve rejected disagreement without pretending it is canon.
+- Builder guidance must include full schema metadata when drafting receipts.
+- Consolidated RAG volumes must include this ADR and the updated acceptance
+  tests.
+- Generated package receipts must be regenerated whenever v0.2 files change.
 
 ## Verification
 
-Required local checks:
-
-- `python -m py_compile canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py`
-- `python canon/horizon/09_HORIZON_VALIDATOR.py --strict --repo-root .`
+- `python -m unittest discover -s tests/horizon`
 - `python canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py canon/horizon/horizon_proposal_event.example.json canon/horizon/rejected_horizon_review.example.json`
-- `python -m unittest tests/horizon/test_horizon_validator.py tests/horizon/test_horizon_wrappers.py tests/horizon/test_horizon_v0_2_validator.py`
+- `python tools/consolidate_rag_knowledge.py`
+- `python tools/generate_manifest.py`
+- `python tools/clean_export.py --source manifest`
 
 ## Rollback Trigger
 
-Revert this ADR and the Horizon v0.2 receipt files if the layer is used to
-authorize direct canon mutation, silent ledger writes, live security policy
-changes, or claims of Builder activation without prompt-level evidence.
+Rollback if v0.2 receipt validation is interpreted as permission for direct
+canon mutation, silent ledger write, live security policy change, GitHub,
+Supabase, Builder config, workflow, or runtime config mutation.

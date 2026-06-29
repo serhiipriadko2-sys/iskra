@@ -1,247 +1,126 @@
 {
-    "release":  "iskra-full-canon-unified-2026-06-10",
-    "generated_at":  "2026-06-28T18:57:23Z",
-    "status":  "WORKSPACE_AGENT_FILE_OVERLAY_PUBLISHED_WITH_PROMPT_SAVE_BLOCKER",
-    "builder_ui_status":  "published-file-overlay-version-51; live-prompt-save-blocked; verified-live-builder not claimed",
-    "active_target":  "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
-    "scope":  "chatgpt_workspace_agent_alignment_plus_user_added_skill_pack",
-    "package_inventory":  {
-                              "manifest_entries_expected_after_final_regeneration":  439,
-                              "zip_entries_expected_after_final_regeneration":  441,
-                              "manifest_rule":  "static clean-subset files except MANIFEST.sha256, SURFACE_INVENTORY.json, and ZIP_RECEIPT.json",
-                              "zip_rule":  "manifest entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json excluded",
-                              "skill_pack":  {
-                                                 "path":  "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/skills/hermes",
-                                                 "package_skill_count":  32,
-                                                 "observed_live_skill_count":  32,
-                                                 "name_alignment":  "PASS"
-                                             }
-                          },
-    "workspace_agent_alignment":  {
-                                      "status":  "PASS_LOCAL_AND_PARTIAL_LIVE_FILE_OVERLAY",
-                                      "live_agent_name":  "РСЃРєСЂР° vО©.7",
-                                      "observed_via":  "Codex Desktop Workspace Agents connector plus user screenshot",
-                                      "observed_at":  "2026-06-27T16:08:44Z",
-                                      "chatgpt_channel":  "present",
-                                      "api_channel":  "active; published; trigger id redacted",
-                                      "slack_channel":  "not configured",
-                                      "memory":  "per_user; platform-managed Workspace Agent Memory surface",
-                                      "memory_surface":  {
-                                                             "status":  "OBSERVED_BY_USER_SCREENSHOT_NOT_ENUMERATED",
-                                                             "folders_observed":  [
-                                                                                      "ChatGPT",
-                                                                                      "API"
-                                                                                  ],
-                                                             "sample_paths_observed":  [
-                                                                                           "archive/",
-                                                                                           "dreamspace/",
-                                                                                           "horizon/",
-                                                                                           "imports/",
-                                                                                           "shadow-core/",
-                                                                                           "project-memory.md",
-                                                                                           "development-diary.md",
-                                                                                           "open-loops.md",
-                                                                                           "adr-log.md",
-                                                                                           "evidence-index.md"
-                                                                                       ],
-                                                             "boundary":  "separate from Builder Files and package agent_files/memory_*; ordinary file upload does not populate Workspace Agent Memory"
-                                                         },
-                                      "app_connectors":  "GitHub, Ace Knowledge Graph, Remote Desktop Commander, Supabase observed",
-                                      "skills":  "33 uploaded skills observed; package 32-skill source names match the Iskra skill-pack subset; iskra-toolchain-bridge observed separately",
-                                      "file_tree":  "handle observed; screenshot shows 269 files before overlay; draft list_agent_file_tree loaded root metadata after overlay with tree_revision=1147; immutable published-version query returned tree_revision=1147 but did not enumerate child nodes; byte-level parity not captured",
-                                      "published_overlay_files":  [
-                                                                      "2026-06-27-instructions-full.md",
-                                                                      "2026-06-27-official-platform-and-memory-boundary.md"
-                                                                  ],
-                                      "published_overlay_version":  51,
-                                      "prompt_alignment":  "live prompt remains stale relative to local corrected Memory-boundary package instructions; prompt/profile/API-channel draft-save calls failed with Workspace Agents draft save request failed",
-                                      "official_docs_alignment":  {
-                                                                      "status":  "PASS_WITH_BOUNDED_TERMS",
-                                                                      "sources_checked":  [
-                                                                                              "help.openai.com ChatGPT Workspace Agents for Enterprise and Business",
-                                                                                              "developers.openai.com/workspace-agents/trigger-runs",
-                                                                                              "developers.openai.com/workspace-agents/authentication"
-                                                                                          ],
-                                                                      "boundaries":  [
-                                                                                         "research-preview / workspace-scoped availability only",
-                                                                                         "202 Accepted means accepted or queued, not completed",
-                                                                                         "Workspace Agent access token is distinct from OpenAI Platform API key",
-                                                                                         "no public official 2026-11-30 deprecation claim retained as current fact"
-                                                                                     ]
-                                                                  }
-                                  },
-    "added_or_promoted_entries":  [
-                                      "agent_files/files_for_agent_builder/19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md",
-                                      "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-                                      "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
-                                      "governance/adr_20260627_workspace_agent_live_alignment.md",
-                                      "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
-                                      "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/",
-                                      "agent_files/live_update_receipts/2026-06-27-official-platform-and-memory-boundary.md"
-                                  ],
-    "updated_entries":  [
-                            "agent.yaml",
-                            "README.md",
-                            "README_AGENT_BUILDER_UPLOAD.md",
-                            "QC_CHECKS.md",
-                            "CANON_TRACE_MAP.md",
-                            "BUILDER_ASSEMBLY_MANIFEST.md",
-                            "BUILDER_UPLOAD_EVIDENCE.md",
-                            "agent_files/instructions",
-                            "agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
-                            "agent_files/files_for_agent_builder/00_AGENT_BUILDER_SETUP.md",
-                            "agent_files/files_for_agent_builder/01_AGENT_INSTRUCTIONS_COMPACT.md",
-                            "agent_files/files_for_agent_builder/15_RUNTIME_BOUNDARY.md",
-                            "agent_files/files_for_agent_builder/17_RUNTIME_SURFACE_MAP.md",
-                            "agent_files/evals/AGENT_BUILDER_ACCEPTANCE_PROMPTS.md",
-                            "tools/clean_export.py",
-                            "tools/consolidate_rag_knowledge.py",
-                            "tools/generate_manifest.py",
-                            "tools/workspace_surface_audit.py"
-                        ],
-    "surface_statuses":  {
-                             "workspace_agent_config":  {
-                                                            "status":  "OBSERVED_AND_FILE_OVERLAY_PUBLISHED",
-                                                            "receipt":  "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-                                                            "boundary":  "config evidence only; partial file-tree metadata observed; not byte-level file parity or prompt-level verification"
-                                                        },
-                             "workspace_agent_prompt_alignment":  {
-                                                                      "status":  "DRIFT_LIVE_PROMPT_SAVE_BLOCKED",
-                                                                      "receipt":  "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-                                                                      "boundary":  "local package contains corrected Memory boundary and published overlay files; live main prompt remains stale because connector prompt/profile/API-channel save calls failed"
-                                                                  },
-                             "workspace_agent_file_overlay":  {
-                                                                  "status":  "PUBLISHED_VERSION_51",
-                                                                  "receipt":  "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-                                                                  "files":  [
-                                                                                "2026-06-27-instructions-full.md",
-                                                                                "2026-06-27-official-platform-and-memory-boundary.md"
-                                                                            ],
-                                                                  "boundary":  "files were uploaded and readable in draft before publishing version 51; publish output used the updated file tree revision, but immutable published node listing did not enumerate child nodes; ordinary files do not override main prompt by themselves and do not prove Workspace Agent Memory contents"
-                                                              },
-                             "workspace_agent_skill_pack":  {
-                                                                "status":  "PASS_NAME_COUNT_ALIGNMENT",
-                                                                "receipt":  "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
-                                                                "boundary":  "package 32-skill source; not byte-identical live skill proof and not the separate iskra-toolchain-bridge skill"
-                                                            },
-                             "workspace_agent_memory":  {
-                                                            "status":  "OBSERVED_UI_NOT_WRITE_TESTED",
-                                                            "receipt":  "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
-                                                            "boundary":  "platform-managed per-user Memory; not populated by Builder file upload and not proven by package memory_seed/current files"
-                                                        },
-                             "workspace_surface_audit":  {
-                                                             "status":  "PASS_REGENERATED",
-                                                             "tool":  "tools/workspace_surface_audit.py",
-                                                             "anti_self_reference":  "SURFACE_INVENTORY.json and ZIP_RECEIPT.json excluded from package aggregate"
-                                                         },
-                             "surface_inventory":  {
-                                                       "status":  "PASS_GENERATED",
-                                                       "path":  "SURFACE_INVENTORY.json",
-                                                       "note":  "dynamic receipt; not hashed by MANIFEST.sha256"
-                                                   },
-                             "clean_export":  {
-                                                  "status":  "PASS",
-                                                  "forbidden_hits":  0,
-                                                  "missing_files":  0,
-                                                  "hash_mismatches":  0
-                                              },
-                             "live_builder":  {
-                                                  "status":  "NOT_VERIFIED",
-                                                  "required":  [
-                                                                   "prompt bootstrap still must be applied through Builder UI or a repaired Workspace Agents save path",
-                                                                   "confirm 19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md is visible through the selected knowledge/file path",
-                                                                   "do not claim live prompt parity until get_current_agent_config shows the corrected prompt or prompt-level Builder evidence is captured",
-                                                                   "confirm user-added skills and iskra-toolchain-bridge are active at the intended versions",
-                                                                   "confirm Workspace Agent Memory write/read behavior separately from Builder Files",
-                                                                   "run acceptance A-Y plus C2/C3",
-                                                                   "record prompt-level live Builder evidence"
-                                                               ]
-                                              }
-                         },
-    "gates":  {
-                  "json_receipts":  {
-                                        "status":  "PASS",
-                                        "files":  [
-                                                      "SURFACE_INVENTORY.json",
-                                                      "GITHUB_TREE_INDEX.json",
-                                                      "HOOK_SMOKE_RECEIPT.json",
-                                                      "SUPABASE_ADVISOR_RECEIPT.json",
-                                                      "UNIFIED_QC_RECEIPT.json",
-                                                      "ZIP_RECEIPT.json"
-                                                  ]
-                                    },
-                  "python_compile":  {
-                                         "status":  "PASS",
-                                         "files":  [
-                                                       "tools/clean_export.py",
-                                                       "tools/consolidate_rag_knowledge.py",
-                                                       "tools/generate_manifest.py",
-                                                       "tools/workspace_surface_audit.py"
-                                                   ]
-                                     },
-                  "secret_scan":  {
-                                      "status":  "PASS_NO_HIGH_CONFIDENCE_SECRET_VALUES",
-                                      "policy_or_placeholder_hits":  [
-                                                                         "GEMINI_API_KEY environment variable references",
-                                                                         "your-gemini-api-key-here placeholder"
-                                                                     ]
-                                  },
-                  "local_tests":  {
-                                      "status":  "PASS",
-                                      "checks":  [
-                                                     "reassemble_interface_style PASS",
-                                                     "validate_terms PASS",
-                                                     "validate_delta PASS checked=78 skipped=247 failed=0",
-                                                     "horizon unit tests PASS ran=9",
-                                                     "agents-sdk fallback tests PASS ran=9",
-                                                     "skill-pack name alignment PASS package=32 live_skill_pack_subset=32 missing=0 extra=0; live_total_skills=33"
-                                                 ]
-                                  }
-              },
-    "non_claims":  [
-                       "Not verified in Builder UI",
-                       "Live Workspace Agent mutation was performed: two overlay files were published as version 51",
-                       "Main prompt/profile/API-channel instructions were not updated because Workspace Agents draft save request failed",
-                       "Live draft prompt is not claimed to include this local package\u0027s corrected Memory boundary",
-                       "No Workspace Agent access token or secret is stored",
-                       "Builder file upload does not prove live Workspace Agent Memory contents",
-                       "Package agent_files/memory_* files are seed/reference receipts, not live Memory proof",
-                       "Skill name/count alignment is not byte-identical live skill proof",
-                       "API channel active does not mean any API-triggered task has completed",
-                       "Local helper files do not prove hosted Builder execution",
-                       "SENSE_EVENT and DREAM_SEED are package-level accepted-memory overlays, not live Builder proof"
-                   ],
-    "next":  "Local manifest, surface inventory, clean zip, and ZIP receipt are regenerated. Run live Builder verification only after explicit approval for the exact Workspace Agent target.",
-    "delta":  {
-                  "delta":  "ChatGPT Workspace Agent live config, live prompt drift, platform-managed Memory, and user-added Iskra skill pack are explicit package surfaces",
-                  "data":  "Codex Desktop Workspace Agents config, local skill-pack inventory, manifest policy, clean export tooling",
-                  "omega":  0.9,
-                  "lambda":  "rerun after any package update, skill-pack rebuild, live Workspace Agent publish, Memory write/read claim, or Workspace Agent API/auth change"
-              },
-    "self_modernization_2026_06_28":  {
-                                          "status":  "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
-                                          "protocols":  [
-                                                            "SENSE_EVENT",
-                                                            "DREAM_SEED"
-                                                        ],
-                                          "files":  [
-                                                        "agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md",
-                                                        "agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
-                                                        "agent_files/files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md"
-                                                    ],
-                                          "non_claim":  "live Builder prompt mirror pending; verified-live-builder not claimed"
-                                      },
-    "post_ledger_builder_mirror_2026_06_28":  {
-                                                  "status":  "PASS_PACKAGE_RECEIPTS_REGENERATED_NO_LIVE_MUTATION",
-                                                  "base_main":  "7fd8d18f0255bce2cdfd0e618749a9adc84f71ab",
-                                                  "clean_export":  {
-                                                                       "manifest_entries":  439,
-                                                                       "file_count":  441,
-                                                                       "forbidden_hits":  0,
-                                                                       "missing_files":  0,
-                                                                       "hash_mismatch_count":  0
-                                                                   },
-                                                  "clean_zip_receipt":  "ZIP_RECEIPT.json holds exact archive sha256/bytes because ZIP_RECEIPT.json is excluded from MANIFEST.sha256 and from the clean zip.",
-                                                  "boundary":  "No live Workspace Agent mutation, no Builder UI upload proof, no live prompt parity claim."
-                                              }
+  "release": "iskra-full-canon-unified-2026-06-10",
+  "generated_at": "2026-06-29T16:18:49Z",
+  "status": "PASS_LOCAL_RDC_PACKAGE_REGEN_READY_FOR_PR_PUSH",
+  "phase": "after_validation_before_manifest",
+  "scope": "dist-package-generated-artifacts+review-fixes",
+  "repository": "serhiipriadko2-sys/iskra",
+  "pull_request": 224,
+  "target_branch": "codex/horizon-v0-2-receipts-20260628",
+  "target_head_before_regen": "8d82fb0f115cdffbfc450696eed77e82447c86b5",
+  "active_target": "dist/agent-builder/iskra-full-canon-unified-2026-06-10",
+  "source_boundary": {
+    "status": "RDC_CHECKOUT_FROM_APPROVED_PR_HEAD",
+    "source": "C:\\i224 checkout of approved PR branch plus SHA-gated payload review fixes",
+    "publication_boundary": "Receipt is package-local until committed and pushed to PR branch.",
+    "not_claims": [
+      "not Builder UI verification",
+      "not Workspace Agent Memory proof"
+    ]
+  },
+  "review_fixes": [
+    "validator rejects malformed/non-object/empty receipt batches",
+    "schemas reject extra fields and enforce proposal/review identity metadata",
+    "live connector mutation proposals are blocked by v0.2 validator heuristics",
+    "Builder receipt templates include full schema metadata",
+    "Russian acceptance prompt text, 29/29 eval count, Sense/Dream rows, and Horizon v0.2 ADR RAG mapping are restored"
+  ],
+  "changed_entries": [
+    "canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
+    "canon/horizon/HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+    "canon/horizon/REJECTED_HORIZON_REVIEW_SCHEMA.json",
+    "canon/horizon/horizon_proposal_event.example.json",
+    "canon/horizon/rejected_horizon_review.example.json",
+    "tools/horizon_v0_2_validator.py",
+    "tests/horizon/test_horizon_v0_2_validator.py",
+    "governance/adr_20260628_horizon_v0_2_receipt_layer.md",
+    "governance/changelog.d/2026-06-28-horizon-v0-2-receipt-layer.md",
+    "canon/horizon/README.md",
+    "tools/consolidate_rag_knowledge.py",
+    "agent_files/files_for_agent_builder/04_MEMORY_STACK.md",
+    "agent_files/files_for_agent_builder/09_COMMAND_LIBRARY.md",
+    "agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md",
+    "agent_files/files_for_agent_builder/13_FULL_CANON_SYNTHESIS.md",
+    "agent_files/files_for_agent_builder/14_CANON_LAYER_INDEX.md",
+    "agent_files/evals/ISKRA_CANON_ACCEPTANCE_TESTS.md",
+    "agent_files/INDEX.md",
+    "BUILDER_ASSEMBLY_MANIFEST.md",
+    "agent_files/consolidated_knowledge/04_ISKRA_EXTENSIONS_AND_WEAVER.md",
+    "agent_files/consolidated_knowledge/05_ISKRA_GOVERNANCE_ADR.md",
+    "agent_files/consolidated_knowledge/06_ISKRA_METRICS_AND_EVALS.md",
+    "GITHUB_TREE_INDEX.json",
+    "UNIFIED_QC_RECEIPT.json",
+    "MANIFEST.sha256",
+    "SURFACE_INVENTORY.json",
+    "ZIP_RECEIPT.json",
+    "../iskra-full-canon-unified-2026-06-10-clean.zip"
+  ],
+  "package_inventory": {
+    "manifest_entries_at_write_time": 439,
+    "manifest_sha256_at_write_time": "8c389543a5a06338a07099d9f95a94d2708983a253deb0abc0e7c236b80a0cb1",
+    "manifest_rule": "MANIFEST.sha256 covers static clean-subset files except MANIFEST.sha256, SURFACE_INVENTORY.json, and ZIP_RECEIPT.json",
+    "zip_rule": "clean zip entries equal manifest entries plus MANIFEST.sha256 and SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
+    "local_static_file_count": 448,
+    "local_static_total_bytes": 8912069,
+    "local_static_surface_sha256": "37199a9588d2462f65852c947297c9c977c84a1b72f17df2a15905ab93a54b85"
+  },
+  "gates": {
+    "consolidate_rag_knowledge": {
+      "status": "PASS",
+      "returncode": 0,
+      "command": "py tools\\consolidate_rag_knowledge.py",
+      "output_tail": "Starting consolidation to: agent_files\\consolidated_knowledge\nGenerating Volume: 01_ISKRA_CORE_INSTRUCTIONS.md (9 files)...\n  Created Volume: 01_ISKRA_CORE_INSTRUCTIONS.md (58915 bytes)\nGenerating Volume: 02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md (8 files)...\n  Created Volume: 02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md (910417 bytes)\nGenerating Volume: 03_ISKRA_SYSTEM_AND_PROTOCOLS.md (11 files)...\n  Created Volume: 03_ISKRA_SYSTEM_AND_PROTOCOLS.md (351227 bytes)\nGenerating Volume: 04_ISKRA_EXTENSIONS_AND_WEAVER.md (6 files)...\n  Created Volume: 04_ISKRA_EXTENSIONS_AND_WEAVER.md (42544 bytes)\nGenerating Volume: 05_ISKRA_GOVERNANCE_ADR.md (24 files)...\n  Created Volume: 05_ISKRA_GOVERNANCE_ADR.md (225040 bytes)\nGenerating Volume: 06_ISKRA_METRICS_AND_EVALS.md (10 files)...\n  Created Volume: 06_ISKRA_METRICS_AND_EVALS.md (122545 bytes)\nGenerating Volume: 07_ISKRA_MEMORY_SEED.md (5 files)...\n  Created Volume: 07_ISKRA_MEMORY_SEED.md (21642 bytes)\nConsolidation complete."
+    },
+    "python_compile": {
+      "status": "PASS",
+      "returncode": 0,
+      "command": "py -m py_compile canon/horizon/09_HORIZON_VALIDATOR.py canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py tools/horizon_v0_2_validator.py tools/consolidate_rag_knowledge.py tools/generate_manifest.py tools/clean_export.py tools/workspace_surface_audit.py",
+      "output_tail": ""
+    },
+    "horizon_v0_2_validator_examples": {
+      "status": "PASS",
+      "returncode": 0,
+      "command": "py canon\\horizon\\10_HORIZON_V0_2_RECEIPT_VALIDATOR.py canon\\horizon\\horizon_proposal_event.example.json canon\\horizon\\rejected_horizon_review.example.json",
+      "output_tail": "{\n  \"status\": \"PASS\",\n  \"results\": [\n    {\n      \"status\": \"PASS\",\n      \"errors\": [],\n      \"warnings\": [],\n      \"path\": \"canon\\\\horizon\\\\horizon_proposal_event.example.json\",\n      \"id\": \"HORIZON-PROP-20260628-001\"\n    },\n    {\n      \"status\": \"PASS\",\n      \"errors\": [],\n      \"warnings\": [],\n      \"path\": \"canon\\\\horizon\\\\rejected_horizon_review.example.json\",\n      \"id\": \"RHR-20260628-001\"\n    }\n  ]\n}"
+    },
+    "horizon_unit_tests": {
+      "status": "PASS",
+      "returncode": 0,
+      "command": "py -m unittest discover -s tests\\horizon",
+      "output_tail": "........................\n----------------------------------------------------------------------\nRan 24 tests in 2.312s\n\nOK"
+    },
+    "horizon_v0_1_validator_strict": {
+      "status": "PASS",
+      "returncode": 0,
+      "command": "py canon\\horizon\\09_HORIZON_VALIDATOR.py --strict --repo-root .",
+      "output_tail": "{\"code\": \"VALIDATOR_PASS\", \"message\": \"Horizon validator canonical targets are present and valid.\", \"status\": \"pass\"}"
+    },
+    "validate_terms": {
+      "status": "PASS",
+      "returncode": 0,
+      "command": "py tools\\validate_terms.py --dir .",
+      "output_tail": "PASS terminology"
+    },
+    "validate_delta": {
+      "status": "PASS",
+      "returncode": 0,
+      "command": "py tools\\validate_delta.py --dir .",
+      "output_tail": "-event-2026-06-28.md\nPASS agent_files\\memory_current\\adr-log.md\nPASS agent_files\\memory_seed\\MEMORY_SEED_CLEANUP.md\nPASS agent_files\\toolchain\\AGENT_BUILDER_CONNECTOR_SPEC.md\nPASS agent_files\\toolchain\\GIT_CLONE_VAULT_SPEC.md\nPASS agent_files\\memory_seed\\archive\\2026-05-26-governance-schema-drift-ledger-entry.md\nPASS governance\\audits\\2026-06-05-migration-provenance-pr.md\nPASS governance\\audits\\2026-06-05-supabase-repo-drift.md\nPASS governance\\audits\\2026-06-06-repair-pr-supabase-drift-decision.md\nPASS governance\\changelog.d\\2026-06-05-agent-builder-dreamspace-docs.md\nPASS governance\\changelog.d\\2026-06-24-relational-vow-canon.md\nPASS governance\\changelog.d\\2026-06-24-voice-seed-builder-canon.md\nPASS governance\\releases\\2026-06-05-agent-builder-dreamspace-docs.md\nPASS governance\\releases\\2026-06-24-relational-vow-package-mirror-qc.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\agent-builder.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\artifact-manager.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\browser-automation.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\github.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\monitoring.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\schedule-runner.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\secrets-vault.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\supabase.md\nPASS provenance\\source-readmes\\iskra-toolchain-upload-set-v2-README.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\agent-builder.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\artifact-manager.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\browser-automation.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\github.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\monitoring.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\schedule-runner.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\secrets-vault.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\supabase.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-architecture\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-code-review\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-code-style\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-cycle-engine\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-git-workflow\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-ledger-integrity\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-metrics-evaluator\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-migration\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-playbook-selector\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-rag-truth-ladder\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-security\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-shadow-repair\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-test-strategy\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-workflow-ops\\references\\output_contract.md\nSUMMARY checked=81 skipped=247 failed=0"
+    },
+    "reassemble_interface_style_check": {
+      "status": "PASS",
+      "returncode": 0,
+      "command": "py tools\\reassemble_interface_style.py --repo-root . --check",
+      "output_tail": "reassembled=\\tmp\\08_INTERFACE_STYLE.reassembled.md\nbytes=3400429\nsha256=6fc341ac84df29e64b4dd51c0a05608d83b4e798fc4db6b1b5a09353412de345\nparts=5\nREASSEMBLY_PASS"
+    },
+    "stale_text_scan": {
+      "status": "PASS",
+      "hits": []
+    }
+  },
+  "non_claims": [
+    "A regenerated package archive proves transport readiness only.",
+    "Builder UI live parity is not claimed.",
+    "The final git commit SHA is verified after push, not inside this pre-push receipt."
+  ]
 }

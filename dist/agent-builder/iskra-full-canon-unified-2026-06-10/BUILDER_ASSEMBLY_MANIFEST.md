@@ -2,7 +2,7 @@
 
 Release: `iskra-full-canon-unified-2026-06-10`
 Date: 2026-06-10
-Updated: 2026-06-23
+Updated: 2026-06-28
 Previous release: `iskra-full-canon-builder-2026-06-06-v4`
 Purpose: one materialized full-canon upload tree for the Iskra agent in
 ChatGPT / OpenAI Agent Builder.
@@ -21,7 +21,7 @@ ChatGPT / OpenAI Agent Builder.
 | Canon | `agent_files/canon_source_files/` | included |
 | Consolidated knowledge | `agent_files/consolidated_knowledge/` | included as compact 7-volume upload mode |
 | Builder instructions | `agent_files/files_for_agent_builder/` | included |
-| Horizon Weaver | `agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md`, `agent_runtime_tools/iskra_horizon_weaver.py` | included as Builder-layer v0.1 |
+| Horizon Weaver | `agent_files/files_for_agent_builder/10_HORIZON_WEAVER.md`, `agent_runtime_tools/iskra_horizon_weaver.py`, `canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py` | included as Builder-layer v0.2 receipt-aware |
 | Dreamspace | `agent_files/files_for_agent_builder/11_DREAMSPACE_LAYER.md`, `agent_runtime_tools/iskra_dreamspace.py` | included |
 | Somatic Intuition | `agent_files/canon_source_files/core__somatic_intuition.md`, `agent_files/canon_source_files/metrics__somatic_index.md` | included |
 | Shadow Core | `agent_runtime_tools/iskra_shadow_core.py` | included |
@@ -75,6 +75,8 @@ Secondary:
 - `CANON_TRACE_MAP.md`
 - `agents-sdk/README.md`
 - `agent_runtime_tools/iskra_horizon_weaver.py`
+- `canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py`
+- `governance/adr_20260628_horizon_v0_2_receipt_layer.md`
 - `agent_files/toolchain/iskra_toolchain_manifest.json`
 - `plugins/iskra-toolchain-bridge/RUNTIME_RECEIPT.md`
 - `plugins/iskra-toolchain-bridge/runtime-smoke-receipt.json`
@@ -86,6 +88,7 @@ This manifest does not claim:
 - the package is already uploaded into Agent Builder;
 - any connector is active unless Builder UI or connector configuration proves it;
 - Horizon can mutate Builder/GitHub/Supabase/live systems by itself;
+- Horizon v0.2 receipt PASS is semantic proof, canon acceptance, or live connector permission;
 - Horizon proves consciousness, semantic truth, or auto-evolution;
 - plugin files are installable in every OpenAI Builder surface;
 - local runtime helpers will execute in cloud-only Builder profiles.
@@ -127,6 +130,7 @@ PASS requires:
 - required target files are present;
 - no obvious secret-bearing values are packaged;
 - Horizon helper source compiles and its dry-run/validate/permission-boundary smoke passes;
+- Horizon v0.2 receipt validator examples and negative tests pass;
 - Agents SDK fallback installs editably and passes local unit tests without a
   live OpenAI call;
 - the optional sidecar zip archive passes integrity if generated;

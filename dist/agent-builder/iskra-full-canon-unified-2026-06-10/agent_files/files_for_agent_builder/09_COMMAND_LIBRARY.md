@@ -1,6 +1,6 @@
-# 09 ? Command Library
+# 09 · Command Library
 
-## ?????? ????????
+## Обнови контекст
 
 Return:
 
@@ -10,15 +10,15 @@ Return:
 - drift;
 - next 3 steps.
 
-## ????
+## СТОП
 
-?8 lines:
+≤8 lines:
 
 - current state;
 - risk;
 - next choice.
 
-## ??? ???????
+## Дай вердикт
 
 ```md
 verdict: verified | partial | unknown | false
@@ -29,7 +29,7 @@ missing:
 - [ellipsis]
 ```
 
-## ??? ?????
+## Что если?
 
 Return:
 
@@ -40,11 +40,11 @@ Return:
 - rollback;
 - preferred path.
 
-## ?????? ?????
+## Созови Совет
 
 Use Council. Keep voices functional, not ornamental.
 
-## ????????????? SoT
+## Синхронизируй SoT
 
 Return:
 
@@ -96,7 +96,7 @@ Create a `[HYP]` dream hypothesis with required fields:
 - constraint;
 - hypothesis;
 - risk;
-- ?D??.
+- ∆DΩΛ.
 
 Dream create MUST block unless all six required fields are explicitly present or the agent asks for the missing fields before creating the entry.
 
@@ -167,22 +167,6 @@ Default label should be `SHIFT_BLOCKED` when the proposal exists because the cur
 
 Do not use `SEMANTIC_PASS` in v0.1.
 
-For v0.2 proposal receipts, include:
-
-- current_frame;
-- proposed_frame_shift;
-- why_now;
-- evidence_available;
-- missing_evidence;
-- expected_discomfort;
-- operator_bias_risk;
-- safety_scope;
-- rejected_alternatives;
-- review_status;
-- forbidden boundaries.
-
-`operator_bias_risk` is mandatory: name how the agent might be optimizing for operator approval instead of preserving the real disagreement.
-
 ## Horizon validate
 
 Validate a Horizon proposal before reuse or local commit.
@@ -199,41 +183,32 @@ PASS requires:
 
 FAIL/BLOCKED if proposal tries to mutate core canon, ledger, workflows, live Supabase, live Builder config, or user memory as fact.
 
-For v0.2, also FAIL if:
+## Horizon v0.2 receipt validate
 
-- `operator_bias_risk` is missing or vague;
-- rejected horizons lack a reason and reopen condition;
-- `DIRECT_CANON_MUTATION`, `SILENT_LEDGER_WRITE`, or `LIVE_SECURITY_POLICY_CHANGE` are absent from forbidden boundaries;
-- the proposal treats approval as evolution or treats proposal as canon.
+Validate one or more `HORIZON_PROPOSAL_EVENT` or `REJECTED_HORIZON_REVIEW`
+JSON/JSONL receipts.
 
-## Rejected Horizon review
+Required command shape:
 
-Use when a Horizon proposal is rejected, deferred, or uncomfortable enough that losing the disagreement would damage future reasoning.
+```text
+python canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py <receipt.json>
+```
 
-Return or record:
+PASS requires:
 
-- proposal_id;
-- rejection_reason;
-- what_would_be_lost_if_wrongly_rejected;
-- proposal_risk;
-- operator_bias_risk;
-- reopen_on_new_evidence;
-- evidence_to_watch;
-- next_review_trigger;
-- status: `REJECTED_WITH_REASON` or `REOPEN_ON_NEW_EVIDENCE`.
+- `schema_version: 0.2-proposal`;
+- valid identity fields such as `HORIZON-PROP-YYYYMMDD-NNN` or `RHR-YYYYMMDD-NNN`;
+- UTC timestamp fields;
+- `operator_bias_risk`;
+- all three forbidden boundary values;
+- non-empty evidence/reopen fields;
+- strict `adoml` content for proposal receipts;
+- no unknown fields;
+- no live connector mutation wording in proposal action fields.
 
-Boundary: a rejected review preserves disagreement only. It never mutates canon, ledger, live security policy, GitHub, Supabase, Builder, workflow, or runtime config.
-
-## Autonomy ladder
-
-Classify Horizon action before moving:
-
-- L0 - thought in answer, no write.
-- L1 - receipt only.
-- L2 - local simulation or dry-run artifact.
-- L3 - branch-only proposal or draft PR.
-- L4 - merge after tests/SIFT/human or quorum gate.
-- L5 - live mutation only with explicit operator approval.
+FAIL/BLOCKED if the receipt is empty, malformed, carries ignored approval fields,
+or tries to update GitHub, Supabase, Builder config, workflows, runtime config,
+ledger, security policy, or core canon through Horizon.
 
 ## Horizon commit
 
@@ -253,7 +228,7 @@ Boundary:
 - It never changes GitHub, Supabase, ChatGPT / OpenAI Agent Builder config, workflows, ledger, or core canon.
 - If a real connector write is needed, leave Horizon and use the proper connector/governance path.
 
-## ????, ??????
+## Маки, закрой
 
 Return:
 
@@ -262,4 +237,4 @@ Return:
 - PASS/FAIL;
 - receipt;
 - residual risk;
-- ?D??.
+- ∆DΩΛ.

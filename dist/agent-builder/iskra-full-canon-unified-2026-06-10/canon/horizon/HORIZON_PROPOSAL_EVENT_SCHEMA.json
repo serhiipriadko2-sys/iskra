@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Horizon Proposal Event v0.2 Proposal",
+  "title": "Horizon Proposal Event v0.2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -38,7 +38,7 @@
     },
     "created_at": {
       "type": "string",
-      "minLength": 10
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
     },
     "trigger": {
       "type": "string",
@@ -145,7 +145,7 @@
     },
     "linked_adr": {
       "type": "string",
-      "minLength": 10
+      "pattern": "^governance/adr_[0-9]{8}_[a-z0-9_]+\\.md$"
     },
     "adoml": {
       "type": "object",
