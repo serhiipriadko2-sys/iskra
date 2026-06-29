@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-29T17:57:32.037Z",
-  "total": 2629,
+  "generatedAt": "2026-06-29T17:57:49.361Z",
+  "total": 2661,
   "curated": 20,
   "layers": {
     "root": 319,
@@ -11,7 +11,7 @@
     "site": 69,
     "web": 13,
     "canon": 16,
-    "builder": 1153,
+    "builder": 1185,
     "docs": 54,
     "governance": 46,
     "ingest": 10,
@@ -3633,6 +3633,7 @@
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27",
         "dist/agent-builder/ISKRA_FULL_CANON_BUILDER_MANIFEST.md",
         "dist/agent-builder/iskra-full-canon-unified-2026-06-10-clean.zip",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
         "dist/agent-builder/README.md"
       ]
     },
@@ -11300,6 +11301,7 @@
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_runtime_tools",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agents-sdk",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/plugins",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/skills",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests",
@@ -11308,6 +11310,7 @@
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent.yaml",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/AGENTS.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/GAP_ANALYSIS.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/GITHUB_TREE_INDEX.json",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/icon.svg",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/LICENSE",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/MANIFEST.sha256",
@@ -11321,11 +11324,24 @@
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SYNTHESIS_DESIGN.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/UNIFIED_QC_RECEIPT.json",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WHAT_IF_MATRIX_WORKSPACE_AGENT.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_READONLY_RECEIPT.json",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_RESEARCH.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_UPLOAD_PLAN.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/ZIP_RECEIPT.json"
       ]
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
+      "name": "iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
+      "kind": "file",
+      "layer": "builder",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
+      "related": [],
+      "parent": "dist/agent-builder"
     },
     {
       "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/.gitattributes",
@@ -11359,6 +11375,7 @@
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/templates",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/toolchain",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/COPYPASTE_AGENT_INSTRUCTIONS_FULL_CANON.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/INDEX.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/instructions"
       ]
     },
@@ -12966,6 +12983,17 @@
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/files_for_agent_builder"
     },
     {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/INDEX.md",
+      "name": "INDEX.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/INDEX.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files"
+    },
+    {
       "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/instructions",
       "name": "instructions",
       "kind": "file",
@@ -13701,9 +13729,14 @@
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon",
       "children": [
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/09_HORIZON_VALIDATOR.py",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/HORIZON_CONTRACT.json",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/horizon_proposal_event.example.json",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/HORIZON_PROPOSAL_SCHEMA.json",
-        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/README.md"
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/README.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/REJECTED_HORIZON_REVIEW_SCHEMA.json",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/rejected_horizon_review.example.json"
       ]
     },
     {
@@ -13718,6 +13751,17 @@
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon"
     },
     {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
+      "name": "10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
+      "kind": "file",
+      "layer": "builder",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon"
+    },
+    {
       "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/HORIZON_CONTRACT.json",
       "name": "HORIZON_CONTRACT.json",
       "kind": "file",
@@ -13725,6 +13769,28 @@
       "role": "config",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/HORIZON_CONTRACT.json",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+      "name": "HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/HORIZON_PROPOSAL_EVENT_SCHEMA.json",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/horizon_proposal_event.example.json",
+      "name": "horizon_proposal_event.example.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/horizon_proposal_event.example.json",
       "related": [],
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon"
     },
@@ -13751,6 +13817,28 @@
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon"
     },
     {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/REJECTED_HORIZON_REVIEW_SCHEMA.json",
+      "name": "REJECTED_HORIZON_REVIEW_SCHEMA.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/REJECTED_HORIZON_REVIEW_SCHEMA.json",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/rejected_horizon_review.example.json",
+      "name": "rejected_horizon_review.example.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon/rejected_horizon_review.example.json",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/canon/horizon"
+    },
+    {
       "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/GAP_ANALYSIS.md",
       "name": "GAP_ANALYSIS.md",
       "kind": "file",
@@ -13760,6 +13848,260 @@
       "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/GAP_ANALYSIS.md",
       "related": [],
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/GITHUB_TREE_INDEX.json",
+      "name": "GITHUB_TREE_INDEX.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/GITHUB_TREE_INDEX.json",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance",
+      "name": "governance",
+      "kind": "directory",
+      "layer": "builder",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+      "children": [
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260206_runtime_patches.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260214_gemini_sdk_unification.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260220_xcode_explainable_code.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260528_embedding_standard_v1.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_iskraspace_release_priority.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_somatic_intuition_sense.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_unified_agent_builder_assembly.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_unified_full_canon_builder_v4.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260610_unified_full_canon_recovery.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260616_retire_canon_import_backfill_edge_functions.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260618_db_proxy_governance.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260627_workspace_agent_live_alignment.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260628_horizon_v0_2_receipt_layer.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.md"
+      ]
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260206_runtime_patches.md",
+      "name": "adr_20260206_runtime_patches.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260206_runtime_patches.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260214_gemini_sdk_unification.md",
+      "name": "adr_20260214_gemini_sdk_unification.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260214_gemini_sdk_unification.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260220_xcode_explainable_code.md",
+      "name": "adr_20260220_xcode_explainable_code.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260220_xcode_explainable_code.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260528_embedding_standard_v1.md",
+      "name": "adr_20260528_embedding_standard_v1.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260528_embedding_standard_v1.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_iskraspace_release_priority.md",
+      "name": "adr_20260606_iskraspace_release_priority.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_iskraspace_release_priority.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_somatic_intuition_sense.md",
+      "name": "adr_20260606_somatic_intuition_sense.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_somatic_intuition_sense.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_unified_agent_builder_assembly.md",
+      "name": "adr_20260606_unified_agent_builder_assembly.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_unified_agent_builder_assembly.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_unified_full_canon_builder_v4.md",
+      "name": "adr_20260606_unified_full_canon_builder_v4.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260606_unified_full_canon_builder_v4.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260610_unified_full_canon_recovery.md",
+      "name": "adr_20260610_unified_full_canon_recovery.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260610_unified_full_canon_recovery.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260616_retire_canon_import_backfill_edge_functions.md",
+      "name": "adr_20260616_retire_canon_import_backfill_edge_functions.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260616_retire_canon_import_backfill_edge_functions.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260618_db_proxy_governance.md",
+      "name": "adr_20260618_db_proxy_governance.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260618_db_proxy_governance.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
+      "name": "adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260627_workspace_agent_live_alignment.md",
+      "name": "adr_20260627_workspace_agent_live_alignment.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260627_workspace_agent_live_alignment.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260628_horizon_v0_2_receipt_layer.md",
+      "name": "adr_20260628_horizon_v0_2_receipt_layer.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr_20260628_horizon_v0_2_receipt_layer.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr.md",
+      "name": "adr.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/adr.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d",
+      "name": "changelog.d",
+      "kind": "directory",
+      "layer": "builder",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance",
+      "children": [
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d/2026-06-28-horizon-v0-2-receipt-layer.md"
+      ]
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
+      "name": "2026-06-27-workspace-agent-live-alignment.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d/2026-06-28-horizon-v0-2-receipt-layer.md",
+      "name": "2026-06-28-horizon-v0-2-receipt-layer.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d/2026-06-28-horizon-v0-2-receipt-layer.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.d"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.md",
+      "name": "changelog.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance/changelog.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/governance"
     },
     {
       "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/icon.svg",
@@ -17847,9 +18189,21 @@
       "related": [],
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests",
       "children": [
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests/horizon/test_horizon_v0_2_validator.py",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests/horizon/test_horizon_validator.py",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests/horizon/test_horizon_wrappers.py"
       ]
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests/horizon/test_horizon_v0_2_validator.py",
+      "name": "test_horizon_v0_2_validator.py",
+      "kind": "file",
+      "layer": "builder",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests/horizon/test_horizon_v0_2_validator.py",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests/horizon"
     },
     {
       "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tests/horizon/test_horizon_validator.py",
@@ -17887,6 +18241,7 @@
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/clean_export.py",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/consolidate_rag_knowledge.py",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/generate_manifest.py",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/horizon_v0_2_validator.py",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/horizon_validator.py",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/horizon_weaver.py",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/reassemble_interface_style.py",
@@ -17926,6 +18281,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/generate_manifest.py",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/horizon_v0_2_validator.py",
+      "name": "horizon_v0_2_validator.py",
+      "kind": "file",
+      "layer": "builder",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools/horizon_v0_2_validator.py",
       "related": [],
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/tools"
     },
@@ -18029,6 +18395,17 @@
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27"
     },
     {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+      "name": "WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27"
+    },
+    {
       "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_READONLY_RECEIPT.json",
       "name": "WORKSPACE_AGENT_READONLY_RECEIPT.json",
       "kind": "file",
@@ -18047,6 +18424,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_RESEARCH.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
+      "name": "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md",
       "related": [],
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27"
     },
