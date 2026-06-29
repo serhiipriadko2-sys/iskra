@@ -78,6 +78,7 @@ VOLUMES = {
         "governance/adr_20260616_retire_canon_import_backfill_edge_functions.md",
         "governance/adr_20260618_db_proxy_governance.md",
         "governance/adr_20260627_workspace_agent_live_alignment.md",
+        "governance/adr_20260628_horizon_v0_2_receipt_layer.md",
         "governance/changelog.d/2026-06-27-workspace-agent-live-alignment.md"
     ],
     "06_ISKRA_METRICS_AND_EVALS.md": [

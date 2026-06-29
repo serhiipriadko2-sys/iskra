@@ -10,7 +10,7 @@ Treat the package as one canon tree, but preserve maturity labels inside the tre
 
 ## Horizon Rule
 
-Horizon is included in this Full Canon package. The validator foundation is under `canon/horizon/`. The Builder-layer Weaver guidance is under `10_HORIZON_WEAVER.md` and the runtime helper. They are one canonical direction with staged maturity, not two competing canons.
+Horizon is included in this Full Canon package. The validator foundation is under `canon/horizon/`. The Builder-layer Weaver guidance is under `10_HORIZON_WEAVER.md` and the runtime helper. Horizon v0.2 receipts preserve proposal/rejected-review evidence and operator-bias risk, but do not authorize live mutation or prove semantic truth. They are one canonical direction with staged maturity, not two competing canons.
 
 ## Maturity Rule
 

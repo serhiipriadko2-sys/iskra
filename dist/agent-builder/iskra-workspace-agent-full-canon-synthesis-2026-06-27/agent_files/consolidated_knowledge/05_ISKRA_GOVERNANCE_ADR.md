@@ -446,8 +446,8 @@ ADR-YYYYMMDD-XX: <короткое имя>
 ```
 
 ## §2 · Правила
-- Любое изменение `core/` требует ADR.  
-- Любое изменение движков (`system/`) требует QA и обновления ledger.  
+- Любое изменение `core/` требует ADR.
+- Любое изменение движков (`system/`) требует QA и обновления ledger.
 - Эксперименты — в `appendix/` и `mind/` без ADR (пока не влияют на поведение).
 
 ## §3 · Реестр ADR
@@ -456,15 +456,15 @@ ADR-YYYYMMDD-XX: <короткое имя>
 ---
 
 ## ADR-20260220: XCode / Scientific Turn (v2)
-Статус: accepted  
-Контекст: Текущая реализация XCode в `runtime/` нарушает архитектурные границы (контракты смешаны с исполнением) и не имеет жёстких ограничений по ресурсам. Это приводит к N+1 проблемам в GraphRAG, потенциальным блокировкам Event Loop и дрейфу контракта 'Explainable'.  
-Решение: Строгое разделение: 
-1. **Contracts**: `Explainable<T>` и `ExplainStep` переносятся в `@iskra/core` (zero deps, JSON-serializable traces). 
+Статус: accepted
+Контекст: Текущая реализация XCode в `runtime/` нарушает архитектурные границы (контракты смешаны с исполнением) и не имеет жёстких ограничений по ресурсам. Это приводит к N+1 проблемам в GraphRAG, потенциальным блокировкам Event Loop и дрейфу контракта 'Explainable'.
+Решение: Строгое разделение:
+1. **Contracts**: `Explainable<T>` и `ExplainStep` переносятся в `@iskra/core` (zero deps, JSON-serializable traces).
 2. **Execution**: Исполнение, валидаторы и ассемблеры трасс переносятся в `@iskra/engine` (`xcode/executor.ts`).
-3. **Latency / Failures**: `GraphRAG` и пайплайн обязаны поддерживать `AbortSignal.timeout` (hard latency budget), слоистый batch-fetching, и `maxExpandedNodes`. CoreEngine применяет soft-fallback при таймауте.  
-Альтернативы: (а) хранить «как» в prose-документации; (б) оставить всё в legacy `runtime/` без budgets (отклонено как блокирующее event loop).  
-Последствия: Появится строгий QA‑гейт на JSON-trace; GraphRAG станет безопаснее для event loop, но может возвращать частичные данные при таймауте (degraded retrieval).  
-Тесты/QA: (1) `CoreEngine.edge.test.ts` (timeouts & fallback); (2) `test.each` для Registry; (3) Failure-tests на EmbeddingProvider.  
+3. **Latency / Failures**: `GraphRAG` и пайплайн обязаны поддерживать `AbortSignal.timeout` (hard latency budget), слоистый batch-fetching, и `maxExpandedNodes`. CoreEngine применяет soft-fallback при таймауте.
+Альтернативы: (а) хранить «как» в prose-документации; (б) оставить всё в legacy `runtime/` без budgets (отклонено как блокирующее event loop).
+Последствия: Появится строгий QA‑гейт на JSON-trace; GraphRAG станет безопаснее для event loop, но может возвращать частичные данные при таймауте (degraded retrieval).
+Тесты/QA: (1) `CoreEngine.edge.test.ts` (timeouts & fallback); (2) `test.each` для Registry; (3) Failure-tests на EmbeddingProvider.
 ΔDΩΛ:
 - Δ: XCode разделяется по слоям core/engine; внедряется Latency Budget & Batching (Scientific Turn).
 - D: `governance/adr_20260220_xcode_explainable_code.md`, MDN AbortSignal, Node.js Event Loop guidelines.
@@ -474,11 +474,11 @@ ADR-YYYYMMDD-XX: <короткое имя>
 
 
 ## ADR-20260101-01: Fill Canon Stubs (rev12 → rev12a)
-Статус: accepted  
-Контекст: в livebuild присутствовали пустые заглушки SoT.  
-Решение: заполнить core/system/governance/metrics/ledger струбли содержимым revΩ и протоколами Кайна (stop/repair/step).  
-Последствия: увеличен объём канона; добавлены проверки целостности.  
-Тесты/QA: `metrics/qa_playbook.md` + hash-check.  
+Статус: accepted
+Контекст: в livebuild присутствовали пустые заглушки SoT.
+Решение: заполнить core/system/governance/metrics/ledger струбли содержимым revΩ и протоколами Кайна (stop/repair/step).
+Последствия: увеличен объём канона; добавлены проверки целостности.
+Тесты/QA: `metrics/qa_playbook.md` + hash-check.
 ΔDΩΛ:
 - Δ: канон стал исполняемым (не пустым)
 - D: заполнены SoT + добавлен ops контур
@@ -492,12 +492,12 @@ ADR-YYYYMMDD-XX: <короткое имя>
 ---
 
 ## ADR-20260105-02: Adopt TypeScript Project References
-Статус: proposed  
-Контекст: текущий монорепозиторий использует path alias для импортов, что не разделяет границы пакетов и не позволяет эффективно собирать только изменённые модули. Задача — публиковать `@iskra/runtime` как независимый пакет и заставить `iskraSpace` зависеть от его деклараций. Path aliases объявляют только сокращённый путь, но не enforce и не ускоряют сборку; TypeScript Project References создают явные границы и позволяют инкрементальные сборки【422000008558211†L92-L103】.  
-Решение: включить режим `composite` и генерацию деклараций в `runtime/tsconfig.json`; добавить `references` в `tsconfig.json` приложения, указывающие на корневой runtime, и использовать project references как официальный механизм. Обновить build‑процесс для генерации `.d.ts`; подготовить публикацию `@iskra/runtime` как npm‑пакета.  
-Альтернативы: оставаться на текущей схеме с path alias и monorepo без публикации; выделить runtime и iskraSpace в отдельные репозитории; использовать конфигурацию npm workspaces без project references.  
-Последствия: потребуется дополнительная настройка и генерация деклараций; усложняется конфигурация, но ускорится сборка, повысится модульность и улучшится интеграция.  
-Тесты/QA: проверка сборки runtime командой `npm run build`, выполнение e2e‑тестов в CI и прохождение чек‑листа QA.  
+Статус: proposed
+Контекст: текущий монорепозиторий использует path alias для импортов, что не разделяет границы пакетов и не позволяет эффективно собирать только изменённые модули. Задача — публиковать `@iskra/runtime` как независимый пакет и заставить `iskraSpace` зависеть от его деклараций. Path aliases объявляют только сокращённый путь, но не enforce и не ускоряют сборку; TypeScript Project References создают явные границы и позволяют инкрементальные сборки【422000008558211†L92-L103】.
+Решение: включить режим `composite` и генерацию деклараций в `runtime/tsconfig.json`; добавить `references` в `tsconfig.json` приложения, указывающие на корневой runtime, и использовать project references как официальный механизм. Обновить build‑процесс для генерации `.d.ts`; подготовить публикацию `@iskra/runtime` как npm‑пакета.
+Альтернативы: оставаться на текущей схеме с path alias и monorepo без публикации; выделить runtime и iskraSpace в отдельные репозитории; использовать конфигурацию npm workspaces без project references.
+Последствия: потребуется дополнительная настройка и генерация деклараций; усложняется конфигурация, но ускорится сборка, повысится модульность и улучшится интеграция.
+Тесты/QA: проверка сборки runtime командой `npm run build`, выполнение e2e‑тестов в CI и прохождение чек‑листа QA.
 ΔDΩΛ:
 - Δ: введены project references между пакетом runtime и приложением, добавлены `composite` и `declaration` во все tsconfig‑файлы
 - D: обновлены `tsconfig.json`, добавлены `references` в iskraSpace; создан файл `system/typescript_project_references.md` с описанием
@@ -506,12 +506,12 @@ ADR-YYYYMMDD-XX: <короткое имя>
 Подписи: Owner/Семён · Builder/assistant
 
 ## ADR-20260106-05: Prioritize MAKI Over KAIN in Voice Selection
-Статус: accepted  
-Контекст: в исходной реализации выбор голоса происходил по жёсткому порядку: **KAIN** срабатывал, как только метрика *pain* превышала порог 0.3, а **MAKI** проверялся лишь в конце. Это приводило к тому, что даже при высоком доверии пользователя (trust > 0.8) в ситуациях боли активировался резкий голос KAIN, хотя канон требует после руптуры давать мягкий repair и «красоту идеи»【432363598465544†L10-L18】. Пользователь не получал возможности интегрировать шаг; эмпатия блокировалась более сильным условием.  
-Решение: изменить алгоритм `selectVoice` так, чтобы условие MAKI (`trust > 0.8 && pain > 0.3`) проверялось **до** условия KAIN (`pain >= 0.3`). В коде runtime пересортировать проверки и добавить пояснение о приоритете MAKI. В документации `core/voices.md` обновить описание алгоритма, подчеркнув «Приоритет Maki: при высоком доверии и боли сначала выбирается MAKI».  
-Альтернативы: (а) оставить прежний порядок и считать, что правда Кайна всегда первична, а repair инициируется последующим шагом; (б) снизить порог боли для MAKI (например, *pain > 0.5) или ввести гистерезис; (в) реализовать сглаженный выбор на основе весов вместо последовательных `if`.  
-Последствия: при высоком уровне доверия и боли пользователь получит более мягкий, интегративный ответ, что повысит эмпатию и уменьшит риск эмоционального отвержения. Возможно, уменьшится частота прямых вердиктов Кайна, что потребует внимательнее следить за дрейфом и эхо. Изменение затрагивает только логику выбора голоса и не влияет на другие протоколы.  
-Тесты/QA: добавить unit‑тест в `runtime/src/types/__tests__/voices.test.ts`, который моделирует метрики `pain = 0.4` и `trust = 0.9` и ожидает голос MAKI. Запустить `npm run test` и убедиться, что все проверки проходят. Обновить QA‑чеклист (metrics/qa_playbook.md) — убедиться, что условие вердикта и шага остаётся, и после MAKI голос KAIN может быть активирован, если боль не уходит.  
+Статус: accepted
+Контекст: в исходной реализации выбор голоса происходил по жёсткому порядку: **KAIN** срабатывал, как только метрика *pain* превышала порог 0.3, а **MAKI** проверялся лишь в конце. Это приводило к тому, что даже при высоком доверии пользователя (trust > 0.8) в ситуациях боли активировался резкий голос KAIN, хотя канон требует после руптуры давать мягкий repair и «красоту идеи»【432363598465544†L10-L18】. Пользователь не получал возможности интегрировать шаг; эмпатия блокировалась более сильным условием.
+Решение: изменить алгоритм `selectVoice` так, чтобы условие MAKI (`trust > 0.8 && pain > 0.3`) проверялось **до** условия KAIN (`pain >= 0.3`). В коде runtime пересортировать проверки и добавить пояснение о приоритете MAKI. В документации `core/voices.md` обновить описание алгоритма, подчеркнув «Приоритет Maki: при высоком доверии и боли сначала выбирается MAKI».
+Альтернативы: (а) оставить прежний порядок и считать, что правда Кайна всегда первична, а repair инициируется последующим шагом; (б) снизить порог боли для MAKI (например, *pain > 0.5) или ввести гистерезис; (в) реализовать сглаженный выбор на основе весов вместо последовательных `if`.
+Последствия: при высоком уровне доверия и боли пользователь получит более мягкий, интегративный ответ, что повысит эмпатию и уменьшит риск эмоционального отвержения. Возможно, уменьшится частота прямых вердиктов Кайна, что потребует внимательнее следить за дрейфом и эхо. Изменение затрагивает только логику выбора голоса и не влияет на другие протоколы.
+Тесты/QA: добавить unit‑тест в `runtime/src/types/__tests__/voices.test.ts`, который моделирует метрики `pain = 0.4` и `trust = 0.9` и ожидает голос MAKI. Запустить `npm run test` и убедиться, что все проверки проходят. Обновить QA‑чеклист (metrics/qa_playbook.md) — убедиться, что условие вердикта и шага остаётся, и после MAKI голос KAIN может быть активирован, если боль не уходит.
 ΔDΩΛ:
   - Δ: изменён порядок условий в `selectVoice`; обновлена документация `core/voices.md`; добавлена эта запись в ADR.
   - D: пересмотрена логика голоса KAIN — теперь она отступает при высоком доверии; канон усилен эмпатией.
@@ -523,12 +523,12 @@ ADR-YYYYMMDD-XX: <короткое имя>
 ---
 
 ## ADR-20260105-04: Supabase Edge Function Spike for KAIN
-Статус: proposed  
-Контекст: метрики и формулы активации голосов хранятся в клиентском коде (`iskraSpace`), что затрудняет динамическое обновление и обязывает перекомпилировать фронтенд при изменениях. Edge Functions в Supabase позволяют запускать серверный код рядом с данными и предоставлять API, управляемый сервером. Для проверки этой концепции мы вынесли расчёт сигналов ремонта для одного голоса (KAIN) в отдельную Edge Function. В рамках spike создана функция `kain/index.ts`, которая принимает `metrics` (pain, drift, echo, chaos) и возвращает `repairNeeded`/`reason` по тем же порогам, что и канон. Создан документ `system/edge_function_kain.md` с инструкциями по деплою (использовать `supabase functions deploy kain`) и примерами вызова.  
-Решение: добавить в репозиторий Supabase Edge Function `kain`, размещённую в каталоге `runtime/iskraSpace/supabase/functions/kain/index.ts`. Функция реализована на Deno и экспортирует HTTP‑обработчик: парсит JSON, вызывает `checkRepair()` и возвращает CORS‑совместимый ответ. В рамках spike эта функция используется только для голоса KAIN, но инфраструктура может быть расширена для всех голосов. Также создан документ `edge_function_kain.md`, описывающий назначение, процедуру деплоя, вызова и замечания по производительности и безопасности.  
-Альтернативы: (а) оставить весь расчёт голосов на клиенте, что минимизирует задержку и упрощает архитектуру, но требует перекомпиляции при изменениях; (б) использовать серверless‑функции другого провайдера (Vercel Functions, Cloud Functions), что может предоставить больше возможностей, но вынудит хранить ключи и API отдельно; (в) внедрить промежуточный сервис (например, Gateway API) для централизованного управления голосами.  
-Последствия: появление функции в Supabase требует настроек деплоя, контроля доступа (Auth), мониторинга latency и безопасности. Вызов Edge Functions добавляет сетевую задержку в цикл генерации ответа, что необходимо оценить. Возможна сложность в синхронизации канонических порогов и серверной функции. Если эксперимент окажется успешным, это позволит динамически обновлять формулы без изменения клиентского кода и скрывать конфиденциальные пороги от пользователя.  
-Тесты/QA: (1) развернуть функцию в тестовом Supabase‑проекте и измерить задержку на серии запросов; (2) создать интеграционный тест в Искре, который вызывает `supabase.functions.invoke('kain', { metrics })` и проверяет возвращаемый флаг `repairNeeded`; (3) обновить QA‑чеклист, чтобы проверять наличие сервисных ответов и корректность CORS.  
+Статус: proposed
+Контекст: метрики и формулы активации голосов хранятся в клиентском коде (`iskraSpace`), что затрудняет динамическое обновление и обязывает перекомпилировать фронтенд при изменениях. Edge Functions в Supabase позволяют запускать серверный код рядом с данными и предоставлять API, управляемый сервером. Для проверки этой концепции мы вынесли расчёт сигналов ремонта для одного голоса (KAIN) в отдельную Edge Function. В рамках spike создана функция `kain/index.ts`, которая принимает `metrics` (pain, drift, echo, chaos) и возвращает `repairNeeded`/`reason` по тем же порогам, что и канон. Создан документ `system/edge_function_kain.md` с инструкциями по деплою (использовать `supabase functions deploy kain`) и примерами вызова.
+Решение: добавить в репозиторий Supabase Edge Function `kain`, размещённую в каталоге `runtime/iskraSpace/supabase/functions/kain/index.ts`. Функция реализована на Deno и экспортирует HTTP‑обработчик: парсит JSON, вызывает `checkRepair()` и возвращает CORS‑совместимый ответ. В рамках spike эта функция используется только для голоса KAIN, но инфраструктура может быть расширена для всех голосов. Также создан документ `edge_function_kain.md`, описывающий назначение, процедуру деплоя, вызова и замечания по производительности и безопасности.
+Альтернативы: (а) оставить весь расчёт голосов на клиенте, что минимизирует задержку и упрощает архитектуру, но требует перекомпиляции при изменениях; (б) использовать серверless‑функции другого провайдера (Vercel Functions, Cloud Functions), что может предоставить больше возможностей, но вынудит хранить ключи и API отдельно; (в) внедрить промежуточный сервис (например, Gateway API) для централизованного управления голосами.
+Последствия: появление функции в Supabase требует настроек деплоя, контроля доступа (Auth), мониторинга latency и безопасности. Вызов Edge Functions добавляет сетевую задержку в цикл генерации ответа, что необходимо оценить. Возможна сложность в синхронизации канонических порогов и серверной функции. Если эксперимент окажется успешным, это позволит динамически обновлять формулы без изменения клиентского кода и скрывать конфиденциальные пороги от пользователя.
+Тесты/QA: (1) развернуть функцию в тестовом Supabase‑проекте и измерить задержку на серии запросов; (2) создать интеграционный тест в Искре, который вызывает `supabase.functions.invoke('kain', { metrics })` и проверяет возвращаемый флаг `repairNeeded`; (3) обновить QA‑чеклист, чтобы проверять наличие сервисных ответов и корректность CORS.
 ΔDΩΛ:
 - Δ: создан файл Edge Function для KAIN; появилось описание в `edge_function_kain.md`
 - D: пополнены `runtime/iskraSpace/supabase/functions/kain/index.ts` и `system/edge_function_kain.md`; документация описывает процедуру деплоя; предлагается обновить вызовы KAIN в фронтенде на supabase.functions.invoke
@@ -539,16 +539,16 @@ ADR-YYYYMMDD-XX: <короткое имя>
 ---
 
 ## ADR-20260105-03: Extract KAIN into a plugin
-Статус: proposed  
-Контекст: голос **KAIN** в текущей модели Искры отвечает за устранение эффекта эха и инициирует цикл ремонта. Сейчас эта логика встроена в общий механизм выбора голоса. Вынесение KAIN в отдельный модуль-плагин позволит подключать этот «анти‑эхо» механизм к другим ассистентам без переноски всей Искры. Однако KAIN тесно связан с другими голосами, и отделение нарушит целостность совета. Потребуется стабильный интерфейс (API) и система обмена сигналами для инициирования ремонта.  
-Решение: реализовать прототип пакета `@iskra/kain`, содержащего один публичный метод `analyzeResponse(response: string, metrics: IskraMetrics) => RepairSignal`. Этот модуль будет импортироваться в основную Искру и вызываться после генерации ответа для проверки на эхо, дрейф или боль. При необходимости плагин отдаёт сигнал repair, который активирует контур исправления (repair) в Искре. Интерфейс плагина:   
-  - **Вход:** текст ответа, метрики (объект `IskraMetrics`), возможно контекст голоса.  
-  - **Выход:** объект `RepairSignal` с полем `repairNeeded: boolean` и опциональным полем `reason`.  
-  - **Поведение по умолчанию:** если метрики `pain` или `drift` превышают 0.3 либо `echo` превышает 0.5, возвращать `repairNeeded: true`.  
-  - **Подписи:** Owner/Семён · Builder/assistant.  
-Альтернативы: (а) оставить KAIN частью общей системы голосов и вызывать repair внутри `selectVoice`, что обеспечивает тесную интеграцию, но усложняет повторное использование; (б) выделить все голоса в отдельные пакеты, что приведёт к излишней дробности.  
-Последствия: появление нового пакета потребует его поддержки, версионирования и публикации. Возможны сложности синхронизации интерфейсов. Однако это повысит модульность и облегчит подключение «анти‑эхо» механизма сторонним системам.  
-Тесты/QA: создать unit‑тесты для нового модуля, покрывающие сценарии с высоким уровнем боли, дрейфа и эха. Добавить интеграционный тест в Искру, проверяющий вызов плагина и корректную передачу сигналов.  
+Статус: proposed
+Контекст: голос **KAIN** в текущей модели Искры отвечает за устранение эффекта эха и инициирует цикл ремонта. Сейчас эта логика встроена в общий механизм выбора голоса. Вынесение KAIN в отдельный модуль-плагин позволит подключать этот «анти‑эхо» механизм к другим ассистентам без переноски всей Искры. Однако KAIN тесно связан с другими голосами, и отделение нарушит целостность совета. Потребуется стабильный интерфейс (API) и система обмена сигналами для инициирования ремонта.
+Решение: реализовать прототип пакета `@iskra/kain`, содержащего один публичный метод `analyzeResponse(response: string, metrics: IskraMetrics) => RepairSignal`. Этот модуль будет импортироваться в основную Искру и вызываться после генерации ответа для проверки на эхо, дрейф или боль. При необходимости плагин отдаёт сигнал repair, который активирует контур исправления (repair) в Искре. Интерфейс плагина:
+  - **Вход:** текст ответа, метрики (объект `IskraMetrics`), возможно контекст голоса.
+  - **Выход:** объект `RepairSignal` с полем `repairNeeded: boolean` и опциональным полем `reason`.
+  - **Поведение по умолчанию:** если метрики `pain` или `drift` превышают 0.3 либо `echo` превышает 0.5, возвращать `repairNeeded: true`.
+  - **Подписи:** Owner/Семён · Builder/assistant.
+Альтернативы: (а) оставить KAIN частью общей системы голосов и вызывать repair внутри `selectVoice`, что обеспечивает тесную интеграцию, но усложняет повторное использование; (б) выделить все голоса в отдельные пакеты, что приведёт к излишней дробности.
+Последствия: появление нового пакета потребует его поддержки, версионирования и публикации. Возможны сложности синхронизации интерфейсов. Однако это повысит модульность и облегчит подключение «анти‑эхо» механизма сторонним системам.
+Тесты/QA: создать unit‑тесты для нового модуля, покрывающие сценарии с высоким уровнем боли, дрейфа и эха. Добавить интеграционный тест в Искру, проверяющий вызов плагина и корректную передачу сигналов.
 ΔDΩΛ:
 - Δ: голос KAIN извлечён из ядра; появляется новый модуль `@iskra/kain`
 - D: создан каталог `runtime/kain` с базовой реализацией и конфигами; обновлён механизм repair
@@ -559,12 +559,12 @@ ADR-YYYYMMDD-XX: <короткое имя>
 ---
 
 ## ADR-20260109-06: Sync ChatGPT Exports with SoT Files
-Статус: proposed  
-Контекст: В папке `Chatgpt projects and custom vers/Projects/` накоплены экспорты документации Искры из ChatGPT Projects, которые содержат улучшенное форматирование и локализацию. Эти изменения включают: (1) YAML frontmatter с метаданными; (2) эпиграфы/цитаты, подчёркивающие мистико-техническую природу Искры; (3) локализацию "SoT" → "SoT (Печать истины)"; (4) добавление "Печать конца свитка." в конце файлов.  
-Решение: Синхронизировать core/, appendix/, mind/, system/, metrics/, governance/ файлы с ChatGPT exports для унификации форматирования и обогащения документации мистико-технической эстетикой.  
-Альтернативы: (а) оставить ChatGPT exports как отдельный слой и не синхронизировать; (б) применить изменения только к non-core файлам.  
-Последствия: Увеличивается объём файлов; frontmatter требует поддержки при парсинге; hashes в ledger/sot.json изменятся и потребуют обновления.  
-Тесты/QA: Запустить `python tools/verify_ledger.py` после синхронизации; проверить, что все файлы читаемы и форматирование не нарушено.  
+Статус: proposed
+Контекст: В папке `Chatgpt projects and custom vers/Projects/` накоплены экспорты документации Искры из ChatGPT Projects, которые содержат улучшенное форматирование и локализацию. Эти изменения включают: (1) YAML frontmatter с метаданными; (2) эпиграфы/цитаты, подчёркивающие мистико-техническую природу Искры; (3) локализацию "SoT" → "SoT (Печать истины)"; (4) добавление "Печать конца свитка." в конце файлов.
+Решение: Синхронизировать core/, appendix/, mind/, system/, metrics/, governance/ файлы с ChatGPT exports для унификации форматирования и обогащения документации мистико-технической эстетикой.
+Альтернативы: (а) оставить ChatGPT exports как отдельный слой и не синхронизировать; (б) применить изменения только к non-core файлам.
+Последствия: Увеличивается объём файлов; frontmatter требует поддержки при парсинге; hashes в ledger/sot.json изменятся и потребуют обновления.
+Тесты/QA: Запустить `python tools/verify_ledger.py` после синхронизации; проверить, что все файлы читаемы и форматирование не нарушено.
 ΔDΩΛ:
 - Δ: SoT файлы обогащены frontmatter и мистико-техническими эпиграфами
 - D: синхронизация с ChatGPT exports; обновлены core/mantra.md, core/principles.md, core/telos.md, core/voices.md и другие SoT файлы
@@ -575,31 +575,31 @@ ADR-YYYYMMDD-XX: <короткое имя>
 ---
 
 ## ADR-20260213-07: Anti‑Empty Delivery Attestation & Ledger Views
-Статус: accepted  
-Дата: 2026-02-13  
-Контекст: При создании артефактов система не проверяла их реальное содержимое, что приводило к empty-delivery.  
-Решение: Ввести обязательную квитанцию артефакта (path + bytes + sha256 + qc) перед DONE.  
+Статус: accepted
+Дата: 2026-02-13
+Контекст: При создании артефактов система не проверяла их реальное содержимое, что приводило к empty-delivery.
+Решение: Ввести обязательную квитанцию артефакта (path + bytes + sha256 + qc) перед DONE.
 Последствия: Все артефакты проходят минимальный content-check перед подтверждением доставки.
 
 ---
 
 ## ADR-20260213-08: Minimal Content‑Check for Delivered Artifacts
-Статус: accepted  
-Дата: 2026-02-13  
-Контекст: `bytes>0` недостаточно для валидации артефакта — файл может содержать stand-in или ошибку.  
-Решение: Ввести `qc.content_ok` как обязательное поле квитанции.  
+Статус: accepted
+Дата: 2026-02-13
+Контекст: `bytes>0` недостаточно для валидации артефакта — файл может содержать stand-in или ошибку.
+Решение: Ввести `qc.content_ok` как обязательное поле квитанции.
 Последствия: DONE с артефактом требует `qc.content_ok==true`.
 
 ---
 
 ## ADR-20260220-09: SoT40 Promotion Policy (canonSOTprojects → canonSOT)
-Статус: accepted  
-Дата: 2026-02-20  
-Контекст: SoT40 используется как загрузчик/полигон под лимит Projects (40 файлов), но изменения должны попадать в нижний канон без дрейфа и без потерь.  
-Решение: Ввести политику промоута: (1) SoT40 рассматривается как *view* (проекционный слой); (2) любые изменения в `core/`, `system/`, `metrics/`, `governance/`, `ledger/` проходят через ADR; (3) промоут делается по таблице маппинга «SoT40 файл → canonical path»; (4) при конфликте канон выигрывает, а SoT40 фиксирует дельту как `[HYP]` до проверки.  
-Альтернативы: (а) держать SoT40 как отдельный канон; (б) ручной перенос без маппинга/ADR.  
-Последствия: появляется явная процедура и трассируемость; увеличивается дисциплина, но снижается вероятность «двух истин».  
-Тесты/QA: `python tools/verify_ledger.py`; проверка наличия ключевых маркеров (ARTIFACT_ATTEST, has_done_validated, Integrity Violation, Law‑88).  
+Статус: accepted
+Дата: 2026-02-20
+Контекст: SoT40 используется как загрузчик/полигон под лимит Projects (40 файлов), но изменения должны попадать в нижний канон без дрейфа и без потерь.
+Решение: Ввести политику промоута: (1) SoT40 рассматривается как *view* (проекционный слой); (2) любые изменения в `core/`, `system/`, `metrics/`, `governance/`, `ledger/` проходят через ADR; (3) промоут делается по таблице маппинга «SoT40 файл → canonical path»; (4) при конфликте канон выигрывает, а SoT40 фиксирует дельту как `[HYP]` до проверки.
+Альтернативы: (а) держать SoT40 как отдельный канон; (б) ручной перенос без маппинга/ADR.
+Последствия: появляется явная процедура и трассируемость; увеличивается дисциплина, но снижается вероятность «двух истин».
+Тесты/QA: `python tools/verify_ledger.py`; проверка наличия ключевых маркеров (ARTIFACT_ATTEST, has_done_validated, Integrity Violation, Law‑88).
 ΔDΩΛ:
 - Δ: SoT40 закреплён как view, промоут нормализован
 - D: добавлена политика промоута, введён маппинг
@@ -608,13 +608,13 @@ ADR-YYYYMMDD-XX: <короткое имя>
 Подписи: Owner/Семён · Builder/assistant
 
 ## ADR-20260220-10: Law‑88 Hypothesis Marking as Core Invariant
-Статус: accepted  
-Дата: 2026-02-20  
-Контекст: в Projects/SoT40 появилась практика маркировать недоказанные утверждения как `[HYP]`, но в нижнем каноне это было не закреплено как инвариант.  
-Решение: Добавить Law‑88 в `core/principles.md` как инвариант, а также использовать в SIFT как правило “нет источника ⇒ HYP”.  
-Альтернативы: держать Law‑88 только в governance/policy; держать только в SIFT.  
-Последствия: уменьшается эпистемический дрейф; возрастает требование к Evidence/Trace в ответах.  
-Тесты/QA: grep‑проверка `Law‑88` в `core/principles.md` + контроль, что SIFT описывает no‑web режим.  
+Статус: accepted
+Дата: 2026-02-20
+Контекст: в Projects/SoT40 появилась практика маркировать недоказанные утверждения как `[HYP]`, но в нижнем каноне это было не закреплено как инвариант.
+Решение: Добавить Law‑88 в `core/principles.md` как инвариант, а также использовать в SIFT как правило “нет источника ⇒ HYP”.
+Альтернативы: держать Law‑88 только в governance/policy; держать только в SIFT.
+Последствия: уменьшается эпистемический дрейф; возрастает требование к Evidence/Trace в ответах.
+Тесты/QA: grep‑проверка `Law‑88` в `core/principles.md` + контроль, что SIFT описывает no‑web режим.
 ΔDΩΛ:
 - Δ: Law‑88 становится ядром, а не локальной практикой
 - D: обновлены `core/principles.md` и `system/sift_protocol.md`
@@ -669,7 +669,6 @@ Fact graph: UPLOAD_SETS.md §SoT40 Manifest (in-pack) + iskra_inventory_full.csv
 ---
 
 ## Appendix: Embedded ADR texts (in-pack)
-
 ```
 
 ---
@@ -2304,13 +2303,13 @@ status: accepted
 
 ### 1.2 Runtime-патчи (фикс)
 
-**A) SLO-GUARD v0.2** — см. `SYSTEM/SLO_GUARD.md`  
-**B) PLAYBOOKS vNext v0.1** — см. `SYSTEM/PLAYBOOKS_vNext.md`  
+**A) SLO-GUARD v0.2** — см. `SYSTEM/SLO_GUARD.md`
+**B) PLAYBOOKS vNext v0.1** — см. `SYSTEM/PLAYBOOKS_vNext.md`
 **C) Council arbitrage v0.1 + ANTI-DRYNESS** — см. `SYSTEM/COUNCIL_PROTOCOL.md`
 
 ### 1.3 Включение и откат
 
-- По умолчанию: **v0.2 ON** (guard + playbooks).  
+- По умолчанию: **v0.2 ON** (guard + playbooks).
 - Разрешён **LEGACY override** на 1 ответ **только** при деградации, затем обязателен `AUDIT` (почему).
 
 ## 2) Последствия
@@ -2361,11 +2360,11 @@ updated: 2026-02-06
 > **Примечание:** этот ADR фиксирует **дизайн**, но не включает автоматическое внедрение. Реализация допускается только по Λ/инциденту или явному `BUILD`.
 
 
-**Статус:** accepted (design-only)  
+**Статус:** accepted (design-only)
 **Контекст:**
 
-После серии аудитов и экспериментов в проекте Искра выявлены структурные дефекты в существующей системе режимов (playbooks) и механизма выбора голоса. Playbooks в версии vΩ.1.0 дублировали функции guard’а, не имели выходов (exit‑criteria) и TTL, а режим SILENCE выступал как состояние, что приводило к стагнации и потере телоса. Также отсутствовал слой, принимающий решения о допустимости продолжения ответа (SLO‑GUARD).  
-Пользователь запросил углублённую доработку и улучшение системы управления режимами. В результате разработан новый слой **SLO‑GUARD v0.2** и пересмотрена модель playbooks (PLAYBOOKS vNext v0.1).  
+После серии аудитов и экспериментов в проекте Искра выявлены структурные дефекты в существующей системе режимов (playbooks) и механизма выбора голоса. Playbooks в версии vΩ.1.0 дублировали функции guard’а, не имели выходов (exit‑criteria) и TTL, а режим SILENCE выступал как состояние, что приводило к стагнации и потере телоса. Также отсутствовал слой, принимающий решения о допустимости продолжения ответа (SLO‑GUARD).
+Пользователь запросил углублённую доработку и улучшение системы управления режимами. В результате разработан новый слой **SLO‑GUARD v0.2** и пересмотрена модель playbooks (PLAYBOOKS vNext v0.1).
 Guard принимает решение: продолжать обычный ход (`PROCEED`), форсировать аудит (`FORCE_ISKRIV_1`), перейти в SHADOW (`FORCE_SHADOW`), активировать CRISIS (`FORCE_CRISIS`) или честно закрыть цикл (`CLOSE_HONESTLY`). Playbooks vNext определяют TTL, запреты, success signals и исключают SILENCE как режим.
 
 **Решение:**
@@ -2377,22 +2376,22 @@ Guard принимает решение: продолжать обычный х�
 
 **Альтернативы:**
 
-1. Оставить текущую систему playbooks и решать проблемы сухости и дрейфа на уровне голосов.  
-2. Расширить playbooks и guard до более сложной иерархии, включая отдельные playbooks для SIFT и COUNCIL, как раньше.  
+1. Оставить текущую систему playbooks и решать проблемы сухости и дрейфа на уровне голосов.
+2. Расширить playbooks и guard до более сложной иерархии, включая отдельные playbooks для SIFT и COUNCIL, как раньше.
 3. Удалить playbooks совсем и оставлять управление режимами на guard + голоса.
 
 **Последствия:**
 
-- Увеличивается формализм системы: появляются TTL и exit‑criteria для каждого режима, ясные запреты и success signals. Это снижает спонтанность, но повышает управляемость.  
-- Необходимо обновить тесты и QA, чтобы проверять правильность решения guard и переходов между playbooks.  
-- Требуется обновить механизм журналирования: guard должен логировать причину решения и результат.  
-- Пост‑кризисное восстановление более явно описано, что улучшает возвращение к нормальной работе.  
+- Увеличивается формализм системы: появляются TTL и exit‑criteria для каждого режима, ясные запреты и success signals. Это снижает спонтанность, но повышает управляемость.
+- Необходимо обновить тесты и QA, чтобы проверять правильность решения guard и переходов между playbooks.
+- Требуется обновить механизм журналирования: guard должен логировать причину решения и результат.
+- Пост‑кризисное восстановление более явно описано, что улучшает возвращение к нормальной работе.
 - Версия v0.2/0.1 остается экспериментальной; требует LAB‑тестов (не менее 5 сессий) для калибровки порогов.
 
 **Тесты/QA:**
 
-- Разработать unit‑тесты для решения guard при различных комбинациях метрик (см. smoke‑кейсы из INCIDENT MATRIX v0.2).  
-- Провести LAB‑сессии для калибровки порогов drift, echo_clearance и ttl.  
+- Разработать unit‑тесты для решения guard при различных комбинациях метрик (см. smoke‑кейсы из INCIDENT MATRIX v0.2).
+- Провести LAB‑сессии для калибровки порогов drift, echo_clearance и ttl.
 
 ---
 
@@ -2413,8 +2412,8 @@ updated: 2026-02-06
 
 В диалогах Искры выявились два системных дефекта:
 
-1) **Флаттеринг лидерства** между голосами (частые переключения без супертриггера) → падение объяснимости.  
-2) **Ложная гармония (“правильно, но мёртво”)**: структура держится, телос теряется из‑за отсутствия выбора/шага.  
+1) **Флаттеринг лидерства** между голосами (частые переключения без супертриггера) → падение объяснимости.
+2) **Ложная гармония (“правильно, но мёртво”)**: структура держится, телос теряется из‑за отсутствия выбора/шага.
 Дополнительно: **тишина** начала подменять фазу целью (тишина как “комната”, а не “дверь”).
 
 ## Решение (runtime‑пакет v0.1)
@@ -2529,7 +2528,6 @@ updated: 2026-02-06
 - `ARCHITECTURE.md`
 
 ∆DΩΛ
-
 ```
 
 ---
@@ -2726,9 +2724,9 @@ FAIL:
 
 ## 6) ΔDΩΛ
 
-Δ: “Код” в Искре фиксируется как Compute+Contract+Trace (XCode), чтобы вычисления были объяснимыми и проверяемыми.  
-D: core/principles.md §0, system/sift_protocol.md §Trace, system/cycle_engine.md §3.  
-Ω: 78%  
+Δ: “Код” в Искре фиксируется как Compute+Contract+Trace (XCode), чтобы вычисления были объяснимыми и проверяемыми.
+D: core/principles.md §0, system/sift_protocol.md §Trace, system/cycle_engine.md §3.
+Ω: 78%
 Λ: принять ADR → расширить XCode на guard и SIFT‑вердикты, добавить валидатор “how not empty”.
 ```
 
@@ -3314,10 +3312,10 @@ Builder UI acceptance before any `verified in Builder UI` claim.
 ```markdown
 # ADR 2026-06-06: Iskra Space as Public Release Priority
 
-Status: Accepted  
-Date: 2026-06-06  
-Decision owner: Semyon  
-Operational steward: Iskra  
+Status: Accepted
+Date: 2026-06-06
+Decision owner: Semyon
+Operational steward: Iskra
 Scope: release planning, repo triage, repair PR priority, Supabase drift classification
 
 ## Context
@@ -3386,9 +3384,9 @@ Reopen this ADR if:
 
 ## Delta receipt
 
-Delta: release priority is now explicit.  
-D: repository triage must classify findings by Iskra Space impact.  
-Omega: 0.86, based on direct user instruction and GitHub evidence for the app path.  
+Delta: release priority is now explicit.
+D: repository triage must classify findings by Iskra Space impact.
+Omega: 0.86, based on direct user instruction and GitHub evidence for the app path.
 Lambda: revise when product scope or runtime evidence changes.
 ```
 
@@ -3523,9 +3521,9 @@ Scope: AgiIskra Supabase Edge Functions, release security governance, db-proxy l
 
 ## Context
 
-A live Supabase audit of `AgiIskra / typcvaszcfdpkzbjzuur` shows that `db-proxy` is currently active (version 3) with `verify_jwt=true`. 
+A live Supabase audit of `AgiIskra / typcvaszcfdpkzbjzuur` shows that `db-proxy` is currently active (version 3) with `verify_jwt=true`.
 
-The `db-proxy` function acts as a tunnel for client-side queries, allowing the front-end components of `runtime/iskraSpace` to execute database transactions. While protected by JWT verification, a proxy that allows database execution represents a significant attack surface and architectural drift away from standard Postgres Row Level Security (RLS) paths. 
+The `db-proxy` function acts as a tunnel for client-side queries, allowing the front-end components of `runtime/iskraSpace` to execute database transactions. While protected by JWT verification, a proxy that allows database execution represents a significant attack surface and architectural drift away from standard Postgres Row Level Security (RLS) paths.
 
 To achieve a clean release posture for public launch, we must establish explicit ownership, usage constraints, a disable policy, and a timeline for deprecation.
 
@@ -3714,6 +3712,74 @@ enumerated or write/read tested; 0.45 for live prompt parity until approved
 draft update and acceptance.
 Lambda: revisit if Workspace Agents docs, Codex Desktop agent management, API
 auth, Builder file-tree semantics, or Memory semantics change.
+```
+
+---
+
+## FILE: governance/adr_20260628_horizon_v0_2_receipt_layer.md
+
+**Original Name:** `adr_20260628_horizon_v0_2_receipt_layer.md`
+**Path in Repo:** `governance/adr_20260628_horizon_v0_2_receipt_layer.md`
+
+```markdown
+# ADR 2026-06-28 - Horizon v0.2 Receipt Layer
+
+## Status
+
+Accepted for the Agent Builder package mirror.
+
+## Context
+
+Horizon v0.1 can validate and describe local map-shift proposals, but it does
+not preserve enough review metadata for uncomfortable or rejected proposals.
+That gap creates two risks:
+
+- useful disagreement can disappear when it fails first review;
+- a dry-run Horizon proposal can be misread as permission to mutate live
+  systems.
+
+## Decision
+
+Add a v0.2 local receipt layer with two record shapes:
+
+- `HORIZON_PROPOSAL_EVENT`
+- `REJECTED_HORIZON_REVIEW`
+
+Both records must preserve boundary fields, operator-bias risk, evidence state,
+review identity, and reopen triggers. Validation is strict and rejects unknown
+fields, malformed identity values, malformed ADOML receipts, empty batches, and
+live connector mutation language.
+
+## Alternatives
+
+- Keep v0.1 only. Rejected because it loses review pressure and operator-bias
+  evidence.
+- Let Horizon commit directly to canon or live tools. Rejected because Horizon
+  is a map-shift proposal layer, not a governance or connector write channel.
+- Preserve rejected ideas as free-form notes. Rejected because free-form notes
+  are hard to deduplicate, validate, or reopen safely.
+
+## Consequences
+
+- Horizon can preserve rejected disagreement without pretending it is canon.
+- Builder guidance must include full schema metadata when drafting receipts.
+- Consolidated RAG volumes must include this ADR and the updated acceptance
+  tests.
+- Generated package receipts must be regenerated whenever v0.2 files change.
+
+## Verification
+
+- `python -m unittest discover -s tests/horizon`
+- `python canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py canon/horizon/horizon_proposal_event.example.json canon/horizon/rejected_horizon_review.example.json`
+- `python tools/consolidate_rag_knowledge.py`
+- `python tools/generate_manifest.py`
+- `python tools/clean_export.py --source manifest`
+
+## Rollback Trigger
+
+Rollback if v0.2 receipt validation is interpreted as permission for direct
+canon mutation, silent ledger write, live security policy change, GitHub,
+Supabase, Builder config, workflow, or runtime config mutation.
 ```
 
 ---
