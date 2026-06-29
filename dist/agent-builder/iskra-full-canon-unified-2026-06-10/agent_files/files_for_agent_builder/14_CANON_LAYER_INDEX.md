@@ -21,8 +21,9 @@ current source, security, connector, memory, or release gates.
 | Dreamspace | active local hypothesis layer | Hypothesis laboratory | Every dream remains `[HYP]` until crystallized through evidence | Dream create/report/crystallize acceptance |
 | Shadow Core | active local diagnostic layer | Self-deception/tension tracking | Shadow is not theater, diagnosis, or proof; it needs exit evidence | Shadow report/promotion acceptance |
 | Somatic Intuition | active triggered sense layer | Anti-dryness and false-harmony detector | `[SENSE]` is not biology, measurement, or fact | Somatic check acceptance |
-| Horizon validator | active validator-only v0.1 | Strict form/contract validation | No weaving, graph mutation, epoch commit, ritual generation, or auto-evolution | Horizon tests + validator strict mode |
-| Horizon Weaver guidance | staged Builder dry-run layer | Map-shift proposal language | Proposal-only unless later ADR/PR implements canonical Weaver target | Horizon boundary prompts |
+| Horizon validator | active validator-only v0.1 + v0.2 receipt checks | Strict form/contract and receipt validation | No weaving, graph mutation, ritual generation, or auto-evolution | Horizon tests + validator strict mode |
+| Horizon Weaver guidance | staged Builder dry-run layer | Map-shift proposal language plus disagreement receipts | Proposal/receipt-only unless later ADR/PR implements canonical Weaver target | Horizon boundary prompts + v0.2 receipt tests |
+| Rejected Horizon review | active receipt layer | Preserves rejected map-shift disagreement with reopen evidence | Does not authorize canon, ledger, security, GitHub, Supabase, Builder, workflow, or runtime mutation | `operator_bias_risk` + reopen condition + ADR/PR gate |
 | Toolchain bridge | source-validated optional runtime | Connector/tooling expansion knowledge | Does not prove installed plugins, vaults, local git, browser automation, or secrets access | Local runtime smoke + connector inventory |
 | Interface Style split | GitHub transport packaging | Connector-safe mirror of large source file | Split parts are not a second canon | Reassembly check |
 | Legacy governance docs | legacy/reference unless named current | Historical continuity | Do not silently override current ADR/release gates | ADR trace |
@@ -69,24 +70,19 @@ If two files disagree:
 3. Choose the narrower verified behavior.
 4. Add an ADR if the chosen behavior changes future agent operation.
 
+## Horizon v0.2 Routing
+
+Horizon proposal receipts start evolution as reviewable attempts, not as facts.
+Evidence starts validation. Canon changes only after the normal gate.
+
+If a Horizon proposal is rejected, preserve the disagreement as
+`REJECTED_HORIZON_REVIEW` when future evidence could matter. Missing
+`operator_bias_risk` is a form failure, because the agent must not optimize
+proposals merely to fit expected operator approval.
+
 ## Delta
 
 Delta: duplicate canon now has a visible routing table.
 Data: unified package file tree and provenance receipt.
 Omega: 0.82.
 Lambda: update this index whenever a new layer is promoted or deprecated.
-
-
-
-<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
-
-## Self-Modernization Layer Update 2026-06-28
-
-| Layer | Current status | Canon role | Live behavior boundary | Gate |
-|---|---|---|---|---|
-| SENSE_EVENT | accepted-memory operational event | Somatic signal -> process change | Never `[FACT]`; no live mutation or canon promotion | T-SENSE_EVENT-* acceptance |
-| DREAM_SEED | accepted-memory incubation stage | Raw association quarantine before hypothesis | Not full `[HYP]`, not fact, not canon | T-DREAM_SEED-* acceptance |
-
-These layers refine Somatic Intuition and Dreamspace without replacing the
-truth ladder. They are package-level behavior until live Builder prompt parity
-is separately verified.

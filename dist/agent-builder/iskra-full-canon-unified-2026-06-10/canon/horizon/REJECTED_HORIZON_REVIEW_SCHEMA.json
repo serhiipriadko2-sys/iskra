@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rejected Horizon Review v0.2 Proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_type",
+    "review_id",
+    "proposal_id",
+    "rejected_at",
+    "rejected_by",
+    "rejection_reason",
+    "what_would_be_lost_if_wrongly_rejected",
+    "proposal_risk",
+    "operator_bias_risk",
+    "reopen_on_new_evidence",
+    "evidence_to_watch",
+    "next_review_trigger",
+    "status",
+    "forbidden"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2-proposal"
+    },
+    "event_type": {
+      "const": "REJECTED_HORIZON_REVIEW"
+    },
+    "review_id": {
+      "type": "string",
+      "pattern": "^RHR-[0-9]{8}-[0-9]{3}$"
+    },
+    "proposal_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "rejected_at": {
+      "type": "string",
+      "minLength": 10
+    },
+    "rejected_by": {
+      "type": "string",
+      "minLength": 2
+    },
+    "rejection_reason": {
+      "type": "string",
+      "minLength": 10
+    },
+    "what_would_be_lost_if_wrongly_rejected": {
+      "type": "string",
+      "minLength": 10
+    },
+    "proposal_risk": {
+      "type": "string",
+      "minLength": 10
+    },
+    "operator_bias_risk": {
+      "type": "string",
+      "minLength": 40
+    },
+    "reopen_on_new_evidence": {
+      "type": "string",
+      "minLength": 10
+    },
+    "evidence_to_watch": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "next_review_trigger": {
+      "type": "string",
+      "minLength": 10
+    },
+    "status": {
+      "enum": [
+        "REJECTED_WITH_REASON",
+        "REOPEN_ON_NEW_EVIDENCE"
+      ]
+    },
+    "forbidden": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "enum": [
+          "DIRECT_CANON_MUTATION",
+          "SILENT_LEDGER_WRITE",
+          "LIVE_SECURITY_POLICY_CHANGE"
+        ]
+      }
+    }
+  }
+}
