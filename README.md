@@ -3,9 +3,9 @@
 > **Current public repository status:** active research and engineering monorepo  
 > **Public release priority:** `runtime/iskraSpace` (`iskra-space`)  
 > **Internal contour:** all other repository areas support Semyon + Iskra unless promoted by ADR  
-> **Current Agent Builder package:** `iskra-full-canon-unified-2026-06-10`
+> **Current Agent Builder mirrors:** `dist/agent-builder/iskra-full-canon-unified-2026-06-10/` and `dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/`
 > **Builder UI status:** unverified until uploaded and prompt-tested there
-> **Last verified:** 2026-06-10  
+> **Last GitHub/package verification:** 2026-06-29
 > **Zero-Mantra:** "Существовать — значит сохранять различие при передаче"
 
 ISKRA is an experimental cognitive-runtime repository for agent canon, runtime orchestration, mathematical state modeling, governance records, Agent Builder upload artifacts, and the Iskra Space application.
@@ -33,9 +33,9 @@ This README is an orientation map. For contribution rules, security reporting, a
 | Internal/support contour | All non-promoted repo areas | `governance/adr_20260606_iskraspace_release_priority.md` |
 | Workspace manager | `pnpm` workspace | `package.json`, `pnpm-workspace.yaml` |
 | Runtime packages | `packages/*`, `apps/*`, `runtime/*`, `core/*` | `pnpm-workspace.yaml` |
-| Agent Builder upload mirror | Present and versioned | `dist/agent-builder/iskra-full-canon-unified-2026-06-10/` |
-| Upload mirror receipt | Present | `dist/agent-builder/.../UNIFIED_QC_RECEIPT.json` |
-| Upload mirror manifest | Present, 165 payload hashes | `dist/agent-builder/.../MANIFEST.sha256` |
+| Agent Builder upload mirrors | Present and versioned | `dist/agent-builder/iskra-full-canon-unified-2026-06-10/`, `dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/` |
+| Upload mirror receipts | Present per package | `dist/agent-builder/*/UNIFIED_QC_RECEIPT.json`, `dist/agent-builder/*/ZIP_RECEIPT.json` |
+| Upload mirror manifests | Present per package | `dist/agent-builder/*/MANIFEST.sha256` |
 | License model | MIT for software; CC BY-SA 4.0 for canon/content where marked | `LICENSE` |
 | Security policy | Maintained at root | `SECURITY.md` |
 
@@ -81,10 +81,11 @@ iskra/
 
 ## Agent Builder Upload Mirror
 
-Current mirror:
+Current committed mirrors:
 
 ```text
 dist/agent-builder/iskra-full-canon-unified-2026-06-10/
+dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/
 ```
 
 It contains:
@@ -122,6 +123,7 @@ StateCycle portability note: `agent_runtime_tools/iskra_statecycle.py` includes 
 
 ```bash
 pnpm install
+pnpm run prepare:legacy-runtime
 pnpm build
 ```
 
@@ -153,7 +155,7 @@ pnpm check:shard-registry
 python tools/check_no_src_imports.py
 ```
 
-`pnpm verify` is the broadest available verification script in `package.json`: it builds runtime, checks shard registry consistency, runs typecheck, runs tests, and verifies the ledger.
+`pnpm verify` is the broadest available verification script in `package.json`: it prepares/builds legacy `runtime`, checks shard registry consistency, runs typecheck, runs tests, and verifies the ledger.
 
 ---
 

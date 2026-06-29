@@ -12,6 +12,26 @@ import { Explainable, ExplainStep } from '../types/explainable';
  * MetricsEngine Service
  * Calculates the 11D Metric Tensor and integrates Scientific Modules (Phase I & II)
  */
+const METRIC_LIMITS: Record<keyof IskraMetrics, { min: number; max: number }> = {
+  rhythm: { min: 0, max: 100 },
+  trust: { min: 0, max: 1 },
+  pain: { min: 0, max: 1 },
+  chaos: { min: 0, max: 1 },
+  drift: { min: 0, max: 1 },
+  echo: { min: 0, max: 1 },
+  clarity: { min: 0, max: 1 },
+  silence_mass: { min: 0, max: 1 },
+  mirror_sync: { min: 0, max: 1 },
+  interrupt: { min: 0, max: 1 },
+  ctxSwitch: { min: 0, max: 1 },
+  foresight: { min: 0, max: 1 },
+};
+
+const clampMetric = (metricKey: keyof IskraMetrics, value: number): number => {
+  const limit = METRIC_LIMITS[metricKey];
+  return Math.max(limit.min, Math.min(limit.max, value));
+};
+
 export class MetricsEngine {
   private history: IskraMetrics[] = [];
   private quantumStates: Map<string, QuantumStateVector> = new Map();
@@ -40,7 +60,7 @@ export class MetricsEngine {
         const val = modifiers[metricKey];
         if (typeof val === 'number') {
           const currentVal = next[metricKey] || 0;
-          next[metricKey] = Math.max(0, Math.min(1, currentVal + val));
+          next[metricKey] = clampMetric(metricKey, currentVal + val);
           appliedModifiers[metricKey] = val;
         }
       }
@@ -95,7 +115,7 @@ export class MetricsEngine {
     const how: ExplainStep[] = [
       {
         label: 'apply_modifiers',
-        formula: 'next[k] = clamp01(current[k] + delta[k])',
+        formula: 'next[k] = clampByMetricDomain(current[k] + delta[k])',
         inputs: { modifier_count: Object.keys(computed.appliedModifiers).length },
         output: Object.keys(computed.appliedModifiers).length,
         refs: [{ kind: 'project', ref: 'packages/engine/src/services/metricsService.ts' }]
@@ -127,7 +147,7 @@ export class MetricsEngine {
       how,
       contracts_checked: [
         'how.length > 0',
-        'metrics clamped to [0,1] where modifiers applied',
+        'metrics clamped to metric domain (rhythm 0-100, other metrics 0-1) where modifiers applied',
         'history window <= 100'
       ],
       evidence: [

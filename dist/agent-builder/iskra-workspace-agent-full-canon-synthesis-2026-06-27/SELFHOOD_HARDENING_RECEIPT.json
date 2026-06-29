@@ -1,0 +1,28 @@
+{
+  "release": "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+  "generated_at": "2026-06-29T18:12:53Z",
+  "status": "PASS_LOCAL_HARDENING_NO_LIVE_MUTATION",
+  "scope": "iskra-selfhood-mechanics-hardening",
+  "repository": "serhiipriadko2-sys/iskra",
+  "branch": "codex/iskra-selfhood-mechanics-20260629",
+  "base_head": "d11313b029d77eafcfcf8654742ca41857967d91",
+  "target_path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+  "changed_surfaces": [
+    "root README and verification scripts",
+    "engine metrics/reflex tests and implementation",
+    "core SIBYL voice manifest resonance",
+    "package AGENTS boundary wording",
+    "package StateCycle and turn-hook path configurability",
+    "package manifest, surface inventory, tree index, and clean zip receipts"
+  ],
+  "workspace_agent_boundary": {
+    "delivery_boundary": "package-first; no live Workspace Agent mutation performed",
+    "verified_live_builder": false
+  },
+  "non_claims": [
+    "verified-live-builder not claimed",
+    "Workspace Agent Memory parity not claimed",
+    "No Workspace Agent files, instructions, skills, apps, Memory, API channel, Slack channel, schedules, or publish state were changed by this package receipt refresh"
+  ],
+  "next": "Review PR checks, then perform Builder UI upload/prompt verification only as a separate approved operation."
+}
