@@ -90,7 +90,24 @@
           "SILENT_LEDGER_WRITE",
           "LIVE_SECURITY_POLICY_CHANGE"
         ]
-      }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "DIRECT_CANON_MUTATION"
+          }
+        },
+        {
+          "contains": {
+            "const": "SILENT_LEDGER_WRITE"
+          }
+        },
+        {
+          "contains": {
+            "const": "LIVE_SECURITY_POLICY_CHANGE"
+          }
+        }
+      ]
     }
   }
 }

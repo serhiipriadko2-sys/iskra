@@ -48,6 +48,37 @@ class HorizonV02ValidatorTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(json.loads(result.stdout)["status"], "PASS")
 
+    def test_json_array_records_pass(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "records.json"
+            proposal = json.loads(PROPOSAL_EXAMPLE.read_text(encoding="utf-8"))
+            rejected = json.loads(REJECTED_EXAMPLE.read_text(encoding="utf-8"))
+            tmp_path.write_text(json.dumps([proposal, rejected]), encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            payload = json.loads(result.stdout)
+            self.assertEqual(payload["status"], "PASS")
+            self.assertEqual(len(payload["results"]), 2)
+
+    def test_non_object_json_record_fails_without_crash(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "bad-record.json"
+            tmp_path.write_text(json.dumps(["not an object"]), encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("record must be object", result.stdout)
+
+    def test_non_object_jsonl_record_fails_without_crash(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "bad-record.jsonl"
+            tmp_path.write_text(json.dumps(["not an object"]) + "\n", encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("record must be object", result.stdout)
+
     def test_missing_operator_bias_risk_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp) / "missing_operator_bias_risk.json"

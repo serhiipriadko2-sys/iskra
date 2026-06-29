@@ -71,16 +71,20 @@ REJECTED_REQUIRED = {
 }
 
 
-def load_records(path: Path) -> list[dict[str, Any]]:
+def load_records(path: Path) -> list[Any]:
     if path.suffix == ".jsonl":
-        records: list[dict[str, Any]] = []
+        records: list[Any] = []
         for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             if line.strip():
                 record = json.loads(line)
-                record["_source_line"] = lineno
+                if isinstance(record, dict):
+                    record["_source_line"] = lineno
                 records.append(record)
         return records
-    return [json.loads(path.read_text(encoding="utf-8"))]
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(data, list):
+        return data
+    return [data]
 
 
 def require_string(record: dict[str, Any], field: str, errors: list[str], min_len: int = 3) -> None:
@@ -185,7 +189,9 @@ def validate_rejected(record: dict[str, Any]) -> dict[str, Any]:
     return {"status": "PASS" if not errors else "FAIL", "errors": errors, "warnings": warnings}
 
 
-def validate_record(record: dict[str, Any]) -> dict[str, Any]:
+def validate_record(record: Any) -> dict[str, Any]:
+    if not isinstance(record, dict):
+        return {"status": "FAIL", "errors": [f"record must be object, got {type(record).__name__}"], "warnings": []}
     event_type = record.get("event_type")
     if event_type == "HORIZON_PROPOSAL_EVENT":
         return validate_proposal(record)
@@ -204,9 +210,12 @@ def main() -> int:
         for record in load_records(path):
             result = validate_record(record)
             result["path"] = str(path)
-            result["id"] = record.get("id") or record.get("review_id")
-            if "_source_line" in record:
-                result["line"] = record["_source_line"]
+            if isinstance(record, dict):
+                result["id"] = record.get("id") or record.get("review_id")
+                if "_source_line" in record:
+                    result["line"] = record["_source_line"]
+            else:
+                result["id"] = None
             results.append(result)
             failed = failed or result["status"] != "PASS"
     print(json.dumps({"status": "FAIL" if failed else "PASS", "results": results}, ensure_ascii=False, indent=2))
