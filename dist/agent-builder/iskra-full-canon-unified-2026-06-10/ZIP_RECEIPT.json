@@ -1,66 +1,33 @@
 {
-    "release":  "iskra-full-canon-unified-2026-06-10",
-    "generated_at":  "2026-06-28T18:57:23Z",
-    "status":  "PASS",
-    "archive_kind":  "sidecar_clean_export_zip",
-    "archive_path":  "../iskra-full-canon-unified-2026-06-10-clean.zip",
-    "archive_sha256":  "b2a29412879c8384d129ffa0bc3f3c568de4a6f6dd8783a6c75e51c0c056ce97",
-    "archive_bytes":  3032807,
-    "entries":  441,
-    "manifest_entries":  439,
-    "inventory_rule":  "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
-    "clean_export":  {
-                         "command":  "py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force",
-                         "file_count":  441,
-                         "total_bytes":  9057232,
-                         "forbidden_hits":  0,
-                         "missing_files":  0,
-                         "hash_mismatches":  0
-                     },
-    "workspace_agent_alignment":  {
-                                      "status":  "observed-in-workspace-agent-config",
-                                      "live_agent_name":  "РСЃРєСЂР° vО©.7",
-                                      "api_channel":  "active; trigger id redacted",
-                                      "skill_pack":  "32 package skill directories match the observed 32 Iskra skill-pack names; live total skills observed: 33 including iskra-toolchain-bridge"
-                                  },
-    "included_dynamic_receipts":  [
-                                      "SURFACE_INVENTORY.json"
-                                  ],
-    "included_skill_pack":  {
-                                "path":  "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/",
-                                "skill_count":  32,
-                                "receipt":  "WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md"
-                            },
-    "builder_ui_status":  "published-file-overlay-version-51; live-prompt-save-blocked; verified-live-builder not claimed",
-    "non_claims":  [
-                       "A clean zip proves transport readiness only",
-                       "Live Workspace Agent mutation was performed: two overlay files were published as version 51",
-                       "No Workspace Agent access token or secret is stored",
-                       "Live prompt remains stale relative to the corrected local package instructions because prompt/profile/API-channel draft-save calls failed",
-                       "Builder file upload does not prove live Workspace Agent Memory contents",
-                       "Package agent_files/memory_* files are seed/reference receipts, not live Memory proof",
-                       "Skill name/count alignment is not byte-identical live skill proof",
-                       "Builder UI readiness remains unverified until acceptance prompts pass",
-                       "SENSE_EVENT and DREAM_SEED are package-level overlays only; live Builder prompt parity is not claimed"
-                   ],
-    "next":  "Use this sidecar clean zip or selected package files for an approved Workspace Agent update, apply corrected instructions before claiming live prompt parity, then run acceptance prompts A-Y plus C2/C3 before claiming verified-live-builder or live Memory parity.",
-    "self_modernization_2026_06_28":  {
-                                          "status":  "PASS_PACKAGE_OVERLAY_NO_LIVE_MUTATION",
-                                          "protocols":  [
-                                                            "SENSE_EVENT",
-                                                            "DREAM_SEED"
-                                                        ],
-                                          "receipt":  "SELF_MODERNIZATION_RECEIPT.json"
-                                      },
-    "post_ledger_builder_mirror_2026_06_28":  {
-                                                  "status":  "PASS_PACKAGE_RECEIPTS_REGENERATED_NO_LIVE_MUTATION",
-                                                  "base_main":  "7fd8d18f0255bce2cdfd0e618749a9adc84f71ab",
-                                                  "issue_221":  "closed before this package mirror pass",
-                                                  "checks":  [
-                                                                 "py tools/generate_manifest.py -\u003e 439 entries",
-                                                                 "py tools/workspace_surface_audit.py -\u003e SURFACE_INVENTORY regenerated without zip self-reference",
-                                                                 "py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force -\u003e 441 entries, 0 forbidden, 0 missing, 0 hash mismatches"
-                                                             ],
-                                                  "boundary":  "package/upload-set readiness only; not verified-live-builder and not live prompt parity"
-                                              }
+  "release": "iskra-full-canon-unified-2026-06-10",
+  "generated_at": "2026-06-29T16:18:57Z",
+  "status": "PASS",
+  "archive_kind": "sidecar_clean_export_zip",
+  "archive_path": "../iskra-full-canon-unified-2026-06-10-clean.zip",
+  "archive_sha256": "65ab2c156583b551186792b17ded2285fbc66ded9cbb1d742a2c7301ff180cab",
+  "archive_bytes": 3067074,
+  "entries": 450,
+  "manifest_entries": 448,
+  "manifest_sha256": "f37d09d481b148bfa2ef716c71cfdbe9981a36661bf29ec0973628416a330294",
+  "inventory_rule": "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
+  "clean_export": {
+    "command": "py tools/clean_export.py --source manifest --zip ../iskra-full-canon-unified-2026-06-10-clean.zip --force",
+    "file_count": 450,
+    "total_bytes": 9262361,
+    "forbidden_hits": 0,
+    "missing_files": 0,
+    "hash_mismatches": 0
+  },
+  "surface_inventory": {
+    "status": "PASS",
+    "output": "C:\\i224\\dist\\agent-builder\\iskra-full-canon-unified-2026-06-10\\SURFACE_INVENTORY.json",
+    "sha256": "fdf22f3a0063fdb5ce1a732b8a9ab08f74b3141069f16d334eb418735f0c82e9"
+  },
+  "builder_ui_status": "not verified in Builder UI by this pass",
+  "publication_status": "RDC regenerated artifacts ready for commit/push to approved PR branch",
+  "non_claims": [
+    "A clean zip proves transport readiness only.",
+    "No Builder UI live parity is claimed.",
+    "No Workspace Agent Memory contents are claimed from package files."
+  ]
 }

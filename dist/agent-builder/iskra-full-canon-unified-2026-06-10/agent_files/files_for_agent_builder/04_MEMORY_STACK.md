@@ -72,13 +72,18 @@ Dreamspace → Supabase/UI persistence only through accepted ADR, repo/schema al
 
 Horizon proposal → local epoch only if:
 
-- proposal validates as schema `0.1` / module `builder_horizon`;
+- proposal validates as schema `0.1` / module `builder_horizon`, or a v0.2
+  proposal/rejected-review receipt validates as `0.2-proposal` for receipt
+  preservation only;
 - label is `SHIFT_BLOCKED`, `FORM_PASS_NEEDS_HUMAN_REVIEW`, or `FORM_PASS`;
 - `SEMANTIC_PASS` is absent;
 - evidence pointer or explicit evidence gap is present;
 - rollback hint is present;
 - `HORIZON_COMMIT_APPROVED`, actor, and reason are present;
 - mutation policy is local-only and does not touch core, ledger, workflows, live Supabase, or live Builder config.
+
+Horizon v0.2 receipts preserve proposal/rejection pressure. They do not prove
+truth, grant live connector permission, or promote a rejected idea to canon.
 
 Horizon → GitHub/Supabase/Builder live mutation only through the normal connector/governance path, never through Horizon commit.
 

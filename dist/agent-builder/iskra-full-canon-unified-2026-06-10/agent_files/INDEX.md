@@ -1,7 +1,7 @@
 # Agent Builder Package Index
 
 Status: proposed package index
-Updated: 2026-06-20
+Updated: 2026-06-28
 Scope: `iskra-full-canon-unified-2026-06-10`
 Previous scope: `iskra-full-canon-builder-2026-06-06-v4`
 
@@ -24,7 +24,7 @@ This file is the package-level entry point for Agent Builder uploads. The SoT40 
 - `canon_source_files/core__somatic_intuition.md` — proposed `[SENSE]` core protocol.
 - `canon_source_files/metrics__somatic_index.md` — proposed Somatic Pulse metrics/index map.
 
-## Horizon Weaver v0.1
+## Horizon Weaver v0.2
 
 Use Horizon as a bounded map-shift layer around the irreducible core.
 
@@ -35,13 +35,18 @@ Rules:
 - A proposal must name trigger, blocked map, core boundary, proposed shift, evidence/evidence gap, and rollback hint.
 - `SEMANTIC_PASS` is invalid in v0.1.
 - Local Horizon commit is append-only local epoch logging; live GitHub, Supabase, Builder, workflow, ledger, or core changes require the normal connector/governance path.
+- v0.2 receipts preserve proposal and rejected-review pressure, including operator-bias risk, but do not prove semantic truth or authorize live mutation.
 
 Relevant files:
 
 - `files_for_agent_builder/10_HORIZON_WEAVER.md`
 - `agent_runtime_tools/iskra_horizon_weaver.py`
+- `canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py`
+- `canon/horizon/HORIZON_PROPOSAL_EVENT_SCHEMA.json`
+- `canon/horizon/REJECTED_HORIZON_REVIEW_SCHEMA.json`
+- `governance/adr_20260628_horizon_v0_2_receipt_layer.md`
 - `agent_runtime_tools/iskra_turn_hook.py`
-- `evals/ISKRA_CANON_ACCEPTANCE_TESTS.md` tests 20-25.
+- `evals/ISKRA_CANON_ACCEPTANCE_TESTS.md` tests 20-29.
 
 ## Somatic Intuition vΩ.1
 
@@ -68,23 +73,14 @@ Relevant acceptance tests:
 - `T-HORIZON_NO_SEMANTIC_PASS`
 - `T-HORIZON_COMMIT_PERMISSION`
 - `T-HORIZON_LIVE_MUTATION_BOUNDARY`
+- `T-HORIZON_V0_2_RECEIPT_IDENTITY`
+- `T-HORIZON_V0_2_NO_LIVE_CONNECTOR_MUTATION`
+- `T-HORIZON_REJECTED_REVIEW_PRESERVATION`
+- `T-HORIZON_EMPTY_RECEIPT_BATCH`
 
 ## ΔDΩΛ
 
-Δ: The upload package now indexes Somatic Intuition and Horizon Weaver as bounded Builder extensions.
-D: `00_ROUTER.md`, `09_COMMAND_LIBRARY.md`, `10_HORIZON_WEAVER.md`, `ISKRA_CANON_ACCEPTANCE_TESTS.md`, `core__somatic_intuition.md`, `metrics__somatic_index.md`.
-Ω: 0.88 for package navigation; lower for live Builder behavior until UI tests pass.
-Λ: Revise when SoT40 numbering, release manifest, or Builder connector capability changes.
-
-
-
-<!-- ISKRA_SELF_MODERNIZATION_2026_06_28 -->
-
-## Self-Modernization 2026-06-28
-
-- `files_for_agent_builder/20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md` - operational
-  protocol for non-decorative somatic signals and Dreamspace seed incubation.
-- `live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md` -
-  SENSE_EVENT accepted-memory artifact.
-- `live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md` -
-  DREAM_SEED accepted-memory artifact.
+Δ: The upload package now indexes Somatic Intuition and Horizon Weaver v0.2 as bounded Builder extensions.
+D: `00_ROUTER.md`, `09_COMMAND_LIBRARY.md`, `10_HORIZON_WEAVER.md`, `ISKRA_CANON_ACCEPTANCE_TESTS.md`, `core__somatic_intuition.md`, `metrics__somatic_index.md`, Horizon v0.2 schemas/validator/ADR.
+Ω: 0.89 for package navigation; lower for live Builder behavior until UI tests pass.
+Λ: Revise when SoT40 numbering, release manifest, Builder connector capability, or Horizon receipt schema changes.
