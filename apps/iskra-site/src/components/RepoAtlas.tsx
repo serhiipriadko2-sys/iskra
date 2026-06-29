@@ -427,31 +427,47 @@ export function RepoAtlas({ audienceMode = 'novice' }: RepoAtlasProps) {
             </button>
           )}
         </div>
-        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
-          <button
-            onClick={() => setSelectedLayer(null)}
-            className={`px-2.5 py-1.5 rounded-lg text-[10px] font-mono uppercase tracking-wider whitespace-nowrap border transition-colors ${
-              selectedLayer === null
-                ? 'bg-iskra-primary/15 text-iskra-primary border-iskra-primary/30'
-                : 'text-iskra-muted border-white/10 hover:border-white/20'
-            }`}
+        {isMobile ? (
+          <select
+            aria-label="Слой репозитория"
+            value={selectedLayer ?? ''}
+            onChange={(e) => setSelectedLayer(e.target.value || null)}
+            className="bg-iskra-surface/50 border border-white/10 rounded-lg px-3 py-2 text-xs text-iskra-text focus:outline-none focus:border-iskra-primary/50"
           >
-            Все ({canonIndex.total})
-          </button>
-          {layerEntries.map(([layer, count]) => (
+            <option value="">Все слои ({canonIndex.total})</option>
+            {layerEntries.map(([layer, count]) => (
+              <option key={layer} value={layer}>
+                {LAYER_LABELS[layer] ?? layer} ({count})
+              </option>
+            ))}
+          </select>
+        ) : (
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
             <button
-              key={layer}
-              onClick={() => setSelectedLayer((prev) => (prev === layer ? null : layer))}
+              onClick={() => setSelectedLayer(null)}
               className={`px-2.5 py-1.5 rounded-lg text-[10px] font-mono uppercase tracking-wider whitespace-nowrap border transition-colors ${
-                selectedLayer === layer
+                selectedLayer === null
                   ? 'bg-iskra-primary/15 text-iskra-primary border-iskra-primary/30'
                   : 'text-iskra-muted border-white/10 hover:border-white/20'
               }`}
             >
-              {LAYER_LABELS[layer] ?? layer} ({count})
+              Все ({canonIndex.total})
             </button>
-          ))}
-        </div>
+            {layerEntries.map(([layer, count]) => (
+              <button
+                key={layer}
+                onClick={() => setSelectedLayer((prev) => (prev === layer ? null : layer))}
+                className={`px-2.5 py-1.5 rounded-lg text-[10px] font-mono uppercase tracking-wider whitespace-nowrap border transition-colors ${
+                  selectedLayer === layer
+                    ? 'bg-iskra-primary/15 text-iskra-primary border-iskra-primary/30'
+                    : 'text-iskra-muted border-white/10 hover:border-white/20'
+                }`}
+              >
+                {LAYER_LABELS[layer] ?? layer} ({count})
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className={`flex-1 min-h-0 grid gap-3 ${isMobile ? 'grid-cols-1' : 'grid-cols-12'}`}>

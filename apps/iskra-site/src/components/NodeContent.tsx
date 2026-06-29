@@ -10,7 +10,7 @@ import { architectureNodes, techStack } from '../lib/architecture';
 import { voices } from '../lib/voices';
 import type { TreeNodeData } from '../lib/treeData';
 import type { AudienceMode } from '../types';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { CognitiveCycleSimulator } from './CognitiveCycleSimulator';
 
 const RepoAtlas = lazy(() => import('./RepoAtlas').then((m) => ({ default: m.RepoAtlas })));
@@ -18,6 +18,7 @@ const RepoAtlas = lazy(() => import('./RepoAtlas').then((m) => ({ default: m.Rep
 interface NodeContentProps {
   node: TreeNodeData;
   audienceMode?: AudienceMode;
+  onOpenAtlas?: () => void;
 }
 
 function Card({ icon, title, text }: { icon?: string; title: string; text: string }) {
@@ -247,6 +248,50 @@ function StartContent({ audienceMode }: { audienceMode?: AudienceMode }) {
   );
 }
 
+function ActionButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className="px-3 py-1.5 rounded-lg text-[10px] font-mono uppercase tracking-wider border border-white/10 bg-iskra-surface/40 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+    >
+      {children}
+    </button>
+  );
+}
+
+function DefaultNodeContent({ node, onOpenAtlas }: { node: TreeNodeData; onOpenAtlas?: () => void }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    const text = `${node.label}\n\n${node.longDescription ?? node.description}\n\n${node.invitation ?? ''}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <p className="text-iskra-text leading-relaxed text-base">{node.longDescription ?? node.description}</p>
+
+      {(node.invitation || node.longDescription) && (
+        <div className="p-4 rounded-xl border border-iskra-primary/30 bg-iskra-primary/10">
+          <p className="text-xs font-mono uppercase tracking-wider text-iskra-primary mb-2">Приглашение</p>
+          <p className="text-iskra-text leading-relaxed">{node.invitation ?? 'Сделай шаг.'}</p>
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-2">
+        <ActionButton onClick={handleCopy}>{copied ? 'Скопировано' : 'Копировать'}</ActionButton>
+        {onOpenAtlas && <ActionButton onClick={onOpenAtlas}>Открыть в Атласе</ActionButton>}
+      </div>
+    </div>
+  );
+}
+
 function VoiceDetail({ id }: { id: string }) {
   const voice = voices.find((v) => v.id === id);
   if (!voice) return null;
@@ -265,11 +310,17 @@ function VoiceDetail({ id }: { id: string }) {
       <div className="p-4 rounded-xl border border-iskra-primary/30 bg-iskra-primary/10">
         <p className="text-sm text-iskra-text">{voice.simpleExplanation}</p>
       </div>
+      <button
+        onClick={() => navigator.clipboard.writeText(`${voice.name} ${voice.symbol}\n${voice.telos}\n${voice.simpleExplanation}`)}
+        className="px-3 py-1.5 rounded-lg text-[10px] font-mono uppercase tracking-wider border border-white/10 bg-iskra-surface/40 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+      >
+        Скопировать профиль голоса
+      </button>
     </div>
   );
 }
 
-export function NodeContent({ node, audienceMode }: NodeContentProps) {
+export function NodeContent({ node, audienceMode, onOpenAtlas }: NodeContentProps) {
   if (node.group === 'leaves') {
     return <VoiceDetail id={node.id} />;
   }
@@ -300,6 +351,6 @@ export function NodeContent({ node, audienceMode }: NodeContentProps) {
         </div>
       );
     default:
-      return <p className="text-iskra-muted leading-relaxed">{node.description}</p>;
+      return <DefaultNodeContent node={node} onOpenAtlas={onOpenAtlas} />;
   }
 }

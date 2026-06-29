@@ -11,9 +11,10 @@ interface TreeNodeProps {
   isActive: boolean;
   isDimmed: boolean;
   onClick: (id: string) => void;
+  onHover?: (id: string | null) => void;
 }
 
-export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
+export function TreeNode({ node, isActive, isDimmed, onClick, onHover }: TreeNodeProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const coronaRef = useRef<THREE.Points>(null);
@@ -92,8 +93,12 @@ export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
         onPointerOver={(e) => {
           e.stopPropagation();
           setHovered(true);
+          onHover?.(node.id);
         }}
-        onPointerOut={() => setHovered(false)}
+        onPointerOut={() => {
+          setHovered(false);
+          onHover?.(null);
+        }}
       >
         <sphereGeometry args={[0.26, 32, 32]} />
         <meshStandardMaterial
@@ -135,10 +140,20 @@ export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
         />
       </points>
 
-      {/* 4. Облегченная, изящная стеклянная подпись ноды */}
+      {/* 4. Hover tooltip */}
+      {hovered && !isActive && (
+        <Html distanceFactor={10} style={{ zIndex: 10 }} center position={[0, 0.72, 0]}>
+          <div className="pointer-events-none glass-card px-3 py-2 rounded-xl border border-white/10 max-w-[16rem]">
+            <p className="font-serif text-sm text-iskra-text text-center">{node.label}</p>
+            <p className="text-[10px] text-iskra-muted text-center mt-1 leading-tight">{node.description}</p>
+          </div>
+        </Html>
+      )}
+
+      {/* 5. Облегченная, изящная стеклянная подпись ноды */}
       <Html distanceFactor={10} style={{ zIndex: 5 }} center position={[0, 0.46, 0]}>
-        <button
-          onClick={() => onClick(node.id)}
+        <a
+          href={`#${node.id}`}
           className={`pointer-events-auto rounded-full font-mono uppercase tracking-[0.14em] whitespace-nowrap transition-all text-[8px] md:text-[9px] px-3 py-1.5 backdrop-blur-[3px] border ${
             isActive
               ? 'bg-iskra-primary/15 border-iskra-primary text-iskra-primary font-bold shadow-[0_0_15px_rgba(255,122,0,0.3)]'
@@ -148,7 +163,7 @@ export function TreeNode({ node, isActive, isDimmed, onClick }: TreeNodeProps) {
           } ${isDimmed ? 'opacity-25' : 'opacity-100'}`}
         >
           {isMobile ? node.shortLabel : node.label}
-        </button>
+        </a>
       </Html>
     </group>
   );

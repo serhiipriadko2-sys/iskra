@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { allTreeNodes, findNodeById } from '../lib/treeData';
 import type { TreeNodeData } from '../lib/treeData';
 import { ChevronDown, ChevronUp } from './icons';
-import { useMediaQuery } from '../hooks/useMediaQuery';
+
 
 type SiftStage = 'claim' | 'stop' | 'investigate' | 'find' | 'trace' | 'delta';
 type ClaimLabel = 'FACT' | 'INTERP' | 'HYP';
@@ -294,8 +294,10 @@ export function SiftLab({ activeNodeId, onReplayNodeSelect }: SiftLabProps) {
   const [replayInput, setReplayInput] = useState('');
   const [replayStatus, setReplayStatus] = useState<'idle' | 'loaded' | 'invalid'>('idle');
   const [replayedReceiptId, setReplayedReceiptId] = useState('');
-  const isMobile = useMediaQuery('(max-width: 767px)');
-  const [collapsed, setCollapsed] = useState(isMobile);
+  // Mobile initial state is computed synchronously below to avoid open-by-default flash.
+  const [collapsed, setCollapsed] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 767px)').matches : false
+  );
 
   useEffect(() => {
     if (replayStageRef.current) {

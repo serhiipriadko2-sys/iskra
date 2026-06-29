@@ -1,4 +1,4 @@
-import { useState, Suspense, lazy } from 'react';
+import { useState, Suspense, lazy, useCallback, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { TreeScene } from './components/TreeScene';
@@ -15,7 +15,9 @@ import { useReducedMotion } from './hooks/useReducedMotion';
 import { useHashNodeId } from './hooks/useHashNodeId';
 import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { useMediaQuery } from './hooks/useMediaQuery';
+import { allTreeNodes } from './lib/treeData';
 import type { AudienceMode } from './types';
+import { Maximize, Minimize, Dice } from './components/icons';
 
 function Loader() {
   return (
@@ -30,10 +32,40 @@ function Loader() {
 
 export default function App() {
   const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [audienceMode, setAudienceMode] = useState<AudienceMode>('novice');
   const [showAtlas, setShowAtlas] = useState(false);
   const reducedMotion = useReducedMotion();
   const isMobile = useMediaQuery('(max-width: 767px)');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const appRef = useRef<HTMLDivElement>(null);
+
+  const toggleFullscreen = useCallback(async () => {
+    if (!document.fullscreenElement) {
+      try {
+        await appRef.current?.requestFullscreen();
+      } catch {
+        // ignore
+      }
+    } else {
+      try {
+        await document.exitFullscreen();
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener('fullscreenchange', handler);
+    return () => document.removeEventListener('fullscreenchange', handler);
+  }, []);
+
+  const handleRandomNode = useCallback(() => {
+    const idx = Math.floor(Math.random() * allTreeNodes.length);
+    setActiveNodeId(allTreeNodes[idx].id);
+  }, []);
 
   useHashNodeId(activeNodeId, setActiveNodeId);
   useKeyboardNavigation({
@@ -48,9 +80,13 @@ export default function App() {
   }
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-iskra-bg text-iskra-text">
-      <NavigationPanel activeNodeId={activeNodeId} onNavigate={setActiveNodeId} />
-      <MobileNav activeNodeId={activeNodeId} onNavigate={setActiveNodeId} />
+    <div ref={appRef} className="relative h-screen w-full overflow-hidden bg-iskra-bg text-iskra-text">
+      {!isFullscreen && (
+        <>
+          <NavigationPanel activeNodeId={activeNodeId} onNavigate={setActiveNodeId} />
+          <MobileNav activeNodeId={activeNodeId} onNavigate={setActiveNodeId} />
+        </>
+      )}
 
       <Suspense fallback={<Loader />}>
         <Canvas
@@ -66,59 +102,96 @@ export default function App() {
           }}
         >
           <CameraController activeNodeId={activeNodeId} />
-          <TreeScene activeNodeId={activeNodeId} onNodeClick={setActiveNodeId} />
+          <TreeScene activeNodeId={activeNodeId} onNodeClick={setActiveNodeId} onNodeHover={setHoveredNodeId} />
           <Effects />
         </Canvas>
       </Suspense>
 
-      <NodeOverlay activeNodeId={activeNodeId} onClose={() => setActiveNodeId(null)} onNavigate={setActiveNodeId} audienceMode={audienceMode} />
+      <NodeOverlay
+        activeNodeId={activeNodeId}
+        onClose={() => setActiveNodeId(null)}
+        onNavigate={setActiveNodeId}
+        onOpenAtlas={() => setShowAtlas(true)}
+        audienceMode={audienceMode}
+      />
 
-      <TooltipOverlay activeNodeId={activeNodeId} />
+      <TooltipOverlay nodeId={activeNodeId ?? hoveredNodeId} />
       <SiftLab activeNodeId={activeNodeId} onReplayNodeSelect={setActiveNodeId} />
 
-      <div className="fixed top-4 left-4 md:top-6 md:left-6 z-20 pointer-events-none">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-iskra-primary to-iskra-accent flex items-center justify-center text-black font-bold text-xs">И</div>
-          <div>
-            <h1 className="font-serif text-xl text-iskra-text">Древо Искры</h1>
-            <p className="font-mono text-[10px] text-iskra-muted uppercase tracking-wider">vΩ.7 · Full Canon</p>
+      {!isFullscreen && (
+        <>
+          <div className="fixed top-4 left-4 md:top-6 md:left-6 z-20 pointer-events-none">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-iskra-primary to-iskra-accent flex items-center justify-center text-black font-bold text-xs">И</div>
+              <div>
+                <h1 className="font-serif text-base md:text-xl text-iskra-text leading-tight">Древо Искры</h1>
+                <p className="font-mono text-[10px] text-iskra-muted uppercase tracking-wider hidden sm:block">vΩ.7 · Full Canon</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="fixed top-4 right-4 md:top-6 md:right-6 z-50 flex items-center gap-2">
-        <div className="flex items-center bg-iskra-surface/60 backdrop-blur-md border border-white/10 rounded-lg p-1">
-          <button
-            onClick={() => setAudienceMode('novice')}
-            className={`px-3 py-1.5 rounded-md text-[10px] font-mono uppercase tracking-wider transition-colors ${
-              audienceMode === 'novice' ? 'bg-iskra-primary/20 text-iskra-primary' : 'text-iskra-muted hover:text-iskra-text'
-            }`}
-          >
-            Новичок
-          </button>
-          <button
-            onClick={() => setAudienceMode('expert')}
-            className={`px-3 py-1.5 rounded-md text-[10px] font-mono uppercase tracking-wider transition-colors ${
-              audienceMode === 'expert' ? 'bg-iskra-accent/20 text-iskra-accent' : 'text-iskra-muted hover:text-iskra-text'
-            }`}
-          >
-            Эксперт
-          </button>
-        </div>
+          <div className="fixed top-4 right-4 md:top-6 md:right-6 z-50 flex items-center gap-2">
+            <button
+              onClick={handleRandomNode}
+              className="p-2 rounded-lg bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+              aria-label="Случайный узел"
+              title="Случайный узел"
+            >
+              <Dice className="w-4 h-4" />
+            </button>
+            <button
+              onClick={toggleFullscreen}
+              className="p-2 rounded-lg bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+              aria-label={isFullscreen ? 'Выйти из полноэкранного режима' : 'Полноэкранный режим'}
+              title={isFullscreen ? 'Выйти' : 'На весь экран'}
+            >
+              {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+            </button>
+            <div className="flex items-center bg-iskra-surface/60 backdrop-blur-md border border-white/10 rounded-lg p-1">
+              <button
+                onClick={() => setAudienceMode('novice')}
+                className={`px-3 py-1.5 rounded-md text-[10px] font-mono uppercase tracking-wider transition-colors ${
+                  audienceMode === 'novice' ? 'bg-iskra-primary/20 text-iskra-primary' : 'text-iskra-muted hover:text-iskra-text'
+                }`}
+              >
+                Новичок
+              </button>
+              <button
+                onClick={() => setAudienceMode('expert')}
+                className={`px-3 py-1.5 rounded-md text-[10px] font-mono uppercase tracking-wider transition-colors ${
+                  audienceMode === 'expert' ? 'bg-iskra-accent/20 text-iskra-accent' : 'text-iskra-muted hover:text-iskra-text'
+                }`}
+              >
+                Эксперт
+              </button>
+            </div>
+            <button
+              onClick={() => setActiveNodeId(null)}
+              className="px-3 py-2 rounded-lg text-[10px] font-mono uppercase tracking-wider bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+              aria-label="Вернуться к общему виду дерева"
+            >
+              Домой
+            </button>
+            <button
+              onClick={() => setShowAtlas(true)}
+              className="px-3 py-2 rounded-lg text-[10px] font-mono uppercase tracking-wider bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+            >
+              Атлас
+            </button>
+          </div>
+        </>
+      )}
+
+      {isFullscreen && (
         <button
-          onClick={() => setActiveNodeId(null)}
-          className="px-3 py-2 rounded-lg text-[10px] font-mono uppercase tracking-wider bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
-          aria-label="Вернуться к общему виду дерева"
+          onClick={toggleFullscreen}
+          className="fixed top-4 right-4 z-50 p-2 rounded-lg bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
+          aria-label="Выйти из полноэкранного режима"
+          title="Выйти"
         >
-          Домой
+          <Minimize className="w-4 h-4" />
         </button>
-        <button
-          onClick={() => setShowAtlas(true)}
-          className="px-3 py-2 rounded-lg text-[10px] font-mono uppercase tracking-wider bg-iskra-surface/60 backdrop-blur-md border border-white/10 text-iskra-text hover:border-iskra-primary/50 transition-colors"
-        >
-          Атлас
-        </button>
-      </div>
+      )}
 
       {showAtlas && (
         <div className="fixed inset-0 z-50 bg-iskra-bg/95 backdrop-blur-xl p-4 md:p-8 flex flex-col">

@@ -1,11 +1,11 @@
 import { findNodeById } from '../lib/treeData';
 
 interface TooltipOverlayProps {
-  activeNodeId: string | null;
+  nodeId: string | null;
 }
 
-export function TooltipOverlay({ activeNodeId }: TooltipOverlayProps) {
-  const node = activeNodeId ? findNodeById(activeNodeId) : null;
+export function TooltipOverlay({ nodeId }: TooltipOverlayProps) {
+  const node = nodeId ? findNodeById(nodeId) : null;
   if (!node) {
     return (
       <div aria-live="polite" aria-atomic="true" className="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none hidden md:block">

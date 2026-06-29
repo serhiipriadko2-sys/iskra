@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-29T14:05:03.896Z",
-  "total": 2619,
+  "generatedAt": "2026-06-29T14:48:35.504Z",
+  "total": 2624,
   "curated": 20,
   "layers": {
-    "root": 320,
+    "root": 323,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
     "appendix": 26,
-    "site": 68,
+    "site": 69,
     "web": 13,
     "canon": 16,
     "builder": 1144,
@@ -27,7 +27,7 @@
     "skills": 267,
     "backend": 50,
     "system": 26,
-    "tools": 50
+    "tools": 51
   },
   "nodes": [
     {
@@ -888,7 +888,10 @@
         ".playwright-mcp/page-2026-06-27T13-13-24-125Z.yml",
         ".playwright-mcp/page-2026-06-27T13-13-39-811Z.yml",
         ".playwright-mcp/page-2026-06-27T16-05-19-109Z.yml",
-        ".playwright-mcp/page-2026-06-28T19-16-08-640Z.yml"
+        ".playwright-mcp/page-2026-06-28T19-16-08-640Z.yml",
+        ".playwright-mcp/page-2026-06-29T14-06-12-229Z.yml",
+        ".playwright-mcp/page-2026-06-29T14-06-36-739Z.yml",
+        ".playwright-mcp/page-2026-06-29T14-06-47-479Z.yml"
       ]
     },
     {
@@ -1805,6 +1808,39 @@
       "parent": ".playwright-mcp"
     },
     {
+      "path": ".playwright-mcp/page-2026-06-29T14-06-12-229Z.yml",
+      "name": "page-2026-06-29T14-06-12-229Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-29T14-06-12-229Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-29T14-06-36-739Z.yml",
+      "name": "page-2026-06-29T14-06-36-739Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-29T14-06-36-739Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
+      "path": ".playwright-mcp/page-2026-06-29T14-06-47-479Z.yml",
+      "name": "page-2026-06-29T14-06-47-479Z.yml",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".playwright-mcp/page-2026-06-29T14-06-47-479Z.yml",
+      "related": [],
+      "parent": ".playwright-mcp"
+    },
+    {
       "path": "adr-log.md",
       "name": "adr-log.md",
       "kind": "file",
@@ -2396,7 +2432,8 @@
         "apps/iskra-site/src/index.css",
         "apps/iskra-site/src/main.tsx",
         "apps/iskra-site/src/postprocessing.d.ts",
-        "apps/iskra-site/src/types.ts"
+        "apps/iskra-site/src/types.ts",
+        "apps/iskra-site/src/vite-env.d.ts"
       ]
     },
     {
@@ -2983,6 +3020,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "apps/iskra-site/src/types.ts",
+      "related": [],
+      "parent": "apps/iskra-site/src"
+    },
+    {
+      "path": "apps/iskra-site/src/vite-env.d.ts",
+      "name": "vite-env.d.ts",
+      "kind": "file",
+      "layer": "site",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "apps/iskra-site/src/vite-env.d.ts",
       "related": [],
       "parent": "apps/iskra-site/src"
     },
@@ -31484,6 +31532,7 @@
         "tools/import_phase1_shard2.py",
         "tools/import_phase1_shard3.py",
         "tools/promote_sot40_to_canon.py",
+        "tools/run_python.mjs",
         "tools/simulate_cycle.test.ts",
         "tools/simulation.test.ts",
         "tools/smoke_openai_provider.py",
@@ -31902,6 +31951,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/promote_sot40_to_canon.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/run_python.mjs",
+      "name": "run_python.mjs",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/run_python.mjs",
       "related": [],
       "parent": "tools"
     },

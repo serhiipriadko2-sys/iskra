@@ -16,6 +16,7 @@ import type { TreeNodeData } from '../lib/treeData';
 interface TreeSceneProps {
   activeNodeId: string | null;
   onNodeClick: (id: string) => void;
+  onNodeHover?: (id: string | null) => void;
 }
 
 function collectIds(node: TreeNodeData): string[] {
@@ -243,7 +244,7 @@ function LeafBranches({ activeBranchIds }: { activeBranchIds: Set<string> }) {
   );
 }
 
-export function TreeScene({ activeNodeId, onNodeClick }: TreeSceneProps) {
+export function TreeScene({ activeNodeId, onNodeClick, onNodeHover }: TreeSceneProps) {
   const activeBranchIds = useMemo(() => getActiveBranchIds(activeNodeId), [activeNodeId]);
   const isMobile = useMediaQuery('(max-width: 767px)');
 
@@ -272,7 +273,7 @@ export function TreeScene({ activeNodeId, onNodeClick }: TreeSceneProps) {
       {allTreeNodes.map((node) => {
         const isActive = node.id === activeNodeId;
         const isDimmed = activeNodeId ? !activeBranchIds.has(node.id) : false;
-        return <TreeNode key={node.id} node={node} isActive={isActive} isDimmed={isDimmed} onClick={onNodeClick} />;
+        return <TreeNode key={node.id} node={node} isActive={isActive} isDimmed={isDimmed} onClick={onNodeClick} onHover={onNodeHover} />;
       })}
     </>
   );

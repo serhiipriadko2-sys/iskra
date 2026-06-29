@@ -10,6 +10,7 @@ export default defineConfig({
   use: { baseURL: 'http://127.0.0.1:4173', trace: 'on-first-retry' },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },
   ],
   webServer: {
     command: 'pnpm --filter iskra-site preview --port 4173',

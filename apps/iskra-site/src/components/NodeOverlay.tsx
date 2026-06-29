@@ -8,6 +8,7 @@ interface NodeOverlayProps {
   activeNodeId: string | null;
   onClose: () => void;
   onNavigate?: (id: string) => void;
+  onOpenAtlas?: () => void;
   audienceMode?: import('../types').AudienceMode;
 }
 
@@ -20,7 +21,7 @@ const GROUP_LABELS: Record<TreeNodeData['group'], string> = {
   leaves: 'Листья кроны',
 };
 
-export function NodeOverlay({ activeNodeId, onClose, onNavigate, audienceMode }: NodeOverlayProps) {
+export function NodeOverlay({ activeNodeId, onClose, onNavigate, onOpenAtlas, audienceMode }: NodeOverlayProps) {
   const node = activeNodeId ? findNodeById(activeNodeId) : null;
   const containerRef = useFocusTrap<HTMLDivElement>({ active: !!node });
   if (!node) return null;
@@ -53,7 +54,7 @@ export function NodeOverlay({ activeNodeId, onClose, onNavigate, audienceMode }:
           </div>
           <div className="flex items-center gap-2">
             {onNavigate && (
-              <div className="hidden sm:flex items-center gap-1 mr-1">
+              <div className="flex items-center gap-1 mr-1">
                 <button
                   onClick={() => prevNode && onNavigate(prevNode.id)}
                   disabled={!prevNode}
@@ -80,7 +81,7 @@ export function NodeOverlay({ activeNodeId, onClose, onNavigate, audienceMode }:
           </div>
         </div>
 
-        <NodeContent node={node} audienceMode={audienceMode} />
+        <NodeContent node={node} audienceMode={audienceMode} onOpenAtlas={onOpenAtlas} />
       </div>
     </div>
   );

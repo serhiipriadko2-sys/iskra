@@ -12,7 +12,7 @@ test.describe('iskra-site smoke', () => {
 
   test('clicking a node opens the detail panel in fallback', async ({ page }) => {
     await page.goto(HOME);
-    const nodeButton = page.getByRole('button', { name: 'Архитектура', exact: true });
+    const nodeButton = page.getByRole('button', { name: /Архитектура/ });
     await expect(nodeButton).toBeVisible();
     await nodeButton.click();
 
@@ -38,5 +38,18 @@ test.describe('iskra-site smoke', () => {
 
     const match = page.getByRole('treeitem').filter({ hasText: /AGENTS\.md/ }).first();
     await expect(match).toBeVisible();
+  });
+
+  test('clicking a 3D tree node label opens the detail dialog', async ({ page, isMobile }) => {
+    test.skip(isMobile, '3D labels use short labels on mobile');
+
+    await page.goto('/');
+    await expect(page.locator('canvas')).toBeVisible({ timeout: 10000 });
+
+    const nodeLink = page.getByRole('link', { name: 'Архитектура', exact: true });
+    await expect(nodeLink).toBeVisible({ timeout: 10000 });
+    await nodeLink.click();
+
+    await expect(page.getByRole('dialog', { name: 'Архитектура' })).toBeVisible();
   });
 });
