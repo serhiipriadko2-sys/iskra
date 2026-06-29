@@ -79,6 +79,17 @@ class HorizonV02ValidatorTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1)
             self.assertIn("record must be object", result.stdout)
 
+    def test_forbidden_must_be_list(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp) / "bad-forbidden.json"
+            proposal = json.loads(PROPOSAL_EXAMPLE.read_text(encoding="utf-8"))
+            proposal["forbidden"] = "DIRECT_CANON_MUTATION"
+            tmp_path.write_text(json.dumps(proposal), encoding="utf-8")
+
+            result = run_validator(tmp_path)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("forbidden: required list", result.stdout)
+
     def test_missing_operator_bias_risk_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp) / "missing_operator_bias_risk.json"
