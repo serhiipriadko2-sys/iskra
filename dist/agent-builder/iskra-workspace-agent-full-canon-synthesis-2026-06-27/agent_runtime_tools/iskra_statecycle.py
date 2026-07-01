@@ -447,10 +447,22 @@ def thresholds_satisfied(thresholds: dict[str, dict[str, float]], m: dict[str, f
     return True
 
 
+def load_voice_manifest(voices_path: Path) -> list[dict[str, Any]]:
+    if not voices_path.exists():
+        return FALLBACK_VOICES
+    try:
+        voices = json.loads(voices_path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return FALLBACK_VOICES
+    return voices if isinstance(voices, list) else FALLBACK_VOICES
+
+
 def quantum_voice_field(metrics: dict[str, float], voices_path: Path = DEFAULT_VOICES) -> dict[str, Any]:
-    voices = json.loads(voices_path.read_text(encoding="utf-8")) if voices_path.exists() else FALLBACK_VOICES
+    voices = load_voice_manifest(voices_path)
     raw_states = []
     for voice in voices:
+        if not isinstance(voice, dict) or "id" not in voice:
+            continue
         vid = voice["id"]
         q = voice.get("quantum", {})
         phase = float(q.get("basePhase", 0.0))
@@ -495,14 +507,15 @@ def quantum_voice_field(metrics: dict[str, float], voices_path: Path = DEFAULT_V
                 "interference": value,
             })
     interference.sort(key=lambda row: row["interference"], reverse=True)
+    sensor_voice = states[0]["id"] if states else "ISKRA"
     return {
         "authority": STATECYCLE_SENSOR_BOUNDARY["authority"],
         "role": STATECYCLE_SENSOR_BOUNDARY["voice_field_role"],
         "final_voice_router": STATECYCLE_SENSOR_BOUNDARY["final_voice_router"],
         "selected_is_authoritative": STATECYCLE_SENSOR_BOUNDARY["selected_is_authoritative"],
         "note": STATECYCLE_SENSOR_BOUNDARY["note"],
-        "selected": states[0]["id"],
-        "sensor_voice": states[0]["id"],
+        "selected": sensor_voice,
+        "sensor_voice": sensor_voice,
         "superposition": [
             {
                 "id": row["id"],
@@ -539,10 +552,12 @@ def summarize_history(path: Path) -> dict[str, Any]:
         }
     latest = history[-1]
     recent = history[-10:]
-    phases = [row.get("analysis", {}).get("fractal", {}).get("phase") for row in recent]
-    voices = [row.get("analysis", {}).get("quantum_voice_field", {}).get("selected") for row in recent]
+    phases = [((row.get("analysis") or {}).get("fractal") or {}).get("phase") for row in recent]
+    voices = [((row.get("analysis") or {}).get("quantum_voice_field") or {}).get("selected") for row in recent]
     metrics = latest.get("metrics", {})
-    analysis = latest.get("analysis", {})
+    analysis = latest.get("analysis") or {}
+    fractal = analysis.get("fractal") or {}
+    qvf = analysis.get("quantum_voice_field") or {}
     return {
         "history_points": len(history),
         "maturity": confidence_gate(len(history)),
@@ -551,11 +566,11 @@ def summarize_history(path: Path) -> dict[str, Any]:
             "role": latest.get("role"),
             "message": latest.get("message"),
             "entropy": analysis.get("entropy"),
-            "phase": analysis.get("fractal", {}).get("phase"),
-            "selected_voice": analysis.get("quantum_voice_field", {}).get("selected"),
-            "selected_voice_authority": analysis.get("quantum_voice_field", {}).get("authority"),
-            "selected_voice_is_authoritative": analysis.get("quantum_voice_field", {}).get("selected_is_authoritative"),
-            "final_voice_router": analysis.get("quantum_voice_field", {}).get("final_voice_router"),
+            "phase": fractal.get("phase"),
+            "selected_voice": qvf.get("selected"),
+            "selected_voice_authority": qvf.get("authority"),
+            "selected_voice_is_authoritative": qvf.get("selected_is_authoritative"),
+            "final_voice_router": qvf.get("final_voice_router"),
             "metrics": {
                 "trust": metrics.get("trust"),
                 "clarity": metrics.get("clarity"),
@@ -574,9 +589,9 @@ def summarize_history(path: Path) -> dict[str, Any]:
             f"hfd={confidence_gate(len(history))['hfd_confidence']} "
             f"dfa={confidence_gate(len(history))['dfa_confidence']} "
             f"ei={confidence_gate(len(history))['ei_confidence']} "
-            f"latest_phase={analysis.get('fractal', {}).get('phase')} "
-            f"latest_sensor_voice={analysis.get('quantum_voice_field', {}).get('selected')} "
-            f"voice_authority={analysis.get('quantum_voice_field', {}).get('authority')}"
+            f"latest_phase={fractal.get('phase')} "
+            f"latest_sensor_voice={qvf.get('selected')} "
+            f"voice_authority={qvf.get('authority')}"
         ),
     }
 
