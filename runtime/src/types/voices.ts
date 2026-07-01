@@ -127,50 +127,56 @@ export function calculateVoiceScores(
 }
 
 /**
- * Select active voice based on metrics
- * Implements trigger priority from core/voices.md
+ * Select active voice based on metrics.
+ *
+ * vΩ.7.1 rule: supertriggers must run before ordinary synthesis so ISKRA
+ * cannot smooth over drift, rupture, or MAKI/KAIN repair conditions.
  */
 export function selectVoice(metrics: IskraMetrics): VoiceActivation {
   const scores = calculateVoiceScores(metrics);
+  const echoClearance = 1 - metrics.echo;
 
-  // Check trigger conditions in priority order
-  // Highest priority: ISKRA (synthesis) when rhythm and trust are high
-  if (metrics.rhythm > 60 && metrics.trust > 0.7) {
-    return { primary: 'ISKRA', scores, reason: 'rhythm > 60 && trust > 0.7' };
+  // Source/telemetry drift triggers audit voice before style resonance.
+  if (metrics.drift >= 0.2) {
+    return { primary: 'ISKRIV', scores, reason: 'drift >= 0.2 (supertrigger)' };
   }
 
-  // Prioritise MAKI over KAIN when trust is high.  According to the canon,
-  // a compassionate integration (Maki) should override a strict truth (Kain)
-  // if the user’s trust is already high.  Place this check before KAIN.
+  // Anti-dryness / shatter: very low echo clearance means the response risks
+  // becoming mirror-noise or false harmony. Audit before prophecy/synthesis.
+  if (echoClearance < 0.25) {
+    return {
+      primary: 'ISKRIV',
+      secondary: 'SAM',
+      scores,
+      reason: 'echo_clearance < 0.25 (ISKRIV + Shatter)',
+    };
+  }
+
+  // MAKI/KAIN repair wrapper: high trust + pain must not be preempted by ISKRA.
   if (metrics.trust > 0.8 && metrics.pain > 0.3) {
     return {
       primary: 'MAKI',
-      secondary: 'KAIN', // KAIN обязан выдать Truth-Spike
+      secondary: 'KAIN',
       scores,
       reason: 'trust > 0.8 && pain > 0.3 (Maki wrapper, Kain payload)',
     };
   }
 
-  // Standard KAIN activation when pain is above threshold
+  // Standard KAIN activation when pain is above threshold.
   if (metrics.pain >= 0.3) {
     return { primary: 'KAIN', scores, reason: 'pain >= 0.3' };
   }
 
-  // Drift triggers audit voice ISKRIV
-  if (metrics.drift >= 0.2) {
-    return { primary: 'ISKRIV', scores, reason: 'drift >= 0.2' };
-  }
-
-  // Chaos triggers HUYNDUN (chaos and renewal)
-  if (metrics.chaos >= 0.4) {
-    // Use canonical name HUYNDUN for the chaos voice. The deprecated alias
-    // 'HUYNDUN' is still scored but not returned as primary.
-    return { primary: 'HUYNDUN', scores, reason: 'chaos >= 0.4' };
-  }
-
-  // Silence triggers ANHANTRA
+  // Silence and low-trust states need containment before strategic branching.
   if (metrics.silence_mass > 0.5) {
     return { primary: 'ANHANTRA', scores, reason: 'silence_mass > 0.5' };
+  }
+
+  // Chaos triggers HUYNDUN (chaos and renewal).
+  if (metrics.chaos >= 0.4) {
+    // Use canonical name HUYNDUN for the chaos voice. Earlier texts may say
+    // Hundun/Hun Dun, but runtime keys return only HUYNDUN.
+    return { primary: 'HUYNDUN', scores, reason: 'chaos >= 0.4' };
   }
 
   if (scores.SIBYL > 0) {
@@ -181,17 +187,22 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
     };
   }
 
-  // Lack of clarity triggers SAM (structure)
+  // Balanced synthesis after all repair/audit/safety-adjacent triggers.
+  if (metrics.rhythm > 60 && metrics.trust > 0.7) {
+    return { primary: 'ISKRA', scores, reason: 'rhythm > 60 && trust > 0.7' };
+  }
+
+  // Lack of clarity triggers SAM (structure).
   if (metrics.clarity < 0.6) {
     return { primary: 'SAM', scores, reason: 'clarity < 0.6' };
   }
 
-  // Remaining conditional check for PINO (lightness and irony)
+  // Remaining conditional check for PINO (lightness and irony).
   if (metrics.pain < 0.3 && metrics.chaos < 0.4) {
     return { primary: 'PINO', scores, reason: 'pain < 0.3 && chaos < 0.4' };
   }
 
-  // Fallback to highest score
+  // Fallback to highest score.
   const maxScore = Math.max(...Object.values(scores));
   const primary = (Object.entries(scores).find(
     ([, score]) => score === maxScore
@@ -320,7 +331,7 @@ export function selectVoiceX(metrics: IskraMetrics): Explainable<VoiceActivation
     },
     {
       label: 'apply_priority_triggers',
-      formula: 'priority checks → fallback max score',
+      formula: 'supertriggers → ordinary resonance → fallback max score',
       inputs: { reason: value.reason },
       output: `${value.primary}${value.secondary ? ' + ' + value.secondary : ''}`,
       refs,
@@ -330,8 +341,8 @@ export function selectVoiceX(metrics: IskraMetrics): Explainable<VoiceActivation
   const contracts_checked = [
     'VoiceActivation.primary is one of 9 canonical voices',
     'scores includes all voices',
+    'supertriggers run before ordinary synthesis',
   ];
 
   return { value, how, contracts_checked, evidence: refs };
 }
-
