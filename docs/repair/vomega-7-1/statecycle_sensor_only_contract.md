@@ -1,7 +1,7 @@
 # StateCycle sensor-only contract
 
 Date: 2026-07-01
-Status: accepted for repair branch
+Status: accepted and implemented in PR 230 repair branch
 
 Decision: StateCycle is telemetry only. It can report metric history, entropy signals, somatic pressure, and a provisional sensor voice.
 
@@ -14,11 +14,15 @@ Required behavior:
 - selected_is_authoritative: false
 - legacy selected means provisional sensor voice
 - summaries should say latest_sensor_voice
+- empty or malformed voice manifests must not crash StateCycle
+- legacy history with analysis null must not crash reports
 
 Acceptance:
 - StateCycle voice is telemetry only.
-- rhythm 80, trust .9, pain .4 routes to MAKI with KAIN secondary.
-- echo .8 routes to ISKRIV with SAM support because echo clearance is below .25.
+- rhythm 80, trust .9, pain .4 routes to MAKI with KAIN secondary in final router.
+- echo .8 routes to ISKRIV with SAM support because echo clearance is below .25 in final router.
+- empty voices smoke returns sensor_voice ISKRA with authority sensor-only.
+- legacy analysis-null report returns safe null fields, not an exception.
 
 Boundaries:
 - Keep StateCycle.
@@ -26,7 +30,7 @@ Boundaries:
 - Builder live verification remains pending.
 - Supabase live SQL is outside this decision.
 
-Delta: StateCycle is classified as sensor-only.
-Data: CANON vs DIST drift map and vOmega 7.1 voice-router repair branch.
-Omega: 0.90 for decision; implementation pending.
-Lambda: revisit after StateCycle metadata patch and package regeneration.
+Delta: StateCycle is classified as sensor-only and hardened against review crash risks.
+Data: CANON vs DIST drift map, vOmega 7.1 voice-router repair branch, PR review findings.
+Omega: 0.93 for implemented repair branch.
+Lambda: revisit after SoT integrity and Builder acceptance prompts.
