@@ -1,7 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { navigateToView } from './helpers/navigation';
 
-async function completeOnboarding(page: import('@playwright/test').Page) {
+async function completeOnboarding(page: Page) {
   await page.goto('/');
   await page.evaluate(() => {
     localStorage.setItem('iskra-onboarding-complete', 'true');

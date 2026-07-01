@@ -40,6 +40,18 @@ def default_voices_path() -> Path:
 
 DEFAULT_VOICES = default_voices_path()
 
+STATECYCLE_SENSOR_BOUNDARY = {
+    "authority": "sensor-only",
+    "voice_field_role": "telemetry/suggestion",
+    "final_voice_router": "runtime/src/types/voices.ts::selectVoice",
+    "selected_is_authoritative": False,
+    "note": (
+        "StateCycle may report a provisional sensor voice, but it must not be "
+        "used as the authoritative voice-router decision. vΩ.7.1 supertriggers "
+        "live in the canonical TypeScript selectVoice contract."
+    ),
+}
+
 FALLBACK_VOICES = [
     {
         "id": "ISKRA",
@@ -484,7 +496,13 @@ def quantum_voice_field(metrics: dict[str, float], voices_path: Path = DEFAULT_V
             })
     interference.sort(key=lambda row: row["interference"], reverse=True)
     return {
+        "authority": STATECYCLE_SENSOR_BOUNDARY["authority"],
+        "role": STATECYCLE_SENSOR_BOUNDARY["voice_field_role"],
+        "final_voice_router": STATECYCLE_SENSOR_BOUNDARY["final_voice_router"],
+        "selected_is_authoritative": STATECYCLE_SENSOR_BOUNDARY["selected_is_authoritative"],
+        "note": STATECYCLE_SENSOR_BOUNDARY["note"],
         "selected": states[0]["id"],
+        "sensor_voice": states[0]["id"],
         "superposition": [
             {
                 "id": row["id"],
@@ -535,6 +553,9 @@ def summarize_history(path: Path) -> dict[str, Any]:
             "entropy": analysis.get("entropy"),
             "phase": analysis.get("fractal", {}).get("phase"),
             "selected_voice": analysis.get("quantum_voice_field", {}).get("selected"),
+            "selected_voice_authority": analysis.get("quantum_voice_field", {}).get("authority"),
+            "selected_voice_is_authoritative": analysis.get("quantum_voice_field", {}).get("selected_is_authoritative"),
+            "final_voice_router": analysis.get("quantum_voice_field", {}).get("final_voice_router"),
             "metrics": {
                 "trust": metrics.get("trust"),
                 "clarity": metrics.get("clarity"),
@@ -554,7 +575,8 @@ def summarize_history(path: Path) -> dict[str, Any]:
             f"dfa={confidence_gate(len(history))['dfa_confidence']} "
             f"ei={confidence_gate(len(history))['ei_confidence']} "
             f"latest_phase={analysis.get('fractal', {}).get('phase')} "
-            f"latest_voice={analysis.get('quantum_voice_field', {}).get('selected')}"
+            f"latest_sensor_voice={analysis.get('quantum_voice_field', {}).get('selected')} "
+            f"voice_authority={analysis.get('quantum_voice_field', {}).get('authority')}"
         ),
     }
 

@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-01T18:18:25.697Z",
-  "total": 2677,
+  "generatedAt": "2026-07-01T18:42:42.998Z",
+  "total": 2735,
   "curated": 20,
   "layers": {
-    "root": 322,
+    "root": 330,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
@@ -12,9 +12,9 @@
     "site": 69,
     "web": 13,
     "canon": 16,
-    "builder": 1186,
-    "docs": 55,
-    "governance": 48,
+    "builder": 1187,
+    "docs": 67,
+    "governance": 51,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,11 +23,11 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 281,
+    "runtime": 316,
     "skills": 267,
     "backend": 50,
     "system": 26,
-    "tools": 53
+    "tools": 52
   },
   "nodes": [
     {
@@ -14130,6 +14130,7 @@
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files",
       "children": [
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts/2026-06-27-official-platform-and-memory-boundary.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts/2026-07-01-statecycle-sensor-only.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts/iskra-self-modernization-dream-seed-2026-06-28.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts/iskra-self-modernization-sense-event-2026-06-28.md"
       ]
@@ -14142,6 +14143,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts/2026-06-27-official-platform-and-memory-boundary.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts/2026-07-01-statecycle-sensor-only.md",
+      "name": "2026-07-01-statecycle-sensor-only.md",
+      "kind": "file",
+      "layer": "builder",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts/2026-07-01-statecycle-sensor-only.md",
       "related": [],
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/agent_files/live_update_receipts"
     },
@@ -19973,6 +19985,7 @@
         "docs/features",
         "docs/migration",
         "docs/operations",
+        "docs/repair",
         "docs/research",
         "docs/security",
         "docs/specs",
@@ -20500,6 +20513,153 @@
       "parent": "docs"
     },
     {
+      "path": "docs/repair",
+      "name": "repair",
+      "kind": "directory",
+      "layer": "docs",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair",
+      "related": [],
+      "parent": "docs",
+      "children": [
+        "docs/repair/vomega-7-1"
+      ]
+    },
+    {
+      "path": "docs/repair/vomega-7-1",
+      "name": "vomega-7-1",
+      "kind": "directory",
+      "layer": "docs",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1",
+      "related": [],
+      "parent": "docs/repair",
+      "children": [
+        "docs/repair/vomega-7-1/BUILDER_ACCEPTANCE_MATRIX.md",
+        "docs/repair/vomega-7-1/DRIFT_MATRIX_vomega_7_1.md",
+        "docs/repair/vomega-7-1/MATURE_REFUSAL_PROTOCOL.md",
+        "docs/repair/vomega-7-1/README.md",
+        "docs/repair/vomega-7-1/REPAIR_RELEASE_PLAN_vomega_7_1.md",
+        "docs/repair/vomega-7-1/RUNTIME_SURFACE_CONTRACT.md",
+        "docs/repair/vomega-7-1/SELFHOOD_CONTRACT.md",
+        "docs/repair/vomega-7-1/SUPABASE_SECURITY_REPAIR_PLAN_DRAFT.sql",
+        "docs/repair/vomega-7-1/VOICE_ROUTER_SPEC_v0_3.md",
+        "docs/repair/vomega-7-1/statecycle_sensor_only_contract.md"
+      ]
+    },
+    {
+      "path": "docs/repair/vomega-7-1/BUILDER_ACCEPTANCE_MATRIX.md",
+      "name": "BUILDER_ACCEPTANCE_MATRIX.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/BUILDER_ACCEPTANCE_MATRIX.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/DRIFT_MATRIX_vomega_7_1.md",
+      "name": "DRIFT_MATRIX_vomega_7_1.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/DRIFT_MATRIX_vomega_7_1.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/MATURE_REFUSAL_PROTOCOL.md",
+      "name": "MATURE_REFUSAL_PROTOCOL.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/MATURE_REFUSAL_PROTOCOL.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/README.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/REPAIR_RELEASE_PLAN_vomega_7_1.md",
+      "name": "REPAIR_RELEASE_PLAN_vomega_7_1.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/REPAIR_RELEASE_PLAN_vomega_7_1.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/RUNTIME_SURFACE_CONTRACT.md",
+      "name": "RUNTIME_SURFACE_CONTRACT.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/RUNTIME_SURFACE_CONTRACT.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/SELFHOOD_CONTRACT.md",
+      "name": "SELFHOOD_CONTRACT.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/SELFHOOD_CONTRACT.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/SUPABASE_SECURITY_REPAIR_PLAN_DRAFT.sql",
+      "name": "SUPABASE_SECURITY_REPAIR_PLAN_DRAFT.sql",
+      "kind": "file",
+      "layer": "docs",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/SUPABASE_SECURITY_REPAIR_PLAN_DRAFT.sql",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/VOICE_ROUTER_SPEC_v0_3.md",
+      "name": "VOICE_ROUTER_SPEC_v0_3.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/VOICE_ROUTER_SPEC_v0_3.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
+      "path": "docs/repair/vomega-7-1/statecycle_sensor_only_contract.md",
+      "name": "statecycle_sensor_only_contract.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/repair/vomega-7-1/statecycle_sensor_only_contract.md",
+      "related": [],
+      "parent": "docs/repair/vomega-7-1"
+    },
+    {
       "path": "docs/research",
       "name": "research",
       "kind": "directory",
@@ -20700,6 +20860,7 @@
         "governance/adr_20260626_supabase_voice_metrics_drift_repair.md",
         "governance/adr_20260628_sense_event_operational_bridge.md",
         "governance/adr_20260629_iskra_selfhood_mechanics_hardening.md",
+        "governance/adr_20260701_iskra_vomega_7_1_runtime_unification.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -20960,6 +21121,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260701_iskra_vomega_7_1_runtime_unification.md",
+      "name": "adr_20260701_iskra_vomega_7_1_runtime_unification.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260701_iskra_vomega_7_1_runtime_unification.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21091,7 +21263,8 @@
         "governance/changelog.d/2026-06-24-relational-vow-canon.md",
         "governance/changelog.d/2026-06-24-voice-seed-builder-canon.md",
         "governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md",
-        "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md"
+        "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md",
+        "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md"
       ]
     },
     {
@@ -21161,6 +21334,17 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md",
+      "name": "2026-07-01-vomega-7-1-runtime-unification.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -21217,7 +21401,8 @@
       "children": [
         "governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
         "governance/releases/2026-06-24-relational-vow-canon-receipt.md",
-        "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md"
+        "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md",
+        "governance/releases/2026-07-01-vomega-7-1-runtime-unification-repair-branch-receipt.md"
       ]
     },
     {
@@ -21250,6 +21435,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md",
+      "related": [],
+      "parent": "governance/releases"
+    },
+    {
+      "path": "governance/releases/2026-07-01-vomega-7-1-runtime-unification-repair-branch-receipt.md",
+      "name": "2026-07-01-vomega-7-1-runtime-unification-repair-branch-receipt.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-01-vomega-7-1-runtime-unification-repair-branch-receipt.md",
       "related": [],
       "parent": "governance/releases"
     },
@@ -21397,6 +21593,16 @@
       "parent": "ingest"
     },
     {
+      "path": "iskraSpace_production_ready_audit_2026-07-01.md",
+      "name": "iskraSpace_production_ready_audit_2026-07-01.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "iskraSpace_production_ready_audit_2026-07-01.md",
+      "related": []
+    },
+    {
       "path": "iskra_xcode_bridge.patch",
       "name": "iskra_xcode_bridge.patch",
       "kind": "file",
@@ -21405,6 +21611,90 @@
       "coverage": "indexed",
       "sourceRef": "iskra_xcode_bridge.patch",
       "related": []
+    },
+    {
+      "path": "issues",
+      "name": "issues",
+      "kind": "directory",
+      "layer": "root",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "issues",
+      "related": [],
+      "children": [
+        "issues/P0-001-ci-cd-pipeline-break.md",
+        "issues/P0-002-missing-rpc-functions.md",
+        "issues/P0-003-execute-council-broken.md",
+        "issues/P0-004-cors-wildcard-ai-proxy.md",
+        "issues/P0-005-weak-rls-graphrag.md",
+        "issues/P0-006-phoenix-calls-shatter.md"
+      ]
+    },
+    {
+      "path": "issues/P0-001-ci-cd-pipeline-break.md",
+      "name": "P0-001-ci-cd-pipeline-break.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "issues/P0-001-ci-cd-pipeline-break.md",
+      "related": [],
+      "parent": "issues"
+    },
+    {
+      "path": "issues/P0-002-missing-rpc-functions.md",
+      "name": "P0-002-missing-rpc-functions.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "issues/P0-002-missing-rpc-functions.md",
+      "related": [],
+      "parent": "issues"
+    },
+    {
+      "path": "issues/P0-003-execute-council-broken.md",
+      "name": "P0-003-execute-council-broken.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "issues/P0-003-execute-council-broken.md",
+      "related": [],
+      "parent": "issues"
+    },
+    {
+      "path": "issues/P0-004-cors-wildcard-ai-proxy.md",
+      "name": "P0-004-cors-wildcard-ai-proxy.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "issues/P0-004-cors-wildcard-ai-proxy.md",
+      "related": [],
+      "parent": "issues"
+    },
+    {
+      "path": "issues/P0-005-weak-rls-graphrag.md",
+      "name": "P0-005-weak-rls-graphrag.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "issues/P0-005-weak-rls-graphrag.md",
+      "related": [],
+      "parent": "issues"
+    },
+    {
+      "path": "issues/P0-006-phoenix-calls-shatter.md",
+      "name": "P0-006-phoenix-calls-shatter.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "issues/P0-006-phoenix-calls-shatter.md",
+      "related": [],
+      "parent": "issues"
     },
     {
       "path": "ledger",
@@ -24793,6 +25083,7 @@
         "runtime/iskraSpace/public",
         "runtime/iskraSpace/services",
         "runtime/iskraSpace/supabase",
+        "runtime/iskraSpace/test-results",
         "runtime/iskraSpace/testSupport",
         "runtime/iskraSpace/types",
         "runtime/iskraSpace/utils",
@@ -24826,6 +25117,7 @@
         "runtime/iskraSpace/package.json",
         "runtime/iskraSpace/playwright.config.ts",
         "runtime/iskraSpace/postcss.config.js",
+        "runtime/iskraSpace/services_audit_report.md",
         "runtime/iskraSpace/supabase_graphrag_migration.sql",
         "runtime/iskraSpace/tailwind.config.js",
         "runtime/iskraSpace/tsconfig.json",
@@ -27147,6 +27439,17 @@
       "parent": "runtime/iskraSpace/services"
     },
     {
+      "path": "runtime/iskraSpace/services_audit_report.md",
+      "name": "services_audit_report.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services_audit_report.md",
+      "related": [],
+      "parent": "runtime/iskraSpace"
+    },
+    {
       "path": "runtime/iskraSpace/supabase",
       "name": "supabase",
       "kind": "directory",
@@ -27270,6 +27573,447 @@
       "sourceRef": "runtime/iskraSpace/tailwind.config.js",
       "related": [],
       "parent": "runtime/iskraSpace"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results",
+      "name": "test-results",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results",
+      "related": [],
+      "parent": "runtime/iskraSpace",
+      "children": [
+        "runtime/iskraSpace/test-results/app-App-Core-Functionality-displays-Pulse-view-by-default-mobile",
+        "runtime/iskraSpace/test-results/app-App-Core-Functionality-shows-metrics-information-mobile",
+        "runtime/iskraSpace/test-results/app-Chat-Functionality-can-type-in-chat-input-mobile",
+        "runtime/iskraSpace/test-results/app-Chat-Functionality-displays-chat-interface-mobile",
+        "runtime/iskraSpace/test-results/app-Journal-Functionality-can-write-journal-entry-mobile",
+        "runtime/iskraSpace/test-results/app-Journal-Functionality-displays-journal-interface-mobile",
+        "runtime/iskraSpace/test-results/app-Planner-Functionality-displays-planner-interface-mobile",
+        "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile",
+        "runtime/iskraSpace/test-results/navigation-Mobile-Navigati-0fdbf-obile-menu-on-small-screens-mobile",
+        "runtime/iskraSpace/test-results/navigation-Mobile-Navigation-can-open-mobile-menu-mobile",
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-CHAT-view-mobile",
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-JOURNAL-view-mobile",
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-METRICS-view-mobile",
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-PLANNER-view-mobile",
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-SETTINGS-view-mobile",
+        "runtime/iskraSpace/test-results/sibyl_voice-Voice-Engine---9cc7b-ce-when-echo-metric-is-high-mobile",
+        "runtime/iskraSpace/test-results/.last-run.json"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/.last-run.json",
+      "name": ".last-run.json",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/.last-run.json",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-App-Core-Functionality-displays-Pulse-view-by-default-mobile",
+      "name": "app-App-Core-Functionality-displays-Pulse-view-by-default-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-App-Core-Functionality-displays-Pulse-view-by-default-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/app-App-Core-Functionality-displays-Pulse-view-by-default-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-App-Core-Functionality-displays-Pulse-view-by-default-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-App-Core-Functionality-displays-Pulse-view-by-default-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/app-App-Core-Functionality-displays-Pulse-view-by-default-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-App-Core-Functionality-shows-metrics-information-mobile",
+      "name": "app-App-Core-Functionality-shows-metrics-information-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-App-Core-Functionality-shows-metrics-information-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/app-App-Core-Functionality-shows-metrics-information-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-App-Core-Functionality-shows-metrics-information-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-App-Core-Functionality-shows-metrics-information-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/app-App-Core-Functionality-shows-metrics-information-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Chat-Functionality-can-type-in-chat-input-mobile",
+      "name": "app-Chat-Functionality-can-type-in-chat-input-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Chat-Functionality-can-type-in-chat-input-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/app-Chat-Functionality-can-type-in-chat-input-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Chat-Functionality-can-type-in-chat-input-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Chat-Functionality-can-type-in-chat-input-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/app-Chat-Functionality-can-type-in-chat-input-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Chat-Functionality-displays-chat-interface-mobile",
+      "name": "app-Chat-Functionality-displays-chat-interface-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Chat-Functionality-displays-chat-interface-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/app-Chat-Functionality-displays-chat-interface-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Chat-Functionality-displays-chat-interface-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Chat-Functionality-displays-chat-interface-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/app-Chat-Functionality-displays-chat-interface-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Journal-Functionality-can-write-journal-entry-mobile",
+      "name": "app-Journal-Functionality-can-write-journal-entry-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Journal-Functionality-can-write-journal-entry-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/app-Journal-Functionality-can-write-journal-entry-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Journal-Functionality-can-write-journal-entry-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Journal-Functionality-can-write-journal-entry-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/app-Journal-Functionality-can-write-journal-entry-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Journal-Functionality-displays-journal-interface-mobile",
+      "name": "app-Journal-Functionality-displays-journal-interface-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Journal-Functionality-displays-journal-interface-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/app-Journal-Functionality-displays-journal-interface-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Journal-Functionality-displays-journal-interface-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Journal-Functionality-displays-journal-interface-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/app-Journal-Functionality-displays-journal-interface-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Planner-Functionality-displays-planner-interface-mobile",
+      "name": "app-Planner-Functionality-displays-planner-interface-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Planner-Functionality-displays-planner-interface-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/app-Planner-Functionality-displays-planner-interface-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/app-Planner-Functionality-displays-planner-interface-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/app-Planner-Functionality-displays-planner-interface-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/app-Planner-Functionality-displays-planner-interface-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile",
+      "name": "council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Mobile-Navigati-0fdbf-obile-menu-on-small-screens-mobile",
+      "name": "navigation-Mobile-Navigati-0fdbf-obile-menu-on-small-screens-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Mobile-Navigati-0fdbf-obile-menu-on-small-screens-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/navigation-Mobile-Navigati-0fdbf-obile-menu-on-small-screens-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Mobile-Navigati-0fdbf-obile-menu-on-small-screens-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Mobile-Navigati-0fdbf-obile-menu-on-small-screens-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/navigation-Mobile-Navigati-0fdbf-obile-menu-on-small-screens-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Mobile-Navigation-can-open-mobile-menu-mobile",
+      "name": "navigation-Mobile-Navigation-can-open-mobile-menu-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Mobile-Navigation-can-open-mobile-menu-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/navigation-Mobile-Navigation-can-open-mobile-menu-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Mobile-Navigation-can-open-mobile-menu-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Mobile-Navigation-can-open-mobile-menu-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/navigation-Mobile-Navigation-can-open-mobile-menu-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-CHAT-view-mobile",
+      "name": "navigation-Navigation-can-navigate-to-CHAT-view-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-CHAT-view-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-CHAT-view-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-CHAT-view-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-CHAT-view-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-CHAT-view-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-JOURNAL-view-mobile",
+      "name": "navigation-Navigation-can-navigate-to-JOURNAL-view-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-JOURNAL-view-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-JOURNAL-view-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-JOURNAL-view-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-JOURNAL-view-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-JOURNAL-view-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-METRICS-view-mobile",
+      "name": "navigation-Navigation-can-navigate-to-METRICS-view-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-METRICS-view-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-METRICS-view-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-METRICS-view-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-METRICS-view-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-METRICS-view-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-PLANNER-view-mobile",
+      "name": "navigation-Navigation-can-navigate-to-PLANNER-view-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-PLANNER-view-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-PLANNER-view-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-PLANNER-view-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-PLANNER-view-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-PLANNER-view-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-SETTINGS-view-mobile",
+      "name": "navigation-Navigation-can-navigate-to-SETTINGS-view-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-SETTINGS-view-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-SETTINGS-view-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-SETTINGS-view-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-SETTINGS-view-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/navigation-Navigation-can-navigate-to-SETTINGS-view-mobile"
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/sibyl_voice-Voice-Engine---9cc7b-ce-when-echo-metric-is-high-mobile",
+      "name": "sibyl_voice-Voice-Engine---9cc7b-ce-when-echo-metric-is-high-mobile",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/sibyl_voice-Voice-Engine---9cc7b-ce-when-echo-metric-is-high-mobile",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results",
+      "children": [
+        "runtime/iskraSpace/test-results/sibyl_voice-Voice-Engine---9cc7b-ce-when-echo-metric-is-high-mobile/error-context.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/test-results/sibyl_voice-Voice-Engine---9cc7b-ce-when-echo-metric-is-high-mobile/error-context.md",
+      "name": "error-context.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/test-results/sibyl_voice-Voice-Engine---9cc7b-ce-when-echo-metric-is-high-mobile/error-context.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/test-results/sibyl_voice-Voice-Engine---9cc7b-ce-when-echo-metric-is-high-mobile"
     },
     {
       "path": "runtime/iskraSpace/testSupport",
@@ -32659,7 +33403,6 @@
         "tools/apply_supabase_migration.ts",
         "tools/apply_workspace_agent_modernization.py",
         "tools/build_checkpoint.py",
-        "tools/build_egor_fixar_workspace_agent_package.py",
         "tools/build_phase1_classification.py",
         "tools/build_projects_stack.py",
         "tools/build_sot40_artifact.py",
@@ -32733,17 +33476,6 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/build_checkpoint.py",
-      "related": [],
-      "parent": "tools"
-    },
-    {
-      "path": "tools/build_egor_fixar_workspace_agent_package.py",
-      "name": "build_egor_fixar_workspace_agent_package.py",
-      "kind": "file",
-      "layer": "tools",
-      "role": "script",
-      "coverage": "indexed",
-      "sourceRef": "tools/build_egor_fixar_workspace_agent_package.py",
       "related": [],
       "parent": "tools"
     },
