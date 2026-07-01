@@ -2,7 +2,7 @@
 
 Status: accepted for repo branch; not merged to `main`; live Builder and live Supabase verification pending.
 
-Branch: `repair/vomega-7-1-runtime-unification-20260701`
+Branch: `repair/vomega-7-1-runtime-unification-accepted-20260701`
 
 This folder stages the vΩ.7.1 repair-release planning surface. It is a branch candidate, not a live runtime claim.
 

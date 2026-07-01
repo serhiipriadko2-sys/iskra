@@ -2,7 +2,7 @@
 
 Status: accepted for repository branch; not merged to `main`; live Builder and live Supabase verification pending.
 
-Branch: `repair/vomega-7-1-runtime-unification-20260701`
+Branch: `repair/vomega-7-1-runtime-unification-accepted-20260701`
 
 Primary artifacts:
 
