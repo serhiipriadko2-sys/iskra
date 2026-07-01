@@ -1,7 +1,7 @@
 {
   "base_head": "48cb2fc940cb29ccfe064cd4a9370679aa1f3753",
   "branch": "codex/sync-workspace-agent-package-20260629",
-  "generated_at": "2026-07-01T18:37:35.786847Z",
+  "generated_at": "2026-07-01T18:56:28.418290Z",
   "local_gates": {
     "consolidate_rag_knowledge": {
       "command": "py tools/consolidate_rag_knowledge.py",
@@ -82,16 +82,17 @@
   "statecycle_sensor_only_patch": {
     "live_builder_verified": false,
     "receipt_path": "agent_files/live_update_receipts/2026-07-01-statecycle-sensor-only.md",
-    "receipt_sha256": "138966f6e58d3e6c018d21d3a97477e9d0eda1d30f7f5730eba488755e0bea3a",
+    "receipt_sha256": "e49ca4e4ec2aba8dc19d2ca6c342221d7ff3d583b6382a7ab2d4caa2b31d44d2",
     "review_hardening": {
       "empty_states_fallback": "ISKRA",
       "local_smoke": "PASS",
       "malformed_voice_manifest_fallback": true,
       "safe_analysis_navigation": true,
+      "safe_history_row_navigation": true,
       "safe_quantum_voice_field_navigation": true
     },
     "statecycle_path": "agent_runtime_tools/iskra_statecycle.py",
-    "statecycle_sha256": "e8396fb0fa6162d711de963f737a404b0dab85902f8c3ccd4b721c8b809652cc",
+    "statecycle_sha256": "99d41728c3fda57b816f860a29e8eea7baefcf951832ccbb1f09e7dcbae8f90c",
     "status": "PASS",
     "supabase_sql_executed": false
   },
