@@ -14,9 +14,13 @@
  * - СРЕЗ-5: Five-point deep analysis (Ясность, Честность, Действие, Рост, Безопасность)
  */
 
-import { IskraMetrics, IskraPhase, VoiceName } from '../types';
+import { IskraMetrics, IskraPhase, VoiceName, RitualName } from '../types';
 import { generateText } from './geminiService';
 import { DELTA_PROTOCOL_INSTRUCTION } from './deltaProtocol';
+import { safeStorage } from './storageCompat';
+
+// Re-export for backward compatibility — type is now canonical in ../types
+export type { RitualName } from '../types';
 
 // Council order per Canon (all 9 voices)
 export const COUNCIL_ORDER: VoiceName[] = [
@@ -57,7 +61,7 @@ export interface CouncilResult {
   recommendation: string;
 }
 
-export type RitualName = 'PHOENIX' | 'SHATTER' | 'COUNCIL' | 'RETUNE' | 'REVERSE' | 'RULE-21' | 'RULE-88' | 'СРЕЗ-5';
+
 
 export interface RitualTriggerResult {
   shouldTrigger: boolean;
@@ -267,8 +271,15 @@ export function getPhaseAfterRitual(ritual: RitualName): IskraPhase {
 // ============================================
 
 // Metrics history for REVERSE ritual
-const metricsHistory: MetricsSnapshot[] = [];
+// Persisted to localStorage so REVERSE works across page reloads (P2-06)
+const METRICS_HISTORY_KEY = 'iskra-ritual-metrics-history';
 const MAX_HISTORY = 10;
+
+/** Load history from storage on module init */
+const _storedHistory = safeStorage.getItem(METRICS_HISTORY_KEY);
+let metricsHistory: MetricsSnapshot[] = _storedHistory
+  ? (() => { try { return JSON.parse(_storedHistory) as MetricsSnapshot[]; } catch { return []; } })()
+  : [];
 
 /**
  * Saves current metrics to history (call before any change)
@@ -284,6 +295,9 @@ export function saveMetricsSnapshot(metrics: IskraMetrics, reason?: string): voi
   if (metricsHistory.length > MAX_HISTORY) {
     metricsHistory.shift();
   }
+
+  // Persist to localStorage for cross-reload continuity (P2-06)
+  safeStorage.setItem(METRICS_HISTORY_KEY, JSON.stringify(metricsHistory));
 }
 
 /**

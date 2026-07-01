@@ -8,8 +8,7 @@
  * an audit trail for transparency and accountability.
  */
 
-import { IskraMetrics, VoiceName, IskraPhase } from '../types';
-import { RitualName } from './ritualService';
+import { IskraMetrics, VoiceName, IskraPhase, RitualName } from '../types';
 import { safeStorage } from './storageCompat';
 
 // ============================================

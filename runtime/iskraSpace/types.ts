@@ -111,6 +111,25 @@ import type { IskraMetrics, VoiceName, VoicePreferences, DeltaSignature, Voice a
 // =============================================================================
 
 // --- Ritual & Task Management ---
+
+/**
+ * RitualName — canonical union of all ritual identifiers.
+ *
+ * Defined here (not in ritualService) to avoid the circular import:
+ *   auditService → ritualService → geminiService → policyEngine → auditService
+ *
+ * ritualService re-exports this type for backward compatibility.
+ */
+export type RitualName =
+  | 'PHOENIX'
+  | 'SHATTER'
+  | 'COUNCIL'
+  | 'RETUNE'
+  | 'REVERSE'
+  | 'RULE-21'
+  | 'RULE-88'
+  | 'СРЕЗ-5';
+
 export type RitualTag = 'FIRE' | 'WATER' | 'SUN' | 'BALANCE' | 'DELTA';
 
 export interface Task {
@@ -387,6 +406,11 @@ export interface MemoryNode {
   section?: string;
   sift?: SIFTBlock;
   metadata?: Record<string, unknown>; // Added for graph
+  /**
+   * Set to true after a node has been successfully synced to Supabase GraphRAG.
+   * Prevents duplicate nodes on reconnect (P2-01).
+   */
+  synced_to_cloud?: boolean;
 }
 
 export interface MemoryEdge {

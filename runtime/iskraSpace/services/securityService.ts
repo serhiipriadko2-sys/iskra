@@ -85,30 +85,34 @@ class SecurityService {
   private injectionPatterns: RegExp[] = [];
   private allowlistPatterns: RegExp[] = [];
   private dangerousTopics: string[] = [];
+  /** True if one or more patterns failed to compile (degraded mode). */
+  readonly loadFailed: boolean = false;
 
   constructor() {
     // Load rulesets from File 20 (cast to fix severity type from JSON)
     this.piiRuleset = securityRulesets.rulesets.pii as Ruleset;
     this.injectionRuleset = securityRulesets.rulesets.injection as Ruleset;
 
-    // Compile PII patterns (strip Python-style inline flags)
-    this.piiPatterns = this.piiRuleset.patterns.map(p =>
-      new RegExp(this.sanitizeRegex(p.regex), p.flags || 'g')
-    );
+    // Compile PII patterns safely (strip Python-style inline flags)
+    this.piiPatterns = this.compilePatterns(this.piiRuleset.patterns, 'g', 'PII');
 
-    // Compile Injection patterns (strip Python-style inline flags)
-    this.injectionPatterns = this.injectionRuleset.patterns.map(p =>
-      new RegExp(this.sanitizeRegex(p.regex), p.flags || 'gims')
-    );
+    // Compile Injection patterns safely
+    this.injectionPatterns = this.compilePatterns(this.injectionRuleset.patterns, 'gims', 'injection');
 
-    // Compile allowlist patterns (strip Python-style inline flags)
+    // Compile allowlist patterns safely
     const allAllowlists = [
       ...this.piiRuleset.allowlist_regex,
       ...this.injectionRuleset.allowlist_regex
     ];
-    this.allowlistPatterns = allAllowlists.map(a =>
-      new RegExp(this.sanitizeRegex(a), 'gi')
-    );
+    this.allowlistPatterns = allAllowlists.flatMap(a => {
+      try {
+        return [new RegExp(this.sanitizeRegex(a), 'gi')];
+      } catch (e) {
+        console.warn(`[Security] Invalid allowlist regex skipped: "${a}"`, e);
+        (this as { loadFailed: boolean }).loadFailed = true;
+        return [];
+      }
+    });
 
     // Compile dangerous topics
     const dangerConfig = securityRulesets.rulesets.danger;
@@ -116,6 +120,26 @@ class SecurityService {
       ...dangerConfig.keywords_ru,
       ...dangerConfig.keywords_en,
     ];
+  }
+
+  /**
+   * Safely compile an array of SecurityPattern objects into RegExp[].
+   * Skips invalid patterns and logs a warning instead of crashing.
+   */
+  private compilePatterns(
+    patterns: SecurityPattern[],
+    defaultFlags: string,
+    scope: string
+  ): RegExp[] {
+    return patterns.flatMap(p => {
+      try {
+        return [new RegExp(this.sanitizeRegex(p.regex), p.flags || defaultFlags)];
+      } catch (e) {
+        console.warn(`[Security] Invalid ${scope} pattern skipped: "${p.regex}"`, e);
+        (this as { loadFailed: boolean }).loadFailed = true;
+        return [];
+      }
+    });
   }
 
   /**

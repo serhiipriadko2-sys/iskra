@@ -198,7 +198,10 @@ function extractTextFromGeminiResponse(data: unknown): string {
   return '';
 }
 
-async function callAiEdgeFunction(payload: Record<string, unknown>): Promise<Response> {
+async function callAiEdgeFunction(
+  payload: Record<string, unknown>,
+  signal?: AbortSignal
+): Promise<Response> {
   const accessToken = await getAccessToken();
 
   const res = await fetch(AI_EDGE_FN_URL, {
@@ -212,6 +215,7 @@ async function callAiEdgeFunction(payload: Record<string, unknown>): Promise<Res
       provider: AI_PROVIDER,
       ...payload,
     }),
+    signal,
   });
   return res;
 }
@@ -248,21 +252,25 @@ async function* streamGenerateContentText(args: {
   model: string;
   contents: Content[];
   config?: GeminiProxyGenerateConfig;
+  signal?: AbortSignal;
 }): AsyncGenerator<string> {
   const config = args.config ?? {};
 
   // Best-effort streaming: if anything goes wrong, fall back to single-chunk generation.
   try {
-    const res = await callAiEdgeFunction({
-      action: 'streamGenerateContent',
-      model: args.model,
-      contents: args.contents,
-      systemInstruction: config.systemInstruction,
-      generationConfig: {
-        ...config,
-        systemInstruction: undefined,
+    const res = await callAiEdgeFunction(
+      {
+        action: 'streamGenerateContent',
+        model: args.model,
+        contents: args.contents,
+        systemInstruction: config.systemInstruction,
+        generationConfig: {
+          ...config,
+          systemInstruction: undefined,
+        },
       },
-    });
+      args.signal
+    );
 
     if (!res.ok || !res.body) {
       const txt = await res.text();
@@ -274,6 +282,11 @@ async function* streamGenerateContentText(args: {
     let buffer = '';
 
     while (true) {
+      // Honour abort signal while reading stream chunks
+      if (args.signal?.aborted) {
+        await reader.cancel();
+        return;
+      }
       const { value, done } = await reader.read();
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
@@ -310,7 +323,9 @@ async function* streamGenerateContentText(args: {
         // ignore
       }
     }
-  } catch {
+  } catch (err) {
+    // Do not fall back on abort — surface the cancellation cleanly
+    if (err instanceof DOMException && err.name === 'AbortError') return;
     const text = await generateContentText({
       model: args.model,
       contents: args.contents,
@@ -518,6 +533,18 @@ async function withRetry<T>(operation: () => Promise<T>, retries = 3, delay = 10
 }
 
 export class IskraAIService {
+  /** Active AbortController for the current chat stream. */
+  private _abortController: AbortController | null = null;
+
+  /**
+   * Abort the currently-running chat stream (if any).
+   * Call this on component unmount or view switch to prevent memory leaks.
+   */
+  abort(): void {
+    this._abortController?.abort();
+    this._abortController = null;
+  }
+
   async getDailyAdvice(tasks: Task[]): Promise<DailyAdvice & { evidence?: Evidence[] }> {
         if (OFFLINE_MODE) {
             return OFFLINE_ADVICE;
@@ -740,12 +767,18 @@ ${deltaInstruction}`;
       }
 
       try {
+        // Abort any previous stream before starting a new one
+        this._abortController?.abort();
+        this._abortController = new AbortController();
+        const { signal } = this._abortController;
+
         for await (const chunk of streamGenerateContentText({
           model,
           contents,
           config: {
             systemInstruction: fullInstruction,
           },
+          signal,
         })) {
           yield chunk;
         }

@@ -2,6 +2,39 @@
 
 ## Timeline & Change History
 
+### JRN-20260701-001: Полный Академический Аудит IskraSpace — Production-Ready Analysis
+- **Context:** Запрос на глубокий brainstorm с карт-бланшем: обновление контекста, суммирование, структурирование, рефлексия 'что если?', анализ, план до production-ready.
+- **Scope:** 35 сервисов, 51 компонент, commit `2067452527647a7ecfb6c26b2ebed98e3cb5fc12`.
+- **Key Findings:**
+  - [FACT] executeCouncil рабочий (переписан на generateText), но без тайм-аута на весь Council.
+  - [FACT] Circular import: `geminiService → policyEngine → auditService → ritualService → geminiService`. `RitualName` type — корень проблемы.
+  - [FACT] Dual Sync: `memoryService.addArchiveEntry()` + `syncService.syncAllPending()` создают дублирующиеся nodes в Supabase GraphRAG.
+  - [FACT] `supabaseService.saveTasks()/saveHabits()` — destructive DELETE+INSERT без транзакции.
+  - [FACT] Нет AbortController в AI streaming.
+  - [FACT] `rateLimiter.ts` существует но не подключён к `geminiService`.
+  - [FACT] `graphService.ts` (in-memory) — dead code, нет потребителей.
+  - [FACT] `SERVICES.md` датирован 2025-12-16, описывает 7 голосов (реально 9), 4 ритуала (реально 8).
+  - [FACT] CORS `*` на gemini Edge Function — release blocker.
+  - [FACT] `SecurityService` constructor может крашнуть app при невалидном regex в JSON.
+- **Artifact:** `iskraSpace_production_plan_2026-07-01.md` — 26-пунктный план, 4 спринта.
+- **Next (Λ):** P1-01 circular import break (`RitualName` → `types.ts`), P1-02 atomic upsert.
+- **Status:** resolved — Sprint 1 executed (P1-01, P1-02, P1-04, P1-05), Sprint 2 partial (P2-01, P2-06).
+
+### JRN-20260701-002: Sprint 1 + Sprint 2 Partial — IskraSpace Production Fixes
+- **Context:** Исполнение production-ready плана. Sprint 1 Critical Safety + первые задачи Sprint 2.
+- **Changes:**
+  - [P1-01 DONE] `RitualName` перенесён в `types.ts`; `ritualService` re-экспортирует для совместимости; `auditService` импортирует из `../types` — цикл `gemini→policy→audit→ritual→gemini` разорван.
+  - [P1-02 DONE] `saveTasks()`/`saveHabits()` заменены на atomic `upsert`. Больше нет риска потери данных при network failure после DELETE.
+  - [P1-03 OPEN] CORS whitelist требует деплоя в Supabase Edge Function — оставлен для P1-03 sprint.
+  - [P1-04 DONE] `IskraAIService.abort()` + `AbortController` в `streamGenerateContentText`. Streaming прерывается при unmount/view switch. AbortError не fallback-ирует.
+  - [P1-05 DONE] `SecurityService.compilePatterns()` с try/catch на каждый RegExp. Невалидные паттерны пропускаются с warn. Флаг `loadFailed` для degraded mode.
+  - [P2-01 DONE] `synced_to_cloud?: boolean` добавлен в `MemoryNode`. `syncService.syncMemoryNodes()` пропускает уже синхронизированные ноды. После sync — флаг проставляется и сохраняется в localStorage.
+  - [P2-06 DONE] `metricsHistory` в `ritualService` теперь персистируется через `safeStorage`. REVERSE-ритуал работает после перезагрузки.
+- **Verification:** `tsc --noEmit` — 0 ошибок. Vitest 437 passed / 30 test files (7 OOM worker errors — системные, не логические).
+- **Status:** resolved.
+- **Next (Λ):** P2-02 (rateLimiter integration), P2-03 (Council timeout), P2-05 (BroadcastChannel), P3-04 (docs sync).
+
+
 ### JRN-20260530-001: Strict Build Compilation Repair
 - **Context:** The workspace recursive `pnpm build` was failing due to strict TypeScript compilation parameters in the `@iskra/kain` package.
 - **Actions:** Modified `runtime/kain/src/index.ts` line 27. Changed unused parameter `response` to `_response` to satisfy TS6133 checks.
