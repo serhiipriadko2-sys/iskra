@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-01T18:42:42.998Z",
-  "total": 2735,
+  "generatedAt": "2026-07-01T18:58:50.164Z",
+  "total": 2737,
   "curated": 20,
   "layers": {
     "root": 330,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 316,
+    "runtime": 318,
     "skills": 267,
     "backend": 50,
     "system": 26,
@@ -28694,6 +28694,7 @@
       "related": [],
       "parent": "runtime/src",
       "children": [
+        "runtime/src/types/__tests__",
         "runtime/src/types/coherence.ts",
         "runtime/src/types/consciousness.ts",
         "runtime/src/types/council.ts",
@@ -28708,6 +28709,31 @@
         "runtime/src/types/voices.ts",
         "runtime/src/types/xcode.ts"
       ]
+    },
+    {
+      "path": "runtime/src/types/__tests__",
+      "name": "__tests__",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/src/types/__tests__",
+      "related": [],
+      "parent": "runtime/src/types",
+      "children": [
+        "runtime/src/types/__tests__/voices.test.ts"
+      ]
+    },
+    {
+      "path": "runtime/src/types/__tests__/voices.test.ts",
+      "name": "voices.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/src/types/__tests__/voices.test.ts",
+      "related": [],
+      "parent": "runtime/src/types/__tests__"
     },
     {
       "path": "runtime/src/types/coherence.ts",
