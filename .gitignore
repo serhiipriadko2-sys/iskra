@@ -18,6 +18,8 @@ dist/**
 apps/iskra-site/dist/
 runtime/dist/
 runtime/iskraSpace/dist/
+runtime/iskraSpace/playwright-report/
+runtime/iskraSpace/test-results/
 runtime/kain/dist/
 
 # Python

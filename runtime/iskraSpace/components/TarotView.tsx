@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { IskraAIService } from '../services/geminiService';
-import { decode, decodeAudioData } from '../css/audioUtils';
+import { createAudioContext, decode, decodeAudioData } from '../css/audioUtils';
 import RuneCasting from './TarotReader';
 import { IskraMetrics } from '../types';
 import { getActiveVoice } from '../services/voiceEngine';
@@ -23,7 +23,7 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
 
     useEffect(() => {
         // Initialize AudioContext on component mount
-        outputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+        outputAudioContextRef.current = createAudioContext(24000);
 
         // Cleanup on unmount
         return () => {
@@ -36,7 +36,10 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
         if (!isTtsEnabled || !sentence.trim()) return;
         
         if (!outputAudioContextRef.current) {
-             outputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+             outputAudioContextRef.current = createAudioContext(24000);
+        }
+        if (!outputAudioContextRef.current) {
+            return;
         }
 
         try {
@@ -76,9 +79,9 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
     
     const resumeAudio = () => {
         if (!outputAudioContextRef.current) {
-             outputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+             outputAudioContextRef.current = createAudioContext(24000);
         }
-        if (outputAudioContextRef.current.state === 'suspended') {
+        if (outputAudioContextRef.current?.state === 'suspended') {
             outputAudioContextRef.current.resume().catch(() => {});
         }
     };

@@ -180,9 +180,6 @@ importers:
 
   runtime/iskraSpace:
     dependencies:
-      '@google/genai':
-        specifier: ^1.34.0
-        version: 1.44.0
       '@iskra/runtime':
         specifier: file:..
         version: file:runtime(@types/node@22.19.15)

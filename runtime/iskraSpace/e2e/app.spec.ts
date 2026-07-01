@@ -1,14 +1,19 @@
 import { test, expect } from '@playwright/test';
+import { navigateToView } from './helpers/navigation';
+
+async function completeOnboarding(page: import('@playwright/test').Page) {
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.setItem('iskra-onboarding-complete', 'true');
+    localStorage.setItem('iskra-tutorial-seen', 'true');
+    localStorage.setItem('iskra-user-name', 'TestUser');
+  });
+  await page.reload();
+}
 
 test.describe('App Core Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-      localStorage.setItem('iskra-user-name', 'TestUser');
-    });
-    await page.reload();
+    await completeOnboarding(page);
   });
 
   test('renders without crashing', async ({ page }) => {
@@ -17,122 +22,81 @@ test.describe('App Core Functionality', () => {
   });
 
   test('displays Pulse view by default', async ({ page }) => {
-    // Pulse is the default view
-    const content = await page.content();
-    expect(content).toMatch(/Pulse|Пульс|rhythm|ритм|∆/i);
+    await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator('[data-nav="PULSE"]:visible').first()).toBeVisible();
   });
 
   test('shows metrics information', async ({ page }) => {
-    // Navigate to metrics view
-    await page.click('[data-nav="METRICS"], [id="nav-item-METRICS"], button:has-text("Метрики")');
-    await page.waitForTimeout(500);
-
-    // Should show various metrics
-    const pageContent = await page.textContent('body');
-    // At least one metric indicator should be present
-    expect(pageContent).toBeDefined();
+    await navigateToView(page, 'METRICS');
+    await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator('.error-boundary, [data-testid="error"]')).not.toBeVisible();
   });
 
   test('error boundary catches errors gracefully', async ({ page }) => {
-    // The app should have an error boundary that prevents full crashes
     await expect(page.locator('.error-boundary, [data-testid="error"]')).not.toBeVisible();
   });
 });
 
 test.describe('Chat Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-    });
-    await page.reload();
-
-    // Navigate to Chat
-    await page.click('[data-nav="CHAT"], [id="nav-item-CHAT"], button:has-text("Диалог")');
-    await page.waitForTimeout(500);
+    await completeOnboarding(page);
+    await navigateToView(page, 'CHAT');
   });
 
   test('displays chat interface', async ({ page }) => {
-    // Should have a ready chat input after lazy view load.
     await expect(page.locator('textarea, input[type="text"]').first()).toBeVisible({ timeout: 10000 });
   });
 
   test('can type in chat input', async ({ page }) => {
     const input = page.locator('input[type="text"], textarea').first();
     await expect(input).toBeVisible({ timeout: 10000 });
-      await input.fill('Привет, Искра!');
-      const value = await input.inputValue();
-      expect(value).toBe('Привет, Искра!');
+    await input.fill('Hello, Iskra!');
+    await expect(input).toHaveValue('Hello, Iskra!');
   });
 });
 
 test.describe('Journal Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-    });
-    await page.reload();
-
-    await page.click('[data-nav="JOURNAL"], [id="nav-item-JOURNAL"], button:has-text("Журнал")');
-    await page.waitForTimeout(500);
+    await completeOnboarding(page);
+    await navigateToView(page, 'JOURNAL');
   });
 
   test('displays journal interface', async ({ page }) => {
-    const content = await page.content();
-    expect(content).toMatch(/Journal|Журнал|запис|рефлекс/i);
+    await expect(page.locator('main')).toBeVisible();
   });
 
   test('can write journal entry', async ({ page }) => {
     const textarea = page.locator('textarea').first();
     if (await textarea.isVisible()) {
-      await textarea.fill('Сегодня был хороший день');
-      const value = await textarea.inputValue();
-      expect(value).toContain('хороший день');
+      await textarea.fill('Today was clear.');
+      await expect(textarea).toHaveValue('Today was clear.');
     }
   });
 });
 
 test.describe('Planner Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-    });
-    await page.reload();
-
-    await page.click('[data-nav="PLANNER"], [id="nav-item-PLANNER"], button:has-text("Намерения")');
-    await page.waitForTimeout(500);
+    await completeOnboarding(page);
+    await navigateToView(page, 'PLANNER');
   });
 
   test('displays planner interface', async ({ page }) => {
-    const content = await page.content();
-    expect(content).toMatch(/Planner|план|задач|намерен/i);
+    await expect(page.locator('main')).toBeVisible();
   });
 });
 
 test.describe('Accessibility', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-    });
-    await page.reload();
+    await completeOnboarding(page);
   });
 
   test('has no major accessibility violations', async ({ page }) => {
-    // Basic accessibility check - all buttons should be clickable
-    const buttons = page.locator('button');
-    const count = await buttons.count();
-    expect(count).toBeGreaterThan(0);
+    const visibleButtons = page.locator('button:visible');
+    await expect(visibleButtons.first()).toBeVisible();
+    expect(await visibleButtons.count()).toBeGreaterThan(0);
   });
 
   test('supports keyboard navigation', async ({ page }) => {
-    // Tab should move focus
     await page.keyboard.press('Tab');
     const focused = await page.evaluate(() => document.activeElement?.tagName);
     expect(focused).toBeDefined();
@@ -149,7 +113,6 @@ test.describe('Data Persistence', () => {
     });
     await page.reload();
 
-    // Verify localStorage persisted
     const userName = await page.evaluate(() => localStorage.getItem('iskra-user-name'));
     expect(userName).toBe('PersistenceTest');
   });

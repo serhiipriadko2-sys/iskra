@@ -5,7 +5,7 @@
  * browser localStorage (offline cache) and Supabase database.
  */
 
-import { isSupabaseAvailable } from './supabaseClient';
+import { ensureSupabaseSession, getLegacyDeviceId, isSupabaseAvailable } from './supabaseClient';
 import { supabaseService } from './supabaseService';
 import { graphServiceSupabase } from './graphServiceSupabase';
 
@@ -20,6 +20,24 @@ export class SyncService {
         );
       });
     }
+  }
+
+  private async getOfflineQueueOwnerKeys(): Promise<string[]> {
+    if (typeof window === 'undefined') return [];
+
+    const ownerKeys = new Set<string>();
+    const authenticatedUserId = await ensureSupabaseSession().catch(() => null);
+    if (authenticatedUserId) {
+      ownerKeys.add(authenticatedUserId);
+    }
+
+    // Legacy device id is read only as a migration source for old offline queues.
+    const legacyDeviceId = getLegacyDeviceId();
+    if (legacyDeviceId) {
+      ownerKeys.add(legacyDeviceId);
+    }
+
+    return Array.from(ownerKeys);
   }
 
   /**
@@ -49,24 +67,25 @@ export class SyncService {
    * Synchronize chat history queue
    */
   private async syncChatHistory(): Promise<void> {
-    const userId = typeof window !== 'undefined' ? localStorage.getItem('iskra_device_id') : null;
-    if (!userId) return;
+    const ownerKeys = await this.getOfflineQueueOwnerKeys();
 
-    const cachedKey = `chat_history_${userId}`;
-    const cachedData = localStorage.getItem(cachedKey);
-    if (!cachedData) return;
+    for (const ownerKey of ownerKeys) {
+      const cachedKey = `chat_history_${ownerKey}`;
+      const cachedData = localStorage.getItem(cachedKey);
+      if (!cachedData) continue;
 
-    try {
-      const messages = JSON.parse(cachedData);
-      if (!Array.isArray(messages)) return;
+      try {
+        const messages = JSON.parse(cachedData);
+        if (!Array.isArray(messages)) continue;
 
-      console.log(`[SyncService] Syncing ${messages.length} chat messages...`);
-      for (const msg of messages) {
-        // Idempotently push message to Supabase
-        await supabaseService.addChatMessage(msg).catch(() => {});
+        console.log(`[SyncService] Syncing ${messages.length} chat messages from ${cachedKey}...`);
+        for (const msg of messages) {
+          // Supabase service writes to the current auth.uid(); ownerKey is queue provenance only.
+          await supabaseService.addChatMessage(msg).catch(() => {});
+        }
+      } catch (e) {
+        console.warn(`[SyncService] Failed to sync chat history from ${cachedKey}:`, e);
       }
-    } catch (e) {
-      console.warn('[SyncService] Failed to sync chat history:', e);
     }
   }
 
@@ -74,35 +93,36 @@ export class SyncService {
    * Synchronize memory nodes queue
    */
   private async syncMemoryNodes(): Promise<void> {
-    const userId = typeof window !== 'undefined' ? localStorage.getItem('iskra_device_id') : null;
-    if (!userId) return;
+    const ownerKeys = await this.getOfflineQueueOwnerKeys();
 
     // Sync both archive and shadow layers
     const layers = ['archive', 'shadow'] as const;
 
-    for (const layer of layers) {
-      const cachedKey = `memory_${layer}_${userId}`;
-      const cachedData = localStorage.getItem(cachedKey);
-      if (!cachedData) continue;
+    for (const ownerKey of ownerKeys) {
+      for (const layer of layers) {
+        const cachedKey = `memory_${layer}_${ownerKey}`;
+        const cachedData = localStorage.getItem(cachedKey);
+        if (!cachedData) continue;
 
-      try {
-        const nodes = JSON.parse(cachedData);
-        if (!Array.isArray(nodes)) continue;
+        try {
+          const nodes = JSON.parse(cachedData);
+          if (!Array.isArray(nodes)) continue;
 
-        console.log(`[SyncService] Syncing ${nodes.length} memory nodes for layer: ${layer}...`);
-        for (const node of nodes) {
-          // Sync each node to Cloud GraphRAG
-          await graphServiceSupabase.addNode(
-            node.layer,
-            node.type,
-            typeof node.content === 'string' ? node.content : JSON.stringify(node.content)
-          ).then(async (syncedNode) => {
-            // Automatically build connections in cloud GraphRAG
-            await graphServiceSupabase.buildConnections(syncedNode.id);
-          }).catch(() => {});
+          console.log(`[SyncService] Syncing ${nodes.length} memory nodes for layer: ${layer} from ${cachedKey}...`);
+          for (const node of nodes) {
+            // Sync each node to Cloud GraphRAG under the current Supabase auth session.
+            await graphServiceSupabase.addNode(
+              node.layer,
+              node.type,
+              typeof node.content === 'string' ? node.content : JSON.stringify(node.content)
+            ).then(async (syncedNode) => {
+              // Automatically build connections in cloud GraphRAG
+              await graphServiceSupabase.buildConnections(syncedNode.id);
+            }).catch(() => {});
+          }
+        } catch (e) {
+          console.warn(`[SyncService] Failed to sync memory layer from ${cachedKey}:`, e);
         }
-      } catch (e) {
-        console.warn(`[SyncService] Failed to sync memory layer: ${layer}:`, e);
       }
     }
   }

@@ -18,9 +18,6 @@ export default defineConfig(() => {
             if (normalized.includes('/node_modules/@supabase/')) {
               return 'vendor-supabase';
             }
-            if (normalized.includes('/node_modules/@google/genai')) {
-              return 'vendor-genai';
-            }
             if (
               normalized.includes('/runtime/src/')
               || normalized.includes('/packages/core/src/')

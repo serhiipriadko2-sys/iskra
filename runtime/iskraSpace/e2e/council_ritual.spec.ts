@@ -1,5 +1,6 @@
 
 import { test, expect } from '@playwright/test';
+import { navigateToView } from './helpers/navigation';
 
 test.describe('Council Ritual View', () => {
   test.beforeEach(async ({ page }) => {
@@ -13,19 +14,7 @@ test.describe('Council Ritual View', () => {
   });
 
   test('displays all 9 voices in Council view', async ({ page }) => {
-    // Navigate to Council
-    const councilNav = page.locator('#nav-item-COUNCIL');
-    // If we are on mobile, Council might be in the radial menu, but on Desktop it is in sidebar.
-    // The default viewport is desktop-like usually, but let's check visibility.
-    // If not visible, we assume it's because of screen size or just verify desktop scenario.
-    if (await councilNav.isVisible()) {
-        await councilNav.click();
-    } else {
-        // Try to find it if it is hidden or need scrolling?
-        // Sidebar usually shows secondary items.
-        // If fail, we skip? No, we want to test.
-        console.log('Council nav item not visible, attempting force click or check viewport');
-    }
+    await navigateToView(page, 'COUNCIL');
 
     // Verify Title
     await expect(page.locator('h1')).toContainText('Совет Граней');
