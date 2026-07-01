@@ -1,6 +1,6 @@
 # ISKRA SPACE — Technical Architecture
 
-**Version:** 3.2.0 • **Updated:** 2026-01-04 • **Tests:** 723 passing
+**Version:** 0.3.3 • **Updated:** 2026-07-01 • **Tests:** 636 passing / 3 skipped
 
 ---
 
@@ -10,11 +10,11 @@ Iskra Space — фронтенд-приложение React/Vite с многоу
 
 ## Stack
 
-- **Runtime:** React 18 + TypeScript 5.9
-- **Build:** Vite
-- **AI:** Google Gemini API
-- **Tests:** Vitest (96 tests)
-- **Storage:** localStorage (client-side)
+- **Runtime:** React 19.2 + TypeScript 6.0.3
+- **Build:** Vite 6.4.3
+- **AI:** Supabase Edge AI gateway (`gemini` function, Gemini default, OpenAI optional)
+- **Tests:** Vitest (636 passed / 3 skipped on 2026-07-01)
+- **Storage:** Supabase Auth/RLS + localStorage offline cache
 
 ---
 
@@ -24,7 +24,7 @@ Iskra Space — фронтенд-приложение React/Vite с многоу
 
 | Service | Purpose | Key Methods |
 |---------|---------|-------------|
-| `geminiService` | AI взаимодействие, streaming | `getChatResponseStream`, `getChatResponseStreamWithPolicy` |
+| `geminiService` | Supabase Edge AI gateway client, streaming, embeddings | `getChatResponseStream`, `getChatResponseStreamWithPolicy`, `generateText` |
 | `policyEngine` | Маршрутизация плейбуков | `classifyRequest`, `makeDecision`, `quickRiskCheck` |
 | `evalService` | Оценка качества ответов | `evaluateResponse`, `evaluateBatch`, `generateEvalReport` |
 | `evalCases` | Контрольный датасет (25 кейсов) | `ALL_CASES`, `getCasesByType` |
@@ -139,7 +139,7 @@ Grades: A (≥0.85) | B (≥0.70) | C (≥0.55) | D (≥0.40) | F (<0.40)
 | Component | Purpose |
 |-----------|---------|
 | `ChatView` | Main conversation interface |
-| `LiveConversation` | Real-time streaming chat |
+| `LiveConversation` | Release-disabled voice surface until server-side streaming gateway exists |
 | `CouncilView` | Multi-voice deliberation |
 | `DeepResearchView` | Extended research mode |
 
@@ -243,34 +243,21 @@ interface IskraMetrics {
 ## Testing
 
 ```bash
-npm test          # Run all 723 tests (runtime + iskraSpace)
-npm run test:ui   # Interactive test UI
-npx tsc --noEmit  # TypeScript check (0 errors)
+pnpm --dir runtime/iskraSpace typecheck
+pnpm --dir runtime/iskraSpace test:run
+pnpm --dir runtime/iskraSpace build
+pnpm --dir runtime/iskraSpace lint
+pnpm --dir runtime/iskraSpace audit
 ```
 
-### Test Coverage
+### Test Snapshot
 
-**Runtime Core Tests (6 files):**
-- `metrics.test.ts` — 9 tests
-- `voices.test.ts` — 17 tests
-- `protocols.test.ts` — 15 tests
-- `sift.test.ts` — 15 tests
-- `fractal.test.ts` — 31 tests
-- `ews.test.ts` — 34 tests
-
-**iskraSpace Service Tests (27 files):**
-- `evalService.test.ts` — 14 tests
-- `policyEngine.test.ts` — 26 tests
-- `ritualService.test.ts` — 20 tests
-- `auditService.test.ts` — 26 tests
-- `memoryService.test.ts` — 18 tests
-- `securityService.test.ts` — 38 tests
-- `voiceEngine.test.ts` — 25 tests
-- `metricsService.test.ts` — 17 tests
-- `validatorsService.test.ts` — 42 tests
-- `graphService.test.ts` — 21 tests
-- `stressTests.test.ts` — 51 tests
-- ... and more
+- `pnpm --dir runtime/iskraSpace test:run`: 37 files passed, 1 skipped; 636 tests passed, 3 skipped.
+- `pnpm --dir runtime/iskraSpace typecheck`: 0 TypeScript errors.
+- `pnpm --dir runtime/iskraSpace build`: production build passed; no `vendor-genai` client bundle chunk.
+- `pnpm --filter iskra-space lint`: 0 errors, 77 warnings.
+- Chromium E2E: 27 passed with `pnpm --filter iskra-space exec playwright test --project=chromium`.
+- Full Playwright browser matrix remains a release gate; browser binaries must be installed with `pnpm exec playwright install`.
 
 ---
 
@@ -300,7 +287,7 @@ iskraSpace/
 
 ## ∆DΩΛ
 
-**Δ:** Architecture doc updated — 27 services, 39 components, 723 tests, full data flow.
-**D:** Source — codebase analysis, test run 2026-01-04, TypeScript types from @iskra/runtime.
-**Ω:** High — all services verified, 723 tests passing.
-**Λ:** Keep this doc updated when adding new services/components.
+**∆:** Architecture doc corrected for pre-release hardening: pnpm canonical path, Edge AI gateway, voice release-disabled, current tests.
+**D:** Source — local gates on 2026-07-01 plus Supabase read-only inventory.
+**Ω:** 0.88 — local runtime gates pass; Supabase advisor warnings and full E2E matrix remain open.
+**Λ:** Keep this doc tied to release receipts, not historic test counts.

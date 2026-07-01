@@ -1,4 +1,3 @@
-import { Type, Content } from '@google/genai';
 import { DailyAdvice, PlanTop3, JournalPrompt, TranscriptionMessage, ConversationAnalysis, Message, Voice, DeepResearchReport, MemoryNode, Evidence, Task, IskraMetrics, ResponseMode } from '../types';
 import { getSystemInstructionForVoice } from './voiceEngine';
 import { DELTA_PROTOCOL_INSTRUCTION } from './deltaProtocol';
@@ -18,6 +17,18 @@ export interface PolicyStreamResult {
   integrity: unknown | null;
 }
 const model = "gemini-2.5-flash";
+
+type Content = {
+  role?: string;
+  parts?: Array<{ text?: string }>;
+};
+
+const Type = {
+  OBJECT: 'OBJECT',
+  ARRAY: 'ARRAY',
+  STRING: 'STRING',
+  INTEGER: 'INTEGER',
+} as const;
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';

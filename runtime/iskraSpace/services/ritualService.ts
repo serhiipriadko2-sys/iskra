@@ -15,7 +15,7 @@
  */
 
 import { IskraMetrics, IskraPhase, VoiceName } from '../types';
-import { getAI } from './geminiService';
+import { generateText } from './geminiService';
 import { DELTA_PROTOCOL_INSTRUCTION } from './deltaProtocol';
 
 // Council order per Canon (all 9 voices)
@@ -126,18 +126,15 @@ ${DELTA_PROTOCOL_INSTRUCTION}`;
     const prompt = `${systemBase}\n\n${COUNCIL_VOICE_PROMPTS[voice]}\n\nДай свой взгляд на тему.`;
 
     try {
-      const response = await getAI().models.generateContent({
+      const response = await generateText(prompt, {
         model: 'gemini-2.5-flash',
-        contents: prompt,
-        config: {
-          maxOutputTokens: 300,
-        },
+        maxOutputTokens: 300,
       });
 
       return {
         voice,
         symbol: VOICE_SYMBOLS[voice],
-        message: response.text || `${VOICE_SYMBOLS[voice]} ...`,
+        message: response || `${VOICE_SYMBOLS[voice]} ...`,
       };
     } catch (error) {
       console.error(`Council voice ${voice} failed:`, error);

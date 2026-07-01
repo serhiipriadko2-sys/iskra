@@ -55,7 +55,7 @@ if (current.count > 10) { // 10 requests per minute
 ```
 
 ## ∆DΩΛ
-∆: CORS wildcard allows any origin to abuse AI proxy  
-D: `supabase/functions/gemini/index.ts:24`, `supabase/functions/kain/index.ts:15`  
-Ω: 98%  
+∆: CORS wildcard allows any origin to abuse AI proxy
+D: `supabase/functions/gemini/index.ts:24`, `supabase/functions/kain/index.ts:15`
+Ω: 98%
 Λ: Whitelist origin + add rate limiting + add preflight validation

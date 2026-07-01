@@ -61,7 +61,7 @@ CREATE POLICY graph_nodes_canonical_admin ON graph_nodes
 **Option B:** Ensure `supabase_graphrag_migration.sql` is always followed by `schema.sql` (add a comment or enforce via migration order). But this is fragile.
 
 ## ∆DΩΛ
-∆: Weak RLS allows canonical node tampering  
-D: `supabase_graphrag_migration.sql:240-247` vs `schema.sql`  
-Ω: 95%  
+∆: Weak RLS allows canonical node tampering
+D: `supabase_graphrag_migration.sql:240-247` vs `schema.sql`
+Ω: 95%
 Λ: Update migration RLS + add canonical-specific policies

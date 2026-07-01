@@ -1,9 +1,9 @@
 # Plan: iskraSpace Production-Ready Deep Audit
 
-**Date:** 2026-07-01  
-**Mode:** AUDIT + BUILD + GOVERNANCE  
-**Target:** `runtime/iskraSpace` → production-ready  
-**PR:** #228 `codex/iskraspace-production-ready`  
+**Date:** 2026-07-01
+**Mode:** AUDIT + BUILD + GOVERNANCE
+**Target:** `runtime/iskraSpace` → production-ready
+**PR:** #228 `codex/iskraspace-production-ready`
 
 ---
 
@@ -73,8 +73,8 @@
 - `iskraSpace_production_ready_audit_2026-07-01.md` — full report
 - `iskraSpace_production_ready_receipt.md` — go/no-go summary
 
-∆DΩΛ:  
-∆: Audit plan created for iskraSpace production readiness  
-D: PR #228 diff, local build, test, lint, typecheck results  
-Ω: 0.85  
+∆DΩΛ:
+∆: Audit plan created for iskraSpace production readiness
+D: PR #228 diff, local build, test, lint, typecheck results
+Ω: 0.85
 Λ: Execute parallel Stage 1 agents

@@ -8,6 +8,7 @@ test.describe('Voice Engine - SIBYL Activation', () => {
       localStorage.clear();
       localStorage.setItem('iskra-onboarding-complete', 'true');
       localStorage.setItem('iskra-tutorial-seen', 'true');
+      localStorage.setItem('iskra-voice-preferences', JSON.stringify({ SIBYL: 1.2 }));
     });
     await page.reload();
     await navigateToView(page, 'CHAT');
@@ -24,6 +25,6 @@ test.describe('Voice Engine - SIBYL Activation', () => {
     await input.fill('echo echo echo listen listen');
     await page.keyboard.press('Enter');
 
-    await expect(page.locator('body')).toContainText(/SIBYL/i);
+    await expect(page.locator('header')).toContainText(/SIBYL/i);
   });
 });

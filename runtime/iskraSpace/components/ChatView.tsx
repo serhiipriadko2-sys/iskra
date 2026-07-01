@@ -8,7 +8,7 @@ import { getActiveVoice, getVoiceSelectionExplanation } from '../services/voiceE
 import { storageService } from '../services/storageService';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import VoiceExplainableDisplay from './ExplainableTrace';
-import { decode, decodeAudioData } from '../css/audioUtils';
+import { createAudioContext, decode, decodeAudioData } from '../css/audioUtils';
 import { Volume2Icon, VolumeXIcon, SparkleIcon, XIcon } from './icons';
 
 // Response mode display config
@@ -129,7 +129,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
 
   useEffect(() => {
     // Initialize AudioContext on mount
-    outputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+    outputAudioContextRef.current = createAudioContext(24000);
     return () => {
       stopAndClearAudio();
       outputAudioContextRef.current?.close();
@@ -179,7 +179,10 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
     
     // Ensure context exists
     if (!outputAudioContextRef.current) {
-        outputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+        outputAudioContextRef.current = createAudioContext(24000);
+    }
+    if (!outputAudioContextRef.current) {
+        return;
     }
     
     try {
@@ -211,9 +214,9 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
     // CRITICAL: Resume AudioContext immediately within the user interaction event loop
     // Ensure context is initialized
     if (!outputAudioContextRef.current) {
-        outputAudioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+        outputAudioContextRef.current = createAudioContext(24000);
     }
-    if (outputAudioContextRef.current.state === 'suspended') {
+    if (outputAudioContextRef.current?.state === 'suspended') {
         outputAudioContextRef.current.resume().catch(() => {});
     }
 

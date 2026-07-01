@@ -1,9 +1,9 @@
 # ISKRA Services Audit Report
 
-**Auditor:** Services_Auditor  
-**Scope:** `runtime/iskraSpace/services/*.ts` (excluding `__tests__`)  
-**Date:** 2026-06-28  
-**Tests:** 631 passed (28 test files covering 24 of 34 services)  
+**Auditor:** Services_Auditor
+**Scope:** `runtime/iskraSpace/services/*.ts` (excluding `__tests__`)
+**Date:** 2026-06-28
+**Tests:** 631 passed (28 test files covering 24 of 34 services)
 **Files Audited:** 34 service files
 
 ---

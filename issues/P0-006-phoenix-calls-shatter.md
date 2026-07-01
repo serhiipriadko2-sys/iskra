@@ -37,10 +37,10 @@ const handleShatter = () => { ... }; // Passed as onShatter prop
 
 **In `App.tsx`:**
 ```typescript
-<IskraStateView 
-    metrics={metrics} 
-    phase={phase} 
-    onShatter={handleShatter} 
+<IskraStateView
+    metrics={metrics}
+    phase={phase}
+    onShatter={handleShatter}
     onPhoenix={handlePhoenix} // ← ADD THIS
 />
 ```
@@ -65,7 +65,7 @@ const handlePhoenix = () => {
 ```
 
 ## ∆DΩΛ
-∆: Phoenix button calls Shatter — destructive UI bug  
-D: `IskraStateView.tsx:121` + `App.tsx` props  
-Ω: 99%  
+∆: Phoenix button calls Shatter — destructive UI bug
+D: `IskraStateView.tsx:121` + `App.tsx` props
+Ω: 99%
 Λ: Pass onPhoenix prop + fix handler + fix sound

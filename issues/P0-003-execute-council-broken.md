@@ -49,7 +49,7 @@ const voiceResponse = await generateText({
 Or create a dedicated `councilService.ts` that orchestrates the 9 calls through the Edge Function in parallel (`Promise.all`).
 
 ## ∆DΩΛ
-∆: COUNCIL ritual generation completely broken  
-D: `ritualService.ts:141` + `geminiService.ts:821`  
-Ω: 99%  
+∆: COUNCIL ritual generation completely broken
+D: `ritualService.ts:141` + `geminiService.ts:821`
+Ω: 99%
 Λ: Replace `getAI()` with `generateText()` via Edge Function

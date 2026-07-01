@@ -6,7 +6,7 @@
 
 > AI companion app built on the Iskra Canon v7 — principles of honesty, usefulness, and authentic relationship.
 
-**Version:** 4.0.0 | **Canon:** revL | **Status:** Production-Ready
+**Version:** 0.3.3 | **Canon:** vΩ.7 / revL | **Status:** Pre-release hardening, not Production-Ready
 
 ---
 
@@ -27,8 +27,8 @@
 ## Quick Start
 
 ```bash
-# Install dependencies
-npm install
+# From repository root: install reproducibly with the canonical package manager
+pnpm install --frozen-lockfile
 
 # Configure environment
 cp .env.example .env.local  # Add VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (client-safe)
@@ -43,7 +43,7 @@ cp .env.example .env.local  # Add VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (cl
 # The frontend must never embed Gemini or OpenAI keys.
 
 # Start development server
-npm run dev
+pnpm --dir runtime/iskraSpace dev
 ```
 
 ---
@@ -57,14 +57,14 @@ npm run dev
 | **Services** | 27 microservices |
 | **Components** | 42 React components |
 | **Types** | 46+ TypeScript interfaces |
-| **Tests** | 322 unit + 3 E2E |
-| **Bundle** | 515 KB (155 KB gzip) |
+| **Tests** | 636 passed / 3 skipped via `pnpm --dir runtime/iskraSpace test:run` |
+| **Bundle** | Build passed; largest chunks: `vendor-react` 193.83 KB, `vendor-supabase` 174.16 KB, `index` 131.68 KB |
 
 ### Tech Stack
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | React 19, TypeScript 5.8, Vite 6.2 |
+| Frontend | React 19.2, TypeScript 6.0.3, Vite 6.4.3 |
 | AI | Supabase Edge AI gateway (Gemini default, OpenAI optional) |
 | Database | Supabase (PostgreSQL + GraphRAG) |
 | Testing | Vitest, Playwright |
@@ -131,7 +131,7 @@ Every ISKRA response includes:
 ## Services Reference
 
 ### Tier 1: Core AI Pipeline
-- `geminiService` — AI gateway client for generation, streaming, and embeddings
+- `geminiService` — Supabase Edge AI gateway client for generation, streaming, and embeddings
 - `policyEngine` (556 LoC) — Playbook routing
 - `ragService` (757 LoC) — RAG + SIFT protocol
 - `evalService` (755 LoC) — 5-metric quality assessment
@@ -182,18 +182,19 @@ Every ISKRA response includes:
 
 ```bash
 # Development
-npm run dev           # Start dev server (port 5173)
-npm run build         # Production build
-npm run preview       # Preview production build
+pnpm --dir runtime/iskraSpace dev       # Start dev server
+pnpm --dir runtime/iskraSpace build     # Production build
+pnpm --dir runtime/iskraSpace preview   # Preview production build
 
 # Testing
-npm test              # Run unit tests (Vitest)
-npm run test:ui       # Test UI
-npm run test:e2e      # E2E tests (Playwright)
+pnpm --dir runtime/iskraSpace test:run  # Vitest unit/integration tests
+pnpm --dir runtime/iskraSpace test      # Interactive Vitest watch
+pnpm --dir runtime/iskraSpace test:e2e  # Playwright E2E; run `pnpm exec playwright install` first
 
 # Quality
-npx tsc --noEmit      # Type check (0 errors expected)
-npm run lint          # Lint check (coming soon)
+pnpm --dir runtime/iskraSpace typecheck # Type check (0 errors expected)
+pnpm --dir runtime/iskraSpace lint      # Lint check (0 errors expected; warnings currently tracked)
+pnpm --dir runtime/iskraSpace audit     # Dependency audit
 ```
 
 ### Project Structure

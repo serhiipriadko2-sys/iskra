@@ -1,4 +1,20 @@
 
+export function createAudioContext(sampleRate: number): AudioContext | null {
+  if (typeof window === 'undefined') return null;
+
+  const AudioContextCtor =
+    window.AudioContext ||
+    (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+  if (!AudioContextCtor) return null;
+
+  try {
+    return new AudioContextCtor({ sampleRate });
+  } catch {
+    return null;
+  }
+}
+
 export function decode(base64: string): Uint8Array {
   const binaryString = atob(base64);
   const len = binaryString.length;

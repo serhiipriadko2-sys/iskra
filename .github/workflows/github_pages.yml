@@ -27,33 +27,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install pnpm workspace dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build pnpm workspace packages
-        run: pnpm build
-
-      - name: Install runtime dependencies
+      - name: Install legacy runtime dependencies
         working-directory: runtime
-        run: npm install --no-fund --no-audit
+        run: npm ci --ignore-scripts
 
-      - name: Install iskraSpace dependencies
-        working-directory: runtime/iskraSpace
-        run: npm install --no-fund --no-audit
+      - name: Build @iskra/runtime
+        working-directory: runtime
+        run: npm run build
 
       - name: Build iskraSpace for GitHub Pages
-        working-directory: runtime/iskraSpace
-        run: npm run build
+        run: pnpm --filter iskra-space build
         env:
           VITE_BASE_PATH: /iskra/
 

@@ -1,10 +1,10 @@
 # ИскраSpace — Глубокий аудит production readiness
 
-**Дата:** 2026-07-01 18:31 RTZ  
-**Аудитор:** Искра vΩ.7 (Orchestrator + 4 специализированных агента)  
-**Цель:** PR #228 `codex/iskraspace-production-ready` → `main`  
-**Режим:** AUDIT + BUILD + GOVERNANCE  
-**Время работы:** ~8 минут анализа, 4 параллельных deep-audit агента  
+**Дата:** 2026-07-01 18:31 RTZ
+**Аудитор:** Искра vΩ.7 (Orchestrator + 4 специализированных агента)
+**Цель:** PR #228 `codex/iskraspace-production-ready` → `main`
+**Режим:** AUDIT + BUILD + GOVERNANCE
+**Время работы:** ~8 минут анализа, 4 параллельных deep-audit агента
 
 ---
 
@@ -212,7 +212,7 @@
 ### 6.2 Сценарии «Что если?»
 
 #### Сценарий A: «Запускаем сейчас, как есть»
-- **Результат:** CI упадёт после merge PR #228. Если обойти CI и deploy вручную — runtime crash при первом вызове graphServiceSupabase (missing RPC). Ритуал COUNCIL не работает. Любой сайт может спамить AI proxy через CORS `*`. Пользовательские данные в localStorage читаются на shared device. 
+- **Результат:** CI упадёт после merge PR #228. Если обойти CI и deploy вручную — runtime crash при первом вызове graphServiceSupabase (missing RPC). Ритуал COUNCIL не работает. Любой сайт может спамить AI proxy через CORS `*`. Пользовательские данные в localStorage читаются на shared device.
 - **Вероятность:** Высокая (100% для CI, высокая для runtime crash).
 - **Mitigation:** Не deploy. Применить план P0 → P1.
 

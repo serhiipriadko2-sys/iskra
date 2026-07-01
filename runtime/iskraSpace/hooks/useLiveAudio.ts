@@ -4,8 +4,12 @@
  */
 
 import { useRef, useCallback } from 'react';
-import { encode } from '../css/audioUtils';
-import { Blob as GenAIBlob } from '@google/genai';
+import { createAudioContext, encode } from '../css/audioUtils';
+
+export interface LiveAudioBlob {
+  data: string;
+  mimeType: string;
+}
 
 export interface AudioRefs {
   mediaStream: MediaStream | null;
@@ -17,7 +21,7 @@ export interface AudioRefs {
   audioSources: Set<AudioBufferSourceNode>;
 }
 
-export function createAudioBlob(data: Float32Array): GenAIBlob {
+export function createAudioBlob(data: Float32Array): LiveAudioBlob {
   const l = data.length;
   const int16 = new Int16Array(l);
   for (let i = 0; i < l; i++) {
@@ -39,8 +43,11 @@ export function useLiveAudio() {
   const audioSourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
 
   const initializeAudioContexts = useCallback(async () => {
-    const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
-    const outputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+    const inputCtx = createAudioContext(16000);
+    const outputCtx = createAudioContext(24000);
+    if (!inputCtx || !outputCtx) {
+      throw new Error('Web Audio API is not available in this browser context');
+    }
 
     // Trigger resume immediately
     const resumeInputPromise = inputCtx.resume().catch(() => {});
@@ -64,7 +71,7 @@ export function useLiveAudio() {
   const setupAudioInput = useCallback((
     stream: MediaStream,
     inputCtx: AudioContext,
-    onAudioData: (blob: GenAIBlob) => void
+    onAudioData: (blob: LiveAudioBlob) => void
   ) => {
     sourceNodeRef.current = inputCtx.createMediaStreamSource(stream);
     scriptProcessorRef.current = inputCtx.createScriptProcessor(4096, 1, 1);

@@ -60,7 +60,7 @@ Each function should follow the RLS patterns in `schema.sql` and use `auth.uid()
 **Option B:** If these functions are not actually needed (e.g., `graphServiceSupabase.ts` is dead code), remove the RPC calls and route everything through the existing 3 functions or the Supabase client directly.
 
 ## ∆DΩΛ
-∆: Missing RPC functions will cause runtime crash  
-D: `graphServiceSupabase.ts:22-89` vs `schema.sql` + `supabase_graphrag_migration.sql`  
-Ω: 98%  
+∆: Missing RPC functions will cause runtime crash
+D: `graphServiceSupabase.ts:22-89` vs `schema.sql` + `supabase_graphrag_migration.sql`
+Ω: 98%
 Λ: Create SQL migration OR remove unused RPC calls

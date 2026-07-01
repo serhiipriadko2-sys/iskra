@@ -6,7 +6,7 @@
 PR #228 (`codex/iskraspace-production-ready`) deletes `runtime/iskraSpace/package-lock.json` (5764 lines), but the following CI/CD files still use `npm ci`:
 
 - `.github/workflows/iskraspace_ci.yml` line 48 → `npm ci`
-- `.github/workflows/production_deploy.yml` line 66 → `npm ci`  
+- `.github/workflows/production_deploy.yml` line 66 → `npm ci`
 - `Dockerfile` line 40 → `npm ci`
 
 `npm ci` **requires** an existing `package-lock.json`. Without it, the command fails.
@@ -44,7 +44,7 @@ Also, `production_deploy.yml` uses `cache-dependency-path: runtime/package-lock.
 **Option B (Quick fix):** Keep `package-lock.json` in `runtime/iskraSpace/` and do NOT delete it in PR #228. Defer migration to pnpm to a separate ADR/PR.
 
 ## ∆DΩΛ
-∆: CI/CD pipeline break identified  
-D: `.github/workflows/iskraspace_ci.yml`, `production_deploy.yml`, `Dockerfile`  
-Ω: 95%  
+∆: CI/CD pipeline break identified
+D: `.github/workflows/iskraspace_ci.yml`, `production_deploy.yml`, `Dockerfile`
+Ω: 95%
 Λ: Choose Option A or B and implement before merge

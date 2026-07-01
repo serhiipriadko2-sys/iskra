@@ -83,6 +83,11 @@ export const MobileMenu: React.FC<{
         return (
             <button
                 key={item.id}
+                id={`nav-item-${item.id}-radial`}
+                type="button"
+                data-nav={item.id}
+                data-nav-surface="radial"
+                aria-label={item.name}
                 onClick={() => handleNavigate(item.id as AppView)}
                 className={`absolute flex flex-col items-center justify-center rounded-2xl border shadow-lg transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1) ${
                     activeView === item.id 
@@ -145,13 +150,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
 
   const renderItem = (item: any, isMobileRender = false) => {
       const isActive = activeView === item.id;
-      const domId = `nav-item-${item.id}`;
+      const domId = isMobileRender ? `nav-item-${item.id}-mobile` : `nav-item-${item.id}`;
       
       if (isMobileRender) {
           return (
             <button
                 key={item.id}
                 id={domId}
+                type="button"
+                data-nav={item.id}
+                data-nav-surface="mobile"
+                aria-label={item.name}
                 onClick={() => handleItemClick(item.id as AppView)}
                 className={`flex flex-col items-center justify-center flex-1 h-full relative transition-all duration-300 active:scale-95 group ${
                     isActive ? 'text-primary' : 'text-text-muted/80'
@@ -170,6 +179,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
         <button
             key={item.id}
             id={domId}
+            type="button"
+            data-nav={item.id}
+            data-nav-surface="desktop"
+            aria-label={item.name}
             onClick={() => handleItemClick(item.id as AppView)}
             className={`group flex items-center w-full p-3 mb-2 rounded-xl transition-all duration-300 relative overflow-hidden active:scale-98 ${
                 isActive
@@ -202,6 +215,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
             
             <button
                 id="nav-item-MENU"
+                type="button"
+                data-nav="MENU"
+                data-nav-surface="mobile"
+                aria-label="Открыть меню"
                 onClick={() => {
                     soundService.playClick();
                     if (onOpenMenu) onOpenMenu();

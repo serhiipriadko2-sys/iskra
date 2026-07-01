@@ -21,18 +21,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
-          cache-dependency-path: runtime/package-lock.json
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
 
-      - name: Install runtime dependencies
+      - name: Install workspace dependencies
+        working-directory: .
         shell: bash
         run: |
           set -o pipefail
-          { node --version; npm --version; npm ci --ignore-scripts || npm install --ignore-scripts; } 2>&1 | tee runtime-install.log
+          { node --version; pnpm --version; pnpm install --frozen-lockfile; } 2>&1 | tee runtime/workspace-install.log
+
+      - name: Install legacy runtime dependencies
+        shell: bash
+        run: |
+          set -o pipefail
+          { node --version; npm --version; npm ci --ignore-scripts; } 2>&1 | tee runtime-install.log
 
       - name: Build @iskra/runtime
         shell: bash
@@ -40,40 +50,33 @@ jobs:
           set -o pipefail
           npm run build 2>&1 | tee runtime-build.log
 
-      - name: Install iskraSpace dependencies
-        working-directory: runtime/iskraSpace
-        shell: bash
-        run: |
-          set -o pipefail
-          { node --version; npm --version; npm ci || npm install; } 2>&1 | tee iskraspace-install.log
-
       - name: TypeScript typecheck
         working-directory: runtime/iskraSpace
         shell: bash
         run: |
           set -o pipefail
-          npm run typecheck 2>&1 | tee iskraspace-typecheck.log
+          pnpm typecheck 2>&1 | tee iskraspace-typecheck.log
 
       - name: Lint
         working-directory: runtime/iskraSpace
         shell: bash
         run: |
           set -o pipefail
-          npm run lint 2>&1 | tee iskraspace-lint.log
+          pnpm lint 2>&1 | tee iskraspace-lint.log
 
       - name: Run unit tests
         working-directory: runtime/iskraSpace
         shell: bash
         run: |
           set -o pipefail
-          npm run test:run 2>&1 | tee iskraspace-unit.log
+          pnpm test:run 2>&1 | tee iskraspace-unit.log
 
       - name: Build iskraSpace
         working-directory: runtime/iskraSpace
         shell: bash
         run: |
           set -o pipefail
-          npm run build 2>&1 | tee iskraspace-build.log
+          pnpm build 2>&1 | tee iskraspace-build.log
 
       - name: Upload iskraSpace diagnostics
         uses: actions/upload-artifact@v4
@@ -81,9 +84,9 @@ jobs:
         with:
           name: iskraspace-ci-diagnostics
           path: |
+            runtime/workspace-install.log
             runtime/runtime-install.log
             runtime/runtime-build.log
-            runtime/iskraSpace/iskraspace-install.log
             runtime/iskraSpace/iskraspace-typecheck.log
             runtime/iskraSpace/iskraspace-lint.log
             runtime/iskraSpace/iskraspace-unit.log
@@ -101,18 +104,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
-          cache-dependency-path: runtime/package-lock.json
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
 
-      - name: Install runtime dependencies
+      - name: Install workspace dependencies
+        working-directory: .
         shell: bash
         run: |
           set -o pipefail
-          { node --version; npm --version; npm ci --ignore-scripts || npm install --ignore-scripts; } 2>&1 | tee runtime-install-e2e.log
+          { node --version; pnpm --version; pnpm install --frozen-lockfile; } 2>&1 | tee runtime/workspace-install-e2e.log
+
+      - name: Install legacy runtime dependencies
+        shell: bash
+        run: |
+          set -o pipefail
+          { node --version; npm --version; npm ci --ignore-scripts; } 2>&1 | tee runtime-install-e2e.log
 
       - name: Build @iskra/runtime
         shell: bash
@@ -120,23 +133,16 @@ jobs:
           set -o pipefail
           npm run build 2>&1 | tee runtime-build-e2e.log
 
-      - name: Install iskraSpace dependencies
-        working-directory: runtime/iskraSpace
-        shell: bash
-        run: |
-          set -o pipefail
-          { node --version; npm --version; npm ci || npm install; } 2>&1 | tee iskraspace-install-e2e.log
-
       - name: Install Playwright browsers
         working-directory: runtime/iskraSpace
-        run: npx playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Run E2E tests
         working-directory: runtime/iskraSpace
         shell: bash
         run: |
           set -o pipefail
-          npx playwright test --project=chromium 2>&1 | tee iskraspace-e2e.log
+          pnpm exec playwright test --project=chromium 2>&1 | tee iskraspace-e2e.log
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
@@ -152,8 +158,8 @@ jobs:
         with:
           name: iskraspace-e2e-diagnostics
           path: |
+            runtime/workspace-install-e2e.log
             runtime/runtime-install-e2e.log
             runtime/runtime-build-e2e.log
-            runtime/iskraSpace/iskraspace-install-e2e.log
             runtime/iskraSpace/iskraspace-e2e.log
           retention-days: 7
