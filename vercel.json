@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "buildCommand": "cd runtime && npm ci && npm run build && cd iskraSpace && npm ci && npm run build",
+  "buildCommand": "npm --prefix runtime run build && pnpm --filter iskra-space build",
   "outputDirectory": "runtime/iskraSpace/dist",
   "framework": "vite",
-  "installCommand": "echo 'Using custom build command'",
-  "devCommand": "cd runtime/iskraSpace && npm run dev",
+  "installCommand": "corepack enable && pnpm install --frozen-lockfile && npm --prefix runtime ci",
+  "devCommand": "corepack enable && pnpm --filter iskra-space dev",
   "regions": ["iad1"],
   "env": {
     "NODE_VERSION": "20"

@@ -255,7 +255,8 @@ pnpm --dir runtime/iskraSpace audit
 - `pnpm --dir runtime/iskraSpace test:run`: 37 files passed, 1 skipped; 636 tests passed, 3 skipped.
 - `pnpm --dir runtime/iskraSpace typecheck`: 0 TypeScript errors.
 - `pnpm --dir runtime/iskraSpace build`: production build passed; no `vendor-genai` client bundle chunk.
-- `pnpm --dir runtime/iskraSpace lint`: 0 errors, 85 warnings.
+- `pnpm --filter iskra-space lint`: 0 errors, 77 warnings.
+- Chromium E2E: 27 passed with `pnpm --filter iskra-space exec playwright test --project=chromium`.
 - Full Playwright browser matrix remains a release gate; browser binaries must be installed with `pnpm exec playwright install`.
 
 ---

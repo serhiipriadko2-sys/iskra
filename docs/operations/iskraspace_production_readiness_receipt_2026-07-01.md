@@ -13,7 +13,7 @@ Package manager decision: `pnpm` is canonical for the workspace; stale `runtime/
 ## Finding / Decision
 
 - Iskra Space is not yet marked production-ready.
-- Reproducibility blocker from stale npm lockfile is closed by the pnpm-only path.
+- Reproducibility blocker from stale IskraSpace npm lockfile is closed by the pnpm workspace path; legacy `runtime/` still uses its own npm lockfile.
 - Chat and Council now route through the Supabase Edge AI gateway wrapper.
 - Browser Gemini Live is release-disabled until a server-side streaming gateway exists.
 - Offline sync reads `iskra_device_id` only as legacy queue provenance; current writes use Supabase Auth session identity.
@@ -28,19 +28,24 @@ Local toolchain:
 
 Local gates:
 
-- `pnpm install --frozen-lockfile --ignore-scripts`: passed.
-- `pnpm --dir runtime/iskraSpace typecheck`: passed.
-- `pnpm --dir runtime/iskraSpace test:run`: 37 files passed, 1 skipped; 636 tests passed, 3 skipped.
-- `pnpm --dir runtime/iskraSpace build`: passed.
-- `pnpm --dir runtime/iskraSpace lint`: 0 errors, 85 warnings.
+- `pnpm install --frozen-lockfile`: passed.
+- `npm --prefix runtime ci --ignore-scripts`: passed.
+- `npm --prefix runtime run build`: passed.
+- `npm --prefix runtime run test:coverage -- --run`: 51 files passed, 1 skipped; 872 tests passed, 3 skipped.
+- `pnpm --filter iskra-space typecheck`: passed.
+- `pnpm --filter iskra-space test:run`: 37 files passed, 1 skipped; 636 tests passed, 3 skipped.
+- `pnpm --filter iskra-space build`: passed.
+- `pnpm --filter iskra-space lint`: 0 errors, 77 warnings.
+- `pnpm --filter iskra-space exec playwright test --project=chromium`: 27 passed.
 - `pnpm --dir runtime/iskraSpace audit --json`: 0 vulnerabilities.
+- `docker build -t iskra-pr228 .`: passed.
 
 Build snapshot:
 
 - `dist/index.html`: 9.61 KB, gzip 3.47 KB.
 - `vendor-react`: 193.83 KB, gzip 60.55 KB.
 - `vendor-supabase`: 174.16 KB, gzip 45.90 KB.
-- `index`: 131.29 KB, gzip 44.77 KB.
+- `index`: 131.68 KB, gzip 44.88 KB.
 - No `vendor-genai` client bundle chunk was emitted.
 
 Supabase read-only inventory for `typcvaszcfdpkzbjzuur`:
@@ -57,21 +62,21 @@ Supabase advisor summary:
 
 ## Risk
 
-- Full Playwright browser matrix still needs a current post-change run after browser installation.
+- Full Playwright browser matrix still needs a current post-change run after browser installation; Chromium E2E is green.
 - `gemini` Edge function uses CORS `*`; public release needs explicit acceptance or origin restriction.
 - `db-proxy` and canon import/backfill functions need keep/retire/owner decision.
 - Supabase advisor warnings are not fixed in this branch because live DDL requires explicit approval.
 
 ## Next
 
-1. Run full Playwright matrix after browser binaries are installed.
+1. Run full Playwright matrix after browser binaries are installed; Chromium already passed locally.
 2. Make an explicit owner decision for `db-proxy`, `iskra-canon-import-1536`, and `iskra-canon-backfill-1536`.
 3. Prepare a migration-only Supabase advisor remediation PR for GraphQL exposure/RPC grants/RLS performance.
 4. Implement server-side streaming voice gateway before re-enabling `LiveConversation`.
 
 ## Status
 
-Pre-release hardening in progress. Local runtime gates are green; live Supabase mutations were not performed.
+Pre-release hardening in progress. Local runtime gates and Chromium E2E are green; live Supabase mutations were not performed.
 
 ## ∆DΩΛ
 

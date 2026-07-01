@@ -7,6 +7,41 @@ const addChatMessageMock = vi.hoisted(() => vi.fn());
 const addNodeMock = vi.hoisted(() => vi.fn());
 const buildConnectionsMock = vi.hoisted(() => vi.fn());
 
+const storage = new Map<string, string>();
+const nodeLocalStorage: Storage = {
+  clear: () => storage.clear(),
+  getItem: (key: string) => storage.get(key) ?? null,
+  key: (index: number) => Array.from(storage.keys())[index] ?? null,
+  removeItem: (key: string) => {
+    storage.delete(key);
+  },
+  setItem: (key: string, value: string) => {
+    storage.set(key, String(value));
+  },
+  get length() {
+    return storage.size;
+  },
+};
+
+function ensureLocalStorage(): void {
+  if (typeof globalThis.localStorage === 'undefined') {
+    Object.defineProperty(globalThis, 'localStorage', {
+      configurable: true,
+      value: nodeLocalStorage,
+    });
+  }
+
+  if (typeof window === 'undefined') {
+    Object.defineProperty(globalThis, 'window', {
+      configurable: true,
+      value: {
+        addEventListener: vi.fn(),
+        localStorage: globalThis.localStorage,
+      },
+    });
+  }
+}
+
 vi.mock('../supabaseClient', () => ({
   isSupabaseAvailable: isSupabaseAvailableMock,
   ensureSupabaseSession: ensureSupabaseSessionMock,
@@ -30,6 +65,7 @@ import { SyncService } from '../syncService';
 
 describe('SyncService identity migration boundary', () => {
   beforeEach(() => {
+    ensureLocalStorage();
     localStorage.clear();
     isSupabaseAvailableMock.mockReset().mockResolvedValue(true);
     ensureSupabaseSessionMock.mockReset().mockResolvedValue('auth-user-id');

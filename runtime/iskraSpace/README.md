@@ -58,7 +58,7 @@ pnpm --dir runtime/iskraSpace dev
 | **Components** | 42 React components |
 | **Types** | 46+ TypeScript interfaces |
 | **Tests** | 636 passed / 3 skipped via `pnpm --dir runtime/iskraSpace test:run` |
-| **Bundle** | Build passed; largest chunks: `vendor-react` 193.83 KB, `vendor-supabase` 174.16 KB, `index` 131.29 KB |
+| **Bundle** | Build passed; largest chunks: `vendor-react` 193.83 KB, `vendor-supabase` 174.16 KB, `index` 131.68 KB |
 
 ### Tech Stack
 

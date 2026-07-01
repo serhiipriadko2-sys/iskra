@@ -1,51 +1,26 @@
 # ISKRA Production Dockerfile
 # Multi-stage build for optimal size
 
-# Stage 1: Build @iskra/runtime
-FROM node:20-alpine AS runtime-builder
+# Stage 1: Build workspace assets with the canonical pnpm lockfile.
+FROM node:22-alpine AS iskraspace-builder
 
 WORKDIR /app
 
-# Copy runtime package files
+RUN corepack enable && corepack prepare pnpm@10.32.1 --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY runtime/package*.json ./runtime/
 RUN cd runtime && npm ci
 
-# Copy runtime source
-COPY runtime/src ./runtime/src
+COPY packages ./packages
+COPY runtime ./runtime
 COPY ledger/baselines.json ./ledger/baselines.json
-COPY runtime/tsconfig.json ./runtime/
-COPY runtime/vitest.config.ts ./runtime/
-COPY runtime/eslint.config.js ./runtime/
-COPY runtime/.prettierrc ./runtime/
 
-# Build runtime
+RUN pnpm install --frozen-lockfile
 RUN cd runtime && npm run build
+RUN pnpm --filter iskra-space build
 
-# Stage 2: Build iskraSpace
-FROM node:20-alpine AS iskraspace-builder
-
-WORKDIR /app
-
-# Copy built runtime from previous stage
-COPY --from=runtime-builder /app/runtime ./runtime
-COPY --from=runtime-builder /app/ledger ./ledger
-
-# Copy workspace sources used by iskraSpace Vite aliases and local file deps
-COPY package.json ./package.json
-COPY packages/core ./packages/core
-COPY packages/math ./packages/math
-
-# Copy iskraSpace package files
-COPY runtime/iskraSpace/package*.json ./runtime/iskraSpace/
-RUN cd runtime/iskraSpace && npm ci
-
-# Copy iskraSpace source
-COPY runtime/iskraSpace ./runtime/iskraSpace
-
-# Build iskraSpace
-RUN cd runtime/iskraSpace && npm run build
-
-# Stage 3: Production image with nginx
+# Stage 2: Production image with nginx
 FROM nginx:alpine
 
 # Copy built static files

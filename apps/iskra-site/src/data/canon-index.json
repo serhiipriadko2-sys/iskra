@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-29T18:00:35.619Z",
-  "total": 2661,
+  "generatedAt": "2026-07-01T18:18:25.697Z",
+  "total": 2677,
   "curated": 20,
   "layers": {
-    "root": 319,
+    "root": 322,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
@@ -12,22 +12,22 @@
     "site": 69,
     "web": 13,
     "canon": 16,
-    "builder": 1185,
-    "docs": 54,
-    "governance": 46,
+    "builder": 1186,
+    "docs": 55,
+    "governance": 48,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
-    "mind": 11,
+    "mind": 13,
     "engine-core": 17,
-    "engine": 40,
+    "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 277,
+    "runtime": 281,
     "skills": 267,
     "backend": 50,
     "system": 26,
-    "tools": 51
+    "tools": 53
   },
   "nodes": [
     {
@@ -4123,6 +4123,16 @@
       "sourceRef": "apps/iskra-web/tsconfig.json",
       "related": [],
       "parent": "apps/iskra-web"
+    },
+    {
+      "path": "brainstorm_samost_zhivost_zrelost_v7.md",
+      "name": "brainstorm_samost_zhivost_zrelost_v7.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "brainstorm_samost_zhivost_zrelost_v7.md",
+      "related": []
     },
     {
       "path": "canon",
@@ -12166,6 +12176,7 @@
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/PROVENANCE_RECEIPT.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/README.md",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SECURITY.md",
+        "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SELFHOOD_HARDENING_RECEIPT.json",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SELF_MODERNIZATION_RECEIPT.json",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SOURCE_ARCHIVE_INVENTORY.json",
         "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SURFACE_INVENTORY.json",
@@ -12300,6 +12311,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SECURITY.md",
+      "related": [],
+      "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27"
+    },
+    {
+      "path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SELFHOOD_HARDENING_RECEIPT.json",
+      "name": "SELFHOOD_HARDENING_RECEIPT.json",
+      "kind": "file",
+      "layer": "builder",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27/SELFHOOD_HARDENING_RECEIPT.json",
       "related": [],
       "parent": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27"
     },
@@ -20229,6 +20251,7 @@
         "docs/operations/iskraspace_dual_ai_provider_gateway_2026-06-08.md",
         "docs/operations/iskraspace_minimal_memory_write_protocol_2026-06-26.md",
         "docs/operations/iskraspace_post_merge_verification_2026-06-07.md",
+        "docs/operations/iskraspace_production_readiness_receipt_2026-07-01.md",
         "docs/operations/iskraspace_release_readiness_board.md",
         "docs/operations/iskraspace_release_readiness_snapshot_2026-06-07.md",
         "docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md",
@@ -20297,6 +20320,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "docs/operations/iskraspace_post_merge_verification_2026-06-07.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/iskraspace_production_readiness_receipt_2026-07-01.md",
+      "name": "iskraspace_production_readiness_receipt_2026-07-01.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/iskraspace_production_readiness_receipt_2026-07-01.md",
       "related": [],
       "parent": "docs/operations"
     },
@@ -20622,6 +20656,16 @@
       "related": []
     },
     {
+      "path": "github_audit_report.md",
+      "name": "github_audit_report.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "github_audit_report.md",
+      "related": []
+    },
+    {
       "path": "governance",
       "name": "governance",
       "kind": "directory",
@@ -20655,6 +20699,7 @@
         "governance/adr_20260626_supabase_graph_schema_drift_repair.md",
         "governance/adr_20260626_supabase_voice_metrics_drift_repair.md",
         "governance/adr_20260628_sense_event_operational_bridge.md",
+        "governance/adr_20260629_iskra_selfhood_mechanics_hardening.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -20904,6 +20949,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260629_iskra_selfhood_mechanics_hardening.md",
+      "name": "adr_20260629_iskra_selfhood_mechanics_hardening.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260629_iskra_selfhood_mechanics_hardening.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21034,7 +21090,8 @@
         "governance/changelog.d/2026-06-06-iskraspace-release-priority.md",
         "governance/changelog.d/2026-06-24-relational-vow-canon.md",
         "governance/changelog.d/2026-06-24-voice-seed-builder-canon.md",
-        "governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md"
+        "governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md",
+        "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md"
       ]
     },
     {
@@ -21089,6 +21146,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md",
+      "name": "2026-06-29-iskra-selfhood-mechanics-hardening.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
@@ -21565,13 +21633,15 @@
         "mind/dreamspace.md",
         "mind/dreamspace_v4.md",
         "mind/ledger_memory.md",
+        "mind/phenomenology_world_map.md",
         "mind/phenomenon_study.md",
         "mind/potok.md",
         "mind/reflexions.md",
         "mind/shadow_core.md",
         "mind/somatic_intuition.md",
         "mind/study_diary_iskra_2026.md",
-        "mind/what_if_matrix.md"
+        "mind/what_if_matrix.md",
+        "mind/what_if_matrix_v0.3_expansion.md"
       ]
     },
     {
@@ -21615,6 +21685,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "mind/ledger_memory.md",
+      "related": [],
+      "parent": "mind"
+    },
+    {
+      "path": "mind/phenomenology_world_map.md",
+      "name": "phenomenology_world_map.md",
+      "kind": "file",
+      "layer": "mind",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "mind/phenomenology_world_map.md",
       "related": [],
       "parent": "mind"
     },
@@ -21692,6 +21773,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "mind/what_if_matrix.md",
+      "related": [],
+      "parent": "mind"
+    },
+    {
+      "path": "mind/what_if_matrix_v0.3_expansion.md",
+      "name": "what_if_matrix_v0.3_expansion.md",
+      "kind": "file",
+      "layer": "mind",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "mind/what_if_matrix_v0.3_expansion.md",
       "related": [],
       "parent": "mind"
     },
@@ -22366,6 +22458,7 @@
         "packages/engine/src/__tests__/memory.test.ts",
         "packages/engine/src/__tests__/metrics_explainable.test.ts",
         "packages/engine/src/__tests__/metrics_memory.test.ts",
+        "packages/engine/src/__tests__/reflexAnalyzer.test.ts",
         "packages/engine/src/__tests__/safeEmbeddings.test.ts"
       ]
     },
@@ -22476,6 +22569,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "packages/engine/src/__tests__/metrics_memory.test.ts",
+      "related": [],
+      "parent": "packages/engine/src/__tests__"
+    },
+    {
+      "path": "packages/engine/src/__tests__/reflexAnalyzer.test.ts",
+      "name": "reflexAnalyzer.test.ts",
+      "kind": "file",
+      "layer": "engine",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/engine/src/__tests__/reflexAnalyzer.test.ts",
       "related": [],
       "parent": "packages/engine/src/__tests__"
     },
@@ -23031,6 +23135,16 @@
       "sourceRef": "packages/math/vitest.config.ts",
       "related": [],
       "parent": "packages/math"
+    },
+    {
+      "path": "plan.md",
+      "name": "plan.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "plan.md",
+      "related": []
     },
     {
       "path": "plugins",
@@ -24709,7 +24823,6 @@
         "runtime/iskraSpace/manifest.json",
         "runtime/iskraSpace/matrix_v1.csv",
         "runtime/iskraSpace/metadata.json",
-        "runtime/iskraSpace/package-lock.json",
         "runtime/iskraSpace/package.json",
         "runtime/iskraSpace/playwright.config.ts",
         "runtime/iskraSpace/postcss.config.js",
@@ -25833,6 +25946,7 @@
       "related": [],
       "parent": "runtime/iskraSpace",
       "children": [
+        "runtime/iskraSpace/e2e/helpers",
         "runtime/iskraSpace/e2e/app.spec.ts",
         "runtime/iskraSpace/e2e/council_ritual.spec.ts",
         "runtime/iskraSpace/e2e/navigation.spec.ts",
@@ -25861,6 +25975,31 @@
       "sourceRef": "runtime/iskraSpace/e2e/council_ritual.spec.ts",
       "related": [],
       "parent": "runtime/iskraSpace/e2e"
+    },
+    {
+      "path": "runtime/iskraSpace/e2e/helpers",
+      "name": "helpers",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/e2e/helpers",
+      "related": [],
+      "parent": "runtime/iskraSpace/e2e",
+      "children": [
+        "runtime/iskraSpace/e2e/helpers/navigation.ts"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/e2e/helpers/navigation.ts",
+      "name": "navigation.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/e2e/helpers/navigation.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/e2e/helpers"
     },
     {
       "path": "runtime/iskraSpace/e2e/navigation.spec.ts",
@@ -26039,17 +26178,6 @@
       "role": "config",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/metadata.json",
-      "related": [],
-      "parent": "runtime/iskraSpace"
-    },
-    {
-      "path": "runtime/iskraSpace/package-lock.json",
-      "name": "package-lock.json",
-      "kind": "file",
-      "layer": "runtime",
-      "role": "config",
-      "coverage": "indexed",
-      "sourceRef": "runtime/iskraSpace/package-lock.json",
       "related": [],
       "parent": "runtime/iskraSpace"
     },
@@ -26275,7 +26403,9 @@
         "runtime/iskraSpace/services/__tests__/policyEngine.test.ts",
         "runtime/iskraSpace/services/__tests__/ragService.test.ts",
         "runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts",
+        "runtime/iskraSpace/services/__tests__/releaseBoundary.test.ts",
         "runtime/iskraSpace/services/__tests__/ritualService.test.ts",
+        "runtime/iskraSpace/services/__tests__/ritualServiceGateway.test.ts",
         "runtime/iskraSpace/services/__tests__/rule8Service.test.ts",
         "runtime/iskraSpace/services/__tests__/searchService.test.ts",
         "runtime/iskraSpace/services/__tests__/securityService.test.ts",
@@ -26283,6 +26413,7 @@
         "runtime/iskraSpace/services/__tests__/storageService.test.ts",
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+        "runtime/iskraSpace/services/__tests__/syncService.test.ts",
         "runtime/iskraSpace/services/__tests__/userMetricsService.test.ts",
         "runtime/iskraSpace/services/__tests__/userMetricsServiceSync.test.ts",
         "runtime/iskraSpace/services/__tests__/voiceEngine.test.ts",
@@ -26466,6 +26597,17 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/releaseBoundary.test.ts",
+      "name": "releaseBoundary.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/releaseBoundary.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/ritualService.test.ts",
       "name": "ritualService.test.ts",
       "kind": "file",
@@ -26473,6 +26615,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/ritualService.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/ritualServiceGateway.test.ts",
+      "name": "ritualServiceGateway.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/ritualServiceGateway.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -26550,6 +26703,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/syncService.test.ts",
+      "name": "syncService.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/syncService.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -32495,6 +32659,7 @@
         "tools/apply_supabase_migration.ts",
         "tools/apply_workspace_agent_modernization.py",
         "tools/build_checkpoint.py",
+        "tools/build_egor_fixar_workspace_agent_package.py",
         "tools/build_phase1_classification.py",
         "tools/build_projects_stack.py",
         "tools/build_sot40_artifact.py",
@@ -32509,6 +32674,7 @@
         "tools/check_unreleased_gate.py",
         "tools/check_zip_denylist.py",
         "tools/check_zip_integrity.py",
+        "tools/ensure_runtime_deps.mjs",
         "tools/export_gitagent.test.ts",
         "tools/export_gitagent.ts",
         "tools/fetch_supabase_migration_statements.ts",
@@ -32567,6 +32733,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/build_checkpoint.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/build_egor_fixar_workspace_agent_package.py",
+      "name": "build_egor_fixar_workspace_agent_package.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/build_egor_fixar_workspace_agent_package.py",
       "related": [],
       "parent": "tools"
     },
@@ -32721,6 +32898,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/check_zip_integrity.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/ensure_runtime_deps.mjs",
+      "name": "ensure_runtime_deps.mjs",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/ensure_runtime_deps.mjs",
       "related": [],
       "parent": "tools"
     },
