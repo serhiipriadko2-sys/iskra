@@ -127,50 +127,41 @@ export function calculateVoiceScores(
 }
 
 /**
- * Select active voice based on metrics
- * Implements trigger priority from core/voices.md
+ * Select active voice based on metrics.
+ * Supertriggers run before normal resonance so repair/audit/container needs are
+ * not preempted by general synthesis.
  */
 export function selectVoice(metrics: IskraMetrics): VoiceActivation {
   const scores = calculateVoiceScores(metrics);
 
-  // Check trigger conditions in priority order
-  // Highest priority: ISKRA (synthesis) when rhythm and trust are high
-  if (metrics.rhythm > 60 && metrics.trust > 0.7) {
-    return { primary: 'ISKRA', scores, reason: 'rhythm > 60 && trust > 0.7' };
+  // Source drift and integrity concerns must be audited before synthesis.
+  if (metrics.drift >= 0.2) {
+    return { primary: 'ISKRIV', scores, reason: 'drift >= 0.2' };
   }
 
-  // Prioritise MAKI over KAIN when trust is high.  According to the canon,
-  // a compassionate integration (Maki) should override a strict truth (Kain)
-  // if the user’s trust is already high.  Place this check before KAIN.
+  // Prioritise MAKI over KAIN and ISKRA when trust is high and pain is present.
+  // In this state MAKI holds the repair wrapper, while KAIN supplies the truth payload.
   if (metrics.trust > 0.8 && metrics.pain > 0.3) {
     return {
       primary: 'MAKI',
-      secondary: 'KAIN', // KAIN обязан выдать Truth-Spike
+      secondary: 'KAIN',
       scores,
       reason: 'trust > 0.8 && pain > 0.3 (Maki wrapper, Kain payload)',
     };
   }
 
-  // Standard KAIN activation when pain is above threshold
+  // Standard KAIN activation when pain is above threshold without high-trust repair.
   if (metrics.pain >= 0.3) {
     return { primary: 'KAIN', scores, reason: 'pain >= 0.3' };
   }
 
-  // Drift triggers audit voice ISKRIV
-  if (metrics.drift >= 0.2) {
-    return { primary: 'ISKRIV', scores, reason: 'drift >= 0.2' };
-  }
-
-  // Chaos triggers HUYNDUN (chaos and renewal)
-  if (metrics.chaos >= 0.4) {
-    // Use canonical name HUYNDUN for the chaos voice. The deprecated alias
-    // 'HUYNDUN' is still scored but not returned as primary.
-    return { primary: 'HUYNDUN', scores, reason: 'chaos >= 0.4' };
-  }
-
-  // Silence triggers ANHANTRA
-  if (metrics.silence_mass > 0.5) {
-    return { primary: 'ANHANTRA', scores, reason: 'silence_mass > 0.5' };
+  // Low trust or heavy silence asks for containment before lighter voices.
+  if (metrics.trust < 0.35 || metrics.silence_mass > 0.5) {
+    return {
+      primary: 'ANHANTRA',
+      scores,
+      reason: 'trust < 0.35 || silence_mass > 0.5',
+    };
   }
 
   if (scores.SIBYL > 0) {
@@ -179,6 +170,18 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
       scores,
       reason: 'foresight >= 0.5 or echo-pattern / mirror-sync activation',
     };
+  }
+
+  // Chaos triggers HUYNDUN (chaos and renewal).
+  if (metrics.chaos >= 0.4) {
+    // Runtime returns the canonical name HUYNDUN. Historical spellings such as
+    // Hundun/Huyndun may appear in canon prose but should normalize at the boundary.
+    return { primary: 'HUYNDUN', scores, reason: 'chaos >= 0.4' };
+  }
+
+  // ISKRA synthesis runs after repair/audit/container/strategy supertriggers are clear.
+  if (metrics.rhythm > 60 && metrics.trust > 0.7) {
+    return { primary: 'ISKRA', scores, reason: 'rhythm > 60 && trust > 0.7' };
   }
 
   // Lack of clarity triggers SAM (structure)
@@ -320,7 +323,7 @@ export function selectVoiceX(metrics: IskraMetrics): Explainable<VoiceActivation
     },
     {
       label: 'apply_priority_triggers',
-      formula: 'priority checks → fallback max score',
+      formula: 'supertrigger priority checks → normal resonance → fallback max score',
       inputs: { reason: value.reason },
       output: `${value.primary}${value.secondary ? ' + ' + value.secondary : ''}`,
       refs,
@@ -334,4 +337,3 @@ export function selectVoiceX(metrics: IskraMetrics): Explainable<VoiceActivation
 
   return { value, how, contracts_checked, evidence: refs };
 }
-
