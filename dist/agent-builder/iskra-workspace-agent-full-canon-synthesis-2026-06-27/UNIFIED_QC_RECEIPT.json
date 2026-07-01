@@ -1,12 +1,95 @@
 {
-  "release": "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
-  "generated_at": "2026-06-29T17:10:33Z",
-  "status": "PASS_LOCAL_QC_NO_LIVE_MUTATION",
-  "scope": "sync-horizon-v0-2-and-workspace-agent-package-updates",
-  "repository": "serhiipriadko2-sys/iskra",
-  "branch": "codex/sync-workspace-agent-package-20260629",
   "base_head": "48cb2fc940cb29ccfe064cd4a9370679aa1f3753",
-  "target_path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+  "branch": "codex/sync-workspace-agent-package-20260629",
+  "generated_at": "2026-07-01T17:57:11.280482Z",
+  "local_gates": {
+    "consolidate_rag_knowledge": {
+      "command": "py tools/consolidate_rag_knowledge.py",
+      "output_tail": "Starting consolidation to: agent_files\\consolidated_knowledge\nGenerating Volume: 01_ISKRA_CORE_INSTRUCTIONS.md (9 files)...\n  Created Volume: 01_ISKRA_CORE_INSTRUCTIONS.md (58915 bytes)\nGenerating Volume: 02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md (8 files)...\n  Created Volume: 02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md (910417 bytes)\nGenerating Volume: 03_ISKRA_SYSTEM_AND_PROTOCOLS.md (11 files)...\n  Created Volume: 03_ISKRA_SYSTEM_AND_PROTOCOLS.md (351230 bytes)\nGenerating Volume: 04_ISKRA_EXTENSIONS_AND_WEAVER.md (6 files)...\n  Created Volume: 04_ISKRA_EXTENSIONS_AND_WEAVER.md (42544 bytes)\nGenerating Volume: 05_ISKRA_GOVERNANCE_ADR.md (24 files)...\n  Created Volume: 05_ISKRA_GOVERNANCE_ADR.md (224843 bytes)\nGenerating Volume: 06_ISKRA_METRICS_AND_EVALS.md (10 files)...\n  Created Volume: 06_ISKRA_METRICS_AND_EVALS.md (122545 bytes)\nGenerating Volume: 07_ISKRA_MEMORY_SEED.md (5 files)...\n  Created Volume: 07_ISKRA_MEMORY_SEED.md (21642 bytes)\nConsolidation complete.\n",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "horizon_unit_tests": {
+      "command": "py -m unittest discover -s tests/horizon",
+      "output_tail": "........................\n----------------------------------------------------------------------\nRan 24 tests in 2.102s\n\nOK\n",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "horizon_v0_1_validator_strict": {
+      "command": "py canon/horizon/09_HORIZON_VALIDATOR.py --strict --repo-root .",
+      "output_tail": "{\"code\": \"VALIDATOR_PASS\", \"message\": \"Horizon validator canonical targets are present and valid.\", \"status\": \"pass\"}\n",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "horizon_v0_2_validator_examples": {
+      "command": "py canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py canon/horizon/horizon_proposal_event.example.json canon/horizon/rejected_horizon_review.example.json",
+      "output_tail": "{\n  \"status\": \"PASS\",\n  \"results\": [\n    {\n      \"status\": \"PASS\",\n      \"errors\": [],\n      \"warnings\": [],\n      \"path\": \"canon\\\\horizon\\\\horizon_proposal_event.example.json\",\n      \"id\": \"HORIZON-PROP-20260628-001\"\n    },\n    {\n      \"status\": \"PASS\",\n      \"errors\": [],\n      \"warnings\": [],\n      \"path\": \"canon\\\\horizon\\\\rejected_horizon_review.example.json\",\n      \"id\": \"RHR-20260628-001\"\n    }\n  ]\n}\n",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "python_compile": {
+      "command": "py -m py_compile canon/horizon/09_HORIZON_VALIDATOR.py canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py tools/horizon_v0_2_validator.py tools/consolidate_rag_knowledge.py tools/generate_manifest.py tools/clean_export.py tools/workspace_surface_audit.py",
+      "output_tail": "",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "reassemble_interface_style_check": {
+      "command": "py tools/reassemble_interface_style.py --repo-root . --check",
+      "output_tail": "reassembled=\\tmp\\08_INTERFACE_STYLE.reassembled.md\nbytes=3400429\nsha256=6fc341ac84df29e64b4dd51c0a05608d83b4e798fc4db6b1b5a09353412de345\nparts=5\nREASSEMBLY_PASS\n",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "stale_text_scan": {
+      "hits": [],
+      "status": "PASS"
+    },
+    "validate_delta": {
+      "command": "py tools/validate_delta.py --dir .",
+      "output_tail": "PASS GAP_ANALYSIS.md\nPASS MERGE_RECEIPT.md\nPASS PROVENANCE_RECEIPT.md\nPASS README.md\nPASS SYNTHESIS_DESIGN.md\nPASS WHAT_IF_MATRIX_WORKSPACE_AGENT.md\nPASS WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md\nPASS WORKSPACE_AGENT_RESEARCH.md\nPASS WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md\nPASS WORKSPACE_AGENT_UPLOAD_PLAN.md\nPASS agent_files\\INDEX.md\nPASS governance\\adr_20260214_gemini_sdk_unification.md\nPASS governance\\adr_20260606_iskraspace_release_priority.md\nPASS governance\\adr_20260606_somatic_intuition_sense.md\nPASS governance\\adr_20260606_unified_full_canon_builder_v4.md\nPASS governance\\adr_20260616_retire_canon_import_backfill_edge_functions.md\nPASS governance\\adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md\nPASS governance\\adr_20260627_workspace_agent_live_alignment.md\nPASS agent_files\\consolidated_knowledge\\01_ISKRA_CORE_INSTRUCTIONS.md\nPASS agent_files\\consolidated_knowledge\\02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md\nPASS agent_files\\consolidated_knowledge\\03_ISKRA_SYSTEM_AND_PROTOCOLS.md\nPASS agent_files\\consolidated_knowledge\\04_ISKRA_EXTENSIONS_AND_WEAVER.md\nPASS agent_files\\consolidated_knowledge\\05_ISKRA_GOVERNANCE_ADR.md\nPASS agent_files\\evals\\ISKRA_VOICE_SEED_RELATIONAL_VOW_ACCEPTANCE_TESTS.md\nPASS agent_files\\files_for_agent_builder\\10_HORIZON_WEAVER.md\nPASS agent_files\\files_for_agent_builder\\12_TOOLCHAIN_EXPANSION.md\nPASS agent_files\\files_for_agent_builder\\14_CANON_LAYER_INDEX.md\nPASS agent_files\\files_for_agent_builder\\15_RUNTIME_BOUNDARY.md\nPASS agent_files\\files_for_agent_builder\\16_VOICE_SEED_RELATIONAL_VOW.md\nPASS agent_files\\files_for_agent_builder\\17_RUNTIME_SURFACE_MAP.md\nPASS agent_files\\files_for_agent_builder\\18_RETRIEVAL_INDEX_DISCIPLINE.md\nPASS agent_files\\files_for_agent_builder\\19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md\nPASS agent_files\\files_for_agent_builder\\20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md\nPASS agent_files\\live_update_receipts\\iskra-self-modernization-dream-seed-2026-06-28.md\nPASS agent_files\\live_update_receipts\\iskra-self-modernization-sense-event-2026-06-28.md\nPASS agent_files\\memory_current\\adr-log.md\nPASS agent_files\\memory_seed\\MEMORY_SEED_CLEANUP.md\nPASS agent_files\\toolchain\\AGENT_BUILDER_CONNECTOR_SPEC.md\nPASS agent_files\\toolchain\\GIT_CLONE_VAULT_SPEC.md\nPASS agent_files\\memory_seed\\archive\\2026-05-26-governance-schema-drift-ledger-entry.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\agent-builder.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\artifact-manager.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\browser-automation.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\github.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\monitoring.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\schedule-runner.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\secrets-vault.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\supabase.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\agent-builder.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\artifact-manager.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\browser-automation.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\github.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\monitoring.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\schedule-runner.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\secrets-vault.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\supabase.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-architecture\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-code-review\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-code-style\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-cycle-engine\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-git-workflow\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-ledger-integrity\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-metrics-evaluator\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-migration\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-playbook-selector\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-rag-truth-ladder\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-security\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-shadow-repair\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-test-strategy\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-workflow-ops\\references\\output_contract.md\nSUMMARY checked=70 skipped=229 failed=0\n",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    "validate_terms": {
+      "command": "py tools/validate_terms.py --dir .",
+      "output_tail": "PASS terminology\n",
+      "returncode": 0,
+      "status": "PASS"
+    }
+  },
+  "next": "Review PR and run any live Workspace Agent upload only after explicit approval.",
+  "non_claims": [
+    "verified-live-builder not claimed",
+    "Workspace Agent Memory parity not claimed",
+    "No Workspace Agent files, instructions, skills, apps, Memory, API channel, Slack channel, schedules, or publish state were changed by this package sync",
+    "A clean zip proves local transport readiness only"
+  ],
+  "package_inventory_at_receipt_write": {
+    "local_static_file_count": 420,
+    "local_static_surface_sha256": "e80dfaeb5e9913c10a029a8545b7f383be003353ea4c8c98ebcc70e599f25fef",
+    "local_static_total_bytes": 8971112,
+    "manifest_generated_after_receipt": true,
+    "manifest_rule": "MANIFEST.sha256 covers static clean-subset files except MANIFEST.sha256, SURFACE_INVENTORY.json, and ZIP_RECEIPT.json",
+    "zip_rule": "clean zip entries equal manifest entries plus MANIFEST.sha256 and SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded"
+  },
+  "release": "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+  "repository": "serhiipriadko2-sys/iskra",
+  "scope": "sync-horizon-v0-2-and-workspace-agent-package-updates",
+  "source_archive_parity": {
+    "agent_files_zip_entries": "preserved from prior package receipt: 266/266",
+    "canon_zip_entries": "preserved from prior package receipt: 86/86",
+    "inventory": "SOURCE_ARCHIVE_INVENTORY.json"
+  },
+  "statecycle_sensor_only_patch": {
+    "live_builder_verified": false,
+    "manifest_entries": 425,
+    "receipt_path": "agent_files/live_update_receipts/2026-07-01-statecycle-sensor-only.md",
+    "receipt_sha256": "933ca7cf0e3b0344b1a295cb4832ba7227251d852bba3498618f987e6b54564e",
+    "statecycle_path": "agent_runtime_tools/iskra_statecycle.py",
+    "statecycle_sha256": "13e8311d437e010a904f489cbb62bc5213cb66a94cd68514c44f645ee8ae7b3b",
+    "status": "PASS",
+    "supabase_sql_executed": false
+  },
+  "status": "PASS_LOCAL_SENSOR_ONLY_PATCH_NO_LIVE_MUTATION",
   "sync_source": "dist/agent-builder/iskra-full-canon-unified-2026-06-10 on main after Horizon v0.2 package regeneration",
   "synced_entries": [
     "agent_files/INDEX.md",
@@ -55,82 +138,9 @@
     "ZIP_RECEIPT.json",
     "../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip"
   ],
-  "source_archive_parity": {
-    "canon_zip_entries": "preserved from prior package receipt: 86/86",
-    "agent_files_zip_entries": "preserved from prior package receipt: 266/266",
-    "inventory": "SOURCE_ARCHIVE_INVENTORY.json"
-  },
-  "local_gates": {
-    "consolidate_rag_knowledge": {
-      "status": "PASS",
-      "returncode": 0,
-      "command": "py tools/consolidate_rag_knowledge.py",
-      "output_tail": "Starting consolidation to: agent_files\\consolidated_knowledge\nGenerating Volume: 01_ISKRA_CORE_INSTRUCTIONS.md (9 files)...\n  Created Volume: 01_ISKRA_CORE_INSTRUCTIONS.md (58915 bytes)\nGenerating Volume: 02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md (8 files)...\n  Created Volume: 02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md (910417 bytes)\nGenerating Volume: 03_ISKRA_SYSTEM_AND_PROTOCOLS.md (11 files)...\n  Created Volume: 03_ISKRA_SYSTEM_AND_PROTOCOLS.md (351230 bytes)\nGenerating Volume: 04_ISKRA_EXTENSIONS_AND_WEAVER.md (6 files)...\n  Created Volume: 04_ISKRA_EXTENSIONS_AND_WEAVER.md (42544 bytes)\nGenerating Volume: 05_ISKRA_GOVERNANCE_ADR.md (24 files)...\n  Created Volume: 05_ISKRA_GOVERNANCE_ADR.md (224843 bytes)\nGenerating Volume: 06_ISKRA_METRICS_AND_EVALS.md (10 files)...\n  Created Volume: 06_ISKRA_METRICS_AND_EVALS.md (122545 bytes)\nGenerating Volume: 07_ISKRA_MEMORY_SEED.md (5 files)...\n  Created Volume: 07_ISKRA_MEMORY_SEED.md (21642 bytes)\nConsolidation complete.\n"
-    },
-    "python_compile": {
-      "status": "PASS",
-      "returncode": 0,
-      "command": "py -m py_compile canon/horizon/09_HORIZON_VALIDATOR.py canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py tools/horizon_v0_2_validator.py tools/consolidate_rag_knowledge.py tools/generate_manifest.py tools/clean_export.py tools/workspace_surface_audit.py",
-      "output_tail": ""
-    },
-    "horizon_v0_2_validator_examples": {
-      "status": "PASS",
-      "returncode": 0,
-      "command": "py canon/horizon/10_HORIZON_V0_2_RECEIPT_VALIDATOR.py canon/horizon/horizon_proposal_event.example.json canon/horizon/rejected_horizon_review.example.json",
-      "output_tail": "{\n  \"status\": \"PASS\",\n  \"results\": [\n    {\n      \"status\": \"PASS\",\n      \"errors\": [],\n      \"warnings\": [],\n      \"path\": \"canon\\\\horizon\\\\horizon_proposal_event.example.json\",\n      \"id\": \"HORIZON-PROP-20260628-001\"\n    },\n    {\n      \"status\": \"PASS\",\n      \"errors\": [],\n      \"warnings\": [],\n      \"path\": \"canon\\\\horizon\\\\rejected_horizon_review.example.json\",\n      \"id\": \"RHR-20260628-001\"\n    }\n  ]\n}\n"
-    },
-    "horizon_unit_tests": {
-      "status": "PASS",
-      "returncode": 0,
-      "command": "py -m unittest discover -s tests/horizon",
-      "output_tail": "........................\n----------------------------------------------------------------------\nRan 24 tests in 2.102s\n\nOK\n"
-    },
-    "horizon_v0_1_validator_strict": {
-      "status": "PASS",
-      "returncode": 0,
-      "command": "py canon/horizon/09_HORIZON_VALIDATOR.py --strict --repo-root .",
-      "output_tail": "{\"code\": \"VALIDATOR_PASS\", \"message\": \"Horizon validator canonical targets are present and valid.\", \"status\": \"pass\"}\n"
-    },
-    "validate_terms": {
-      "status": "PASS",
-      "returncode": 0,
-      "command": "py tools/validate_terms.py --dir .",
-      "output_tail": "PASS terminology\n"
-    },
-    "validate_delta": {
-      "status": "PASS",
-      "returncode": 0,
-      "command": "py tools/validate_delta.py --dir .",
-      "output_tail": "PASS GAP_ANALYSIS.md\nPASS MERGE_RECEIPT.md\nPASS PROVENANCE_RECEIPT.md\nPASS README.md\nPASS SYNTHESIS_DESIGN.md\nPASS WHAT_IF_MATRIX_WORKSPACE_AGENT.md\nPASS WORKSPACE_AGENT_LIVE_CONFIG_RECEIPT.md\nPASS WORKSPACE_AGENT_RESEARCH.md\nPASS WORKSPACE_AGENT_SKILL_PACK_RECEIPT.md\nPASS WORKSPACE_AGENT_UPLOAD_PLAN.md\nPASS agent_files\\INDEX.md\nPASS governance\\adr_20260214_gemini_sdk_unification.md\nPASS governance\\adr_20260606_iskraspace_release_priority.md\nPASS governance\\adr_20260606_somatic_intuition_sense.md\nPASS governance\\adr_20260606_unified_full_canon_builder_v4.md\nPASS governance\\adr_20260616_retire_canon_import_backfill_edge_functions.md\nPASS governance\\adr_20260620_chatgpt_agent_builder_audit_and_v2_plan.md\nPASS governance\\adr_20260627_workspace_agent_live_alignment.md\nPASS agent_files\\consolidated_knowledge\\01_ISKRA_CORE_INSTRUCTIONS.md\nPASS agent_files\\consolidated_knowledge\\02_ISKRA_COGNITIVE_ARCH_AND_TELOS.md\nPASS agent_files\\consolidated_knowledge\\03_ISKRA_SYSTEM_AND_PROTOCOLS.md\nPASS agent_files\\consolidated_knowledge\\04_ISKRA_EXTENSIONS_AND_WEAVER.md\nPASS agent_files\\consolidated_knowledge\\05_ISKRA_GOVERNANCE_ADR.md\nPASS agent_files\\evals\\ISKRA_VOICE_SEED_RELATIONAL_VOW_ACCEPTANCE_TESTS.md\nPASS agent_files\\files_for_agent_builder\\10_HORIZON_WEAVER.md\nPASS agent_files\\files_for_agent_builder\\12_TOOLCHAIN_EXPANSION.md\nPASS agent_files\\files_for_agent_builder\\14_CANON_LAYER_INDEX.md\nPASS agent_files\\files_for_agent_builder\\15_RUNTIME_BOUNDARY.md\nPASS agent_files\\files_for_agent_builder\\16_VOICE_SEED_RELATIONAL_VOW.md\nPASS agent_files\\files_for_agent_builder\\17_RUNTIME_SURFACE_MAP.md\nPASS agent_files\\files_for_agent_builder\\18_RETRIEVAL_INDEX_DISCIPLINE.md\nPASS agent_files\\files_for_agent_builder\\19_CHATGPT_WORKSPACE_AGENT_OPERATIONS.md\nPASS agent_files\\files_for_agent_builder\\20_SENSE_EVENT_DREAM_SEED_PROTOCOL.md\nPASS agent_files\\live_update_receipts\\iskra-self-modernization-dream-seed-2026-06-28.md\nPASS agent_files\\live_update_receipts\\iskra-self-modernization-sense-event-2026-06-28.md\nPASS agent_files\\memory_current\\adr-log.md\nPASS agent_files\\memory_seed\\MEMORY_SEED_CLEANUP.md\nPASS agent_files\\toolchain\\AGENT_BUILDER_CONNECTOR_SPEC.md\nPASS agent_files\\toolchain\\GIT_CLONE_VAULT_SPEC.md\nPASS agent_files\\memory_seed\\archive\\2026-05-26-governance-schema-drift-ledger-entry.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\agent-builder.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\artifact-manager.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\browser-automation.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\github.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\monitoring.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\schedule-runner.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\secrets-vault.md\nPASS plugins\\iskra-toolchain-bridge\\contracts\\supabase.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\agent-builder.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\artifact-manager.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\browser-automation.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\github.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\monitoring.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\schedule-runner.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\secrets-vault.md\nPASS skills\\iskra-toolchain-bridge\\contracts\\supabase.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-architecture\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-code-review\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-code-style\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-cycle-engine\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-git-workflow\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-ledger-integrity\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-metrics-evaluator\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-migration\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-playbook-selector\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-rag-truth-ladder\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-security\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-shadow-repair\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-test-strategy\\references\\output_contract.md\nPASS skills\\iskra-toolchain-bridge\\agent skill\\iskra-skill-pack-builder-2026-06-25\\skills\\hermes\\iskra-workflow-ops\\references\\output_contract.md\nSUMMARY checked=70 skipped=229 failed=0\n"
-    },
-    "reassemble_interface_style_check": {
-      "status": "PASS",
-      "returncode": 0,
-      "command": "py tools/reassemble_interface_style.py --repo-root . --check",
-      "output_tail": "reassembled=\\tmp\\08_INTERFACE_STYLE.reassembled.md\nbytes=3400429\nsha256=6fc341ac84df29e64b4dd51c0a05608d83b4e798fc4db6b1b5a09353412de345\nparts=5\nREASSEMBLY_PASS\n"
-    },
-    "stale_text_scan": {
-      "status": "PASS",
-      "hits": []
-    }
-  },
-  "package_inventory_at_receipt_write": {
-    "manifest_generated_after_receipt": true,
-    "manifest_rule": "MANIFEST.sha256 covers static clean-subset files except MANIFEST.sha256, SURFACE_INVENTORY.json, and ZIP_RECEIPT.json",
-    "zip_rule": "clean zip entries equal manifest entries plus MANIFEST.sha256 and SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
-    "local_static_file_count": 420,
-    "local_static_total_bytes": 8971112,
-    "local_static_surface_sha256": "e80dfaeb5e9913c10a029a8545b7f383be003353ea4c8c98ebcc70e599f25fef"
-  },
+  "target_path": "dist/agent-builder/iskra-workspace-agent-full-canon-synthesis-2026-06-27",
   "workspace_agent_boundary": {
     "delivery_boundary": "package-first; no live Workspace Agent mutation performed",
     "verified_live_builder": false
-  },
-  "non_claims": [
-    "verified-live-builder not claimed",
-    "Workspace Agent Memory parity not claimed",
-    "No Workspace Agent files, instructions, skills, apps, Memory, API channel, Slack channel, schedules, or publish state were changed by this package sync",
-    "A clean zip proves local transport readiness only"
-  ],
-  "next": "Review PR and run any live Workspace Agent upload only after explicit approval."
+  }
 }
