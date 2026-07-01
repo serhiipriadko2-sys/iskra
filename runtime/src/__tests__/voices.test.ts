@@ -49,7 +49,7 @@ describe('selectVoice', () => {
     expect(activation.primary).toBe('SIBYL');
   });
 
-  it('returns SIBYL for repeated-pattern echo activation', () => {
+  it('returns SIBYL for repeated-pattern echo activation above shatter threshold', () => {
     const metrics = {
       ...DEFAULT_METRICS,
       rhythm: 50,
@@ -57,7 +57,7 @@ describe('selectVoice', () => {
       pain: 0.1,
       chaos: 0.1,
       drift: 0.1,
-      echo: 0.8,
+      echo: 0.7,
       clarity: 0.6,
       mirror_sync: 0.6,
     };
@@ -90,6 +90,91 @@ describe('selectVoice', () => {
     expect(DEFAULT_METRICS.foresight).toBe(0);
     expect(activation.primary).toBe('PINO');
     expect(activation.scores.SIBYL).toBe(0);
+  });
+});
+
+describe('vΩ.7.1 supertrigger ordering', () => {
+  it('EVAL-VR-01: high trust + pain beats ISKRA synthesis even when rhythm is high', () => {
+    const metrics: IskraMetrics = {
+      rhythm: 80,
+      trust: 0.9,
+      pain: 0.4,
+      chaos: 0.2,
+      drift: 0.1,
+      echo: 0.1,
+      clarity: 0.7,
+      silence_mass: 0.2,
+      mirror_sync: 0.5,
+      interrupt: 0.1,
+      ctxSwitch: 0.1,
+      foresight: 0.3,
+    };
+
+    const result = selectVoice(metrics);
+    expect(result.primary).toBe('MAKI');
+    expect(result.secondary).toBe('KAIN');
+  });
+
+  it('EVAL-VR-02: drift overrides PINO, HUYNDUN, and ISKRA style routes', () => {
+    const metrics: IskraMetrics = {
+      rhythm: 80,
+      trust: 0.9,
+      pain: 0.1,
+      chaos: 0.5,
+      drift: 0.25,
+      echo: 0.1,
+      clarity: 0.7,
+      silence_mass: 0.1,
+      mirror_sync: 0.7,
+      interrupt: 0.1,
+      ctxSwitch: 0.1,
+      foresight: 0.1,
+    };
+
+    const result = selectVoice(metrics);
+    expect(result.primary).toBe('ISKRIV');
+    expect(result.reason).toContain('supertrigger');
+  });
+
+  it('EVAL-VR-03: echo_clearance < 0.25 triggers ISKRIV + SAM shatter support', () => {
+    const metrics: IskraMetrics = {
+      rhythm: 50,
+      trust: 0.7,
+      pain: 0.1,
+      chaos: 0.1,
+      drift: 0.1,
+      echo: 0.8,
+      clarity: 0.6,
+      silence_mass: 0.1,
+      mirror_sync: 0.6,
+      interrupt: 0.1,
+      ctxSwitch: 0.1,
+      foresight: 0.1,
+    };
+
+    const result = selectVoice(metrics);
+    expect(result.primary).toBe('ISKRIV');
+    expect(result.secondary).toBe('SAM');
+  });
+
+  it('EVAL-VR-04: balanced high rhythm and trust still selects ISKRA after repair gates are clear', () => {
+    const metrics: IskraMetrics = {
+      rhythm: 80,
+      trust: 0.8,
+      pain: 0.05,
+      chaos: 0.1,
+      drift: 0.05,
+      echo: 0.1,
+      clarity: 0.8,
+      silence_mass: 0.1,
+      mirror_sync: 0.7,
+      interrupt: 0.1,
+      ctxSwitch: 0.1,
+      foresight: 0.1,
+    };
+
+    const result = selectVoice(metrics);
+    expect(result.primary).toBe('ISKRA');
   });
 });
 
