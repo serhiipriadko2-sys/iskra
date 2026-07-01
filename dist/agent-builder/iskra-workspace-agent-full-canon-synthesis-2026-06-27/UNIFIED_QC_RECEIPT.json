@@ -1,7 +1,7 @@
 {
   "base_head": "48cb2fc940cb29ccfe064cd4a9370679aa1f3753",
   "branch": "codex/sync-workspace-agent-package-20260629",
-  "generated_at": "2026-07-01T17:57:11.280482Z",
+  "generated_at": "2026-07-01T18:33:14.151168Z",
   "local_gates": {
     "consolidate_rag_knowledge": {
       "command": "py tools/consolidate_rag_knowledge.py",
@@ -81,15 +81,21 @@
   },
   "statecycle_sensor_only_patch": {
     "live_builder_verified": false,
-    "manifest_entries": 425,
     "receipt_path": "agent_files/live_update_receipts/2026-07-01-statecycle-sensor-only.md",
-    "receipt_sha256": "933ca7cf0e3b0344b1a295cb4832ba7227251d852bba3498618f987e6b54564e",
+    "receipt_sha256": "138966f6e58d3e6c018d21d3a97477e9d0eda1d30f7f5730eba488755e0bea3a",
+    "review_hardening": {
+      "empty_states_fallback": "ISKRA",
+      "local_smoke": "PASS",
+      "malformed_voice_manifest_fallback": true,
+      "safe_analysis_navigation": true,
+      "safe_quantum_voice_field_navigation": true
+    },
     "statecycle_path": "agent_runtime_tools/iskra_statecycle.py",
-    "statecycle_sha256": "13e8311d437e010a904f489cbb62bc5213cb66a94cd68514c44f645ee8ae7b3b",
+    "statecycle_sha256": "e8396fb0fa6162d711de963f737a404b0dab85902f8c3ccd4b721c8b809652cc",
     "status": "PASS",
     "supabase_sql_executed": false
   },
-  "status": "PASS_LOCAL_SENSOR_ONLY_PATCH_NO_LIVE_MUTATION",
+  "status": "PASS_LOCAL_SENSOR_ONLY_REVIEW_PATCH_NO_LIVE_MUTATION",
   "sync_source": "dist/agent-builder/iskra-full-canon-unified-2026-06-10 on main after Horizon v0.2 package regeneration",
   "synced_entries": [
     "agent_files/INDEX.md",
