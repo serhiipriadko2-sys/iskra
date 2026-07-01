@@ -552,8 +552,16 @@ def summarize_history(path: Path) -> dict[str, Any]:
         }
     latest = history[-1]
     recent = history[-10:]
-    phases = [((row.get("analysis") or {}).get("fractal") or {}).get("phase") for row in recent]
-    voices = [((row.get("analysis") or {}).get("quantum_voice_field") or {}).get("selected") for row in recent]
+    phases = [
+        ((row.get("analysis") or {}).get("fractal") or {}).get("phase")
+        for row in recent
+        if isinstance(row, dict)
+    ]
+    voices = [
+        ((row.get("analysis") or {}).get("quantum_voice_field") or {}).get("selected")
+        for row in recent
+        if isinstance(row, dict)
+    ]
     metrics = latest.get("metrics", {})
     analysis = latest.get("analysis") or {}
     fractal = analysis.get("fractal") or {}

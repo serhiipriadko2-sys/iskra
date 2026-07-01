@@ -13,6 +13,7 @@ Review hardening:
 - empty voice state falls back to sensor_voice ISKRA
 - invalid or malformed voices manifest falls back safely
 - legacy history with analysis null is handled safely
+- malformed history rows are skipped in phase/voice summaries
 - quantum_voice_field null or missing is handled safely in summaries
 
 Required meaning:
@@ -26,11 +27,12 @@ Verification:
 - py_compile PASS
 - empty voices smoke PASS
 - legacy analysis-null report PASS
+- malformed row report PASS
 - manifest regenerated after patch
 - no Supabase SQL executed
 - no live Builder verification claimed
 
 Delta: package now preserves StateCycle as sensor, not sovereign router, with review-risk guards.
 Data: vOmega 7.1 statecycle sensor-only contract and PR review findings.
-Omega: 0.93 for local package patch.
+Omega: 0.94 for local package patch.
 Lambda: wait for SoT integrity, then upload to Builder and run acceptance prompts.
