@@ -1,11 +1,17 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { createClient } from '@supabase/supabase-js';
 
-// Load environment variables for E2E testing
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'http://localhost:54321';
-const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || 'dummy-anon-key';
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? '';
+const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY ?? '';
 
-describe.skip('E2E Security & Regression Tests', () => {
+// These tests require an explicitly selected live/local Supabase target with the
+// gemini Edge Function deployed. Default verify runs must stay offline-safe.
+const SECURITY_E2E_ENABLED =
+  (process.env.RUN_SECURITY_E2E === 'true' || process.env.RUN_E2E_SECURITY_TESTS === 'true') &&
+  Boolean(SUPABASE_URL) &&
+  Boolean(SUPABASE_ANON_KEY);
+
+describe.skipIf(!SECURITY_E2E_ENABLED)('E2E Security & Regression Tests', () => {
   let supabase: ReturnType<typeof createClient>;
 
   beforeAll(() => {
@@ -32,11 +38,24 @@ describe.skip('E2E Security & Regression Tests', () => {
           'Content-Type': 'application/json',
           // intentionally omitting Authorization header
         },
-        body: JSON.stringify({ message: 'Hello' })
+        body: JSON.stringify({ action: 'generateContent', contents: 'Hello' }),
       });
 
       // Task 2.3 check: Should return 401 Unauthorized, not 200 OK
       expect(response.status).toBe(401);
+    });
+
+    it('should return 403 Forbidden when origin is not allowed', async () => {
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/gemini`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Origin: 'https://evil.example.com',
+        },
+        body: JSON.stringify({ action: 'generateContent', contents: 'Hello' }),
+      });
+
+      expect(response.status).toBe(403);
     });
   });
 

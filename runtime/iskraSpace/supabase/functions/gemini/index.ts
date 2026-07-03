@@ -20,21 +20,138 @@ const DEFAULT_OPENAI_TEXT_MODEL = 'gpt-5';
 const DEFAULT_OPENAI_EMBEDDING_MODEL = 'text-embedding-3-small';
 const EMBEDDING_DIMENSIONS = 1536;
 
-const corsHeaders = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-headers': 'authorization, x-client-info, apikey, content-type',
-  'access-control-allow-methods': 'POST, OPTIONS',
-};
+type AllowedOriginMode = 'any' | 'explicit';
 
-function json(body: unknown, init: ResponseInit = {}) {
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+
+function getAllowedOrigins(): { mode: AllowedOriginMode; origins: Set<string> } {
+  const raw = Deno.env.get('AI_PROXY_ALLOWED_ORIGINS') ?? '';
+  const trimmed = raw.trim();
+  if (trimmed === '*') {
+    return { mode: 'any', origins: new Set<string>() };
+  }
+  return {
+    mode: 'explicit',
+    origins: new Set(
+      trimmed
+        .split(',')
+        .map((o) => o.trim().toLowerCase())
+        .filter(Boolean),
+    ),
+  };
+}
+
+function isOriginAllowed(origin: string | null): boolean {
+  if (!origin) return false;
+  const { mode, origins } = getAllowedOrigins();
+  if (mode === 'any') return true;
+  return origins.has(origin.toLowerCase());
+}
+
+function corsHeaders(origin: string | null): Record<string, string> {
+  const headers: Record<string, string> = {
+    'access-control-allow-headers': 'authorization, x-client-info, apikey, content-type',
+    'access-control-allow-methods': 'POST, OPTIONS',
+    'vary': 'origin',
+  };
+  if (isOriginAllowed(origin)) {
+    headers['access-control-allow-origin'] = origin ?? '';
+  }
+  return headers;
+}
+
+function json(body: unknown, init: ResponseInit = {}, origin: string | null = null) {
   return new Response(JSON.stringify(body), {
     ...init,
     headers: {
-      ...corsHeaders,
+      ...corsHeaders(origin),
       'content-type': 'application/json',
       ...(init.headers ?? {}),
     },
   });
+}
+
+async function validateJwt(token: string): Promise<{ sub: string; user?: Record<string, unknown> } | null> {
+  // Local/dev bypass: if Supabase env vars are missing, we cannot validate.
+  // In production these are injected by Supabase and validation is enforced.
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.warn('[gemini] SUPABASE_URL or SUPABASE_ANON_KEY missing; JWT validation skipped (dev mode)');
+    return { sub: 'dev' };
+  }
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        apikey: SUPABASE_ANON_KEY,
+      },
+    });
+
+    if (!res.ok) return null;
+
+    const data = (await res.json()) as Record<string, unknown> | undefined;
+    if (!data || typeof data.id !== 'string') return null;
+
+    return { sub: data.id, user: data };
+  } catch (err) {
+    console.error('[gemini] JWT validation error:', err);
+    return null;
+  }
+}
+
+function getClientIdentifier(req: Request, userSub?: string): string {
+  if (userSub) return `user:${userSub}`;
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown';
+  return `ip:${ip}`;
+}
+
+const RL_WINDOW_MS = Number(Deno.env.get('AI_PROXY_RL_WINDOW_MS') ?? '') || 60_000;
+const RL_MAX = Number(Deno.env.get('AI_PROXY_RL_MAX') ?? '') || 60;
+const rlBuckets = new Map<string, { windowStart: number; count: number }>();
+
+function cleanupExpiredBuckets(now: number): void {
+  for (const [key, bucket] of rlBuckets.entries()) {
+    if (now - bucket.windowStart >= RL_WINDOW_MS) {
+      rlBuckets.delete(key);
+    }
+  }
+}
+
+function rateLimit(req: Request, userSub?: string): Response | null {
+  const now = Date.now();
+  // Best-effort cleanup to prevent unbounded growth across long-lived workers.
+  if (rlBuckets.size > 10_000) cleanupExpiredBuckets(now);
+
+  const key = getClientIdentifier(req, userSub);
+  const bucket = rlBuckets.get(key);
+
+  if (!bucket || now - bucket.windowStart >= RL_WINDOW_MS) {
+    rlBuckets.set(key, { windowStart: now, count: 1 });
+    return null;
+  }
+
+  bucket.count += 1;
+  if (bucket.count > RL_MAX) {
+    return json(
+      { error: 'Rate limit exceeded. Slow down.' },
+      { status: 429 },
+      req.headers.get('origin'),
+    );
+  }
+  return null;
+}
+
+function extractBearerToken(req: Request): string | null {
+  const auth = req.headers.get('authorization') ?? req.headers.get('Authorization');
+  if (!auth) return null;
+  const [scheme, token] = auth.split(' ');
+  if (scheme?.toLowerCase() !== 'bearer' || !token) return null;
+  return token;
 }
 
 function getConfig(payload: AiProxyPayload) {
@@ -342,25 +459,52 @@ async function streamWithFallback(payload: AiProxyPayload, controller: ReadableS
   throw new Error(errors.join('; ') || 'AI stream provider failed');
 }
 
+
 Deno.serve(async (req) => {
+  const origin = req.headers.get('origin');
+
+  // CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    if (!isOriginAllowed(origin)) {
+      return json({ error: 'Origin not allowed' }, { status: 403 }, origin);
+    }
+    return new Response(null, { headers: corsHeaders(origin), status: 204 });
   }
 
   if (req.method !== 'POST') {
-    return json({ error: 'Method not allowed' }, { status: 405 });
+    return json({ error: 'Method not allowed' }, { status: 405 }, origin);
   }
+
+  // Origin check for actual requests
+  if (origin && !isOriginAllowed(origin)) {
+    return json({ error: 'Origin not allowed' }, { status: 403 }, origin);
+  }
+
+  // Authentication: require a valid Supabase JWT
+  const token = extractBearerToken(req);
+  if (!token) {
+    return json({ error: 'Missing Authorization bearer token' }, { status: 401 }, origin);
+  }
+
+  const jwt = await validateJwt(token);
+  if (!jwt) {
+    return json({ error: 'Invalid or expired token' }, { status: 401 }, origin);
+  }
+
+  // Rate limiting (per user, fallback to IP)
+  const rl = rateLimit(req, jwt.sub);
+  if (rl) return rl;
 
   let payload: AiProxyPayload;
   try {
     payload = await req.json();
   } catch {
-    return json({ error: 'Invalid JSON body' }, { status: 400 });
+    return json({ error: 'Invalid JSON body' }, { status: 400 }, origin);
   }
 
   const action = payload.action;
   if (!action) {
-    return json({ error: 'Missing action' }, { status: 400 });
+    return json({ error: 'Missing action' }, { status: 400 }, origin);
   }
 
   try {
@@ -368,7 +512,7 @@ Deno.serve(async (req) => {
       case 'generateContent':
       case 'embedContent': {
         const result = await runWithFallback(action, payload);
-        return json({ provider: result.provider, ...(result.response as Record<string, unknown>) });
+        return json({ provider: result.provider, ...(result.response as Record<string, unknown>) }, {}, origin);
       }
 
       case 'streamGenerateContent': {
@@ -391,7 +535,7 @@ Deno.serve(async (req) => {
 
         return new Response(stream, {
           headers: {
-            ...corsHeaders,
+            ...corsHeaders(origin),
             'content-type': 'text/event-stream; charset=utf-8',
             'cache-control': 'no-cache',
             connection: 'keep-alive',
@@ -400,13 +544,14 @@ Deno.serve(async (req) => {
       }
 
       default:
-        return json({ error: `Unsupported action: ${action}` }, { status: 400 });
+        return json({ error: `Unsupported action: ${action}` }, { status: 400 }, origin);
     }
   } catch (error) {
     console.error('ai edge function error', error);
     return json(
       { error: error instanceof Error ? error.message : 'Internal error' },
       { status: 500 },
+      origin,
     );
   }
 });
