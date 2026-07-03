@@ -277,7 +277,7 @@ const MAX_HISTORY = 10;
 
 /** Load history from storage on module init */
 const _storedHistory = safeStorage.getItem(METRICS_HISTORY_KEY);
-let metricsHistory: MetricsSnapshot[] = _storedHistory
+const metricsHistory: MetricsSnapshot[] = _storedHistory
   ? (() => { try { return JSON.parse(_storedHistory) as MetricsSnapshot[]; } catch { return []; } })()
   : [];
 
