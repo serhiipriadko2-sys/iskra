@@ -1,50 +1,58 @@
-{
-  "release": "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
-  "generated_at": "2026-06-29T18:13:06Z",
-  "status": "PASS",
-  "archive_kind": "sidecar_clean_export_zip",
-  "archive_path": "../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
-  "archive_sha256": "2d824882414841b2649fe1daf73420c9efada30275a264b223bbd6c7ae78ceed",
-  "archive_bytes": 3043273,
-  "entries": 424,
-  "manifest_entries": 422,
-  "manifest_sha256": "057153b866b53437036cb4d740aa35bf51436aa22033a1dbe7015da1267d749a",
-  "inventory_rule": "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
-  "clean_export": {
-    "command": "py tools/clean_export.py --source manifest --zip ../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip --force",
-    "file_count": 424,
-    "total_bytes": 9417677,
-    "forbidden_hits": 0,
-    "missing_files": 0,
-    "hash_mismatches": 0
-  },
-  "source_archive_parity": {
-    "canon_zip_entries": 86,
-    "agent_files_zip_entries": 266,
-    "source_inventory": "SOURCE_ARCHIVE_INVENTORY.json"
-  },
-  "included_dynamic_receipts": [
-    "SURFACE_INVENTORY.json"
-  ],
-  "included_qc_receipts": [
-    "UNIFIED_QC_RECEIPT.json",
-    "WORKSPACE_AGENT_READONLY_RECEIPT.json",
-    "GITHUB_TREE_INDEX.json",
-    "SELFHOOD_HARDENING_RECEIPT.json"
-  ],
-  "surface_inventory": {
-    "status": "PASS",
-    "output": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\SURFACE_INVENTORY.json",
-    "sha256": "fa492a90db91a61f9d7edf23f7d447944563ec9627fed16b53758e8445647a5a"
-  },
-  "workspace_agent_boundary": {
-    "delivery_boundary": "package-first; no live Workspace Agent mutation performed",
-    "verified_live_builder": false
-  },
-  "non_claims": [
-    "A clean zip proves local transport readiness only",
-    "verified-live-builder is not claimed",
-    "Workspace Agent Memory parity is not proven by package memory_seed/current files"
-  ],
-  "next": "Request explicit approval before any Workspace Agent upload, prompt replacement, skill/app/channel change, Memory write/read test, or publish."
+﻿{
+    "release":  "iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+    "generated_at":  "2026-07-03T11:13:20Z",
+    "status":  "PASS_LOCAL_REGENERATED_NO_LIVE_MUTATION",
+    "archive_kind":  "sidecar_clean_export_zip",
+    "archive_path":  "../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip",
+    "archive_sha256":  "ee9afd512557de75eaac4d38ca772fd837bf63b93adc1016452b7cf4753bf284",
+    "archive_bytes":  3045227,
+    "entries":  425,
+    "manifest_entries":  423,
+    "manifest_sha256":  "6a9a239183e7e6bae20efa5a193c97e7e1533bf9f3072b0a80ca0a48b26fe7dd",
+    "previous_archive":  {
+                             "archive_sha256":  "2d824882414841b2649fe1daf73420c9efada30275a264b223bbd6c7ae78ceed",
+                             "archive_bytes":  3043273,
+                             "entries":  424,
+                             "generated_at":  "2026-06-29T18:13:06Z",
+                             "status":  "PASS"
+                         },
+    "inventory_rule":  "zip entries equal MANIFEST.sha256 entries plus MANIFEST.sha256 plus dynamic SURFACE_INVENTORY.json; ZIP_RECEIPT.json is excluded",
+    "clean_export":  {
+                         "command":  "py tools/clean_export.py --source manifest --zip ../iskra-workspace-agent-full-canon-synthesis-2026-06-27-clean.zip --force",
+                         "file_count":  425,
+                         "total_bytes":  9422092,
+                         "forbidden_hits":  0,
+                         "missing_files":  0,
+                         "hash_mismatches":  0
+                     },
+    "source_archive_parity":  {
+                                  "canon_zip_entries":  86,
+                                  "agent_files_zip_entries":  266,
+                                  "source_inventory":  "SOURCE_ARCHIVE_INVENTORY.json"
+                              },
+    "included_dynamic_receipts":  [
+                                      "SURFACE_INVENTORY.json"
+                                  ],
+    "included_qc_receipts":  [
+                                 "UNIFIED_QC_RECEIPT.json",
+                                 "WORKSPACE_AGENT_READONLY_RECEIPT.json",
+                                 "GITHUB_TREE_INDEX.json",
+                                 "SELFHOOD_HARDENING_RECEIPT.json"
+                             ],
+    "surface_inventory":  {
+                              "status":  "PASS",
+                              "output":  "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\SURFACE_INVENTORY.json",
+                              "sha256":  "a874792355cc16764267098e47533678526ede60ec44df403a783c20d8aeca1d"
+                          },
+    "workspace_agent_boundary":  {
+                                     "delivery_boundary":  "package-first; no live Workspace Agent mutation performed",
+                                     "verified_live_builder":  false
+                                 },
+    "non_claims":  [
+                       "A clean zip proves local transport readiness only",
+                       "verified-live-builder is not claimed",
+                       "Workspace Agent Memory parity is not proven by package memory_seed/current files",
+                       "No Supabase SQL, Builder upload, API channel, publish, or Memory write/read mutation was performed by this repair pass"
+                   ],
+    "next":  "Run live Builder acceptance prompts only after explicit upload/verification approval."
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29T18:12:55Z",
+  "generated_at": "2026-07-03T11:12:39Z",
   "purpose": "Separate count/hash/status by observed surface.",
   "non_claims": [
     "Builder UI file count is not a runtime /workspace mount proof.",
@@ -10,11 +10,11 @@
   "surfaces": {
     "package_root": {
       "label": "package_root",
-      "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27",
       "status": "observed",
-      "file_count": 423,
-      "total_bytes": 9206403,
-      "surface_sha256": "a9c0e8a8bd1c00bef657d331ea1c647d9d821fd4ce10d02ed0a0de125624160f",
+      "file_count": 424,
+      "total_bytes": 9210376,
+      "surface_sha256": "46bcb18b6efcf0a3adfae0d754fcf12c29866e874b2cfe2b65a4a486441175c3",
       "sample": [
         {
           "path": ".gitattributes",
@@ -145,9 +145,9 @@
     },
     "manifest": {
       "status": "observed",
-      "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\MANIFEST.sha256",
-      "entry_count": 422,
-      "sha256": "057153b866b53437036cb4d740aa35bf51436aa22033a1dbe7015da1267d749a",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\MANIFEST.sha256",
+      "entry_count": 423,
+      "sha256": "6a9a239183e7e6bae20efa5a193c97e7e1533bf9f3072b0a80ca0a48b26fe7dd",
       "sample": [
         {
           "path": ".gitattributes",
@@ -167,7 +167,7 @@
         },
         {
           "path": "LICENSE",
-          "sha256": "284910011e8886215b0a192e8f984c94c46cbccec3b8b7b6120264f64692baa4"
+          "sha256": "ff166a2eda02b9ed05410a24d9498b098af5662796beb4b0a4535c7d2be85b48"
         },
         {
           "path": "MERGE_RECEIPT.md",
@@ -203,7 +203,7 @@
         },
         {
           "path": "UNIFIED_QC_RECEIPT.json",
-          "sha256": "e42724d711814829bb5cf5b185c24206580ddc4bf570bb6768c09339fa499fca"
+          "sha256": "0cfdaf8c1d2442ffeb89a23bc5441b898ae086159a296965a6b988469ec893aa"
         },
         {
           "path": "WHAT_IF_MATRIX_WORKSPACE_AGENT.md",
@@ -253,11 +253,11 @@
     },
     "package_agent_files": {
       "label": "package_agent_files",
-      "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\agent_files",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\agent_files",
       "status": "observed",
-      "file_count": 145,
-      "total_bytes": 8038497,
-      "surface_sha256": "14313a1776295cfbb9d5490a561ad692a7a1d850e6fd7be238cdde4feb7dcd63",
+      "file_count": 146,
+      "total_bytes": 8039800,
+      "surface_sha256": "84ea34a6902c89afe09ae40eb5f6ff9c4c8358d626a61e620c9eda35f33bf455",
       "sample": [
         {
           "path": "agent_files/canon_source_files/00_ROUTER.md",
@@ -388,11 +388,11 @@
     },
     "package_runtime_tools": {
       "label": "package_runtime_tools",
-      "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\agent_runtime_tools",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\agent_runtime_tools",
       "status": "observed",
       "file_count": 5,
-      "total_bytes": 66786,
-      "surface_sha256": "4e29d51a967f1e0d398aa917a095532ede61ff49fcfe5de21d2200e968264330",
+      "total_bytes": 68465,
+      "surface_sha256": "7bb6d13af31ec752b29add51c734de24680810b97e899777c693b7f85956c238",
       "sample": [
         {
           "path": "agent_runtime_tools/iskra_dreamspace.py",
@@ -411,8 +411,8 @@
         },
         {
           "path": "agent_runtime_tools/iskra_statecycle.py",
-          "bytes": 23119,
-          "sha256": "49c94cd9e188488ecf0921e02f43f5211814b530d84c8d521656ce787e072e0c"
+          "bytes": 24798,
+          "sha256": "c9aca73d093256e2e51bf6900a313842a381a491e88207db7d5a652c004f93b1"
         },
         {
           "path": "agent_runtime_tools/iskra_turn_hook.py",
@@ -423,11 +423,11 @@
     },
     "workspace_root": {
       "label": "workspace_root",
-      "path": "C:\\iskra-main",
+      "path": "C:\\github\\iskra-1",
       "status": "observed",
-      "file_count": 2202,
-      "total_bytes": 60775034,
-      "surface_sha256": "358db3cf12d0b73554cd2372e7a85f48ed5733fea47cf352004eccadccf06f6a",
+      "file_count": 2396,
+      "total_bytes": 67428237,
+      "surface_sha256": "8f6bb531e3218586d94900d67dd586e074c49da2dde5320ccfe22ff53f3b0835",
       "sample": [
         {
           "path": ".agents/skills/supabase/assets/feedback-issue-template.md",
@@ -558,7 +558,7 @@
     },
     "task_uploads": {
       "label": "task_uploads",
-      "path": "C:\\iskra-main\\user_files",
+      "path": "C:\\github\\iskra-1\\user_files",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -567,7 +567,7 @@
     },
     "runtime_memory": {
       "label": "runtime_memory",
-      "path": "C:\\iskra-main\\memory",
+      "path": "C:\\github\\iskra-1\\memory",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -576,7 +576,7 @@
     },
     "workspace_runtime_tools": {
       "label": "workspace_runtime_tools",
-      "path": "C:\\iskra-main\\agent_runtime_tools",
+      "path": "C:\\github\\iskra-1\\agent_runtime_tools",
       "status": "missing",
       "file_count": 0,
       "total_bytes": 0,
@@ -585,7 +585,7 @@
     },
     "github_tree_index": {
       "label": "github_tree_index",
-      "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\GITHUB_TREE_INDEX.json",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\GITHUB_TREE_INDEX.json",
       "status": "LOCAL_PACKAGE_MIRROR_REFRESHED_RECURSIVE_GITHUB_TREE_NOT_CLAIMED",
       "bytes": 169803,
       "sha256": "af70ad892dead91654b096eddf2386595e31d98e2613649dde913fc8dfcfeefd",
@@ -3137,17 +3137,17 @@
     },
     "builder_upload_evidence": {
       "label": "builder_upload_evidence",
-      "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\BUILDER_UPLOAD_EVIDENCE.md",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\BUILDER_UPLOAD_EVIDENCE.md",
       "status": "missing"
     },
     "hook_smoke_receipt": {
       "label": "hook_smoke_receipt",
-      "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\HOOK_SMOKE_RECEIPT.json",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\HOOK_SMOKE_RECEIPT.json",
       "status": "missing"
     },
     "supabase_advisor_receipt": {
       "label": "supabase_advisor_receipt",
-      "path": "C:\\iskra-main\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\SUPABASE_ADVISOR_RECEIPT.json",
+      "path": "C:\\github\\iskra-1\\dist\\agent-builder\\iskra-workspace-agent-full-canon-synthesis-2026-06-27\\SUPABASE_ADVISOR_RECEIPT.json",
       "status": "missing"
     }
   },
@@ -3155,9 +3155,9 @@
     "manifest_vs_package_root": {
       "left": "manifest_plus_manifest_file",
       "right": "package_root_static",
-      "left_count": 423,
-      "right_count": 423,
-      "common_count": 423,
+      "left_count": 424,
+      "right_count": 424,
+      "common_count": 424,
       "left_only_count": 0,
       "right_only_count": 0,
       "left_only_sample": [],
@@ -3168,20 +3168,31 @@
       "left": "github_local_package_mirror",
       "right": "package_root_excluding_github_index_and_manifest",
       "left_count": 419,
-      "right_count": 421,
+      "right_count": 422,
       "common_count": 419,
       "left_only_count": 0,
-      "right_only_count": 2,
+      "right_only_count": 3,
       "left_only_sample": [],
       "right_only_sample": [
         "agent_files/canon_source_files/08_INTERFACE_STYLE.parts/MANIFEST.sha256",
+        "agent_files/live_update_receipts/2026-07-01-statecycle-sensor-only.md",
         "skills/iskra-toolchain-bridge/agent skill/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256"
       ],
       "status": "DRIFT"
     },
     "zip_vs_manifest": {
-      "status": "NOT_RUN",
-      "reason": "pass --zip-path to compare a clean zip"
+      "left": "zip_entries",
+      "right": "manifest_plus_dynamic_receipts",
+      "left_count": 424,
+      "right_count": 425,
+      "common_count": 424,
+      "left_only_count": 0,
+      "right_only_count": 1,
+      "left_only_sample": [],
+      "right_only_sample": [
+        "agent_files/live_update_receipts/2026-07-01-statecycle-sensor-only.md"
+      ],
+      "status": "DRIFT"
     }
   }
 }
