@@ -121,8 +121,9 @@ describe('memoryService', () => {
         }],
       };
 
-      memoryService.addArchiveEntry(entry);
+      const node = memoryService.addArchiveEntry(entry);
       expect(localStorageMock.setItem).toHaveBeenCalled();
+      expect(node.synced_to_cloud).toBe(false);
     });
   });
 
@@ -149,8 +150,9 @@ describe('memoryService', () => {
         }],
       };
 
-      memoryService.addShadowEntry(entry);
+      const node = memoryService.addShadowEntry(entry);
       expect(localStorageMock.setItem).toHaveBeenCalled();
+      expect(node.synced_to_cloud).toBe(false);
     });
   });
 

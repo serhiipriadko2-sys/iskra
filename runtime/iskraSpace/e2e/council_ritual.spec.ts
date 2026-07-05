@@ -17,7 +17,7 @@ test.describe('Council Ritual View', () => {
 
     await expect(page.locator('main')).toBeVisible();
     await expect(page.locator('textarea')).toBeVisible();
-    await expect(page.locator('button', { hasText: /Совет|Council|Созвать/ }).first()).toBeVisible();
+    await expect(page.locator('button:visible', { hasText: /Совет|Council|Созвать/ }).first()).toBeVisible();
     await expect(page.locator('body')).toContainText(/9|ISKRA|KAIN|SAM/i);
   });
 });

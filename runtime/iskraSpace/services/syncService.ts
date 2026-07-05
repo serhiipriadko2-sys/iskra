@@ -8,6 +8,7 @@
 import { ensureSupabaseSession, getLegacyDeviceId, isSupabaseAvailable } from './supabaseClient';
 import { supabaseService } from './supabaseService';
 import { graphServiceSupabase } from './graphServiceSupabase';
+import type { MemoryNode } from '../types';
 
 export class SyncService {
   private isSyncing = false;
@@ -92,13 +93,17 @@ export class SyncService {
   /**
    * Synchronize memory nodes queue.
    * Nodes with `synced_to_cloud === true` are skipped to prevent duplicates (P2-01).
+   *
+   * This is the single coordinator for uploading local memory nodes to Supabase GraphRAG.
+   * `memoryService` no longer performs eager background uploads; it only persists nodes
+   * locally and marks them as `synced_to_cloud: false`.
    */
   private async syncMemoryNodes(): Promise<void> {
     const ownerKeys = await this.getOfflineQueueOwnerKeys();
-
-    // Sync both archive and shadow layers
     const layers = ['archive', 'shadow'] as const;
 
+    // 1. Migration path: legacy per-owner queues written by older app versions.
+    //    These queues are processed once and then removed.
     for (const ownerKey of ownerKeys) {
       for (const layer of layers) {
         const cachedKey = `memory_${layer}_${ownerKey}`;
@@ -106,42 +111,83 @@ export class SyncService {
         if (!cachedData) continue;
 
         try {
-          const nodes: Array<{ id?: string; layer: string; type: string; content: unknown; synced_to_cloud?: boolean }> =
+          const nodes: Array<{ id?: string; layer: string; type: string; content: unknown }> =
             JSON.parse(cachedData);
-          if (!Array.isArray(nodes)) continue;
+          if (!Array.isArray(nodes)) {
+            localStorage.removeItem(cachedKey);
+            continue;
+          }
 
-          // P2-01: Only sync nodes that haven't been uploaded yet
-          const unsynced = nodes.filter(n => !n.synced_to_cloud);
-          if (unsynced.length === 0) continue;
+          console.warn(`[SyncService] Migrating ${nodes.length} legacy memory nodes for layer: ${layer}`);
 
-          console.log(`[SyncService] Syncing ${unsynced.length} (of ${nodes.length}) memory nodes for layer: ${layer}`);
-
-          const updatedNodes = [...nodes];
-
-          for (const node of unsynced) {
+          let allMigrated = true;
+          for (const node of nodes) {
             try {
               const syncedNode = await graphServiceSupabase.addNode(
                 node.layer,
                 node.type,
                 typeof node.content === 'string' ? node.content : JSON.stringify(node.content)
               );
-              // Automatically build connections in cloud GraphRAG
               await graphServiceSupabase.buildConnections(syncedNode.id).catch(() => {});
-
-              // Mark node as synced in our local copy
-              const idx = updatedNodes.findIndex(n => n.id === node.id);
-              if (idx !== -1) updatedNodes[idx] = { ...updatedNodes[idx], synced_to_cloud: true };
             } catch {
-              // Leave node unmarked — will retry next sync cycle
+              // Mark failure but keep processing other nodes in the queue.
+              allMigrated = false;
             }
           }
 
-          // Persist updated sync flags back to localStorage
-          localStorage.setItem(cachedKey, JSON.stringify(updatedNodes));
-
+          if (allMigrated) {
+            localStorage.removeItem(cachedKey);
+          }
         } catch (e) {
-          console.warn(`[SyncService] Failed to sync memory layer from ${cachedKey}:`, e);
+          console.warn(`[SyncService] Failed to migrate legacy memory layer from ${cachedKey}:`, e);
         }
+      }
+    }
+
+    // 2. Primary path: current app-local memory stores.
+    const storageKeys: Record<typeof layers[number], string> = {
+      archive: 'iskra-space-archive',
+      shadow: 'iskra-space-shadow',
+    };
+
+    for (const layer of layers) {
+      const cachedKey = storageKeys[layer];
+      const cachedData = localStorage.getItem(cachedKey);
+      if (!cachedData) continue;
+
+      try {
+        const nodes: MemoryNode[] = JSON.parse(cachedData);
+        if (!Array.isArray(nodes)) continue;
+
+        const unsynced = nodes.filter(n => !n.synced_to_cloud);
+        if (unsynced.length === 0) continue;
+
+        console.warn(`[SyncService] Syncing ${unsynced.length} (of ${nodes.length}) memory nodes for layer: ${layer}`);
+
+        const updatedNodes = [...nodes];
+
+        for (const node of unsynced) {
+          try {
+            const syncedNode = await graphServiceSupabase.addNode(
+              node.layer,
+              node.type,
+              typeof node.content === 'string' ? node.content : JSON.stringify(node.content)
+            );
+            // Automatically build connections in cloud GraphRAG
+            await graphServiceSupabase.buildConnections(syncedNode.id).catch(() => {});
+
+            // Mark node as synced in our local copy
+            const idx = updatedNodes.findIndex(n => n.id === node.id);
+            if (idx !== -1) updatedNodes[idx] = { ...updatedNodes[idx], synced_to_cloud: true };
+          } catch {
+            // Leave node unmarked — will retry next sync cycle
+          }
+        }
+
+        // Persist updated sync flags back to localStorage
+        localStorage.setItem(cachedKey, JSON.stringify(updatedNodes));
+      } catch (e) {
+        console.warn(`[SyncService] Failed to sync memory layer from ${cachedKey}:`, e);
       }
     }
   }

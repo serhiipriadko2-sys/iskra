@@ -99,5 +99,60 @@ describe('SyncService identity migration boundary', () => {
 
     expect(addNodeMock).toHaveBeenCalledWith('archive', 'insight', '{"note":"old local node"}');
     expect(buildConnectionsMock).toHaveBeenCalledWith('node-1');
+    expect(localStorage.getItem('memory_archive_legacy-device-id')).toBeNull();
+  });
+
+  it('syncs current app-local memory stores and marks nodes as synced', async () => {
+    const archiveNode = {
+      id: 'arc-1',
+      layer: 'archive',
+      type: 'insight',
+      content: { note: 'new archive node' },
+      title: 'Archive Node',
+      timestamp: new Date().toISOString(),
+      evidence: [{ source: 'test', inference: 'test', fact: 'true' as const, trace: 'test' }],
+      synced_to_cloud: false,
+    };
+    const shadowNode = {
+      id: 'shd-1',
+      layer: 'shadow',
+      type: 'event',
+      content: 'shadow note',
+      title: 'Shadow Node',
+      timestamp: new Date().toISOString(),
+      evidence: [{ source: 'test', inference: 'test', fact: 'true' as const, trace: 'test' }],
+      synced_to_cloud: false,
+    };
+    localStorage.setItem('iskra-space-archive', JSON.stringify([archiveNode]));
+    localStorage.setItem('iskra-space-shadow', JSON.stringify([shadowNode]));
+
+    await new SyncService().syncAllPending();
+
+    expect(addNodeMock).toHaveBeenCalledWith('archive', 'insight', '{"note":"new archive node"}');
+    expect(addNodeMock).toHaveBeenCalledWith('shadow', 'event', 'shadow note');
+    expect(buildConnectionsMock).toHaveBeenCalledTimes(2);
+
+    const syncedArchive = JSON.parse(localStorage.getItem('iskra-space-archive') ?? '[]');
+    const syncedShadow = JSON.parse(localStorage.getItem('iskra-space-shadow') ?? '[]');
+    expect(syncedArchive[0].synced_to_cloud).toBe(true);
+    expect(syncedShadow[0].synced_to_cloud).toBe(true);
+  });
+
+  it('skips already-synced nodes in app-local memory stores', async () => {
+    const archiveNode = {
+      id: 'arc-2',
+      layer: 'archive',
+      type: 'insight',
+      content: { note: 'already synced' },
+      title: 'Synced Node',
+      timestamp: new Date().toISOString(),
+      evidence: [{ source: 'test', inference: 'test', fact: 'true' as const, trace: 'test' }],
+      synced_to_cloud: true,
+    };
+    localStorage.setItem('iskra-space-archive', JSON.stringify([archiveNode]));
+
+    await new SyncService().syncAllPending();
+
+    expect(addNodeMock).not.toHaveBeenCalled();
   });
 });
