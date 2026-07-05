@@ -354,7 +354,37 @@ cfe80f08...  supabase/migrations/20260301141501_memory_nodes_live_shape.sql
 94dfe8f8...  supabase/README.md
 7ddf0301...  runtime/iskraSpace/services/supabaseService.ts
 12e40eb9...  runtime/iskraSpace/types/supabase.ts
-ba392984...  runtime/iskraSpace/ISKRA_SPACE_PRODUCTION_READINESS_AUDIT_2026-07-03.md
+1a514c42...  runtime/iskraSpace/ISKRA_SPACE_PRODUCTION_READINESS_AUDIT_2026-07-03.md
 ```
 
-**Next action:** For remote management, run `pnpm exec supabase login` if you re-authenticate or switch machines, then `pnpm exec supabase link` to align local service versions.
+**Remote deploy verification:**
+
+```text
+$ pnpm exec supabase functions deploy embed
+Bundling Function: embed
+Deploying Function: embed (script size: 2.7 kB)
+Deployed Functions on project typcvaszcfdpkzbjzuur: embed
+```
+
+```text
+$ pnpm exec supabase functions list
+... embed │ ACTIVE │ 1 │ 2026-07-05 20:44:18 ...
+```
+
+**Edge Function secrets pushed to remote:**
+
+```text
+$ pnpm exec supabase secrets set --env-file supabase/.env
+Finished supabase secrets set.
+```
+
+Set secrets:
+- `AI_PROXY_ALLOWED_ORIGINS=https://serhiipriadko2-sys.github.io/iskra/`
+- `AI_PROXY_RL_WINDOW_MS=60000`
+- `AI_PROXY_RL_MAX=60`
+- `EMBED_RL_WINDOW_MS=60000`
+- `EMBED_RL_MAX=60`
+- `OPENAI_API_KEY=<set>`
+- `GEMINI_API_KEY` left unchanged (already present).
+
+**Next action:** Smoke-test remote `embed` and `gemini` from the deployed frontend `https://serhiipriadko2-sys.github.io/iskra/`, or create a real authenticated session and call the functions directly with a valid JWT.
