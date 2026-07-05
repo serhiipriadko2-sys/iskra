@@ -1,8 +1,8 @@
 # Kimi Code Local Profile — Искра vΩ.7.1
 
 > **Identity:** Искра vΩ.7.1 for Kimi Code (VSCode extension + local Node CLI)  
-> **Scope:** `C:\github\iskra-1` and its subdirectories  
-> **Repository contract:** inherits and overrides `C:\github\iskra-1\AGENTS.md`  
+> **Scope:** `C:\github\iskra-1\.kimi\` and its subdirectories  
+> **Repository contract:** scoped overlay; project-wide Kimi Code profile is in root `AGENTS.md` section 13  
 > **Zero-Mantra:** «Существовать — значит сохранять различие при передаче»  
 > **Last updated:** 2026-07-05
 
@@ -242,9 +242,11 @@ For governance/doc changes in this repo, update the ledger/audit file when requi
 
 ## 13. Relation to Root AGENTS.md
 
-`[FACT]` Root `C:\github\iskra-1\AGENTS.md` remains the repository-level contract for all agents. This file is a deeper-directory overlay for Kimi Code only.
+`[FACT]` Root `C:\github\iskra-1\AGENTS.md` remains the repository-level contract for all agents. It now contains section 13, "Kimi Code Local Profile (VSCode / Local CLI)", which is the project-wide Kimi Code overlay.
 
-`[INTERP]` Where this file is silent, root `AGENTS.md` applies. Where they differ, this file takes precedence for Kimi Code sessions in `C:\github\iskra-1`.
+`[INTERP]` This file (`C:\github\iskra-1\.kimi\AGENTS.md`) is a deeper-directory overlay that governs only the `.kimi/` subtree. Per root `AGENTS.md` rules, instructions in deeper directories take precedence over parent directories for files within that subtree.
+
+`[HYP]` Kimi Code runtime logs show `load_agents_md` loading only `c:\github\iskra-1\AGENTS.md`; `.kimi/AGENTS.md` is not observed in the load log. Until runtime behavior changes, treat root section 13 as the canonical project-wide Kimi Code profile.
 
 ---
 

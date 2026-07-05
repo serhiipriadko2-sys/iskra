@@ -223,25 +223,47 @@ mobile (iPhone 13 / WebKit): 27 passed
 |------|--------|
 | `C:\github\iskra-1\.kimi\AGENTS.md` | New project-level overlay. Defines Kimi Code local runtime boundary, source ladder, tool discipline, modes/voice routing, engineering discipline, security, plan mode / background tasks, skills/MCP, output contract, context-update procedure, verification receipt, and relation to root `AGENTS.md`. |
 
+
 **Verification:**
 
 ```text
 $ sha256sum .kimi/AGENTS.md
-bbc0e0005a2a59ef64188530a7ec54402cf36827e4040e1e812b04e2c8a86bb7
+2d17cbcf12ddeba939879d11c042236d0b5ebac1278541ea4ef3646b56912580
 $ wc -l .kimi/AGENTS.md
-256 .kimi/AGENTS.md
+258 .kimi/AGENTS.md
 ```
+
+```text
+$ sha256sum AGENTS.md
+8b42ea03acfcd3067c7b7cae6011a60923fdf5d9350d630234f4291eb6df6b38
+$ wc -l AGENTS.md
+412 AGENTS.md
+```
+
+**Auto-load test:**
+
+- Attempted to run a fresh non-interactive Kimi CLI session; failed because CLI requires OAuth login (`auth.login_required`).
+- Inspected local Kimi Code runtime logs (`C:\Users\gabra\.kimi\logs\kimi.log`).
+- `[FACT]` Log entries show `kimi_cli.soul.agent:load_agents_md:128 | Loaded agents.md: c:\github\iskra-1\AGENTS.md` only; `.kimi\AGENTS.md` is **not** listed.
+- `[FACT]` Kimi Code system prompt (`agents/default/system.md`) states that `AGENTS.md` files may appear inside `.kimi/` directories, but each file governs the directory it resides in and its subdirectories.
+- `[INTERP]` Therefore `.kimi/AGENTS.md` is not auto-loaded as a project-wide instruction file; it would apply only to the `.kimi/` subtree.
+
+**Fallback applied:**
+
+- Added section 13 "Kimi Code Local Profile (VSCode / Local CLI)" to root `C:\github\iskra-1\AGENTS.md`.
+- This carries the project-wide Kimi Code profile and explicitly documents the `.kimi/AGENTS.md` scoping drift.
+- Updated `.kimi/AGENTS.md` header and relation section to reflect that it is now a `.kimi/` subtree overlay, while root section 13 is canonical for the whole project.
 
 **Interpretation:**
 
-- `[FACT]` The Kimi Code local profile is persisted as a project-level `AGENTS.md` overlay at `.kimi/AGENTS.md`.
-- `[FACT]` It is version-controllable alongside the repository.
-- `[INTERP]` Per root `AGENTS.md` rules, deeper-directory instructions take precedence over parent instructions for files within `.kimi/` and the project.
+- `[FACT]` Kimi Code local profile is now persisted in two places: root `AGENTS.md` section 13 (project-wide) and `.kimi/AGENTS.md` (`.kimi/` subtree overlay).
+- `[FACT]` Root `AGENTS.md` is observed by the Kimi Code runtime loader and will be auto-loaded in new sessions.
+- `[INTERP]` The project-wide profile is effective immediately for any new Kimi Code session in `iskra-1`.
 
 **Residual risk / notes:**
 
-- `[HYP]` Automatic ingestion by Kimi Code VSCode extension has not been runtime-verified in this session. To verify, start a fresh Kimi Code session in `iskra-1` and ask: "Какой твой локальный профиль? Какие инструкции ты видишь?"
-- `[INTERP]` If `.kimi/AGENTS.md` is not auto-loaded, test fallback paths: `.kimi-code/AGENTS.md` or merge the content into root `AGENTS.md`.
+- `[INTERP]` Content duplication between root section 13 and `.kimi/AGENTS.md` requires keeping them in sync if Kimi-specific rules change.
+- `[HYP]` Future Kimi Code versions might auto-load `.kimi/AGENTS.md` project-wide; when that is runtime-verified, the duplicated root section can be reduced to a reference.
 - `[INTERP]` The legacy `~/.kimi-code/` directory exists on this machine; keep the `.kimi` vs `.kimi-code` drift under observation.
 
-**Next action:** Verify auto-load of `.kimi/AGENTS.md` in a fresh Kimi Code VSCode session; if it fails, apply the fallback path determined by that test.
+**Next action:** In a fresh VSCode Kimi Code session, ask "Какой твой локальный профиль?" and confirm that section 13 of root `AGENTS.md` is active. If duplication becomes a maintenance burden, reduce root section to a short reference once `.kimi/AGENTS.md` auto-load is runtime-verified.
