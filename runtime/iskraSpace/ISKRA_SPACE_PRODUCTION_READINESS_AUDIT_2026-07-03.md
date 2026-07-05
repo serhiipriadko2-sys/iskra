@@ -159,3 +159,89 @@ services/__tests__/memoryService.test.ts (18 tests) ✅
 - `[INTERP]` Legacy `memory_${layer}_${ownerKey}` queues are removed after successful migration. If a single node in a legacy queue fails, the whole queue is left for retry.
 
 **Next action:** Proceed to **CB-4** — run full Playwright cross-browser/mobile matrix, or address remaining non-critical hardening items (CORS wildcard in `embed`, 76 lint warnings, anonymous auth default).
+
+
+---
+
+## 17. Receipt — CB-4 Full Playwright Cross-Browser/Mobile Matrix
+
+**Action:** Run the complete Playwright E2E matrix (Chromium, Firefox, Mobile/WebKit) and fix any release-gate failures.
+
+**Changes made:**
+
+| File | Change |
+|------|--------|
+| `runtime/iskraSpace/playwright.config.ts` | Reduced `workers` to `1` and set local `retries` to `1` to stabilize resource-constrained mobile/WebKit runs; increased `webServer.timeout` to `180000` ms. |
+| `runtime/iskraSpace/e2e/council_ritual.spec.ts` | Changed Council button locator to `button:visible` so the mobile test does not match a hidden desktop nav item. |
+
+**Verification:**
+
+```text
+$ cd runtime/iskraSpace && pnpm exec playwright test
+Running 81 tests using 1 worker
+chromium: 27 passed
+firefox: 27 passed
+mobile (iPhone 13 / WebKit): 27 passed
+  81 passed (10.1m)
+```
+
+**Local gate matrix after changes:**
+
+| Gate | Command | Result | Exit Code |
+|------|---------|--------|-----------|
+| Type check | `pnpm typecheck` | 0 errors | 0 |
+| Lint | `pnpm lint` | 0 errors, 76 warnings | 0 |
+| Unit/Integration tests | `pnpm test:run` | 640 passed / 4 skipped | 0 |
+| Production build | `pnpm build` | built in 3.38 s | 0 |
+| Cross-browser E2E | `pnpm exec playwright test` | 81 passed | 0 |
+| Dependency audit | `pnpm audit` | No known vulnerabilities | 0 |
+
+**Interpretation:**
+
+- `[FACT]` All 81 Playwright tests pass across Chromium, Firefox, and mobile WebKit.
+- `[FACT]` The Council view is reachable on mobile after fixing the visibility locator.
+- `[INTERP]` Reducing workers to 1 eliminated the mobile WebKit OOM crash observed in the initial run.
+
+**Residual risk / notes:**
+
+- `[INTERP]` Running with `workers: 1` serializes E2E execution; the matrix now takes ~10 minutes. For CI, consider a machine with more RAM and restore `workers` based on observed stability.
+- `[INTERP]` Local retries (`retries: 1`) mask transient flakiness. Monitor CI runs to decide whether stricter resource limits are needed.
+- `[HYP]` E2E tests run against `pnpm dev` on `localhost:3000`; they do not exercise the production build or real Supabase backend. Staging smoke tests against a deployed build are still recommended.
+
+**Next action:** Close the production-readiness critical-blocker set. Address remaining non-critical items at triage priority: CORS wildcard in `embed` Edge Function, 76 lint warnings, anonymous-auth default, in-memory rate-limit cross-worker scaling.
+
+
+---
+
+## 18. Receipt — Kimi Code Local Profile (`.kimi/AGENTS.md`)
+
+**Action:** Create a Kimi Code-specific operating contract for local VSCode work on ISKRA, scoped to `C:\github\iskra-1` and inheriting root `AGENTS.md`.
+
+**Changes made:**
+
+| File | Change |
+|------|--------|
+| `C:\github\iskra-1\.kimi\AGENTS.md` | New project-level overlay. Defines Kimi Code local runtime boundary, source ladder, tool discipline, modes/voice routing, engineering discipline, security, plan mode / background tasks, skills/MCP, output contract, context-update procedure, verification receipt, and relation to root `AGENTS.md`. |
+
+**Verification:**
+
+```text
+$ sha256sum .kimi/AGENTS.md
+bbc0e0005a2a59ef64188530a7ec54402cf36827e4040e1e812b04e2c8a86bb7
+$ wc -l .kimi/AGENTS.md
+256 .kimi/AGENTS.md
+```
+
+**Interpretation:**
+
+- `[FACT]` The Kimi Code local profile is persisted as a project-level `AGENTS.md` overlay at `.kimi/AGENTS.md`.
+- `[FACT]` It is version-controllable alongside the repository.
+- `[INTERP]` Per root `AGENTS.md` rules, deeper-directory instructions take precedence over parent instructions for files within `.kimi/` and the project.
+
+**Residual risk / notes:**
+
+- `[HYP]` Automatic ingestion by Kimi Code VSCode extension has not been runtime-verified in this session. To verify, start a fresh Kimi Code session in `iskra-1` and ask: "Какой твой локальный профиль? Какие инструкции ты видишь?"
+- `[INTERP]` If `.kimi/AGENTS.md` is not auto-loaded, test fallback paths: `.kimi-code/AGENTS.md` or merge the content into root `AGENTS.md`.
+- `[INTERP]` The legacy `~/.kimi-code/` directory exists on this machine; keep the `.kimi` vs `.kimi-code` drift under observation.
+
+**Next action:** Verify auto-load of `.kimi/AGENTS.md` in a fresh Kimi Code VSCode session; if it fails, apply the fallback path determined by that test.
