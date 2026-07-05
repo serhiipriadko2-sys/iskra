@@ -2,6 +2,56 @@
 
 This folder contains **Edge Functions** and **schema/migration artifacts** used by Iskra.
 
+## Supabase CLI quick start
+
+The CLI is installed as a project dev dependency. Docker is required.
+
+```bash
+# Start the local stack (applies migrations, serves Edge Functions)
+pnpm supabase:start
+# or: pnpm exec supabase start
+
+# Check status and local credentials
+pnpm supabase:status
+# or: pnpm exec supabase status
+
+# Stop the local stack
+pnpm supabase:stop
+# or: pnpm exec supabase stop
+
+# Reset the local database (destructive)
+pnpm supabase:reset
+# or: pnpm exec supabase db reset
+
+# View logs
+pnpm supabase:logs
+
+# Create a new migration
+pnpm supabase:migration:new <name>
+
+# Regenerate TypeScript types from the local database
+pnpm exec supabase gen types typescript --local --schema public > runtime/iskraSpace/types/supabase.ts
+```
+
+Project configuration:
+
+- Copy `supabase/.env.example` to `supabase/.env` and fill in real keys, then run `pnpm exec supabase secrets set --env-file .env` to push them to the linked project.
+- `supabase/config.toml` uses `project_id = "iskra"` so local containers are named consistently.
+- The project is already linked to the remote `AgiIskra` project (`typcvaszcfdpkzbjzuur`); run `pnpm exec supabase link` again if you re-authenticate.
+- Local app credentials are written to `runtime/iskraSpace/.env.local` during setup.
+
+### Local `embed` smoke test
+
+The local Kong gateway requires the `apikey` header in addition to `Authorization`:
+
+```bash
+curl -X POST http://127.0.0.1:54321/functions/v1/embed \
+  -H "apikey: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH" \
+  -H "Authorization: Bearer sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH" \
+  -H "Content-Type: application/json" \
+  -d '{"input":"hello world"}'
+```
+
 ## Current Truth-Boundary Notes
 
 [FACT] The repository currently contains both:
@@ -25,11 +75,12 @@ GraphRAG at scale needs DB-side ANN (Approximate Nearest Neighbors). The legacy 
 
 Schema + RPC are documented in:
 
-- `supabase/migrations/20260301141500_memory_nodes_pgvector_hnsw.sql`
+- `supabase/migration_archive/20260301141500_memory_nodes_pgvector_hnsw.sql` (archived legacy shape)
+- `supabase/migrations/20260301141501_memory_nodes_live_shape.sql` (local-dev bootstrap for the current app-state shape)
 
 This older path describes:
 
-- `public.memory_nodes` (embedding `vector(384)` for `gte-small`)
+- `public.memory_nodes` (legacy archived shape used `vector(384)` for `gte-small`)
 - HNSW index: `USING hnsw (embedding vector_cosine_ops)`
 - RPC:
   - `match_memory_nodes(query_embedding real[], ...)`

@@ -267,3 +267,94 @@ $ wc -l AGENTS.md
 - `[INTERP]` The legacy `~/.kimi-code/` directory exists on this machine; keep the `.kimi` vs `.kimi-code` drift under observation.
 
 **Next action:** In a fresh VSCode Kimi Code session, ask "Какой твой локальный профиль?" and confirm that section 13 of root `AGENTS.md` is active. If duplication becomes a maintenance burden, reduce root section to a short reference once `.kimi/AGENTS.md` auto-load is runtime-verified.
+
+
+---
+
+## 19. Receipt — Supabase CLI Local Setup
+
+**Action:** Configure the repository so `pnpm exec supabase` works locally and the local development stack starts cleanly.
+
+**Changes made:**
+
+| File | Change |
+|------|--------|
+| `package.json` | `supabase` CLI `^2.109.0` was already present in dev dependencies; verified `pnpm exec supabase --version` returns `2.109.0`. Added convenient npm scripts: `supabase:start`, `supabase:stop`, `supabase:status`, `supabase:reset`, `supabase:logs`, `supabase:migration:new`. |
+| `supabase/.env.example` | **New file.** Template for Edge Function secrets (GEMINI_API_KEY, AI proxy rate-limiting, embed rate-limiting). Added a negation exception to `.gitignore` so the template is tracked. |
+| `supabase/config.toml` | Added `project_id = "iskra"` so local Docker containers are named consistently with the existing stack. |
+| `supabase/migrations/20260301141501_memory_nodes_live_shape.sql` | **New migration.** Creates `public.memory_nodes` in the current app-state shape so that later RLS/grant migrations (`residual_advisors_rls_fk_hardening`, `truth_boundary_p0_security_hardening`, `release_auth_rls_hardening`, `vomega7_1_rls_policy_advisor_cleanup`) can be applied idempotently on a fresh database. |
+| `runtime/iskraSpace/.env.local` | **New untracked env file.** Sets `VITE_SUPABASE_URL=http://127.0.0.1:54321` and the local publishable (anon) key. |
+| `runtime/iskraSpace/types/supabase.ts` | Regenerated from the local database schema with `supabase gen types typescript --local --schema public` so it includes the bootstrapped `memory_nodes` table and other current shapes. |
+| `runtime/iskraSpace/services/supabaseService.ts` | Adjusted `getMemoryNodes` / `addMemoryNode` mappers to tolerate nullable `title` from the generated DB types (`title || ''`). |
+| `supabase/README.md` | Added "Supabase CLI quick start" section with start/stop/status/reset/logs/migration commands, local `embed` smoke test, and corrected the legacy migration path to `migration_archive/`. |
+
+**Verification commands:**
+
+```text
+$ pnpm exec supabase --version
+2.109.0
+
+$ pnpm exec supabase link --project-ref typcvaszcfdpkzbjzuur
+Finished supabase link.
+
+$ pnpm exec supabase gen types typescript --local --schema public > runtime/iskraSpace/types/supabase.ts
+Connecting to db 5432
+
+$ pnpm exec supabase status
+supabase local development setup is running.
+Project URL    │ http://127.0.0.1:54321
+REST           │ http://127.0.0.1:54321/rest/v1
+GraphQL        │ http://127.0.0.1:54321/graphql/v1
+Edge Functions │ http://127.0.0.1:54321/functions/v1
+Database       │ postgresql://postgres:postgres@127.0.0.1:54322/postgres
+
+$ pnpm exec supabase migration list --local
+26 migrations applied locally and on remote.
+
+$ pnpm exec supabase db advisors --local
+1 WARN: extension_in_public (pg_trgm) — non-blocking.
+```
+
+**Local `embed` Edge Function smoke test:**
+
+```bash
+curl -X POST http://127.0.0.1:54321/functions/v1/embed \
+  -H "apikey: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH" \
+  -H "Authorization: Bearer sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH" \
+  -H "Content-Type: application/json" \
+  -d '{"input":"hello world"}'
+# -> {"embedding":[...]}
+```
+
+**Local gate matrix after changes:**
+
+| Gate | Result |
+|------|--------|
+| `pnpm --dir runtime/iskraSpace typecheck` | 0 errors ✅ |
+| `pnpm --dir runtime/iskraSpace lint` | 0 errors, 76 warnings ✅ |
+| `pnpm --dir runtime/iskraSpace test:run` | 640 passed / 4 skipped ✅ |
+| `pnpm --dir runtime/iskraSpace build` | built in 3.14 s ✅ |
+
+**Residual risk / notes:**
+
+- `[FACT]` Local stack service versions still differ from the linked remote project (`gotrue` and `storage-api`) after `supabase link`; a fresh `pnpm exec supabase stop && pnpm exec supabase start` will download the aligned images on next start.
+- `[FACT]` Analytics container warns that Docker daemon on Windows must be exposed on `tcp://localhost:2375` for full analytics support; this does not block DB/API/Edge Functions.
+- `[FACT]` Remote Edge Functions (`gemini`, `db-proxy`, `iskra-canon-backfill-1536`, `iskra-canon-import-1536`) are `ACTIVE` and remote secrets include `GEMINI_API_KEY`.
+- `[INTERP]` Local Edge Function `embed` is served but has no remote deployment yet; deploy with `pnpm exec supabase functions deploy embed` when ready.
+- `[INTERP]` `supabase/functions/_shared/cors.ts` still returns `Access-Control-Allow-Origin: *`. This is acceptable for local dev but should be hardened for production (tracked separately as a non-blocking residual item).
+
+**Checksums (sha256):**
+
+```text
+fe9e01c5...  .gitignore
+bf7aa6f9...  package.json
+a5106624...  supabase/config.toml
+5076eb50...  supabase/.env.example
+cfe80f08...  supabase/migrations/20260301141501_memory_nodes_live_shape.sql
+94dfe8f8...  supabase/README.md
+7ddf0301...  runtime/iskraSpace/services/supabaseService.ts
+12e40eb9...  runtime/iskraSpace/types/supabase.ts
+ba392984...  runtime/iskraSpace/ISKRA_SPACE_PRODUCTION_READINESS_AUDIT_2026-07-03.md
+```
+
+**Next action:** For remote management, run `pnpm exec supabase login` if you re-authenticate or switch machines, then `pnpm exec supabase link` to align local service versions.

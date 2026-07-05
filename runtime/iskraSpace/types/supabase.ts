@@ -7,114 +7,8 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.1"
-  }
   public: {
     Tables: {
-      graph_nodes: {
-        Row: {
-          id: string
-          layer: string
-          type: string
-          content: string
-          timestamp: string | null
-          metrics_snapshot: Json | null
-          related_ids: string[] | null
-          resonance_score: number | null
-          metadata: Json | null
-          created_at: string | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          id: string
-          layer: string
-          type: string
-          content: string
-          timestamp?: string
-          metrics_snapshot?: Json | null
-          related_ids?: string[] | null
-          resonance_score?: number | null
-          metadata?: Json | null
-          created_at?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          id?: string
-          layer?: string
-          type?: string
-          content?: string
-          timestamp?: string
-          metrics_snapshot?: Json | null
-          related_ids?: string[] | null
-          resonance_score?: number | null
-          metadata?: Json | null
-          created_at?: string | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-           {
-            foreignKeyName: "graph_nodes_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      graph_edges: {
-        Row: {
-          id: string
-          source: string
-          target: string
-          type: string
-          weight: number
-          metadata: Json | null
-          created_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          id: string
-          source: string
-          target: string
-          type: string
-          weight?: number
-          metadata?: Json | null
-          created_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          id?: string
-          source?: string
-          target?: string
-          type?: string
-          weight?: number
-          metadata?: Json | null
-          created_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-           {
-            foreignKeyName: "graph_edges_source_fkey"
-            columns: ["source"]
-            isOneToOne: false
-            referencedRelation: "graph_nodes"
-            referencedColumns: ["id"]
-          },
-           {
-            foreignKeyName: "graph_edges_target_fkey"
-            columns: ["target"]
-            isOneToOne: false
-            referencedRelation: "graph_nodes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       audit_log: {
         Row: {
           action: string
@@ -181,6 +75,114 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "chat_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      graph_edges: {
+        Row: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          source: string
+          target: string
+          type: string
+          user_id: string | null
+          weight: number
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          metadata?: Json | null
+          source: string
+          target: string
+          type: string
+          user_id?: string | null
+          weight?: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          source?: string
+          target?: string
+          type?: string
+          user_id?: string | null
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "graph_edges_source_fkey"
+            columns: ["source"]
+            isOneToOne: false
+            referencedRelation: "graph_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "graph_edges_target_fkey"
+            columns: ["target"]
+            isOneToOne: false
+            referencedRelation: "graph_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "graph_edges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      graph_nodes: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          layer: string
+          metadata: Json | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          timestamp: string
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id: string
+          layer: string
+          metadata?: Json | null
+          metrics_snapshot?: Json | null
+          related_ids?: string[] | null
+          resonance_score?: number | null
+          timestamp?: string
+          type: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          layer?: string
+          metadata?: Json | null
+          metrics_snapshot?: Json | null
+          related_ids?: string[] | null
+          resonance_score?: number | null
+          timestamp?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "graph_nodes_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -281,52 +283,52 @@ export type Database = {
       }
       memory_nodes: {
         Row: {
-          content: Json
+          content: Json | null
           created_at: string | null
           doc_type: string | null
           evidence: Json | null
           facet: string | null
           id: string
-          layer: string
+          layer: string | null
           section: string | null
           tags: string[] | null
-          title: string
+          title: string | null
           trust_level: number | null
-          type: string
+          type: string | null
           updated_at: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
-          content: Json
+          content?: Json | null
           created_at?: string | null
           doc_type?: string | null
           evidence?: Json | null
           facet?: string | null
           id?: string
-          layer: string
+          layer?: string | null
           section?: string | null
           tags?: string[] | null
-          title: string
+          title?: string | null
           trust_level?: number | null
-          type: string
+          type?: string | null
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
-          content?: Json
+          content?: Json | null
           created_at?: string | null
           doc_type?: string | null
           evidence?: Json | null
           facet?: string | null
           id?: string
-          layer?: string
+          layer?: string | null
           section?: string | null
           tags?: string[] | null
-          title?: string
+          title?: string | null
           trust_level?: number | null
-          type?: string
+          type?: string | null
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -346,6 +348,7 @@ export type Database = {
           ctx_switch: number | null
           drift: number | null
           echo: number | null
+          foresight: number | null
           id: string
           interrupt: number | null
           mirror_sync: number | null
@@ -363,6 +366,7 @@ export type Database = {
           ctx_switch?: number | null
           drift?: number | null
           echo?: number | null
+          foresight?: number | null
           id?: string
           interrupt?: number | null
           mirror_sync?: number | null
@@ -380,6 +384,7 @@ export type Database = {
           ctx_switch?: number | null
           drift?: number | null
           echo?: number | null
+          foresight?: number | null
           id?: string
           interrupt?: number | null
           mirror_sync?: number | null
@@ -388,7 +393,7 @@ export type Database = {
           rhythm?: number | null
           silence_mass?: number | null
           trust?: number | null
-          user_id: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -399,6 +404,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      rate_limits: {
+        Row: {
+          created_at: string | null
+          endpoint: string
+          hits: number
+          ip: string
+          reset_time: string
+        }
+        Insert: {
+          created_at?: string | null
+          endpoint: string
+          hits?: number
+          ip: string
+          reset_time: string
+        }
+        Update: {
+          created_at?: string | null
+          endpoint?: string
+          hits?: number
+          ip?: string
+          reset_time?: string
+        }
+        Relationships: []
       }
       tasks: {
         Row: {
@@ -511,72 +540,249 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      graph_bfs_traversal: {
+      check_rate_limit: {
         Args: {
-          start_id: string
-          max_depth?: number
-          min_weight?: number
+          client_ip: string
+          max_hits: number
+          target_endpoint: string
+          window_minutes: number
         }
+        Returns: boolean
+      }
+      claim_legacy_data: { Args: { legacy_device_id: string }; Returns: Json }
+      graph_bfs_traversal: {
+        Args: { max_depth?: number; min_weight?: number; start_id: string }
         Returns: {
-          node_id: string
           depth: number
+          node_id: string
           path: string[]
         }[]
       }
-      graph_find_resonant: {
+      graph_create_edge: {
         Args: {
-          min_resonance?: number
-          limit_count?: number
+          p_id: string
+          p_metadata?: Json
+          p_source: string
+          p_target: string
+          p_type: string
+          p_weight?: number
         }
         Returns: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          source: string
+          target: string
+          type: string
+          user_id: string | null
+          weight: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "graph_edges"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      graph_create_node: {
+        Args: {
+          p_content: string
+          p_id: string
+          p_layer: string
+          p_metadata?: Json
+          p_metrics_snapshot?: Json
+          p_related_ids?: string[]
+          p_resonance_score?: number
+          p_timestamp?: string
+          p_type: string
+        }
+        Returns: {
+          content: string
+          created_at: string | null
           id: string
           layer: string
+          metadata: Json | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          timestamp: string
           type: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "graph_nodes"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      graph_delete_node: { Args: { p_node_id: string }; Returns: undefined }
+      graph_find_resonant: {
+        Args: { limit_count?: number; min_resonance?: number }
+        Returns: {
           content: string
+          id: string
+          layer: string
           resonance_score: number
+          type: string
         }[]
       }
-      graph_get_node_with_edges: {
-        Args: {
-          node_id: string
-        }
+      graph_find_resonant_nodes: {
+        Args: { p_limit_count?: number; p_min_resonance?: number }
         Returns: {
-          node: {
-            id: string
-            layer: string
-            type: string
-            content: string
-            timestamp: string
-            metrics_snapshot: Json
-            related_ids: string[]
-            resonance_score: number
-            metadata: Json
-            created_at: string
-            updated_at: string
-            user_id: string | null
-          }
-          outgoing_edges: {
-            id: string
-            source: string
-            target: string
-            type: string
-            weight: number
-            metadata: Json
-            created_at: string
-            user_id: string | null
-          }[]
-          incoming_edges: {
-            id: string
-            source: string
-            target: string
-            type: string
-            weight: number
-            metadata: Json
-            created_at: string
-            user_id: string | null
-          }[]
+          content: string
+          created_at: string | null
+          id: string
+          layer: string
+          metadata: Json | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          timestamp: string
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "graph_nodes"
+          isOneToOne: false
+          isSetofReturn: true
         }
       }
+      graph_get_connection_candidates: {
+        Args: { p_limit_count?: number; p_node_id: string }
+        Returns: {
+          content: string
+          created_at: string | null
+          id: string
+          layer: string
+          metadata: Json | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          timestamp: string
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "graph_nodes"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      graph_get_node_with_edges: { Args: { node_id: string }; Returns: Json }
+      graph_get_stats: { Args: never; Returns: Json }
+      graph_get_user_nodes: {
+        Args: {
+          p_layer?: string
+          p_limit_count?: number
+          p_node_ids?: string[]
+          p_type?: string
+        }
+        Returns: {
+          content: string
+          created_at: string | null
+          id: string
+          layer: string
+          metadata: Json | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          timestamp: string
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "graph_nodes"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      graph_search_nodes: {
+        Args: { p_limit_count?: number; p_query: string }
+        Returns: {
+          content: string
+          created_at: string | null
+          id: string
+          layer: string
+          metadata: Json | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          timestamp: string
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "graph_nodes"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      graph_traverse_bfs_nodes: {
+        Args: {
+          p_max_depth?: number
+          p_min_weight?: number
+          p_start_id: string
+        }
+        Returns: {
+          content: string
+          created_at: string | null
+          id: string
+          layer: string
+          metadata: Json | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          timestamp: string
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "graph_nodes"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      graph_update_node_resonance: {
+        Args: {
+          p_metrics_snapshot: Json
+          p_node_id: string
+          p_resonance_score: number
+        }
+        Returns: {
+          content: string
+          created_at: string | null
+          id: string
+          layer: string
+          metadata: Json | null
+          metrics_snapshot: Json | null
+          related_ids: string[] | null
+          resonance_score: number | null
+          timestamp: string
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "graph_nodes"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
       [_ in never]: never
@@ -709,3 +915,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+

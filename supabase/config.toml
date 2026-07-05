@@ -6,5 +6,7 @@
 # incompatible with JWT Signing Keys. If you migrate to Signing Keys, implement
 # manual JWT validation in the function (see Supabase docs/examples).
 
+project_id = "iskra"
+
 [functions.embed]
 verify_jwt = true
