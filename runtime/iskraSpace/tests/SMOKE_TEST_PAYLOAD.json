@@ -1,0 +1,9 @@
+{
+  "message": "Hello from iskraSpace smoke test",
+  "route": "chat",
+  "phase": "runtime",
+  "context": {
+    "sift": true,
+    "delta_receipt": true
+  }
+}
