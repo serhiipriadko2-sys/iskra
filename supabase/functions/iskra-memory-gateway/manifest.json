@@ -1,35 +1,42 @@
 {
   "release": "iskra-memory-gateway-project-facing-package",
-  "created_at": "2026-07-09T18:12:50.7218718Z",
+  "updated_at": "2026-07-09T19:10:00Z",
   "counts": {
     "files": 3,
-    "bytes": 8564
+    "bytes": 26009
   },
   "checks": {
     "content_ok": true,
-    "secret_literal_scan": "only redaction regex literals matched",
-    "verify_jwt": true,
+    "secret_literal_scan": "source contains redaction regex literals only",
+    "verify_jwt_required": true,
+    "actor_source": "verified Supabase JWT claims, not request body",
+    "unknown_route_status": 404,
+    "db_url_preference": "SUPABASE_DB_POOLER_URL then SUPABASE_DB_URL fallback",
+    "db_pool_max_default": 2,
+    "db_pool_max_hard_cap": 4,
+    "rpc_contract_migration": "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
     "deploy_path": "Remote Desktop Commander + Supabase CLI",
-    "live_status": "ACTIVE",
-    "live_version": 1,
-    "live_verify_jwt": true,
-    "live_edge_sha256": "3f5a7cf64d51d6dfcbf658f916f67d6904d3a4566647c9046a61f2314be1b035"
+    "live_status_before_patch": "ACTIVE",
+    "live_version_before_patch": 1,
+    "live_verify_jwt_before_patch": true,
+    "live_edge_sha256_before_patch": "3f5a7cf64d51d6dfcbf658f916f67d6904d3a4566647c9046a61f2314be1b035",
+    "live_redeploy_after_patch": "pending"
   },
   "items": [
     {
-      "path": "README.md",
-      "bytes": 1319,
-      "sha256": "61c594139db8daeaec90b1865f68db37971840186911766d80084e861f839d6c"
-    },
-    {
-      "path": "supabase/config.toml",
-      "bytes": 145,
-      "sha256": "5d2834d3fc588a910eece19120fc15ac551e7230caea3a531b0452af87918c15"
+      "path": "supabase/functions/iskra-memory-gateway/README.md",
+      "bytes": 1871,
+      "sha256": "1e193d72ade0da5c5b6b8fa8a2b3c826243593ec1ba6bf12f91b3fc2b759ee27"
     },
     {
       "path": "supabase/functions/iskra-memory-gateway/index.ts",
-      "bytes": 7100,
-      "sha256": "6af9d10d352ae9b2db93d86c018a08befc0400162521619ac073683b2a08c0e3"
+      "bytes": 8880,
+      "sha256": "f3813679c1a5aba276be190cf1f38d9cef16f9b7542a770eb4da0c997fd01f7c"
+    },
+    {
+      "path": "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
+      "bytes": 15258,
+      "sha256": "6978373b0832a9e90d7b8b5a2d8757d6dd66674995121783a40110b18df126ce"
     }
   ]
 }
