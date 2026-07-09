@@ -90,6 +90,15 @@ class SoundService {
     setTimeout(() => this.playTone(50, 'sawtooth', 0.6), 100);
   }
 
+  playRitualPhoenix() {
+    if (this.isMuted) return;
+
+    // Ascending ember — rebirth signal, distinct from shatter crunch
+    this.playTone(220, 'sine', 0.4, 0.05);
+    setTimeout(() => this.playTone(440, 'sine', 0.5, 0.05), 120);
+    setTimeout(() => this.playTone(660, 'sine', 0.8, 0.1), 240);
+  }
+
   playRitualConnect() {
      // 440Hz pure light
      this.playTone(440, 'sine', 1.5, 0.5);

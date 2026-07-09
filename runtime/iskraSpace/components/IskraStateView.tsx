@@ -14,6 +14,7 @@ interface IskraStateViewProps {
   metrics: IskraMetrics;
   phase: IskraPhase;
   onShatter: () => void;
+  onPhoenix: () => void;
 }
 
 const phaseDescriptions: Record<IskraPhase, string> = {
@@ -72,7 +73,7 @@ const RitualButton: React.FC<{
     </button>
 );
 
-const IskraStateView: React.FC<IskraStateViewProps> = ({ metrics, phase, onShatter }) => {
+const IskraStateView: React.FC<IskraStateViewProps> = ({ metrics, phase, onShatter, onPhoenix }) => {
     const status: SessionStatus = 'LISTENING'; 
     const prefs = storageService.getVoicePreferences();
     const lastState = storageService.getLastVoiceState();
@@ -120,8 +121,8 @@ const IskraStateView: React.FC<IskraStateViewProps> = ({ metrics, phase, onShatt
 
     const handlePhoenix = () => {
         triggerGlitch();
-        soundService.playRitualShatter();
-        onShatter(); 
+        soundService.playRitualPhoenix();
+        onPhoenix();
         setLogs(prev => [`[SYSTEM] RITUAL PHOENIX INITIATED...`, ...prev]);
     };
 

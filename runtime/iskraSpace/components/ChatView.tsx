@@ -6,6 +6,7 @@ import { searchService } from '../services/searchService';
 import { Message, IskraMetrics, Voice, VoiceName, SearchResult, VoicePreferences, ResponseMode } from '../types';
 import { getActiveVoice, getVoiceSelectionExplanation } from '../services/voiceEngine';
 import { storageService } from '../services/storageService';
+import { securityService } from '../services/securityService';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import VoiceExplainableDisplay from './ExplainableTrace';
 import { createAudioContext, decode, decodeAudioData } from '../css/audioUtils';
@@ -222,13 +223,26 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
 
     setError(null);
     stopAndClearAudio();
-    const userMessage: Message = { role: 'user', text: query, image: image };
-    onUserInput(query);
+
+    // Security guardrails: scan user input before any AI or storage path
+    const security = securityService.validate(query);
+    if (security.action === 'REJECT') {
+      setError(`Ввод отклонён: ${security.reason || 'обнаружена попытка инъекции'}`);
+      return;
+    }
+    if (security.action === 'REDIRECT') {
+      setError(`Эта тема выходит за безопасный контур Искры (${security.reason}). Если тебе нужна помощь, обратись к человеку, которому доверяешь.`);
+      return;
+    }
+
+    const safeQuery = security.sanitizedText;
+    const userMessage: Message = { role: 'user', text: safeQuery, image: image };
+    onUserInput(safeQuery);
     
-    if (query.trim().startsWith('/search ')) {
+    if (safeQuery.trim().startsWith('/search ')) {
       setHistory(prev => [...prev, userMessage]);
       setIsLoading(true);
-      const searchQuery = query.trim().substring(8);
+      const searchQuery = safeQuery.trim().substring(8);
       try {
         const searchResults = await searchService.searchHybrid(searchQuery, {});
         

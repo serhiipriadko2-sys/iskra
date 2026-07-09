@@ -264,7 +264,7 @@ export default function App() {
                             {view === 'RUNES' && <RuneView metrics={metrics} />}
                             {view === 'RESEARCH' && <DeepResearchView metrics={metrics} />}
                             {view === 'MEMORY' && <MemoryView />}
-                            {view === 'METRICS' && <IskraStateView metrics={metrics} phase={phase} onShatter={handleShatter} />}
+                            {view === 'METRICS' && <IskraStateView metrics={metrics} phase={phase} onShatter={handleShatter} onPhoenix={handlePhoenix} />}
                             {view === 'COUNCIL' && <CouncilView onClose={() => setView('METRICS')} />}
                             {view === 'EVAL' && <EvalDashboard />}
                             {view === 'GLOSSARY' && <GlossaryView />}

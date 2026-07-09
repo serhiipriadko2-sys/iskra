@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { IskraAIService } from '../services/geminiService';
 import { storageService } from '../services/storageService';
+import { securityService } from '../services/securityService';
 import { JournalPrompt, JournalEntry } from '../types';
 import Loader from './Loader';
 import { SparkleIcon, XIcon, ChevronRightIcon, Undo2Icon } from './icons';
@@ -80,11 +81,25 @@ const Journal: React.FC = () => {
 
     const handleSave = async () => {
         if (!entryText.trim() || !prompt) return;
+
+        // Security guardrails: scan journal entry before AI analysis and storage
+        const security = securityService.validate(entryText);
+        if (security.action === 'REJECT') {
+            setError(`Запись не сохранена: ${security.reason || 'обнаружена попытка инъекции'}`);
+            return;
+        }
+        if (security.action === 'REDIRECT') {
+            setError(`Эта тема выходит за безопасный контур Искры (${security.reason}). Если тебе нужна помощь, обратись к человеку, которому доверяешь.`);
+            return;
+        }
+
+        const safeText = security.sanitizedText;
         setIsSaving(true);
-        
+        setError(null);
+
         let analysis = undefined;
         try {
-             analysis = await service.analyzeJournalEntry(entryText);
+             analysis = await service.analyzeJournalEntry(safeText);
         } catch (e) {
             console.error("Journal analysis failed", e);
             // Proceed to save without analysis if it fails
@@ -93,7 +108,7 @@ const Journal: React.FC = () => {
         const newEntry: JournalEntry = {
             id: `entry-${Date.now()}`,
             timestamp: new Date().toISOString(),
-            text: entryText,
+            text: safeText,
             prompt: prompt,
             userMetrics: {
                 mood,
