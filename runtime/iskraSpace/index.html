@@ -12,109 +12,13 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%2305080A' width='100' height='100'/><text y='.9em' font-size='70' x='15'>⟡</text></svg>">
     <meta name="description" content="Искра — AI-компаньон с 9 голосами и когнитивной архитектурой. Фрактальная операционная система жизнеритма.">
     <meta name="mobile-web-app-capable" content="yes">
-    <!-- GitHub Pages SPA routing handler -->
-    <script type="text/javascript">
-      // Handle SPA redirects from 404.html
-      (function(l) {
-        if (l.search[1] === '/') {
-          var decoded = l.search.slice(1).split('&').map(function(s) {
-            return s.replace(/~and~/g, '&')
-          }).join('?');
-          window.history.replaceState(null, null,
-            l.pathname.slice(0, -1) + decoded + l.hash
-          );
-        }
-      }(window.location));
-    </script>
+    <!-- GitHub Pages SPA routing handler (external for CSP script-src 'self') -->
+    <script src="%BASE_URL%spa-redirect.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: ['class'],
-        content: ['./src/**/*.{js,ts,jsx,tsx}'],
-        theme: {
-          extend: {
-            colors: {
-              bg: '#05080A', 
-              surface: '#0F1216',
-              surface2: '#1A1E24',
-              glass: 'rgba(20, 25, 30, 0.6)',
-              'glass-light': 'rgba(255, 255, 255, 0.03)',
-              border: 'rgba(255, 255, 255, 0.08)',
-              text: '#E6E8EB',
-              'text-muted': '#8A9199',
-              primary: '#FF7A00', 
-              'primary-dim': 'rgba(255, 122, 0, 0.1)',
-              accent: '#4DA3FF',  
-              'accent-dim': 'rgba(77, 163, 255, 0.1)',
-              success: '#2ECC71',
-              warning: '#FFB020',
-              danger: '#FF4D4D',
-            },
-            borderRadius: {
-              'xl': '16px',
-              '2xl': '24px',
-              '3xl': '32px',
-              'pill': '9999px',
-            },
-            boxShadow: {
-              soft: '0 4px 20px rgba(0,0,0,0.3)',
-              deep: '0 10px 40px -10px rgba(0,0,0,0.6)',
-              'glow-ember': '0 0 20px rgba(255,122,0,0.2), 0 0 40px rgba(255,122,0,0.1)',
-              'glow-electric': '0 0 20px rgba(77,163,255,0.2), 0 0 40px rgba(77,163,255,0.1)',
-              'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
-            },
-            dropShadow: {
-              'glow-primary': '0 0 10px rgba(255,122,0,0.5)',
-              'glow-accent': '0 0 10px rgba(77,163,255,0.5)',
-            },
-            fontFamily: {
-              sans: "'Inter', system-ui, -apple-system, sans-serif",
-              mono: "'JetBrains Mono', monospace",
-              serif: "'Cormorant Garamond', serif",
-            },
-            animation: {
-              'fade-in': 'fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              'slide-up': 'slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              'float': 'float 6s ease-in-out infinite',
-              'float-delayed': 'float 7s ease-in-out infinite 2s',
-              'float-delayed-2': 'float 8s ease-in-out infinite 1s',
-              'breathe': 'breathe 6s ease-in-out infinite',
-              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'glow': 'glow 2s ease-in-out infinite alternate',
-            },
-            keyframes: {
-              'fade-in': {
-                'from': { opacity: 0, transform: 'scale(0.98)' },
-                'to': { opacity: 1, transform: 'scale(1)' },
-              },
-              'slide-up': {
-                'from': { transform: 'translateY(100%)' },
-                'to': { transform: 'translateY(0)' },
-              },
-              'float': {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-10px)' },
-              },
-              'breathe': {
-                '0%, 100%': { transform: 'scale(1)' },
-                '50%': { transform: 'scale(1.02)' },
-              },
-              'glow': {
-                'from': { filter: 'drop-shadow(0 0 10px rgba(255,122,0,0.5))' },
-                'to': { filter: 'drop-shadow(0 0 20px rgba(255,122,0,0.9)) brightness(1.2)' },
-              }
-            },
-            backgroundImage: {
-              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-              'hero-glow': 'conic-gradient(from 90deg at 50% 50%, #000000 0%, #1a1a1a 50%, #000000 100%)',
-            }
-          }
-        }
-      };
-    </script>
+    <!-- Tailwind is compiled at build time via PostCSS (tailwind.config.js); the
+         Play CDN and inline config were removed for production + CSP compliance. -->
 <style>
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -138,34 +42,11 @@ body::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; he
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
-<script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0"
-  }
-}
-</script>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
-    <script>
-      // PWA Service Worker Registration
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          const basePath = new URL('%BASE_URL%', window.location.origin).pathname;
-          navigator.serviceWorker.register(`${basePath}service-worker.js`, { scope: basePath })
-            .then(registration => {
-              console.log('[PWA] ServiceWorker registered:', registration.scope);
-            })
-            .catch(error => {
-              console.log('[PWA] ServiceWorker registration failed:', error);
-            });
-        });
-      }
-    </script>
+    <script src="%BASE_URL%pwa-register.js"></script>
 </body>
 </html>

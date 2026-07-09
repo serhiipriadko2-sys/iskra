@@ -11,8 +11,6 @@
  * - Per-user/IP in-memory rate limiting.
  */
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-
 type AllowedOriginMode = 'any' | 'explicit';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
@@ -175,12 +173,15 @@ function checkRepair(metrics: Partial<Metrics>): RepairResult {
   };
 }
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
   const origin = req.headers.get('origin');
 
-  // Handle CORS preflight
+  // Handle CORS preflight (reject disallowed origins, mirror gemini/iskra-agent: 204 no body)
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders(origin) });
+    if (!isOriginAllowed(origin)) {
+      return json({ error: 'forbidden_origin' }, { status: 403 }, origin);
+    }
+    return new Response(null, { status: 204, headers: corsHeaders(origin) });
   }
 
   if (req.method !== 'POST') {

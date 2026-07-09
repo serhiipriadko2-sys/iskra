@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
 import Sidebar, { MobileMenu } from './components/Sidebar';
 import ErrorBoundary from './components/ErrorBoundary';
 import Ambience from './components/Ambience';
+import AuthGate from './components/AuthGate';
 import type { TourStep } from './components/OnboardingTour';
 
 // Lazy-loaded views — code-split per route
@@ -31,7 +32,6 @@ import { metricsService } from './services/metricsService';
 import { canonService } from './services/canonService';
 import { storageService } from './services/storageService';
 import { checkRitualTriggers, executePhoenix, executeShatter, getPhaseAfterRitual } from './services/ritualService';
-import { syncService } from './services/syncService';
 
 export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'LIVE' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
 
@@ -82,7 +82,7 @@ const INITIAL_METRICS: IskraMetrics = {
 
 type MetricsUpdater = Partial<IskraMetrics> | ((prev: IskraMetrics) => Partial<IskraMetrics>);
 
-export default function App() {
+export function IskraSpaceApp() {
     const [view, setView] = useState<AppView>('PULSE');
     const [isOnboarding, setIsOnboarding] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -157,7 +157,7 @@ export default function App() {
             setShowTour(true);
         }
         canonService.seedCanon();
-        syncService.syncAllPending();
+        void import('./services/syncService').then(({ syncService }) => syncService.syncAllPending());
     }, []);
 
     useEffect(() => {
@@ -337,5 +337,13 @@ export default function App() {
                 )}
             </div>
         </ErrorBoundary>
+    );
+}
+
+export default function App() {
+    return (
+        <AuthGate>
+            <IskraSpaceApp />
+        </AuthGate>
     );
 }
