@@ -1,0 +1,35 @@
+{
+  "release": "iskra-memory-gateway-project-facing-package",
+  "created_at": "2026-07-09T18:12:50.7218718Z",
+  "counts": {
+    "files": 3,
+    "bytes": 8564
+  },
+  "checks": {
+    "content_ok": true,
+    "secret_literal_scan": "only redaction regex literals matched",
+    "verify_jwt": true,
+    "deploy_path": "Remote Desktop Commander + Supabase CLI",
+    "live_status": "ACTIVE",
+    "live_version": 1,
+    "live_verify_jwt": true,
+    "live_edge_sha256": "3f5a7cf64d51d6dfcbf658f916f67d6904d3a4566647c9046a61f2314be1b035"
+  },
+  "items": [
+    {
+      "path": "README.md",
+      "bytes": 1319,
+      "sha256": "61c594139db8daeaec90b1865f68db37971840186911766d80084e861f839d6c"
+    },
+    {
+      "path": "supabase/config.toml",
+      "bytes": 145,
+      "sha256": "5d2834d3fc588a910eece19120fc15ac551e7230caea3a531b0452af87918c15"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/index.ts",
+      "bytes": 7100,
+      "sha256": "6af9d10d352ae9b2db93d86c018a08befc0400162521619ac073683b2a08c0e3"
+    }
+  ]
+}
