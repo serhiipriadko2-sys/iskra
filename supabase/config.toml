@@ -10,7 +10,3 @@ project_id = "iskra"
 
 [functions.embed]
 verify_jwt = true
-
-[functions.iskra-memory-gateway]
-verify_jwt = true
-entrypoint = "./functions/iskra-memory-gateway/index.ts"
