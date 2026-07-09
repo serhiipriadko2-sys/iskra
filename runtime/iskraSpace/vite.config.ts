@@ -1,13 +1,57 @@
 import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig(() => {
+// Single source of truth for the Content-Security-Policy.
+// KEEP IN SYNC with vercel.json and nginx.conf (HTTP-header copies).
+// Notes:
+// - script-src 'self': all inline scripts were externalized (spa-redirect.js,
+//   pwa-register.js) and the Vite modulepreload polyfill is disabled below.
+// - style-src 'unsafe-inline': required for React inline style props, the inline
+//   <style> block, and Google Fonts injected styles (style injection is low XSS risk).
+// - connect-src includes Supabase REST/Realtime/Edge; extend it if Sentry/PostHog
+//   (VITE_SENTRY_DSN / VITE_POSTHOG_HOST) are enabled.
+// - frame-ancestors is ignored inside a <meta> CSP (GitHub Pages); it is enforced
+//   via HTTP headers on Vercel/nginx. X-Frame-Options provides the meta-side fallback.
+export const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "img-src 'self' data: blob:",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "script-src 'self'",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  'upgrade-insecure-requests',
+].join('; ');
+
+// Inject the CSP as a <meta> tag in production builds only. In dev, Vite/react-refresh
+// rely on inline scripts + eval for HMR, which a strict CSP would break.
+function cspMetaPlugin(isProd: boolean): Plugin {
+  return {
+    name: 'iskra-csp-meta',
+    transformIndexHtml(html) {
+      if (!isProd) return html;
+      const meta = `<meta http-equiv="Content-Security-Policy" content="${CONTENT_SECURITY_POLICY}" />`;
+      return html.replace('</title>', `</title>\n    ${meta}`);
+    },
+  };
+}
+
+export default defineConfig(({ command }) => {
   const root = __dirname;
+  const isProd = command === 'build';
   return {
     base: process.env.VITE_BASE_PATH || '/',
-    plugins: [react()],
+    plugins: [react(), cspMetaPlugin(isProd)],
     build: {
+      // Disable the inline modulepreload polyfill so no inline <script> is emitted
+      // (keeps script-src 'self' strict). Modern browsers support modulepreload natively.
+      modulePreload: { polyfill: false },
       rollupOptions: {
         output: {
           manualChunks(id) {

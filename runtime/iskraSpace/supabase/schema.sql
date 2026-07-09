@@ -238,9 +238,14 @@ CREATE POLICY "Users can manage own chat_history"
     USING (user_id = auth.uid())
     WITH CHECK (user_id = auth.uid());
 
-CREATE POLICY "Users can manage own audit_log"
-    ON audit_log FOR ALL
-    USING (user_id = auth.uid())
+-- audit_log is append-only: users may read and insert their own audit rows,
+-- but never UPDATE or DELETE them (no such policies => RLS denies those actions).
+CREATE POLICY "Users can view own audit_log"
+    ON audit_log FOR SELECT
+    USING (user_id = auth.uid());
+
+CREATE POLICY "Users can insert own audit_log"
+    ON audit_log FOR INSERT
     WITH CHECK (user_id = auth.uid());
 
 -- =============================================================================

@@ -781,6 +781,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      resolve_beta_access: { Args: never; Returns: Json }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
     }

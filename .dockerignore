@@ -1,119 +1,41 @@
-# Include any files or directories that you don't want to be copied to your
-# container here (e.g., local build artifacts, temporary files, etc.).
-#
-# For more help, visit the .dockerignore file reference guide at
+# Files/directories excluded from the Docker build context.
 # https://docs.docker.com/engine/reference/builder/#dockerignore-file
 
-**/.DS_Store
-**/__pycache__
-**/.venv
-**/.classpath
-**/.dockerignore
-**/.env
-**/.git
-**/.gitignore
-**/.project
-**/.settings
-**/.toolstarget
-**/.vs
-**/.vscode
-**/*.*proj.user
-**/*.dbmdl
-**/*.jfm
-**/bin
-**/charts
-**/docker-compose*
-**/compose*
-**/Dockerfile*
-**/node_modules
-**/npm-debug.log
-**/obj
-**/secrets.dev.yaml
-**/values.dev.yaml
-LICENSE
-README.md
-# Include any files or directories that you don't want to be copied to your
-# container here (e.g., local build artifacts, temporary files, etc.).
-#
-# For more help, visit the .dockerignore file reference guide at
-# https://docs.docker.com/engine/reference/builder/#dockerignore-file
-
-**/.DS_Store
-**/__pycache__
-**/.venv
-**/.classpath
-**/.dockerignore
-**/.env
-**/.git
-**/.gitignore
-**/.project
-**/.settings
-**/.toolstarget
-**/.vs
-**/.vscode
-**/*.*proj.user
-**/*.dbmdl
-**/*.jfm
-**/bin
-**/charts
-**/docker-compose*
-**/compose*
-**/Dockerfile*
-**/node_modules
-**/npm-debug.log
-**/obj
-**/secrets.dev.yaml
-**/values.dev.yaml
-LICENSE
-README.md
-# Include any files or directories that you don't want to be copied to your
-# container here (e.g., local build artifacts, temporary files, etc.).
-#
-# For more help, visit the .dockerignore file reference guide at
-# https://docs.docker.com/engine/reference/builder/#dockerignore-file
-
-**/.DS_Store
-**/__pycache__
-**/.venv
-**/.classpath
-**/.dockerignore
-**/.env
-**/.git
-**/.gitignore
-**/.project
-**/.settings
-**/.toolstarget
-**/.vs
-**/.vscode
-**/*.*proj.user
-**/*.dbmdl
-**/*.jfm
-**/bin
-**/charts
-**/docker-compose*
-**/compose*
-**/Dockerfile*
-**/node_modules
-**/npm-debug.log
-**/obj
-**/secrets.dev.yaml
-**/values.dev.yaml
-LICENSE
-README.md
 # VCS and metadata
-.git
-.gitignore
+**/.git
+**/.gitignore
+**/.dockerignore
+**/.vs
+**/.vscode
+**/.DS_Store
+**/__pycache__
+**/.venv
 
-# Dependencies and build artifacts
+# Dependencies and build artifacts (installed/built inside the image)
 **/node_modules
 **/dist
 **/.turbo
 **/.cache
+**/bin
+**/obj
+
+# Docker / compose files (not needed inside the image)
+**/Dockerfile*
+**/docker-compose*
+**/compose*
+**/charts
 
 # Logs
 **/*.log
+**/npm-debug.log
 
-# Environment files (prevent secret leakage into Docker build context)
+# Environment files (prevent secret leakage into the build context)
 **/.env
 **/.env.*
 !**/.env.example
+
+# Misc
+LICENSE
+README.md
+**/secrets.dev.yaml
+**/values.dev.yaml
