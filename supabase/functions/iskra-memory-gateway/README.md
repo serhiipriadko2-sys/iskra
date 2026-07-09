@@ -19,11 +19,24 @@ Routes:
 
 ## Security posture
 
-- `verify_jwt = true`
-- no public unauthenticated gateway
-- no secrets committed
-- DB access comes from `SUPABASE_DB_URL` in Supabase Edge runtime environment
-- payloads are still checked by locked RPC validators in `iskra_memory`
+- Supabase function must run with `verify_jwt=true`.
+- The gateway does not trust `actor` from request JSON.
+- Actor is derived from the verified Supabase JWT claims exposed through the Authorization header.
+- Unknown routes return `404` with `ok:false`.
+- DB access should use `SUPABASE_DB_POOLER_URL`; `SUPABASE_DB_URL` remains a fallback.
+- The postgres-js pool is capped by `SUPABASE_DB_POOL_MAX`, default `2`, max `4`.
+- No secrets are committed.
+- Payloads are still checked by locked RPC validators in `iskra_memory`.
+
+## Reproducible DB boundary
+
+The gateway depends on `iskra_memory` RPCs. The repo includes a compatibility migration:
+
+```text
+supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql
+```
+
+It creates missing compatibility functions only when absent, so it does not replace stronger live functions.
 
 ## Deploy
 
