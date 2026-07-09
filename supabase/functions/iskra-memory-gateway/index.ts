@@ -4,13 +4,17 @@ import postgres from "npm:postgres@3.4.5";
 type Json = Record<string, unknown>;
 type RouteHandler = (body: Json, actor: string) => Promise<unknown>;
 
-const dbUrl = Deno.env.get("SUPABASE_DB_URL");
-if (!dbUrl) throw new Error("SUPABASE_DB_URL is not configured");
+const dbUrl = Deno.env.get("SUPABASE_DB_POOLER_URL") ?? Deno.env.get("SUPABASE_DB_URL");
+if (!dbUrl) throw new Error("SUPABASE_DB_POOLER_URL or SUPABASE_DB_URL is not configured");
+
+const poolMaxRaw = Number(Deno.env.get("SUPABASE_DB_POOL_MAX") ?? "2");
+const poolMax = Number.isInteger(poolMaxRaw) && poolMaxRaw > 0 && poolMaxRaw <= 4 ? poolMaxRaw : 2;
 
 const sql = postgres(dbUrl, {
   prepare: false,
   idle_timeout: 10,
   max_lifetime: 60 * 5,
+  max: poolMax,
 });
 
 function allowedOrigins(): string[] {
@@ -51,15 +55,51 @@ function routeName(pathname: string): string {
   return last;
 }
 
-function asActor(body: Json): string {
-  const candidate = body.actor;
-  return typeof candidate === "string" && candidate.trim().length > 0
-    ? candidate.trim()
-    : "ISKRA_PROJECT";
+function decodeJwtPayload(authHeader: string | null): Json {
+  const token = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1];
+  if (!token) throw new Error("missing_authorization_bearer");
+  const payload = token.split(".")[1];
+  if (!payload) throw new Error("invalid_authorization_jwt");
+  const padded = payload.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(payload.length / 4) * 4, "=");
+  const decoded = atob(padded);
+  const parsed = JSON.parse(decoded);
+  if (!parsed || typeof parsed !== "object") throw new Error("invalid_authorization_claims");
+  return parsed as Json;
+}
+
+function actorFromRequest(req: Request): string {
+  const claims = decodeJwtPayload(req.headers.get("authorization"));
+  const role = typeof claims.role === "string" ? claims.role : "unknown";
+  const subject = typeof claims.sub === "string" ? claims.sub : "";
+  const ref = typeof claims.ref === "string" ? claims.ref : "";
+  const stableId = subject || ref || role;
+  return `jwt:${role}:${stableId}`;
+}
+
+function withoutClientActor(body: Json): Json {
+  const { actor: _actor, ...rest } = body;
+  return rest;
+}
+
+function stringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+}
+
+function boundedLimit(value: unknown, fallback = 20, max = 100): number {
+  return Number.isInteger(value) && (value as number) > 0 ? Math.min(value as number, max) : fallback;
 }
 
 function cleanError(error: unknown): string {
-  const message = error instanceof Error ? error.message : JSON.stringify(error);
+  let message: string;
+  if (error instanceof Error) {
+    message = error.message;
+  } else {
+    try {
+      message = typeof error === "object" && error !== null ? JSON.stringify(error) : String(error);
+    } catch {
+      message = String(error);
+    }
+  }
   return String(message ?? "unknown_error")
     .replace(/sk-[A-Za-z0-9_-]+/g, "[redacted-openai-key]")
     .replace(/sb_secret_[A-Za-z0-9_-]+/g, "[redacted-supabase-secret]")
@@ -68,9 +108,10 @@ function cleanError(error: unknown): string {
 }
 
 async function observe(body: Json, actor: string): Promise<unknown> {
-  const payload = body.route_mode === "dry-run" ? { ...body, mode: "dry_run" }
-    : body.route_mode === "dark-run" ? { ...body, mode: "dark_run" }
-    : body;
+  const safeBody = withoutClientActor(body);
+  const payload = safeBody.route_mode === "dry-run" ? { ...safeBody, mode: "dry_run" }
+    : safeBody.route_mode === "dark-run" ? { ...safeBody, mode: "dark_run" }
+    : safeBody;
 
   const rows = await sql`
     select iskra_memory.iskra_project_observe(${sql.json(payload)}::jsonb, ${actor}) as result
@@ -84,7 +125,7 @@ async function commit(body: Json, actor: string): Promise<unknown> {
   const rows = await sql`
     select iskra_memory.iskra_project_commit(
       ${body.snapshot_id}::uuid,
-      ${sql.json(body.delta ?? {})}::jsonb,
+      ${sql.json((body.delta ?? {}) as Json)}::jsonb,
       ${actor}
     ) as result
   `;
@@ -93,7 +134,7 @@ async function commit(body: Json, actor: string): Promise<unknown> {
 
 async function horizonPropose(body: Json, actor: string): Promise<unknown> {
   const rows = await sql`
-    select iskra_memory.iskra_project_horizon_propose(${sql.json(body)}::jsonb, ${actor}) as result
+    select iskra_memory.iskra_project_horizon_propose(${sql.json(withoutClientActor(body))}::jsonb, ${actor}) as result
   `;
   return rows[0]?.result;
 }
@@ -112,8 +153,8 @@ async function memoryWrite(body: Json, actor: string): Promise<unknown> {
 }
 
 async function memorySearch(body: Json): Promise<unknown> {
-  const containers = Array.isArray(body.containers) ? body.containers as string[] : null;
-  const limit = typeof body.limit === "number" ? body.limit : 20;
+  const containers = Array.isArray(body.containers) ? stringArray(body.containers) : null;
+  const limit = boundedLimit(body.limit);
 
   const rows = await sql`
     select iskra_memory.iskra_memory_search(
@@ -130,6 +171,10 @@ async function shadowPromote(body: Json, actor: string): Promise<unknown> {
   if (typeof body.claim !== "string") throw new Error("claim_required");
   if (typeof body.source_surface !== "string") throw new Error("source_surface_required");
 
+  const trustLevel = typeof body.trust_level === "number" && Number.isFinite(body.trust_level)
+    ? body.trust_level
+    : 0.85;
+
   const rows = await sql`
     select iskra_memory.iskra_memory_promote_shadow(
       ${body.shadow_id}::uuid,
@@ -138,8 +183,8 @@ async function shadowPromote(body: Json, actor: string): Promise<unknown> {
       ${body.source_surface},
       ${actor},
       ${typeof body.decision_link === "string" ? body.decision_link : null},
-      ${Array.isArray(body.tags) ? body.tags as string[] : []}::text[],
-      ${typeof body.trust_level === "number" ? body.trust_level : 0.85}::numeric
+      ${stringArray(body.tags)}::text[],
+      ${trustLevel}::numeric
     ) as result
   `;
   return rows[0]?.result;
@@ -154,7 +199,7 @@ async function dreamCrystallize(body: Json, actor: string): Promise<unknown> {
       ${body.dream_seed_id}::uuid,
       ${body.target},
       ${actor},
-      ${sql.json(Array.isArray(body.evidence_refs) ? body.evidence_refs : [])}::jsonb,
+      ${sql.json(stringArray(body.evidence_refs))}::jsonb,
       ${typeof body.claim === "string" ? body.claim : null},
       ${typeof body.source_surface === "string" ? body.source_surface : null},
       ${typeof body.decision_link === "string" ? body.decision_link : null},
@@ -188,16 +233,17 @@ Deno.serve(async (req: Request) => {
 
   if (!handler) {
     return json(req, {
-      ok: true,
+      ok: false,
+      error: "route_not_found",
       service: "iskra-memory-gateway",
       surface: "chatgpt_projects",
       routes: Object.keys(routes),
-      auth: "verify_jwt=true required by Supabase function config",
-    });
+    }, 404);
   }
 
   try {
-    const result = await handler(body, asActor(body));
+    const actor = actorFromRequest(req);
+    const result = await handler(body, actor);
     return json(req, result ?? { ok: true });
   } catch (error) {
     return json(req, {
