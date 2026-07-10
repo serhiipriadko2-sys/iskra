@@ -23,7 +23,7 @@ export const CONTENT_SECURITY_POLICY = [
   "font-src 'self' https://fonts.gstatic.com data:",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "script-src 'self'",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.chatgpt.com https://generativelanguage.googleapis.com https://api.openai.com",
   "worker-src 'self'",
   "manifest-src 'self'",
   'upgrade-insecure-requests',

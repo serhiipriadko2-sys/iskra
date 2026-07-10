@@ -1,6 +1,17 @@
 # [P0-BLOCKER] Weak RLS in GraphRAG Migration — `user_id IS NULL` Allows Canonical Node Tampering
 
-## Status: 🔴 BLOCKER — Any authenticated user can modify canonical data
+## Status: 🟢 RESOLVED — shared-row guard migration added
+
+Resolution:
+- `runtime/iskraSpace/supabase/schema.sql` already uses strict `user_id = auth.uid()` policies for `graph_nodes` / `graph_edges` and append-only `audit_log` policies.
+- New forward migration `supabase/migrations/20260710110000_graph_shared_row_guard.sql` replaces the legacy `FOR ALL` policies with:
+  - `graph_*_active_beta_read_visible` — active beta members can read own + shared (`user_id IS NULL`) rows;
+  - `graph_*_active_beta_insert/update/delete_own` — mutations are strictly owner-scoped;
+  - `SECURITY DEFINER` RPCs `graph_create_node`, `graph_create_edge`, `graph_delete_node`, `graph_update_node_resonance` enforce `auth.uid()` and `private.is_active_beta_member()` and never mutate shared rows.
+- Regression coverage exists in `services/__tests__/auditLogAppendOnly.test.ts` and `services/__tests__/graphSharedRowGuardMigration.test.ts`.
+- The stale `runtime/iskraSpace/supabase_graphrag_migration.sql` has been archived to `supabase/migration_archive/deprecated_graphrag_migration_2026-06-26.sql` and marked as deprecated; it must not be applied to new projects (use the new migration + `schema.sql` instead).
+
+## Original report (retained for context)
 
 ## Problem
 `supabase_graphrag_migration.sql:240-247` uses `USING (user_id = auth.uid() OR user_id IS NULL)` for RLS policies on `graph_nodes` and `graph_edges`. The canonical seed nodes (mantra, principles, etc.) are inserted with `user_id = NULL`, making them world-writable to any authenticated user.

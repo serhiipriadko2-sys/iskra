@@ -4,6 +4,7 @@ import { storageService } from '../services/storageService';
 import { memoryService } from '../services/memoryService';
 import { PowerIcon, DatabaseIcon, FilePlus2Icon, TrashIcon, LayersIcon, FileSearchIcon, TriangleIcon, SparkleIcon, ScaleIcon, MessageSquareIcon } from './icons';
 import { IntegrityReport, ResponseMode } from '../types';
+import { getAvailableResponseModes, normalizeResponseModeForBeta } from '../config/betaCapabilities';
 
 const SettingsView: React.FC = () => {
     const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -13,18 +14,26 @@ const SettingsView: React.FC = () => {
     const [integrityReport, setIntegrityReport] = useState<IntegrityReport | null>(null);
     const [isCheckingIntegrity, setIsCheckingIntegrity] = useState(false);
 
-    const [responseMode, setResponseMode] = useState<ResponseMode>(storageService.getResponseMode());
+    const [responseMode, setResponseMode] = useState<ResponseMode>(() => {
+        const persistedMode = storageService.getResponseMode();
+        const normalizedMode = normalizeResponseModeForBeta(persistedMode);
+        if (normalizedMode !== persistedMode) {
+            storageService.saveResponseMode(normalizedMode);
+        }
+        return normalizedMode;
+    });
 
     const handleResponseModeChange = (mode: ResponseMode) => {
         setResponseMode(mode);
         storageService.saveResponseMode(mode);
     };
 
-    const RESPONSE_MODES: { mode: ResponseMode; label: string; description: string; icon: string }[] = [
+    const RESPONSE_MODES = ([
         { mode: 'simple', label: 'Просто', description: 'Краткие, быстрые ответы', icon: '⚡' },
         { mode: 'deep', label: 'Глубоко', description: 'Развёрнутый анализ с ∆DΩΛ', icon: '🔬' },
         { mode: 'debate', label: 'Совет', description: 'Многоголосие Совета Граней', icon: '👥' },
-    ];
+    ] as { mode: ResponseMode; label: string; description: string; icon: string }[])
+        .filter(({ mode }) => getAvailableResponseModes().includes(mode));
 
     const handleExport = () => {
         const json = storageService.exportAllData();
@@ -169,6 +178,7 @@ const SettingsView: React.FC = () => {
                             {RESPONSE_MODES.map(({ mode, label, description, icon }) => (
                                 <button
                                     key={mode}
+                                    data-response-mode={mode}
                                     onClick={() => handleResponseModeChange(mode)}
                                     className={`p-4 rounded-xl border-2 transition-all duration-200 text-left ${
                                         responseMode === mode

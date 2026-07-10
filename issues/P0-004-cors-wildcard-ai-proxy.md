@@ -1,6 +1,16 @@
-# [P0-BLOCKER] CORS `*` on AI Proxy Edge Function — Open to Abuse
+# [P0-BLOCKER] CORS `*` on AI Proxy Edge Functions — Open to Abuse
 
-## Status: 🔴 BLOCKER — Any website can consume AI API quota
+## Status: ✅ RESOLVED for `gemini`, `kain`, `iskra-agent` — 2026-07-09
+
+Resolution:
+- `gemini` Edge Function was already hardened with origin allow-list, JWT validation, and rate limiting.
+- `kain` Edge Function hardened: `KAIN_ALLOWED_ORIGINS`, Supabase JWT validation via `/auth/v1/user`, per-user/IP rate limiting.
+- `iskra-agent` Edge Function hardened: `ISKRA_AGENT_ALLOWED_ORIGINS`, full Supabase JWT validation (replaced payload-only decode), per-user/IP rate limiting.
+- Security tests added: `services/__tests__/kainEdgeFunctionSecurity.test.ts`, `services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts`.
+- Environment variables documented in `.env.example`.
+- Local gates: typecheck, lint, test:run, build — pass.
+
+## Original report (retained for context)
 
 ## Problem
 The Supabase Edge Function `supabase/functions/gemini/index.ts` sets `Access-Control-Allow-Origin: *`, allowing any origin to call the AI proxy. This function forwards requests to Google Gemini/OpenAI using the project's API keys.

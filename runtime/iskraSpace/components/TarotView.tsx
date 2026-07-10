@@ -6,15 +6,17 @@ import RuneCasting from './TarotReader';
 import { IskraMetrics } from '../types';
 import { getActiveVoice } from '../services/voiceEngine';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
+import { isBetaCapabilityEnabled } from '../config/betaCapabilities';
 
 const service = new IskraAIService();
+const TTS_AVAILABLE = isBetaCapabilityEnabled('textToSpeech');
 
 interface RuneViewProps {
     metrics: IskraMetrics;
 }
 
 const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
-    const [isTtsEnabled, setIsTtsEnabled] = useState(false);
+    const [isTtsEnabled, setIsTtsEnabled] = useState(TTS_AVAILABLE);
     const outputAudioContextRef = useRef<AudioContext | null>(null);
     const nextStartTimeRef = useRef(0);
     const audioSourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
@@ -22,6 +24,7 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
     const activeVoice = getActiveVoice(metrics);
 
     useEffect(() => {
+        if (!TTS_AVAILABLE) return;
         // Initialize AudioContext on component mount
         outputAudioContextRef.current = createAudioContext(24000);
 
@@ -33,7 +36,7 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
     }, []);
 
     const processSentenceForSpeech = async (sentence: string) => {
-        if (!isTtsEnabled || !sentence.trim()) return;
+        if (!TTS_AVAILABLE || !isTtsEnabled || !sentence.trim()) return;
         
         if (!outputAudioContextRef.current) {
              outputAudioContextRef.current = createAudioContext(24000);
@@ -78,6 +81,7 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
     };
     
     const resumeAudio = () => {
+        if (!TTS_AVAILABLE) return;
         if (!outputAudioContextRef.current) {
              outputAudioContextRef.current = createAudioContext(24000);
         }
@@ -88,7 +92,7 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
     
     // When TTS is toggled off, stop any playing audio.
     useEffect(() => {
-        if (!isTtsEnabled) {
+        if (TTS_AVAILABLE && !isTtsEnabled) {
             stopAndClearAudio();
         }
     }, [isTtsEnabled]);
@@ -98,6 +102,7 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
             <div className="absolute top-4 left-6 z-20">
                 <MiniMetricsDisplay metrics={metrics} activeVoice={activeVoice}/>
             </div>
+            {TTS_AVAILABLE && (
             <div className="absolute top-4 right-6 z-20 flex items-center space-x-3" role="presentation">
                 <label
                     htmlFor="tts-toggle"
@@ -121,6 +126,7 @@ const RuneView: React.FC<RuneViewProps> = ({ metrics }) => {
                     />
                 </button>
             </div>
+            )}
             
             <RuneCasting
                 metrics={metrics}

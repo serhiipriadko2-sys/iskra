@@ -14,18 +14,22 @@ describe('gemini Edge Function security boundary', () => {
   it('does not expose wildcard CORS by default', () => {
     expect(edgeFunctionSource).not.toContain("'access-control-allow-origin': '*'");
     expect(edgeFunctionSource).toContain('AI_PROXY_ALLOWED_ORIGINS');
-    expect(edgeFunctionSource).toContain("if (trimmed === '*')");
+    expect(edgeFunctionSource).toContain('AI_EDGE_ALLOW_DEV_WILDCARD');
+    expect(edgeFunctionSource).toContain('AI_EDGE_ENV');
   });
 
-  it('keeps auth and rate limiting before AI provider calls', () => {
+  it('keeps closed-beta auth and shared transactional quota before AI provider calls', () => {
     const tokenCheck = edgeFunctionSource.indexOf('const token = extractBearerToken(req);');
     const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token);');
-    const rateLimitCheck = edgeFunctionSource.indexOf('const rl = rateLimit(req, jwt.sub);');
+    const quotaCheck = edgeFunctionSource.indexOf('const boundary = await enforceAiRequestBoundary(');
     const providerCall = edgeFunctionSource.indexOf('await runWithFallback(action, payload)');
 
     expect(tokenCheck).toBeGreaterThan(-1);
     expect(jwtCheck).toBeGreaterThan(tokenCheck);
-    expect(rateLimitCheck).toBeGreaterThan(jwtCheck);
-    expect(providerCall).toBeGreaterThan(rateLimitCheck);
+    expect(quotaCheck).toBeGreaterThan(jwtCheck);
+    expect(providerCall).toBeGreaterThan(quotaCheck);
+    expect(edgeFunctionSource).toContain("from '../_shared/aiBoundary.ts'");
+    expect(edgeFunctionSource).not.toContain('rlBuckets');
+    expect(edgeFunctionSource).not.toContain('console.');
   });
 });
