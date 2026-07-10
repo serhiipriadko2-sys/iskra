@@ -2,6 +2,15 @@
 -- GraphRAG Integration - Supabase Migration
 -- ============================================
 --
+-- DEPRECATED: This migration has been archived. It contains weak RLS policies
+-- (user_id = auth.uid() OR user_id IS NULL) that make canonical/shared graph
+-- rows mutable by any authenticated user. Do not apply it to new projects.
+--
+-- Replacement:
+--   - supabase/migrations/20260710110000_graph_shared_row_guard.sql
+--     enforces owner-only mutations while preserving read access to shared rows.
+--   - runtime/iskraSpace/supabase/schema.sql is the canonical baseline.
+--
 -- Creates tables for Hypergraph Memory persistence
 -- Enables graph-based retrieval with nodes + edges
 --

@@ -52,6 +52,61 @@ export interface CouncilResponse {
   voice: VoiceName;
   symbol: string;
   message: string;
+  status: CouncilResponseStatus;
+}
+
+export type CouncilResponseStatus = 'ok' | 'timeout' | 'cancelled' | 'error';
+
+export interface CouncilExecutionOptions {
+  signal?: AbortSignal;
+  voiceTimeoutMs?: number;
+}
+
+export const DEFAULT_COUNCIL_VOICE_TIMEOUT_MS = 15_000;
+
+function createCouncilAbortError(): Error {
+  const error = new Error('Council request aborted');
+  error.name = 'AbortError';
+  return error;
+}
+
+function awaitWithAbort<T>(operation: Promise<T>, signal: AbortSignal): Promise<T> {
+  if (signal.aborted) {
+    return Promise.reject(createCouncilAbortError());
+  }
+
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => {
+      signal.removeEventListener('abort', onAbort);
+      reject(createCouncilAbortError());
+    };
+
+    signal.addEventListener('abort', onAbort, { once: true });
+    operation.then(
+      (value) => {
+        signal.removeEventListener('abort', onAbort);
+        resolve(value);
+      },
+      (error) => {
+        signal.removeEventListener('abort', onAbort);
+        reject(error);
+      }
+    );
+  });
+}
+
+function getCouncilFallbackMessage(voice: VoiceName, status: CouncilResponseStatus): string {
+  const symbol = VOICE_SYMBOLS[voice];
+  switch (status) {
+    case 'timeout':
+      return `${symbol} Голос не успел ответить в отведённое время.`;
+    case 'cancelled':
+      return `${symbol} Ответ отменён пользователем.`;
+    case 'error':
+      return `${symbol} Голос временно недоступен.`;
+    default:
+      return `${symbol} ...`;
+  }
 }
 
 export interface CouncilResult {
@@ -108,15 +163,15 @@ const VOICE_SYMBOLS: Record<VoiceName, string> = {
 };
 
 /**
- * Executes the COUNCIL ritual - all voices debate the topic
- *
- * Performance optimization: All 9 voice queries run in parallel
- * using Promise.allSettled, then results are yielded in canonical order.
- * This reduces total time from ~9x to ~1x (limited by slowest voice).
+ * Executes the COUNCIL ritual through bounded parallel voice requests.
+ * Each completed voice is yielded immediately; consumers own the canonical
+ * display order. Every request receives a distinct controller so a timeout
+ * or parent cancellation aborts the underlying Edge gateway fetch as well.
  */
 export async function* executeCouncil(
   topic: string,
-  context?: string
+  context?: string,
+  options?: CouncilExecutionOptions
 ): AsyncGenerator<CouncilResponse> {
   const systemBase = `Ты — одна из граней Искры, участвуешь в Совете Граней (COUNCIL).
 Тема обсуждения: "${topic}"
@@ -124,40 +179,96 @@ ${context ? `Контекст: ${context}` : ''}
 
 Отвечай КРАТКО (2-4 предложения). Говори от первого лица своей грани.
 ${DELTA_PROTOCOL_INSTRUCTION}`;
+  const configuredTimeout = options?.voiceTimeoutMs;
+  const voiceTimeoutMs =
+    typeof configuredTimeout === 'number' && Number.isFinite(configuredTimeout) && configuredTimeout > 0
+      ? configuredTimeout
+      : DEFAULT_COUNCIL_VOICE_TIMEOUT_MS;
+  const controllers = new Set<AbortController>();
+  let parentCancelled = options?.signal?.aborted ?? false;
 
-  // Create all voice query promises in parallel
-  const voicePromises = COUNCIL_ORDER.map(async (voice): Promise<CouncilResponse> => {
+  const cancelAllVoices = () => {
+    parentCancelled = true;
+    for (const controller of controllers) {
+      controller.abort();
+    }
+  };
+
+  if (options?.signal?.aborted) {
+    cancelAllVoices();
+  } else {
+    options?.signal?.addEventListener('abort', cancelAllVoices, { once: true });
+  }
+
+  const runVoice = async (voice: VoiceName): Promise<CouncilResponse> => {
+    const controller = new AbortController();
+    const state = { timedOut: false };
+    controllers.add(controller);
+
+    if (parentCancelled) {
+      controller.abort();
+    }
+
+    const timeoutId = setTimeout(() => {
+      state.timedOut = true;
+      controller.abort();
+    }, voiceTimeoutMs);
     const prompt = `${systemBase}\n\n${COUNCIL_VOICE_PROMPTS[voice]}\n\nДай свой взгляд на тему.`;
 
     try {
-      const response = await generateText(prompt, {
-        model: 'gemini-2.5-flash',
-        maxOutputTokens: 300,
-      });
+      const response = await awaitWithAbort(
+        generateText(prompt, {
+          model: 'gemini-2.5-flash',
+          maxOutputTokens: 300,
+          signal: controller.signal,
+        }),
+        controller.signal
+      );
 
       return {
         voice,
         symbol: VOICE_SYMBOLS[voice],
-        message: response || `${VOICE_SYMBOLS[voice]} ...`,
+        message: response || getCouncilFallbackMessage(voice, 'error'),
+        status: response ? 'ok' : 'error',
       };
-    } catch (error) {
-      console.error(`Council voice ${voice} failed:`, error);
+    } catch {
+      const status: CouncilResponseStatus = parentCancelled || options?.signal?.aborted
+        ? 'cancelled'
+        : state.timedOut
+          ? 'timeout'
+          : 'error';
       return {
         voice,
         symbol: VOICE_SYMBOLS[voice],
-        message: `${VOICE_SYMBOLS[voice]} [Голос молчит...]`,
+        message: getCouncilFallbackMessage(voice, status),
+        status,
       };
+    } finally {
+      clearTimeout(timeoutId);
+      controllers.delete(controller);
     }
-  });
+  };
 
-  // Wait for all voices to complete (parallel execution)
-  const results = await Promise.allSettled(voicePromises);
+  const pending = new Map<number, Promise<CouncilResponse>>(
+    COUNCIL_ORDER.map((voice, index) => [index, runVoice(voice)])
+  );
 
-  // Yield results in canonical order
-  for (const result of results) {
-    if (result.status === 'fulfilled') {
-      yield result.value;
+  try {
+    while (pending.size > 0) {
+      const next = await Promise.race(
+        [...pending.entries()].map(async ([index, response]) => ({
+          index,
+          response: await response,
+        }))
+      );
+      pending.delete(next.index);
+      yield next.response;
     }
+  } finally {
+    for (const controller of controllers) {
+      controller.abort();
+    }
+    options?.signal?.removeEventListener('abort', cancelAllVoices);
   }
 }
 

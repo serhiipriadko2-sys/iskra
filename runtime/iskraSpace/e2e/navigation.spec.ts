@@ -20,6 +20,10 @@ test.describe('Navigation', () => {
     await expect(page.locator('main')).toBeVisible();
   });
 
+  test('does not expose the unavailable Live conversation route in closed beta', async ({ page }) => {
+    await expect(page.locator('[data-nav="LIVE"]')).toHaveCount(0);
+  });
+
   for (const view of ['PLANNER', 'JOURNAL', 'CHAT', 'SETTINGS', 'METRICS'] as const) {
     test(`can navigate to ${view} view`, async ({ page }) => {
       await navigateToView(page, view);

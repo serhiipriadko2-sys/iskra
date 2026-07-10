@@ -7,6 +7,7 @@ import { Message, IskraMetrics, Voice, VoiceName, SearchResult, VoicePreferences
 import { getActiveVoice, getVoiceSelectionExplanation } from '../services/voiceEngine';
 import { storageService } from '../services/storageService';
 import { securityService } from '../services/securityService';
+import { getAvailableResponseModes, isBetaCapabilityEnabled, normalizeResponseModeForBeta } from '../config/betaCapabilities';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import VoiceExplainableDisplay from './ExplainableTrace';
 import { createAudioContext, decode, decodeAudioData } from '../css/audioUtils';
@@ -18,6 +19,8 @@ const RESPONSE_MODE_DISPLAY: Record<ResponseMode, { label: string; icon: string;
   deep: { label: 'Глубоко', icon: '🔬', color: 'text-primary' },
   debate: { label: 'Совет', icon: '👥', color: 'text-warning' },
 };
+
+const TTS_AVAILABLE = isBetaCapabilityEnabled('textToSpeech');
 
 const service = new IskraAIService();
 
@@ -56,7 +59,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   const [history, setHistory] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isTtsEnabled, setIsTtsEnabled] = useState(false);
+  const [isTtsEnabled, setIsTtsEnabled] = useState(TTS_AVAILABLE);
 
   // Voice State
   const [selectedVoiceName, setSelectedVoiceName] = useState<VoiceName | 'AUTO'>('AUTO');
@@ -64,18 +67,25 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   const [currentVoice, setCurrentVoice] = useState<Voice | null>(null);
 
   // Response Mode State
-  const [responseMode, setResponseMode] = useState<ResponseMode>(() => storageService.getResponseMode());
+  const [responseMode, setResponseMode] = useState<ResponseMode>(() => {
+    const persistedMode = storageService.getResponseMode();
+    const normalizedMode = normalizeResponseModeForBeta(persistedMode);
+    if (normalizedMode !== persistedMode) {
+      storageService.saveResponseMode(normalizedMode);
+    }
+    return normalizedMode;
+  });
 
   // Policy / Integrity observability (last turn)
   const [lastPolicyDecision, setLastPolicyDecision] = useState<any | null>(null);
   const [lastPostIntegrity, setLastPostIntegrity] = useState<any | null>(null);
   const [showVoiceWhy, setShowVoiceWhy] = useState(false);
 
-  // Cycle through response modes: simple → deep → debate → simple
+  // Cycle through beta-approved response modes only.
   const cycleResponseMode = () => {
-    const modes: ResponseMode[] = ['simple', 'deep', 'debate'];
+    const modes = getAvailableResponseModes();
     const currentIndex = modes.indexOf(responseMode);
-    const nextMode = modes[(currentIndex + 1) % modes.length];
+    const nextMode = modes[(currentIndex + 1) % modes.length] ?? 'simple';
     setResponseMode(nextMode);
     storageService.saveResponseMode(nextMode);
   };
@@ -129,6 +139,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   }, [metrics, selectedVoiceName, voicePrefs]);
 
   useEffect(() => {
+    if (!TTS_AVAILABLE) return;
     // Initialize AudioContext on mount
     outputAudioContextRef.current = createAudioContext(24000);
     return () => {
@@ -148,7 +159,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   };
   
   useEffect(() => {
-    if (!isTtsEnabled) {
+    if (TTS_AVAILABLE && !isTtsEnabled) {
         stopAndClearAudio();
     }
   }, [isTtsEnabled]);
@@ -176,7 +187,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   };
 
   const processSentenceForSpeech = async (sentence: string) => {
-    if (!isTtsEnabled || !sentence.trim() || !currentVoice) return;
+    if (!TTS_AVAILABLE || !isTtsEnabled || !sentence.trim() || !currentVoice) return;
     
     // Ensure context exists
     if (!outputAudioContextRef.current) {
@@ -214,15 +225,19 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   const handleQuery = async (query: string, image?: string) => {
     // CRITICAL: Resume AudioContext immediately within the user interaction event loop
     // Ensure context is initialized
-    if (!outputAudioContextRef.current) {
-        outputAudioContextRef.current = createAudioContext(24000);
-    }
-    if (outputAudioContextRef.current?.state === 'suspended') {
-        outputAudioContextRef.current.resume().catch(() => {});
+    if (TTS_AVAILABLE) {
+      if (!outputAudioContextRef.current) {
+          outputAudioContextRef.current = createAudioContext(24000);
+      }
+      if (outputAudioContextRef.current?.state === 'suspended') {
+          outputAudioContextRef.current.resume().catch(() => {});
+      }
     }
 
     setError(null);
-    stopAndClearAudio();
+    if (TTS_AVAILABLE) {
+      stopAndClearAudio();
+    }
 
     // Security guardrails: scan user input before any AI or storage path
     const security = securityService.validate(query);
@@ -264,7 +279,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
         };
 
         setHistory(prev => [...prev, searchMessage]);
-        if (isTtsEnabled) {
+        if (TTS_AVAILABLE && isTtsEnabled) {
           await processSentenceForSpeech(resultText.replace(/\*/g, ''));
         }
       } catch (e) {
@@ -319,7 +334,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
         setLastPostIntegrity(streamResult.integrity);
       }
 
-      if (isTtsEnabled && fullResponse.trim().length > 0) {
+      if (TTS_AVAILABLE && isTtsEnabled && fullResponse.trim().length > 0) {
         const speechText = fullResponse
            .replace(/I-Loop:.*?(?:\n|$)/i, '')
            .replace(/⚑ KAIN-Slice:.*?(?:\n\n|$)/i, '')
@@ -449,16 +464,18 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
                  </div>
             </div>
 
-            <button
-                onClick={() => setIsTtsEnabled(!isTtsEnabled)}
-                className={`p-2 rounded-full transition-colors ${
-                    isTtsEnabled ? 'bg-accent/20 text-accent' : 'bg-surface2 text-text-muted hover:bg-border'
-                }`}
-                aria-label={isTtsEnabled ? "Выключить озвучку" : "Включить озвучку"}
-                title="Озвучка ответа"
-            >
-                {isTtsEnabled ? <Volume2Icon className="w-5 h-5"/> : <VolumeXIcon className="w-5 h-5"/>}
-            </button>
+            {TTS_AVAILABLE && (
+              <button
+                  onClick={() => setIsTtsEnabled(!isTtsEnabled)}
+                  className={`p-2 rounded-full transition-colors ${
+                      isTtsEnabled ? 'bg-accent/20 text-accent' : 'bg-surface2 text-text-muted hover:bg-border'
+                  }`}
+                  aria-label={isTtsEnabled ? "Выключить озвучку" : "Включить озвучку"}
+                  title="Озвучка ответа"
+              >
+                  {isTtsEnabled ? <Volume2Icon className="w-5 h-5"/> : <VolumeXIcon className="w-5 h-5"/>}
+              </button>
+            )}
             
             <div className="hidden md:block">
                <MiniMetricsDisplay metrics={metrics} activeVoice={currentVoice || undefined} />

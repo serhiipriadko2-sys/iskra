@@ -9,6 +9,7 @@ import {
 } from './integrityService';
 import { storageService } from "./storageService";
 import { getAccessToken } from './supabaseClient';
+import { isBetaCapabilityEnabled, normalizeResponseModeForBeta } from '../config/betaCapabilities';
 
 
 export interface PolicyStreamResult {
@@ -119,7 +120,7 @@ const RESPONSE_MODE_INSTRUCTIONS: Record<ResponseMode, string> = {
  * Get response mode instruction suffix
  */
 export function getResponseModeInstruction(mode?: ResponseMode): string {
-  const currentMode = mode ?? storageService.getResponseMode();
+  const currentMode = normalizeResponseModeForBeta(mode ?? storageService.getResponseMode());
   return RESPONSE_MODE_INSTRUCTIONS[currentMode];
 }
 
@@ -138,7 +139,12 @@ export function isOnlineAIAvailable(): boolean {
 
 export async function generateText(
   prompt: string,
-  opts?: { model?: string; systemInstruction?: string; maxOutputTokens?: number }
+  opts?: {
+    model?: string;
+    systemInstruction?: string;
+    maxOutputTokens?: number;
+    signal?: AbortSignal;
+  }
 ): Promise<string> {
   if (OFFLINE_MODE) {
     throw new Error('AI generation is unavailable (offline/test or Supabase not configured).');
@@ -150,6 +156,7 @@ export async function generateText(
       systemInstruction: opts?.systemInstruction,
       maxOutputTokens: opts?.maxOutputTokens,
     },
+    signal: opts?.signal,
   });
 }
 
@@ -224,18 +231,22 @@ async function generateContentText(args: {
   model: string;
   contents: string | Content[];
   config?: GeminiProxyGenerateConfig;
+  signal?: AbortSignal;
 }): Promise<string> {
   const config = args.config ?? {};
-  const res = await callAiEdgeFunction({
-    action: 'generateContent',
-    model: args.model,
-    contents: toGeminiContents(args.contents),
-    systemInstruction: config.systemInstruction,
-    generationConfig: {
-      ...config,
-      systemInstruction: undefined,
+  const res = await callAiEdgeFunction(
+    {
+      action: 'generateContent',
+      model: args.model,
+      contents: toGeminiContents(args.contents),
+      systemInstruction: config.systemInstruction,
+      generationConfig: {
+        ...config,
+        systemInstruction: undefined,
+      },
     },
-  });
+    args.signal
+  );
 
   if (!res.ok) {
     const txt = await res.text();
@@ -330,6 +341,7 @@ async function* streamGenerateContentText(args: {
       model: args.model,
       contents: args.contents,
       config,
+      signal: args.signal,
     });
     yield text;
   }
@@ -732,7 +744,9 @@ export class IskraAIService {
     const instruction = getSystemInstructionForVoice(voice);
 
     // Get response mode (from options or storage)
-    const responseMode = options?.responseMode ?? storageService.getResponseMode();
+    const responseMode = normalizeResponseModeForBeta(
+      options?.responseMode ?? storageService.getResponseMode()
+    );
     const responseModeInstruction = getResponseModeInstruction(responseMode);
 
     // Inject metrics context into the session so the model can "feel" the state
@@ -1044,10 +1058,11 @@ Chaos: ${metrics.chaos.toFixed(2)} | Drift: ${metrics.drift.toFixed(2)} | Clarit
   }
   
   async getTextToSpeech(_text: string, _voiceName: string = 'ISKRA'): Promise<string> {
-    // MOCKED to prevent rate limit errors. Returns a silent 1-second WAV file.
-    // In a real implementation, 'voiceName' would be used to select the specific TTS voice model or variant.
-    const silentWavBase64 = "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAAAAAA==";
-    return Promise.resolve(silentWavBase64);
+    if (!isBetaCapabilityEnabled('textToSpeech')) {
+      throw new Error('Text-to-speech is unavailable in the closed beta.');
+    }
+
+    throw new Error('Text-to-speech has no server-side provider contract.');
   }
   
   async getEmbedding(text: string): Promise<number[]> {

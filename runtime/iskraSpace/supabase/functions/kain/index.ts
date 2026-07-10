@@ -63,11 +63,13 @@ function json(body: unknown, init: ResponseInit = {}, origin: string | null = nu
   });
 }
 
-async function validateJwt(token: string): Promise<{ sub: string } | null> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    console.warn('[kain] SUPABASE_URL or SUPABASE_ANON_KEY missing; JWT validation skipped (dev mode)');
-    return { sub: 'dev' };
-  }
+type VerifiedKainUser = {
+  sub: string;
+  isAnonymous: boolean;
+};
+
+async function validateJwt(token: string): Promise<VerifiedKainUser | null> {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
 
   try {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
@@ -83,9 +85,11 @@ async function validateJwt(token: string): Promise<{ sub: string } | null> {
     const data = (await res.json()) as Record<string, unknown> | undefined;
     if (!data || typeof data.id !== 'string') return null;
 
-    return { sub: data.id };
-  } catch (err) {
-    console.error('[kain] JWT validation error:', err);
+    const appMetadata = data.app_metadata;
+    const anonymousProvider = appMetadata && typeof appMetadata === 'object'
+      && (appMetadata as Record<string, unknown>).provider === 'anonymous';
+    return { sub: data.id, isAnonymous: data.is_anonymous === true || anonymousProvider };
+  } catch {
     return null;
   }
 }
@@ -202,6 +206,10 @@ Deno.serve(async (req: Request) => {
   const user = await validateJwt(token);
   if (!user) {
     return json({ error: 'invalid_token' }, { status: 401 }, origin);
+  }
+
+  if (user.isAnonymous) {
+    return json({ error: 'anonymous_sessions_are_not_allowed' }, { status: 401 }, origin);
   }
 
   // Rate limiting

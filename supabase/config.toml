@@ -10,3 +10,12 @@ project_id = "iskra"
 
 [functions.embed]
 verify_jwt = true
+
+[functions.gemini]
+verify_jwt = true
+
+[functions.iskra-agent]
+verify_jwt = true
+
+[functions.kain]
+verify_jwt = true

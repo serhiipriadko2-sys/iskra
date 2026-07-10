@@ -1,6 +1,15 @@
 # [P0-BLOCKER] `IskraStateView.handlePhoenix` Calls `onShatter` — Destructive UI Bug
 
-## Status: 🔴 BLOCKER — User triggers Phoenix, gets Shatter
+## Status: ✅ RESOLVED — Fix applied 2026-07-09
+
+Resolution:
+- `App.tsx` now passes `onPhoenix={handlePhoenix}` to `IskraStateView`.
+- `IskraStateView.handlePhoenix` now calls `onPhoenix()` and `soundService.playRitualPhoenix()`.
+- `soundService.playRitualPhoenix()` added with an ascending ember sound distinct from Shatter.
+- Regression test added in `__tests__/components/IskraStateView.test.tsx`.
+- Local gates: typecheck, lint, test:run, build — pass.
+
+## Original report (retained for context)
 
 ## Problem
 In `components/IskraStateView.tsx`, the `handlePhoenix` button handler calls `onShatter()` instead of `onPhoenix()`. This means when a user clicks the Phoenix (rebirth/renewal) ritual button, the app executes the Shatter (destructive reset) ritual instead.

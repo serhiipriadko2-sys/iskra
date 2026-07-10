@@ -33,7 +33,7 @@ import { canonService } from './services/canonService';
 import { storageService } from './services/storageService';
 import { checkRitualTriggers, executePhoenix, executeShatter, getPhaseAfterRitual } from './services/ritualService';
 
-export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'LIVE' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
+export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
 
 const TOUR_STEPS: TourStep[] = [
     {
@@ -251,16 +251,6 @@ export function IskraSpaceApp() {
                             {view === 'BEACON' && <BeaconView />}
                             {view === 'DUO' && <DuoLink />}
                             {view === 'CHAT' && <ChatView metrics={metrics} onUserInput={handleUserInput} />}
-                            {view === 'LIVE' && (
-                                <div className="flex h-full items-center justify-center p-6">
-                                    <div className="max-w-xl rounded-2xl border border-border bg-surface/80 p-6 text-center shadow-deep">
-                                        <h2 className="font-serif text-2xl text-text">Голос временно скрыт</h2>
-                                        <p className="mt-3 text-sm text-text-muted">
-                                            Этот режим не входит в текущий beta-контур. Voice path вернётся после перевода на безопасный серверный поток.
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
                             {view === 'RUNES' && <RuneView metrics={metrics} />}
                             {view === 'RESEARCH' && <DeepResearchView metrics={metrics} />}
                             {view === 'MEMORY' && <MemoryView />}

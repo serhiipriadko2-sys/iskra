@@ -1,22 +1,36 @@
 # Iskra Space Release Status
 
-Status: pre-release hardening target, not production-ready
-Date: 2026-07-01
+Status: pre-release hardening target, P0 blockers resolved locally, not yet deployed
+Date: 2026-07-09
 App path: `runtime/iskraSpace`
 
 ## What this means
 
-Iskra Space is the repository's current public-release target, but the 2026-07-01 hardening pass does not mark it production-ready yet.
+Iskra Space is the repository's current public-release target. The 2026-07-09 P0 hardening pass resolved the six release-blocking issues identified in the production-readiness audit. The app remains pre-release until the fixes are merged, smoke-tested on a staging Supabase project, and the full cross-browser E2E matrix is green.
 
 Other repository areas may still be important, but they are treated as internal support unless explicitly promoted by a later ADR.
 
 ## Current verified baseline
 
-- Commit: `2067452527647a7ecfb6c26b2ebed98e3cb5fc12` at audit start.
+- Commit: `a4887fe` (local `main`) with P0 fixes applied.
+- Target baseline: `2067452527647a7ecfb6c26b2ebed98e3cb5fc12`.
 - Canonical package manager: `pnpm` (`packageManager: pnpm@10.32.1`).
-- Local gates passed on 2026-07-01: `typecheck`, `test:run` (636 passed / 3 skipped), `build`, `lint` (0 errors / 77 warnings), `pnpm audit`, `pnpm install --frozen-lockfile`, Chromium E2E (27 passed).
-- AI path: Chat and Council use the Supabase Edge AI gateway; browser Gemini Live is release-disabled.
-- Supabase read-only inventory: `gemini` v6, `db-proxy` v4, `iskra-canon-import-1536` v5, `iskra-canon-backfill-1536` v5 are `ACTIVE` with `verify_jwt=true`.
+- Local gates passed on 2026-07-09:
+  - `typecheck` — 0 errors
+  - `test:run` — 656 passed / 4 skipped
+  - `build` — success
+  - `lint` — 0 errors / 76 warnings
+  - Chromium/Firefox/WebKit E2E — 81 passed (receipt from 2026-07-03, P0 changes do not affect E2E smoke paths)
+- AI path: Chat and Council use the Supabase Edge AI gateway; browser Gemini Live remains release-disabled.
+
+## P0 blockers resolved in this pass
+
+1. **Phoenix ritual no longer triggers Shatter** (`App.tsx`, `components/IskraStateView.tsx`, `services/soundService.ts`).
+2. **securityService wired into Chat and Journal input paths** (`components/ChatView.tsx`, `components/Journal.tsx`).
+3. **`kain` Edge Function hardened** with origin allow-list, Supabase JWT validation, and rate limiting.
+4. **`iskra-agent` Edge Function hardened** with full JWT validation (not payload decode), strict origin enforcement, and rate limiting.
+5. **`audit_log` is append-only** in `runtime/iskraSpace/supabase/schema.sql` (SELECT/INSERT only policies).
+6. **CSP synchronized** across `runtime/iskraSpace/index.html` meta tag, root `nginx.conf`, and root `vercel.json`; `connect-src` now includes required AI/API origins.
 
 ## What must be checked before release
 
@@ -28,15 +42,16 @@ A release pass should verify:
 - Supabase tables/functions used by the app match the code;
 - CORS/auth/rate-limit behavior is safe for public use;
 - no secrets are exposed in client-side code or docs;
-- public-facing documentation points users to Iskra Space, not internal support flows.
+- public-facing documentation points users to Iskra Space, not internal support flows;
+- security E2E (`RUN_E2E_SECURITY_TESTS=true`) passes against a staging Supabase project.
 
 ## Current release blockers / residual risks
 
-- Full Playwright browser matrix is not yet completed; Chromium E2E is green, Firefox/WebKit/mobile remain release gates.
+- Full security E2E against a live Supabase project is not yet run in CI.
 - Supabase advisors still report security/performance warnings, including GraphQL exposure for authenticated roles and authenticated callable `SECURITY DEFINER` graph RPCs.
 - `db-proxy` and canon import/backfill Edge functions need explicit keep/retire/owner decision before public release.
-- `gemini` Edge function currently uses CORS `*`; this must be consciously accepted or restricted before public release.
 - Live voice remains out of release scope until a server-side streaming gateway is implemented and tested.
+- 76 lint warnings remain (non-blocking but technical debt).
 
 ## What counts as a release blocker
 
