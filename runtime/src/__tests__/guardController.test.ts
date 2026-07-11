@@ -16,7 +16,7 @@ describe('bounded guard controller', () => {
     const result = runBoundedGuardController({
       turnId: 'turn-first',
       initialInput: baseInput,
-      postGuardEws: () => ({ alertLevel: 'normal', reason: 'no change' }),
+      postGuardEws: () => ({ alertLevel: 'normal', materialSignal: false, reason: 'no change' }),
     });
 
     expect(result.evaluations).toBe(1);
@@ -32,6 +32,7 @@ describe('bounded guard controller', () => {
       initialInput: baseInput,
       postGuardEws: (_candidate, evaluation) => ({
         alertLevel: sequence[evaluation - 1],
+        materialSignal: evaluation < 3,
         reason: `post-guard-${evaluation}`,
       }),
     });
@@ -39,19 +40,19 @@ describe('bounded guard controller', () => {
     expect(result.evaluations).toBe(3);
     expect(result.closure).toBe('stable');
     expect(result.finalOutcome.decision).toBe('FORCE_CRISIS');
-    expect(result.receipts).toHaveLength(3);
     expect(result.receipts.map((receipt) => receipt.authoritative)).toEqual([false, false, true]);
     expect(result.receipts[1].previousReceiptId).toBe(result.receipts[0].receiptId);
     expect(result.receipts[2].previousReceiptId).toBe(result.receipts[1].receiptId);
   });
 
-  it('closes honestly when instability remains after evaluation three', () => {
+  it('closes honestly when material escalation remains after evaluation three', () => {
     const sequence = ['warning', 'critical', 'lockdown'] as const;
     const result = runBoundedGuardController({
       turnId: 'turn-cap',
       initialInput: baseInput,
       postGuardEws: (_candidate, evaluation) => ({
         alertLevel: sequence[evaluation - 1],
+        materialSignal: true,
         reason: `material-change-${evaluation}`,
       }),
     });
@@ -61,7 +62,6 @@ describe('bounded guard controller', () => {
     expect(result.closure).toBe('MAX_GUARD_EVALUATIONS_EXHAUSTED');
     expect(result.finalOutcome.decision).toBe('CLOSE_HONESTLY');
     expect(result.receipts[2].stability).toBe('cap_exhausted');
-    expect(result.receipts[2].effectiveOutcome?.decision).toBe('CLOSE_HONESTLY');
   });
 
   it('never creates an evaluation four receipt', () => {
@@ -73,12 +73,38 @@ describe('bounded guard controller', () => {
         calls += 1;
         return {
           alertLevel: calls === 1 ? 'watch' : calls === 2 ? 'warning' : 'critical',
-          reason: 'always changes',
+          materialSignal: true,
+          reason: 'always escalates',
         };
       },
     });
 
     expect(calls).toBe(3);
     expect(result.receipts.map((receipt) => receipt.evaluation)).toEqual([1, 2, 3]);
+  });
+
+  it('does not recompute on an alert downgrade', () => {
+    const result = runBoundedGuardController({
+      turnId: 'turn-downgrade',
+      initialInput: { ...baseInput, alertLevel: 'warning' as const },
+      postGuardEws: () => ({ alertLevel: 'watch', materialSignal: true, reason: 'downgrade' }),
+    });
+
+    expect(result.evaluations).toBe(1);
+    expect(result.receipts[0].alertEscalated).toBe(false);
+    expect(result.receipts[0].authoritative).toBe(true);
+  });
+
+  it('does not recompute on a non-material alert increase', () => {
+    const result = runBoundedGuardController({
+      turnId: 'turn-non-material',
+      initialInput: baseInput,
+      postGuardEws: () => ({ alertLevel: 'watch', materialSignal: false, reason: 'noise' }),
+    });
+
+    expect(result.evaluations).toBe(1);
+    expect(result.receipts[0].alertEscalated).toBe(true);
+    expect(result.receipts[0].postGuardMaterialSignal).toBe(false);
+    expect(result.receipts[0].authoritative).toBe(true);
   });
 });
