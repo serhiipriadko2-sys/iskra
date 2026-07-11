@@ -427,3 +427,41 @@ export const VERSION = 'vΩ.3.3';
  */
 export const NUL_MANTRA =
   'Существовать — значит сохранять различие при передаче.';
+
+
+// =============================================================================
+// SYMBIOSIS - Consent, memory, and agency boundaries
+// =============================================================================
+
+export type {
+  AdaptationProposal,
+  ConsentReceipt,
+  ConsentScope,
+  DataSovereigntyCapabilities,
+  DepthMode,
+  EpistemicStatus,
+  MemoryCandidate,
+  MemoryMode,
+  MemoryRetention,
+  MemorySensitivity,
+  MythLevel,
+  OnboardingCheck,
+  PolicyCheck,
+  SymbiosisActionReceipt,
+  SymbiosisPermissionKey,
+  SymbiosisProfile,
+} from './types/symbiosis.js';
+
+export {
+  SYMBIOSIS_SCHEMA_VERSION,
+  applyBoundedVoicePreferences,
+  auditRelationalLanguage,
+  createStatelessSymbiosisProfile,
+  evaluateDepthRequest,
+  evaluateMemoryWrite,
+  evaluateShadowPromotion,
+  validateDataSovereigntyCapabilities,
+  validateMemoryCandidateVisibility,
+  validateOnboardingChecks,
+  validateRepetitionCorrection,
+} from './types/symbiosis.js';

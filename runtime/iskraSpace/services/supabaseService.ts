@@ -1,6 +1,7 @@
 import { supabase, getUserId, isSupabaseAvailable } from './supabaseClient';
 import type { Database } from '../types/supabase';
 import type { IskraMetrics, IskraPhase, MemoryNode, SIFTBlock } from '../types';
+import type { SymbiosisState } from './symbiosisService';
 
 // We use the generated types for DB interactions
 type VoicePreferences = Record<string, number>;
@@ -83,6 +84,39 @@ export async function updateUser(updates: Database['public']['Tables']['users'][
 
 export async function completeOnboarding(): Promise<void> {
   await updateUser({ onboarding_complete: true });
+}
+
+export async function saveSymbiosisSettings(state: SymbiosisState): Promise<void> {
+  await getOrCreateUser();
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from('users')
+    .select('settings')
+    .eq('id', userId)
+    .single();
+  if (error) {
+    console.error('Failed to read user settings before symbiosis update:', error);
+    return;
+  }
+  const current = data?.settings && typeof data.settings === 'object' && !Array.isArray(data.settings)
+    ? data.settings as Record<string, unknown>
+    : {};
+  await updateUser({
+    settings: { ...current, symbiosis: state } as unknown as Database['public']['Tables']['users']['Update']['settings'],
+    onboarding_complete: true,
+  });
+}
+
+export async function getSymbiosisSettings(): Promise<SymbiosisState | null> {
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from('users')
+    .select('settings')
+    .eq('id', userId)
+    .single();
+  if (error || !data?.settings || typeof data.settings !== 'object' || Array.isArray(data.settings)) return null;
+  const value = (data.settings as Record<string, unknown>).symbiosis;
+  return value && typeof value === 'object' ? value as SymbiosisState : null;
 }
 
 export async function completeTutorial(): Promise<void> {
@@ -547,6 +581,8 @@ export const supabaseService = {
   getOrCreateUser,
   updateUser,
   completeOnboarding,
+  saveSymbiosisSettings,
+  getSymbiosisSettings,
   completeTutorial,
   isOnboardingComplete,
   // Tasks
