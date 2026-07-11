@@ -2,14 +2,17 @@
 -- Live migration applied on project typcvaszcfdpkzbjzuur as harden_graph_destructive_boundaries_v1.
 -- Rollback: restore previous graph_delete_node definition from 20260626164633_graph_rpc_boundary.sql if required.
 
+begin;
+
 revoke execute on function public.graph_bfs_traversal(text, integer, real) from public, anon, authenticated;
 revoke execute on function public.graph_find_resonant(real, integer) from public, anon, authenticated;
 
 create or replace function public.graph_delete_node(p_node_id text)
 returns void
 language plpgsql
+volatile
 security definer
-set search_path to 'public', 'pg_temp'
+set search_path = public, pg_temp
 as $function$
 declare
   v_uid uuid := auth.uid();
@@ -35,3 +38,5 @@ end;
 $function$;
 
 comment on function public.graph_delete_node(text) is 'Deletes only authenticated user-owned graph nodes. Shared canon nodes (user_id NULL) are immutable through this RPC.';
+
+commit;
