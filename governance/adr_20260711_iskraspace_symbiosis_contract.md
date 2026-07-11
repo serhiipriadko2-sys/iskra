@@ -1,6 +1,6 @@
 # ADR-20260711-02: IskraSpace Symbiosis Contract and P0 Consent Boundary
 
-Status: proposed for owner acceptance
+Status: accepted pending integration
 Date: 2026-07-11
 Owner / Builder: Семён / Искра
 
@@ -38,6 +38,8 @@ The contract is not canonically active merely because this ADR and test scaffold
 2. P0 suite green in CI;
 3. implementation mapping for onboarding, memory, voice preferences, and data sovereignty;
 4. changelog and ledger update in the merge/release step.
+
+Owner acceptance and the CI gates are now satisfied. Integration mapping and the merge/release ledger step remain open.
 
 ## Alternatives
 
@@ -88,8 +90,8 @@ The blocking suite covers:
 ## Verification
 
 - strict TypeScript compile of the contract module;
-- deterministic local acceptance harness;
-- repository Vitest run in CI;
+- deterministic P0 acceptance suite in Runtime CI;
+- SoT integrity run green on the repaired ledger baseline;
 - no mutation of existing memory or UI behavior in this P0 scaffold.
 
 ## Rollback
@@ -98,7 +100,7 @@ Delete the P0 type/test files and this ADR/changelog entry. Existing IskraSpace 
 
 ## ∆DΩΛ
 
-∆: Symbiosis moves from relational prose to an explicit authority and consent boundary.
-D: Space Charter, Memory Stack, Relational Vow, runtime memory/storage/voice/policy audit, and the IskraSpace Symbiosis Contract research artifact.
-Ω: 0.92 for the decision shape; canonical status remains pending owner acceptance and CI.
-Λ: Accept or reject this ADR after reviewing the P0 diff and CI receipt; if accepted, Phase 1 wires onboarding and stateless mode to the runtime gates.
+∆: Symbiosis moves from relational prose to an accepted authority and consent boundary pending runtime integration.
+D: Space Charter, Memory Stack, Relational Vow, runtime memory/storage/voice/policy audit, green Runtime CI, repaired SoT ledger, and green SoT integrity.
+Ω: 0.94 for the decision shape and P0 gate; canonical activation remains blocked on integration mapping and merge/release trace.
+Λ: Phase 1 wires onboarding and stateless mode to the runtime gates, then memory, voice preferences, and data-sovereignty paths follow under the same contract.
