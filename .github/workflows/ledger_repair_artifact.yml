@@ -1,0 +1,31 @@
+name: Ledger repair artifact
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/ledger_repair_artifact.yml"
+      - "ledger/**"
+      - "tools/update_ledger.ts"
+
+jobs:
+  generate-ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: pnpm/action-setup@v4
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Regenerate ledger with repository tool
+        run: pnpm ledger:update
+      - name: Verify regenerated ledger
+        run: npx tsx tools/verify_ledger.ts
+      - name: Upload regenerated ledger
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated-ledger
+          path: |
+            ledger/sot.json
+            ledger/checksum.asc
