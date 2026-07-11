@@ -8,7 +8,11 @@
 import { ensureSupabaseSession, getLegacyDeviceId, isSupabaseAvailable } from './supabaseClient';
 import { supabaseService } from './supabaseService';
 import { graphServiceSupabase } from './graphServiceSupabase';
-import type { MemoryNode } from '../types';
+import {
+  isMemoryLayer,
+  isMemoryNodeType,
+  type MemoryNode,
+} from '../types';
 
 export class SyncService {
   private isSyncing = false;
@@ -51,12 +55,9 @@ export class SyncService {
     if (!isOnline) return;
 
     this.isSyncing = true;
-    console.log('[SyncService] Internet connection restored. Synchronizing offline queue...');
-
     try {
       await this.syncChatHistory();
       await this.syncMemoryNodes();
-      console.log('[SyncService] All offline data successfully synchronized.');
     } catch (error) {
       console.error('[SyncService] Synchronization error:', error);
     } finally {
@@ -79,7 +80,6 @@ export class SyncService {
         const messages = JSON.parse(cachedData);
         if (!Array.isArray(messages)) continue;
 
-        console.log(`[SyncService] Syncing ${messages.length} chat messages from ${cachedKey}...`);
         for (const msg of messages) {
           // Supabase service writes to the current auth.uid(); ownerKey is queue provenance only.
           await supabaseService.addChatMessage(msg).catch(() => {});
@@ -123,6 +123,10 @@ export class SyncService {
           let allMigrated = true;
           for (const node of nodes) {
             try {
+              if (!isMemoryLayer(node.layer) || !isMemoryNodeType(node.type)) {
+                allMigrated = false;
+                continue;
+              }
               const syncedNode = await graphServiceSupabase.addNode(
                 node.layer,
                 node.type,

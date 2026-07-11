@@ -4,13 +4,20 @@ import { MemoryNode, MemoryNodeLayer, SearchFilters, SearchResult, Task, Journal
 import { IskraAIService } from './geminiService';
 import { graphServiceSupabase } from './graphServiceSupabase';
 import { isSupabaseAvailable } from './supabaseClient';
+import { getRuntimeConfig } from '../config/runtimeConfig';
 
 /**
  * Hybrid search: lexical (tf-idf-like) + semantic (embeddings).
  */
 class SearchService {
-  private readonly remoteSemanticEnabled = import.meta.env.VITE_ENABLE_REMOTE_SEMANTIC_SEARCH === 'true';
-  private readonly allowSensitiveRemoteEmbedding = import.meta.env.VITE_ALLOW_SENSITIVE_REMOTE_EMBEDDING === 'true';
+  private readonly remoteSemanticEnabled = getRuntimeConfig(
+    'VITE_ENABLE_REMOTE_SEMANTIC_SEARCH',
+    import.meta.env.VITE_ENABLE_REMOTE_SEMANTIC_SEARCH,
+  ) === 'true';
+  private readonly allowSensitiveRemoteEmbedding = getRuntimeConfig(
+    'VITE_ALLOW_SENSITIVE_REMOTE_EMBEDDING',
+    import.meta.env.VITE_ALLOW_SENSITIVE_REMOTE_EMBEDDING,
+  ) === 'true';
   private ready = false;
   private lexIndex: {
     docs: { id: string; type: SearchResult['type']; layer?: MemoryNodeLayer; text: string; title?: string; tags?: string[]; ts?: number }[];
@@ -202,7 +209,7 @@ class SearchService {
         cloudResults = nodes.map(node => ({
           id: `graph_${node.id}`,
           type: 'memory' as const,
-          layer: node.layer?.toLowerCase() as any,
+          layer: node.layer,
           title: node.title,
           snippet: String(node.content),
           score: node.resonance_score || 0.5,

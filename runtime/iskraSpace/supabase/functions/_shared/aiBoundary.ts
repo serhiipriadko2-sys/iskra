@@ -14,6 +14,23 @@ export type VerifiedAiUser = {
   isAnonymous: boolean;
 };
 
+export function parseVerifiedAiUser(value: unknown): VerifiedAiUser | null {
+  if (!value || typeof value !== 'object') return null;
+
+  const record = value as Record<string, unknown>;
+  if (typeof record.id !== 'string' || record.id.length === 0) return null;
+
+  const appMetadata = record.app_metadata;
+  const anonymousProvider = typeof appMetadata === 'object'
+    && appMetadata !== null
+    && (appMetadata as Record<string, unknown>).provider === 'anonymous';
+
+  return {
+    sub: record.id,
+    isAnonymous: record.is_anonymous === true || anonymousProvider,
+  };
+}
+
 export type AiBoundaryResult =
   | { allowed: true }
   | { allowed: false; status: 401 | 403 | 429 | 503; error: string };

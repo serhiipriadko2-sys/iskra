@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
@@ -22,8 +23,10 @@
   },
   "dependencies": {
     "@iskra/runtime": "file:..",
+    "@sentry/react": "^10.65.0",
     "@supabase/supabase-js": "^2.88.0",
     "iskra-monorepo": "file:../..",
+    "posthog-js": "^1.399.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

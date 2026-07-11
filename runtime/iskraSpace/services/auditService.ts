@@ -37,11 +37,11 @@ export interface AuditEntry {
   severity: AuditSeverity;
   actor: 'user' | 'system' | 'voice' | 'ritual';
   voiceName?: VoiceName;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   context?: string;
   delta?: {
-    before: any;
-    after: any;
+    before: unknown;
+    after: unknown;
   };
 }
 
@@ -70,6 +70,81 @@ const STORAGE_KEY = 'iskra_audit_log';
 const MAX_ENTRIES = 1000;
 const DRIFT_THRESHOLD = 0.3;
 
+const AUDIT_EVENT_TYPES: readonly AuditEventType[] = [
+  'metric_change',
+  'voice_selected',
+  'ritual_executed',
+  'phase_transition',
+  'memory_operation',
+  'delta_violation',
+  'drift_detected',
+  'trust_change',
+  'user_action',
+  'system_event',
+  'eval_result',
+];
+
+const AUDIT_SEVERITIES: readonly AuditSeverity[] = [
+  'info',
+  'warning',
+  'critical',
+  'audit',
+];
+
+const AUDIT_ACTORS = ['user', 'system', 'voice', 'ritual'] as const;
+const VOICE_NAMES: readonly VoiceName[] = [
+  'ISKRA',
+  'ISKRIV',
+  'KAIN',
+  'PINO',
+  'HUYNDUN',
+  'ANHANTRA',
+  'SAM',
+  'MAKI',
+  'SIBYL',
+];
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isVoiceName(value: unknown): value is VoiceName {
+  return typeof value === 'string' && VOICE_NAMES.includes(value as VoiceName);
+}
+
+function isAuditEntry(value: unknown): value is AuditEntry {
+  if (!isRecord(value) || !isRecord(value.details)) return false;
+
+  const hasValidDelta = value.delta === undefined || (
+    isRecord(value.delta) &&
+    'before' in value.delta &&
+    'after' in value.delta
+  );
+
+  return typeof value.id === 'string' &&
+    typeof value.timestamp === 'string' &&
+    typeof value.type === 'string' &&
+    AUDIT_EVENT_TYPES.includes(value.type as AuditEventType) &&
+    typeof value.severity === 'string' &&
+    AUDIT_SEVERITIES.includes(value.severity as AuditSeverity) &&
+    typeof value.actor === 'string' &&
+    AUDIT_ACTORS.includes(value.actor as typeof AUDIT_ACTORS[number]) &&
+    (value.voiceName === undefined || isVoiceName(value.voiceName)) &&
+    (value.context === undefined || typeof value.context === 'string') &&
+    hasValidDelta;
+}
+
+function isDriftReport(value: unknown): value is DriftReport {
+  return isRecord(value) &&
+    typeof value.timestamp === 'string' &&
+    typeof value.driftLevel === 'number' &&
+    Array.isArray(value.indicators) &&
+    value.indicators.every(indicator => typeof indicator === 'string') &&
+    typeof value.recommendation === 'string' &&
+    Array.isArray(value.affectedVoices) &&
+    value.affectedVoices.every(isVoiceName);
+}
+
 class AuditService {
   private entries: AuditEntry[] = [];
   private driftHistory: DriftReport[] = [];
@@ -88,13 +163,13 @@ class AuditService {
    */
   log(
     type: AuditEventType,
-    details: Record<string, any>,
+    details: Record<string, unknown>,
     options: {
       severity?: AuditSeverity;
       actor?: 'user' | 'system' | 'voice' | 'ritual';
       voiceName?: VoiceName;
       context?: string;
-      delta?: { before: any; after: any };
+      delta?: { before: unknown; after: unknown };
     } = {}
   ): AuditEntry {
     const entry: AuditEntry = {
@@ -405,8 +480,25 @@ class AuditService {
    * Get audit statistics
    */
   getStats(): AuditStats {
-    const byType: Record<AuditEventType, number> = {} as any;
-    const bySeverity: Record<AuditSeverity, number> = {} as any;
+    const byType: Record<AuditEventType, number> = {
+      metric_change: 0,
+      voice_selected: 0,
+      ritual_executed: 0,
+      phase_transition: 0,
+      memory_operation: 0,
+      delta_violation: 0,
+      drift_detected: 0,
+      trust_change: 0,
+      user_action: 0,
+      system_event: 0,
+      eval_result: 0,
+    };
+    const bySeverity: Record<AuditSeverity, number> = {
+      info: 0,
+      warning: 0,
+      critical: 0,
+      audit: 0,
+    };
     let driftIncidents = 0;
     let deltaViolations = 0;
 
@@ -497,9 +589,15 @@ class AuditService {
     try {
       const stored = safeStorage.getItem(STORAGE_KEY);
       if (!stored) return;
-      const data = JSON.parse(stored) as { entries?: unknown[]; driftHistory?: unknown[] };
-      this.entries = (data.entries as any[]) || [];
-      this.driftHistory = (data.driftHistory as any[]) || [];
+      const data: unknown = JSON.parse(stored);
+      if (!isRecord(data)) return;
+
+      this.entries = Array.isArray(data.entries)
+        ? data.entries.filter(isAuditEntry)
+        : [];
+      this.driftHistory = Array.isArray(data.driftHistory)
+        ? data.driftHistory.filter(isDriftReport)
+        : [];
     } catch {
       // Do not spam stderr in tests; fail closed to empty state
       this.entries = [];

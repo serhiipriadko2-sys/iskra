@@ -9,8 +9,8 @@ import react from '@vitejs/plugin-react';
 //   pwa-register.js) and the Vite modulepreload polyfill is disabled below.
 // - style-src 'unsafe-inline': required for React inline style props, the inline
 //   <style> block, and Google Fonts injected styles (style injection is low XSS risk).
-// - connect-src includes Supabase REST/Realtime/Edge; extend it if Sentry/PostHog
-//   (VITE_SENTRY_DSN / VITE_POSTHOG_HOST) are enabled.
+// - connect-src permits Supabase REST/Realtime/Edge and the opt-in telemetry
+//   providers. Browser-to-model-provider traffic is intentionally forbidden.
 // - frame-ancestors is ignored inside a <meta> CSP (GitHub Pages); it is enforced
 //   via HTTP headers on Vercel/nginx. X-Frame-Options provides the meta-side fallback.
 export const CONTENT_SECURITY_POLICY = [
@@ -23,7 +23,7 @@ export const CONTENT_SECURITY_POLICY = [
   "font-src 'self' https://fonts.gstatic.com data:",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "script-src 'self'",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.chatgpt.com https://generativelanguage.googleapis.com https://api.openai.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.posthog.com https://*.sentry.io",
   "worker-src 'self'",
   "manifest-src 'self'",
   'upgrade-insecure-requests',
@@ -103,6 +103,8 @@ export default defineConfig(({ command }) => {
     test: {
       exclude: ['node_modules', 'e2e', 'playwright-report', 'test-results'],
       environment: 'jsdom',
+      pool: 'threads',
+      maxWorkers: 2,
     },
   };
 });

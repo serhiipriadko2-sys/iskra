@@ -5,7 +5,7 @@ on:
     paths:
       - "supabase/**"
       - "runtime/iskraSpace/supabase/schema.sql"
-      - "runtime/iskraSpace/supabase_graphrag_migration.sql"
+      - "supabase/migration_archive/deprecated_graphrag_migration_2026-06-26.sql"
       - "tools/verify_supabase_voice_metrics_contract.ts"
       - "tools/verify_supabase_graph_contract.ts"
       - "package.json"

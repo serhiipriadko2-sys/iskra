@@ -62,14 +62,21 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          pnpm lint 2>&1 | tee iskraspace-lint.log
+          pnpm lint -- --max-warnings 0 2>&1 | tee iskraspace-lint.log
 
-      - name: Run unit tests
+      - name: Run unit tests pass 1
         working-directory: runtime/iskraSpace
         shell: bash
         run: |
           set -o pipefail
           pnpm test:run 2>&1 | tee iskraspace-unit.log
+
+      - name: Run unit tests pass 2
+        working-directory: runtime/iskraSpace
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm test:run 2>&1 | tee iskraspace-unit-repeat.log
 
       - name: Build iskraSpace
         working-directory: runtime/iskraSpace
@@ -77,6 +84,7 @@ jobs:
         run: |
           set -o pipefail
           pnpm build 2>&1 | tee iskraspace-build.log
+          pnpm check:bundle-budget 2>&1 | tee -a iskraspace-build.log
 
       - name: Upload iskraSpace diagnostics
         uses: actions/upload-artifact@v4
@@ -90,6 +98,7 @@ jobs:
             runtime/iskraSpace/iskraspace-typecheck.log
             runtime/iskraSpace/iskraspace-lint.log
             runtime/iskraSpace/iskraspace-unit.log
+            runtime/iskraSpace/iskraspace-unit-repeat.log
             runtime/iskraSpace/iskraspace-build.log
           retention-days: 7
 

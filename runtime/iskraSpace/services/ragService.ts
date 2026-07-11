@@ -612,8 +612,6 @@ export async function buildRAGContextWithSIFT(
   while (iteration < MAX_SIFT_ITERATIONS && conflictTable.length > 0) {
     iteration++;
 
-    console.log(`[SIFT] Iteration ${iteration}: Found ${conflictTable.length} conflicts`);
-
     // Generate verification queries for each conflict
     const verificationQueries = conflictTable.map(conflict => {
       // Extract key terms from claim
@@ -658,11 +656,8 @@ export async function buildRAGContextWithSIFT(
       }
     }
 
-    console.log(`[SIFT] Found ${additionalMemories.length} additional sources`);
-
     // If no new sources found, break (can't resolve further)
     if (additionalMemories.length === 0) {
-      console.log(`[SIFT] No new sources found, stopping at iteration ${iteration}`);
       unresolvedConflicts = conflictTable;
       break;
     }
@@ -680,7 +675,6 @@ export async function buildRAGContextWithSIFT(
 
     if (resolvedThisIteration > 0) {
       conflictsResolved += resolvedThisIteration;
-      console.log(`[SIFT] Resolved ${resolvedThisIteration} conflicts in iteration ${iteration}`);
     }
 
     // Update context with new memories and conflicts
@@ -705,7 +699,6 @@ export async function buildRAGContextWithSIFT(
 
     // If all conflicts resolved, break early
     if (newConflictTable.length === 0) {
-      console.log(`[SIFT] All conflicts resolved after ${iteration} iterations`);
       break;
     }
   }
@@ -713,7 +706,6 @@ export async function buildRAGContextWithSIFT(
   // Final unresolved conflicts
   if (currentContext.conflictTable && currentContext.conflictTable.length > 0) {
     unresolvedConflicts = currentContext.conflictTable;
-    console.log(`[SIFT] ${unresolvedConflicts.length} conflicts remain unresolved after ${iteration} iterations`);
   }
 
   return {

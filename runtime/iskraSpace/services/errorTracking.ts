@@ -5,12 +5,12 @@
  * Gracefully degrades when Sentry is not configured.
  */
 
+import { getRuntimeConfig } from '../config/runtimeConfig';
+
 interface ErrorContext {
-  userId?: string;
   voice?: string;
   playbook?: string;
   metrics?: Record<string, number>;
-  extra?: Record<string, unknown>;
 }
 
 interface ErrorTrackingConfig {
@@ -20,43 +20,83 @@ interface ErrorTrackingConfig {
   enabled: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let sentry: any = null;
+interface SentryEvent {
+  message?: string;
+  request?: {
+    headers?: Record<string, unknown>;
+    data?: unknown;
+  };
+  breadcrumbs?: Array<{ message?: string; data?: unknown }>;
+  exception?: { values?: Array<{ value?: string }> };
+}
+
+interface SentryClient {
+  captureException(error: Error, context?: Record<string, unknown>): void;
+  captureMessage(message: string, level: 'info' | 'warning' | 'error'): void;
+  setUser(user: { id: string } | null): void;
+  addBreadcrumb(breadcrumb: Record<string, unknown>): void;
+  setTag(key: string, value: string): void;
+}
+
+let sentry: SentryClient | null = null;
 let config: ErrorTrackingConfig = {
   environment: import.meta.env.MODE || 'development',
   enabled: false,
 };
+const ERROR_TRACKING_CONSENT_KEY = 'iskra_error_tracking_opted_in';
+
+function isAllowedSentryDsn(dsn: string): boolean {
+  try {
+    const url = new URL(dsn);
+    return url.protocol === 'https:' && (
+      url.hostname === 'sentry.io' || url.hostname.endsWith('.sentry.io')
+    );
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Initialize error tracking
  * Call this early in app initialization (main.tsx)
  */
 export async function initErrorTracking(): Promise<void> {
-  const dsn = import.meta.env.VITE_SENTRY_DSN;
+  const dsn = getRuntimeConfig('VITE_SENTRY_DSN', import.meta.env.VITE_SENTRY_DSN);
+  const release = getRuntimeConfig('VITE_APP_VERSION', import.meta.env.VITE_APP_VERSION);
 
-  if (!dsn) {
-    console.info('[ErrorTracking] Sentry DSN not configured, running without error tracking');
+  if (!dsn) return;
+  if (localStorage.getItem(ERROR_TRACKING_CONSENT_KEY) !== 'true') return;
+  if (!isAllowedSentryDsn(dsn)) {
+    console.warn('[ErrorTracking] Sentry DSN is outside the closed-beta allow-list');
     return;
   }
 
   try {
     // Dynamic import to avoid loading Sentry if not needed
-    // @ts-expect-error - Optional dependency, may not be installed
-    const Sentry = await import('@sentry/react');
+    const Sentry = await import('@sentry/react') as unknown as SentryClient & {
+      init(options: Record<string, unknown>): void;
+    };
 
     Sentry.init({
       dsn,
       environment: import.meta.env.MODE,
-      release: import.meta.env.VITE_APP_VERSION || 'unknown',
+      release: release || 'unknown',
       tracesSampleRate: import.meta.env.MODE === 'production' ? 0.1 : 1.0,
       replaysSessionSampleRate: 0,
-      replaysOnErrorSampleRate: 0.1,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      beforeSend(event: any) {
+      replaysOnErrorSampleRate: 0,
+      sendDefaultPii: false,
+      beforeSend(event: SentryEvent) {
         if (event.request?.headers) {
           delete event.request.headers['Authorization'];
           delete event.request.headers['Cookie'];
         }
+        if (event.request) delete event.request.data;
+        delete event.message;
+        event.breadcrumbs?.forEach(breadcrumb => {
+          delete breadcrumb.message;
+          delete breadcrumb.data;
+        });
+        event.exception?.values?.forEach(value => delete value.value);
         return event;
       },
     });
@@ -65,11 +105,10 @@ export async function initErrorTracking(): Promise<void> {
     config = {
       dsn,
       environment: import.meta.env.MODE,
-      release: import.meta.env.VITE_APP_VERSION,
+      release,
       enabled: true,
     };
 
-    console.info('[ErrorTracking] Sentry initialized');
   } catch (error) {
     console.warn('[ErrorTracking] Failed to initialize Sentry:', error);
   }
@@ -79,7 +118,7 @@ export async function initErrorTracking(): Promise<void> {
  * Capture an exception with ISKRA context
  */
 export function captureError(error: Error, context?: ErrorContext): void {
-  console.error('[ErrorTracking]', error.message, context);
+  console.error('[ErrorTracking]', error.name);
 
   if (!sentry || !config.enabled) return;
 
@@ -89,10 +128,8 @@ export function captureError(error: Error, context?: ErrorContext): void {
       playbook: context?.playbook,
     },
     extra: {
-      ...context?.extra,
       metrics: context?.metrics,
     },
-    user: context?.userId ? { id: context.userId } : undefined,
   });
 }
 
@@ -103,10 +140,6 @@ export function captureMessage(
   message: string,
   level: 'info' | 'warning' | 'error' = 'info'
 ): void {
-  if (import.meta.env.VITE_DEBUG_MODE === 'true') {
-    console.log(`[ErrorTracking:${level}]`, message);
-  }
-
   if (!sentry || !config.enabled) return;
 
   sentry.captureMessage(message, level);
@@ -118,7 +151,8 @@ export function captureMessage(
 export function setUser(userId: string | null): void {
   if (!sentry || !config.enabled) return;
 
-  sentry.setUser(userId ? { id: userId } : null);
+  void userId;
+  sentry.setUser(null);
 }
 
 /**
@@ -133,10 +167,11 @@ export function addBreadcrumb(
 
   sentry.addBreadcrumb({
     category,
-    message,
-    data,
+    message: 'redacted-event',
     level: 'info',
   });
+  void message;
+  void data;
 }
 
 /**
@@ -148,11 +183,23 @@ export function setTag(key: string, value: string): void {
   sentry.setTag(key, value);
 }
 
-/**
- * Check if error tracking is enabled
- */
+export function optInErrorTracking(): void {
+  localStorage.setItem(ERROR_TRACKING_CONSENT_KEY, 'true');
+  void initErrorTracking();
+}
+
+export function optOutErrorTracking(): void {
+  localStorage.removeItem(ERROR_TRACKING_CONSENT_KEY);
+  config.enabled = false;
+  sentry?.setUser(null);
+}
+
 export function isErrorTrackingEnabled(): boolean {
-  return config.enabled;
+  return config.enabled && localStorage.getItem(ERROR_TRACKING_CONSENT_KEY) === 'true';
+}
+
+export function hasErrorTrackingConsent(): boolean {
+  return localStorage.getItem(ERROR_TRACKING_CONSENT_KEY) === 'true';
 }
 
 /**

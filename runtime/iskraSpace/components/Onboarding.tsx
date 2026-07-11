@@ -18,7 +18,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     const handleNext = () => {
         setFadeIn(false);
         setTimeout(() => {
-            setStep(prev => (prev + 1) as any);
+            setStep(prev => prev === 1 ? 2 : 3);
             setFadeIn(true);
         }, 500);
     };

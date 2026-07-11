@@ -17,7 +17,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { getActiveVoice, getSystemInstructionForVoice } from '../voiceEngine';
 import { classifyRequest, quickRiskCheck } from '../policyEngine';
-import { securityService } from '../securityService';
+import { SECURITY_ACTIONS, securityService } from '../securityService';
 import { evaluateResponse } from '../evalService';
 import { validateDeltaSignature } from '../deltaProtocol';
 import { IskraMetrics, VoiceName, Message } from '../../types';
@@ -506,7 +506,7 @@ describe('SecurityService Stress Tests', () => {
         const result = securityService.validate(input);
         expect(result).toBeDefined();
         expect(result.action).toBeDefined();
-        expect(['PROCEED', 'REJECT', 'REDIRECT']).toContain(result.action);
+        expect(SECURITY_ACTIONS).toContain(result.action);
       });
     });
   });

@@ -19,9 +19,18 @@ Routes:
 
 ## Security posture
 
-- Supabase function must run with `verify_jwt=true`.
+- Supabase function runs with `verify_jwt=true` at the platform level (belt).
+- The function ALSO independently verifies the JWT signature in-process via
+  `jose`/`SUPABASE_JWT_SECRET` (HS256) — it does not rely solely on the platform
+  switch, since this project's `service_role`/`anon` keys are static project
+  JWTs, not user sessions, and the Postgres connection has schema-wide
+  `service_role` grants regardless of which caller reaches the function.
+- After signature verification, the caller's `role` claim must equal
+  `service_role`; any other role (including a validly-signed `anon` key) gets
+  `403 forbidden_role`. Missing/invalid/unsigned tokens get `401`.
 - The gateway does not trust `actor` from request JSON.
-- Actor is derived from the verified Supabase JWT claims exposed through the Authorization header.
+- Actor is derived from the verified (signature + role) JWT claims, never from
+  the request body.
 - Unknown routes return `404` with `ok:false`.
 - DB access should use `SUPABASE_DB_POOLER_URL`; `SUPABASE_DB_URL` remains a fallback.
 - The postgres-js pool is capped by `SUPABASE_DB_POOL_MAX`, default `2`, max `4`.

@@ -12,6 +12,7 @@ import MiniMetricsDisplay from './MiniMetricsDisplay';
 import VoiceExplainableDisplay from './ExplainableTrace';
 import { createAudioContext, decode, decodeAudioData } from '../css/audioUtils';
 import { Volume2Icon, VolumeXIcon, SparkleIcon, XIcon } from './icons';
+import type { IntegrityState } from '../../src/types/guard.js';
 
 // Response mode display config
 const RESPONSE_MODE_DISPLAY: Record<ResponseMode, { label: string; icon: string; color: string }> = {
@@ -28,6 +29,29 @@ interface ChatViewProps {
   metrics: IskraMetrics;
   onUserInput: (input: string) => void;
 }
+
+interface PendingRedactedQuery {
+  sanitizedText: string;
+}
+
+const isStringArray = (value: unknown): value is string[] =>
+  Array.isArray(value) && value.every(item => typeof item === 'string');
+
+const isIntegrityState = (value: unknown): value is IntegrityState => {
+  if (typeof value !== 'object' || value === null) return false;
+
+  return (
+    'ok' in value &&
+    typeof value.ok === 'boolean' &&
+    'warnings' in value &&
+    isStringArray(value.warnings) &&
+    'missing' in value &&
+    isStringArray(value.missing) &&
+    'evidenceCount' in value &&
+    typeof value.evidenceCount === 'number' &&
+    (!('reasons' in value) || value.reasons === undefined || isStringArray(value.reasons))
+  );
+};
 
 // List of selectable voices (all 9 canonical voices)
 const AVAILABLE_VOICES: { name: VoiceName | 'AUTO', label: string }[] = [
@@ -59,6 +83,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   const [history, setHistory] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pendingRedactedQuery, setPendingRedactedQuery] = useState<PendingRedactedQuery | null>(null);
   const [isTtsEnabled, setIsTtsEnabled] = useState(TTS_AVAILABLE);
 
   // Voice State
@@ -77,8 +102,8 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   });
 
   // Policy / Integrity observability (last turn)
-  const [lastPolicyDecision, setLastPolicyDecision] = useState<any | null>(null);
-  const [lastPostIntegrity, setLastPostIntegrity] = useState<any | null>(null);
+  const [lastPolicyDecision, setLastPolicyDecision] = useState<PolicyStreamResult['policy'] | null>(null);
+  const [lastPostIntegrity, setLastPostIntegrity] = useState<IntegrityState | null>(null);
   const [showVoiceWhy, setShowVoiceWhy] = useState(false);
 
   // Cycle through beta-approved response modes only.
@@ -222,7 +247,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   };
 
 
-  const handleQuery = async (query: string, image?: string) => {
+  const dispatchSafeQuery = async (safeQuery: string, image?: string) => {
     // CRITICAL: Resume AudioContext immediately within the user interaction event loop
     // Ensure context is initialized
     if (TTS_AVAILABLE) {
@@ -239,18 +264,6 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
       stopAndClearAudio();
     }
 
-    // Security guardrails: scan user input before any AI or storage path
-    const security = securityService.validate(query);
-    if (security.action === 'REJECT') {
-      setError(`Ввод отклонён: ${security.reason || 'обнаружена попытка инъекции'}`);
-      return;
-    }
-    if (security.action === 'REDIRECT') {
-      setError(`Эта тема выходит за безопасный контур Искры (${security.reason}). Если тебе нужна помощь, обратись к человеку, которому доверяешь.`);
-      return;
-    }
-
-    const safeQuery = security.sanitizedText;
     const userMessage: Message = { role: 'user', text: safeQuery, image: image };
     onUserInput(safeQuery);
     
@@ -322,15 +335,10 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
         });
       }
 
-      // Log eval result for debugging (can be shown in UI later)
-      if (streamResult?.eval) {
-        console.debug('[Eval]', streamResult.eval.grade, streamResult.eval.overall.toFixed(2));
-      }
       if (streamResult?.policy) {
-        console.debug('[Policy]', streamResult.policy.classification.playbook);
         setLastPolicyDecision(streamResult.policy);
       }
-      if (streamResult?.integrity) {
+      if (isIntegrityState(streamResult?.integrity)) {
         setLastPostIntegrity(streamResult.integrity);
       }
 
@@ -355,6 +363,43 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleQuery = async (query: string, image?: string) => {
+    setError(null);
+    setPendingRedactedQuery(null);
+
+    if (image) {
+      setError('Изображения отключены в закрытой beta: клиент не может доказать отсутствие чувствительных данных.');
+      return;
+    }
+
+    const security = securityService.validate(query);
+    if (security.action === 'REQUIRES_REDACTED_CONSENT') {
+      setPendingRedactedQuery({ sanitizedText: security.sanitizedText });
+      return;
+    }
+
+    if (security.action !== 'PROCEED') {
+      setError(`Ввод не отправлен в AI: ${security.reason || 'сработал безопасный контур'}`);
+      return;
+    }
+
+    await dispatchSafeQuery(security.sanitizedText);
+  };
+
+  const sendPendingRedactedQuery = async () => {
+    if (!pendingRedactedQuery) return;
+
+    const rechecked = securityService.validate(pendingRedactedQuery.sanitizedText);
+    if (rechecked.action !== 'PROCEED') {
+      setPendingRedactedQuery(null);
+      setError('Обезличенная копия всё ещё не проходит безопасный контур. Запрос не отправлен.');
+      return;
+    }
+
+    setPendingRedactedQuery(null);
+    await dispatchSafeQuery(rechecked.sanitizedText);
   };
 
   // Get current voice visuals
@@ -494,6 +539,34 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
         <div className={`absolute inset-0 pointer-events-none border-x-2 opacity-10 transition-all duration-1000 ${voiceStyle.split(' ')[0]}`} />
         
         <ChatWindow history={history} isLoading={isLoading} onQuery={handleQuery} />
+
+        {pendingRedactedQuery && (
+          <div
+            className="absolute bottom-20 left-1/2 w-full max-w-md -translate-x-1/2 rounded-md border border-warning/40 bg-surface2 p-4 text-sm text-text shadow-deep"
+            data-testid="chat-security-decision"
+            role="alert"
+          >
+            <p>Обнаружены чувствительные данные. До явного согласия запрос не отправляется в AI или облако.</p>
+            <div className="mt-3 flex gap-2">
+              <button
+                type="button"
+                className="button-primary"
+                data-action="send-redacted"
+                onClick={() => { void sendPendingRedactedQuery(); }}
+              >
+                Отправить обезличенную копию
+              </button>
+              <button
+                type="button"
+                className="button-secondary"
+                data-action="cancel"
+                onClick={() => setPendingRedactedQuery(null)}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        )}
         
          {error && (
             <div className="absolute bottom-20 left-1/2 -translate-x-1/2 max-w-md w-full rounded-md bg-danger/80 p-3 text-sm text-white backdrop-blur-md text-center">

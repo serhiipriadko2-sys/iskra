@@ -3,6 +3,7 @@ import {
   AI_RATE_LIMIT_IP_HMAC_SECRET_ENV,
   buildCorsHeaders,
   enforceAiRequestBoundary,
+  parseVerifiedAiUser,
   isAllowedOrigin,
   type AiBoundaryConfig,
   type VerifiedAiUser,
@@ -78,13 +79,7 @@ async function validateJwt(token: string): Promise<VerifiedAiUser | null> {
 
     if (!res.ok) return null;
 
-    const data = (await res.json()) as Record<string, unknown> | undefined;
-    if (!data || typeof data.id !== 'string') return null;
-
-    const appMetadata = data.app_metadata;
-    const anonymousProvider = appMetadata && typeof appMetadata === 'object'
-      && (appMetadata as Record<string, unknown>).provider === 'anonymous';
-    return { sub: data.id, isAnonymous: data.is_anonymous === true || anonymousProvider };
+    return parseVerifiedAiUser(await res.json());
   } catch {
     return null;
   }

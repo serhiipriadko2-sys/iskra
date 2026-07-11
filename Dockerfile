@@ -28,6 +28,8 @@ COPY --from=iskraspace-builder /app/runtime/iskraSpace/dist /usr/share/nginx/htm
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY deploy/iskraspace-runtime-config.sh /docker-entrypoint.d/40-iskraspace-runtime-config.sh
+RUN chmod 0555 /docker-entrypoint.d/40-iskraspace-runtime-config.sh
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

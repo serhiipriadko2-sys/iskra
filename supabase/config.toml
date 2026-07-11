@@ -19,3 +19,6 @@ verify_jwt = true
 
 [functions.kain]
 verify_jwt = true
+
+[functions.iskra-memory-gateway]
+verify_jwt = true

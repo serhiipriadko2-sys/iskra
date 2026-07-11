@@ -1,9 +1,54 @@
 import { supabase, getUserId, isSupabaseAvailable } from './supabaseClient';
-import type { Database } from '../types/supabase';
-import type { IskraMetrics, IskraPhase, MemoryNode, SIFTBlock } from '../types';
+import type { Database, Json } from '../types/supabase';
+import { isMemoryLayer, isMemoryNodeType, VOICE_SYMBOLS } from '../types';
+import type {
+  DocType,
+  IskraMetrics,
+  IskraPhase,
+  MemoryNode,
+  SIFTBlock,
+  VoiceName,
+} from '../types';
 
 // We use the generated types for DB interactions
 type VoicePreferences = Record<string, number>;
+
+const DOC_TYPES: readonly DocType[] = ['canon', 'draft', 'code', 'log', 'personal'];
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
+
+const isDocType = (value: unknown): value is DocType =>
+  typeof value === 'string' && DOC_TYPES.some(docType => docType === value);
+
+const isVoiceName = (value: unknown): value is VoiceName =>
+  typeof value === 'string' && Object.prototype.hasOwnProperty.call(VOICE_SYMBOLS, value);
+
+const isSiftBlock = (value: unknown): value is SIFTBlock => {
+  if (!isRecord(value)) return false;
+
+  return (
+    typeof value.source === 'string' &&
+    typeof value.inference === 'string' &&
+    (value.fact === 'true' || value.fact === 'false' || value.fact === 'uncertain') &&
+    typeof value.trace === 'string'
+  );
+};
+
+const parseEvidence = (value: unknown): SIFTBlock[] =>
+  Array.isArray(value) ? value.filter(isSiftBlock) : [];
+
+const toJson = (value: unknown): Json => {
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (Array.isArray(value)) return value.map(toJson);
+  if (isRecord(value)) {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [key, entry === undefined ? undefined : toJson(entry)])
+    );
+  }
+  return value === undefined ? null : String(value);
+};
 
 interface Message {
   role: 'user' | 'model';
@@ -450,17 +495,17 @@ export async function getMemoryNodes(layer?: string): Promise<MemoryNode[]> {
 
   const nodes: MemoryNode[] = (data || []).map(row => ({
     id: row.id,
-    type: row.type as any,
-    layer: row.layer as any,
+    type: isMemoryNodeType(row.type) ? row.type : 'event',
+    layer: isMemoryLayer(row.layer) ? row.layer : 'archive',
     timestamp: row.created_at || new Date().toISOString(),
     title: row.title || '',
     content: row.content,
-    doc_type: row.doc_type as any || undefined,
+    doc_type: isDocType(row.doc_type) ? row.doc_type : undefined,
     trust_level: row.trust_level ?? undefined,
     tags: row.tags || [],
     section: row.section || undefined,
-    facet: row.facet as any || undefined,
-    evidence: (row.evidence as unknown as SIFTBlock[]) || [],
+    facet: isVoiceName(row.facet) ? row.facet : undefined,
+    evidence: parseEvidence(row.evidence),
   }));
 
   // Cache for offline use
@@ -478,13 +523,13 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
       layer: node.layer,
       type: node.type,
       title: node.title,
-      content: node.content as any,
+      content: toJson(node.content),
       doc_type: node.doc_type || null,
       trust_level: node.trust_level || 1.0,
       tags: node.tags || [],
       section: node.section || null,
       facet: node.facet || null,
-      evidence: node.evidence as any || [],
+      evidence: toJson(node.evidence),
     })
     .select()
     .single();
@@ -493,12 +538,12 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
 
   return {
     id: data.id,
-    type: data.type as any,
-    layer: data.layer as any,
+    type: isMemoryNodeType(data.type) ? data.type : 'event',
+    layer: isMemoryLayer(data.layer) ? data.layer : 'archive',
     timestamp: data.created_at || new Date().toISOString(),
     title: data.title || '',
     content: data.content,
-    doc_type: data.doc_type as any || undefined,
+    doc_type: isDocType(data.doc_type) ? data.doc_type : undefined,
     trust_level: data.trust_level ?? 1.0,
     tags: data.tags || [],
     evidence: [],

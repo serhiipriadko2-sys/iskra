@@ -14,7 +14,9 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['src/**/*.test.ts', 'iskraSpace/**/*.test.ts'],
+    pool: 'threads',
+    maxWorkers: 1,
+    include: ['src/**/*.test.ts'],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',

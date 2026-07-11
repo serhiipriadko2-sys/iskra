@@ -5,6 +5,12 @@ import { memoryService } from '../services/memoryService';
 import { PowerIcon, DatabaseIcon, FilePlus2Icon, TrashIcon, LayersIcon, FileSearchIcon, TriangleIcon, SparkleIcon, ScaleIcon, MessageSquareIcon } from './icons';
 import { IntegrityReport, ResponseMode } from '../types';
 import { getAvailableResponseModes, normalizeResponseModeForBeta } from '../config/betaCapabilities';
+import { hasOptedOut, optIn, optOut } from '../services/analytics';
+import {
+    hasErrorTrackingConsent,
+    optInErrorTracking,
+    optOutErrorTracking,
+} from '../services/errorTracking';
 
 const SettingsView: React.FC = () => {
     const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -13,6 +19,8 @@ const SettingsView: React.FC = () => {
     
     const [integrityReport, setIntegrityReport] = useState<IntegrityReport | null>(null);
     const [isCheckingIntegrity, setIsCheckingIntegrity] = useState(false);
+    const [analyticsConsent, setAnalyticsConsent] = useState(() => !hasOptedOut());
+    const [errorTrackingConsent, setErrorTrackingConsent] = useState(hasErrorTrackingConsent);
 
     const [responseMode, setResponseMode] = useState<ResponseMode>(() => {
         const persistedMode = storageService.getResponseMode();
@@ -90,6 +98,18 @@ const SettingsView: React.FC = () => {
         }, 800);
     };
 
+    const toggleAnalyticsConsent = () => {
+        const nextValue = !analyticsConsent;
+        if (nextValue) optIn(); else optOut();
+        setAnalyticsConsent(nextValue);
+    };
+
+    const toggleErrorTrackingConsent = () => {
+        const nextValue = !errorTrackingConsent;
+        if (nextValue) optInErrorTracking(); else optOutErrorTracking();
+        setErrorTrackingConsent(nextValue);
+    };
+
     return (
         <div className="flex flex-col h-full p-4 sm:p-6 overflow-y-auto items-center pb-24 lg:pb-6">
             <header className="text-center mb-10">
@@ -161,6 +181,45 @@ const SettingsView: React.FC = () => {
                                 <p className="text-xs text-danger mt-2 text-right">Нажмите еще раз для подтверждения. Приложение перезагрузится.</p>
                             )}
                         </div>
+                    </div>
+                </div>
+
+                {/* Explicit telemetry consent. No provider SDK loads before opt-in. */}
+                <div className="card">
+                    <div className="flex items-center gap-3 mb-6 border-b border-border pb-4">
+                        <TriangleIcon className="w-6 h-6 text-warning" />
+                        <h3 className="font-serif text-xl text-text">Диагностика и приватность</h3>
+                    </div>
+                    <p className="text-sm text-text-muted mb-4">
+                        По умолчанию телеметрия выключена. Даже после согласия не отправляются тексты чата и дневника, содержимое запросов, токены, raw IP или session replay.
+                    </p>
+                    <div className="space-y-4">
+                        <label className="flex items-center justify-between gap-4 cursor-pointer">
+                            <span>
+                                <span className="block font-medium text-text">Анонимная продуктовая аналитика</span>
+                                <span className="block text-xs text-text-muted">Только события интерфейса и числовые метрики.</span>
+                            </span>
+                            <input
+                                data-telemetry-consent="analytics"
+                                type="checkbox"
+                                checked={analyticsConsent}
+                                onChange={toggleAnalyticsConsent}
+                                className="h-5 w-5 accent-primary"
+                            />
+                        </label>
+                        <label className="flex items-center justify-between gap-4 cursor-pointer">
+                            <span>
+                                <span className="block font-medium text-text">Отчёты о технических сбоях</span>
+                                <span className="block text-xs text-text-muted">Сообщения и breadcrumbs очищаются от пользовательского текста.</span>
+                            </span>
+                            <input
+                                data-telemetry-consent="errors"
+                                type="checkbox"
+                                checked={errorTrackingConsent}
+                                onChange={toggleErrorTrackingConsent}
+                                className="h-5 w-5 accent-primary"
+                            />
+                        </label>
                     </div>
                 </div>
 

@@ -9,6 +9,9 @@ async function completeOnboarding(page: Page) {
     localStorage.setItem('iskra-user-name', 'TestUser');
   });
   await page.reload();
+  // The load event can precede React mounting on a cold Vite transform. Use
+  // the actual application shell as the readiness condition.
+  await expect(page.locator('main')).toBeVisible({ timeout: 15000 });
 }
 
 test.describe('App Core Functionality', () => {

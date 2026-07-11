@@ -34,4 +34,29 @@ describe('SettingsView closed-beta capabilities', () => {
     expect(container.querySelectorAll('[data-response-mode]')).toHaveLength(2);
     expect(container.querySelector('[data-response-mode="debate"]')).toBeNull();
   });
+
+  it('keeps telemetry off until each explicit consent is selected', async () => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    root = createRoot(container);
+
+    await act(async () => {
+      root?.render(<SettingsView />);
+    });
+
+    const analytics = container.querySelector<HTMLInputElement>('[data-telemetry-consent="analytics"]');
+    const errors = container.querySelector<HTMLInputElement>('[data-telemetry-consent="errors"]');
+    expect(analytics?.checked).toBe(false);
+    expect(errors?.checked).toBe(false);
+
+    await act(async () => {
+      analytics?.click();
+      errors?.click();
+    });
+
+    expect(analytics?.checked).toBe(true);
+    expect(errors?.checked).toBe(true);
+    expect(localStorage.getItem('iskra_analytics_opted_in')).toBe('true');
+    expect(localStorage.getItem('iskra_error_tracking_opted_in')).toBe('true');
+  });
 });

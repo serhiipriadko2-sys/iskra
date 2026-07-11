@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 const ROOT = process.cwd();
 const LEGACY_RUNTIME_SQL = [
   'runtime/iskraSpace/supabase/schema.sql',
-  'runtime/iskraSpace/supabase_graphrag_migration.sql',
+  'supabase/migration_archive/deprecated_graphrag_migration_2026-06-26.sql',
 ];
 
 function readRepoFile(relativePath: string): string {
@@ -18,9 +18,7 @@ function readStringArray(source: string, constant: string): string[] {
   return Array.from(match![1].matchAll(/'([^']+)'/g), ([, value]) => value);
 }
 
-// TODO: reconcile with archived graphrag migration and canonical schema.sql baseline,
-// then update LEGACY_RUNTIME_SQL and GRAPHRAG_SUPABASE_SETUP.md expectations.
-describe.skip('canonical Supabase SQL source contracts', () => {
+describe('canonical Supabase SQL source contracts', () => {
   it('selects only root migrations for graph and voice release contracts', () => {
     const graphVerifier = readRepoFile('tools/verify_supabase_graph_contract.ts');
     const voiceVerifier = readRepoFile('tools/verify_supabase_voice_metrics_contract.ts');
@@ -30,7 +28,9 @@ describe.skip('canonical Supabase SQL source contracts', () => {
 
     expect(graphSources.length).toBeGreaterThan(0);
     expect(voiceSources.length).toBeGreaterThan(0);
-    expect([...graphSources, ...voiceSources]).toSatisfyAll((source) => source.startsWith('supabase/migrations/'));
+    expect(
+      [...graphSources, ...voiceSources].every((source) => source.startsWith('supabase/migrations/')),
+    ).toBe(true);
 
     for (const legacyPath of LEGACY_RUNTIME_SQL) {
       expect(graphSources).not.toContain(legacyPath);

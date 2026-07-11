@@ -10,17 +10,38 @@ export interface HealthProvider {
   getSleepData(date: string): Promise<SleepData | null>;
 }
 
+interface IskraHealthBridge {
+  requestPermissions?: (scopes: string[]) => Promise<boolean>;
+  getSleepData?: (date: string) => Promise<unknown>;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isIskraHealthBridge(value: unknown): value is IskraHealthBridge {
+  return isRecord(value);
+}
+
+function getHealthBridge(): IskraHealthBridge | null {
+  if (typeof window === 'undefined') return null;
+
+  const candidate = (window as Window & { IskraHealth?: unknown }).IskraHealth;
+  return isIskraHealthBridge(candidate) ? candidate : null;
+}
+
 // Mock implementation that checks for a global bridge
 class WebHealthProvider implements HealthProvider {
   isAvailable(): boolean {
-    return typeof window !== 'undefined' &&
-           (window as any).IskraHealth !== undefined;
+    return getHealthBridge() !== null;
   }
 
   async requestPermissions(): Promise<boolean> {
-    if (!this.isAvailable()) return false;
+    const bridge = getHealthBridge();
+    if (!bridge || typeof bridge.requestPermissions !== 'function') return false;
+
     try {
-      return await (window as any).IskraHealth.requestPermissions(['sleep']);
+      return await bridge.requestPermissions(['sleep']);
     } catch (e) {
       console.warn('Health permission request failed', e);
       return false;
@@ -28,10 +49,12 @@ class WebHealthProvider implements HealthProvider {
   }
 
   async getSleepData(date: string): Promise<SleepData | null> {
-    if (!this.isAvailable()) return null;
+    const bridge = getHealthBridge();
+    if (!bridge || typeof bridge.getSleepData !== 'function') return null;
+
     try {
-      const result = await (window as any).IskraHealth.getSleepData(date);
-      if (result && typeof result.minutes === 'number') {
+      const result = await bridge.getSleepData(date);
+      if (isRecord(result) && typeof result.minutes === 'number') {
         return {
           minutes: result.minutes,
           source: 'HealthKit/Connect'
@@ -62,8 +85,6 @@ class _StubHealthProvider implements HealthProvider {
 }
 
 // Select the best provider
-const provider = typeof window !== 'undefined' && (window as any).IskraHealth
-  ? new WebHealthProvider()
-  : new WebHealthProvider(); // Always use WebHealthProvider as it checks availability internally
+const provider: HealthProvider = new WebHealthProvider();
 
 export const healthService = provider;

@@ -12,13 +12,19 @@ interface SidebarProps {
   onOpenMenu?: () => void;
 }
 
+interface NavigationItem {
+  readonly id: AppView;
+  readonly name: string;
+  readonly icon: React.FC<React.SVGProps<SVGSVGElement>>;
+}
+
 const NAV_ITEMS = [
   { id: 'PULSE', name: 'Пульс', icon: PulseIcon },
   { id: 'PLANNER', name: 'План', icon: ListTodoIcon },
   { id: 'CHAT', name: 'Чат', icon: MessageCircleIcon },
   { id: 'JOURNAL', name: 'Дневник', icon: BookTextIcon },
   { id: 'BEACON', name: 'Маяк', icon: BeaconIcon },
-] as const;
+] as const satisfies readonly NavigationItem[];
 
 const SECONDARY_ITEMS = [
     { id: 'DUO', name: 'Связь', icon: UsersIcon },
@@ -31,7 +37,7 @@ const SECONDARY_ITEMS = [
     { id: 'EVAL', name: 'Оценка', icon: ScaleIcon },
     { id: 'GLOSSARY', name: 'Канон', icon: BookTextIcon },
     { id: 'SETTINGS', name: 'Настройки', icon: LayersIcon },
-] as const;
+] as const satisfies readonly NavigationItem[];
 
 export const MobileMenu: React.FC<{
     isOpen: boolean;
@@ -59,7 +65,7 @@ export const MobileMenu: React.FC<{
         onNavigate(view);
     }
 
-    const renderRadialItem = (item: any, index: number, total: number) => {
+    const renderRadialItem = (item: NavigationItem, index: number, total: number) => {
         // Two-arc layout for better ergonomics
         const isInner = index < 4;
         const arcIndex = isInner ? index : index - 4;
@@ -88,7 +94,7 @@ export const MobileMenu: React.FC<{
                 data-nav={item.id}
                 data-nav-surface="radial"
                 aria-label={item.name}
-                onClick={() => handleNavigate(item.id as AppView)}
+                onClick={() => handleNavigate(item.id)}
                 className={`absolute flex flex-col items-center justify-center rounded-2xl border shadow-lg transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1) ${
                     activeView === item.id 
                     ? 'bg-primary/20 border-primary text-primary shadow-glow-ember' 
@@ -148,7 +154,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
      setView(id);
   }
 
-  const renderItem = (item: any, isMobileRender = false) => {
+  const renderItem = (item: NavigationItem, isMobileRender = false) => {
       const isActive = activeView === item.id;
       const domId = isMobileRender ? `nav-item-${item.id}-mobile` : `nav-item-${item.id}`;
       
@@ -161,7 +167,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
                 data-nav={item.id}
                 data-nav-surface="mobile"
                 aria-label={item.name}
-                onClick={() => handleItemClick(item.id as AppView)}
+                onClick={() => handleItemClick(item.id)}
                 className={`flex flex-col items-center justify-center flex-1 h-full relative transition-all duration-300 active:scale-95 group ${
                     isActive ? 'text-primary' : 'text-text-muted/80'
                 }`}
@@ -183,7 +189,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setView, compact = false,
             data-nav={item.id}
             data-nav-surface="desktop"
             aria-label={item.name}
-            onClick={() => handleItemClick(item.id as AppView)}
+            onClick={() => handleItemClick(item.id)}
             className={`group flex items-center w-full p-3 mb-2 rounded-xl transition-all duration-300 relative overflow-hidden active:scale-98 ${
                 isActive
                 ? 'bg-white/5 text-primary shadow-[0_0_20px_rgba(255,122,0,0.15)] border border-primary/20'
