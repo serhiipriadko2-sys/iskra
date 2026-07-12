@@ -20,6 +20,8 @@ const LAMBDA_PATTERN = /[ΛΛλ][:：]\s*([^\n]+)/i;
 
 // Full block pattern for extraction
 const FULL_BLOCK_PATTERN = /∆DΩΛ[\s\S]*?(?=\n\n|\n$|$)/i;
+const MAX_OMEGA_CONFIDENCE = 0.95;
+const DEFAULT_OMEGA_CONFIDENCE = 0.7;
 
 export interface DeltaValidationResult {
   isValid: boolean;
@@ -98,7 +100,9 @@ export function generateDeltaBlock(params: {
     ? `${source || 'internal'} → ${inference || 'synthesis'} → ${fact || 'uncertain'}`
     : 'internal_state → synthesis → uncertain';
 
-  const omega = `${Math.round(confidence * 100)}%`;
+  const finiteConfidence = Number.isFinite(confidence) ? confidence : DEFAULT_OMEGA_CONFIDENCE;
+  const clampedConfidence = Math.min(Math.max(finiteConfidence, 0), MAX_OMEGA_CONFIDENCE);
+  const omega = `${Math.round(clampedConfidence * 100)}%`;
 
   return `
 ∆DΩΛ
@@ -125,7 +129,7 @@ export function enforceDeltaProtocol(text: string, fallbackContext?: {
   // Generate fallback block
   const fallbackBlock = generateDeltaBlock({
     delta: fallbackContext?.topic || 'Резонанс сохраняется',
-    confidence: fallbackContext?.confidence || 0.7,
+    confidence: fallbackContext?.confidence || DEFAULT_OMEGA_CONFIDENCE,
     nextStep: 'Рефлексия в дневнике',
     source: 'dialog',
     inference: 'synthesis',
@@ -146,7 +150,7 @@ export const DELTA_PROTOCOL_INSTRUCTION = `
 ∆DΩΛ
 Δ: [Что изменилось / суть ответа — одной фразой]
 D: [Source → Inference → Fact(true/false/uncertain)]
-Ω: [Уверенность в ответе: 0-100%]
+Ω: [Уверенность в ответе: 0-95%]
 Λ: [Конкретный следующий шаг ≤24ч]
 
 Пример:
