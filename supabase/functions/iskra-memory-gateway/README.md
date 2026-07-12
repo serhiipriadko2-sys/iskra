@@ -25,9 +25,14 @@ Routes:
   switch, since this project's `service_role`/`anon` keys are static project
   JWTs, not user sessions, and the Postgres connection has schema-wide
   `service_role` grants regardless of which caller reaches the function.
-- After signature verification, the caller's `role` claim must equal
-  `service_role`; any other role (including a validly-signed `anon` key) gets
-  `403 forbidden_role`. Missing/invalid/unsigned tokens get `401`.
+- `[HYP]` Role is **not yet** restricted to `service_role` — any validly-signed
+  project JWT (including `anon`) currently passes. This is intentional and
+  temporary: the actual Authorization value the ChatGPT Projects connector
+  sends was unconfirmed at fix time, and a premature role-gate risked breaking
+  the only working integration. Missing/invalid/unsigned tokens still get
+  `401`. Track/tighten this via `AGENTS.md` §15.4 and the `[HYP]` comment on
+  `verifyActor()` in `index.ts` — do not re-add a `service_role` gate here
+  without updating both the code and this note together.
 - The gateway does not trust `actor` from request JSON.
 - Actor is derived from the verified (signature + role) JWT claims, never from
   the request body.

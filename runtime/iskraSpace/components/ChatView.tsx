@@ -380,6 +380,15 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
       return;
     }
 
+    if (security.action === 'REDIRECT') {
+      setError(
+        'Эта тема слишком чувствительна, чтобы отправлять её напрямую в облачный AI. ' +
+        'Попробуй записать это в Дневнике — там есть защищённый локальный режим, ' +
+        'который никуда не отправляет текст без твоего явного согласия.',
+      );
+      return;
+    }
+
     if (security.action !== 'PROCEED') {
       setError(`Ввод не отправлен в AI: ${security.reason || 'сработал безопасный контур'}`);
       return;

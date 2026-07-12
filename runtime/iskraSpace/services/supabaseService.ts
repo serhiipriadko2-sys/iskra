@@ -1,7 +1,7 @@
 import { supabase, getUserId, isSupabaseAvailable } from './supabaseClient';
 import type { Database, Json } from '../types/supabase';
 import { isMemoryLayer, isMemoryNodeType, VOICE_SYMBOLS } from '../types';
-import type { DocType, IskraMetrics, IskraPhase, MemoryNode, SIFTBlock, VoiceName } from '../types';
+import type { DocType, IskraMetrics, IskraPhase, MemoryLayer, MemoryNode, SIFTBlock, VoiceName } from '../types';
 import type { SymbiosisState } from './symbiosisService';
 
 // We use the generated types for DB interactions
@@ -17,6 +17,14 @@ const isDocType = (value: unknown): value is DocType =>
 
 const isVoiceName = (value: unknown): value is VoiceName =>
   typeof value === 'string' && Object.prototype.hasOwnProperty.call(VOICE_SYMBOLS, value);
+
+// Legacy rows may store the layer in uppercase (e.g. 'SHADOW', 'ARCHIVE'). Normalize
+// case before validating so a legacy-cased hypothesis-tier 'SHADOW' node is never
+// silently downgraded to fact-tier 'archive' by the isMemoryLayer fallback below.
+export const normalizeMemoryLayer = (value: unknown): MemoryLayer => {
+  const normalized = typeof value === 'string' ? value.toLowerCase() : value;
+  return isMemoryLayer(normalized) ? normalized : 'archive';
+};
 
 const isSiftBlock = (value: unknown): value is SIFTBlock => {
   if (!isRecord(value)) return false;
@@ -532,7 +540,7 @@ export async function getMemoryNodes(layer?: string): Promise<MemoryNode[]> {
   const nodes: MemoryNode[] = (data || []).map(row => ({
     id: row.id,
     type: isMemoryNodeType(row.type) ? row.type : 'event',
-    layer: isMemoryLayer(row.layer) ? row.layer : 'archive',
+    layer: normalizeMemoryLayer(row.layer),
     timestamp: row.created_at || new Date().toISOString(),
     title: row.title || '',
     content: row.content,
@@ -577,7 +585,7 @@ export async function addMemoryNode(
   return {
     id: data.id,
     type: isMemoryNodeType(data.type) ? data.type : 'event',
-    layer: isMemoryLayer(data.layer) ? data.layer : 'archive',
+    layer: normalizeMemoryLayer(data.layer),
     timestamp: data.created_at || new Date().toISOString(),
     title: data.title || '',
     content: data.content,
