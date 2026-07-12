@@ -1,15 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { navigateToView } from './helpers/navigation';
+import { seedCompletedOnboarding } from './helpers/onboarding';
 
 test.describe('Council Ritual View', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.clear();
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-    });
-    await page.reload();
+    await seedCompletedOnboarding(page);
   });
 
   test('displays all 9 voices in Council view', async ({ page }) => {
@@ -17,7 +12,9 @@ test.describe('Council Ritual View', () => {
 
     await expect(page.locator('main')).toBeVisible();
     await expect(page.locator('textarea')).toBeVisible();
-    await expect(page.locator('button:visible', { hasText: /Совет|Council|Созвать/ }).first()).toBeVisible();
+    await expect(
+      page.locator('button:visible', { hasText: /Совет|Council|Созвать/ }).first()
+    ).toBeVisible();
     await expect(page.locator('body')).toContainText(/9|ISKRA|KAIN|SAM/i);
   });
 });

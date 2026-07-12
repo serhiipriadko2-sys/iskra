@@ -1,22 +1,10 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { navigateToView } from './helpers/navigation';
-
-async function completeOnboarding(page: Page) {
-  await page.goto('/');
-  await page.evaluate(() => {
-    localStorage.setItem('iskra-onboarding-complete', 'true');
-    localStorage.setItem('iskra-tutorial-seen', 'true');
-    localStorage.setItem('iskra-user-name', 'TestUser');
-  });
-  await page.reload();
-  // The load event can precede React mounting on a cold Vite transform. Use
-  // the actual application shell as the readiness condition.
-  await expect(page.locator('main')).toBeVisible({ timeout: 15000 });
-}
+import { seedCompletedOnboarding } from './helpers/onboarding';
 
 test.describe('App Core Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await completeOnboarding(page);
+    await seedCompletedOnboarding(page);
   });
 
   test('renders without crashing', async ({ page }) => {
@@ -42,12 +30,14 @@ test.describe('App Core Functionality', () => {
 
 test.describe('Chat Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await completeOnboarding(page);
+    await seedCompletedOnboarding(page);
     await navigateToView(page, 'CHAT');
   });
 
   test('displays chat interface', async ({ page }) => {
-    await expect(page.locator('textarea, input[type="text"]').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('textarea, input[type="text"]').first()).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test('can type in chat input', async ({ page }) => {
@@ -60,7 +50,7 @@ test.describe('Chat Functionality', () => {
 
 test.describe('Journal Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await completeOnboarding(page);
+    await seedCompletedOnboarding(page);
     await navigateToView(page, 'JOURNAL');
   });
 
@@ -79,7 +69,7 @@ test.describe('Journal Functionality', () => {
 
 test.describe('Planner Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await completeOnboarding(page);
+    await seedCompletedOnboarding(page);
     await navigateToView(page, 'PLANNER');
   });
 
@@ -90,7 +80,7 @@ test.describe('Planner Functionality', () => {
 
 test.describe('Accessibility', () => {
   test.beforeEach(async ({ page }) => {
-    await completeOnboarding(page);
+    await seedCompletedOnboarding(page);
   });
 
   test('has no major accessibility violations', async ({ page }) => {
@@ -108,12 +98,7 @@ test.describe('Accessibility', () => {
 
 test.describe('Data Persistence', () => {
   test('preserves user data across page reloads', async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-      localStorage.setItem('iskra-user-name', 'PersistenceTest');
-    });
+    await seedCompletedOnboarding(page, { userName: 'PersistenceTest' });
     await page.reload();
 
     const userName = await page.evaluate(() => localStorage.getItem('iskra-user-name'));

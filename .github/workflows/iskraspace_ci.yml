@@ -4,11 +4,35 @@ on:
   push:
     paths:
       - "runtime/iskraSpace/**"
+      - "runtime/src/**"
+      - "runtime/package*.json"
+      - "packages/core/**"
+      - "packages/math/**"
+      - "deploy/**"
+      - "Dockerfile"
+      - "nginx.conf"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
       - ".github/workflows/iskraspace_ci.yml"
+      - ".github/workflows/production_deploy.yml"
+      - ".github/workflows/github_pages.yml"
   pull_request:
     paths:
       - "runtime/iskraSpace/**"
+      - "runtime/src/**"
+      - "runtime/package*.json"
+      - "packages/core/**"
+      - "packages/math/**"
+      - "deploy/**"
+      - "Dockerfile"
+      - "nginx.conf"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
       - ".github/workflows/iskraspace_ci.yml"
+      - ".github/workflows/production_deploy.yml"
+      - ".github/workflows/github_pages.yml"
 
 jobs:
   build-and-test:
@@ -62,7 +86,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          pnpm lint -- --max-warnings 0 2>&1 | tee iskraspace-lint.log
+          pnpm lint:strict 2>&1 | tee iskraspace-lint.log
 
       - name: Run unit tests pass 1
         working-directory: runtime/iskraSpace

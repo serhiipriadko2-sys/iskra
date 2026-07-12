@@ -2,7 +2,7 @@
 # Multi-stage build for optimal size
 
 # Stage 1: Build workspace assets with the canonical pnpm lockfile.
-FROM node:22-alpine AS iskraspace-builder
+FROM node:22-alpine@sha256:16e22a550f3863206a3f701448c45f7912c6896a62de43add43bb9c86130c3e2 AS iskraspace-builder
 
 WORKDIR /app
 
@@ -10,18 +10,18 @@ RUN corepack enable && corepack prepare pnpm@10.32.1 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY runtime/package*.json ./runtime/
-RUN cd runtime && npm ci
 
 COPY packages ./packages
 COPY runtime ./runtime
 COPY ledger/baselines.json ./ledger/baselines.json
 
 RUN pnpm install --frozen-lockfile
+RUN cd runtime && npm ci --ignore-scripts
 RUN cd runtime && npm run build
 RUN pnpm --filter iskra-space build
 
 # Stage 2: Production image with nginx
-FROM nginx:alpine
+FROM nginx:alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa
 
 # Copy built static files
 COPY --from=iskraspace-builder /app/runtime/iskraSpace/dist /usr/share/nginx/html

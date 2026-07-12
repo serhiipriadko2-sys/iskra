@@ -19,6 +19,7 @@
     "test:e2e:headed": "playwright test --headed",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --ignore-pattern dist --ignore-pattern node_modules",
+    "lint:strict": "eslint . --ext .ts,.tsx --ignore-pattern dist --ignore-pattern node_modules --max-warnings=0",
     "lint:fix": "eslint . --ext .ts,.tsx --ignore-pattern dist --ignore-pattern node_modules --fix"
   },
   "dependencies": {

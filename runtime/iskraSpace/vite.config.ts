@@ -56,16 +56,19 @@ export default defineConfig(({ command }) => {
         output: {
           manualChunks(id) {
             const normalized = id.replace(/\\/g, '/');
-            if (normalized.includes('/node_modules/react') || normalized.includes('/node_modules/react-dom')) {
+            if (
+              normalized.includes('/node_modules/react') ||
+              normalized.includes('/node_modules/react-dom')
+            ) {
               return 'vendor-react';
             }
             if (normalized.includes('/node_modules/@supabase/')) {
               return 'vendor-supabase';
             }
             if (
-              normalized.includes('/runtime/src/')
-              || normalized.includes('/packages/core/src/')
-              || normalized.includes('/packages/math/src/')
+              normalized.includes('/runtime/src/') ||
+              normalized.includes('/packages/core/src/') ||
+              normalized.includes('/packages/math/src/')
             ) {
               return 'iskra-runtime';
             }
@@ -93,15 +96,27 @@ export default defineConfig(({ command }) => {
         { find: /^@iskra\/runtime$/, replacement: path.resolve(root, '../src/index.ts') },
         { find: /^@iskra\/runtime\/(.*)$/, replacement: path.resolve(root, `../src/$1`) },
         // Explicit alias for the local math package. Point to the TypeScript source files.
-        { find: /^@iskra\/math$/, replacement: path.resolve(root, '../../packages/math/src/index.ts') },
-        { find: /^@iskra\/math\/(.*)$/, replacement: path.resolve(root, `../../packages/math/src/$1`) },
+        {
+          find: /^@iskra\/math$/,
+          replacement: path.resolve(root, '../../packages/math/src/index.ts'),
+        },
+        {
+          find: /^@iskra\/math\/(.*)$/,
+          replacement: path.resolve(root, `../../packages/math/src/$1`),
+        },
         // Math source imports core types directly when compiled through iskraSpace.
-        { find: /^@iskra\/core$/, replacement: path.resolve(root, '../../packages/core/src/index.ts') },
-        { find: /^@iskra\/core\/(.*)$/, replacement: path.resolve(root, `../../packages/core/src/$1`) },
+        {
+          find: /^@iskra\/core$/,
+          replacement: path.resolve(root, '../../packages/core/src/index.ts'),
+        },
+        {
+          find: /^@iskra\/core\/(.*)$/,
+          replacement: path.resolve(root, `../../packages/core/src/$1`),
+        },
       ],
     },
     test: {
-      exclude: ['node_modules', 'e2e', 'playwright-report', 'test-results'],
+      exclude: ['node_modules', 'e2e', 'e2e-production', 'playwright-report', 'test-results'],
       environment: 'jsdom',
       pool: 'threads',
       maxWorkers: 2,

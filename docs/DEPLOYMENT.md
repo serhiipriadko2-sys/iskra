@@ -5,11 +5,18 @@
 
 ## Canonical production surface
 
-The only production release surface is the Docker image published by
+The only production release surface is the Docker image published by a manual
+dispatch of
 `.github/workflows/production_deploy.yml` to GHCR. The image serves the static
 IskraSpace bundle through the repository `nginx.conf` on port `8080`.
+Automatic `main` pushes run source release gates but cannot publish an image.
+Publishing additionally requires the `production` environment and an operator
+confirmation that a current live Supabase parity/advisory/isolation acceptance
+receipt exists. The confirmation is an approval boundary, not a substitute for
+the receipt.
 
-Vercel, GitHub Pages, Netlify and other static hosts are preview surfaces. They
+Vercel, GitHub Pages, Netlify and other static hosts are preview surfaces. GitHub
+Pages is manual-only (`workflow_dispatch`). They
 must not be described as production until they have the same headers,
 environment validation and smoke gates as the canonical Docker path. The
 optional Vercel job creates a preview deployment and never uses `--prod`.
@@ -27,7 +34,7 @@ From a clean checkout:
 pnpm install --frozen-lockfile
 cd runtime && npm ci --ignore-scripts && npm run build && cd ..
 pnpm --filter iskra-space typecheck
-pnpm --filter iskra-space lint -- --max-warnings 0
+pnpm --filter iskra-space lint:strict
 pnpm --filter iskra-space test:run
 pnpm --filter iskra-space test:run
 pnpm --filter iskra-space build
@@ -46,9 +53,11 @@ service-role credentials, webhook secrets or HMAC values in a `VITE_*`
 variable.
 
 The canonical image is environment-neutral. At container startup the validated
-entrypoint creates a no-cache `runtime-config.js`; it refuses to start without
-`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, and rejects service-role
-credentials. Start from these name-only examples:
+entrypoint creates a no-cache `runtime-config.js`; the service worker also
+network-fetches this file with `no-store`. The container refuses to start
+without `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, rejects deceptive
+provider URLs, `sb_secret_*` keys and legacy JWTs whose role is not `anon`.
+Start from these name-only examples:
 
 - `runtime/iskraSpace/.env.production.example` for container runtime values;
 - `supabase/.env.example` for Edge Function secret names.
@@ -94,7 +103,12 @@ The GHCR publish job waits for all of the following:
 - Chromium E2E;
 - production build;
 - bundle-size budget;
-- Docker `/health`, CSP, no wildcard CORS header and SPA-route smoke checks.
+- Docker `/health`, CSP, no wildcard CORS header and SPA-route smoke checks;
+- production-artifact Chromium smoke of the closed-beta AuthGate and runtime config.
+
+The workflow builds and pushes one immutable candidate, tests that exact digest,
+and only then promotes the same digest to release tags. It never rebuilds between
+smoke and promotion. Base image indexes are pinned by digest.
 
 The resulting artifact contains the commit SHA, immutable image digest,
 name-only environment inventory, gate list, byte size and SHA-256 of the
@@ -106,7 +120,7 @@ receipt. A green source workflow does not prove Supabase live parity.
 docker build -t iskraspace:local .
 docker run --rm -p 8080:8080 \
   -e VITE_SUPABASE_URL=https://smoke.supabase.co \
-  -e VITE_SUPABASE_ANON_KEY=smoke-public-anon-key \
+  -e VITE_SUPABASE_ANON_KEY=sb_publishable_smoke_public_only \
   iskraspace:local
 curl --fail http://127.0.0.1:8080/health
 curl --head http://127.0.0.1:8080/
@@ -115,8 +129,9 @@ curl --head http://127.0.0.1:8080/
 Expected: `/health` returns `healthy`; the root response includes
 `Content-Security-Policy`; `/runtime-config.js` is marked no-cache; a deep
 route returns the SPA shell. Replace smoke values at deployment time. The URL
-must be an official `https://*.supabase.co` endpoint; the key is browser-public
-but must never be a service-role key.
+must be an exact official `https://<project-ref>.supabase.co` origin with no
+path, query or fragment; the key must be a browser publishable key or a legacy
+JWT declaring the `anon` role.
 
 ## Observability and privacy
 
