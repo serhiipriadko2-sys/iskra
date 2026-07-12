@@ -1,70 +1,69 @@
-import { test, expect } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function completeStatelessOnboarding(page: Page): Promise<void> {
+  await page.getByRole('button', { name: /Войти в ритм/i }).click();
+  await page.getByPlaceholder(/имя/i).fill('TestUser');
+  await page.getByRole('button', { name: /Продолжить/i }).click();
+
+  await expect(page.getByRole('heading', { name: 'Выбери режим памяти' })).toBeVisible();
+  await page.getByRole('button', { name: /Stateless preview/i }).click();
+
+  await expect(page.getByRole('heading', { name: 'Проверка границы' })).toBeVisible();
+  const start = page.getByRole('button', { name: /^Начать$/i });
+  await expect(start).toBeEnabled();
+  await start.click();
+}
 
 test.describe('Onboarding Flow', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear localStorage to ensure onboarding shows
     await page.goto('/');
     await page.evaluate(() => localStorage.clear());
     await page.reload();
   });
 
   test('displays onboarding for new users', async ({ page }) => {
-    // Step 1: Initial welcome screen
     await expect(page.locator('h1')).toContainText('Существовать — значит сохранять различие');
     await expect(page.getByRole('button', { name: /Войти в ритм/i })).toBeVisible();
   });
 
-  test('progresses through onboarding steps', async ({ page }) => {
-    // Step 1: Click to proceed
+  test('progresses to the name and explicit memory-mode steps', async ({ page }) => {
     await page.getByRole('button', { name: /Войти в ритм/i }).click();
 
-    // Step 2: Name input
-    await expect(page.locator('h2')).toContainText('Я не запоминаю факты');
-    await expect(page.getByPlaceholder(/имя/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Как мне называть тебя?' })).toBeVisible();
+    await page.getByPlaceholder(/имя/i).fill('TestUser');
+    await page.getByRole('button', { name: /Продолжить/i }).click();
+
+    await expect(page.getByRole('heading', { name: 'Выбери режим памяти' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Stateless preview/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Память с согласием/i })).toBeVisible();
   });
 
   test('requires name before proceeding', async ({ page }) => {
     await page.getByRole('button', { name: /Войти в ритм/i }).click();
 
-    // Button should be disabled without name
-    const continueBtn = page.getByRole('button', { name: /Продолжить/i });
-    await expect(continueBtn).toBeDisabled();
+    const continueButton = page.getByRole('button', { name: /Продолжить/i });
+    await expect(continueButton).toBeDisabled();
 
-    // Enter name
     await page.getByPlaceholder(/имя/i).fill('TestUser');
-    await expect(continueBtn).toBeEnabled();
+    await expect(continueButton).toBeEnabled();
   });
 
-  test('completes full onboarding flow', async ({ page }) => {
-    // Step 1
-    await page.getByRole('button', { name: /Войти в ритм/i }).click();
-
-    // Step 2
-    await page.getByPlaceholder(/имя/i).fill('TestUser');
-    await page.getByRole('button', { name: /Продолжить/i }).click();
-
-    // Step 3: Initialization
-    await expect(page.locator('h2')).toContainText('Инициализация');
-    await page.getByRole('button', { name: /Начать/i }).click();
-
-    // Should navigate to the main app; the tutorial tour may be visible on first entry.
-    await expect(page.locator('main')).toBeVisible({ timeout: 5000 });
+  test('completes the stateless onboarding flow', async ({ page }) => {
+    await completeStatelessOnboarding(page);
+    await expect(page.locator('main')).toBeVisible({ timeout: 5_000 });
   });
 
-  test('saves onboarding completion to localStorage', async ({ page }) => {
-    // Complete onboarding
-    await page.getByRole('button', { name: /Войти в ритм/i }).click();
-    await page.getByPlaceholder(/имя/i).fill('TestUser');
-    await page.getByRole('button', { name: /Продолжить/i }).click();
-    await page.getByRole('button', { name: /Начать/i }).click();
+  test('persists completion and the selected memory mode locally', async ({ page }) => {
+    await completeStatelessOnboarding(page);
 
-    // Wait for main app
-    await page.waitForTimeout(1500);
+    await expect
+      .poll(async () => page.evaluate(() => localStorage.getItem('iskra-onboarding-complete')))
+      .toBe('true');
 
-    // Check localStorage
-    const isComplete = await page.evaluate(() => {
-      return localStorage.getItem('iskra-onboarding-complete');
-    });
-    expect(isComplete).toBe('true');
+    const storedState = await page.evaluate(
+      () =>
+        Object.entries(localStorage).find(([, value]) => value.includes('STATELESS'))?.[1] ?? null
+    );
+    expect(storedState).toContain('STATELESS');
   });
 });

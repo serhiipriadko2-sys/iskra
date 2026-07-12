@@ -26,10 +26,13 @@ type LiveSnapshot = {
 };
 
 const ROOT = process.cwd();
-const SCHEMA_FILES = [
+const CANONICAL_VOICE_METRICS_MIGRATION_FILES = [
   'supabase/migrations/20260101000000_schema.sql',
-  'runtime/iskraSpace/supabase/schema.sql',
+  'supabase/migrations/20260626141034_voice_metrics_drift_repair.sql',
+  'supabase/migrations/20260701000000_vomega7_1_metrics_baseline_defaults.sql',
 ];
+const VOICE_METRICS_BASE_SCHEMA_FILE = CANONICAL_VOICE_METRICS_MIGRATION_FILES[0];
+const VOICE_METRICS_REPAIR_FILE = CANONICAL_VOICE_METRICS_MIGRATION_FILES[1];
 const VOICE_TABLES = ['voice_preferences', 'chat_history'];
 const METRIC_COLUMNS = ['rhythm', 'trust', 'clarity', 'chaos', 'foresight'];
 const REPAIR_MIGRATION = 'voice_metrics_drift_repair';
@@ -86,8 +89,8 @@ function usage(): void {
   SUPABASE_DB_URL=postgresql://... npx tsx tools/verify_supabase_voice_metrics_contract.ts
 
 Options:
-  --repo-only   Verify the two repo schema snapshots agree.
-  --snapshot    Compare repo schema snapshots to a live snapshot JSON file.
+  --repo-only   Verify the canonical root-migration contract.
+  --snapshot    Compare the canonical repo contract to a live snapshot JSON file.
   --print-sql   Print the read-only SQL used to produce a live snapshot.
 
 Env:
@@ -184,19 +187,30 @@ function sameJson(a: unknown, b: unknown): boolean {
 }
 
 function buildRepoContract(): Contract {
-  const contracts = SCHEMA_FILES.map((file) => ({ file, contract: parseRepoContractFromFile(file) }));
-  const baseline = contracts[0].contract;
+  for (const file of CANONICAL_VOICE_METRICS_MIGRATION_FILES) {
+    readText(file);
+  }
 
-  for (const { file, contract } of contracts.slice(1)) {
-    if (!sameJson(contract, baseline)) {
-      console.error('[DRIFT] Repo schema snapshots disagree.');
-      console.error(`${contracts[0].file}: ${JSON.stringify(baseline, null, 2)}`);
-      console.error(`${file}: ${JSON.stringify(contract, null, 2)}`);
-      process.exit(1);
+  const contract = parseRepoContractFromFile(VOICE_METRICS_BASE_SCHEMA_FILE);
+  const repair = readText(VOICE_METRICS_REPAIR_FILE);
+  const normalizedRepair = repair.replace(/\s+/g, ' ').toLowerCase();
+
+  for (const voice of contract.voicesByTable.voice_preferences) {
+    if (!normalizedRepair.includes(`'${voice.toLowerCase()}'::text`)) {
+      fail(`${VOICE_METRICS_REPAIR_FILE}: missing canonical voice ${voice}`);
     }
   }
 
-  return baseline;
+  for (const [metric, value] of Object.entries(contract.metricDefaults)) {
+    const expected = metric === 'foresight'
+      ? `add column if not exists ${metric} real default ${value}`
+      : `alter column ${metric} set default ${value}`;
+    if (!normalizedRepair.includes(expected)) {
+      fail(`${VOICE_METRICS_REPAIR_FILE}: missing canonical default ${metric}=${value}`);
+    }
+  }
+
+  return contract;
 }
 
 function extractJsonObject(input: string): string {
@@ -325,7 +339,7 @@ function main(): void {
   }
 
   const repo = buildRepoContract();
-  ok(`repo schema snapshots agree: ${SCHEMA_FILES.join(', ')}`);
+  ok(`canonical root-migration voice/metrics contract verified: ${CANONICAL_VOICE_METRICS_MIGRATION_FILES.join(', ')}`);
 
   if (args.repoOnly) return;
 

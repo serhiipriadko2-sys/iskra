@@ -400,7 +400,12 @@ const Planner: React.FC = () => {
                             <span>Сортировка:</span>
                             <select 
                                 value={sortBy} 
-                                onChange={(e) => setSortBy(e.target.value as any)}
+                                onChange={(e) => {
+                                    const value = e.currentTarget.value;
+                                    if (value === 'DEFAULT' || value === 'DATE' || value === 'PRIORITY') {
+                                        setSortBy(value);
+                                    }
+                                }}
                                 className="bg-surface border border-white/10 rounded px-2 py-1 focus:outline-none focus:border-accent/50"
                             >
                                 <option value="DEFAULT">По умолчанию</option>
@@ -426,7 +431,12 @@ const Planner: React.FC = () => {
                     <div className="flex flex-wrap items-center gap-2">
                         <select 
                             value={newPriority}
-                            onChange={(e) => setNewPriority(e.target.value as any)}
+                            onChange={(e) => {
+                                const value = e.currentTarget.value;
+                                if (value === 'low' || value === 'medium' || value === 'high') {
+                                    setNewPriority(value);
+                                }
+                            }}
                             className="bg-bg text-text-muted text-xs rounded-lg px-2 py-2 border border-white/5 focus:outline-none"
                         >
                             <option value="low">Low</option>

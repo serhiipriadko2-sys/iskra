@@ -198,7 +198,7 @@ export function computeIntegrityStateV02(params: {
     evidence: {
       ok: traceCheck.valid && evidenceErrors.length === 0,
       total: evidenceStats.total,
-      byContour: evidenceStats.byContour as any,
+      byContour: evidenceStats.byContour,
       errors: evidenceErrors,
       warnings: evidenceWarnings,
       trace_errors: traceCheck.errors,

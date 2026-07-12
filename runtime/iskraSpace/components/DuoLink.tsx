@@ -12,7 +12,7 @@ interface ShareControlProps {
     label: string;
     value: ShareLevel;
     onChange: (level: ShareLevel) => void;
-    icon: React.FC<any>;
+    icon: React.FC<React.SVGProps<SVGSVGElement>>;
 }
 
 const ShareControl: React.FC<ShareControlProps> = ({ label, value, onChange, icon: Icon }) => {

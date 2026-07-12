@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { memoryService } from '../services/memoryService';
 import { searchService } from '../services/searchService';
-import { MemoryNode, MemoryNodeType, SearchResult } from '../types';
+import { MemoryNode, MemoryNodeType, SearchResult, isMemoryNodeType } from '../types';
 import { XIcon, LayersIcon, DatabaseIcon, PlusIcon, FilePlus2Icon } from './icons';
 import Loader from './Loader';
 import MemoryGraph from './MemoryGraph';
@@ -252,7 +252,12 @@ const MemoryView: React.FC = () => {
             />
             <select
                 value={selectedType}
-                onChange={e => setSelectedType(e.target.value as any)}
+                onChange={e => {
+                    const value = e.currentTarget.value;
+                    if (value === 'all' || isMemoryNodeType(value)) {
+                        setSelectedType(value);
+                    }
+                }}
                  className="rounded-lg border border-border bg-surface px-4 py-2 text-text focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-colors"
             >
                 <option value="all">Все типы</option>
@@ -304,13 +309,31 @@ const MemoryView: React.FC = () => {
                       <div className="grid grid-cols-2 gap-4">
                           <div>
                               <label className="block text-xs text-text-muted uppercase mb-1">Тип</label>
-                              <select value={newType} onChange={e => setNewType(e.target.value as any)} className="w-full bg-bg border border-white/10 rounded p-2 text-text">
+                              <select
+                                  value={newType}
+                                  onChange={e => {
+                                      const value = e.currentTarget.value;
+                                      if (isMemoryNodeType(value)) {
+                                          setNewType(value);
+                                      }
+                                  }}
+                                  className="w-full bg-bg border border-white/10 rounded p-2 text-text"
+                              >
                                   {MEMORY_NODE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                               </select>
                           </div>
                           <div>
                               <label className="block text-xs text-text-muted uppercase mb-1">Слой</label>
-                              <select value={newLayer} onChange={e => setNewLayer(e.target.value as any)} className="w-full bg-bg border border-white/10 rounded p-2 text-text">
+                              <select
+                                  value={newLayer}
+                                  onChange={e => {
+                                      const value = e.currentTarget.value;
+                                      if (value === 'archive' || value === 'shadow') {
+                                          setNewLayer(value);
+                                      }
+                                  }}
+                                  className="w-full bg-bg border border-white/10 rounded p-2 text-text"
+                              >
                                   <option value="shadow">Shadow (Гипотеза)</option>
                                   <option value="archive">Archive (Факт)</option>
                               </select>
@@ -376,10 +399,10 @@ const MemoryView: React.FC = () => {
                        <h4 className="font-semibold text-text-muted uppercase text-xs tracking-wider mb-2">Содержимое</h4>
                        <pre className="text-sm bg-bg p-3 rounded-md whitespace-pre-wrap font-mono overflow-x-auto">{JSON.stringify(selectedNode.content, null, 2)}</pre>
                    </div>
-                    {selectedNode.metrics && (
+                    {selectedNode.metrics_snapshot && (
                         <div>
                             <h4 className="font-semibold text-text-muted uppercase text-xs tracking-wider mb-2">Метрики в момент записи</h4>
-                            <pre className="text-sm bg-bg p-3 rounded-md whitespace-pre-wrap font-mono">{JSON.stringify(selectedNode.metrics, null, 2)}</pre>
+                            <pre className="text-sm bg-bg p-3 rounded-md whitespace-pre-wrap font-mono">{JSON.stringify(selectedNode.metrics_snapshot, null, 2)}</pre>
                         </div>
                     )}
                      {selectedNode.evidence && selectedNode.evidence.length > 0 && (

@@ -7,7 +7,7 @@ interface MemoryGraphProps {
   onSelectNode: (node: MemoryNode) => void;
 }
 
-const TYPE_COLORS: Record<MemoryNodeType, string> = {
+const TYPE_COLORS: Partial<Record<MemoryNodeType, string>> = {
   event: '#4DA3FF', // Accent
   insight: '#FF7A00', // Primary
   decision: '#2ECC71', // Success
@@ -15,7 +15,7 @@ const TYPE_COLORS: Record<MemoryNodeType, string> = {
   artifact: '#E5484D', // Danger
 };
 
-const TYPE_Y_OFFSET: Record<MemoryNodeType, number> = {
+const TYPE_Y_OFFSET: Partial<Record<MemoryNodeType, number>> = {
   event: 0.2,
   insight: 0.4,
   decision: 0.6,

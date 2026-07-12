@@ -2,12 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import { IskraAIService } from '../services/geminiService';
 import { storageService } from '../services/storageService';
-import { securityService } from '../services/securityService';
+import { securityService, type SecurityCheckResult } from '../services/securityService';
 import { JournalPrompt, JournalEntry } from '../types';
 import Loader from './Loader';
 import { SparkleIcon, XIcon, ChevronRightIcon, Undo2Icon } from './icons';
 
 const service = new IskraAIService();
+
+type PendingJournalAction = Extract<
+    SecurityCheckResult['action'],
+    'REQUIRES_REDACTED_CONSENT' | 'BLOCK_CLOUD' | 'REDIRECT'
+>;
+
+interface PendingJournalDecision {
+    action: PendingJournalAction;
+    originalText: string;
+    sanitizedText: string;
+    reason?: string;
+}
 
 // Range Slider Component
 const MetricSlider: React.FC<{ label: string; value: number; onChange: (v: number) => void; icon: string; colorClass: string }> = ({ label, value, onChange, icon, colorClass }) => (
@@ -37,6 +49,7 @@ const Journal: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isPromptLoading, setIsPromptLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [pendingSecurityDecision, setPendingSecurityDecision] = useState<PendingJournalDecision | null>(null);
     
     // User Metrics State
     const [mood, setMood] = useState(50);
@@ -79,51 +92,85 @@ const Journal: React.FC = () => {
         }
     };
 
-    const handleSave = async () => {
-        if (!entryText.trim() || !prompt) return;
+    const resetEditor = () => {
+        setEntryText('');
+        setMood(50);
+        setEnergy(50);
+        setPendingSecurityDecision(null);
+    };
 
-        // Security guardrails: scan journal entry before AI analysis and storage
-        const security = securityService.validate(entryText);
-        if (security.action === 'REJECT') {
-            setError(`Запись не сохранена: ${security.reason || 'обнаружена попытка инъекции'}`);
-            return;
-        }
-        if (security.action === 'REDIRECT') {
-            setError(`Эта тема выходит за безопасный контур Искры (${security.reason}). Если тебе нужна помощь, обратись к человеку, которому доверяешь.`);
-            return;
-        }
-
-        const safeText = security.sanitizedText;
-        setIsSaving(true);
-        setError(null);
-
-        let analysis = undefined;
-        try {
-             analysis = await service.analyzeJournalEntry(safeText);
-        } catch (e) {
-            console.error("Journal analysis failed", e);
-            // Proceed to save without analysis if it fails
-        }
+    const persistEntry = (text: string, analysis?: JournalEntry['analysis']) => {
+        if (!prompt) return;
 
         const newEntry: JournalEntry = {
             id: `entry-${Date.now()}`,
             timestamp: new Date().toISOString(),
-            text: safeText,
-            prompt: prompt,
-            userMetrics: {
-                mood,
-                energy
-            },
-            analysis
+            text,
+            prompt,
+            userMetrics: { mood, energy },
+            analysis,
         };
-        
+
         storageService.addJournalEntry(newEntry);
-        setSavedEntries(storageService.getJournalEntries()); 
-        
+        setSavedEntries(storageService.getJournalEntries());
+        resetEditor();
+    };
+
+    const saveWithAnalysis = async (localText: string, analysisText: string) => {
+        setIsSaving(true);
+        setError(null);
+
+        let analysis: JournalEntry['analysis'];
+        try {
+            analysis = await service.analyzeJournalEntry(analysisText);
+        } catch (e) {
+            console.error('Journal analysis failed', e);
+        }
+
+        persistEntry(localText, analysis);
         setIsSaving(false);
-        setEntryText('');
-        setMood(50);
-        setEnergy(50);
+    };
+
+    const handleSave = async () => {
+        if (!entryText.trim() || !prompt) return;
+
+        const security = securityService.validate(entryText);
+        if (security.action === 'REJECT') {
+            setPendingSecurityDecision(null);
+            setError(`Запись не сохранена: ${security.reason || 'обнаружены секретные данные'}`);
+            return;
+        }
+
+        if (security.action !== 'PROCEED') {
+            setPendingSecurityDecision({
+                action: security.action,
+                originalText: entryText,
+                sanitizedText: security.sanitizedText,
+                reason: security.reason,
+            });
+            setError(null);
+            return;
+        }
+
+        await saveWithAnalysis(entryText, security.sanitizedText);
+    };
+
+    const savePendingLocally = () => {
+        if (!pendingSecurityDecision) return;
+        persistEntry(pendingSecurityDecision.originalText);
+        setError(null);
+    };
+
+    const sendPendingRedactedCopy = async () => {
+        if (!pendingSecurityDecision || pendingSecurityDecision.action !== 'REQUIRES_REDACTED_CONSENT') return;
+
+        const rechecked = securityService.validate(pendingSecurityDecision.sanitizedText);
+        if (rechecked.action !== 'PROCEED') {
+            setError('Обезличенная копия всё ещё не проходит безопасный контур. Сохраните запись только локально.');
+            return;
+        }
+
+        await saveWithAnalysis(pendingSecurityDecision.originalText, rechecked.sanitizedText);
     };
     
     const formatDate = (isoString: string) => {
@@ -176,10 +223,49 @@ const Journal: React.FC = () => {
                             
                             <textarea
                                 value={entryText}
-                                onChange={(e) => setEntryText(e.target.value)}
+                                onChange={(e) => {
+                                    setEntryText(e.target.value);
+                                    setPendingSecurityDecision(null);
+                                }}
                                 placeholder="Напишите свои мысли здесь..."
                                 className="w-full h-full flex-grow resize-none rounded-lg border border-border bg-surface p-4 text-text-muted focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors mb-4 min-h-[200px]"
                             />
+
+                            {pendingSecurityDecision && (
+                                <div
+                                    className="mb-4 rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-text-muted"
+                                    data-testid="journal-security-decision"
+                                    role="alert"
+                                >
+                                    <p>
+                                        Эта запись не будет отправлена в AI или облако. Исходный текст можно сохранить
+                                        только в локальном хранилище браузера; оно не зашифровано.
+                                    </p>
+                                    {pendingSecurityDecision.reason && (
+                                        <p className="mt-2 text-xs">Причина: {pendingSecurityDecision.reason}</p>
+                                    )}
+                                    <div className="mt-3 flex flex-wrap gap-2">
+                                        <button
+                                            type="button"
+                                            className="button-secondary"
+                                            data-action="save-local"
+                                            onClick={savePendingLocally}
+                                        >
+                                            Сохранить только локально
+                                        </button>
+                                        {pendingSecurityDecision.action === 'REQUIRES_REDACTED_CONSENT' && (
+                                            <button
+                                                type="button"
+                                                className="button-primary"
+                                                data-action="send-redacted"
+                                                onClick={() => { void sendPendingRedactedCopy(); }}
+                                            >
+                                                Отправить обезличенную копию в AI
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                             
                             {/* Metrics Logger */}
                             <div className="bg-surface p-4 rounded-lg border border-border mb-4 shrink-0">

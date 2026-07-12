@@ -8,9 +8,13 @@
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js';
 import { safeStorage } from './storageCompat';
 import type { Database } from '../types/supabase';
+import { getRuntimeConfig } from '../config/runtimeConfig';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = getRuntimeConfig('VITE_SUPABASE_URL', import.meta.env.VITE_SUPABASE_URL) || '';
+const supabaseAnonKey = getRuntimeConfig(
+  'VITE_SUPABASE_ANON_KEY',
+  import.meta.env.VITE_SUPABASE_ANON_KEY,
+) || '';
 const isNonProductionBuild = import.meta.env.MODE !== 'production';
 const allowAnonymousAuth = isNonProductionBuild && import.meta.env.VITE_ENABLE_ANONYMOUS_AUTH === 'true';
 

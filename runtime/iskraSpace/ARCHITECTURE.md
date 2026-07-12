@@ -232,11 +232,14 @@ interface IskraMetrics {
 
 ### Metric Thresholds (Voice Activation)
 
+Authoritative source: `services/voiceEngine.ts` activation functions (pinned by
+`services/__tests__/voiceThresholdCanon.test.ts`). Matches CLAUDE.md §9.
+
 - `trust < 0.75` → Анхантра (≈) silence
-- `clarity < 0.70` → Сэм (☉) structure
-- `pain ≥ 0.70` → Кайн (⚑) directness
-- `drift > 0.30` → Искрив (🪞) audit
-- `chaos > 0.60` → Хуньдун (🜃) reset
+- `clarity < 0.6` → Сэм (☉) structure
+- `pain ≥ 0.3` → Кайн (⚑) directness
+- `drift ≥ 0.2` → Искрив (🪞) audit
+- `chaos ≥ 0.4` → Хуньдун (🜃) reset
 
 ---
 

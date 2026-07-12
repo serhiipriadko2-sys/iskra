@@ -91,7 +91,7 @@ const CANONICAL_GRAPH_MIGRATION_FILES = [
 
 const LEGACY_RUNTIME_SQL_SNAPSHOTS = [
   'runtime/iskraSpace/supabase/schema.sql',
-  'runtime/iskraSpace/supabase_graphrag_migration.sql',
+  'supabase/migration_archive/deprecated_graphrag_migration_2026-06-26.sql',
 ];
 
 const GRAPH_RUNTIME_SERVICE = 'runtime/iskraSpace/services/graphServiceSupabase.ts';
@@ -547,10 +547,24 @@ function assertCurrentGraphRpcBoundary(): void {
     assertContains(definition, 'auth.uid()', `${CLOSED_BETA_FILE}:${rpcName}`);
   }
 
-  const aclSql = readText(GRAPH_RPC_ACL_FILE);
+  const boundaryAclSql = readText(GRAPH_RPC_BOUNDARY_FILE);
+  const anonAclSql = readText(GRAPH_RPC_ACL_FILE);
   for (const rpcName of REQUIRED_GRAPH_RPC_NAMES) {
-    assertContains(aclSql, `revoke all on function public.${rpcName}`, `${GRAPH_RPC_ACL_FILE}:${rpcName}`);
-    assertContains(aclSql, `grant execute on function public.${rpcName}`, `${GRAPH_RPC_ACL_FILE}:${rpcName}`);
+    assertContains(
+      boundaryAclSql,
+      `revoke all on function public.${rpcName}`,
+      `${GRAPH_RPC_BOUNDARY_FILE}:${rpcName}`,
+    );
+    assertContains(
+      boundaryAclSql,
+      `grant execute on function public.${rpcName}`,
+      `${GRAPH_RPC_BOUNDARY_FILE}:${rpcName}`,
+    );
+    assertContains(
+      anonAclSql,
+      `revoke execute on function public.${rpcName}`,
+      `${GRAPH_RPC_ACL_FILE}:${rpcName}`,
+    );
   }
 
   const boundarySql = readText(GRAPH_RPC_BOUNDARY_FILE);

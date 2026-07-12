@@ -6,8 +6,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { GraphService, MemoryNode, MemoryEdge } from '../../services/graphService';
-import type { IskraMetrics } from '../../types';
+import { GraphService } from '../../services/graphService';
+import type { IskraMetrics, MemoryEdge, MemoryNode } from '../../types';
 
 describe('GraphService', () => {
   let graphService: GraphService;
@@ -28,10 +28,12 @@ describe('GraphService', () => {
 
   const createNode = (overrides: Partial<MemoryNode> = {}): MemoryNode => ({
     id: `node_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    layer: 'ARCHIVE',
+    layer: 'archive',
     type: 'insight',
     content: 'Test content',
-    timestamp: Date.now(),
+    title: 'Test node',
+    evidence: [],
+    timestamp: new Date().toISOString(),
     relatedIds: [],
     ...overrides,
   });
@@ -56,7 +58,7 @@ describe('GraphService', () => {
       expect(id).toBe('test_node_1');
       const retrieved = graphService.getNode('test_node_1');
       expect(retrieved).toBeDefined();
-      expect(retrieved?.layer).toBe('ARCHIVE');
+      expect(retrieved?.layer).toBe('archive');
       expect(retrieved?.type).toBe('insight');
       expect(retrieved?.content).toBe('Test insight');
     });
@@ -255,12 +257,12 @@ describe('GraphService', () => {
       // Add nodes with different metrics snapshots
       const highPainNode = createNode({
         id: 'high_pain_node',
-        layer: 'SHADOW',
+        layer: 'shadow',
         metrics_snapshot: { ...mockMetrics, pain: 0.8 },
       });
       const normalNode = createNode({
         id: 'normal_node',
-        layer: 'ARCHIVE',
+        layer: 'archive',
         metrics_snapshot: mockMetrics,
       });
       graphService.addNode(highPainNode);
@@ -279,7 +281,7 @@ describe('GraphService', () => {
       const resonant = graphService.findResonantNodes({ ...mockMetrics, trust: 0.3 });
 
       // Should find at least some canonical nodes
-      const canonicalIds = resonant.filter(n => n.layer === 'MANTRA').map(n => n.id);
+      const canonicalIds = resonant.filter(n => n.layer === 'mantra').map(n => n.id);
       expect(canonicalIds.length).toBeGreaterThan(0);
     });
   });
@@ -300,12 +302,12 @@ describe('GraphService', () => {
 
   describe('getNodesByLayer', () => {
     it('should retrieve nodes from specific layer', () => {
-      const mantraNode = createNode({ id: 'custom_mantra', layer: 'MANTRA' });
-      const archiveNode = createNode({ id: 'custom_archive', layer: 'ARCHIVE' });
+      const mantraNode = createNode({ id: 'custom_mantra', layer: 'mantra' });
+      const archiveNode = createNode({ id: 'custom_archive', layer: 'archive' });
       graphService.addNode(mantraNode);
       graphService.addNode(archiveNode);
 
-      const mantraNodes = graphService.getNodesByLayer('MANTRA');
+      const mantraNodes = graphService.getNodesByLayer('mantra');
 
       // Should include at least canonical nodes + our custom node
       expect(mantraNodes.length).toBeGreaterThanOrEqual(1);
@@ -333,7 +335,7 @@ describe('GraphService', () => {
     it('should initialize with canonical nodes', () => {
       // Fresh service should have canonical nodes
       const freshService = new GraphService();
-      const mantraNodes = freshService.getNodesByLayer('MANTRA');
+      const mantraNodes = freshService.getNodesByLayer('mantra');
 
       expect(mantraNodes.length).toBeGreaterThanOrEqual(8);
 

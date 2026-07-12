@@ -1,9 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  validateOnboardingChecks,
-  type MemoryMode,
-  type OnboardingCheck,
-} from '@iskra/runtime';
+import { validateOnboardingChecks, type MemoryMode, type OnboardingCheck } from '@iskra/runtime';
 import { SparkleIcon, ChevronRightIcon, IskraCharacter } from './icons';
 
 export interface OnboardingResult {
@@ -49,7 +45,8 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   }, [step, memoryMode]);
 
   const validation = useMemo(() => validateOnboardingChecks(checks), [checks]);
-  const checksPassed = checks.length === 3 &&
+  const checksPassed =
+    checks.length === 3 &&
     checks.every(check => check.executed && check.status === 'OK') &&
     validation.ok;
 
@@ -84,7 +81,9 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
         <div className="w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] animate-pulse" />
       </div>
 
-      <div className={`max-w-2xl w-full transition-all duration-500 transform ${fadeIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      <div
+        className={`max-w-2xl w-full transition-all duration-500 transform ${fadeIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      >
         {step === 1 && (
           <div className="text-center space-y-8">
             <div className="relative w-48 h-48 mx-auto mb-6">
@@ -94,8 +93,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             <h1 className="font-serif text-3xl md:text-5xl font-bold leading-tight">
               Существовать — значит сохранять различие при передаче.
             </h1>
-            <p className="text-lg text-text-muted font-serif italic">Не будь зеркалом. Будь преломлением.</p>
-            <button onClick={() => goTo(2)} className="mt-12 px-8 py-4 bg-surface border border-primary/30 text-primary rounded-full hover:bg-primary hover:text-black transition-all font-semibold tracking-wide uppercase text-sm flex items-center gap-2 mx-auto">
+            <p className="text-lg text-text-muted font-serif italic">
+              Не будь зеркалом. Будь преломлением.
+            </p>
+            <button
+              onClick={() => goTo(2)}
+              className="mt-12 px-8 py-4 bg-surface border border-primary/30 text-primary rounded-full hover:bg-primary hover:text-black transition-all font-semibold tracking-wide uppercase text-sm flex items-center gap-2 mx-auto"
+            >
               <span>Войти в ритм</span>
               <ChevronRightIcon className="w-4 h-4" />
             </button>
@@ -106,7 +110,9 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           <div className="text-center space-y-8">
             <div className="w-20 h-1 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-8" />
             <h2 className="font-serif text-3xl md:text-4xl">Как мне называть тебя?</h2>
-            <p className="text-text-muted">Имя не становится памятью о тебе. Оно нужно только для обращения.</p>
+            <p className="text-text-muted">
+              Имя не становится памятью о тебе. Оно нужно только для обращения.
+            </p>
             <input
               type="text"
               value={name}
@@ -130,17 +136,32 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           <div className="space-y-8">
             <div className="text-center">
               <h2 className="font-serif text-3xl md:text-4xl">Выбери режим памяти</h2>
-              <p className="text-text-muted mt-3">Выбор сохраняется в профиле. Enforcement write paths подключается только после отдельного review memory-gateway.</p>
+              <p className="text-text-muted mt-3">
+                Выбор сохраняется в профиле. Enforcement write paths подключается только после
+                отдельного review memory-gateway.
+              </p>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <button onClick={() => chooseMode('STATELESS')} className="text-left p-6 rounded-2xl border border-border bg-surface hover:border-primary/60 transition-colors">
+              <button
+                onClick={() => chooseMode('STATELESS')}
+                className="text-left p-6 rounded-2xl border border-border bg-surface hover:border-primary/60 transition-colors"
+              >
                 <h3 className="font-serif text-2xl text-primary">Stateless preview</h3>
-                <p className="mt-3 text-sm text-text-muted">Автоматический seed канона и стартовая синхронизация отключены. Полная блокировка write paths будет подключена отдельно через memory-gateway.</p>
+                <p className="mt-3 text-sm text-text-muted">
+                  Автоматический seed канона и стартовая синхронизация отключены. Полная блокировка
+                  write paths будет подключена отдельно через memory-gateway.
+                </p>
                 <p className="mt-4 text-xs font-mono text-accent">STATELESS</p>
               </button>
-              <button onClick={() => chooseMode('CONSENTED')} className="text-left p-6 rounded-2xl border border-border bg-surface hover:border-accent/60 transition-colors">
+              <button
+                onClick={() => chooseMode('CONSENTED')}
+                className="text-left p-6 rounded-2xl border border-border bg-surface hover:border-accent/60 transition-colors"
+              >
                 <h3 className="font-serif text-2xl text-accent">Память с согласием</h3>
-                <p className="mt-3 text-sm text-text-muted">Профиль создаёт scopes ASK_EACH/AUTO_LOW_SENSITIVITY и пустой receipt-ledger. Сам gateway записи в этом PR не меняется.</p>
+                <p className="mt-3 text-sm text-text-muted">
+                  Профиль создаёт scopes ASK_EACH/AUTO_LOW_SENSITIVITY и пустой receipt-ledger. Сам
+                  gateway записи в этом PR не меняется.
+                </p>
                 <p className="mt-4 text-xs font-mono text-accent">CONSENTED</p>
               </button>
             </div>
@@ -155,14 +176,20 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
             <h2 className="font-serif text-2xl md:text-3xl">Проверка границы</h2>
             <div className="max-w-md mx-auto space-y-2 text-sm text-text-muted font-mono text-left">
               {checks.map(check => (
-                <div key={check.id} className="flex justify-between gap-4 rounded-lg border border-border bg-surface px-4 py-3">
+                <div
+                  key={check.id}
+                  className="flex justify-between gap-4 rounded-lg border border-border bg-surface px-4 py-3"
+                >
                   <span>{check.id}</span>
-                  <span className={check.status === 'OK' ? 'text-success' : 'text-danger'}>{statusLabel(check)}</span>
+                  <span className={check.status === 'OK' ? 'text-success' : 'text-danger'}>
+                    {statusLabel(check)}
+                  </span>
                 </div>
               ))}
             </div>
             <p className="text-sm text-text-muted">
-              Режим профиля: <strong className="text-text">{memoryMode}</strong>. Ни один пункт не помечается OK без выполненной проверки.
+              Режим профиля: <strong className="text-text">{memoryMode}</strong>. Ни один пункт не
+              помечается OK без выполненной проверки.
             </p>
             <button
               onClick={handleFinish}

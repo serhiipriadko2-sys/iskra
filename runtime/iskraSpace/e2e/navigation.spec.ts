@@ -1,26 +1,19 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { navigateToView } from './helpers/navigation';
-
-async function completeOnboarding(page: Page) {
-  await page.goto('/');
-  await page.evaluate(() => {
-    localStorage.setItem('iskra-onboarding-complete', 'true');
-    localStorage.setItem('iskra-tutorial-seen', 'true');
-    localStorage.setItem('iskra-user-name', 'TestUser');
-  });
-  await page.reload();
-}
+import { seedCompletedOnboarding } from './helpers/onboarding';
 
 test.describe('Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    await completeOnboarding(page);
+    await seedCompletedOnboarding(page);
   });
 
   test('displays main app after onboarding', async ({ page }) => {
     await expect(page.locator('main')).toBeVisible();
   });
 
-  test('does not expose the unavailable Live conversation route in closed beta', async ({ page }) => {
+  test('does not expose the unavailable Live conversation route in closed beta', async ({
+    page,
+  }) => {
     await expect(page.locator('[data-nav="LIVE"]')).toHaveCount(0);
   });
 
@@ -37,7 +30,7 @@ test.describe('Mobile Navigation', () => {
   test.use({ viewport: { width: 375, height: 667 } });
 
   test.beforeEach(async ({ page }) => {
-    await completeOnboarding(page);
+    await seedCompletedOnboarding(page);
   });
 
   test('shows mobile menu on small screens', async ({ page }) => {

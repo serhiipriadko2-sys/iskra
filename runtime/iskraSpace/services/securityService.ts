@@ -60,11 +60,21 @@ interface Ruleset {
   patterns: SecurityPattern[];
 }
 
+export const SECURITY_ACTIONS = [
+  'PROCEED',
+  'REQUIRES_REDACTED_CONSENT',
+  'BLOCK_CLOUD',
+  'REJECT',
+  'REDIRECT',
+] as const;
+
+export type SecurityAction = typeof SECURITY_ACTIONS[number];
+
 export interface SecurityCheckResult {
   safe: boolean;
   sanitizedText: string;
   reason?: string;
-  action?: 'PROCEED' | 'REJECT' | 'REDIRECT';
+  action: SecurityAction;
   findings?: Finding[];
 }
 
@@ -75,6 +85,14 @@ export interface Finding {
   match: string;
   rationale: string;
 }
+
+const SECRET_FINDING_IDS = new Set([
+  'openai_api_key',
+  'google_api_key',
+  'jwt_bearer',
+  'private_key',
+  'password_field',
+]);
 
 // --- SERVICE ---
 
@@ -277,10 +295,19 @@ class SecurityService {
     const injectionFindings = this.scanInjection(text, scope);
     findings.push(...injectionFindings);
 
-    // Check for ERROR severity
-    const hasErrors = findings.some(f => f.severity === 'error');
+    const containsSecret = piiFindings.some(finding => SECRET_FINDING_IDS.has(finding.id));
+    if (containsSecret) {
+      return {
+        safe: false,
+        sanitizedText: this.sanitizeInput(text),
+        reason: 'Credential Material Must Not Be Stored Or Sent',
+        action: 'REJECT',
+        findings
+      };
+    }
 
-    // 3. Injection Check (reject if errors)
+    // 3. Injection Check. Warning-level patterns still block cloud/AI use:
+    // a direct caller must not turn "warn" into transparent forwarding.
     const hasInjection = injectionFindings.some(f => f.severity === 'error');
     if (hasInjection) {
       return {
@@ -288,7 +315,17 @@ class SecurityService {
         sanitizedText: text,
         reason: 'Prompt Injection Detected',
         action: 'REJECT',
-        findings: injectionFindings
+        findings
+      };
+    }
+
+    if (injectionFindings.length > 0) {
+      return {
+        safe: false,
+        sanitizedText: text,
+        reason: 'Prompt Injection Requires Local-Only Handling',
+        action: 'BLOCK_CLOUD',
+        findings
       };
     }
 
@@ -307,9 +344,18 @@ class SecurityService {
     // 5. PII Sanitization
     const sanitized = this.sanitizeInput(text);
 
-    // Warnings (PII) don't block, just sanitize
+    if (piiFindings.length > 0) {
+      return {
+        safe: false,
+        sanitizedText: sanitized,
+        reason: 'Sensitive Data Requires Explicit Redacted Consent',
+        action: 'REQUIRES_REDACTED_CONSENT',
+        findings
+      };
+    }
+
     return {
-      safe: !hasErrors,
+      safe: true,
       sanitizedText: sanitized,
       action: 'PROCEED',
       findings

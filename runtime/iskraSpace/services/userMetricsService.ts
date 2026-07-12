@@ -162,7 +162,6 @@ class UserMetricsService {
         const TARGET_MINUTES = 480;
         const score = Math.min(100, Math.round((sleepData.minutes / TARGET_MINUTES) * 100));
 
-        console.log(`[UserMetricsService] Synced sleep data: ${sleepData.minutes} mins -> score ${score}`);
         this.setSleepScore(score);
       }
     } catch (e) {

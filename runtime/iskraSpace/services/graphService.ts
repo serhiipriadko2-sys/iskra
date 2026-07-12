@@ -7,58 +7,14 @@
  * @see canon/IskraCanonDocumentation/07_MEMORY_SYSTEM.md
  */
 
-import type { IskraMetrics } from '../types';
-
-// --- TYPES ---
-
-export type MemoryLayer = 'MANTRA' | 'ARCHIVE' | 'SHADOW' | 'DREAM';
-
-export type MemoryNodeType =
-  | 'insight'
-  | 'decision'
-  | 'artifact'
-  | 'shadow_pattern'
-  | 'ritual_log'
-  | 'dream_crystal'
-  | 'knowledge_file'
-  | 'event'
-  | 'concept'
-  | 'fact';
-
-export type EdgeType =
-  | 'CAUSAL'         // Причинно-следственная
-  | 'SIMILARITY'     // Похожесть
-  | 'RESONANCE'      // Резонанс
-  | 'SUPPORTS'       // Подтверждает
-  | 'CONTRADICTS'    // Противоречит
-  | 'DERIVES_FROM'   // Происходит от
-  | 'RELATED_TO';    // Связано с
-
-export interface MemoryNode {
-  id: string;
-  layer: MemoryLayer;
-  type: MemoryNodeType;
-  content: string;
-  timestamp: number;
-  metrics_snapshot?: IskraMetrics;
-  relatedIds?: string[];  // Graph connections
-  resonance_score?: number; // Dynamic score based on current context
-  metadata?: Record<string, any>;
-}
-
-export interface MemoryEdge {
-  id: string;
-  source: string;
-  target: string;
-  type: EdgeType;
-  weight: number; // 0.0 - 1.0
-  metadata?: Record<string, any>;
-}
-
-export interface MemoryGraph {
-  nodes: MemoryNode[];
-  edges: MemoryEdge[];
-}
+import type {
+  EdgeType,
+  IskraMetrics,
+  MemoryEdge,
+  MemoryGraph,
+  MemoryLayer,
+  MemoryNode,
+} from '../types';
 
 // --- HYPERGRAPH SERVICE ---
 
@@ -90,10 +46,12 @@ export class GraphService {
     canonMantras.forEach(({ id, content }) => {
       const node: MemoryNode = {
         id,
-        layer: 'MANTRA',
-        type: 'concept',
+        layer: 'mantra',
+        type: 'CANON',
         content,
-        timestamp: Date.now(),
+        title: id,
+        evidence: [],
+        timestamp: new Date().toISOString(),
         resonance_score: 1.0,
         metadata: { canonical: true, immutable: true }
       };
@@ -193,12 +151,12 @@ export class GraphService {
       let score = 0;
 
       // Layer-based resonance
-      if (metrics.pain > 0.6 && node.layer === 'SHADOW') score += 0.8;
-      if (metrics.clarity > 0.8 && node.layer === 'ARCHIVE') score += 0.8;
-      if (metrics.trust < 0.5 && node.layer === 'MANTRA') score += 1.0;
+      if (metrics.pain > 0.6 && node.layer === 'shadow') score += 0.8;
+      if (metrics.clarity > 0.8 && node.layer === 'archive') score += 0.8;
+      if (metrics.trust < 0.5 && node.layer === 'mantra') score += 1.0;
 
       // Recency bonus
-      const age = Date.now() - node.timestamp;
+      const age = Date.now() - Date.parse(node.timestamp);
       if (age < 3600000) score += 0.2; // Last hour
 
       // Metrics snapshot similarity
@@ -226,7 +184,10 @@ export class GraphService {
       if (existingNode.id === newNodeId) continue;
 
       // Similarity check (content-based)
-      const similarity = this.calculateSimilarity(newNode.content, existingNode.content);
+      const similarity = this.calculateSimilarity(
+        this.contentAsText(newNode.content),
+        this.contentAsText(existingNode.content)
+      );
       if (similarity > 0.7) {
         const edge: MemoryEdge = {
           id: `edge_${newNodeId}_${existingNode.id}`,
@@ -240,7 +201,9 @@ export class GraphService {
 
       // Temporal causality (if close in time and same layer)
       if (newNode.layer === existingNode.layer) {
-        const timeDiff = Math.abs(newNode.timestamp - existingNode.timestamp);
+        const timeDiff = Math.abs(
+          Date.parse(newNode.timestamp) - Date.parse(existingNode.timestamp)
+        );
         if (timeDiff < 3600000) { // 1 hour
           const edge: MemoryEdge = {
             id: `edge_${existingNode.id}_${newNodeId}`,
@@ -277,6 +240,10 @@ export class GraphService {
     const union = new Set([...words1, ...words2]);
 
     return intersection.size / union.size;
+  }
+
+  private contentAsText(content: unknown): string {
+    return typeof content === 'string' ? content : JSON.stringify(content);
   }
 
   /**

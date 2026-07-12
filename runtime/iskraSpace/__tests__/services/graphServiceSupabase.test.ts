@@ -42,7 +42,7 @@ describe('GraphServiceSupabase', () => {
     mockSupabase.rpc.mockResolvedValue({ data: row, error: null });
 
     const node = await svc.addNode(
-      'ARCHIVE', // layer
+      'archive', // layer
       'EVENT', // type
       'C', // content
       undefined // metrics
@@ -59,7 +59,7 @@ describe('GraphServiceSupabase', () => {
 
     // Result should normalize layer casing back to enum-like form
     expect(node.id).toBe('node-1');
-    expect(node.layer).toBe('ARCHIVE');
+    expect(node.layer).toBe('archive');
     expect(node.type).toBe('event');
   });
 
@@ -70,7 +70,7 @@ describe('GraphServiceSupabase', () => {
 
     await expect(
       svc.addNode(
-        'ARCHIVE',
+        'archive',
         'EVENT',
         'C',
         undefined

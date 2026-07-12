@@ -7,7 +7,13 @@ class SoundService {
   private init() {
     try {
       if (!this.ctx) {
-        this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const audioWindow = window as Window & typeof globalThis & {
+          webkitAudioContext?: typeof AudioContext;
+        };
+        const AudioContextConstructor = audioWindow.AudioContext || audioWindow.webkitAudioContext;
+        if (!AudioContextConstructor) return;
+
+        this.ctx = new AudioContextConstructor();
         this.masterGain = this.ctx.createGain();
         this.masterGain.gain.value = 0.1; // Low volume default
         this.masterGain.connect(this.ctx.destination);
@@ -37,7 +43,7 @@ class SoundService {
             await this.ctx.resume();
         } catch (e) {
             // Interaction required
-            console.debug("Audio context resume failed (needs gesture)", e);
+            console.warn("Audio context resume failed (needs gesture)", e);
             return;
         }
     }

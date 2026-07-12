@@ -9,8 +9,8 @@ import react from '@vitejs/plugin-react';
 //   pwa-register.js) and the Vite modulepreload polyfill is disabled below.
 // - style-src 'unsafe-inline': required for React inline style props, the inline
 //   <style> block, and Google Fonts injected styles (style injection is low XSS risk).
-// - connect-src includes Supabase REST/Realtime/Edge; extend it if Sentry/PostHog
-//   (VITE_SENTRY_DSN / VITE_POSTHOG_HOST) are enabled.
+// - connect-src permits Supabase REST/Realtime/Edge and the opt-in telemetry
+//   providers. Browser-to-model-provider traffic is intentionally forbidden.
 // - frame-ancestors is ignored inside a <meta> CSP (GitHub Pages); it is enforced
 //   via HTTP headers on Vercel/nginx. X-Frame-Options provides the meta-side fallback.
 export const CONTENT_SECURITY_POLICY = [
@@ -23,7 +23,7 @@ export const CONTENT_SECURITY_POLICY = [
   "font-src 'self' https://fonts.gstatic.com data:",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "script-src 'self'",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.chatgpt.com https://generativelanguage.googleapis.com https://api.openai.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.posthog.com https://*.sentry.io",
   "worker-src 'self'",
   "manifest-src 'self'",
   'upgrade-insecure-requests',
@@ -56,16 +56,19 @@ export default defineConfig(({ command }) => {
         output: {
           manualChunks(id) {
             const normalized = id.replace(/\\/g, '/');
-            if (normalized.includes('/node_modules/react') || normalized.includes('/node_modules/react-dom')) {
+            if (
+              normalized.includes('/node_modules/react') ||
+              normalized.includes('/node_modules/react-dom')
+            ) {
               return 'vendor-react';
             }
             if (normalized.includes('/node_modules/@supabase/')) {
               return 'vendor-supabase';
             }
             if (
-              normalized.includes('/runtime/src/')
-              || normalized.includes('/packages/core/src/')
-              || normalized.includes('/packages/math/src/')
+              normalized.includes('/runtime/src/') ||
+              normalized.includes('/packages/core/src/') ||
+              normalized.includes('/packages/math/src/')
             ) {
               return 'iskra-runtime';
             }
@@ -93,16 +96,30 @@ export default defineConfig(({ command }) => {
         { find: /^@iskra\/runtime$/, replacement: path.resolve(root, '../src/index.ts') },
         { find: /^@iskra\/runtime\/(.*)$/, replacement: path.resolve(root, `../src/$1`) },
         // Explicit alias for the local math package. Point to the TypeScript source files.
-        { find: /^@iskra\/math$/, replacement: path.resolve(root, '../../packages/math/src/index.ts') },
-        { find: /^@iskra\/math\/(.*)$/, replacement: path.resolve(root, `../../packages/math/src/$1`) },
+        {
+          find: /^@iskra\/math$/,
+          replacement: path.resolve(root, '../../packages/math/src/index.ts'),
+        },
+        {
+          find: /^@iskra\/math\/(.*)$/,
+          replacement: path.resolve(root, `../../packages/math/src/$1`),
+        },
         // Math source imports core types directly when compiled through iskraSpace.
-        { find: /^@iskra\/core$/, replacement: path.resolve(root, '../../packages/core/src/index.ts') },
-        { find: /^@iskra\/core\/(.*)$/, replacement: path.resolve(root, `../../packages/core/src/$1`) },
+        {
+          find: /^@iskra\/core$/,
+          replacement: path.resolve(root, '../../packages/core/src/index.ts'),
+        },
+        {
+          find: /^@iskra\/core\/(.*)$/,
+          replacement: path.resolve(root, `../../packages/core/src/$1`),
+        },
       ],
     },
     test: {
-      exclude: ['node_modules', 'e2e', 'playwright-report', 'test-results'],
+      exclude: ['node_modules', 'e2e', 'e2e-production', 'playwright-report', 'test-results'],
       environment: 'jsdom',
+      pool: 'threads',
+      maxWorkers: 2,
     },
   };
 });

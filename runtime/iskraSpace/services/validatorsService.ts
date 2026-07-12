@@ -43,11 +43,34 @@ export interface LambdaCondition {
 /**
  * Validation result
  */
-export interface ValidationResult {
+export interface ValidationResult<TParsed = unknown> {
   valid: boolean;
   errors: string[];
   warnings: string[];
-  parsed?: any;  // Parsed structure if valid
+  parsed?: TParsed;
+}
+
+interface ParsedISODate {
+  year: number;
+  month: number;
+  day: number;
+  date: Date;
+}
+
+interface ParsedVoice {
+  voiceId: VoiceID;
+  symbol: string;
+}
+
+interface DeltaSignatureInput {
+  delta?: string;
+  depth?: string;
+  omega?: string;
+  lambda?: string;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 // --- CONSTANTS ---
@@ -95,7 +118,7 @@ class ValidatorsService {
   /**
    * Validate ISO date format (YYYY-MM-DD)
    */
-  public validateISODate(dateStr: string): ValidationResult {
+  public validateISODate(dateStr: string): ValidationResult<ParsedISODate> {
     const errors: string[] = [];
     const warnings: string[] = [];
 
@@ -170,7 +193,7 @@ class ValidatorsService {
   /**
    * Validate voice ID
    */
-  public validateVoiceID(voiceId: string): ValidationResult {
+  public validateVoiceID(voiceId: string): ValidationResult<ParsedVoice> {
     const errors: string[] = [];
     const warnings: string[] = [];
 
@@ -210,7 +233,7 @@ class ValidatorsService {
    * Validate voice mix (1-3 voices allowed)
    * @see canon/04_VOICES_FACETS_PHASES_AND_RHYTHM.md#4.1.2
    */
-  public validateVoiceMix(voices: string[]): ValidationResult {
+  public validateVoiceMix(voices: string[]): ValidationResult<{ voices: string[] }> {
     const errors: string[] = [];
     const warnings: string[] = [];
 
@@ -240,7 +263,7 @@ class ValidatorsService {
       valid: errors.length === 0,
       errors,
       warnings,
-      parsed: voices.length > 0 ? { voices: voices as VoiceID[] } : undefined
+      parsed: voices.length > 0 ? { voices } : undefined
     };
   }
 
@@ -254,12 +277,12 @@ class ValidatorsService {
    * - {condition: "text", by: "YYYY-MM-DD"}
    * - {action: "text", owner: "text", condition: "text", <=24h: true}
    */
-  public validateLambda(lambdaStr: string): ValidationResult {
+  public validateLambda(lambdaStr: string): ValidationResult<Record<string, unknown>> {
     const errors: string[] = [];
     const warnings: string[] = [];
 
     // Try to parse as JSON object
-    let parsed: any;
+    let parsed: unknown;
     try {
       // Handle both JSON object and plain string
       if (lambdaStr.trim().startsWith('{')) {
@@ -279,6 +302,11 @@ class ValidatorsService {
       return { valid: false, errors, warnings };
     }
 
+    if (!isRecord(parsed)) {
+      errors.push('Lambda must be a JSON object');
+      return { valid: false, errors, warnings };
+    }
+
     // Validate required field: condition
     if (!parsed.condition || typeof parsed.condition !== 'string') {
       errors.push('Lambda must have "condition" field (string)');
@@ -286,9 +314,13 @@ class ValidatorsService {
 
     // Validate optional field: by (ISO date)
     if (parsed.by) {
-      const dateValidation = this.validateISODate(parsed.by);
-      if (!dateValidation.valid) {
-        errors.push(`Lambda "by" field has invalid ISO date: ${dateValidation.errors.join(', ')}`);
+      if (typeof parsed.by !== 'string') {
+        errors.push('Lambda "by" field must be a string');
+      } else {
+        const dateValidation = this.validateISODate(parsed.by);
+        if (!dateValidation.valid) {
+          errors.push(`Lambda "by" field has invalid ISO date: ${dateValidation.errors.join(', ')}`);
+        }
       }
     }
 
@@ -314,7 +346,11 @@ class ValidatorsService {
 
     // Warning: very generic condition
     const genericConditions = ['later', 'soon', 'eventually', 'когда-нибудь', 'потом'];
-    if (genericConditions.some(g => parsed.condition?.toLowerCase().includes(g))) {
+    const condition = parsed.condition;
+    if (
+      typeof condition === 'string' &&
+      genericConditions.some(g => condition.toLowerCase().includes(g))
+    ) {
       warnings.push('Lambda condition is very generic. Consider adding specific event/metric/date.');
     }
 
@@ -361,12 +397,9 @@ class ValidatorsService {
    * Validate complete ∆DΩΛ signature
    * @see canon/06_RITUALS_SHADOW_PROTOCOLS_AND_DELTA_BLOCKS.md
    */
-  public validateDeltaSignature(signature: {
-    delta?: string;
-    depth?: string;
-    omega?: string;
-    lambda?: string;
-  }): ValidationResult {
+  public validateDeltaSignature(
+    signature: DeltaSignatureInput
+  ): ValidationResult<DeltaSignatureInput> {
     const errors: string[] = [];
     const warnings: string[] = [];
 
@@ -426,7 +459,7 @@ class ValidatorsService {
     const validation = this.validateISODate(isoDate);
     if (!validation.valid || !validation.parsed) return false;
 
-    const { year, month, day } = validation.parsed as { year: number; month: number; day: number };
+    const { year, month, day } = validation.parsed;
     const targetStart = new Date(year, month - 1, day);
     const now = new Date();
 

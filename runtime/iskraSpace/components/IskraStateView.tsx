@@ -49,7 +49,7 @@ const DerivedMetricCard: React.FC<{ label: string; value: number; desc: string; 
 const RitualButton: React.FC<{ 
     title: string; 
     desc: string; 
-    icon: React.FC<any>; 
+    icon: React.FC<React.SVGProps<SVGSVGElement>>;
     onClick: () => void; 
     colorClass: string;
     ariaLabel: string;

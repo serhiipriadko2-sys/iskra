@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-05T19:49:11.990Z",
-  "total": 2714,
+  "generatedAt": "2026-07-12T13:26:44.736Z",
+  "total": 2797,
   "curated": 20,
   "layers": {
-    "root": 330,
+    "root": 334,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
@@ -13,8 +13,8 @@
     "web": 13,
     "canon": 16,
     "builder": 1187,
-    "docs": 69,
-    "governance": 52,
+    "docs": 71,
+    "governance": 61,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,11 +23,11 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 290,
+    "runtime": 346,
     "skills": 267,
-    "backend": 52,
+    "backend": 63,
     "system": 26,
-    "tools": 52
+    "tools": 53
   },
   "nodes": [
     {
@@ -795,6 +795,30 @@
       "coverage": "indexed",
       "sourceRef": ".gitignore",
       "related": []
+    },
+    {
+      "path": ".kimi",
+      "name": ".kimi",
+      "kind": "directory",
+      "layer": "root",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": ".kimi",
+      "related": [],
+      "children": [
+        ".kimi/AGENTS.md"
+      ]
+    },
+    {
+      "path": ".kimi/AGENTS.md",
+      "name": "AGENTS.md",
+      "kind": "file",
+      "layer": "root",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": ".kimi/AGENTS.md",
+      "related": [],
+      "parent": ".kimi"
     },
     {
       "path": ".playwright-mcp",
@@ -4436,6 +4460,30 @@
       "sourceRef": "core/voices_monographs/SIBYL.md",
       "related": [],
       "parent": "core/voices_monographs"
+    },
+    {
+      "path": "deploy",
+      "name": "deploy",
+      "kind": "directory",
+      "layer": "root",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "deploy",
+      "related": [],
+      "children": [
+        "deploy/iskraspace-runtime-config.sh"
+      ]
+    },
+    {
+      "path": "deploy/iskraspace-runtime-config.sh",
+      "name": "iskraspace-runtime-config.sh",
+      "kind": "file",
+      "layer": "root",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "deploy/iskraspace-runtime-config.sh",
+      "related": [],
+      "parent": "deploy"
     },
     {
       "path": "development-diary.md",
@@ -19982,6 +20030,7 @@
       "related": [],
       "children": [
         "docs/architecture",
+        "docs/contracts",
         "docs/features",
         "docs/migration",
         "docs/operations",
@@ -20197,6 +20246,31 @@
       "sourceRef": "docs/architecture/SYSTEM_REFACTOR_PLAN.md",
       "related": [],
       "parent": "docs/architecture"
+    },
+    {
+      "path": "docs/contracts",
+      "name": "contracts",
+      "kind": "directory",
+      "layer": "docs",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "docs/contracts",
+      "related": [],
+      "parent": "docs",
+      "children": [
+        "docs/contracts/ISKRA_SPACE_SYMBIOSIS_CONTRACT_LINK.md"
+      ]
+    },
+    {
+      "path": "docs/contracts/ISKRA_SPACE_SYMBIOSIS_CONTRACT_LINK.md",
+      "name": "ISKRA_SPACE_SYMBIOSIS_CONTRACT_LINK.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/contracts/ISKRA_SPACE_SYMBIOSIS_CONTRACT_LINK.md",
+      "related": [],
+      "parent": "docs/contracts"
     },
     {
       "path": "docs/features",
@@ -20885,6 +20959,10 @@
         "governance/adr_20260628_sense_event_operational_bridge.md",
         "governance/adr_20260629_iskra_selfhood_mechanics_hardening.md",
         "governance/adr_20260701_iskra_vomega_7_1_runtime_unification.md",
+        "governance/adr_20260711_iskraspace_symbiosis_contract.md",
+        "governance/adr_20260712_iskra_constitution_v1_activation.md",
+        "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
+        "governance/adr_20260712_iskra_constitution_v1_redline.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -20893,6 +20971,9 @@
         "governance/changelog.md",
         "governance/codex_local_operating_contract.md",
         "governance/governance_pack.md",
+        "governance/iskra_constitution_v1_annexes.md",
+        "governance/iskra_constitution_v1_core.md",
+        "governance/iskra_constitution_v1_transition_schedule.md",
         "governance/memory_stack.md",
         "governance/policy.md",
         "governance/update_protocol.md"
@@ -21157,6 +21238,50 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260711_iskraspace_symbiosis_contract.md",
+      "name": "adr_20260711_iskraspace_symbiosis_contract.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260711_iskraspace_symbiosis_contract.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260712_iskra_constitution_v1_activation.md",
+      "name": "adr_20260712_iskra_constitution_v1_activation.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260712_iskra_constitution_v1_activation.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
+      "name": "adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260712_iskra_constitution_v1_redline.md",
+      "name": "adr_20260712_iskra_constitution_v1_redline.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260712_iskra_constitution_v1_redline.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21289,7 +21414,9 @@
         "governance/changelog.d/2026-06-24-voice-seed-builder-canon.md",
         "governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md",
         "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md",
-        "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md"
+        "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md",
+        "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md",
+        "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md"
       ]
     },
     {
@@ -21370,6 +21497,28 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md",
+      "name": "2026-07-11-iskraspace-symbiosis-contract-p0.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+      "name": "2026-07-12-iskra-constitution-v1-redline.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -21399,6 +21548,39 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/governance_pack.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/iskra_constitution_v1_annexes.md",
+      "name": "iskra_constitution_v1_annexes.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/iskra_constitution_v1_annexes.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/iskra_constitution_v1_core.md",
+      "name": "iskra_constitution_v1_core.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/iskra_constitution_v1_core.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/iskra_constitution_v1_transition_schedule.md",
+      "name": "iskra_constitution_v1_transition_schedule.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/iskra_constitution_v1_transition_schedule.md",
       "related": [],
       "parent": "governance"
     },
@@ -25114,13 +25296,17 @@
         "runtime/iskraSpace/config",
         "runtime/iskraSpace/css",
         "runtime/iskraSpace/data",
+        "runtime/iskraSpace/docs",
         "runtime/iskraSpace/e2e",
+        "runtime/iskraSpace/e2e-production",
         "runtime/iskraSpace/hooks",
         "runtime/iskraSpace/public",
+        "runtime/iskraSpace/scripts",
         "runtime/iskraSpace/services",
         "runtime/iskraSpace/supabase",
         "runtime/iskraSpace/test-results",
         "runtime/iskraSpace/testSupport",
+        "runtime/iskraSpace/tests",
         "runtime/iskraSpace/types",
         "runtime/iskraSpace/utils",
         "runtime/iskraSpace/01_MANIFEST_and_OVERVIEW.md",
@@ -25153,9 +25339,9 @@
         "runtime/iskraSpace/metadata.json",
         "runtime/iskraSpace/package.json",
         "runtime/iskraSpace/playwright.config.ts",
+        "runtime/iskraSpace/playwright.production.config.ts",
         "runtime/iskraSpace/postcss.config.js",
         "runtime/iskraSpace/services_audit_report.md",
-        "runtime/iskraSpace/supabase_graphrag_migration.sql",
         "runtime/iskraSpace/tailwind.config.js",
         "runtime/iskraSpace/tsconfig.json",
         "runtime/iskraSpace/types.ts",
@@ -25371,10 +25557,84 @@
       "related": [],
       "parent": "runtime/iskraSpace",
       "children": [
+        "runtime/iskraSpace/__tests__/components",
         "runtime/iskraSpace/__tests__/e2e",
         "runtime/iskraSpace/__tests__/services",
         "runtime/iskraSpace/__tests__/utils"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components",
+      "name": "components",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__",
+      "children": [
+        "runtime/iskraSpace/__tests__/components/ChatSecurityBoundary.test.tsx",
+        "runtime/iskraSpace/__tests__/components/CouncilView.test.tsx",
+        "runtime/iskraSpace/__tests__/components/IskraStateView.test.tsx",
+        "runtime/iskraSpace/__tests__/components/JournalSecurityBoundary.test.tsx",
+        "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/ChatSecurityBoundary.test.tsx",
+      "name": "ChatSecurityBoundary.test.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/ChatSecurityBoundary.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/CouncilView.test.tsx",
+      "name": "CouncilView.test.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/CouncilView.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/IskraStateView.test.tsx",
+      "name": "IskraStateView.test.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/IskraStateView.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/JournalSecurityBoundary.test.tsx",
+      "name": "JournalSecurityBoundary.test.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/JournalSecurityBoundary.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx",
+      "name": "SettingsView.test.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
     },
     {
       "path": "runtime/iskraSpace/__tests__/e2e",
@@ -25513,6 +25773,7 @@
         "runtime/iskraSpace/components/assets",
         "runtime/iskraSpace/components/live",
         "runtime/iskraSpace/components/Ambience.tsx",
+        "runtime/iskraSpace/components/AuthGate.tsx",
         "runtime/iskraSpace/components/BeaconView.tsx",
         "runtime/iskraSpace/components/BreathingExercise.tsx",
         "runtime/iskraSpace/components/BreathingIndicator.tsx",
@@ -25568,6 +25829,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/components/Ambience.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/components"
+    },
+    {
+      "path": "runtime/iskraSpace/components/AuthGate.tsx",
+      "name": "AuthGate.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/components/AuthGate.tsx",
       "related": [],
       "parent": "runtime/iskraSpace/components"
     },
@@ -26175,10 +26447,24 @@
       "related": [],
       "parent": "runtime/iskraSpace",
       "children": [
+        "runtime/iskraSpace/config/betaCapabilities.ts",
         "runtime/iskraSpace/config/deltaConfig.ts",
+        "runtime/iskraSpace/config/e2eAuth.ts",
         "runtime/iskraSpace/config/metricsConfig.ts",
+        "runtime/iskraSpace/config/runtimeConfig.ts",
         "runtime/iskraSpace/config/securityPatterns.json"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/config/betaCapabilities.ts",
+      "name": "betaCapabilities.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/config/betaCapabilities.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/config"
     },
     {
       "path": "runtime/iskraSpace/config/deltaConfig.ts",
@@ -26192,6 +26478,17 @@
       "parent": "runtime/iskraSpace/config"
     },
     {
+      "path": "runtime/iskraSpace/config/e2eAuth.ts",
+      "name": "e2eAuth.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/config/e2eAuth.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/config"
+    },
+    {
       "path": "runtime/iskraSpace/config/metricsConfig.ts",
       "name": "metricsConfig.ts",
       "kind": "file",
@@ -26199,6 +26496,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/config/metricsConfig.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/config"
+    },
+    {
+      "path": "runtime/iskraSpace/config/runtimeConfig.ts",
+      "name": "runtimeConfig.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/config/runtimeConfig.ts",
       "related": [],
       "parent": "runtime/iskraSpace/config"
     },
@@ -26276,6 +26584,55 @@
       "parent": "runtime/iskraSpace/data"
     },
     {
+      "path": "runtime/iskraSpace/docs",
+      "name": "docs",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/docs",
+      "related": [],
+      "parent": "runtime/iskraSpace",
+      "children": [
+        "runtime/iskraSpace/docs/ISKRA_AGENT_EDGE_FUNCTION_RUNBOOK.md",
+        "runtime/iskraSpace/docs/ISKRA_SPACE_PRODUCTION_ROADMAP_2026-07-09.md",
+        "runtime/iskraSpace/docs/SECURITY_NOTES.md"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/docs/ISKRA_AGENT_EDGE_FUNCTION_RUNBOOK.md",
+      "name": "ISKRA_AGENT_EDGE_FUNCTION_RUNBOOK.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/docs/ISKRA_AGENT_EDGE_FUNCTION_RUNBOOK.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/docs"
+    },
+    {
+      "path": "runtime/iskraSpace/docs/ISKRA_SPACE_PRODUCTION_ROADMAP_2026-07-09.md",
+      "name": "ISKRA_SPACE_PRODUCTION_ROADMAP_2026-07-09.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/docs/ISKRA_SPACE_PRODUCTION_ROADMAP_2026-07-09.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/docs"
+    },
+    {
+      "path": "runtime/iskraSpace/docs/SECURITY_NOTES.md",
+      "name": "SECURITY_NOTES.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/docs/SECURITY_NOTES.md",
+      "related": [],
+      "parent": "runtime/iskraSpace/docs"
+    },
+    {
       "path": "runtime/iskraSpace/e2e",
       "name": "e2e",
       "kind": "directory",
@@ -26293,6 +26650,31 @@
         "runtime/iskraSpace/e2e/onboarding.spec.ts",
         "runtime/iskraSpace/e2e/sibyl_voice.spec.ts"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/e2e-production",
+      "name": "e2e-production",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/e2e-production",
+      "related": [],
+      "parent": "runtime/iskraSpace",
+      "children": [
+        "runtime/iskraSpace/e2e-production/production-artifact.spec.ts"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/e2e-production/production-artifact.spec.ts",
+      "name": "production-artifact.spec.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/e2e-production/production-artifact.spec.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/e2e-production"
     },
     {
       "path": "runtime/iskraSpace/e2e/app.spec.ts",
@@ -26327,7 +26709,8 @@
       "related": [],
       "parent": "runtime/iskraSpace/e2e",
       "children": [
-        "runtime/iskraSpace/e2e/helpers/navigation.ts"
+        "runtime/iskraSpace/e2e/helpers/navigation.ts",
+        "runtime/iskraSpace/e2e/helpers/onboarding.ts"
       ]
     },
     {
@@ -26338,6 +26721,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/e2e/helpers/navigation.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/e2e/helpers"
+    },
+    {
+      "path": "runtime/iskraSpace/e2e/helpers/onboarding.ts",
+      "name": "onboarding.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/e2e/helpers/onboarding.ts",
       "related": [],
       "parent": "runtime/iskraSpace/e2e/helpers"
     },
@@ -26544,6 +26938,17 @@
       "parent": "runtime/iskraSpace"
     },
     {
+      "path": "runtime/iskraSpace/playwright.production.config.ts",
+      "name": "playwright.production.config.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/playwright.production.config.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace"
+    },
+    {
       "path": "runtime/iskraSpace/postcss.config.js",
       "name": "postcss.config.js",
       "kind": "file",
@@ -26570,7 +26975,10 @@
         "runtime/iskraSpace/public/404.html",
         "runtime/iskraSpace/public/manifest.json",
         "runtime/iskraSpace/public/offline.html",
-        "runtime/iskraSpace/public/service-worker.js"
+        "runtime/iskraSpace/public/pwa-register.js",
+        "runtime/iskraSpace/public/runtime-config.js",
+        "runtime/iskraSpace/public/service-worker.js",
+        "runtime/iskraSpace/public/spa-redirect.js"
       ]
     },
     {
@@ -26657,6 +27065,28 @@
       "parent": "runtime/iskraSpace/public"
     },
     {
+      "path": "runtime/iskraSpace/public/pwa-register.js",
+      "name": "pwa-register.js",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/public/pwa-register.js",
+      "related": [],
+      "parent": "runtime/iskraSpace/public"
+    },
+    {
+      "path": "runtime/iskraSpace/public/runtime-config.js",
+      "name": "runtime-config.js",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/public/runtime-config.js",
+      "related": [],
+      "parent": "runtime/iskraSpace/public"
+    },
+    {
       "path": "runtime/iskraSpace/public/service-worker.js",
       "name": "service-worker.js",
       "kind": "file",
@@ -26666,6 +27096,42 @@
       "sourceRef": "runtime/iskraSpace/public/service-worker.js",
       "related": [],
       "parent": "runtime/iskraSpace/public"
+    },
+    {
+      "path": "runtime/iskraSpace/public/spa-redirect.js",
+      "name": "spa-redirect.js",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/public/spa-redirect.js",
+      "related": [],
+      "parent": "runtime/iskraSpace/public"
+    },
+    {
+      "path": "runtime/iskraSpace/scripts",
+      "name": "scripts",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/scripts",
+      "related": [],
+      "parent": "runtime/iskraSpace",
+      "children": [
+        "runtime/iskraSpace/scripts/check-bundle-budget.mjs"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/scripts/check-bundle-budget.mjs",
+      "name": "check-bundle-budget.mjs",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/scripts/check-bundle-budget.mjs",
+      "related": [],
+      "parent": "runtime/iskraSpace/scripts"
     },
     {
       "path": "runtime/iskraSpace/services",
@@ -26694,6 +27160,7 @@
         "runtime/iskraSpace/services/graphServiceSupabase.ts",
         "runtime/iskraSpace/services/healthService.ts",
         "runtime/iskraSpace/services/integrityService.ts",
+        "runtime/iskraSpace/services/iskraAgentService.ts",
         "runtime/iskraSpace/services/makiService.ts",
         "runtime/iskraSpace/services/memoryService.ts",
         "runtime/iskraSpace/services/metricsService.ts",
@@ -26709,6 +27176,7 @@
         "runtime/iskraSpace/services/storageService.ts",
         "runtime/iskraSpace/services/supabaseClient.ts",
         "runtime/iskraSpace/services/supabaseService.ts",
+        "runtime/iskraSpace/services/symbiosisService.ts",
         "runtime/iskraSpace/services/syncService.ts",
         "runtime/iskraSpace/services/userMetricsService.ts",
         "runtime/iskraSpace/services/validatorsService.ts",
@@ -26727,16 +27195,28 @@
       "related": [],
       "parent": "runtime/iskraSpace/services",
       "children": [
+        "runtime/iskraSpace/services/__tests__/aiEdgeHardening.test.ts",
+        "runtime/iskraSpace/services/__tests__/aiEdgeQuotaBoundary.test.ts",
+        "runtime/iskraSpace/services/__tests__/analyticsConsent.test.ts",
+        "runtime/iskraSpace/services/__tests__/auditLogAppendOnly.test.ts",
         "runtime/iskraSpace/services/__tests__/auditService.test.ts",
+        "runtime/iskraSpace/services/__tests__/betaCapabilityBoundary.test.ts",
         "runtime/iskraSpace/services/__tests__/canonService.test.ts",
+        "runtime/iskraSpace/services/__tests__/closedBetaMigration.test.ts",
         "runtime/iskraSpace/services/__tests__/deltaEnforcer.test.ts",
         "runtime/iskraSpace/services/__tests__/deltaProtocol.test.ts",
+        "runtime/iskraSpace/services/__tests__/e2eAuthBypass.test.ts",
+        "runtime/iskraSpace/services/__tests__/errorTrackingConsent.test.ts",
         "runtime/iskraSpace/services/__tests__/evalCases.test.ts",
         "runtime/iskraSpace/services/__tests__/evalService.test.ts",
         "runtime/iskraSpace/services/__tests__/geminiEdgeFunctionSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/geminiService.test.ts",
         "runtime/iskraSpace/services/__tests__/glossaryService.test.ts",
+        "runtime/iskraSpace/services/__tests__/graphSharedRowGuardMigration.test.ts",
         "runtime/iskraSpace/services/__tests__/healthService.test.ts",
+        "runtime/iskraSpace/services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts",
+        "runtime/iskraSpace/services/__tests__/iskraMemoryGatewaySecurity.test.ts",
+        "runtime/iskraSpace/services/__tests__/kainEdgeFunctionSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/makiService.test.ts",
         "runtime/iskraSpace/services/__tests__/memoryService.test.ts",
         "runtime/iskraSpace/services/__tests__/metricsService.test.ts",
@@ -26745,21 +27225,71 @@
         "runtime/iskraSpace/services/__tests__/ragService.test.ts",
         "runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts",
         "runtime/iskraSpace/services/__tests__/releaseBoundary.test.ts",
+        "runtime/iskraSpace/services/__tests__/releaseWorkflowContract.test.ts",
         "runtime/iskraSpace/services/__tests__/ritualService.test.ts",
         "runtime/iskraSpace/services/__tests__/ritualServiceGateway.test.ts",
         "runtime/iskraSpace/services/__tests__/rule8Service.test.ts",
+        "runtime/iskraSpace/services/__tests__/runtimeConfig.test.ts",
+        "runtime/iskraSpace/services/__tests__/runtimeConfigDeliveryBoundary.test.ts",
         "runtime/iskraSpace/services/__tests__/searchService.test.ts",
         "runtime/iskraSpace/services/__tests__/securityService.test.ts",
         "runtime/iskraSpace/services/__tests__/soundService.test.ts",
         "runtime/iskraSpace/services/__tests__/storageService.test.ts",
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+        "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
+        "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts",
         "runtime/iskraSpace/services/__tests__/syncService.test.ts",
         "runtime/iskraSpace/services/__tests__/userMetricsService.test.ts",
         "runtime/iskraSpace/services/__tests__/userMetricsServiceSync.test.ts",
         "runtime/iskraSpace/services/__tests__/voiceEngine.test.ts",
-        "runtime/iskraSpace/services/__tests__/voiceSynapseService.test.ts"
+        "runtime/iskraSpace/services/__tests__/voiceSynapseService.test.ts",
+        "runtime/iskraSpace/services/__tests__/voiceThresholdCanon.test.ts"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/aiEdgeHardening.test.ts",
+      "name": "aiEdgeHardening.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/aiEdgeHardening.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/aiEdgeQuotaBoundary.test.ts",
+      "name": "aiEdgeQuotaBoundary.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/aiEdgeQuotaBoundary.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/analyticsConsent.test.ts",
+      "name": "analyticsConsent.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/analyticsConsent.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/auditLogAppendOnly.test.ts",
+      "name": "auditLogAppendOnly.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/auditLogAppendOnly.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
       "path": "runtime/iskraSpace/services/__tests__/auditService.test.ts",
@@ -26773,6 +27303,17 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/betaCapabilityBoundary.test.ts",
+      "name": "betaCapabilityBoundary.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/betaCapabilityBoundary.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/canonService.test.ts",
       "name": "canonService.test.ts",
       "kind": "file",
@@ -26780,6 +27321,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/canonService.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/closedBetaMigration.test.ts",
+      "name": "closedBetaMigration.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/closedBetaMigration.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -26802,6 +27354,28 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/deltaProtocol.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/e2eAuthBypass.test.ts",
+      "name": "e2eAuthBypass.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/e2eAuthBypass.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/errorTrackingConsent.test.ts",
+      "name": "errorTrackingConsent.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/errorTrackingConsent.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -26861,6 +27435,17 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/graphSharedRowGuardMigration.test.ts",
+      "name": "graphSharedRowGuardMigration.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/graphSharedRowGuardMigration.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/healthService.test.ts",
       "name": "healthService.test.ts",
       "kind": "file",
@@ -26868,6 +27453,39 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/healthService.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts",
+      "name": "iskraAgentEdgeFunctionSecurity.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/iskraMemoryGatewaySecurity.test.ts",
+      "name": "iskraMemoryGatewaySecurity.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/iskraMemoryGatewaySecurity.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/kainEdgeFunctionSecurity.test.ts",
+      "name": "kainEdgeFunctionSecurity.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/kainEdgeFunctionSecurity.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -26960,6 +27578,17 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/releaseWorkflowContract.test.ts",
+      "name": "releaseWorkflowContract.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/releaseWorkflowContract.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/ritualService.test.ts",
       "name": "ritualService.test.ts",
       "kind": "file",
@@ -26989,6 +27618,28 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/rule8Service.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/runtimeConfig.test.ts",
+      "name": "runtimeConfig.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/runtimeConfig.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/runtimeConfigDeliveryBoundary.test.ts",
+      "name": "runtimeConfigDeliveryBoundary.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/runtimeConfigDeliveryBoundary.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -27059,6 +27710,28 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
+      "name": "supabaseClient.betaAccess.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts",
+      "name": "symbiosisService.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/syncService.test.ts",
       "name": "syncService.test.ts",
       "kind": "file",
@@ -27110,6 +27783,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/voiceSynapseService.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/voiceThresholdCanon.test.ts",
+      "name": "voiceThresholdCanon.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/voiceThresholdCanon.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -27279,6 +27963,17 @@
       "parent": "runtime/iskraSpace/services"
     },
     {
+      "path": "runtime/iskraSpace/services/iskraAgentService.ts",
+      "name": "iskraAgentService.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/iskraAgentService.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
       "path": "runtime/iskraSpace/services/makiService.ts",
       "name": "makiService.ts",
       "kind": "file",
@@ -27444,6 +28139,17 @@
       "parent": "runtime/iskraSpace/services"
     },
     {
+      "path": "runtime/iskraSpace/services/symbiosisService.ts",
+      "name": "symbiosisService.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/symbiosisService.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
       "path": "runtime/iskraSpace/services/syncService.ts",
       "name": "syncService.ts",
       "kind": "file",
@@ -27535,9 +28241,72 @@
       "related": [],
       "parent": "runtime/iskraSpace/supabase",
       "children": [
+        "runtime/iskraSpace/supabase/functions/_shared",
         "runtime/iskraSpace/supabase/functions/gemini",
+        "runtime/iskraSpace/supabase/functions/iskra-agent",
         "runtime/iskraSpace/supabase/functions/kain"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/_shared",
+      "name": "_shared",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/_shared",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions",
+      "children": [
+        "runtime/iskraSpace/supabase/functions/_shared/aiBoundary.ts",
+        "runtime/iskraSpace/supabase/functions/_shared/aiBoundary_test.ts",
+        "runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy.ts",
+        "runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy_test.ts"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/_shared/aiBoundary.ts",
+      "name": "aiBoundary.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/_shared/aiBoundary.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions/_shared"
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/_shared/aiBoundary_test.ts",
+      "name": "aiBoundary_test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/_shared/aiBoundary_test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions/_shared"
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy.ts",
+      "name": "aiContentPolicy.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions/_shared"
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy_test.ts",
+      "name": "aiContentPolicy_test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy_test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions/_shared"
     },
     {
       "path": "runtime/iskraSpace/supabase/functions/gemini",
@@ -27551,6 +28320,7 @@
       "parent": "runtime/iskraSpace/supabase/functions",
       "children": [
         "runtime/iskraSpace/supabase/functions/gemini/deno.json",
+        "runtime/iskraSpace/supabase/functions/gemini/deno.lock",
         "runtime/iskraSpace/supabase/functions/gemini/index.ts"
       ]
     },
@@ -27566,6 +28336,17 @@
       "parent": "runtime/iskraSpace/supabase/functions/gemini"
     },
     {
+      "path": "runtime/iskraSpace/supabase/functions/gemini/deno.lock",
+      "name": "deno.lock",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/gemini/deno.lock",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions/gemini"
+    },
+    {
       "path": "runtime/iskraSpace/supabase/functions/gemini/index.ts",
       "name": "index.ts",
       "kind": "file",
@@ -27575,6 +28356,43 @@
       "sourceRef": "runtime/iskraSpace/supabase/functions/gemini/index.ts",
       "related": [],
       "parent": "runtime/iskraSpace/supabase/functions/gemini"
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/iskra-agent",
+      "name": "iskra-agent",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/iskra-agent",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions",
+      "children": [
+        "runtime/iskraSpace/supabase/functions/iskra-agent/deno.json",
+        "runtime/iskraSpace/supabase/functions/iskra-agent/index.ts"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/iskra-agent/deno.json",
+      "name": "deno.json",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/iskra-agent/deno.json",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions/iskra-agent"
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/iskra-agent/index.ts",
+      "name": "index.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/iskra-agent/index.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions/iskra-agent"
     },
     {
       "path": "runtime/iskraSpace/supabase/functions/kain",
@@ -27587,8 +28405,20 @@
       "related": [],
       "parent": "runtime/iskraSpace/supabase/functions",
       "children": [
+        "runtime/iskraSpace/supabase/functions/kain/deno.json",
         "runtime/iskraSpace/supabase/functions/kain/index.ts"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/supabase/functions/kain/deno.json",
+      "name": "deno.json",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/supabase/functions/kain/deno.json",
+      "related": [],
+      "parent": "runtime/iskraSpace/supabase/functions/kain"
     },
     {
       "path": "runtime/iskraSpace/supabase/functions/kain/index.ts",
@@ -27613,17 +28443,6 @@
       "parent": "runtime/iskraSpace/supabase"
     },
     {
-      "path": "runtime/iskraSpace/supabase_graphrag_migration.sql",
-      "name": "supabase_graphrag_migration.sql",
-      "kind": "file",
-      "layer": "runtime",
-      "role": "data",
-      "coverage": "indexed",
-      "sourceRef": "runtime/iskraSpace/supabase_graphrag_migration.sql",
-      "related": [],
-      "parent": "runtime/iskraSpace"
-    },
-    {
       "path": "runtime/iskraSpace/tailwind.config.js",
       "name": "tailwind.config.js",
       "kind": "file",
@@ -27645,7 +28464,6 @@
       "related": [],
       "parent": "runtime/iskraSpace",
       "children": [
-        "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile",
         "runtime/iskraSpace/test-results/.last-run.json"
       ]
     },
@@ -27659,31 +28477,6 @@
       "sourceRef": "runtime/iskraSpace/test-results/.last-run.json",
       "related": [],
       "parent": "runtime/iskraSpace/test-results"
-    },
-    {
-      "path": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile",
-      "name": "council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile",
-      "kind": "directory",
-      "layer": "runtime",
-      "role": "container",
-      "coverage": "indexed",
-      "sourceRef": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile",
-      "related": [],
-      "parent": "runtime/iskraSpace/test-results",
-      "children": [
-        "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile/error-context.md"
-      ]
-    },
-    {
-      "path": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile/error-context.md",
-      "name": "error-context.md",
-      "kind": "file",
-      "layer": "runtime",
-      "role": "documentation",
-      "coverage": "indexed",
-      "sourceRef": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile/error-context.md",
-      "related": [],
-      "parent": "runtime/iskraSpace/test-results/council_ritual-Council-Rit-5d4ad-ll-9-voices-in-Council-view-mobile"
     },
     {
       "path": "runtime/iskraSpace/testSupport",
@@ -27709,6 +28502,31 @@
       "sourceRef": "runtime/iskraSpace/testSupport/googleGenAIMock.ts",
       "related": [],
       "parent": "runtime/iskraSpace/testSupport"
+    },
+    {
+      "path": "runtime/iskraSpace/tests",
+      "name": "tests",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/tests",
+      "related": [],
+      "parent": "runtime/iskraSpace",
+      "children": [
+        "runtime/iskraSpace/tests/SMOKE_TEST_PAYLOAD.json"
+      ]
+    },
+    {
+      "path": "runtime/iskraSpace/tests/SMOKE_TEST_PAYLOAD.json",
+      "name": "SMOKE_TEST_PAYLOAD.json",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/tests/SMOKE_TEST_PAYLOAD.json",
+      "related": [],
+      "parent": "runtime/iskraSpace/tests"
     },
     {
       "path": "runtime/iskraSpace/tsconfig.json",
@@ -28025,11 +28843,13 @@
         "runtime/src/__tests__/council.test.ts",
         "runtime/src/__tests__/ews.test.ts",
         "runtime/src/__tests__/fractal.test.ts",
+        "runtime/src/__tests__/guardController.test.ts",
         "runtime/src/__tests__/metrics.test.ts",
         "runtime/src/__tests__/protocols.test.ts",
         "runtime/src/__tests__/sift.test.ts",
         "runtime/src/__tests__/siftExtended.test.ts",
         "runtime/src/__tests__/siftVerdictFlip.test.ts",
+        "runtime/src/__tests__/symbiosis.test.ts",
         "runtime/src/__tests__/voices.test.ts",
         "runtime/src/__tests__/xcode_gate.test.ts",
         "runtime/src/__tests__/xcode_registry.test.ts"
@@ -28087,6 +28907,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/src/__tests__/fractal.test.ts",
+      "related": [],
+      "parent": "runtime/src/__tests__"
+    },
+    {
+      "path": "runtime/src/__tests__/guardController.test.ts",
+      "name": "guardController.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/src/__tests__/guardController.test.ts",
       "related": [],
       "parent": "runtime/src/__tests__"
     },
@@ -28167,6 +28998,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/src/__tests__/siftVerdictFlip.test.ts",
+      "related": [],
+      "parent": "runtime/src/__tests__"
+    },
+    {
+      "path": "runtime/src/__tests__/symbiosis.test.ts",
+      "name": "symbiosis.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/src/__tests__/symbiosis.test.ts",
       "related": [],
       "parent": "runtime/src/__tests__"
     },
@@ -28372,10 +29214,12 @@
         "runtime/src/types/explainable.ts",
         "runtime/src/types/fractal.ts",
         "runtime/src/types/guard.ts",
+        "runtime/src/types/guardController.ts",
         "runtime/src/types/metrics.ts",
         "runtime/src/types/protocols.ts",
         "runtime/src/types/sift.ts",
         "runtime/src/types/siftExtended.ts",
+        "runtime/src/types/symbiosis.ts",
         "runtime/src/types/voices.ts",
         "runtime/src/types/xcode.ts"
       ]
@@ -28483,6 +29327,17 @@
       "parent": "runtime/src/types"
     },
     {
+      "path": "runtime/src/types/guardController.ts",
+      "name": "guardController.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/src/types/guardController.ts",
+      "related": [],
+      "parent": "runtime/src/types"
+    },
+    {
       "path": "runtime/src/types/metrics.ts",
       "name": "metrics.ts",
       "kind": "file",
@@ -28523,6 +29378,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/src/types/siftExtended.ts",
+      "related": [],
+      "parent": "runtime/src/types"
+    },
+    {
+      "path": "runtime/src/types/symbiosis.ts",
+      "name": "symbiosis.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/src/types/symbiosis.ts",
       "related": [],
       "parent": "runtime/src/types"
     },
@@ -32256,7 +33122,8 @@
       "parent": "supabase",
       "children": [
         "supabase/functions/_shared",
-        "supabase/functions/embed"
+        "supabase/functions/embed",
+        "supabase/functions/iskra-memory-gateway"
       ]
     },
     {
@@ -32310,6 +33177,55 @@
       "parent": "supabase/functions/embed"
     },
     {
+      "path": "supabase/functions/iskra-memory-gateway",
+      "name": "iskra-memory-gateway",
+      "kind": "directory",
+      "layer": "backend",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway",
+      "related": [],
+      "parent": "supabase/functions",
+      "children": [
+        "supabase/functions/iskra-memory-gateway/README.md",
+        "supabase/functions/iskra-memory-gateway/index.ts",
+        "supabase/functions/iskra-memory-gateway/manifest.json"
+      ]
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "backend",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/README.md",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/index.ts",
+      "name": "index.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/index.ts",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/manifest.json",
+      "name": "manifest.json",
+      "kind": "file",
+      "layer": "backend",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/manifest.json",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
       "path": "supabase/migration_archive",
       "name": "migration_archive",
       "kind": "directory",
@@ -32322,7 +33238,8 @@
       "children": [
         "supabase/migration_archive/20260301141500_memory_nodes_pgvector_hnsw.sql",
         "supabase/migration_archive/20260308000000_legacy_data_migration.sql",
-        "supabase/migration_archive/20260308000001_rate_limiting.sql"
+        "supabase/migration_archive/20260308000001_rate_limiting.sql",
+        "supabase/migration_archive/deprecated_graphrag_migration_2026-06-26.sql"
       ]
     },
     {
@@ -32359,6 +33276,17 @@
       "parent": "supabase/migration_archive"
     },
     {
+      "path": "supabase/migration_archive/deprecated_graphrag_migration_2026-06-26.sql",
+      "name": "deprecated_graphrag_migration_2026-06-26.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migration_archive/deprecated_graphrag_migration_2026-06-26.sql",
+      "related": [],
+      "parent": "supabase/migration_archive"
+    },
+    {
       "path": "supabase/migrations",
       "name": "migrations",
       "kind": "directory",
@@ -32370,6 +33298,7 @@
       "parent": "supabase",
       "children": [
         "supabase/migrations/20260101000000_schema.sql",
+        "supabase/migrations/20260301141501_memory_nodes_live_shape.sql",
         "supabase/migrations/20260305000000_graph_nodes.sql",
         "supabase/migrations/20260309091308_20260308000000_legacy_data_migration.sql",
         "supabase/migrations/20260309091342_20260308000001_rate_limiting.sql",
@@ -32394,6 +33323,11 @@
         "supabase/migrations/20260628181804_release_auth_rls_hardening.sql",
         "supabase/migrations/20260701000000_vomega7_1_metrics_baseline_defaults.sql",
         "supabase/migrations/20260701010000_vomega7_1_rls_policy_advisor_cleanup.sql",
+        "supabase/migrations/20260709170000_closed_beta_access_boundary.sql",
+        "supabase/migrations/20260709180000_audit_log_append_only.sql",
+        "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
+        "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
+        "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
         "supabase/migrations/README_LEGACY_DATA_MIGRATION.sql"
@@ -32407,6 +33341,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260101000000_schema.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260301141501_memory_nodes_live_shape.sql",
+      "name": "20260301141501_memory_nodes_live_shape.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260301141501_memory_nodes_live_shape.sql",
       "related": [],
       "parent": "supabase/migrations"
     },
@@ -32671,6 +33616,61 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260701010000_vomega7_1_rls_policy_advisor_cleanup.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260709170000_closed_beta_access_boundary.sql",
+      "name": "20260709170000_closed_beta_access_boundary.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260709170000_closed_beta_access_boundary.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260709180000_audit_log_append_only.sql",
+      "name": "20260709180000_audit_log_append_only.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260709180000_audit_log_append_only.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
+      "name": "20260709190000_iskra_memory_gateway_rpc_contract.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
+      "name": "20260710100000_ai_edge_quota_boundary.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
+      "name": "20260710110000_graph_shared_row_guard.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
       "related": [],
       "parent": "supabase/migrations"
     },
@@ -33162,6 +34162,7 @@
         "tools/verify_ledger.ts",
         "tools/verify_sot40_receipt.py",
         "tools/verify_sot40_scope.py",
+        "tools/verify_supabase_contract_sources.test.ts",
         "tools/verify_supabase_graph_contract.ts",
         "tools/verify_supabase_voice_metrics_contract.ts"
       ]
@@ -33722,6 +34723,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/verify_sot40_scope.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/verify_supabase_contract_sources.test.ts",
+      "name": "verify_supabase_contract_sources.test.ts",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/verify_supabase_contract_sources.test.ts",
       "related": [],
       "parent": "tools"
     },
