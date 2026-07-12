@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-12T11:04:19.543Z",
-  "total": 2790,
+  "generatedAt": "2026-07-12T13:26:44.736Z",
+  "total": 2797,
   "curated": 20,
   "layers": {
     "root": 334,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 54,
+    "governance": 61,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -20960,6 +20960,9 @@
         "governance/adr_20260629_iskra_selfhood_mechanics_hardening.md",
         "governance/adr_20260701_iskra_vomega_7_1_runtime_unification.md",
         "governance/adr_20260711_iskraspace_symbiosis_contract.md",
+        "governance/adr_20260712_iskra_constitution_v1_activation.md",
+        "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
+        "governance/adr_20260712_iskra_constitution_v1_redline.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -20968,6 +20971,9 @@
         "governance/changelog.md",
         "governance/codex_local_operating_contract.md",
         "governance/governance_pack.md",
+        "governance/iskra_constitution_v1_annexes.md",
+        "governance/iskra_constitution_v1_core.md",
+        "governance/iskra_constitution_v1_transition_schedule.md",
         "governance/memory_stack.md",
         "governance/policy.md",
         "governance/update_protocol.md"
@@ -21243,6 +21249,39 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260712_iskra_constitution_v1_activation.md",
+      "name": "adr_20260712_iskra_constitution_v1_activation.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260712_iskra_constitution_v1_activation.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
+      "name": "adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260712_iskra_constitution_v1_redline.md",
+      "name": "adr_20260712_iskra_constitution_v1_redline.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260712_iskra_constitution_v1_redline.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21376,7 +21415,8 @@
         "governance/changelog.d/2026-06-26-repeatable-surface-diagnostics.md",
         "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md",
         "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md",
-        "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md"
+        "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md",
+        "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md"
       ]
     },
     {
@@ -21468,6 +21508,17 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+      "name": "2026-07-12-iskra-constitution-v1-redline.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -21497,6 +21548,39 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/governance_pack.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/iskra_constitution_v1_annexes.md",
+      "name": "iskra_constitution_v1_annexes.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/iskra_constitution_v1_annexes.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/iskra_constitution_v1_core.md",
+      "name": "iskra_constitution_v1_core.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/iskra_constitution_v1_core.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/iskra_constitution_v1_transition_schedule.md",
+      "name": "iskra_constitution_v1_transition_schedule.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/iskra_constitution_v1_transition_schedule.md",
       "related": [],
       "parent": "governance"
     },

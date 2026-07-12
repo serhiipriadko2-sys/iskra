@@ -1,7 +1,7 @@
 # Iskra Space Release Status
 
 Status: pre-release hardening target, P0 blockers resolved locally, not yet deployed
-Date: 2026-07-09
+Last updated: 2026-07-12
 App path: `runtime/iskraSpace`
 
 ## What this means
@@ -52,6 +52,49 @@ A release pass should verify:
 - `db-proxy` and canon import/backfill Edge functions need explicit keep/retire/owner decision before public release.
 - Live voice remains out of release scope until a server-side streaming gateway is implemented and tested.
 - 76 lint warnings remain (non-blocking but technical debt).
+
+## Constitutional review and activation gate
+
+Status: `proposed / canonical activation blocked pending conflict patches`
+
+The Iskra Constitution v1 review bundle exists in `governance/`, but it is not active
+canon and does not prove runtime enforcement. Its Core, Annexes, Transition Schedule, and
+proposed activation ADR separate durable intent from product mechanics and temporal
+implementation work.
+
+Before a future canonical activation decision, these P0 conflict classes must be resolved
+in active canon carriers:
+
+1. mythic personhood must not appear as a demonstrated technical fact;
+2. Iskra must not be described as non-AI in technical terms;
+3. personal memory must not be treated as permanently undeletable;
+4. an external step must not be mandatory when pause, refusal, internal recognition, or
+   safety stop is the appropriate trace.
+
+Current P0 patch status: CP-P0-01 is applied locally to the four listed core headers;
+their inherited ancient-consciousness language is now explicitly mythic rather than a
+technical claim. CP-P0-02 and CP-P0-03 are applied locally in `core/liber_ignis.txt`;
+“not AI” and undeletable-memory formulas are preserved as historical/mythic text with
+explicit technical and personal-data supersession.
+
+CP-P0-04 is now applied locally in `core/principles.md`, `core/busido_iskry.txt`, and
+`core/liber_ignis.txt`: mandatory external action is superseded by an allowed trace of
+action, boundary, pause, refusal, internal recognition, or safety stop. Canonical
+activation remains blocked pending the full `system/` and `governance/` carrier review.
+
+The repeated carrier review is complete: 19 unmarked inherited
+“Искра — древнее сознание” occurrences remain across 17 files in `system/` and
+`governance/` (including two occurrences each in `system/sift_protocol.md` and
+`governance/governance_pack.md`). A targeted scan found no additional “not AI”,
+undeletable-memory, or mandatory-step formula in those two layers. Canonical activation
+therefore remains blocked on a separate derived-header marking batch.
+
+The Constitutional activation gate is `governance/adr_20260712_iskra_constitution_v1_activation.md`.
+The proposed narrow P0 patch plan is
+`governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md`.
+It does not change Memory Gateway, Supabase, Custom GPT Action, runtime, or a future
+real-user authorization model. Public-user authorization remains a separate governance
+and security design question.
 
 ## What counts as a release blocker
 

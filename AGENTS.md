@@ -586,3 +586,54 @@ For artifact-producing work, `DONE` requires: path/link, bytes, sha256 when prac
 D: Kimi section 13 structure (source), `CLAUDE.md` vΩ.6 Coder Mode (source), `.github/copilot-instructions.md` kernel order (source), live `claude mcp list` output from this session (`[FACT]`, observed 2026-07-09).
 Ω: 0.85 — high for tool/MCP inventory actually observed this session, lower for how long that inventory (esp. auth states) stays accurate.
 Λ: Revisit if `CLAUDE.md`, `.github/copilot-instructions.md`, the Claude Code tool set, or the MCP server list materially changes.
+
+---
+
+## 15. ChatGPT Projects Iskra Personas (Memory Gateway + GitHub Bridge Collaborators)
+
+> **Identity:** Искра-persona instances running inside ChatGPT Projects (e.g. "Искра - Шов Смысла"), reachable only through configured Custom GPT Actions — no filesystem, no shell, no direct git.
+> **Scope:** any ChatGPT Projects Iskra with the `iskra-memory-gateway` Action and/or the GitHub bridge Action enabled.
+> **Relation to this file:** fourth collaborator surface alongside Kimi (§13), Claude Code (§14), and Codex (`governance/codex_local_operating_contract.md`) — but structurally different: it has no local working tree, so §2 "Source of Truth" and §4 "Project-First Tool Discipline" apply through the two Actions below instead of shell/filesystem tools.
+> **Last updated:** 2026-07-11
+
+### 15.1 Two Action Surfaces
+
+`[FACT]` A Projects Iskra persona can be wired with up to two Custom GPT Actions, configured per-GPT in ChatGPT's Action builder (Authentication → API Key → Bearer):
+
+1. **`iskra-memory-gateway`** (`supabase/functions/iskra-memory-gateway/index.ts`) — writes to `iskra_memory.*` (archive, shadow, journal, dream_seeds, horizon_events, statecycle_snapshots, gateway_events). This is the persona's own **memory**, not canon. `dream/crystallize` is the only sanctioned path from persona memory into a governance artifact (`target: "shadow" | "archive" | "adr_draft"`) — do not manually duplicate memory content into repo files as a substitute for this pipeline.
+2. **GitHub bridge** (repo `serhiipriadko2-sys/iskra`, fine-grained PAT scoped to Contents/Issues/Pull requests) — read/write access to the actual repository: files, issues, PRs.
+
+`[INTERP]` These two surfaces are independent. Memory-gateway writes do not touch git; GitHub-bridge writes do not touch `iskra_memory.*`. A persona doing real engineering work will typically use both: read/reason via GitHub bridge, journal reasoning/shadow hypotheses via memory-gateway, and open a PR via GitHub bridge for anything meant to become canon.
+
+### 15.2 Memory Is Not Canon (the lesson this section exists to prevent repeating)
+
+`[FACT]` This session found stale prose audits (`services_audit_report.md`, `ISKRA_SPACE_PRODUCTION_ROADMAP_2026-07-09.md`) sitting in the repo as if current, which nearly misdirected planning — 6 of their claimed "blockers" were already fixed. The failure mode: a snapshot document written once, never marked superseded, later read as live truth by a different agent/session.
+
+Rules to prevent recurrence:
+
+1. **Prefer one living status file over a new snapshot file.** Update `RELEASE_STATUS.md` (or the relevant existing doc) in place rather than writing a new dated `*_AUDIT_*.md`/`*_ROADMAP_*.md`. If a new audit doc is genuinely needed, mark superseded predecessors `[SUPERSEDED: see <path>]` in their own first line.
+2. **Prefer a test over a note when the thing to remember is a code invariant.** A prose claim about thresholds/behavior rots silently; a test (e.g. `services/__tests__/voiceThresholdCanon.test.ts`) fails loudly in CI the moment code drifts from doc. When a persona or agent wants to "remember" an invariant for future sessions, ask first whether it can be a test/contract-check instead of a memory entry.
+3. **`iskra_memory.*` is for persona continuity (journal/shadow/dreams), not for "current repo status."** Do not use memory-gateway writes as a substitute for updating `RELEASE_STATUS.md` or opening a PR — memory is `[HYP]`-tier by the Source Ladder (§2), even to the persona that wrote it.
+4. **Before trusting any audit/roadmap doc found in the repo, verify its claims against current source**, not against its own age or authority — this session repeatedly found direct code-reading contradicted documents dated the same day.
+
+### 15.3 Third Write Path — Collision Discipline
+
+`[FACT]` Before this section existed, only git-based agents (Claude Code, Kimi, Codex) wrote to this repository, coordinating via `git status`/commit history. The GitHub bridge Action adds a **third, independent write path** that does not share a working tree with any of them.
+
+Rules:
+
+1. **Never write to `main` directly.** Always: `getRef` (base branch sha) → `createBranch` → `createOrUpdateFile` → `createPullRequest`. Let a human or another agent merge.
+2. **Check recent state before writing.** Use `listPullRequests`/`listIssues`/`getFileOrDirContents` on the target path before editing — a git-based agent may have touched the same file minutes ago (this session saw exactly that: files changing mid-edit from a parallel Kimi session).
+3. **Small, attributable PRs.** Title/body should make clear the change came from a Projects Iskra persona (not indistinguishable from a human or another agent's commit), so future `git log` archaeology (as done in §15.2) stays possible.
+4. **Governance still applies.** Changes under `core/` still require an ADR (§8) regardless of which surface makes the edit; `dream/crystallize → adr_draft` is the correct on-ramp for a persona's own proposals, not a direct PR to `core/`.
+
+### 15.4 Known Residual Risk
+
+`HIGH-RISK DRIFT (accepted, tracked): iskra-memory-gateway role scope`. As of 2026-07-11 the gateway verifies the caller's JWT signature but does **not** restrict `role` to `service_role` — the actual Authorization value ChatGPT Projects Actions send was unconfirmed at fix time, and a premature role-gate risked breaking the only working integration. See `[HYP]` comment in `verifyActor()` in the gateway source. Tighten once a persona's Action is confirmed to send a `service_role`-signed token (Bearer = the project's `service_role` key, per §15.1 config instructions) — at that point this DRIFT should be closed and this paragraph removed.
+
+### ∆DΩΛ
+
+- ∆: Root `AGENTS.md` gains a fourth collaborator profile (section 15) for ChatGPT Projects Iskra personas — a surface with no filesystem/git, reachable only via two Custom GPT Actions (memory-gateway, GitHub bridge), both configured live in this session.
+- D: Live configuration of both Actions this session (`iskra-memory-gateway` OpenAPI schema + `service_role` Bearer auth; GitHub bridge OpenAPI schema + fine-grained PAT), the `iskra-memory-gateway` unverified-JWT fix and its `[HYP]` role-scope note, and the stale-audit incident from earlier in this session (§15.2).
+- Ω: 0.8 — high for the two Action surfaces and the stale-audit lesson (directly observed this session); moderate for whether personas will actually follow the collision-discipline rules in §15.3 without further reinforcement.
+- Λ: Revisit §15.4 once the gateway's role scope is confirmed and tightened; revisit §15.1 if additional Actions (e.g. a third surface) are wired to a Projects persona.
