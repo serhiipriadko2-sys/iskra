@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-12T13:26:44.736Z",
-  "total": 2797,
+  "generatedAt": "2026-07-15T15:34:13.894Z",
+  "total": 2799,
   "curated": 20,
   "layers": {
     "root": 334,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 346,
+    "runtime": 348,
     "skills": 267,
     "backend": 63,
     "system": 26,
@@ -25575,6 +25575,7 @@
       "parent": "runtime/iskraSpace/__tests__",
       "children": [
         "runtime/iskraSpace/__tests__/components/ChatSecurityBoundary.test.tsx",
+        "runtime/iskraSpace/__tests__/components/ChatViewRedirectMessage.test.ts",
         "runtime/iskraSpace/__tests__/components/CouncilView.test.tsx",
         "runtime/iskraSpace/__tests__/components/IskraStateView.test.tsx",
         "runtime/iskraSpace/__tests__/components/JournalSecurityBoundary.test.tsx",
@@ -25589,6 +25590,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/__tests__/components/ChatSecurityBoundary.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/ChatViewRedirectMessage.test.ts",
+      "name": "ChatViewRedirectMessage.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/ChatViewRedirectMessage.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/__tests__/components"
     },
@@ -27238,6 +27250,7 @@
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
+        "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts",
         "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts",
         "runtime/iskraSpace/services/__tests__/syncService.test.ts",
         "runtime/iskraSpace/services/__tests__/userMetricsService.test.ts",
@@ -27717,6 +27730,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts",
+      "name": "supabaseServiceLayerNormalization.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
