@@ -42,9 +42,10 @@ The current conflict register and activation decision boundary are maintained in
 The classes 4–9 review found two missed textual conflicts and three material runtime
 proof gaps. Shadow and mandatory-step text received preservation-first supersession;
 Shadow promotion was open in the immutable conflict-register baseline; its narrow
-repository integration is now specified by proposed ADR-20260715-03 and remains pending
-merge/post-merge verification. Exit-pressure application integration and unknown-safe
-user metrics remain open. This review does not activate the Constitution.
+repository integration is specified by proposed ADR-20260715-03 and is merged with green
+post-merge gates at `d42c53ef43a3e08a08c7177d39dfb9a41ae6d340`.
+Exit-pressure application integration and unknown-safe user metrics remain open. This
+review does not activate the Constitution.
 ADR-20260715-02 records Owner acceptance of the exact
 register at merge `ba662eabf1076e940cdbb07f3912dfb732fb881e`, raw Git blob SHA-256
 `0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624`, and the
@@ -98,14 +99,15 @@ classes_4_9_conflict_register:
   delivery_evidence: merged
 shadow_promotion_boundary:
   governance_status: proposed
-  delivery_evidence: tested
+  delivery_evidence: merged
   live_evidence: not_invoked
 ```
 
 The constitutional review bundle and activation decision remain proposed. The classes
 4–9 conflict register alone is Owner-accepted through ADR-20260715-02. The Shadow status
-above is a repository-tested claim for the current changeset only; no database,
-connector, Action, deployment, invocation, or verified-live status is asserted here.
+above is a merged repository-tested claim for the exact receipt in ADR-20260715-03; no
+database, connector, Action, deployment, invocation, or verified-live status is asserted
+here.
 
 ## 5. Rollback
 

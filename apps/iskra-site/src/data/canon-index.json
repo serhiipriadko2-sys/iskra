@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-15T19:36:35.678Z",
-  "total": 2833,
+  "generatedAt": "2026-07-15T19:54:03.127Z",
+  "total": 2834,
   "curated": 20,
   "layers": {
     "root": 334,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 67,
+    "governance": 68,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -21755,7 +21755,8 @@
         "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
         "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
         "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
-        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md"
+        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
+        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md"
       ]
     },
     {
@@ -21887,6 +21888,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
+      "name": "2026-07-15-iskraspace-shadow-promotion-receipt.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
