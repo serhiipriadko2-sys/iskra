@@ -129,7 +129,9 @@ export function enforceDeltaProtocol(text: string, fallbackContext?: {
   // Generate fallback block
   const fallbackBlock = generateDeltaBlock({
     delta: fallbackContext?.topic || 'Резонанс сохраняется',
-    confidence: fallbackContext?.confidence || DEFAULT_OMEGA_CONFIDENCE,
+    // Nullish coalescing (not ||): a genuine confidence of 0 is a valid signal
+    // and must not be silently replaced by the default.
+    confidence: fallbackContext?.confidence ?? DEFAULT_OMEGA_CONFIDENCE,
     nextStep: 'Рефлексия в дневнике',
     source: 'dialog',
     inference: 'synthesis',
