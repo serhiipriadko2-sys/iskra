@@ -67,11 +67,13 @@ describe('Constitution v1 carrier-review contract', () => {
 
   it('keeps the living status on the verified post-merge baseline', () => {
     const status = readRepoFile('runtime/iskraSpace/RELEASE_STATUS.md');
+    const normalizedStatus = status.replace(/\r\n/g, '\n');
 
     expect(status).toContain('d42c53ef43a3e08a08c7177d39dfb9a41ae6d340');
     expect(status).toContain('29445858079');
-    expect(status).toContain('shadow_promotion_boundary:');
-    expect(status).toContain('delivery_evidence: merged');
+    expect(normalizedStatus).toContain(
+      'shadow_promotion_boundary:\n  governance_status: proposed\n  delivery_evidence: merged\n  live_evidence: not_invoked',
+    );
     expect(status).not.toContain('production audit gate under repair');
     expect(status).toContain('canonical_activation: blocked');
   });
