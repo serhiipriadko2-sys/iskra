@@ -19,19 +19,19 @@ Other repository areas may still be important, but they are treated as internal 
 
 ## Current verified baseline
 
-- Verified `main` commit: `1c5f0c44d0ca9e288dee9f126dd6b5b008fbabb1`
-  (merge commit for PR #258, Owner acceptance receipt for the immutable register).
+- Verified implementation baseline: `d42c53ef43a3e08a08c7177d39dfb9a41ae6d340`
+  (merge commit for Shadow promotion boundary PR #260).
 - Target baseline: `2067452527647a7ecfb6c26b2ebed98e3cb5fc12`.
 - Canonical package manager: `pnpm` (`packageManager: pnpm@10.32.1`).
 - The root dependency gate uses pinned `pnpm@11.13.0` with
   `--pm-on-fail=ignore` only as the supported npm bulk-advisory client; workspace install
   and all other package operations remain on the declared pnpm 10 version.
-- Post-merge GitHub receipts on `1c5f0c44d0ca9e288dee9f126dd6b5b008fbabb1`
+- Post-merge GitHub receipts on `d42c53ef43a3e08a08c7177d39dfb9a41ae6d340`
   (2026-07-15):
-  - [SoT integrity run 29440668365](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29440668365) — success;
-  - [Runtime CI run 29440668256](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29440668256) — success;
-  - [iskraSpace CI run 29440668286](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29440668286) — success;
-  - [Production Deployment run 29440668187](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29440668187) — release-gate job success.
+  - [SoT integrity run 29445858093](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29445858093) — success;
+  - [Runtime CI run 29445858146](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29445858146) — success;
+  - [iskraSpace CI run 29445858149](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29445858149) — success, including Chromium E2E;
+  - [Production Deployment run 29445858079](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29445858079) — release-gate job success.
 - Production Deployment passed install, legacy runtime build/tests, IskraSpace typecheck,
   strict lint, unit tests twice, Deno checks, both dependency audits, Supabase repository
   contracts, ledger, production build, and Chromium E2E. Docker smoke/GHCR promotion and
@@ -70,8 +70,8 @@ A release pass should verify:
 - The canonical GHCR Docker image has not been produced from this changeset.
 - Shadow promotion is repository-integrated in the current changeset through evidence +
   SIFT preflight, explicit one-use consent, read-back, and a persistent action receipt.
-  Merge, post-merge CI, deployed invocation, and verified-live behavior remain pending;
-  see proposed ADR-20260715-03.
+  PR #260 is merged and post-merge CI is green. Deployment, live invocation, and
+  verified-live behavior remain pending; see proposed ADR-20260715-03.
 - Initial IskraSpace user metrics are numeric defaults without observation provenance or
   an `unknown` state; a separate unknown-safe metrics changeset is required.
 - Canonical activation of Constitution v1 remains a separate Owner decision; textual P0
@@ -88,7 +88,7 @@ classes_4_9_conflict_register:
   delivery_evidence: merged
 shadow_promotion_boundary:
   governance_status: proposed
-  delivery_evidence: tested
+  delivery_evidence: merged
   live_evidence: not_invoked
 canonical_activation: blocked
 runtime_enforcement: partial / not verified live
@@ -147,10 +147,11 @@ complete runtime-enforcement claim.
 
 The accepted register remains an immutable baseline: its `CR-P0-04` row correctly
 records the conflict observed at that merge. Proposed ADR-20260715-03 is the separate
-delivery artifact for the current Shadow runtime patch. Local deterministic policy,
-storage, source-contract, and behavioral DOM tests are green; until merge and post-merge
-receipts exist, this is `delivery_evidence: tested`, not `merged`, `deployed`, `invoked`,
-or `verified_live`. Unknown-safe metrics (`CR-P0-08`) and the remaining relational/UI
+delivery artifact for the current Shadow runtime patch. Deterministic policy, storage,
+source-contract, and behavioral DOM tests are green locally and in post-merge CI at
+`d42c53ef43a3e08a08c7177d39dfb9a41ae6d340`. This is
+`delivery_evidence: merged`, not `deployed`, `invoked`, or `verified_live`.
+Unknown-safe metrics (`CR-P0-08`) and the remaining relational/UI
 integration gaps continue to block a complete runtime-enforcement claim.
 
 The Constitutional activation gate is `governance/adr_20260712_iskra_constitution_v1_activation.md`.
