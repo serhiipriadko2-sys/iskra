@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-15T17:50:21.190Z",
-  "total": 2802,
+  "generatedAt": "2026-07-15T18:22:42.599Z",
+  "total": 2804,
   "curated": 20,
   "layers": {
     "root": 334,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 63,
+    "governance": 65,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -20963,6 +20963,7 @@
         "governance/adr_20260712_iskra_constitution_v1_activation.md",
         "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
         "governance/adr_20260712_iskra_constitution_v1_redline.md",
+        "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
         "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
@@ -21283,6 +21284,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
+      "name": "adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
       "name": "adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
       "kind": "file",
@@ -21429,6 +21441,7 @@
         "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md",
         "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md",
         "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+        "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
         "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md"
       ]
     },
@@ -21528,6 +21541,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
+      "name": "2026-07-15-constitution-carrier-review-acceptance.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
       "related": [],
       "parent": "governance/changelog.d"
     },

@@ -43,7 +43,12 @@ The classes 4–9 review found two missed textual conflicts and three material r
 proof gaps. Shadow and mandatory-step text received preservation-first supersession;
 Shadow promotion integration, exit-pressure application integration, and unknown-safe
 user metrics remain open under the exact statuses in the conflict register. This review
-does not activate the Constitution.
+does not activate the Constitution. ADR-20260715-02 records Owner acceptance of the exact
+register at merge `ba662eabf1076e940cdbb07f3912dfb732fb881e`, raw Git blob SHA-256
+`0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624`, and the
+Owner-supplied equivalent Windows CRLF digest `10227394...` as a governance audit
+baseline only. It does not accept an exact Constitution Core version or assert runtime
+enforcement.
 
 ## 2. Runtime implementation map
 
@@ -83,11 +88,17 @@ presented as completed capability.
 The authoritative status for this redline is:
 
 ```text
-governance_status: proposed
-delivery_evidence: implemented (documentation review bundle only)
+constitutional_bundle:
+  governance_status: proposed
+  delivery_evidence: implemented
+classes_4_9_conflict_register:
+  governance_status: accepted
+  delivery_evidence: merged
 ```
 
-No runtime, database, connector, Action, or deployment status is asserted by this file.
+The constitutional review bundle and activation decision remain proposed. The classes
+4–9 conflict register alone is Owner-accepted through ADR-20260715-02. No runtime,
+database, connector, Action, or deployment status is asserted by this file.
 
 ## 5. Rollback
 

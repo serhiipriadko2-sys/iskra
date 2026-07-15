@@ -42,10 +42,12 @@ GPT Action, or user authorization.
 
 The 2026-07-15 review is recorded in
 `governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md`.
-This activation gate remains blocked because that register is proposed and no exact Owner
-acceptance has been recorded. Its open Shadow and metrics findings separately block a
-claim of complete runtime enforcement; they may not be silently converted into a
-canonical-compliance claim.
+ADR-20260715-02 records Owner acceptance of its exact merge and SHA-256 as the conflict
+register and governance audit baseline. This satisfies only the register-acceptance
+condition. The activation gate remains blocked because no exact Constitution Core
+version or separate activation decision has been accepted. The register's open Shadow,
+metrics, and relational/UI findings separately block a claim of complete runtime
+enforcement; they may not be silently converted into a canonical-compliance claim.
 
 ## P1 enforcement conditions
 
@@ -103,4 +105,5 @@ own documented reversal path; no rollback may silently restore a P0 contradictio
 ∆: canonical activation changes from an implicit next step into an explicit blocked gate.
 D: ADR-20260712-01, `RELEASE_STATUS.md`, active SoT carrier search, and ADR-20260711-02.
 Ω: 0.94 for the governance gate; 0 for any unperformed canonical or runtime activation.
-Λ: reconsider only after all P0 conflict patches and an explicit Owner acceptance.
+Λ: prepare an activation decision only after Owner names an exact Core version and
+explicitly decides how the accepted open runtime findings constrain activation scope.
