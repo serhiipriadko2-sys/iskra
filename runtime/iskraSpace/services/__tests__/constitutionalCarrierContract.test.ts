@@ -75,9 +75,10 @@ describe('Constitution v1 carrier-review contract', () => {
   });
 
   it('records exact Owner acceptance without activating Constitution or runtime enforcement', () => {
-    const receipt = readRepoFile(
-      'governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md',
-    );
+    const receiptPath =
+      'governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md';
+    expect(existsSync(join(repoRoot, receiptPath))).toBe(true);
+    const receipt = readRepoFile(receiptPath);
 
     expect(receipt).toContain('Status: accepted');
     expect(receipt).toContain('ba662eabf1076e940cdbb07f3912dfb732fb881e');
