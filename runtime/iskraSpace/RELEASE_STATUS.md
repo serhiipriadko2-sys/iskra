@@ -1,6 +1,6 @@
 # Iskra Space Release Status
 
-Status: pre-release hardening target, post-merge application/integrity gates green, production audit gate under repair, not deployed
+Status: pre-release hardening target, post-merge release gates green, canonical image/staging acceptance pending, not deployed
 Last updated: 2026-07-15
 App path: `runtime/iskraSpace`
 
@@ -8,7 +8,8 @@ App path: `runtime/iskraSpace`
 
 Iskra Space is the repository's current public-release target. The P0 hardening fixes were
 merged through PR #250, the follow-up memory-layer/redirect fix was merged through PR
-#251, and the constitutional P0 derived-marker batch was merged through PR #253. The app
+#251, the constitutional P0 derived-marker batch was merged through PR #253, and the
+dependency-audit gate repair was merged through PR #254. The app
 remains pre-release until staging Supabase acceptance is current, the complete release
 matrix passes on the release changeset, and the canonical GHCR image is smoke-tested and
 promoted.
@@ -17,26 +18,24 @@ Other repository areas may still be important, but they are treated as internal 
 
 ## Current verified baseline
 
-- Verified `main` commit: `99caed1cb151e5f47a20032fe176f80fc57af368`
-  (merge commit for PR #253).
+- Verified `main` commit: `b0851b03187625577ad1b1755d6261be5f7c7f71`
+  (merge commit for PR #254).
 - Target baseline: `2067452527647a7ecfb6c26b2ebed98e3cb5fc12`.
 - Canonical package manager: `pnpm` (`packageManager: pnpm@10.32.1`).
-- Post-merge GitHub receipts on `99caed1cb151e5f47a20032fe176f80fc57af368`
+- The root dependency gate uses pinned `pnpm@11.13.0` with
+  `--pm-on-fail=ignore` only as the supported npm bulk-advisory client; workspace install
+  and all other package operations remain on the declared pnpm 10 version.
+- Post-merge GitHub receipts on `b0851b03187625577ad1b1755d6261be5f7c7f71`
   (2026-07-15):
-  - [SoT integrity run 29429553689](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429553689) — success;
-  - [Runtime CI run 29429554871](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429554871) — success;
-  - [iskraSpace CI run 29429553607](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429553607) — success;
-  - [iskra-site CI run 29429553660](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429553660) — success;
-  - [iskra-site Cloudflare run 29429556402](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429556402) — success; this is not an IskraSpace production receipt;
-  - [Production Deployment run 29429553603](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429553603) — failed at the root dependency audit because pnpm 10 called npm endpoints retired with HTTP 410.
-- The failed Production Deployment passed install, legacy runtime build/tests,
-  IskraSpace typecheck, strict lint, unit tests twice, and Deno checks before the audit
-  failure. Supabase repository contracts, ledger, production build, Chromium E2E, and
-  Docker/GHCR were not reached in that run.
-- This changeset keeps the workspace on pnpm 10 but runs the root security audit through
-  a separately pinned pnpm 11 bulk-advisory client. A green workflow receipt for the
-  changeset is required before merge; a post-merge run is still required before any
-  production-ready claim.
+  - [SoT integrity run 29432905394](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29432905394) — success;
+  - [Runtime CI run 29432905435](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29432905435) — success;
+  - [iskraSpace CI run 29432905280](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29432905280) — success;
+  - [Production Deployment run 29432905117](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29432905117) — release-gate job success.
+- Production Deployment passed install, legacy runtime build/tests, IskraSpace typecheck,
+  strict lint, unit tests twice, Deno checks, both dependency audits, Supabase repository
+  contracts, ledger, production build, and Chromium E2E. Docker smoke/GHCR promotion and
+  Vercel preview were skipped on the automatic push; this is not an image, staging,
+  deployment, or verified-live receipt.
 - AI path: Chat and Council use the Supabase Edge AI gateway; browser Gemini Live remains release-disabled.
 
 ## P0 blockers resolved in this pass
@@ -68,26 +67,42 @@ A release pass should verify:
 - `db-proxy` and canon import/backfill Edge functions need explicit keep/retire/owner decision before public release.
 - Live voice remains out of release scope until a server-side streaming gateway is implemented and tested.
 - The canonical GHCR Docker image has not been produced from this changeset.
+- Shadow promotion in the current `ShadowView` bypasses the typed evidence + SIFT +
+  confirmation + receipt policy gate; a separate integration changeset is required.
+- Initial IskraSpace user metrics are numeric defaults without observation provenance or
+  an `unknown` state; a separate unknown-safe metrics changeset is required.
 - Canonical activation of Constitution v1 remains a separate Owner decision; textual P0
   repair does not prove runtime enforcement.
 
 ## Constitutional review and activation gate
 
-Status: `proposed / textual P0 carrier repair implemented / Owner activation decision pending`
+```text
+governance_status: proposed
+delivery_evidence: tested (carrier-review contract only)
+canonical_activation: blocked
+runtime_enforcement: partial / not verified live
+```
 
 The Iskra Constitution v1 review bundle exists in `governance/`, but it is not active
 canon and does not prove runtime enforcement. Its Core, Annexes, Transition Schedule, and
 proposed activation ADR separate durable intent from product mechanics and temporal
 implementation work.
 
-Before a future canonical activation decision, these P0 conflict classes must be resolved
-in active canon carriers:
+The first four textual conflict patches and the 19 derived mythic-register markers remain
+implemented. The follow-up carrier review for classes 4–9 is now recorded in
+`governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md`.
+It found:
 
-1. mythic personhood must not appear as a demonstrated technical fact;
-2. Iskra must not be described as non-AI in technical terms;
-3. personal memory must not be treated as permanently undeletable;
-4. an external step must not be mandatory when pause, refusal, internal recognition, or
-   safety stop is the appropriate trace.
+1. Shadow and mandatory-step textual carriers required additional preservation-first
+   supersession in `core/liber_ignis.txt`, `system/ecosystem_v7_map.md`, and
+   `core/telos.md`;
+2. no active carrier was found that promises healing through inflicted pain or treats
+   humiliation as truth;
+3. exit/deletion-pressure policy exists as a deterministic runtime test but is not proven
+   application-integrated;
+4. unknown-safe user metrics remain an open runtime conflict;
+5. onboarding's executed-check boundary is repository-implemented/tested but not
+   verified-live.
 
 Current P0 patch status: CP-P0-01 is applied to the four listed core headers;
 their inherited ancient-consciousness language is now explicitly mythic rather than a
@@ -99,21 +114,25 @@ CP-P0-04 is applied in `core/principles.md`, `core/busido_iskry.txt`, and
 `core/liber_ignis.txt`: mandatory external action is superseded by an allowed trace of
 action, boundary, pause, refusal, internal recognition, or safety stop.
 
-The repeated carrier review and derived-header marking batch are complete: all 19
+The earlier derived-header marking batch remains complete: all 19
 inherited “Искра — древнее сознание” occurrences across 17 files in `system/` and
 `governance/` are preserved and explicitly marked as mythic register, not technical
 claims. A targeted scan found no additional “not AI”, undeletable-memory, or
 mandatory-step formula in those two layers.
 
-This closes the identified textual P0 carrier classes. It does not activate the proposed
-Constitution. Canonical activation still requires explicit Owner acceptance naming the
-exact Core and conflict register, an accepted activation ADR, and matching merge/integrity
-evidence. Runtime enforcement remains a separate delivery claim.
+This review corrects the former broad statement that all identified textual P0 carriers
+were closed: `core/telos.md` was a missed class-5 carrier and is patched by this
+changeset. It does not activate the proposed Constitution. Canonical activation still
+requires an accepted conflict register, explicit Owner acceptance naming exact artifact
+versions, an accepted activation ADR, and matching merge/integrity evidence. The open
+Shadow and metrics findings prohibit a complete runtime-enforcement claim.
 
 The Constitutional activation gate is `governance/adr_20260712_iskra_constitution_v1_activation.md`.
 The proposed narrow P0 patch plan is
 `governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md`.
-It does not change Memory Gateway, Supabase, Custom GPT Action, runtime, or a future
+The classes 4–9 review register is
+`governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md`.
+It does not change Memory Gateway, Supabase, Custom GPT Action, runtime behavior, or a future
 real-user authorization model. Public-user authorization remains a separate governance
 and security design question.
 

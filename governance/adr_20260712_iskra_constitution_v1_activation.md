@@ -37,6 +37,15 @@ GPT Action, or user authorization.
 4. An explicit Owner acceptance names the exact Core version and the accepted conflict
    register.
 5. Ledger, canon index, changelog, and review gates are green on the activation changeset.
+6. The classes 4–9 conflict register is accepted at an exact version and does not hide an
+   unresolved active conflict behind a historical marker or an unqualified test claim.
+
+The 2026-07-15 review is recorded in
+`governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md`.
+This activation gate remains blocked because that register is proposed and no exact Owner
+acceptance has been recorded. Its open Shadow and metrics findings separately block a
+claim of complete runtime enforcement; they may not be silently converted into a
+canonical-compliance claim.
 
 ## P1 enforcement conditions
 
