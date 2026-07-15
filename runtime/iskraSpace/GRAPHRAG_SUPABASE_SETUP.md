@@ -16,21 +16,20 @@ This integration adds **persistent graph storage** to the GraphRAG service using
 
 ## Setup Instructions
 
-### 1. Run SQL Migration
+### 1. Use the canonical migration chain
 
-Execute the migration SQL to create tables and functions:
+Production DDL is defined only by the ordered files under
+`supabase/migrations/`. The archived GraphRAG script and the runtime
+`supabase/schema.sql` snapshot are historical references and must not be
+applied through psql or the Dashboard SQL editor.
+
+For a local disposable Supabase stack, replay the repository chain with the
+repo-local Supabase CLI. For staging or production, first reconcile migration
+history and obtain the explicit live-change approval required by `AGENTS.md`.
 
 ```bash
-# Option A: Via psql
-psql -h <YOUR_SUPABASE_HOST> \
-     -U postgres \
-     -d postgres \
-     -f apps/iskraspaceappMain/supabase_graphrag_migration.sql
-
-# Option B: Via Supabase Dashboard
-# 1. Go to https://app.supabase.com/project/<YOUR_PROJECT>/sql
-# 2. Paste contents of supabase_graphrag_migration.sql
-# 3. Click "Run"
+pnpm supabase:start
+pnpm exec supabase migration list --local
 ```
 
 ### 2. Verify Tables Created

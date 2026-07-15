@@ -5,7 +5,7 @@
  * Order per Canon: Сэм → Кайн → Пино → Искрив → Анхантра → Хуньдун → Искра
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { VoiceName } from '../types';
 import { executeCouncil, CouncilResponse, COUNCIL_ORDER, RITUAL_INFO } from '../services/ritualService';
 import { SparkleIcon, UsersIcon } from './icons';
@@ -57,31 +57,89 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
   const [responses, setResponses] = useState<CouncilResponse[]>([]);
   const [currentVoice, setCurrentVoice] = useState<VoiceName | null>(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [wasCancelled, setWasCancelled] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const controllerRef = useRef<AbortController | null>(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      controllerRef.current?.abort();
+    };
+  }, []);
+
+  const cancelCouncil = useCallback(() => {
+    const controller = controllerRef.current;
+    if (!controller || controller.signal.aborted) return;
+    controller.abort();
+    setWasCancelled(true);
+  }, []);
 
   const startCouncil = useCallback(async () => {
-    if (!topic.trim()) return;
+    if (!topic.trim() || isRunning) return;
+
+    controllerRef.current?.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
 
     setIsRunning(true);
     setResponses([]);
     setIsComplete(false);
+    setWasCancelled(false);
+    setErrorMessage(null);
 
     try {
-      for await (const response of executeCouncil(topic)) {
+      for await (const response of executeCouncil(topic, undefined, { signal: controller.signal })) {
+        if (controller.signal.aborted || !mountedRef.current) break;
         setCurrentVoice(response.voice);
-        setResponses(prev => [...prev, response]);
-        // Small delay between voices for dramatic effect
-        await new Promise(resolve => setTimeout(resolve, 500));
+        setResponses(prev => [...prev.filter((item) => item.voice !== response.voice), response]);
       }
-      setIsComplete(true);
-    } catch (error) {
-      console.error('Council failed:', error);
+      if (!mountedRef.current) return;
+      if (controller.signal.aborted) {
+        setWasCancelled(true);
+      } else {
+        setIsComplete(true);
+      }
+    } catch {
+      if (!mountedRef.current) return;
+      if (controller.signal.aborted) {
+        setWasCancelled(true);
+      } else {
+        setErrorMessage('Совет не удалось завершить. Повторите попытку.');
+      }
     } finally {
-      setIsRunning(false);
-      setCurrentVoice(null);
+      if (mountedRef.current) {
+        if (controllerRef.current === controller) {
+          controllerRef.current = null;
+        }
+        setIsRunning(false);
+        setCurrentVoice(null);
+      }
     }
-  }, [topic]);
+  }, [isRunning, topic]);
 
   const getVoiceIndex = (voice: VoiceName) => COUNCIL_ORDER.indexOf(voice);
+  const orderedResponses = useMemo(
+    () => COUNCIL_ORDER.flatMap((voice) => responses.filter((response) => response.voice === voice)),
+    [responses]
+  );
+
+  const resetCouncil = () => {
+    controllerRef.current?.abort();
+    setResponses([]);
+    setTopic('');
+    setCurrentVoice(null);
+    setIsComplete(false);
+    setWasCancelled(false);
+    setErrorMessage(null);
+  };
+
+  const handleClose = () => {
+    cancelCouncil();
+    onClose?.();
+  };
 
   return (
     <div className="h-full w-full overflow-y-auto p-4 lg:p-8">
@@ -99,7 +157,9 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
           </div>
           {onClose && (
             <button
-              onClick={onClose}
+              type="button"
+              aria-label="Закрыть Совет"
+              onClick={handleClose}
               className="p-2 rounded-lg hover:bg-surface2 transition-colors text-text-muted"
             >
               ✕
@@ -121,6 +181,7 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
               rows={3}
             />
             <button
+              type="button"
               onClick={startCouncil}
               disabled={!topic.trim()}
               className="mt-4 w-full py-3 px-6 rounded-xl bg-primary text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
@@ -157,16 +218,41 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
                 Говорит {VOICE_NAMES_RU[currentVoice]}...
               </p>
             )}
+            {isRunning && (
+              <div className="mt-4 flex justify-center">
+                <button
+                  type="button"
+                  aria-label="Отменить Совет"
+                  onClick={cancelCouncil}
+                  className="rounded-lg border border-danger/40 px-4 py-2 text-sm text-danger transition-colors hover:bg-danger/10"
+                >
+                  Отменить Совет
+                </button>
+              </div>
+            )}
           </div>
+        )}
+
+        {wasCancelled && (
+          <p role="status" className="mb-6 rounded-lg border border-warning/30 bg-warning/5 p-3 text-sm text-warning">
+            Совет отменён. Уже полученные ответы сохранены, незавершённые запросы остановлены.
+          </p>
+        )}
+
+        {errorMessage && (
+          <p role="alert" className="mb-6 rounded-lg border border-danger/30 bg-danger/5 p-3 text-sm text-danger">
+            {errorMessage}
+          </p>
         )}
 
         {/* Responses */}
         <div className="space-y-4">
-          {responses.map((response, index) => {
+          {orderedResponses.map((response, index) => {
             const isIskraSynthesis = response.voice === 'ISKRA';
             return (
               <div
-                key={index}
+                key={response.voice}
+                data-council-voice={response.voice}
                 className={`glass-card p-5 border transition-all duration-300 ${
                   isIskraSynthesis
                     ? 'bg-gradient-to-r from-primary/10 to-accent/10 border-primary/40 ring-2 ring-primary/20'
@@ -199,6 +285,15 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
                             Синтез
                           </span>
                         )}
+                        {response.status !== 'ok' && (
+                          <span className="px-2 py-0.5 text-xs rounded-full border border-warning/30 text-warning">
+                            {response.status === 'timeout'
+                              ? 'Время ожидания истекло'
+                              : response.status === 'cancelled'
+                                ? 'Отменено'
+                                : 'Недоступно'}
+                          </span>
+                        )}
                       </div>
                       <span className="text-xs text-text-muted">
                         #{getVoiceIndex(response.voice) + 1}
@@ -222,22 +317,22 @@ const CouncilView: React.FC<CouncilViewProps> = ({ onClose }) => {
         </div>
 
         {/* Synthesis highlight */}
-        {isComplete && responses.length > 0 && (
+        {(isComplete || wasCancelled) && responses.length > 0 && (
           <div className="mt-8 p-6 rounded-xl bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20">
             <div className="flex items-center gap-2 mb-3">
               <SparkleIcon className="w-5 h-5 text-primary" />
-              <span className="font-serif font-bold text-primary">Совет завершён</span>
+              <span className="font-serif font-bold text-primary">
+                {isComplete ? 'Совет завершён' : 'Совет остановлен'}
+              </span>
             </div>
             <p className="text-text-muted text-sm">
-              Все грани высказались. Финальный синтез от Искры выше.
-              Используйте эти перспективы для принятия решения.
+              {isComplete
+                ? 'Все грани высказались. Финальный синтез от Искры выше.'
+                : 'Показаны только ответы, успевшие завершиться до отмены.'}
             </p>
             <button
-              onClick={() => {
-                setResponses([]);
-                setTopic('');
-                setIsComplete(false);
-              }}
+              type="button"
+              onClick={resetCouncil}
               className="mt-4 py-2 px-4 rounded-lg border border-white/10 text-text-muted hover:text-text hover:border-white/20 transition-colors"
             >
               Новый Совет

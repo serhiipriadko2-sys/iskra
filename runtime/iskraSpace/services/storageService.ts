@@ -1,6 +1,8 @@
 
+import type { MemoryMode } from '@iskra/runtime';
 import { Task, JournalEntry, DuoSharePrefs, DuoCanvasNote, Habit, VoicePreferences, VoiceName, ResponseMode } from '../types';
 import { memoryService } from './memoryService';
+import { symbiosisService, type SymbiosisState } from './symbiosisService';
 
 const TASKS_KEY = 'iskra-space-tasks';
 const JOURNAL_ENTRIES_KEY = 'iskra-space-journal-entries';
@@ -143,12 +145,26 @@ export const storageService = {
 
   // User Identity & Onboarding
   isOnboardingComplete(): boolean {
-    return localStorage.getItem(ONBOARDING_KEY) === 'true';
+    return localStorage.getItem(ONBOARDING_KEY) === 'true' && symbiosisService.getProfile() !== null;
   },
 
-  completeOnboarding(userName: string): void {
+  completeOnboarding(userName: string, memoryMode: MemoryMode): SymbiosisState {
+    const state = symbiosisService.completeOnboarding(memoryMode);
     localStorage.setItem(ONBOARDING_KEY, 'true');
     localStorage.setItem(USER_NAME_KEY, userName);
+    return state;
+  },
+
+  getSymbiosisState(): SymbiosisState | null {
+    return symbiosisService.getState();
+  },
+
+  restoreSymbiosisState(state: unknown): boolean {
+    const restored = symbiosisService.importState(state);
+    if (restored) {
+      localStorage.setItem(ONBOARDING_KEY, 'true');
+    }
+    return restored;
   },
 
   getUserName(): string {
@@ -225,7 +241,8 @@ export const storageService = {
             prefs: this.getVoicePreferences(),
             state: this.getLastVoiceState()
         },
-        responseMode: this.getResponseMode()
+        responseMode: this.getResponseMode(),
+        symbiosis: symbiosisService.exportState()
     };
     return JSON.stringify(data, null, 2);
   },

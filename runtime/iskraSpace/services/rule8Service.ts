@@ -56,7 +56,7 @@ export class Rule8Service {
    */
   updateContextBeforeResponse(
     conversationHistory: Message[],
-    userFiles?: any[]
+    userFiles?: readonly unknown[]
   ): Rule8Context {
     // 1. Анализ последних 100 сообщений
     const recentMessages = conversationHistory.slice(-100);
@@ -103,7 +103,7 @@ export class Rule8Service {
       const newTopics = [...recentSet].filter(k => !previousSet.has(k));
       if (newTopics.length > 5) {
         // Significant topic shift detected
-        console.log('[Rule-8] Topic shift detected:', newTopics);
+        console.warn('[Rule-8] Topic shift detected:', newTopics);
       }
     }
   }
@@ -221,12 +221,14 @@ export class Rule8Service {
   /**
    * Проверка обновлений файлов
    */
-  private checkFileUpdates(userFiles?: any[]): FileChange[] {
+  private checkFileUpdates(userFiles?: readonly unknown[]): FileChange[] {
     if (!userFiles || userFiles.length === 0) return [];
 
     // Mock implementation - in real app would track actual file changes
     return userFiles.map(file => ({
-      path: file.name || 'unknown',
+      path: typeof file === 'object' && file !== null && 'name' in file && typeof file.name === 'string'
+        ? file.name
+        : 'unknown',
       change_type: 'modified' as const,
       timestamp: Date.now()
     }));

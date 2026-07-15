@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import postgres from "npm:postgres@3.4.5";
+import { jwtVerify } from "jsr:@panva/jose";
 
 type Json = Record<string, unknown>;
 type RouteHandler = (body: Json, actor: string) => Promise<unknown>;
@@ -55,20 +56,37 @@ function routeName(pathname: string): string {
   return last;
 }
 
-function decodeJwtPayload(authHeader: string | null): Json {
+// SECURITY: this gateway is called server-to-server (ChatGPT Projects backend),
+// not from a browser user session, so identity is a static service_role/anon
+// project key rather than a Supabase Auth user session. Those static keys are
+// HS256-signed JWTs verifiable against the project's legacy JWT secret; they
+// cannot be validated via the /auth/v1/user endpoint (that endpoint expects a
+// user session JWT, not a project key). Do NOT rely solely on the platform
+// `verify_jwt` function setting for identity binding — verify the signature
+// independently here.
+//
+// [HYP] Role scope is intentionally NOT restricted to service_role yet: the
+// actual Authorization value sent by the live ChatGPT Projects connector has
+// not been confirmed (custom GPT Actions/connectors may not forward a
+// service_role-signed token). Once that is verified, tighten this to require
+// role === "service_role" to match the Postgres grants in
+// supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql.
+const JWT_SECRET_RAW = Deno.env.get("SUPABASE_JWT_SECRET") ?? "";
+const JWT_SECRET_KEY = JWT_SECRET_RAW ? new TextEncoder().encode(JWT_SECRET_RAW) : null;
+
+async function verifyActor(authHeader: string | null): Promise<string> {
   const token = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1];
   if (!token) throw new Error("missing_authorization_bearer");
-  const payload = token.split(".")[1];
-  if (!payload) throw new Error("invalid_authorization_jwt");
-  const padded = payload.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(payload.length / 4) * 4, "=");
-  const decoded = atob(padded);
-  const parsed = JSON.parse(decoded);
-  if (!parsed || typeof parsed !== "object") throw new Error("invalid_authorization_claims");
-  return parsed as Json;
-}
+  if (!JWT_SECRET_KEY) throw new Error("jwt_secret_not_configured");
 
-function actorFromRequest(req: Request): string {
-  const claims = decodeJwtPayload(req.headers.get("authorization"));
+  let claims: Json;
+  try {
+    const verified = await jwtVerify(token, JWT_SECRET_KEY, { algorithms: ["HS256"] });
+    claims = verified.payload as Json;
+  } catch {
+    throw new Error("invalid_authorization_jwt");
+  }
+
   const role = typeof claims.role === "string" ? claims.role : "unknown";
   const subject = typeof claims.sub === "string" ? claims.sub : "";
   const ref = typeof claims.ref === "string" ? claims.ref : "";
@@ -225,6 +243,17 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(req) });
   if (req.method !== "POST") return json(req, { ok: false, error: "method_not_allowed" }, 405);
 
+  // Verify the JWT signature before touching the body or routing, so an
+  // unauthenticated caller cannot reach any handler. (Role is not yet gated
+  // here — see the [HYP] note on verifyActor above.)
+  let actor: string;
+  try {
+    actor = await verifyActor(req.headers.get("authorization"));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "unauthorized";
+    return json(req, { ok: false, error: message }, 401);
+  }
+
   const body = await req.json().catch(() => null) as Json | null;
   if (!body) return json(req, { ok: false, error: "invalid_json" }, 400);
 
@@ -242,7 +271,6 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const actor = actorFromRequest(req);
     const result = await handler(body, actor);
     return json(req, result ?? { ok: true });
   } catch (error) {

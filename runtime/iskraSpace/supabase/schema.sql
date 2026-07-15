@@ -1,3 +1,6 @@
+-- DEPRECATED: historical runtime schema snapshot - DO NOT APPLY.
+-- Production SQL source of truth is the ordered chain in supabase/migrations/.
+-- This file is retained for archaeology only and is excluded from release contracts.
 -- =============================================================================
 -- ISKRA SPACE APP - Supabase Database Schema
 -- =============================================================================

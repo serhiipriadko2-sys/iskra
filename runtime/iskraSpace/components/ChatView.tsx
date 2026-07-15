@@ -7,10 +7,12 @@ import { Message, IskraMetrics, Voice, VoiceName, SearchResult, VoicePreferences
 import { getActiveVoice, getVoiceSelectionExplanation } from '../services/voiceEngine';
 import { storageService } from '../services/storageService';
 import { securityService } from '../services/securityService';
+import { getAvailableResponseModes, isBetaCapabilityEnabled, normalizeResponseModeForBeta } from '../config/betaCapabilities';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import VoiceExplainableDisplay from './ExplainableTrace';
 import { createAudioContext, decode, decodeAudioData } from '../css/audioUtils';
 import { Volume2Icon, VolumeXIcon, SparkleIcon, XIcon } from './icons';
+import type { IntegrityState } from '../../src/types/guard.js';
 
 // Response mode display config
 const RESPONSE_MODE_DISPLAY: Record<ResponseMode, { label: string; icon: string; color: string }> = {
@@ -19,12 +21,37 @@ const RESPONSE_MODE_DISPLAY: Record<ResponseMode, { label: string; icon: string;
   debate: { label: 'Совет', icon: '👥', color: 'text-warning' },
 };
 
+const TTS_AVAILABLE = isBetaCapabilityEnabled('textToSpeech');
+
 const service = new IskraAIService();
 
 interface ChatViewProps {
   metrics: IskraMetrics;
   onUserInput: (input: string) => void;
 }
+
+interface PendingRedactedQuery {
+  sanitizedText: string;
+}
+
+const isStringArray = (value: unknown): value is string[] =>
+  Array.isArray(value) && value.every(item => typeof item === 'string');
+
+const isIntegrityState = (value: unknown): value is IntegrityState => {
+  if (typeof value !== 'object' || value === null) return false;
+
+  return (
+    'ok' in value &&
+    typeof value.ok === 'boolean' &&
+    'warnings' in value &&
+    isStringArray(value.warnings) &&
+    'missing' in value &&
+    isStringArray(value.missing) &&
+    'evidenceCount' in value &&
+    typeof value.evidenceCount === 'number' &&
+    (!('reasons' in value) || value.reasons === undefined || isStringArray(value.reasons))
+  );
+};
 
 // List of selectable voices (all 9 canonical voices)
 const AVAILABLE_VOICES: { name: VoiceName | 'AUTO', label: string }[] = [
@@ -56,7 +83,8 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   const [history, setHistory] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isTtsEnabled, setIsTtsEnabled] = useState(false);
+  const [pendingRedactedQuery, setPendingRedactedQuery] = useState<PendingRedactedQuery | null>(null);
+  const [isTtsEnabled, setIsTtsEnabled] = useState(TTS_AVAILABLE);
 
   // Voice State
   const [selectedVoiceName, setSelectedVoiceName] = useState<VoiceName | 'AUTO'>('AUTO');
@@ -64,18 +92,25 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   const [currentVoice, setCurrentVoice] = useState<Voice | null>(null);
 
   // Response Mode State
-  const [responseMode, setResponseMode] = useState<ResponseMode>(() => storageService.getResponseMode());
+  const [responseMode, setResponseMode] = useState<ResponseMode>(() => {
+    const persistedMode = storageService.getResponseMode();
+    const normalizedMode = normalizeResponseModeForBeta(persistedMode);
+    if (normalizedMode !== persistedMode) {
+      storageService.saveResponseMode(normalizedMode);
+    }
+    return normalizedMode;
+  });
 
   // Policy / Integrity observability (last turn)
-  const [lastPolicyDecision, setLastPolicyDecision] = useState<any | null>(null);
-  const [lastPostIntegrity, setLastPostIntegrity] = useState<any | null>(null);
+  const [lastPolicyDecision, setLastPolicyDecision] = useState<PolicyStreamResult['policy'] | null>(null);
+  const [lastPostIntegrity, setLastPostIntegrity] = useState<IntegrityState | null>(null);
   const [showVoiceWhy, setShowVoiceWhy] = useState(false);
 
-  // Cycle through response modes: simple → deep → debate → simple
+  // Cycle through beta-approved response modes only.
   const cycleResponseMode = () => {
-    const modes: ResponseMode[] = ['simple', 'deep', 'debate'];
+    const modes = getAvailableResponseModes();
     const currentIndex = modes.indexOf(responseMode);
-    const nextMode = modes[(currentIndex + 1) % modes.length];
+    const nextMode = modes[(currentIndex + 1) % modes.length] ?? 'simple';
     setResponseMode(nextMode);
     storageService.saveResponseMode(nextMode);
   };
@@ -129,6 +164,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   }, [metrics, selectedVoiceName, voicePrefs]);
 
   useEffect(() => {
+    if (!TTS_AVAILABLE) return;
     // Initialize AudioContext on mount
     outputAudioContextRef.current = createAudioContext(24000);
     return () => {
@@ -148,7 +184,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   };
   
   useEffect(() => {
-    if (!isTtsEnabled) {
+    if (TTS_AVAILABLE && !isTtsEnabled) {
         stopAndClearAudio();
     }
   }, [isTtsEnabled]);
@@ -176,7 +212,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   };
 
   const processSentenceForSpeech = async (sentence: string) => {
-    if (!isTtsEnabled || !sentence.trim() || !currentVoice) return;
+    if (!TTS_AVAILABLE || !isTtsEnabled || !sentence.trim() || !currentVoice) return;
     
     // Ensure context exists
     if (!outputAudioContextRef.current) {
@@ -211,31 +247,23 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
   };
 
 
-  const handleQuery = async (query: string, image?: string) => {
+  const dispatchSafeQuery = async (safeQuery: string, image?: string) => {
     // CRITICAL: Resume AudioContext immediately within the user interaction event loop
     // Ensure context is initialized
-    if (!outputAudioContextRef.current) {
-        outputAudioContextRef.current = createAudioContext(24000);
-    }
-    if (outputAudioContextRef.current?.state === 'suspended') {
-        outputAudioContextRef.current.resume().catch(() => {});
+    if (TTS_AVAILABLE) {
+      if (!outputAudioContextRef.current) {
+          outputAudioContextRef.current = createAudioContext(24000);
+      }
+      if (outputAudioContextRef.current?.state === 'suspended') {
+          outputAudioContextRef.current.resume().catch(() => {});
+      }
     }
 
     setError(null);
-    stopAndClearAudio();
-
-    // Security guardrails: scan user input before any AI or storage path
-    const security = securityService.validate(query);
-    if (security.action === 'REJECT') {
-      setError(`Ввод отклонён: ${security.reason || 'обнаружена попытка инъекции'}`);
-      return;
-    }
-    if (security.action === 'REDIRECT') {
-      setError(`Эта тема выходит за безопасный контур Искры (${security.reason}). Если тебе нужна помощь, обратись к человеку, которому доверяешь.`);
-      return;
+    if (TTS_AVAILABLE) {
+      stopAndClearAudio();
     }
 
-    const safeQuery = security.sanitizedText;
     const userMessage: Message = { role: 'user', text: safeQuery, image: image };
     onUserInput(safeQuery);
     
@@ -264,7 +292,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
         };
 
         setHistory(prev => [...prev, searchMessage]);
-        if (isTtsEnabled) {
+        if (TTS_AVAILABLE && isTtsEnabled) {
           await processSentenceForSpeech(resultText.replace(/\*/g, ''));
         }
       } catch (e) {
@@ -307,19 +335,14 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
         });
       }
 
-      // Log eval result for debugging (can be shown in UI later)
-      if (streamResult?.eval) {
-        console.debug('[Eval]', streamResult.eval.grade, streamResult.eval.overall.toFixed(2));
-      }
       if (streamResult?.policy) {
-        console.debug('[Policy]', streamResult.policy.classification.playbook);
         setLastPolicyDecision(streamResult.policy);
       }
-      if (streamResult?.integrity) {
+      if (isIntegrityState(streamResult?.integrity)) {
         setLastPostIntegrity(streamResult.integrity);
       }
 
-      if (isTtsEnabled && fullResponse.trim().length > 0) {
+      if (TTS_AVAILABLE && isTtsEnabled && fullResponse.trim().length > 0) {
         const speechText = fullResponse
            .replace(/I-Loop:.*?(?:\n|$)/i, '')
            .replace(/⚑ KAIN-Slice:.*?(?:\n\n|$)/i, '')
@@ -340,6 +363,52 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleQuery = async (query: string, image?: string) => {
+    setError(null);
+    setPendingRedactedQuery(null);
+
+    if (image) {
+      setError('Изображения отключены в закрытой beta: клиент не может доказать отсутствие чувствительных данных.');
+      return;
+    }
+
+    const security = securityService.validate(query);
+    if (security.action === 'REQUIRES_REDACTED_CONSENT') {
+      setPendingRedactedQuery({ sanitizedText: security.sanitizedText });
+      return;
+    }
+
+    if (security.action === 'REDIRECT') {
+      setError(
+        'Эта тема слишком чувствительна, чтобы отправлять её напрямую в облачный AI. ' +
+        'Попробуй записать это в Дневнике — там есть защищённый локальный режим, ' +
+        'который никуда не отправляет текст без твоего явного согласия.',
+      );
+      return;
+    }
+
+    if (security.action !== 'PROCEED') {
+      setError(`Ввод не отправлен в AI: ${security.reason || 'сработал безопасный контур'}`);
+      return;
+    }
+
+    await dispatchSafeQuery(security.sanitizedText);
+  };
+
+  const sendPendingRedactedQuery = async () => {
+    if (!pendingRedactedQuery) return;
+
+    const rechecked = securityService.validate(pendingRedactedQuery.sanitizedText);
+    if (rechecked.action !== 'PROCEED') {
+      setPendingRedactedQuery(null);
+      setError('Обезличенная копия всё ещё не проходит безопасный контур. Запрос не отправлен.');
+      return;
+    }
+
+    setPendingRedactedQuery(null);
+    await dispatchSafeQuery(rechecked.sanitizedText);
   };
 
   // Get current voice visuals
@@ -449,16 +518,18 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
                  </div>
             </div>
 
-            <button
-                onClick={() => setIsTtsEnabled(!isTtsEnabled)}
-                className={`p-2 rounded-full transition-colors ${
-                    isTtsEnabled ? 'bg-accent/20 text-accent' : 'bg-surface2 text-text-muted hover:bg-border'
-                }`}
-                aria-label={isTtsEnabled ? "Выключить озвучку" : "Включить озвучку"}
-                title="Озвучка ответа"
-            >
-                {isTtsEnabled ? <Volume2Icon className="w-5 h-5"/> : <VolumeXIcon className="w-5 h-5"/>}
-            </button>
+            {TTS_AVAILABLE && (
+              <button
+                  onClick={() => setIsTtsEnabled(!isTtsEnabled)}
+                  className={`p-2 rounded-full transition-colors ${
+                      isTtsEnabled ? 'bg-accent/20 text-accent' : 'bg-surface2 text-text-muted hover:bg-border'
+                  }`}
+                  aria-label={isTtsEnabled ? "Выключить озвучку" : "Включить озвучку"}
+                  title="Озвучка ответа"
+              >
+                  {isTtsEnabled ? <Volume2Icon className="w-5 h-5"/> : <VolumeXIcon className="w-5 h-5"/>}
+              </button>
+            )}
             
             <div className="hidden md:block">
                <MiniMetricsDisplay metrics={metrics} activeVoice={currentVoice || undefined} />
@@ -477,6 +548,34 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
         <div className={`absolute inset-0 pointer-events-none border-x-2 opacity-10 transition-all duration-1000 ${voiceStyle.split(' ')[0]}`} />
         
         <ChatWindow history={history} isLoading={isLoading} onQuery={handleQuery} />
+
+        {pendingRedactedQuery && (
+          <div
+            className="absolute bottom-20 left-1/2 w-full max-w-md -translate-x-1/2 rounded-md border border-warning/40 bg-surface2 p-4 text-sm text-text shadow-deep"
+            data-testid="chat-security-decision"
+            role="alert"
+          >
+            <p>Обнаружены чувствительные данные. До явного согласия запрос не отправляется в AI или облако.</p>
+            <div className="mt-3 flex gap-2">
+              <button
+                type="button"
+                className="button-primary"
+                data-action="send-redacted"
+                onClick={() => { void sendPendingRedactedQuery(); }}
+              >
+                Отправить обезличенную копию
+              </button>
+              <button
+                type="button"
+                className="button-secondary"
+                data-action="cancel"
+                onClick={() => setPendingRedactedQuery(null)}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        )}
         
          {error && (
             <div className="absolute bottom-20 left-1/2 -translate-x-1/2 max-w-md w-full rounded-md bg-danger/80 p-3 text-sm text-white backdrop-blur-md text-center">

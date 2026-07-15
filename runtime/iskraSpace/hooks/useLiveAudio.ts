@@ -5,6 +5,7 @@
 
 import { useRef, useCallback } from 'react';
 import { createAudioContext, encode } from '../css/audioUtils';
+import { isBetaCapabilityEnabled } from '../config/betaCapabilities';
 
 export interface LiveAudioBlob {
   data: string;
@@ -43,6 +44,9 @@ export function useLiveAudio() {
   const audioSourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
 
   const initializeAudioContexts = useCallback(async () => {
+    if (!isBetaCapabilityEnabled('liveConversation')) {
+      throw new Error('Live conversation is unavailable in the closed beta.');
+    }
     const inputCtx = createAudioContext(16000);
     const outputCtx = createAudioContext(24000);
     if (!inputCtx || !outputCtx) {
@@ -63,6 +67,9 @@ export function useLiveAudio() {
   }, []);
 
   const requestMicrophoneAccess = useCallback(async () => {
+    if (!isBetaCapabilityEnabled('liveConversation')) {
+      throw new Error('Live conversation is unavailable in the closed beta.');
+    }
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaStreamRef.current = stream;
     return stream;

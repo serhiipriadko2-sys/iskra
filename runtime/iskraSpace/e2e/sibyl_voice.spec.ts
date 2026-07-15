@@ -1,16 +1,14 @@
 import { test, expect } from '@playwright/test';
 import { navigateToView } from './helpers/navigation';
+import { seedCompletedOnboarding } from './helpers/onboarding';
 
 test.describe('Voice Engine - SIBYL Activation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.clear();
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-      localStorage.setItem('iskra-voice-preferences', JSON.stringify({ SIBYL: 1.2 }));
+    await seedCompletedOnboarding(page, {
+      extraStorage: {
+        'iskra-voice-preferences': JSON.stringify({ SIBYL: 1.2 }),
+      },
     });
-    await page.reload();
     await navigateToView(page, 'CHAT');
   });
 

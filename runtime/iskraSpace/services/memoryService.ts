@@ -20,26 +20,30 @@ const sanitizeHtml = (text: string): string => {
 
 // --- Validation Schemas (Runtime Checks) ---
 
-const validateSIFTBlock = (sift: any): boolean => {
-    if (!sift || typeof sift !== 'object') return false;
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+    typeof value === 'object' && value !== null;
+
+const validateSIFTBlock = (sift: unknown): boolean => {
+    if (!isRecord(sift)) return false;
     return (
         typeof sift.source === 'string' &&
         typeof sift.inference === 'string' &&
-        ['true', 'false', 'uncertain'].includes(sift.fact) &&
+        (sift.fact === 'true' || sift.fact === 'false' || sift.fact === 'uncertain') &&
         typeof sift.trace === 'string'
     );
 }
 
-const validateMemoryNode = (node: any, expectedLayer?: string): boolean => {
-    if (!node || typeof node !== 'object') return false;
+const validateMemoryNode = (node: unknown, expectedLayer?: string): boolean => {
+    if (!isRecord(node)) return false;
     
     // Check core fields
     const hasCore = (
         typeof node.id === 'string' &&
         typeof node.title === 'string' &&
         typeof node.timestamp === 'string' &&
-        ['event', 'feedback', 'decision', 'insight', 'artifact'].includes(node.type) &&
-        ['mantra', 'archive', 'shadow'].includes(node.layer) &&
+        (node.type === 'event' || node.type === 'feedback' || node.type === 'decision' ||
+          node.type === 'insight' || node.type === 'artifact') &&
+        (node.layer === 'mantra' || node.layer === 'archive' || node.layer === 'shadow') &&
         Array.isArray(node.evidence)
     );
 
@@ -49,15 +53,15 @@ const validateMemoryNode = (node: any, expectedLayer?: string): boolean => {
     if (expectedLayer && node.layer !== expectedLayer) return false;
 
     // Evidence Integrity (SIFT)
-    if (!node.evidence.every(validateSIFTBlock)) return false;
+    const evidence = node.evidence;
+    if (!Array.isArray(evidence) || !evidence.every(validateSIFTBlock)) return false;
 
     return true;
 }
 
-const validateMantraNode = (node: any): boolean => {
+const validateMantraNode = (node: unknown): boolean => {
     return (
-        node &&
-        typeof node === 'object' &&
+        isRecord(node) &&
         typeof node.id === 'string' &&
         node.layer === 'mantra' &&
         typeof node.text === 'string' &&
@@ -337,7 +341,7 @@ export const memoryService = {
   },
 
   // Basic sanitization to prevent simple injection attacks from memory content
-  sanitize(content: any): string {
+  sanitize(content: unknown): string {
     if (typeof content === 'string') {
         return sanitizeHtml(content);
     }

@@ -57,8 +57,8 @@ export class GraphServiceSupabase {
    * Add node to Supabase through the authenticated RPC boundary.
    */
   public async addNode(
-    layer: string,
-    type: string,
+    layer: MemoryLayer,
+    type: MemoryNodeType,
     content: string,
     metrics?: IskraMetrics
   ): Promise<MemoryNode> {
@@ -387,7 +387,7 @@ export class GraphServiceSupabase {
       evidence: [],
       title: (metadata.title as string) || "Untitled",
       id: row.id,
-      layer: row.layer.toUpperCase() as MemoryLayer,
+      layer: row.layer.toLowerCase() as MemoryLayer,
       type: row.type as MemoryNodeType,
       content: row.content,
       timestamp: row.timestamp || new Date().toISOString(),

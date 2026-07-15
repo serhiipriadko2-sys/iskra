@@ -264,7 +264,7 @@ const DeepResearchView: React.FC<DeepResearchViewProps> = ({ metrics }) => {
       title: `${mode === 'audit' ? 'Аудит' : 'Исследование'}: ${report.title}`,
       type: 'artifact',
       content: report,
-      metrics: { ...metrics },
+      metrics_snapshot: { ...metrics },
       tags: ['report', mode],
       evidence: [{
         source: `Deep Research on topic: "${topic}"`,

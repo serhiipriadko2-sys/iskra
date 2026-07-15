@@ -49,11 +49,14 @@ const DerivedMetricCard: React.FC<{ label: string; value: number; desc: string; 
 const RitualButton: React.FC<{ 
     title: string; 
     desc: string; 
-    icon: React.FC<any>; 
+    icon: React.FC<React.SVGProps<SVGSVGElement>>;
     onClick: () => void; 
     colorClass: string;
-}> = ({ title, desc, icon: Icon, onClick, colorClass }) => (
+    ariaLabel: string;
+}> = ({ title, desc, icon: Icon, onClick, colorClass, ariaLabel }) => (
     <button 
+        type="button"
+        aria-label={ariaLabel}
         onClick={() => {
             soundService.playClick();
             onClick();
@@ -256,6 +259,7 @@ const IskraStateView: React.FC<IskraStateViewProps> = ({ metrics, phase, onShatt
                                 icon={TriangleIcon}
                                 onClick={handleShatter}
                                 colorClass="text-accent"
+                                ariaLabel="Запустить Shatter"
                             />
                             <RitualButton 
                                 title="Phoenix 🔥♻" 
@@ -263,6 +267,7 @@ const IskraStateView: React.FC<IskraStateViewProps> = ({ metrics, phase, onShatt
                                 icon={FlameIcon}
                                 onClick={handlePhoenix}
                                 colorClass="text-danger"
+                                ariaLabel="Запустить Phoenix"
                             />
                         </div>
                     </div>

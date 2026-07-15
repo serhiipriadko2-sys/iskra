@@ -15,7 +15,8 @@ describe('iskra-agent Edge Function security boundary', () => {
     expect(edgeFunctionSource).not.toContain("'access-control-allow-origin': '*'");
     expect(edgeFunctionSource).not.toContain('"access-control-allow-origin": "*"');
     expect(edgeFunctionSource).toContain('ISKRA_AGENT_ALLOWED_ORIGINS');
-    expect(edgeFunctionSource).toContain('if (trimmed === "*")');
+    expect(edgeFunctionSource).toContain('AI_EDGE_ALLOW_DEV_WILDCARD');
+    expect(edgeFunctionSource).toContain('AI_EDGE_ENV');
   });
 
   it('verifies the JWT signature via the Supabase auth endpoint (no raw base64 decode)', () => {
@@ -24,17 +25,20 @@ describe('iskra-agent Edge Function security boundary', () => {
     expect(edgeFunctionSource).not.toContain('function readUserId');
   });
 
-  it('requires origin, JWT and rate limit before calling the billed upstream agent API', () => {
-    const originCheck = edgeFunctionSource.indexOf('if (origin && !isOriginAllowed(origin))');
+  it('requires origin, JWT and shared closed-beta quota before calling the billed upstream agent API', () => {
+    const originCheck = edgeFunctionSource.indexOf('if (!isOriginAllowed(origin))');
     const tokenCheck = edgeFunctionSource.indexOf('const token = extractBearerToken(req);');
     const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token);');
-    const rateLimitCheck = edgeFunctionSource.indexOf('const rl = rateLimit(req, jwt.sub);');
+    const quotaCheck = edgeFunctionSource.indexOf('const boundary = await enforceAiRequestBoundary(');
     const upstreamCall = edgeFunctionSource.indexOf('const agentResponse = await fetch(');
 
     expect(originCheck).toBeGreaterThan(-1);
     expect(tokenCheck).toBeGreaterThan(originCheck);
     expect(jwtCheck).toBeGreaterThan(tokenCheck);
-    expect(rateLimitCheck).toBeGreaterThan(jwtCheck);
-    expect(upstreamCall).toBeGreaterThan(rateLimitCheck);
+    expect(quotaCheck).toBeGreaterThan(jwtCheck);
+    expect(upstreamCall).toBeGreaterThan(quotaCheck);
+    expect(edgeFunctionSource).toContain("from '../_shared/aiBoundary.ts'");
+    expect(edgeFunctionSource).not.toContain('rlBuckets');
+    expect(edgeFunctionSource).not.toContain('console.');
   });
 });

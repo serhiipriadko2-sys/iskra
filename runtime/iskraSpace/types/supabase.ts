@@ -540,6 +540,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      consume_ai_quota: { Args: { p_ip_digest: string }; Returns: Json }
       check_rate_limit: {
         Args: {
           client_ip: string

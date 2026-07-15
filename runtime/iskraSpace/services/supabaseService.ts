@@ -1,9 +1,59 @@
 import { supabase, getUserId, isSupabaseAvailable } from './supabaseClient';
-import type { Database } from '../types/supabase';
-import type { IskraMetrics, IskraPhase, MemoryNode, SIFTBlock } from '../types';
+import type { Database, Json } from '../types/supabase';
+import { isMemoryLayer, isMemoryNodeType, VOICE_SYMBOLS } from '../types';
+import type { DocType, IskraMetrics, IskraPhase, MemoryLayer, MemoryNode, SIFTBlock, VoiceName } from '../types';
+import type { SymbiosisState } from './symbiosisService';
 
 // We use the generated types for DB interactions
 type VoicePreferences = Record<string, number>;
+
+const DOC_TYPES: readonly DocType[] = ['canon', 'draft', 'code', 'log', 'personal'];
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
+
+const isDocType = (value: unknown): value is DocType =>
+  typeof value === 'string' && DOC_TYPES.some(docType => docType === value);
+
+const isVoiceName = (value: unknown): value is VoiceName =>
+  typeof value === 'string' && Object.prototype.hasOwnProperty.call(VOICE_SYMBOLS, value);
+
+// Legacy rows may store the layer in uppercase (e.g. 'SHADOW', 'ARCHIVE'). Normalize
+// case before validating so a legacy-cased hypothesis-tier 'SHADOW' node is never
+// silently downgraded to fact-tier 'archive' by the isMemoryLayer fallback below.
+export const normalizeMemoryLayer = (value: unknown): MemoryLayer => {
+  const normalized = typeof value === 'string' ? value.toLowerCase() : value;
+  return isMemoryLayer(normalized) ? normalized : 'archive';
+};
+
+const isSiftBlock = (value: unknown): value is SIFTBlock => {
+  if (!isRecord(value)) return false;
+
+  return (
+    typeof value.source === 'string' &&
+    typeof value.inference === 'string' &&
+    (value.fact === 'true' || value.fact === 'false' || value.fact === 'uncertain') &&
+    typeof value.trace === 'string'
+  );
+};
+
+const parseEvidence = (value: unknown): SIFTBlock[] =>
+  Array.isArray(value) ? value.filter(isSiftBlock) : [];
+
+const toJson = (value: unknown): Json => {
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (Array.isArray(value)) return value.map(toJson);
+  if (isRecord(value)) {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [
+        key,
+        entry === undefined ? undefined : toJson(entry),
+      ])
+    );
+  }
+  return value === undefined ? null : String(value);
+};
 
 interface Message {
   role: 'user' | 'model';
@@ -11,7 +61,6 @@ interface Message {
   deltaSignature?: string;
   voice?: { name: string };
 }
-
 
 const safeStorage = {
   getItem: (key: string) => {
@@ -27,7 +76,9 @@ const safeStorage = {
 // USER & ONBOARDING
 // =============================================================================
 
-export async function getOrCreateUser(name?: string): Promise<{ id: string; name: string; isNew: boolean }> {
+export async function getOrCreateUser(
+  name?: string
+): Promise<{ id: string; name: string; isNew: boolean }> {
   const userId = await getUserId();
 
   // Try to get existing
@@ -41,7 +92,7 @@ export async function getOrCreateUser(name?: string): Promise<{ id: string; name
     return {
       id: existingUser.id,
       name: existingUser.name || 'Anonymous',
-      isNew: false
+      isNew: false,
     };
   }
 
@@ -67,22 +118,51 @@ export async function getOrCreateUser(name?: string): Promise<{ id: string; name
   return {
     id: newUser.id,
     name: newUser.name || 'Traveler',
-    isNew: true
+    isNew: true,
   };
 }
 
-export async function updateUser(updates: Database['public']['Tables']['users']['Update']): Promise<void> {
+export async function updateUser(
+  updates: Database['public']['Tables']['users']['Update']
+): Promise<void> {
   const userId = await getUserId();
-  const { error } = await supabase
-    .from('users')
-    .update(updates)
-    .eq('id', userId);
+  const { error } = await supabase.from('users').update(updates).eq('id', userId);
 
   if (error) console.error('Failed to update user:', error);
 }
 
 export async function completeOnboarding(): Promise<void> {
   await updateUser({ onboarding_complete: true });
+}
+
+export async function saveSymbiosisSettings(state: SymbiosisState): Promise<void> {
+  await getOrCreateUser();
+  const userId = await getUserId();
+  const { data, error } = await supabase.from('users').select('settings').eq('id', userId).single();
+  if (error) {
+    console.error('Failed to read user settings before symbiosis update:', error);
+    return;
+  }
+  const current =
+    data?.settings && typeof data.settings === 'object' && !Array.isArray(data.settings)
+      ? (data.settings as Record<string, unknown>)
+      : {};
+  await updateUser({
+    settings: {
+      ...current,
+      symbiosis: state,
+    } as unknown as Database['public']['Tables']['users']['Update']['settings'],
+    onboarding_complete: true,
+  });
+}
+
+export async function getSymbiosisSettings(): Promise<SymbiosisState | null> {
+  const userId = await getUserId();
+  const { data, error } = await supabase.from('users').select('settings').eq('id', userId).single();
+  if (error || !data?.settings || typeof data.settings !== 'object' || Array.isArray(data.settings))
+    return null;
+  const value = (data.settings as Record<string, unknown>).symbiosis;
+  return value && typeof value === 'object' ? (value as SymbiosisState) : null;
 }
 
 export async function completeTutorial(): Promise<void> {
@@ -120,7 +200,9 @@ export async function getTasks(): Promise<Database['public']['Tables']['tasks'][
   return data || [];
 }
 
-export async function saveTasks(tasks: Database['public']['Tables']['tasks']['Insert'][]): Promise<void> {
+export async function saveTasks(
+  tasks: Database['public']['Tables']['tasks']['Insert'][]
+): Promise<void> {
   const userId = await getUserId();
   if (tasks.length === 0) {
     // Nothing to save — clear all tasks atomically
@@ -139,7 +221,9 @@ export async function saveTasks(tasks: Database['public']['Tables']['tasks']['In
   if (error) console.error('Failed to save tasks:', error);
 }
 
-export async function addTask(task: Database['public']['Tables']['tasks']['Insert']): Promise<Database['public']['Tables']['tasks']['Row'] | null> {
+export async function addTask(
+  task: Database['public']['Tables']['tasks']['Insert']
+): Promise<Database['public']['Tables']['tasks']['Row'] | null> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('tasks')
@@ -154,11 +238,11 @@ export async function addTask(task: Database['public']['Tables']['tasks']['Inser
   return data;
 }
 
-export async function updateTask(id: string, updates: Database['public']['Tables']['tasks']['Update']): Promise<void> {
-  const { error } = await supabase
-    .from('tasks')
-    .update(updates)
-    .eq('id', id);
+export async function updateTask(
+  id: string,
+  updates: Database['public']['Tables']['tasks']['Update']
+): Promise<void> {
+  const { error } = await supabase.from('tasks').update(updates).eq('id', id);
 
   if (error) console.error('Failed to update task:', error);
 }
@@ -170,10 +254,7 @@ export async function deleteTask(id: string): Promise<void> {
 
 export async function getHabits(): Promise<Database['public']['Tables']['habits']['Row'][]> {
   const userId = await getUserId();
-  const { data, error } = await supabase
-    .from('habits')
-    .select('*')
-    .eq('user_id', userId);
+  const { data, error } = await supabase.from('habits').select('*').eq('user_id', userId);
 
   if (error) {
     console.error('Failed to get habits:', error);
@@ -182,7 +263,9 @@ export async function getHabits(): Promise<Database['public']['Tables']['habits'
   return data || [];
 }
 
-export async function saveHabits(habits: Database['public']['Tables']['habits']['Insert'][]): Promise<void> {
+export async function saveHabits(
+  habits: Database['public']['Tables']['habits']['Insert'][]
+): Promise<void> {
   const userId = await getUserId();
   if (habits.length === 0) {
     const { error } = await supabase.from('habits').delete().eq('user_id', userId);
@@ -203,7 +286,9 @@ export async function saveHabits(habits: Database['public']['Tables']['habits'][
 // JOURNAL
 // =============================================================================
 
-export async function getJournalEntries(): Promise<Database['public']['Tables']['journal_entries']['Row'][]> {
+export async function getJournalEntries(): Promise<
+  Database['public']['Tables']['journal_entries']['Row'][]
+> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('journal_entries')
@@ -218,11 +303,11 @@ export async function getJournalEntries(): Promise<Database['public']['Tables'][
   return data || [];
 }
 
-export async function addJournalEntry(entry: Database['public']['Tables']['journal_entries']['Insert']): Promise<void> {
+export async function addJournalEntry(
+  entry: Database['public']['Tables']['journal_entries']['Insert']
+): Promise<void> {
   const userId = await getUserId();
-  const { error } = await supabase
-    .from('journal_entries')
-    .insert({ ...entry, user_id: userId });
+  const { error } = await supabase.from('journal_entries').insert({ ...entry, user_id: userId });
 
   if (error) console.error('Failed to add journal entry:', error);
 }
@@ -234,7 +319,7 @@ export async function addJournalEntry(entry: Database['public']['Tables']['journ
 export async function saveMetricsSnapshot(metrics: IskraMetrics, phase: string): Promise<void> {
   const userId = await getUserId();
   const snapshot = { metrics, phase, timestamp: new Date().toISOString() };
-  
+
   // Save to local storage as fallback/cache
   safeStorage.setItem(`metrics_latest_${userId}`, JSON.stringify(snapshot));
 
@@ -257,7 +342,10 @@ export async function saveMetricsSnapshot(metrics: IskraMetrics, phase: string):
   if (error) console.error('Failed to save metrics snapshot:', error);
 }
 
-export async function getLatestMetrics(): Promise<{ metrics: IskraMetrics; phase: IskraPhase } | null> {
+export async function getLatestMetrics(): Promise<{
+  metrics: IskraMetrics;
+  phase: IskraPhase;
+} | null> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('metrics_snapshots')
@@ -329,15 +417,16 @@ export async function saveVoicePreferences(prefs: VoicePreferences): Promise<voi
 
   // Upsert each preference
   for (const [voice, weight] of Object.entries(prefs)) {
-    const { error } = await supabase
-      .from('voice_preferences')
-      .upsert({
+    const { error } = await supabase.from('voice_preferences').upsert(
+      {
         user_id: userId,
         voice_name: voice,
         weight: weight || 1.0,
-      }, {
+      },
+      {
         onConflict: 'user_id,voice_name',
-      });
+      }
+    );
 
     if (error) console.error('Failed to save voice preference:', error);
   }
@@ -371,7 +460,7 @@ export async function getChatHistory(limit = 50): Promise<Message[]> {
   }
 
   const messages: Message[] = (data || []).map(row => ({
-    role: (row.role === 'user' || row.role === 'model') ? row.role : 'user',
+    role: row.role === 'user' || row.role === 'model' ? row.role : 'user',
     text: row.text,
     deltaSignature: (row.delta_signature as string) || undefined,
   }));
@@ -450,17 +539,17 @@ export async function getMemoryNodes(layer?: string): Promise<MemoryNode[]> {
 
   const nodes: MemoryNode[] = (data || []).map(row => ({
     id: row.id,
-    type: row.type as any,
-    layer: row.layer as any,
+    type: isMemoryNodeType(row.type) ? row.type : 'event',
+    layer: normalizeMemoryLayer(row.layer),
     timestamp: row.created_at || new Date().toISOString(),
     title: row.title || '',
     content: row.content,
-    doc_type: row.doc_type as any || undefined,
+    doc_type: isDocType(row.doc_type) ? row.doc_type : undefined,
     trust_level: row.trust_level ?? undefined,
     tags: row.tags || [],
     section: row.section || undefined,
-    facet: row.facet as any || undefined,
-    evidence: (row.evidence as unknown as SIFTBlock[]) || [],
+    facet: isVoiceName(row.facet) ? row.facet : undefined,
+    evidence: parseEvidence(row.evidence),
   }));
 
   // Cache for offline use
@@ -469,7 +558,9 @@ export async function getMemoryNodes(layer?: string): Promise<MemoryNode[]> {
   return nodes;
 }
 
-export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>): Promise<MemoryNode> {
+export async function addMemoryNode(
+  node: Omit<MemoryNode, 'id' | 'timestamp'>
+): Promise<MemoryNode> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('memory_nodes')
@@ -478,13 +569,13 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
       layer: node.layer,
       type: node.type,
       title: node.title,
-      content: node.content as any,
+      content: toJson(node.content),
       doc_type: node.doc_type || null,
       trust_level: node.trust_level || 1.0,
       tags: node.tags || [],
       section: node.section || null,
       facet: node.facet || null,
-      evidence: node.evidence as any || [],
+      evidence: toJson(node.evidence),
     })
     .select()
     .single();
@@ -493,12 +584,12 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
 
   return {
     id: data.id,
-    type: data.type as any,
-    layer: data.layer as any,
+    type: isMemoryNodeType(data.type) ? data.type : 'event',
+    layer: normalizeMemoryLayer(data.layer),
     timestamp: data.created_at || new Date().toISOString(),
     title: data.title || '',
     content: data.content,
-    doc_type: data.doc_type as any || undefined,
+    doc_type: isDocType(data.doc_type) ? data.doc_type : undefined,
     trust_level: data.trust_level ?? 1.0,
     tags: data.tags || [],
     evidence: [],
@@ -509,19 +600,27 @@ export async function addMemoryNode(node: Omit<MemoryNode, 'id' | 'timestamp'>):
 // AUDIT LOG
 // =============================================================================
 
-export async function logAudit(action: string, category: string, details?: Record<string, unknown>): Promise<void> {
+export async function logAudit(
+  action: string,
+  category: string,
+  details?: Record<string, unknown>
+): Promise<void> {
   const userId = await getUserId();
   const { error } = await supabase.from('audit_log').insert({
     user_id: userId,
     action,
     category,
-    details: details ? (details as unknown as Database['public']['Tables']['audit_log']['Insert']['details']) : null,
+    details: details
+      ? (details as unknown as Database['public']['Tables']['audit_log']['Insert']['details'])
+      : null,
   });
 
   if (error) console.error('Failed to log audit:', error);
 }
 
-export async function getAuditLog(limit = 100): Promise<Database['public']['Tables']['audit_log']['Row'][]> {
+export async function getAuditLog(
+  limit = 100
+): Promise<Database['public']['Tables']['audit_log']['Row'][]> {
   const userId = await getUserId();
   const { data, error } = await supabase
     .from('audit_log')
@@ -547,6 +646,8 @@ export const supabaseService = {
   getOrCreateUser,
   updateUser,
   completeOnboarding,
+  saveSymbiosisSettings,
+  getSymbiosisSettings,
   completeTutorial,
   isOnboardingComplete,
   // Tasks

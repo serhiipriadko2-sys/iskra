@@ -9,12 +9,14 @@ import {
 } from './integrityService';
 import { storageService } from "./storageService";
 import { getAccessToken } from './supabaseClient';
+import { isBetaCapabilityEnabled, normalizeResponseModeForBeta } from '../config/betaCapabilities';
+import { getRuntimeConfig } from '../config/runtimeConfig';
 
 
 export interface PolicyStreamResult {
   eval: EvalResult | null;
   policy: PolicyDecision;
-  integrity: unknown | null;
+  integrity: ReturnType<typeof computeIntegrityStateV02> | null;
 }
 const model = "gemini-2.5-flash";
 
@@ -30,14 +32,19 @@ const Type = {
   INTEGER: 'INTEGER',
 } as const;
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const SUPABASE_URL = getRuntimeConfig('VITE_SUPABASE_URL', import.meta.env.VITE_SUPABASE_URL) || '';
+const SUPABASE_ANON_KEY = getRuntimeConfig(
+  'VITE_SUPABASE_ANON_KEY',
+  import.meta.env.VITE_SUPABASE_ANON_KEY,
+) || '';
 type AiProvider = 'gemini' | 'openai' | 'auto';
-const AI_PROVIDER = normalizeAiProvider(import.meta.env.VITE_AI_PROVIDER);
+const AI_PROVIDER = normalizeAiProvider(
+  getRuntimeConfig('VITE_AI_PROVIDER', import.meta.env.VITE_AI_PROVIDER),
+);
 const AI_EDGE_FUNCTION_SLUG = normalizeEdgeFunctionSlug(
-  import.meta.env.VITE_AI_EDGE_FUNCTION_SLUG ||
-    import.meta.env.VITE_GEMINI_EDGE_FUNCTION_SLUG ||
-    import.meta.env.VITE_GEMINI_FUNCTION_SLUG ||
+  getRuntimeConfig('VITE_AI_EDGE_FUNCTION_SLUG', import.meta.env.VITE_AI_EDGE_FUNCTION_SLUG) ||
+    getRuntimeConfig('VITE_GEMINI_EDGE_FUNCTION_SLUG', import.meta.env.VITE_GEMINI_EDGE_FUNCTION_SLUG) ||
+    getRuntimeConfig('VITE_GEMINI_FUNCTION_SLUG', import.meta.env.VITE_GEMINI_FUNCTION_SLUG) ||
     'gemini'
 );
 const AI_EDGE_FN_URL =
@@ -119,7 +126,7 @@ const RESPONSE_MODE_INSTRUCTIONS: Record<ResponseMode, string> = {
  * Get response mode instruction suffix
  */
 export function getResponseModeInstruction(mode?: ResponseMode): string {
-  const currentMode = mode ?? storageService.getResponseMode();
+  const currentMode = normalizeResponseModeForBeta(mode ?? storageService.getResponseMode());
   return RESPONSE_MODE_INSTRUCTIONS[currentMode];
 }
 
@@ -138,7 +145,12 @@ export function isOnlineAIAvailable(): boolean {
 
 export async function generateText(
   prompt: string,
-  opts?: { model?: string; systemInstruction?: string; maxOutputTokens?: number }
+  opts?: {
+    model?: string;
+    systemInstruction?: string;
+    maxOutputTokens?: number;
+    signal?: AbortSignal;
+  }
 ): Promise<string> {
   if (OFFLINE_MODE) {
     throw new Error('AI generation is unavailable (offline/test or Supabase not configured).');
@@ -150,6 +162,7 @@ export async function generateText(
       systemInstruction: opts?.systemInstruction,
       maxOutputTokens: opts?.maxOutputTokens,
     },
+    signal: opts?.signal,
   });
 }
 
@@ -224,18 +237,22 @@ async function generateContentText(args: {
   model: string;
   contents: string | Content[];
   config?: GeminiProxyGenerateConfig;
+  signal?: AbortSignal;
 }): Promise<string> {
   const config = args.config ?? {};
-  const res = await callAiEdgeFunction({
-    action: 'generateContent',
-    model: args.model,
-    contents: toGeminiContents(args.contents),
-    systemInstruction: config.systemInstruction,
-    generationConfig: {
-      ...config,
-      systemInstruction: undefined,
+  const res = await callAiEdgeFunction(
+    {
+      action: 'generateContent',
+      model: args.model,
+      contents: toGeminiContents(args.contents),
+      systemInstruction: config.systemInstruction,
+      generationConfig: {
+        ...config,
+        systemInstruction: undefined,
+      },
     },
-  });
+    args.signal
+  );
 
   if (!res.ok) {
     const txt = await res.text();
@@ -330,6 +347,7 @@ async function* streamGenerateContentText(args: {
       model: args.model,
       contents: args.contents,
       config,
+      signal: args.signal,
     });
     yield text;
   }
@@ -518,11 +536,11 @@ function cleanAndParseJSON<T>(text: string): T {
  * Retry wrapper for API calls to handle transient network issues.
  */
 async function withRetry<T>(operation: () => Promise<T>, retries = 3, delay = 1000): Promise<T> {
-    let lastError: any;
+    let lastError: unknown = undefined;
     for (let i = 0; i < retries; i++) {
         try {
             return await operation();
-        } catch (error: any) {
+        } catch (error) {
             lastError = error;
             console.warn(`Gemini API attempt ${i + 1} failed:`, error);
             // Simple exponential backoff
@@ -732,7 +750,9 @@ export class IskraAIService {
     const instruction = getSystemInstructionForVoice(voice);
 
     // Get response mode (from options or storage)
-    const responseMode = options?.responseMode ?? storageService.getResponseMode();
+    const responseMode = normalizeResponseModeForBeta(
+      options?.responseMode ?? storageService.getResponseMode()
+    );
     const responseModeInstruction = getResponseModeInstruction(responseMode);
 
     // Inject metrics context into the session so the model can "feel" the state
@@ -740,9 +760,9 @@ export class IskraAIService {
 [SYSTEM METRICS - CURRENT STATE]
 Rhythm: ${metrics.rhythm.toFixed(0)}% (Overall system sync)
 Trust: ${metrics.trust.toFixed(2)} (If < 0.75: Be more cautious, gentle, brief)
-Pain: ${metrics.pain.toFixed(2)} (If > 0.7: Be direct (Kain) or silent (Anhantra), avoid flowery language)
-Chaos: ${metrics.chaos.toFixed(2)} (If > 0.6: Offer structure (Sam) or reset (Huyndun))
-Drift: ${metrics.drift.toFixed(2)} (If > 0.3: Point out contradictions (Iskriv))
+Pain: ${metrics.pain.toFixed(2)} (If >= 0.3: Be direct (Kain) or silent (Anhantra), avoid flowery language)
+Chaos: ${metrics.chaos.toFixed(2)} (If >= 0.4: Offer structure (Sam) or reset (Huyndun))
+Drift: ${metrics.drift.toFixed(2)} (If >= 0.2: Point out contradictions (Iskriv))
 Echo: ${metrics.echo.toFixed(2)}
 Silence Mass: ${metrics.silence_mass.toFixed(2)}
 
@@ -862,9 +882,9 @@ ${deltaInstruction}`;
     const playbookContext = this.buildPlaybookContext(classification.playbook, config, metrics);
 
     // Get instruction based on suggested voices (use first required voice if different from current)
-    const effectiveVoice = classification.suggestedVoices.includes(voice.name as any)
+    const effectiveVoice: Voice = classification.suggestedVoices.includes(voice.name)
       ? voice
-      : { ...voice, name: classification.suggestedVoices[0] };
+      : { ...voice, name: classification.suggestedVoices[0] ?? voice.name };
 
     const instruction = getSystemInstructionForVoice(effectiveVoice);
 
@@ -915,7 +935,7 @@ SIFT Depth: ${config.siftDepth}
       });
 
       // === Persist integrity for the next turn (IntegrityState v0.2) ===
-      let integrity: any = null;
+      let integrity: ReturnType<typeof computeIntegrityStateV02> | null = null;
       try {
         const evalFlags = Array.isArray(evalResult?.flags)
           ? evalResult.flags.map(f => f.code)
@@ -924,7 +944,7 @@ SIFT Depth: ${config.siftDepth}
           responseText: fullResponse,
           playbook: policyDecision.classification.playbook as PlaybookType,
           responseId,
-          voiceName: (effectiveVoice as any)?.name,
+          voiceName: effectiveVoice.name,
           evalFlags,
         });
         saveIntegrityState(integrity);
@@ -942,7 +962,7 @@ SIFT Depth: ${config.siftDepth}
           responseText: fullResponse || '',
           playbook: policyDecision.classification.playbook as PlaybookType,
           responseId: `policy_${classification.playbook}_${Date.now()}`,
-          voiceName: (effectiveVoice as any)?.name,
+          voiceName: effectiveVoice.name,
           evalFlags: [],
         });
         saveIntegrityState(integrity);
@@ -1044,10 +1064,11 @@ Chaos: ${metrics.chaos.toFixed(2)} | Drift: ${metrics.drift.toFixed(2)} | Clarit
   }
   
   async getTextToSpeech(_text: string, _voiceName: string = 'ISKRA'): Promise<string> {
-    // MOCKED to prevent rate limit errors. Returns a silent 1-second WAV file.
-    // In a real implementation, 'voiceName' would be used to select the specific TTS voice model or variant.
-    const silentWavBase64 = "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAAABkYXRhAAAAAA==";
-    return Promise.resolve(silentWavBase64);
+    if (!isBetaCapabilityEnabled('textToSpeech')) {
+      throw new Error('Text-to-speech is unavailable in the closed beta.');
+    }
+
+    throw new Error('Text-to-speech has no server-side provider contract.');
   }
   
   async getEmbedding(text: string): Promise<number[]> {

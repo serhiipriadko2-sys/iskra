@@ -19,9 +19,23 @@ Routes:
 
 ## Security posture
 
-- Supabase function must run with `verify_jwt=true`.
+- Supabase function runs with `verify_jwt=true` at the platform level (belt).
+- The function ALSO independently verifies the JWT signature in-process via
+  `jose`/`SUPABASE_JWT_SECRET` (HS256) — it does not rely solely on the platform
+  switch, since this project's `service_role`/`anon` keys are static project
+  JWTs, not user sessions, and the Postgres connection has schema-wide
+  `service_role` grants regardless of which caller reaches the function.
+- `[HYP]` Role is **not yet** restricted to `service_role` — any validly-signed
+  project JWT (including `anon`) currently passes. This is intentional and
+  temporary: the actual Authorization value the ChatGPT Projects connector
+  sends was unconfirmed at fix time, and a premature role-gate risked breaking
+  the only working integration. Missing/invalid/unsigned tokens still get
+  `401`. Track/tighten this via `AGENTS.md` §15.4 and the `[HYP]` comment on
+  `verifyActor()` in `index.ts` — do not re-add a `service_role` gate here
+  without updating both the code and this note together.
 - The gateway does not trust `actor` from request JSON.
-- Actor is derived from the verified Supabase JWT claims exposed through the Authorization header.
+- Actor is derived from the verified (signature + role) JWT claims, never from
+  the request body.
 - Unknown routes return `404` with `ok:false`.
 - DB access should use `SUPABASE_DB_POOLER_URL`; `SUPABASE_DB_URL` remains a fallback.
 - The postgres-js pool is capped by `SUPABASE_DB_POOL_MAX`, default `2`, max `4`.

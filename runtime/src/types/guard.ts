@@ -158,8 +158,8 @@ function evaluateSloGuard(input: GuardInput): GuardEval {
   const baseline_chaos: number =
     typeof input.baseline_chaos === 'number'
       ? input.baseline_chaos
-      : typeof (baselines as any).baseline_chaos === 'number'
-        ? (baselines as any).baseline_chaos
+      : typeof baselines.baseline_chaos === 'number'
+        ? baselines.baseline_chaos
         : 0.6;
 
   const chaos_threshold: number = Math.max(0.70, baseline_chaos + 0.20);
@@ -175,13 +175,13 @@ function evaluateSloGuard(input: GuardInput): GuardEval {
   const baseline_alive_index: number =
     typeof input.baseline_alive_index === 'number'
       ? input.baseline_alive_index
-      : typeof (baselines as any).baseline_alive_index === 'number'
-        ? (baselines as any).baseline_alive_index
+      : typeof baselines.baseline_alive_index === 'number'
+        ? baselines.baseline_alive_index
         : 0.6;
 
   const alive_index: number | undefined =
-    typeof (metrics as any).alive_index === 'number'
-      ? (metrics as any).alive_index
+    typeof metrics.alive_index === 'number'
+      ? metrics.alive_index
       : undefined;
 
   const alive_delta: number | undefined =
@@ -193,11 +193,11 @@ function evaluateSloGuard(input: GuardInput): GuardEval {
   const contracts: string[] = [];
   const assumptions: string[] = [];
 
-  if (typeof input.baseline_chaos !== 'number' && typeof (baselines as any).baseline_chaos !== 'number') {
+  if (typeof input.baseline_chaos !== 'number' && typeof baselines.baseline_chaos !== 'number') {
     assumptions.push('baseline_chaos missing → using default 0.6');
   }
 
-  if (typeof input.baseline_alive_index !== 'number' && typeof (baselines as any).baseline_alive_index !== 'number') {
+  if (typeof input.baseline_alive_index !== 'number' && typeof baselines.baseline_alive_index !== 'number') {
     assumptions.push('baseline_alive_index missing → using default 0.6 (see system/workflow_ops.md#§0.1)');
   }
 

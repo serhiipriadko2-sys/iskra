@@ -7,14 +7,10 @@
  * - uses a network-first strategy for navigations with an offline fallback
  */
 
-const CACHE_NAME = 'iskra-pwa-v2';
-const APP_SHELL_ASSETS = [
-  '',
-  'index.html',
-  'offline.html',
-  'manifest.json',
-];
+const CACHE_NAME = 'iskra-pwa-v3';
+const APP_SHELL_ASSETS = ['', 'index.html', 'offline.html', 'manifest.json'];
 const STATIC_ASSET_PATTERN = /\.(?:css|js|mjs|html|svg|png|jpg|jpeg|webp|ico|woff2?)$/i;
+const RUNTIME_CONFIG_PATH_PATTERN = /\/runtime-config\.js$/i;
 const PRIVATE_PATH_PATTERNS = [
   /\/auth\//i,
   /\/rest\/v1\//i,
@@ -37,7 +33,7 @@ function isPrivateRequest(request) {
     return true;
   }
 
-  return PRIVATE_PATH_PATTERNS.some((pattern) => pattern.test(url.pathname));
+  return PRIVATE_PATH_PATTERNS.some(pattern => pattern.test(url.pathname));
 }
 
 function isNavigationRequest(request) {
@@ -47,46 +43,47 @@ function isNavigationRequest(request) {
 function isCacheableStaticRequest(request) {
   const url = new URL(request.url);
 
-  if (isPrivateRequest(request)) {
+  if (isPrivateRequest(request) || RUNTIME_CONFIG_PATH_PATTERN.test(url.pathname)) {
     return false;
   }
 
   return STATIC_ASSET_PATTERN.test(url.pathname) || url.pathname.endsWith('/manifest.json');
 }
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_SHELL_ASSETS.map(toScopedUrl)))
+      .then(cache => cache.addAll(APP_SHELL_ASSETS.map(toScopedUrl)))
       .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', event => {
   event.waitUntil(
     caches
       .keys()
-      .then((cacheNames) => Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      ))
+      .then(cacheNames =>
+        Promise.all(cacheNames.filter(name => name !== CACHE_NAME).map(name => caches.delete(name)))
+      )
       .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
   const { request } = event;
 
   if (request.method !== 'GET' || isPrivateRequest(request)) {
     return;
   }
 
+  if (RUNTIME_CONFIG_PATH_PATTERN.test(new URL(request.url).pathname)) {
+    event.respondWith(fetch(request, { cache: 'no-store' }));
+    return;
+  }
+
   if (isNavigationRequest(request)) {
-    event.respondWith(
-      fetch(request).catch(() => caches.match(toScopedUrl('offline.html')))
-    );
+    event.respondWith(fetch(request).catch(() => caches.match(toScopedUrl('offline.html'))));
     return;
   }
 
@@ -95,18 +92,18 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.match(request).then((cached) => {
+    caches.match(request).then(cached => {
       if (cached) {
         return cached;
       }
 
-      return fetch(request).then((response) => {
+      return fetch(request).then(response => {
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
 
         const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
+        caches.open(CACHE_NAME).then(cache => {
           cache.put(request, responseToCache);
         });
 
@@ -116,7 +113,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-self.addEventListener('message', (event) => {
+self.addEventListener('message', event => {
   if (event.data === 'skipWaiting') {
     self.skipWaiting();
   }

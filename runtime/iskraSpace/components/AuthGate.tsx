@@ -7,6 +7,7 @@ import {
   signOutBetaSession,
   supabase,
 } from '../services/supabaseClient';
+import { isE2eAuthBypassEnabled } from '../config/e2eAuth';
 
 interface AuthGateProps {
   children: ReactNode;
@@ -40,7 +41,15 @@ function accessMessage(reason: BetaAccessDenyReason): string {
   }
 }
 
-export default function AuthGate({ children }: AuthGateProps) {
+export default function AuthGate(props: AuthGateProps) {
+  if (isE2eAuthBypassEnabled()) {
+    return <>{props.children}</>;
+  }
+
+  return <ClosedBetaAuthGate {...props} />;
+}
+
+function ClosedBetaAuthGate({ children }: AuthGateProps) {
   const [gate, setGate] = useState<GateState>({ kind: 'loading' });
   const [email, setEmail] = useState('');
   const [requestState, setRequestState] = useState<{ kind: 'idle' | 'sending' | 'sent' | 'error'; message?: string }>({ kind: 'idle' });

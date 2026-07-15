@@ -373,29 +373,53 @@ export interface SIFTBlock {
   label?: TraceLabel;
 }
 
-export interface MemoryNodeMetrics {
-  trust: number;
-  clarity: number;
-  pain: number;
-  drift: number;
-  chaos: number;
+/** Graph node kinds accepted by the canonical Supabase schema. */
+export const MEMORY_NODE_TYPES = [
+  'EVENT',
+  'DECISION',
+  'INSIGHT',
+  'CANON',
+  'CONFLICT',
+  'QUESTION',
+  'ACTION',
+  'REFLECTION',
+  'event',
+  'feedback',
+  'decision',
+  'insight',
+  'artifact',
+] as const;
+export type MemoryNodeType = typeof MEMORY_NODE_TYPES[number];
+
+export const MEMORY_NODE_LAYERS = ['mantra', 'archive', 'shadow'] as const;
+export type MemoryNodeLayer = typeof MEMORY_NODE_LAYERS[number];
+export type DocType = 'canon' | 'draft' | 'code' | 'log' | 'personal';
+export type MemoryLayer = MemoryNodeLayer;
+export type EdgeType =
+  | 'CAUSAL'
+  | 'SIMILARITY'
+  | 'RESONANCE'
+  | 'SUPPORTS'
+  | 'CONTRADICTS'
+  | 'DERIVES_FROM'
+  | 'RELATED_TO';
+
+export function isMemoryLayer(value: unknown): value is MemoryLayer {
+  return typeof value === 'string' && MEMORY_NODE_LAYERS.some(layer => layer === value);
 }
 
-export type MemoryNodeType = 'event' | 'feedback' | 'decision' | 'insight' | 'artifact';
-export type MemoryNodeLayer = 'mantra' | 'archive' | 'shadow';
-export type DocType = 'canon' | 'draft' | 'code' | 'log' | 'personal';
-export type MemoryLayer = MemoryNodeLayer; // Export alias for compatibility
-export type EdgeType = 'SIMILARITY' | 'RELATED_TO' | 'RESONANCE'; // Define missing EdgeType
+export function isMemoryNodeType(value: unknown): value is MemoryNodeType {
+  return typeof value === 'string' && MEMORY_NODE_TYPES.some(type => type === value);
+}
 
 export interface MemoryNode {
   id: string;
   type: MemoryNodeType;
   layer: MemoryNodeLayer;
   timestamp: string;
-  metrics_snapshot?: IskraMetrics; // Updated to match graphService usage
-  metrics?: MemoryNodeMetrics; // Keep for compatibility if needed, or deprecate
-  relatedIds?: string[]; // Added for graph
-  resonance_score?: number; // Added for graph
+  metrics_snapshot?: IskraMetrics;
+  relatedIds?: string[];
+  resonance_score?: number;
   facet?: VoiceName;
   evidence: SIFTBlock[];
   content: unknown;
@@ -405,7 +429,7 @@ export interface MemoryNode {
   tags?: string[];
   section?: string;
   sift?: SIFTBlock;
-  metadata?: Record<string, unknown>; // Added for graph
+  metadata?: Record<string, unknown>;
   /**
    * Set to true after a node has been successfully synced to Supabase GraphRAG.
    * Prevents duplicate nodes on reconnect (P2-01).
@@ -420,6 +444,11 @@ export interface MemoryEdge {
   type: EdgeType;
   weight: number;
   metadata?: Record<string, unknown>;
+}
+
+export interface MemoryGraph {
+  nodes: MemoryNode[];
+  edges: MemoryEdge[];
 }
 
 export interface MantraNode {

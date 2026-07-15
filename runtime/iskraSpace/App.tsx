@@ -4,6 +4,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Ambience from './components/Ambience';
 import AuthGate from './components/AuthGate';
 import type { TourStep } from './components/OnboardingTour';
+import type { OnboardingResult } from './components/Onboarding';
 
 // Lazy-loaded views — code-split per route
 const DayPulse = lazy(() => import('./components/DayPulse'));
@@ -33,7 +34,7 @@ import { canonService } from './services/canonService';
 import { storageService } from './services/storageService';
 import { checkRitualTriggers, executePhoenix, executeShatter, getPhaseAfterRitual } from './services/ritualService';
 
-export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'LIVE' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
+export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
 
 const TOUR_STEPS: TourStep[] = [
     {
@@ -150,14 +151,41 @@ export function IskraSpaceApp() {
     }, [metrics]);
 
     useEffect(() => {
-        const complete = storageService.isOnboardingComplete();
-        if (!complete) {
-            setIsOnboarding(true);
-        } else if (!storageService.hasSeenTutorial()) {
-            setShowTour(true);
-        }
-        canonService.seedCanon();
-        void import('./services/syncService').then(({ syncService }) => syncService.syncAllPending());
+        let active = true;
+
+        const initializeSymbiosis = async (): Promise<void> => {
+            let complete = storageService.isOnboardingComplete();
+
+            if (!complete) {
+                try {
+                    const { getSymbiosisSettings } = await import('./services/supabaseService');
+                    const remoteState = await getSymbiosisSettings();
+                    if (remoteState) {
+                        complete = storageService.restoreSymbiosisState(remoteState);
+                    }
+                } catch (error) {
+                    console.warn('[Symbiosis] Remote profile hydration failed:', error);
+                }
+            }
+
+            if (!active) return;
+
+            setIsOnboarding(!complete);
+            if (complete && !storageService.hasSeenTutorial()) {
+                setShowTour(true);
+            }
+
+            const symbiosis = storageService.getSymbiosisState();
+            if (complete && symbiosis?.profile.memory_mode === 'CONSENTED') {
+                canonService.seedCanon();
+                void import('./services/syncService').then(({ syncService }) => syncService.syncAllPending());
+            }
+        };
+
+        void initializeSymbiosis();
+        return () => {
+            active = false;
+        };
     }, []);
 
     useEffect(() => {
@@ -171,8 +199,15 @@ export function IskraSpaceApp() {
         return () => clearInterval(interval);
     }, [updateMetrics]);
 
-    const handleOnboardingComplete = (name: string) => {
-        storageService.completeOnboarding(name);
+    const handleOnboardingComplete = (result: OnboardingResult) => {
+        const state = storageService.completeOnboarding(result.name, result.memoryMode);
+        void import('./services/supabaseService').then(({ saveSymbiosisSettings }) =>
+            saveSymbiosisSettings(state),
+        );
+        if (state.profile.memory_mode === 'CONSENTED') {
+            canonService.seedCanon();
+            void import('./services/syncService').then(({ syncService }) => syncService.syncAllPending());
+        }
         setIsOnboarding(false);
         setShowTour(true);
     };
@@ -251,16 +286,6 @@ export function IskraSpaceApp() {
                             {view === 'BEACON' && <BeaconView />}
                             {view === 'DUO' && <DuoLink />}
                             {view === 'CHAT' && <ChatView metrics={metrics} onUserInput={handleUserInput} />}
-                            {view === 'LIVE' && (
-                                <div className="flex h-full items-center justify-center p-6">
-                                    <div className="max-w-xl rounded-2xl border border-border bg-surface/80 p-6 text-center shadow-deep">
-                                        <h2 className="font-serif text-2xl text-text">Голос временно скрыт</h2>
-                                        <p className="mt-3 text-sm text-text-muted">
-                                            Этот режим не входит в текущий beta-контур. Voice path вернётся после перевода на безопасный серверный поток.
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
                             {view === 'RUNES' && <RuneView metrics={metrics} />}
                             {view === 'RESEARCH' && <DeepResearchView metrics={metrics} />}
                             {view === 'MEMORY' && <MemoryView />}

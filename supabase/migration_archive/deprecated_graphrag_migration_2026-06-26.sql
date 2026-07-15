@@ -1,6 +1,16 @@
+-- DEPRECATED: archived GraphRAG snapshot - DO NOT APPLY.
 -- ============================================
 -- GraphRAG Integration - Supabase Migration
 -- ============================================
+--
+-- This migration has been archived. It contains weak RLS policies
+-- (user_id = auth.uid() OR user_id IS NULL) that make canonical/shared graph
+-- rows mutable by any authenticated user. Do not apply it to new projects.
+--
+-- Replacement:
+--   - supabase/migrations/20260710110000_graph_shared_row_guard.sql
+--     enforces owner-only mutations while preserving read access to shared rows.
+--   - the ordered supabase/migrations/ chain is the canonical SQL source.
 --
 -- Creates tables for Hypergraph Memory persistence
 -- Enables graph-based retrieval with nodes + edges

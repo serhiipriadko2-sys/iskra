@@ -300,12 +300,32 @@ flowchart TD
 
 ---
 
-## 12. Следующие шаги
+## 12. Пост-имплементационное обновление (2026-07-09)
 
-1. **Утвердить приоритеты** — применить ли предложенный порядок P0/P1/P2/P3?
-2. **Создать hotfix branch** для P0-1 … P0-6.
-3. **Войти в plan mode** для детального планирования первого спринта.
-4. **Проверить live Supabase** через `supabase db diff` / `supabase inspect` для устранения HIGH-RISK DRIFT.
+`[FACT]` Во время аудита в локальное дерево был внесён коммит `58ac061` («cloude codex»), который уже содержит исправления P0-1 … P0-5:
+- `App.tsx` / `IskraStateView.tsx` — Phoenix корректно вызывает `onPhoenix`.
+- `ChatView.tsx` / `Journal.tsx` — подключён `securityService.validate()`.
+- `supabase/functions/kain/index.ts` — hardened (origin/JWT/rate limit).
+- `supabase/functions/iskra-agent/index.ts` — hardened (origin/JWT/rate limit).
+- `supabase/schema.sql` — `audit_log` append-only.
+- Добавлены регрессионные тесты: `auditLogAppendOnly.test.ts`, `closedBetaMigration.test.ts`, `iskraAgentEdgeFunctionSecurity.test.ts`, `IskraStateView.test.tsx`, `kainEdgeFunctionSecurity.test.ts`.
+
+`[FACT]` В этой сессии мной добавлены/обновлены:
+- CSP meta tag в `runtime/iskraSpace/index.html`.
+- Синхронизация CSP в корневых `nginx.conf` и `vercel.json` (добавлены AI/API origin в `connect-src`).
+- `runtime/iskraSpace/.env.example` — документированы `KAIN_*` и `ISKRA_AGENT_*` переменные.
+- `runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts` — проверка `script-src`, а не всего CSP.
+- `RELEASE_STATUS.md` и P0-issue файлы отражают текущее состояние.
+
+`[INTERP]` Большая часть P0-спринта оказалась уже выполненной в коммите `58ac061`. Оставшийся риск — drift между несколькими агентами/источниками изменений; требуется явное code review перед merge/deploy.
+
+## 13. Следующие шаги
+
+1. **Review коммита `58ac061`** — проверить, не конфликтует ли он с предполагаемой канонической реализацией.
+2. **Влить или перебазировать** мои документальные/CSP-изменения поверх `58ac061`.
+3. **Запустить security E2E** против staging Supabase (`RUN_E2E_SECURITY_TESTS=true`).
+4. **Проверить live Supabase** через `supabase db diff` / `supabase inspect`.
+5. **Перейти к P1** после стабилизации P0.
 
 ---
 

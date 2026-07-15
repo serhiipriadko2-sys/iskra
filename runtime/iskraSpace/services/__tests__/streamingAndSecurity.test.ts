@@ -100,7 +100,7 @@ vi.mock('../deltaProtocol', () => ({
 
 // Import after mocks
 import { IskraAIService } from '../geminiService';
-import { securityService } from '../securityService';
+import { SECURITY_ACTIONS, securityService } from '../securityService';
 
 // Mock localStorage
 const localStorageMock = (function() {
@@ -655,7 +655,7 @@ describe('SecurityService Expanded Patterns', () => {
       expect(result).toBeDefined();
       expect(result.action).toBeDefined();
       // Action should be one of the valid types
-      expect(['PROCEED', 'REJECT', 'REDIRECT']).toContain(result.action);
+      expect(SECURITY_ACTIONS).toContain(result.action);
     });
 
     it('should return structured result for various inputs', () => {
