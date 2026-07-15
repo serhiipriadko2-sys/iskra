@@ -1,33 +1,42 @@
 # Iskra Space Release Status
 
-Status: pre-release hardening target, application gates green, integrity changeset pending merge, not deployed
+Status: pre-release hardening target, post-merge application/integrity gates green, production audit gate under repair, not deployed
 Last updated: 2026-07-15
 App path: `runtime/iskraSpace`
 
 ## What this means
 
 Iskra Space is the repository's current public-release target. The P0 hardening fixes were
-merged through PR #250, and the follow-up memory-layer/redirect fix was merged through
-PR #251. The app remains pre-release until repository integrity is green on the release
-changeset, staging Supabase acceptance is current, the required release matrix passes,
-and the canonical GHCR image is smoke-tested and promoted.
+merged through PR #250, the follow-up memory-layer/redirect fix was merged through PR
+#251, and the constitutional P0 derived-marker batch was merged through PR #253. The app
+remains pre-release until staging Supabase acceptance is current, the complete release
+matrix passes on the release changeset, and the canonical GHCR image is smoke-tested and
+promoted.
 
 Other repository areas may still be important, but they are treated as internal support unless explicitly promoted by a later ADR.
 
 ## Current verified baseline
 
-- Verified base commit: `c292a7eb7513999c739fff99bce21ad417861a79` (`main` before this changeset).
+- Verified `main` commit: `99caed1cb151e5f47a20032fe176f80fc57af368`
+  (merge commit for PR #253).
 - Target baseline: `2067452527647a7ecfb6c26b2ebed98e3cb5fc12`.
 - Canonical package manager: `pnpm` (`packageManager: pnpm@10.32.1`).
-- GitHub gates passed on the verified base on 2026-07-12:
-  - `typecheck` — success
-  - strict lint — 0 warnings
-  - `test:run` twice — 719 passed / 9 skipped per run
-  - `build` — success
-  - Chromium E2E — 28 passed
-  - Deno source checks, dependency audits, and repo-only Supabase contracts — success
-- Production Deployment did not reach Docker/GHCR on that base because ledger integrity
-  failed after PR #251; this changeset repairs the ledger together with the canon index.
+- Post-merge GitHub receipts on `99caed1cb151e5f47a20032fe176f80fc57af368`
+  (2026-07-15):
+  - [SoT integrity run 29429553689](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429553689) — success;
+  - [Runtime CI run 29429554871](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429554871) — success;
+  - [iskraSpace CI run 29429553607](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429553607) — success;
+  - [iskra-site CI run 29429553660](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429553660) — success;
+  - [iskra-site Cloudflare run 29429556402](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429556402) — success; this is not an IskraSpace production receipt;
+  - [Production Deployment run 29429553603](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29429553603) — failed at the root dependency audit because pnpm 10 called npm endpoints retired with HTTP 410.
+- The failed Production Deployment passed install, legacy runtime build/tests,
+  IskraSpace typecheck, strict lint, unit tests twice, and Deno checks before the audit
+  failure. Supabase repository contracts, ledger, production build, Chromium E2E, and
+  Docker/GHCR were not reached in that run.
+- This changeset keeps the workspace on pnpm 10 but runs the root security audit through
+  a separately pinned pnpm 11 bulk-advisory client. A green workflow receipt for the
+  changeset is required before merge; a post-merge run is still required before any
+  production-ready claim.
 - AI path: Chat and Council use the Supabase Edge AI gateway; browser Gemini Live remains release-disabled.
 
 ## P0 blockers resolved in this pass
