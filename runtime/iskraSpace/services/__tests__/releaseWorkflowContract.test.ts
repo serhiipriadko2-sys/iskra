@@ -64,7 +64,7 @@ describe('IskraSpace release workflow contract', () => {
       expect(productionWorkflow).toContain(marker);
     }
 
-    expect(productionWorkflow).not.toMatch(/^\s*pnpm audit --audit-level moderate\s*$/m);
+    expect(productionWorkflow).not.toContain('pnpm audit --audit-level moderate');
   });
 
   it('keeps Vercel out of the canonical production path', () => {
