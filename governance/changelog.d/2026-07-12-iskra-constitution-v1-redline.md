@@ -15,5 +15,9 @@
 - Applied CP-P0-04 locally: active principles accept a broader trace, while Busido and
   Liber preserve the original step formula as historical text with explicit supersession.
 - Completed the repeated `system/` and `governance/` carrier review: 19 unmarked inherited
-  ancient-consciousness headers remain in 17 files; no additional P0-02/03/04 formula was
-  found by the targeted scan.
+  ancient-consciousness headers were found in 17 files; no additional P0-02/03/04 formula
+  was found by the targeted scan.
+- Marked all 19 derived headers as mythic register without deleting the historical text
+  or changing the procedural logic of their `system/` and `governance/` carriers.
+- Closed the identified textual P0 carrier classes while retaining Constitution v1 as
+  proposed and non-canonical pending explicit Owner acceptance and activation evidence.
