@@ -68,8 +68,8 @@ describe('Constitution v1 carrier-review contract', () => {
   it('keeps the living status on the verified post-merge baseline', () => {
     const status = readRepoFile('runtime/iskraSpace/RELEASE_STATUS.md');
 
-    expect(status).toContain('ba662eabf1076e940cdbb07f3912dfb732fb881e');
-    expect(status).toContain('29438498965');
+    expect(status).toContain('1c5f0c44d0ca9e288dee9f126dd6b5b008fbabb1');
+    expect(status).toContain('29440668187');
     expect(status).not.toContain('production audit gate under repair');
     expect(status).toContain('canonical_activation: blocked');
   });
@@ -91,5 +91,17 @@ describe('Constitution v1 carrier-review contract', () => {
     expect(receipt).toContain('canonical_activation: blocked');
     expect(receipt).toContain('runtime_enforcement: partial / not verified live');
     expect(receipt).toContain('Memory Gateway: unchanged');
+  });
+
+  it('routes the product Shadow promotion path through the typed policy boundary', () => {
+    const view = readRepoFile('runtime/iskraSpace/components/ShadowView.tsx');
+    const boundary = readRepoFile('runtime/iskraSpace/services/shadowPromotionService.ts');
+
+    expect(view).toContain('shadowPromotionService.promote');
+    expect(view).toContain("symbiosisService.grantConsent(");
+    expect(view).not.toContain('memoryService.promoteToArchive(');
+    expect(boundary).toContain('evaluateShadowPromotionIntent');
+    expect(boundary).toContain('evaluateShadowPromotion');
+    expect(boundary).toContain('recordActionReceipt');
   });
 });

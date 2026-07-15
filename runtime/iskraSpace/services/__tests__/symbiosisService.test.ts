@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { SymbiosisActionReceipt } from '@iskra/runtime';
 import { symbiosisService } from '../symbiosisService';
 
 const localStorageMock = (() => {
@@ -23,6 +24,7 @@ describe('symbiosisService onboarding state', () => {
     const state = symbiosisService.completeOnboarding('STATELESS');
     expect(state.profile.memory_mode).toBe('STATELESS');
     expect(state.receipts).toEqual([]);
+    expect(state.actionReceipts).toEqual([]);
     expect(symbiosisService.isStateless()).toBe(true);
   });
 
@@ -49,6 +51,22 @@ describe('symbiosisService onboarding state', () => {
     expect(symbiosisService.getCurrentConsent('memory.write.personal')?.id).toBe(receipt?.id);
   });
 
+  it('retains superseded consent receipts so action permission refs stay auditable', () => {
+    symbiosisService.completeOnboarding('CONSENTED');
+    const first = symbiosisService.grantConsent(
+      'memory.promote.shadow',
+      'Promote the first reviewed Shadow record',
+    );
+    const second = symbiosisService.grantConsent(
+      'memory.promote.shadow',
+      'Promote the second reviewed Shadow record',
+    );
+
+    expect(symbiosisService.getReceipts().map(receipt => receipt.id))
+      .toEqual([first?.id, second?.id]);
+    expect(symbiosisService.getCurrentConsent('memory.promote.shadow')?.id).toBe(second?.id);
+  });
+
   it('exports and restores the profile and receipt ledger', () => {
     symbiosisService.completeOnboarding('CONSENTED');
     symbiosisService.grantConsent('memory.write.personal', 'restore test');
@@ -65,5 +83,48 @@ describe('symbiosisService onboarding state', () => {
       receipts: [{ id: 'receipt-without-required-fields' }],
     })).toBe(false);
     expect(symbiosisService.getState()).toBeNull();
+  });
+
+  it('records an action receipt and marks ASK_EACH consent as consumed', () => {
+    symbiosisService.completeOnboarding('CONSENTED');
+    const consent = symbiosisService.grantConsent(
+      'memory.promote.shadow',
+      'Promote one reviewed Shadow record',
+    );
+    const actionReceipt: SymbiosisActionReceipt = {
+      action: 'memory.promote.shadow',
+      requested_by: 'USER',
+      permission_ref: consent?.id ?? null,
+      result: 'DONE',
+      read_back: 'VERIFIED',
+      evidence_refs: ['turn:42'],
+    };
+
+    expect(symbiosisService.recordActionReceipt(actionReceipt)).toBe(true);
+    expect(symbiosisService.getActionReceipts()).toEqual([actionReceipt]);
+    expect(symbiosisService.hasUsedConsentReceipt(consent?.id ?? '')).toBe(true);
+  });
+
+  it('rejects malformed or duplicate action receipts', () => {
+    symbiosisService.completeOnboarding('CONSENTED');
+    const consent = symbiosisService.grantConsent(
+      'memory.promote.shadow',
+      'Promote one reviewed Shadow record',
+    );
+    const actionReceipt: SymbiosisActionReceipt = {
+      action: 'memory.promote.shadow',
+      requested_by: 'USER',
+      permission_ref: consent?.id ?? null,
+      result: 'DONE',
+      read_back: 'VERIFIED',
+      evidence_refs: ['turn:42'],
+    };
+
+    expect(symbiosisService.recordActionReceipt(actionReceipt)).toBe(true);
+    expect(symbiosisService.recordActionReceipt(actionReceipt)).toBe(false);
+    expect(symbiosisService.recordActionReceipt({
+      ...actionReceipt,
+      permission_ref: null,
+    })).toBe(false);
   });
 });

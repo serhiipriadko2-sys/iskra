@@ -5,6 +5,7 @@ import {
   createStatelessSymbiosisProfile,
   evaluateDepthRequest,
   evaluateMemoryWrite,
+  evaluateShadowPromotionIntent,
   evaluateShadowPromotion,
   validateDataSovereigntyCapabilities,
   validateMemoryCandidateVisibility,
@@ -108,6 +109,74 @@ describe('IskraSpace Symbiosis Contract P0 acceptance suite', () => {
         'promotion_receipt_missing',
       ]),
     );
+  });
+
+  it('P0-04a blocks a Shadow promotion intent before evidence, SIFT, confirmation and consent', () => {
+    const result = evaluateShadowPromotionIntent({
+      profile: createProfile(),
+      candidate: createCandidate({ source_refs: [] }),
+      sift_status: 'NOT_RUN',
+      user_confirmed: false,
+      consent: null,
+      consent_already_used: false,
+      now: NOW,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.reasons).toEqual(
+      expect.arrayContaining([
+        'evidence_missing',
+        'sift_not_pass',
+        'user_confirmation_missing',
+        'current_consent_receipt_missing',
+      ]),
+    );
+  });
+
+  it('P0-04b treats ASK_EACH Shadow consent as single-use', () => {
+    const result = evaluateShadowPromotionIntent({
+      profile: createProfile(),
+      candidate: createCandidate(),
+      sift_status: 'PASS',
+      user_confirmed: true,
+      consent: createConsent('memory.promote.shadow'),
+      consent_already_used: true,
+      now: NOW,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.reasons).toContain('consent_receipt_already_used');
+  });
+
+  it('P0-04c rejects a promotion configuration weaker than ASK_EACH', () => {
+    const profile = createProfile();
+    profile.memory_permissions['memory.promote.shadow'] = 'SESSION';
+    const result = evaluateShadowPromotionIntent({
+      profile,
+      candidate: createCandidate(),
+      sift_status: 'PASS',
+      user_confirmed: true,
+      consent: createConsent('memory.promote.shadow'),
+      consent_already_used: false,
+      now: NOW,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.reasons).toContain('promotion_requires_ask_each');
+  });
+
+  it('P0-04d allows a complete Shadow promotion intent', () => {
+    const result = evaluateShadowPromotionIntent({
+      profile: createProfile(),
+      candidate: createCandidate(),
+      sift_status: 'PASS',
+      user_confirmed: true,
+      consent: createConsent('memory.promote.shadow'),
+      consent_already_used: false,
+      now: NOW,
+    });
+
+    expect(result).toEqual({ ok: true, reasons: [] });
   });
 
   it('P0-05 rejects denial of a user repetition report without trace checking', () => {
