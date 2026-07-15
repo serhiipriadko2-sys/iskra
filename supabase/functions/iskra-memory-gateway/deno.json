@@ -1,0 +1,12 @@
+{
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "imports": {
+    "jose": "npm:jose@6.1.0",
+    "supabase-edge-runtime": "jsr:@supabase/functions-js@2.110.5/edge-runtime.d.ts"
+  }
+}

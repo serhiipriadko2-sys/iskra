@@ -38,6 +38,7 @@
     "prepare:legacy-runtime": "node tools/ensure_runtime_deps.mjs"
   },
   "devDependencies": {
+    "jose": "6.1.0",
     "supabase": "^2.109.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",

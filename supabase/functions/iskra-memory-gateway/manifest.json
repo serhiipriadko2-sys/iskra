@@ -1,42 +1,77 @@
 {
-  "release": "iskra-memory-gateway-project-facing-package",
-  "updated_at": "2026-07-09T19:10:00Z",
-  "counts": {
-    "files": 3,
-    "bytes": 26009
-  },
-  "checks": {
-    "content_ok": true,
-    "secret_literal_scan": "source contains redaction regex literals only",
-    "verify_jwt_required": true,
-    "actor_source": "verified Supabase JWT claims, not request body",
-    "unknown_route_status": 404,
-    "db_url_preference": "SUPABASE_DB_POOLER_URL then SUPABASE_DB_URL fallback",
-    "db_pool_max_default": 2,
-    "db_pool_max_hard_cap": 4,
-    "rpc_contract_migration": "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
-    "deploy_path": "Remote Desktop Commander + Supabase CLI",
-    "live_status_before_patch": "ACTIVE",
-    "live_version_before_patch": 1,
-    "live_verify_jwt_before_patch": true,
-    "live_edge_sha256_before_patch": "3f5a7cf64d51d6dfcbf658f916f67d6904d3a4566647c9046a61f2314be1b035",
-    "live_redeploy_after_patch": "pending"
-  },
-  "items": [
-    {
-      "path": "supabase/functions/iskra-memory-gateway/README.md",
-      "bytes": 1871,
-      "sha256": "1e193d72ade0da5c5b6b8fa8a2b3c826243593ec1ba6bf12f91b3fc2b759ee27"
-    },
-    {
-      "path": "supabase/functions/iskra-memory-gateway/index.ts",
-      "bytes": 8880,
-      "sha256": "f3813679c1a5aba276be190cf1f38d9cef16f9b7542a770eb4da0c997fd01f7c"
-    },
-    {
-      "path": "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
-      "bytes": 15258,
-      "sha256": "6978373b0832a9e90d7b8b5a2d8757d6dd66674995121783a40110b18df126ce"
-    }
-  ]
+    "release":  "iskra-memory-gateway-probe-only-containment-1a1",
+    "updated_at":  "2026-07-15T16:51:32Z",
+    "mode":  "probe_only",
+    "status":  {
+                   "source":  "implemented_on_branch",
+                   "github":  "candidate_not_merged",
+                   "supabase":  "not_deployed",
+                   "projects_probe":  "not_executed",
+                   "verified_live":  false
+               },
+    "counts":  {
+                   "files":  5,
+                   "bytes":  19858
+               },
+    "checks":  {
+                   "content_ok":  true,
+                   "verify_jwt_required":  true,
+                   "jwt_algorithm":  "HS256",
+                   "issuer_audience":  "validated only when explicit expected env values are configured",
+                   "canonical_routes":  [
+                                            "/functions/v1/iskra-memory-gateway/auth/whoami",
+                                            "/iskra-memory-gateway/auth/whoami"
+                                        ],
+                   "privileged_routes":  "503 gateway_security_hold",
+                   "postgres_capability":  "absent from production index.ts",
+                   "response_fields":  [
+                                           "ok",
+                                           "service",
+                                           "mode",
+                                           "credential_class"
+                                       ],
+                   "frozen_pnpm_install":  "pass on rebased branch",
+                   "focused_tests":  "26 passed, 0 skipped, 0 failed on rebased branch",
+                   "full_tests":  "854 passed, 9 pre-existing skipped, 0 failed on rebased branch",
+                   "test_eslint":  "pass with --no-ignore on rebased branch",
+                   "strict_typecheck":  "pass on rebased branch",
+                   "deno_lint":  "pass on rebased branch",
+                   "deno_check":  "pass on rebased branch",
+                   "deno_bundle_bytes":  43039,
+                   "secret_literal_scan":  "no credential-like literal found in changed content",
+                   "live_before":  {
+                                       "version":  3,
+                                       "status":  "ACTIVE",
+                                       "verify_jwt":  true,
+                                       "ezbr_sha256":  "1df0c8076fe269ba2da7e74441ee66c5937589482faef7fda61d957c212fd16d"
+                                   },
+                   "deployment":  "pending explicit approval and read-back"
+               },
+    "items":  [
+                  {
+                      "path":  "supabase/functions/iskra-memory-gateway/README.md",
+                      "bytes":  3551,
+                      "sha256":  "26dc5f868c390790fc0f8448bdcf46ee87ed4e9c03bdaacc070c97a6f45f9a21"
+                  },
+                  {
+                      "path":  "supabase/functions/iskra-memory-gateway/index.ts",
+                      "bytes":  848,
+                      "sha256":  "0cdef7b80862fe379b38eac72be8fc3e859b89c1f543db2b851d76018704d47b"
+                  },
+                  {
+                      "path":  "supabase/functions/iskra-memory-gateway/handler.ts",
+                      "bytes":  6736,
+                      "sha256":  "340b6f6f67cf29bc8d3230f3ea4435fdb936b76ae235cc6d14855f6c8e4e069d"
+                  },
+                  {
+                      "path":  "supabase/functions/iskra-memory-gateway/deno.json",
+                      "bytes":  284,
+                      "sha256":  "7dfaa27ce99473d81d0611f438ec633efd34a73801b01d0341f098a2b607f4ac"
+                  },
+                  {
+                      "path":  "supabase/functions/iskra-memory-gateway/deno.lock",
+                      "bytes":  8439,
+                      "sha256":  "9efd83e340288d06dff48de54f24d8a716bafd3ddc26ee3d258179d37d41660a"
+                  }
+              ]
 }

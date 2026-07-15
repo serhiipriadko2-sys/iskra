@@ -153,3 +153,26 @@ Delta: Gemini remains the default path; OpenAI becomes a supported optional prov
 D: frontend gateway source, Supabase Edge Function source, operations receipt.
 Omega: 0.82 until staged Supabase deploy/smoke confirms runtime behavior.
 Lambda: revise after live/staging Edge Function proof or if provider policy changes.
+
+## ADR-20260715-001: Memory Gateway Probe-Only Containment
+
+### Context
+The deployed and GitHub v3 gateway verified HS256 signatures but did not authorize JWT
+roles before privileged PostgreSQL-backed routes. The actual credential class sent by the
+ChatGPT Projects Action was not measured.
+
+### Decision
+Temporarily replace the privileged production composition with a probe-only handler. Only
+exact `auth/whoami` paths may return a normalized credential class; all former privileged
+routes return `503 gateway_security_hold`. PostgreSQL capability is absent from the
+production adapter. Design 1B only after the real probe and use a dedicated least-privilege
+credential profile.
+
+### Verification
+Focused production-bound Vitest tests, strict TypeScript typecheck, frozen pnpm install,
+Deno check/bundle, ADR/secret/ledger gates, branch review, approved Supabase deploy, live
+source read-back, and a real Projects probe.
+
+### Rollback / Reversal Trigger
+Before deploy, revert the branch. After deploy, retain fail-closed behavior or disable the
+Action/function; do not routinely restore privileged v3.

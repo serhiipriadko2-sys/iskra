@@ -1,49 +1,54 @@
-import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const edgeFunctionSource = readFileSync(
-  join(__dirname, '../../../../supabase/functions/iskra-memory-gateway/index.ts'),
+import { describe, expect, it } from 'vitest';
+
+const currentDirectory = dirname(fileURLToPath(import.meta.url));
+const gatewayDirectory = join(
+  currentDirectory,
+  '../../../../supabase/functions/iskra-memory-gateway',
+);
+const indexSource = readFileSync(join(gatewayDirectory, 'index.ts'), 'utf-8');
+const handlerSource = readFileSync(
+  join(gatewayDirectory, 'handler.ts'),
   'utf-8',
 );
 
-describe('iskra-memory-gateway Edge Function security boundary', () => {
-  it('verifies the JWT signature independently of the platform verify_jwt switch', () => {
-    // The insecure prior implementation trusted an unverified base64-decoded payload.
-    expect(edgeFunctionSource).not.toContain('function decodeJwtPayload');
-    expect(edgeFunctionSource).toContain("jsr:@panva/jose");
-    expect(edgeFunctionSource).toContain('jwtVerify(token, JWT_SECRET_KEY');
-    expect(edgeFunctionSource).toContain('algorithms: ["HS256"]');
+describe('iskra-memory-gateway production composition security boundary', () => {
+  it('keeps index.ts as a thin probe-only Deno adapter', () => {
+    expect(indexSource).toContain("mode: 'probe_only'");
+    expect(indexSource).toContain("from './handler.ts'");
+    expect(indexSource).toContain('Deno.serve(handler)');
+    expect(indexSource).not.toContain("from 'npm:postgres");
+    expect(indexSource).not.toContain('SUPABASE_DB_POOLER_URL');
+    expect(indexSource).not.toContain('SUPABASE_DB_URL');
   });
 
-  it('never derives actor from the request body (only from verified JWT claims)', () => {
-    // The insecure prior implementation trusted `body.actor` outright.
-    expect(edgeFunctionSource).not.toContain('function asActor');
-    expect(edgeFunctionSource).not.toMatch(/body\.actor/);
+  it('verifies JWTs in the production handler with jose and HS256', () => {
+    expect(handlerSource).toContain("from 'jose'");
+    expect(handlerSource).toContain('jwtVerify(token, options.secret');
+    expect(handlerSource).toContain("algorithms: ['HS256']");
+    expect(handlerSource).not.toContain('decodeJwtPayload');
   });
 
-  it('verifies identity before parsing the body or dispatching to any route handler', () => {
-    const verifyCall = edgeFunctionSource.indexOf('actor = await verifyActor(');
-    const bodyParse = edgeFunctionSource.indexOf('const body = await req.json()');
-    const routeDispatch = edgeFunctionSource.indexOf('const handler = routes[route]');
-
-    expect(verifyCall).toBeGreaterThan(-1);
-    expect(bodyParse).toBeGreaterThan(verifyCall);
-    expect(routeDispatch).toBeGreaterThan(bodyParse);
+  it('uses exact canonical path matching rather than suffix matching', () => {
+    expect(handlerSource).toContain(
+      "'/functions/v1/iskra-memory-gateway'",
+    );
+    expect(handlerSource).toContain("'/iskra-memory-gateway'");
+    expect(handlerSource).not.toContain("endsWith('/auth/whoami')");
+    expect(handlerSource).not.toContain("return last;");
   });
 
-  it('maps auth failures to 401, not the generic 500 handler', () => {
-    expect(edgeFunctionSource).toMatch(/return json\(req, \{ ok: false, error: message \}, 401\);/);
+  it('contains an active fail-closed hold for privileged routes', () => {
+    expect(handlerSource).toContain("options.mode === 'probe_only'");
+    expect(handlerSource).toContain("error: 'gateway_security_hold'");
   });
 
-  it('[HYP] role is not yet gated to service_role — documented follow-up, not silently forgotten', () => {
-    // Intentionally permissive until the real ChatGPT Projects connector's
-    // Authorization value is confirmed. This test pins the documented reason
-    // so removing the gate doesn't silently become "nobody remembers why".
-    expect(edgeFunctionSource).toContain('[HYP] Role scope is intentionally NOT restricted to service_role yet');
-    expect(edgeFunctionSource).not.toContain('REQUIRED_ROLE');
+  it('never derives identity from the request body', () => {
+    expect(handlerSource).not.toMatch(/body\.actor/);
+    expect(handlerSource).not.toContain('function asActor');
+    expect(indexSource).not.toMatch(/body\.actor/);
   });
 });

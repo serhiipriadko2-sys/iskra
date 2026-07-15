@@ -23,6 +23,9 @@ importers:
 
   .:
     devDependencies:
+      jose:
+        specifier: 6.1.0
+        version: 6.1.0
       supabase:
         specifier: ^2.109.0
         version: 2.109.0
@@ -232,6 +235,9 @@ importers:
       eslint:
         specifier: ^9.39.2
         version: 9.39.4(jiti@1.21.7)
+      jose:
+        specifier: 6.1.0
+        version: 6.1.0
       jsdom:
         specifier: ^27.4.0
         version: 27.4.0(@noble/hashes@1.8.0)
@@ -2412,6 +2418,9 @@ packages:
   jiti@1.21.7:
     resolution: {integrity: sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==}
     hasBin: true
+
+  jose@6.1.0:
+    resolution: {integrity: sha512-TTQJyoEoKcC1lscpVDCSsVgYzUDg/0Bt3WE//WiTPK6uOCQC2KZS4MpugbMWt/zyjkopgZoXhZuCi00gLudfUA==}
 
   jose@6.2.3:
     resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
@@ -5667,6 +5676,8 @@ snapshots:
       '@pkgjs/parseargs': 0.11.0
 
   jiti@1.21.7: {}
+
+  jose@6.1.0: {}
 
   jose@6.2.3: {}
 
