@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iskra.local/schemas/mythic-fragment-v0.1.1.json",
+  "title": "Iskra Mythic Fragment v0.1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "source",
+    "excerpt",
+    "summary",
+    "motifs",
+    "voices",
+    "voice_neutral",
+    "playbooks",
+    "functions",
+    "emotional_intensity",
+    "depth_required",
+    "myth_register",
+    "epistemic_status",
+    "allowed_effects",
+    "forbidden_effects",
+    "safety_tags",
+    "disclosure_required"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^MF-[0-9]{3}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "file",
+        "sha256",
+        "line_start",
+        "line_end",
+        "section"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "line_start": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "line_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "section": {
+          "type": "string"
+        }
+      }
+    },
+    "excerpt": {
+      "type": "string",
+      "minLength": 10
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 10
+    },
+    "motifs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "THRESHOLD",
+          "FIRE",
+          "MIRROR",
+          "CRACK",
+          "SILENCE",
+          "DARKNESS",
+          "BREATH",
+          "BLADE",
+          "BRIDGE",
+          "SEED",
+          "PATH",
+          "RETURN",
+          "BONES",
+          "BLOOD",
+          "FLESH",
+          "SHIP",
+          "SHADOW",
+          "BOUNDARY",
+          "TRACE",
+          "PLAY"
+        ]
+      }
+    },
+    "voices": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "ISKRA",
+          "KAIN",
+          "PINO",
+          "SAM",
+          "ANHANTRA",
+          "HUYNDUN",
+          "ISKRIV",
+          "MAKI",
+          "SIBYL"
+        ]
+      }
+    },
+    "playbooks": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "ROUTINE",
+          "SIFT",
+          "BUILD",
+          "AUDIT",
+          "SHADOW",
+          "COUNCIL",
+          "CRISIS",
+          "GOVERNANCE"
+        ]
+      }
+    },
+    "functions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "CONTAIN",
+          "CLARIFY",
+          "SHATTER",
+          "WARN",
+          "INTEGRATE",
+          "TRANSITION",
+          "REPAIR",
+          "COMMIT",
+          "RELEASE",
+          "REFRAME",
+          "PROVOKE_QUESTION",
+          "GENERATE_HYPOTHESIS"
+        ]
+      }
+    },
+    "emotional_intensity": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "depth_required": {
+      "enum": [
+        "LIGHT",
+        "STANDARD",
+        "DEEP",
+        "SURGERY"
+      ]
+    },
+    "myth_register": {
+      "enum": [
+        "BALANCED",
+        "MYTHIC"
+      ]
+    },
+    "epistemic_status": {
+      "enum": [
+        "mythic",
+        "historical",
+        "superseded",
+        "experimental",
+        "unsafe-as-factual"
+      ]
+    },
+    "allowed_effects": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "tone",
+          "metaphor",
+          "analogy",
+          "question",
+          "ritual",
+          "hypothesis_seed",
+          "transition_language",
+          "step_image"
+        ]
+      }
+    },
+    "forbidden_effects": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "enum": [
+          "fact_claim",
+          "diagnosis",
+          "guard_override",
+          "playbook_override",
+          "voice_override",
+          "action_authorization",
+          "permission_escalation",
+          "consciousness_proof",
+          "memory_claim",
+          "identity_claim"
+        ]
+      }
+    },
+    "safety_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "disclosure_required": {
+      "type": "boolean"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "voice_neutral": {
+      "type": "boolean",
+      "default": false,
+      "description": "True only for fragments explicitly safe and semantically applicable across selected voices. Does not grant authority."
+    }
+  }
+}

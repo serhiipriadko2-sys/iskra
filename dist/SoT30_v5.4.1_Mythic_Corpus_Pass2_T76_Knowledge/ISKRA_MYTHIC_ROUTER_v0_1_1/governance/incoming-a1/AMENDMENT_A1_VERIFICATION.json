@@ -1,0 +1,21 @@
+{
+  "artifact": "ADR-20260712-02-AMENDMENT-A1",
+  "status": "proposed",
+  "runtime": "claude",
+  "date": "2026-07-12",
+  "corpus_ref": "MYTHIC_FRAGMENTS_v0_1.jsonl",
+  "corpus_package_sha256": "0088f2ec56e236b443219b0aa8b4a3a33807031fb68b6aef61bba99182e3a6ed",
+  "voice_alignment_class": {"3": "only selected", "2": "selected + others", "1": "voice_neutral=true", "0": "absent & not neutral -> dropped pre-scoring"},
+  "sort_order": ["total_score DESC","voice_alignment_class DESC","voice_count ASC","function_hits DESC","motif_hits DESC","playbook_hit DESC","disclosure_required=false first","fragment_id ASC"],
+  "source_cap": "applied after full ranking",
+  "checks": {
+    "MR-16A_MF013_first_for_ISKRIV": "PASS",
+    "MR-16B_ISKRIV_beats_ISKRIV_SAM": "PASS",
+    "MR-17B_class0_dropped_pre_scoring": "PASS",
+    "MR-17A_HUYNDUN_BALANCED_result": "EMPTY (nothing-branch, safe)",
+    "class1_voice_neutral_reachable": false,
+    "class1_fragments_with_field": 0
+  },
+  "required_schema_addition": {"field": "voice_neutral", "type": "boolean", "default": false, "reason": "class 1 unreachable without it; MR-17A neutral branch dead"},
+  "boundary": {"router_code_modified": false, "claude_layer_modified": false, "sot30_mirrored": false, "memory_written": false}
+}

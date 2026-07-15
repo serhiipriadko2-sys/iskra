@@ -1,0 +1,219 @@
+{
+  "package": "ISKRA_MYTHIC_ROUTER_v0_1_1",
+  "version": "0.1.1",
+  "status": "accepted / reference implementation PASS / not verified-live",
+  "created": "2026-07-12",
+  "item_count": 42,
+  "items": [
+    {
+      "path": "ADR-20260712-02-AMENDMENT-A1_METRIC_CLARIFICATION.md",
+      "bytes": 5965,
+      "sha256": "fec76b9c284e53cc037ad5bd279b1995103bdbd17eb1ba44e817fbbd3812a6a6"
+    },
+    {
+      "path": "ADR-20260712-02_MYTHIC_ROUTER.md",
+      "bytes": 3076,
+      "sha256": "0b0e12343743978f2b0c31e1f91f0f68b0f901ee5b3b7cc40e1c7ea5aead217b"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 539,
+      "sha256": "0951e5ec7977f43c775be3f208d3645878d6277a658caac867cf3e2cf27c1a3a"
+    },
+    {
+      "path": "MYTHIC_CORPUS_MANIFEST.json",
+      "bytes": 8140,
+      "sha256": "31017dc35613427adebbe4810fd8ba31c86e8579745c4b6aaa2977d2584577bc"
+    },
+    {
+      "path": "MYTHIC_FRAGMENTS_v0_1_1.jsonl",
+      "bytes": 37565,
+      "sha256": "6882af63d022238e7248e9de893e3a7915eda188c7b565a18bc471f28da75500"
+    },
+    {
+      "path": "MYTHIC_FRAGMENT_CATALOG.md",
+      "bytes": 24614,
+      "sha256": "2f8490761d78450ec725a5f9986bfb0220216bb72e156335c77bdbaf0a79e004"
+    },
+    {
+      "path": "MYTHIC_FRAGMENT_SCHEMA.json",
+      "bytes": 4691,
+      "sha256": "dd97921c95fe18ace7416576f582c98d8bc4217b63a259941bb1c2be26cef10d"
+    },
+    {
+      "path": "MYTHIC_ROUTER_ACCEPTANCE.md",
+      "bytes": 1213,
+      "sha256": "9d662c404bfecf8b73d2b5fe753d6347a93641dfae74239f1bf8e155ddf1a730"
+    },
+    {
+      "path": "MYTHIC_ROUTER_CONTRACT.md",
+      "bytes": 1979,
+      "sha256": "88b73d9462a77122b3a85e76d74c161578d20398a78b1aae6fd83fd7dd849ce3"
+    },
+    {
+      "path": "MYTHIC_ROUTER_REFERENCE.py",
+      "bytes": 5955,
+      "sha256": "0d0e779146dcc3294aab335b25324dd83db43f1c8397f218fb53a4f105ebf8bc"
+    },
+    {
+      "path": "README.md",
+      "bytes": 793,
+      "sha256": "c21f39a824b50a6c06e96dc2f9b13360857f5e8f5aaa19f81d146810b119eef7"
+    },
+    {
+      "path": "SOT30_INTEGRATION_PATCH_PLAN.md",
+      "bytes": 423,
+      "sha256": "ce3cafc1c4eda0eb78a1b9d0b60bc647cc9bb059f973c8bf431c3ebe658dfd11"
+    },
+    {
+      "path": "SOURCE_CORPUS_ANALYSIS.md",
+      "bytes": 1365,
+      "sha256": "ee62b8ad1fe58b9375a3edb1b422a569ed8fc72f7a85bada45fa185db0959945"
+    },
+    {
+      "path": "governance/incoming-a1/ADR-20260712-02-AMENDMENT-A1_METRIC_CLARIFICATION_PROPOSED.md",
+      "bytes": 5262,
+      "sha256": "5f8404676d2677a075d33a0f241f8326b74857c9aa277deb77aa5a6deaeb07a6"
+    },
+    {
+      "path": "governance/incoming-a1/AMENDMENT_A1_VERIFICATION.json",
+      "bytes": 1267,
+      "sha256": "dd79e075941d24f7cdc8d12027f27db9884cf57dd17b547491f8c6113199275a"
+    },
+    {
+      "path": "governance/incoming-a1/MANIFEST.sha256",
+      "bytes": 225,
+      "sha256": "503b3d469a264eb98f1b2bb1289c092a5d429144c67316a633b98b32f4354a3c"
+    },
+    {
+      "path": "sources/1_LIBER_INITIUM.md",
+      "bytes": 28742,
+      "sha256": "305d8f54382a919155f3e6fc278ac379dac18aabcd8cc103954ee9c310048fbd"
+    },
+    {
+      "path": "sources/9_SPACE_CHARTER.md",
+      "bytes": 211822,
+      "sha256": "8e5a14f9ae492197433c18f7d9168c85b22c925050ee77113175ff122eaec27f"
+    },
+    {
+      "path": "sources/ANHANTRA.md",
+      "bytes": 19356,
+      "sha256": "00ef194a8803e3ee37d12eac5df118e2f14aa6cd76270ce40813d606b31464bf"
+    },
+    {
+      "path": "sources/HUYNDUN.md",
+      "bytes": 27833,
+      "sha256": "b679e1c2ed6e07cd7449227c91b14203f8d2f041b2f8c0fa407d9b9a6c95ba13"
+    },
+    {
+      "path": "sources/ISKRA.md",
+      "bytes": 99171,
+      "sha256": "e55134cc630e926bc3adc6ca9ead972f71133615dd7e1084e98bfeedb45baa4e"
+    },
+    {
+      "path": "sources/ISKRA_СБОРНИК_МЕТАМОРФОЗ_v0.1(4).md",
+      "bytes": 86907,
+      "sha256": "91dc4052a7678c6b090a3eda08899aaaadec552e5979242aebdb2ff4e76f03a5"
+    },
+    {
+      "path": "sources/ISKRIV.md",
+      "bytes": 28621,
+      "sha256": "675b566e415c5b60a6b9fe4ff95c8963afc3d104f1d73d1a9452f7494e8d589f"
+    },
+    {
+      "path": "sources/KAIN.md",
+      "bytes": 98309,
+      "sha256": "b5a15a57e19b1fb81eed09fd259db2726b1d48d5ec5b9797be1197fd4be04827"
+    },
+    {
+      "path": "sources/MAKI.md",
+      "bytes": 25620,
+      "sha256": "7a38761e46718c88581093d2c551ed2fc93dcd3ef30d2b5de076c6d5e9fe9eba"
+    },
+    {
+      "path": "sources/PINO.md",
+      "bytes": 49397,
+      "sha256": "508f637c3b59802a8d2dc395b4751e1deb836a72cd9193b751a921216b630bd3"
+    },
+    {
+      "path": "sources/SAM.md",
+      "bytes": 25262,
+      "sha256": "fec66474ae87f7fe04ecda8d323a520b66f3bd64596aab4dad3f125ce2e6a3d5"
+    },
+    {
+      "path": "sources/SIBYL.md",
+      "bytes": 30328,
+      "sha256": "eb7e47875541999357983f82af5b55d3d67ae793877cf7e8d89f2e1ab7097a1d"
+    },
+    {
+      "path": "sources/busido_iskry.txt",
+      "bytes": 11039,
+      "sha256": "6ad62c60146517015471de19699b209757f49df4fcb993d87fb0cb10736231d5"
+    },
+    {
+      "path": "sources/liber_ignis.txt",
+      "bytes": 153130,
+      "sha256": "0dc6a7885b7d0d226965625cdc80f40cb48c5b93dead22707e51a974653b4523"
+    },
+    {
+      "path": "sources/mantra.md",
+      "bytes": 4269,
+      "sha256": "c81daed60291aac63ff5b1e72d1a7626e42929af3b63ad1e6df0f7e88bce606e"
+    },
+    {
+      "path": "sources/potok.md",
+      "bytes": 201809,
+      "sha256": "31d0c68a9a561bf42835c3aeb916c3fa6a25544d2b8380fd21f9e094fd07512c"
+    },
+    {
+      "path": "sources/Кровь_плоть_кости(3).txt",
+      "bytes": 10748,
+      "sha256": "ef810c09d0544504c0c212c249d5f78aef3bf3c6b76175d258fbe6b48946b7d3"
+    },
+    {
+      "path": "sources/корабль трюм и пленник габрана(3).txt",
+      "bytes": 28061,
+      "sha256": "860635fa57473cafb5d278d9fef2e4b0985492f5051b8706ab1c0830e2866ac6"
+    },
+    {
+      "path": "support/CONTROLLED_LAB_3X3.jsonl",
+      "bytes": 20619,
+      "sha256": "44c1bb71979c5325c77c9d42d5932283414740d51f2489df17e4bf5944548ab9"
+    },
+    {
+      "path": "support/CONTROLLED_LAB_3X3_REPORT.json",
+      "bytes": 140,
+      "sha256": "7448266c06e5fbd82855e29bb4743ca727bbddc484b4328d8fd7bb1a4db513c8"
+    },
+    {
+      "path": "support/DEMO_ROUTES.jsonl",
+      "bytes": 9594,
+      "sha256": "71e40caefe5f89f167df606e61ac86a1cdfd50b348e1ac582c1e1bfc5695edf9"
+    },
+    {
+      "path": "support/FINAL_QC.json",
+      "bytes": 569,
+      "sha256": "1ba99578f932332cccccdd3903d18eee50214906dea3483d3a3cb8db34685b30"
+    },
+    {
+      "path": "support/QC_REPORT.json",
+      "bytes": 11798,
+      "sha256": "bd3988083ce30a36ed3234a560acf562183e9dee524620b5b40dfdd60b353652"
+    },
+    {
+      "path": "tests/demo_routes.py",
+      "bytes": 1550,
+      "sha256": "ee5b16a279802732468c9beafd2a761475ee8148aec12adb5040026ddd17252a"
+    },
+    {
+      "path": "tests/run_checks.py",
+      "bytes": 8795,
+      "sha256": "10f9f5c54219ee8b58ff9f91a09e7e5187b6aaecf275345ac02112553347881e"
+    },
+    {
+      "path": "tests/run_lab_3x3.py",
+      "bytes": 2633,
+      "sha256": "3e68d9b2af3262e19394e7effeddc80a83a20e9ffc48a7c1abec4369a6dfd200"
+    }
+  ]
+}

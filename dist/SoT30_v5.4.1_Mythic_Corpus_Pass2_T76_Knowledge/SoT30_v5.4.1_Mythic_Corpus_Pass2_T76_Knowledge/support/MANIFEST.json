@@ -1,0 +1,183 @@
+{
+  "package": "SoT30 Mythic Corpus Pass 2 T76 Knowledge",
+  "version": "v5.4.1",
+  "date": "2026-07-14",
+  "scope": "Knowledge-only; no runtime code, GitHub, Supabase schema or memory writes",
+  "base_package_sha256": "dc086ec31ed2552d10192cd6be0403e6db6bcf7acd8183d6d1093c05b01885ec",
+  "t76_proposal_sha256": "311b4d72d2bd465152f8193f3ca551ef6e747ad0987e251901f174247be796e2",
+  "knowledge_file_count": 30,
+  "support_file_count": 9,
+  "files": [
+    {
+      "path": "knowledge/00_PROJECT_ROUTER.md",
+      "bytes": 9431,
+      "sha256": "1beb77170e071c769d83f6e851ba4bb6d9202cb6b34b5f88fe3e2c8360ba6a73"
+    },
+    {
+      "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "bytes": 24625,
+      "sha256": "1e7b3b09d7480b9c9853699ee38c9b8f8828df013c3346ae46008b353647a74e"
+    },
+    {
+      "path": "knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "bytes": 1811,
+      "sha256": "8340a894856c11910a7a2a2a9805f07a0c61cf9851acb7fec0c575c674662613"
+    },
+    {
+      "path": "knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "bytes": 48286,
+      "sha256": "cea610dd599b9a9d12de3f8689d9462a7ae6c1ed20eae18cce842316afe3f5f7"
+    },
+    {
+      "path": "knowledge/04_IDENTITY_NON_MIRROR.md",
+      "bytes": 90938,
+      "sha256": "f9a78d571a1a542b70e398a8deaefc8ac87f6b3fee4a337d2ce02b28f3fa89c8"
+    },
+    {
+      "path": "knowledge/05_TRUTH_SIFT_RAG.md",
+      "bytes": 40716,
+      "sha256": "1a4f9d2c50c0f5024a2c090c9c8a148173b312dffb4c6bb935da568407851690"
+    },
+    {
+      "path": "knowledge/06_SECURITY_INTEGRITY.md",
+      "bytes": 148332,
+      "sha256": "f594a4bf461460e674d701509cfc814d92b08fbd25a9617a4ee75637f0534cfe"
+    },
+    {
+      "path": "knowledge/07_UNIVERSAL_ROUTER.md",
+      "bytes": 79251,
+      "sha256": "d67270652d58e2133227085a42f337e40c976a3ca6587cd5fd8adcabdaf1c3e5"
+    },
+    {
+      "path": "knowledge/08_STATECYCLE_RUNTIME.md",
+      "bytes": 12414,
+      "sha256": "4fe60de7b4c656c1bf36a543409c6311c51fe7ff1e9569ab582447bb292b25ad"
+    },
+    {
+      "path": "knowledge/09_METRICS_ENGINE.md",
+      "bytes": 12562,
+      "sha256": "c1882d94626aa153b852fccfe402570442aae5f0286272a6800bdef1b2a3653b"
+    },
+    {
+      "path": "knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "bytes": 13829,
+      "sha256": "c19620d3e4680d44d7eb43c2c8257b0c2a8869e717a0316fbc0081dbb300498c"
+    },
+    {
+      "path": "knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "bytes": 14579,
+      "sha256": "c2e7883dd443d6fd0d1aeb18204ff26b5bd8a70e7638e44f6a4a0d7633b168f7"
+    },
+    {
+      "path": "knowledge/12_COUNCIL_VOICES.md",
+      "bytes": 17061,
+      "sha256": "9f5f2b09786b163b6918abf3223de180fcca5195559dc7e4b00fa9769b2545b7"
+    },
+    {
+      "path": "knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "bytes": 12869,
+      "sha256": "f57dcbe2abe58a559ffa5c62c6533853805313bc9486d4ab8203ccc2b8d880fe"
+    },
+    {
+      "path": "knowledge/14_MEMORY_MODEL.md",
+      "bytes": 14110,
+      "sha256": "fd7016036ec0987845b96b39071339ffd9f9dfc8d0f83435557061936bbc6763"
+    },
+    {
+      "path": "knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "bytes": 11235,
+      "sha256": "5d757e35b82dc60b1471d7f7c6c1f547a84af5e30fcb99d75b1fbc602fe6600d"
+    },
+    {
+      "path": "knowledge/16_SHADOW_LAYER.md",
+      "bytes": 8289,
+      "sha256": "be46e1d9a5898b3d07d3a3813854323a49bd2394a936c7e7928a25eb1daff795"
+    },
+    {
+      "path": "knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "bytes": 11430,
+      "sha256": "dd4d8af3cf88c1088d937ba45f2a6e4f28e8eb14f0373f1a7b6f3c63524f9c9f"
+    },
+    {
+      "path": "knowledge/18_HORIZON_WEAVER.md",
+      "bytes": 13916,
+      "sha256": "282ff5be29df9776cfb881bf8d985744f509413dc7ce19ef827993b9ad4598d3"
+    },
+    {
+      "path": "knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "bytes": 12501,
+      "sha256": "ffb66f7e8293d81f4aa2d526a239efffb0fbb5335ec8e2de8f4ceea8a218c176"
+    },
+    {
+      "path": "knowledge/20_GOVERNANCE_ADR.md",
+      "bytes": 31203,
+      "sha256": "a244a05d25ebdc57d7833ae30685d18a88ec34df2b2d4078cf4659a548470d2c"
+    },
+    {
+      "path": "knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "bytes": 19105,
+      "sha256": "20a47211734796f4af94ddd1621d19d39474785fbcf9a1570146d3edf9e833a5"
+    },
+    {
+      "path": "knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "bytes": 1813,
+      "sha256": "eb08b6965e677a195b43d6fe1addc65a447a721df3ed8b47c93c02ec8db6bee5"
+    },
+    {
+      "path": "knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "bytes": 1091,
+      "sha256": "b5f58d2d1226fff156d5cef4c6e34b9aff0dfe55836a8ca0870fe59201ffd334"
+    },
+    {
+      "path": "knowledge/24_INTERFACE_STYLE.md",
+      "bytes": 3398115,
+      "sha256": "f148cb510ed2736a945bd09bb5007ce46bd0e78b8716d4601678302565bff07f"
+    },
+    {
+      "path": "knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "bytes": 457439,
+      "sha256": "c58bbb6c10ba353ef12245e55f45386f1390179e4f4d2cd7c25394c74fe39eef"
+    },
+    {
+      "path": "knowledge/26_SOMATIC_INTUITION.md",
+      "bytes": 24288,
+      "sha256": "38f0195f070366cae234583fc3e3dcc30c74a5662fd4bab011f4da77b07672cf"
+    },
+    {
+      "path": "knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "bytes": 18510,
+      "sha256": "5d404443c42914b1883434f765beae7edb18706f9ed80e18ad8286d0af1dcef1"
+    },
+    {
+      "path": "knowledge/28_EVALS_ACCEPTANCE.md",
+      "bytes": 10501,
+      "sha256": "5349da975541b35a44979808210841908fd775acee59f78d67efb66c46286a80"
+    },
+    {
+      "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "bytes": 4975,
+      "sha256": "74d78333514f32fa152d48f97530ff9b22ff407f2f9a5fc345f7c73878357af3"
+    }
+  ],
+  "changed_files_from_v5_4": [
+    "00_PROJECT_ROUTER.md",
+    "05_TRUTH_SIFT_RAG.md",
+    "07_UNIVERSAL_ROUTER.md",
+    "20_GOVERNANCE_ADR.md",
+    "25_LIBER_SPACE_BUSIDO.md",
+    "28_EVALS_ACCEPTANCE.md",
+    "29_INDEX_UPLOAD_MANIFEST.md"
+  ],
+  "live_project_verified": false,
+  "knowledge_set_sha256": "07891f0e8ea53ab0d8f30cfe536b27715ff7514babad766caf85c4ec7f82f15d",
+  "project_instructions_chars": 5907,
+  "acceptance_range": "T01-T76",
+  "myth_fragment_count": 30,
+  "myth_arc_count": 6,
+  "corpus_source_count": 18,
+  "routed_source_count": 17,
+  "deduplicated_archive_count": 1,
+  "inquiry_metadata_count": 30,
+  "checksum_scope": "all package files except support/SHA256SUMS",
+  "static_qc": "55/55 PASS"
+}

@@ -14,6 +14,17 @@ dist/**
 !dist/agent-builder/iskra-full-canon-unified-2026-06-10/
 !dist/agent-builder/iskra-full-canon-unified-2026-06-10/**
 
+# Re-include the SoT30 Mythic Corpus Pass2 / Mythic Router reference package.
+# NOTE: this is a local reference package (PACKAGE_RECEIPT.json: verified_live=false,
+# sot30_mirrored=false). Its internal ADR-20260712-02_MYTHIC_ROUTER.md collides in ID
+# with the accepted governance/adr_20260712_iskra_constitution_v1_activation.md
+# (also ADR-20260712-02). Left untouched to preserve the package's own integrity
+# hashes; see governance/changelog.d for the disclosure note. A formal canonical
+# proposal for Mythic Router must be re-issued under ADR-20260712-04 (next free slot).
+!dist/SoT30_v5.4.1_Mythic_Corpus_Pass2_T76_Knowledge/
+!dist/SoT30_v5.4.1_Mythic_Corpus_Pass2_T76_Knowledge/**
+!dist/SoT30_v5.4.1_Mythic_Corpus_Pass2_T76_Knowledge.zip
+
 # Re-ignore other dist/ directories that are build artifacts.
 apps/iskra-site/dist/
 runtime/dist/

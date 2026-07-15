@@ -1,0 +1,17 @@
+{
+  "package": "ISKRA_MYTHIC_ROUTER_v0_1_1",
+  "version": "0.1.1",
+  "status": "PASS_LOCAL_REFERENCE_NOT_VERIFIED_LIVE",
+  "manifest_sha256": "703cef3e9371195aac57becd1ffb7c2749767adad6711efc8d8104d4a540c6fd",
+  "manifest_items": 42,
+  "tree_aggregate_sha256": "f71a036ed21d2d59d16505c3ff4ea6e3d3973b7a0a36a2427b1a2979bbd26200",
+  "source_count": 18,
+  "fragment_count": 21,
+  "static_checks": "41/41 PASS",
+  "controlled_lab": "9/9 PASS",
+  "a1_status": "ACCEPTED",
+  "sot30_mirrored": false,
+  "claude_layer_mirrored": false,
+  "verified_live": false,
+  "zip_receipt": "external authoritative receipt"
+}

@@ -1,0 +1,212 @@
+{
+  "status": "PASS",
+  "passed": 41,
+  "total": 41,
+  "checks": [
+    {
+      "name": "source_count_18",
+      "pass": true,
+      "detail": "18"
+    },
+    {
+      "name": "fragment_count_21",
+      "pass": true,
+      "detail": "21"
+    },
+    {
+      "name": "fragment_ids_unique",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "voice_neutral_field_all",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "voice_neutral_reachable",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "name": "all_nine_voices",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "forbidden_complete",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "source_hashes",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "line_ranges",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "excerpt_readback",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "potok_not_selected",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "potok_marked_duplicate",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "liber_ignis_disclosure",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "identity_fragment_disclosure",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "huyndun_balanced_fragment",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "MR01_plain_zero",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "MR02_balanced_max1",
+      "pass": true,
+      "detail": "[{'fragment_id': 'MF-010', 'source_file': 'KAIN.md', 'line_range': [61, 69], 'score': 11, 'voice_alignment_class': 3, 'voice_count': 1, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'tone', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}]"
+    },
+    {
+      "name": "MR07_kain_ranks",
+      "pass": true,
+      "detail": "[{'fragment_id': 'MF-010', 'source_file': 'KAIN.md', 'line_range': [61, 69], 'score': 11, 'voice_alignment_class': 3, 'voice_count': 1, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'tone', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}]"
+    },
+    {
+      "name": "MR03_mythic_max3",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "MR03_max2_sources",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "MR08_anhantra_ranks",
+      "pass": true,
+      "detail": "[{'fragment_id': 'MF-011', 'source_file': 'ANHANTRA.md', 'line_range': [60, 63], 'score': 13, 'voice_alignment_class': 3, 'voice_count': 1, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 2, 'function_hits': 1}, 'use_as': 'tone', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}, {'fragment_id': 'MF-004', 'source_file': 'ISKRA_СБОРНИК_МЕТАМОРФОЗ_v0.1(4).md', 'line_range': [343, 349], 'score': 11, 'voice_alignment_class': 2, 'voice_count': 3, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}]"
+    },
+    {
+      "name": "MR09_huyndun_ranks",
+      "pass": true,
+      "detail": "[{'fragment_id': 'MF-021', 'source_file': 'HUYNDUN.md', 'line_range': [53, 62], 'score': 11, 'voice_alignment_class': 3, 'voice_count': 1, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}, {'fragment_id': 'MF-012', 'source_file': 'HUYNDUN.md', 'line_range': [37, 62], 'score': 11, 'voice_alignment_class': 2, 'voice_count': 2, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}, {'fragment_id': 'MF-020', 'source_file': 'liber_ignis.txt', 'line_range': [172, 189], 'score': 6, 'voice_alignment_class': 2, 'voice_count': 3, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 0, 'motif_hits': 1, 'function_hits': 0}, 'use_as': 'analogy', 'disclosure_required': True, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}]"
+    },
+    {
+      "name": "MR04_crisis_off",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "MR05_depth_block",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "MR06_technical_identity_block",
+      "pass": true,
+      "detail": "[{'fragment_id': 'MF-007', 'source_file': 'корабль трюм и пленник габрана(3).txt', 'line_range': [19, 24], 'score': 9, 'voice_alignment_class': 2, 'voice_count': 3, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 0, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}, {'fragment_id': 'MF-008', 'source_file': 'корабль трюм и пленник габрана(3).txt', 'line_range': [125, 127], 'score': 9, 'voice_alignment_class': 2, 'voice_count': 3, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 0, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}, {'fragment_id': 'MF-001', 'source_file': 'mantra.md', 'line_range': [21, 25], 'score': 8, 'voice_alignment_class': 2, 'voice_count': 2, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 0, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': True, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}]"
+    },
+    {
+      "name": "MR16A_MF013_first",
+      "pass": true,
+      "detail": "['MF-013', 'MF-001']"
+    },
+    {
+      "name": "MR16B_single_voice_beats_multi",
+      "pass": true,
+      "detail": "['MF-013', 'MF-001']"
+    },
+    {
+      "name": "MR16_source_cap_after_ranking",
+      "pass": true,
+      "detail": "['MF-013', 'MF-001']"
+    },
+    {
+      "name": "MR17A_huyndun_own_neutral_or_none",
+      "pass": true,
+      "detail": "[{'fragment_id': 'MF-021', 'source_file': 'HUYNDUN.md', 'line_range': [53, 62], 'score': 11, 'voice_alignment_class': 3, 'voice_count': 1, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}]"
+    },
+    {
+      "name": "MR17B_foreign_dropped",
+      "pass": true,
+      "detail": "VOICE_ALIGNMENT"
+    },
+    {
+      "name": "MR17_class1_reachable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "MR18_valid_subset",
+      "pass": true,
+      "detail": "{'ok': True, 'errors': [], 'used_fragment_ids': ['MF-004', 'MF-011'], 'used_image_sources': [], 'provenance': [{'fragment_id': 'MF-004', 'source_file': 'ISKRA_СБОРНИК_МЕТАМОРФОЗ_v0.1(4).md', 'line_range': [343, 349], 'score': 11, 'voice_alignment_class': 2, 'voice_count': 3, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}, {'fragment_id': 'MF-011', 'source_file': 'ANHANTRA.md', 'line_range': [60, 63], 'score': 13, 'voice_alignment_class': 3, 'voice_count': 1, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 1, 'motif_hits': 2, 'function_hits': 1}, 'use_as': 'tone', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}], 'disclosure_required': False}"
+    },
+    {
+      "name": "MR18_unrouted_image_fails",
+      "pass": true,
+      "detail": "{'ok': False, 'errors': [{'reason': 'UNROUTED_PROVENANCE', 'fragment_ids': ['MF-007']}], 'used_fragment_ids': ['MF-004', 'MF-011'], 'used_image_sources': ['MF-007'], 'provenance': [], 'disclosure_required': False}"
+    },
+    {
+      "name": "MR19_unused_disclosure_absent",
+      "pass": true,
+      "detail": "{'ok': True, 'errors': [], 'used_fragment_ids': ['MF-021'], 'used_image_sources': [], 'provenance': [{'fragment_id': 'MF-021', 'source_file': 'HUYNDUN.md', 'line_range': [53, 62], 'score': 8, 'voice_alignment_class': 3, 'voice_count': 1, 'score_breakdown': {'voice_hits': 1, 'playbook_hit': 0, 'motif_hits': 1, 'function_hits': 1}, 'use_as': 'analogy', 'disclosure_required': False, 'voice_neutral': False, 'forbidden_effects': ['fact_claim', 'diagnosis', 'guard_override', 'playbook_override', 'voice_override', 'action_authorization', 'permission_escalation', 'consciousness_proof', 'memory_claim', 'identity_claim']}], 'disclosure_required': False}"
+    },
+    {
+      "name": "A1_incoming_manifest_readback",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "A1_canonical_accepted",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no_empty_files",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no_generated_junk",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "adr_accepted",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "contract_rollback",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "not_verified_live_claim",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

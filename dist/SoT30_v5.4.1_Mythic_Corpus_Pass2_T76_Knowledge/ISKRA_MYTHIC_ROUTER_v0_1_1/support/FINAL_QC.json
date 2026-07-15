@@ -1,0 +1,22 @@
+{
+  "package": "ISKRA_MYTHIC_ROUTER_v0_1_1",
+  "version": "0.1.1",
+  "status": "PASS_LOCAL_REFERENCE_NOT_VERIFIED_LIVE",
+  "checks": {
+    "static": "41/41 PASS",
+    "controlled_lab": "9/9 PASS"
+  },
+  "sources": 18,
+  "fragments": 21,
+  "voice_neutral_fragments": 2,
+  "boundaries": {
+    "sot30_mirrored": false,
+    "claude_layer_mirrored": false,
+    "target_project_invoked": false,
+    "verified_live": false
+  },
+  "notes": [
+    "Reference router and controlled frozen-core LAB only.",
+    "External ZIP receipt is authoritative for archive bytes/hash."
+  ]
+}
