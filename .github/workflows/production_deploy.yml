@@ -98,8 +98,18 @@ jobs:
           deno check --no-lock --config runtime/iskraSpace/supabase/functions/iskra-agent/deno.json runtime/iskraSpace/supabase/functions/iskra-agent/index.ts
 
       - name: Dependency audits
+        shell: bash
         run: |
-          pnpm audit --audit-level moderate
+          # pnpm 10 uses npm's retired quick-audit endpoint. Run the pinned
+          # bulk-advisory client from outside the workspace so it cannot
+          # delegate back to packageManager: pnpm@10.32.1.
+          (
+            cd "$RUNNER_TEMP"
+            npx --yes pnpm@11.13.0 \
+              --dir "$GITHUB_WORKSPACE" \
+              --pm-on-fail=ignore \
+              audit --audit-level moderate
+          )
           cd runtime
           npm audit --audit-level moderate
 

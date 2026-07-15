@@ -37,7 +37,8 @@ describe('IskraSpace release workflow contract', () => {
   it('makes security, integrity, browser and Docker smoke checks release gates', () => {
     for (const marker of [
       'lint:strict',
-      'pnpm audit --audit-level moderate',
+      'pnpm@11.13.0',
+      '--pm-on-fail=ignore',
       'npm audit --audit-level moderate',
       'check:supabase-graph-contract:repo',
       'check:supabase-voice-metrics-contract:repo',
@@ -62,6 +63,8 @@ describe('IskraSpace release workflow contract', () => {
     ]) {
       expect(productionWorkflow).toContain(marker);
     }
+
+    expect(productionWorkflow).not.toContain('pnpm audit --audit-level moderate');
   });
 
   it('keeps Vercel out of the canonical production path', () => {
