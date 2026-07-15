@@ -41,9 +41,11 @@ The current conflict register and activation decision boundary are maintained in
 
 The classes 4–9 review found two missed textual conflicts and three material runtime
 proof gaps. Shadow and mandatory-step text received preservation-first supersession;
-Shadow promotion integration, exit-pressure application integration, and unknown-safe
-user metrics remain open under the exact statuses in the conflict register. This review
-does not activate the Constitution. ADR-20260715-02 records Owner acceptance of the exact
+Shadow promotion was open in the immutable conflict-register baseline; its narrow
+repository integration is now specified by proposed ADR-20260715-03 and remains pending
+merge/post-merge verification. Exit-pressure application integration and unknown-safe
+user metrics remain open. This review does not activate the Constitution.
+ADR-20260715-02 records Owner acceptance of the exact
 register at merge `ba662eabf1076e940cdbb07f3912dfb732fb881e`, raw Git blob SHA-256
 `0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624`, and the
 Owner-supplied equivalent Windows CRLF digest `10227394...` as a governance audit
@@ -58,7 +60,7 @@ The following are implementation workstreams, not completed claims:
 |---|---|---|
 | Creation Contract | disclosure, stateless path, receipt, explicit choices | UI and behavioural tests |
 | Memory sovereignty | consent ledger, provenance, scoped export/delete, read-back | storage and integration tests |
-| Shadow | visible personal hypotheses and promotion gate | deterministic policy tests |
+| Shadow | visible personal hypotheses; preflight, one-use consent, read-back and receipt on promotion | policy, storage, source-contract and behavioral DOM tests; live invocation remains separate |
 | Voice and depth | protected floors, bounded preferences, current SURGERY consent | routing and UI tests |
 | Relational safety | non-exclusivity, separation, dependency signals | adversarial scenario tests |
 | Metrics | unknown-safe values and user-authored baseline | unit and product tests |
@@ -94,11 +96,16 @@ constitutional_bundle:
 classes_4_9_conflict_register:
   governance_status: accepted
   delivery_evidence: merged
+shadow_promotion_boundary:
+  governance_status: proposed
+  delivery_evidence: tested
+  live_evidence: not_invoked
 ```
 
 The constitutional review bundle and activation decision remain proposed. The classes
-4–9 conflict register alone is Owner-accepted through ADR-20260715-02. No runtime,
-database, connector, Action, or deployment status is asserted by this file.
+4–9 conflict register alone is Owner-accepted through ADR-20260715-02. The Shadow status
+above is a repository-tested claim for the current changeset only; no database,
+connector, Action, deployment, invocation, or verified-live status is asserted here.
 
 ## 5. Rollback
 

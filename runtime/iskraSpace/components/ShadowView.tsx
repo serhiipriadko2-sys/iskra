@@ -10,6 +10,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { memoryService } from '../services/memoryService';
+import { shadowPromotionService } from '../services/shadowPromotionService';
+import { symbiosisService } from '../services/symbiosisService';
 import { MemoryNode } from '../types';
 
 interface ShadowViewProps {
@@ -21,6 +23,7 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
   const [selectedNode, setSelectedNode] = useState<MemoryNode | null>(null);
   const [filter, setFilter] = useState<'all' | 'recent' | 'uncertain'>('all');
   const [showPromoteDialog, setShowPromoteDialog] = useState(false);
+  const [promotionReasons, setPromotionReasons] = useState<string[]>([]);
 
   useEffect(() => {
     loadShadowNodes();
@@ -46,8 +49,22 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
   };
 
   const promoteToArchive = useCallback((node: MemoryNode) => {
-    // Use memoryService to promote shadow to archive
-    memoryService.promoteToArchive(node.id);
+    const consent = symbiosisService.grantConsent(
+      'memory.promote.shadow',
+      `Перенести выбранную запись Shadow "${node.title || node.id}" в Archive после проверки SIFT.`,
+    );
+    const result = shadowPromotionService.promote({
+      node,
+      userConfirmed: true,
+      consent,
+    });
+
+    if (!result.ok) {
+      setPromotionReasons(result.reasons);
+      return;
+    }
+
+    setPromotionReasons([]);
     loadShadowNodes();
     setSelectedNode(null);
     setShowPromoteDialog(false);
@@ -192,6 +209,7 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
             shadowNodes.map(node => (
               <div
                 key={node.id}
+                data-testid={`shadow-node-${node.id}`}
                 onClick={() => setSelectedNode(node)}
                 style={{
                   padding: '12px 16px',
@@ -308,7 +326,11 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
             {/* Actions */}
             <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
               <button
-                onClick={() => setShowPromoteDialog(true)}
+                data-testid="shadow-promote-open"
+                onClick={() => {
+                  setPromotionReasons([]);
+                  setShowPromoteDialog(true);
+                }}
                 style={{
                   padding: '10px 20px',
                   backgroundColor: '#2e7d32',
@@ -365,9 +387,26 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
                     📚 Перенос в Archive
                   </h3>
                   <p style={{ color: '#ccc' }}>
-                    Эта мысль будет перенесена из Shadow в Archive как верифицированное знание.
-                    Убедитесь, что информация проверена и достоверна.
+                    Перенос выполняется только для этой записи и только после явного подтверждения.
+                    Система проверит evidence, статус SIFT, одноразовый consent и сохранит receipt
+                    с read-back результатом. Если любое условие не выполнено, запись останется в Shadow.
                   </p>
+                  {promotionReasons.length > 0 && (
+                    <div
+                      data-testid="shadow-promotion-decision"
+                      role="alert"
+                      style={{
+                        backgroundColor: 'rgba(198, 40, 40, 0.2)',
+                        border: '1px solid #c62828',
+                        borderRadius: '8px',
+                        color: '#ffcdd2',
+                        padding: '12px',
+                        margin: '16px 0',
+                      }}
+                    >
+                      Перенос заблокирован политикой: {promotionReasons.join(', ')}
+                    </div>
+                  )}
                   <div style={{
                     backgroundColor: '#1a1a2e',
                     padding: '12px',
@@ -378,7 +417,10 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
                   </div>
                   <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                     <button
-                      onClick={() => setShowPromoteDialog(false)}
+                      onClick={() => {
+                        setPromotionReasons([]);
+                        setShowPromoteDialog(false);
+                      }}
                       style={{
                         padding: '8px 16px',
                         backgroundColor: '#444',
@@ -391,6 +433,7 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
                       Отмена
                     </button>
                     <button
+                      data-testid="shadow-promote-confirm"
                       onClick={() => promoteToArchive(selectedNode)}
                       style={{
                         padding: '8px 16px',

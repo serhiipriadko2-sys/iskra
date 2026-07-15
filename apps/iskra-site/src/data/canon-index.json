@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-15T18:22:42.599Z",
-  "total": 2804,
+  "generatedAt": "2026-07-15T19:14:55.027Z",
+  "total": 2809,
   "curated": 20,
   "layers": {
     "root": 334,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 65,
+    "governance": 67,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 349,
+    "runtime": 352,
     "skills": 267,
     "backend": 63,
     "system": 26,
@@ -20965,6 +20965,7 @@
         "governance/adr_20260712_iskra_constitution_v1_redline.md",
         "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
         "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+        "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -21306,6 +21307,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
+      "name": "adr_20260715_iskraspace_shadow_promotion_boundary.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21442,7 +21454,8 @@
         "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md",
         "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
         "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
-        "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md"
+        "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
+        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md"
       ]
     },
     {
@@ -21563,6 +21576,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
+      "name": "2026-07-15-iskraspace-shadow-promotion-boundary.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
@@ -25627,7 +25651,8 @@
         "runtime/iskraSpace/__tests__/components/CouncilView.test.tsx",
         "runtime/iskraSpace/__tests__/components/IskraStateView.test.tsx",
         "runtime/iskraSpace/__tests__/components/JournalSecurityBoundary.test.tsx",
-        "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx"
+        "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx",
+        "runtime/iskraSpace/__tests__/components/ShadowView.test.tsx"
       ]
     },
     {
@@ -25693,6 +25718,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/ShadowView.test.tsx",
+      "name": "ShadowView.test.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/ShadowView.test.tsx",
       "related": [],
       "parent": "runtime/iskraSpace/__tests__/components"
     },
@@ -27231,6 +27267,7 @@
         "runtime/iskraSpace/services/rule8Service.ts",
         "runtime/iskraSpace/services/searchService.ts",
         "runtime/iskraSpace/services/securityService.ts",
+        "runtime/iskraSpace/services/shadowPromotionService.ts",
         "runtime/iskraSpace/services/soundService.ts",
         "runtime/iskraSpace/services/storageCompat.ts",
         "runtime/iskraSpace/services/storageService.ts",
@@ -27294,6 +27331,7 @@
         "runtime/iskraSpace/services/__tests__/runtimeConfigDeliveryBoundary.test.ts",
         "runtime/iskraSpace/services/__tests__/searchService.test.ts",
         "runtime/iskraSpace/services/__tests__/securityService.test.ts",
+        "runtime/iskraSpace/services/__tests__/shadowPromotionService.test.ts",
         "runtime/iskraSpace/services/__tests__/soundService.test.ts",
         "runtime/iskraSpace/services/__tests__/storageService.test.ts",
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
@@ -27739,6 +27777,17 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/shadowPromotionService.test.ts",
+      "name": "shadowPromotionService.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/shadowPromotionService.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/soundService.test.ts",
       "name": "soundService.test.ts",
       "kind": "file",
@@ -28164,6 +28213,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/securityService.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
+      "path": "runtime/iskraSpace/services/shadowPromotionService.ts",
+      "name": "shadowPromotionService.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/shadowPromotionService.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services"
     },
