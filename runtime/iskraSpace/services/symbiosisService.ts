@@ -2,17 +2,20 @@ import {
   createStatelessSymbiosisProfile,
   type ConsentReceipt,
   type MemoryMode,
+  type SymbiosisActionReceipt,
   type SymbiosisPermissionKey,
   type SymbiosisProfile,
 } from '@iskra/runtime';
 
 const PROFILE_KEY = 'iskra-symbiosis-profile-v1';
 const RECEIPTS_KEY = 'iskra-symbiosis-consent-receipts-v1';
+const ACTION_RECEIPTS_KEY = 'iskra-symbiosis-action-receipts-v1';
 const REVIEW_DAYS = 30;
 
 export interface SymbiosisState {
   profile: SymbiosisProfile;
   receipts: ConsentReceipt[];
+  actionReceipts: SymbiosisActionReceipt[];
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -40,6 +43,19 @@ const isConsentReceipt = (value: unknown): value is ConsentReceipt => {
     typeof value.granted_at === 'string' &&
     (value.expires_at === null || typeof value.expires_at === 'string') &&
     typeof value.profile_version === 'number';
+};
+
+const isActionReceipt = (value: unknown): value is SymbiosisActionReceipt => {
+  if (!isRecord(value)) return false;
+  return typeof value.action === 'string' &&
+    (value.requested_by === 'USER' || value.requested_by === 'ISKRA_PROPOSAL') &&
+    (value.permission_ref === null || typeof value.permission_ref === 'string') &&
+    (value.result === 'DONE' || value.result === 'PARTIAL' ||
+      value.result === 'BLOCKED' || value.result === 'FAILED') &&
+    (value.read_back === 'VERIFIED' || value.read_back === 'MISMATCH' ||
+      value.read_back === 'NOT_APPLICABLE') &&
+    Array.isArray(value.evidence_refs) &&
+    value.evidence_refs.every(ref => typeof ref === 'string');
 };
 
 const parseJson = <T>(key: string): T | null => {
@@ -81,6 +97,7 @@ const createReceiptId = (): string => {
 const persistState = (state: SymbiosisState): void => {
   localStorage.setItem(PROFILE_KEY, JSON.stringify(state.profile));
   localStorage.setItem(RECEIPTS_KEY, JSON.stringify(state.receipts));
+  localStorage.setItem(ACTION_RECEIPTS_KEY, JSON.stringify(state.actionReceipts));
 };
 
 export const symbiosisService = {
@@ -91,7 +108,7 @@ export const symbiosisService = {
           iskraName: 'Искра',
           reviewAt: addDays(REVIEW_DAYS),
         });
-    const state: SymbiosisState = { profile, receipts: [] };
+    const state: SymbiosisState = { profile, receipts: [], actionReceipts: [] };
     persistState(state);
     return state;
   },
@@ -106,9 +123,16 @@ export const symbiosisService = {
     return Array.isArray(receipts) ? receipts.filter(isConsentReceipt) : [];
   },
 
+  getActionReceipts(): SymbiosisActionReceipt[] {
+    const receipts = parseJson<unknown>(ACTION_RECEIPTS_KEY);
+    return Array.isArray(receipts) ? receipts.filter(isActionReceipt) : [];
+  },
+
   getState(): SymbiosisState | null {
     const profile = this.getProfile();
-    return profile ? { profile, receipts: this.getReceipts() } : null;
+    return profile
+      ? { profile, receipts: this.getReceipts(), actionReceipts: this.getActionReceipts() }
+      : null;
   },
 
   isStateless(): boolean {
@@ -134,9 +158,24 @@ export const symbiosisService = {
       expires_at: new Date(now.getTime() + ttlMinutes * 60_000).toISOString(),
       profile_version: state.profile.version,
     };
-    const receipts = [...state.receipts.filter(item => item.scope !== scope), receipt];
-    persistState({ profile: state.profile, receipts });
+    const receipts = [...state.receipts, receipt];
+    persistState({ ...state, receipts });
     return receipt;
+  },
+
+  recordActionReceipt(receipt: SymbiosisActionReceipt): boolean {
+    if (!isActionReceipt(receipt) || !receipt.permission_ref) return false;
+    const state = this.getState();
+    if (!state || state.actionReceipts.some(item => item.permission_ref === receipt.permission_ref)) {
+      return false;
+    }
+    persistState({ ...state, actionReceipts: [...state.actionReceipts, receipt] });
+    return true;
+  },
+
+  hasUsedConsentReceipt(receiptId: string): boolean {
+    if (!receiptId) return false;
+    return this.getActionReceipts().some(receipt => receipt.permission_ref === receiptId);
   },
 
   getCurrentConsent(
@@ -145,7 +184,7 @@ export const symbiosisService = {
   ): ConsentReceipt | null {
     const profile = this.getProfile();
     if (!profile) return null;
-    return this.getReceipts().find(receipt =>
+    return [...this.getReceipts()].reverse().find(receipt =>
       receipt.scope === scope &&
       receipt.decision === 'GRANTED' &&
       receipt.profile_version === profile.version &&
@@ -162,12 +201,19 @@ export const symbiosisService = {
     const candidate = value as Partial<SymbiosisState>;
     if (!isSymbiosisProfile(candidate.profile)) return false;
     if (!Array.isArray(candidate.receipts) || !candidate.receipts.every(isConsentReceipt)) return false;
-    persistState({ profile: candidate.profile, receipts: candidate.receipts });
+    const actionReceipts = candidate.actionReceipts ?? [];
+    if (!Array.isArray(actionReceipts) || !actionReceipts.every(isActionReceipt)) return false;
+    persistState({
+      profile: candidate.profile,
+      receipts: candidate.receipts,
+      actionReceipts,
+    });
     return true;
   },
 
   clear(): void {
     localStorage.removeItem(PROFILE_KEY);
     localStorage.removeItem(RECEIPTS_KEY);
+    localStorage.removeItem(ACTION_RECEIPTS_KEY);
   },
 };

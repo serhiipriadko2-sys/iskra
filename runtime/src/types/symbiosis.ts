@@ -107,6 +107,16 @@ export interface ShadowPromotionRequest {
   receipt: SymbiosisActionReceipt | null;
 }
 
+export interface ShadowPromotionIntentRequest {
+  profile: SymbiosisProfile;
+  candidate: MemoryCandidate;
+  sift_status: SiftGateStatus;
+  user_confirmed: boolean;
+  consent: ConsentReceipt | null;
+  consent_already_used: boolean;
+  now: string;
+}
+
 export interface OnboardingCheck {
   id: string;
   executed: boolean;
@@ -231,6 +241,27 @@ export function evaluateShadowPromotion(input: ShadowPromotionRequest): PolicyCh
     if (input.receipt.read_back !== 'VERIFIED') reasons.push('read_back_not_verified');
     if (!input.receipt.permission_ref) reasons.push('permission_ref_missing');
   }
+  return { ok: reasons.length === 0, reasons };
+}
+
+export function evaluateShadowPromotionIntent(input: ShadowPromotionIntentRequest): PolicyCheck {
+  const reasons: string[] = [];
+  const { profile, candidate, consent, now } = input;
+
+  if (profile.memory_mode === 'STATELESS') reasons.push('memory_mode_is_stateless');
+  if (candidate.layer !== 'SHADOW') reasons.push('candidate_is_not_shadow');
+  if (candidate.source_refs.length === 0) reasons.push('evidence_missing');
+  if (input.sift_status !== 'PASS') reasons.push('sift_not_pass');
+  if (!input.user_confirmed) reasons.push('user_confirmation_missing');
+
+  const configuredScope = profile.memory_permissions['memory.promote.shadow'] ?? 'NONE';
+  if (configuredScope === 'NONE') reasons.push('permission_scope_is_none');
+  if (configuredScope !== 'ASK_EACH') reasons.push('promotion_requires_ask_each');
+  if (!isReceiptCurrent(consent, 'memory.promote.shadow', profile.version, now)) {
+    reasons.push('current_consent_receipt_missing');
+  }
+  if (input.consent_already_used) reasons.push('consent_receipt_already_used');
+
   return { ok: reasons.length === 0, reasons };
 }
 
