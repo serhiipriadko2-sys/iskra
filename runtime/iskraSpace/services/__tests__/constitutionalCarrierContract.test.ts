@@ -68,9 +68,24 @@ describe('Constitution v1 carrier-review contract', () => {
   it('keeps the living status on the verified post-merge baseline', () => {
     const status = readRepoFile('runtime/iskraSpace/RELEASE_STATUS.md');
 
-    expect(status).toContain('b0851b03187625577ad1b1755d6261be5f7c7f71');
-    expect(status).toContain('29432905117');
+    expect(status).toContain('ba662eabf1076e940cdbb07f3912dfb732fb881e');
+    expect(status).toContain('29438498965');
     expect(status).not.toContain('production audit gate under repair');
     expect(status).toContain('canonical_activation: blocked');
+  });
+
+  it('records exact Owner acceptance without activating Constitution or runtime enforcement', () => {
+    const receipt = readRepoFile(
+      'governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md',
+    );
+
+    expect(receipt).toContain('Status: accepted');
+    expect(receipt).toContain('ba662eabf1076e940cdbb07f3912dfb732fb881e');
+    expect(receipt).toContain(
+      '10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79',
+    );
+    expect(receipt).toContain('canonical_activation: blocked');
+    expect(receipt).toContain('runtime_enforcement: partial / not verified live');
+    expect(receipt).toContain('Memory Gateway: unchanged');
   });
 });
