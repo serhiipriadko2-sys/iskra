@@ -91,6 +91,58 @@ describe('shadowPromotionService policy boundary', () => {
     expect(memoryService.getArchive()).toEqual([]);
   });
 
+  it('fails closed without throwing for malformed persisted evidence and content', () => {
+    const stored = addReviewedShadow();
+    const malformed = {
+      ...stored,
+      content: undefined,
+      evidence: undefined,
+    } as unknown as MemoryNode;
+    const consent = grantPromotionConsent();
+
+    expect(() => shadowPromotionService.promote({
+      node: malformed,
+      userConfirmed: true,
+      consent,
+    })).not.toThrow();
+    const result = shadowPromotionService.promote({
+      node: malformed,
+      userConfirmed: true,
+      consent,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.reasons).toContain('evidence_missing');
+  });
+
+  it('ignores non-string evidence references instead of calling trim on them', () => {
+    const stored = addReviewedShadow();
+    const malformed = {
+      ...stored,
+      evidence: [{
+        source: 42,
+        inference: 'corrupted persisted record',
+        fact: 'true',
+        trace: null,
+      }],
+    } as unknown as MemoryNode;
+    const consent = grantPromotionConsent();
+
+    expect(() => shadowPromotionService.promote({
+      node: malformed,
+      userConfirmed: true,
+      consent,
+    })).not.toThrow();
+    const result = shadowPromotionService.promote({
+      node: malformed,
+      userConfirmed: true,
+      consent,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.reasons).toContain('evidence_missing');
+  });
+
   it('uses the system clock and rejects an expired consent receipt', () => {
     vi.useFakeTimers();
     vi.setSystemTime('2026-07-15T12:00:00.000Z');

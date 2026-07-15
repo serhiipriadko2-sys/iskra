@@ -23,17 +23,20 @@ export interface ShadowPromotionOutcome {
   receipt: SymbiosisActionReceipt | null;
 }
 
-const uniqueNonEmpty = (values: string[]): string[] =>
-  [...new Set(values.map(value => value.trim()).filter(Boolean))];
+const uniqueNonEmpty = (values: unknown[]): string[] =>
+  [...new Set(values
+    .filter((value): value is string => typeof value === 'string')
+    .map(value => value.trim())
+    .filter(Boolean))];
 
 const evidenceRefsFor = (node: MemoryNode): string[] => uniqueNonEmpty(
-  node.evidence.flatMap(evidence => [evidence.source, evidence.trace]),
+  (node.evidence ?? []).flatMap(evidence => [evidence.source, evidence.trace]),
 );
 
 const claimFor = (node: MemoryNode): string => {
   if (typeof node.content === 'string') return node.content;
   try {
-    return JSON.stringify(node.content);
+    return JSON.stringify(node.content) ?? '';
   } catch {
     return '';
   }

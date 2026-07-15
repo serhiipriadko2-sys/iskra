@@ -142,8 +142,11 @@ describe('ShadowView promotion boundary', () => {
 
     await act(async () => findButton('Подтвердить')?.click());
 
-    expect(container?.querySelector('[data-testid="shadow-promotion-decision"]')?.textContent)
-      .toContain('sift_not_pass');
+    const decision = container
+      ?.querySelector('[data-testid="shadow-promotion-decision"]')
+      ?.textContent;
+    expect(decision).toContain('SIFT-проверка не пройдена');
+    expect(decision).not.toContain('sift_not_pass');
     expect(findButton('Подтвердить')).toBeDefined();
     expect(mocks.promoteRaw).not.toHaveBeenCalled();
   });

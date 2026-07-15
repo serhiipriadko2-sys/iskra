@@ -18,6 +18,28 @@ interface ShadowViewProps {
   onClose?: () => void;
 }
 
+const PROMOTION_REASON_MESSAGES: Readonly<Record<string, string>> = {
+  symbiosis_profile_missing: 'Профиль согласий не настроен.',
+  memory_mode_is_stateless: 'В режиме без памяти перенос недоступен.',
+  candidate_is_not_shadow: 'Выбранная запись больше не находится в Shadow.',
+  evidence_missing: 'У записи нет проверяемого источника или trace.',
+  sift_not_pass: 'SIFT-проверка не пройдена.',
+  user_confirmation_missing: 'Не получено явное подтверждение пользователя.',
+  permission_scope_is_none: 'Разрешение на перенос Shadow отключено.',
+  promotion_requires_ask_each: 'Для каждого переноса требуется отдельное согласие.',
+  current_consent_receipt_missing: 'Согласие отсутствует, истекло или относится к другой версии профиля.',
+  consent_receipt_already_used: 'Это одноразовое согласие уже использовано.',
+  promotion_receipt_missing: 'Не создан receipt операции.',
+  receipt_action_mismatch: 'Receipt относится к другой операции.',
+  promotion_not_done: 'Перенос не был завершён.',
+  read_back_not_verified: 'Не удалось подтвердить результат повторным чтением.',
+  permission_ref_missing: 'В receipt отсутствует ссылка на согласие.',
+  action_receipt_not_recorded: 'Не удалось сохранить audit receipt.',
+};
+
+const promotionReasonMessage = (reason: string): string =>
+  PROMOTION_REASON_MESSAGES[reason] ?? 'Операция отклонена политикой безопасности.';
+
 const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
   const [shadowNodes, setShadowNodes] = useState<MemoryNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<MemoryNode | null>(null);
@@ -404,7 +426,7 @@ const ShadowView: React.FC<ShadowViewProps> = ({ onClose }) => {
                         margin: '16px 0',
                       }}
                     >
-                      Перенос заблокирован политикой: {promotionReasons.join(', ')}
+                      Перенос заблокирован: {promotionReasons.map(promotionReasonMessage).join(' ')}
                     </div>
                   )}
                   <div style={{
