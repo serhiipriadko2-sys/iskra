@@ -83,6 +83,9 @@ describe('Constitution v1 carrier-review contract', () => {
     expect(receipt).toContain('Status: accepted');
     expect(receipt).toContain('ba662eabf1076e940cdbb07f3912dfb732fb881e');
     expect(receipt).toContain(
+      '0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624',
+    );
+    expect(receipt).toContain(
       '10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79',
     );
     expect(receipt).toContain('canonical_activation: blocked');

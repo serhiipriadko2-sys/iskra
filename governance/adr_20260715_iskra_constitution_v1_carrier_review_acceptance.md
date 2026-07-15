@@ -20,17 +20,25 @@ merged through PR #256. Canonical activation requires an explicit Owner decision
 names the exact accepted artifact rather than inferring acceptance from a merge, green
 tests, or discussion context.
 
-The accepted content-addressed register is:
+The accepted register identity and its two deterministic byte representations are:
 
 ```text
 artifact: governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md
 merge: ba662eabf1076e940cdbb07f3912dfb732fb881e
-sha256: 10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79
+git_blob_sha256_lf: 0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624
+owner_supplied_worktree_sha256_crlf: 10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79
+git_blob_bytes: 8496
+windows_worktree_bytes: 8608
+line_ending_normalization: 112 LF records materialized as 112 CRLF sequences
 ```
 
 The embedded `Status: proposed` in that immutable artifact describes its authored state
 at the accepted merge. This acceptance receipt advances the governance status of that
-exact version without rewriting it and invalidating its content hash.
+exact version without rewriting it. The Owner-supplied digest is preserved exactly as the
+Windows checkout representation observed during acceptance. The repository-canonical
+content address is the raw Git blob digest recorded by `ledger/sot.json`; the two digests
+describe the same text at the same merge with Git line-ending materialization, not two
+different governance artifacts.
 
 ## Owner decision
 
@@ -52,7 +60,10 @@ The Owner stated:
    promotion, unknown-safe metrics, and relational/UI integration findings remain open.
 4. Do not change Memory Gateway, Supabase, Custom GPT Action, Builder, authentication,
    deployed state, or user data as a consequence of this decision.
-5. Treat future changes to a finding, scope, or verdict as a new reviewed register
+5. Use `git_blob_sha256_lf` as the repository-canonical byte identity and retain
+   `owner_supplied_worktree_sha256_crlf` as part of the Owner decision provenance. This
+   normalization clarification does not alter the quoted Owner decision or its scope.
+6. Treat future changes to a finding, scope, or verdict as a new reviewed register
    version with its own hash and Owner decision; do not silently mutate this acceptance.
 
 ## Activation boundary after acceptance
@@ -69,8 +80,10 @@ ADR-20260712-02. Canonical activation remains blocked pending, at minimum:
 
 ## Verification
 
-- Recompute SHA-256 for ADR-20260715-01 from merge `ba662eab...` and require the accepted
-  digest above.
+- Recompute the raw Git blob SHA-256 for ADR-20260715-01 from merge `ba662eab...` and
+  require `0f9f564c...`. On a Windows CRLF checkout, separately verify the preserved
+  Owner-supplied representation `10227394...`; do not compare one byte representation to
+  the other without line-ending normalization.
 - Verify PR #256 and post-merge repository gates for the accepted merge.
 - Run `pnpm check:adr-gate`, `pnpm check:sensitive-status`,
   `pnpm check:shard-registry`, `pnpm --filter iskra-site canon:index:check`,
@@ -90,8 +103,8 @@ runtime findings unless it says so explicitly with matching evidence.
 ∆: the exact classes 4–9 conflict register moves from proposed review to an
 Owner-accepted governance audit baseline without becoming active Constitution or runtime
 proof.
-D: Owner decision, ADR-20260715-01 at merge `ba662eab...`, its SHA-256, PR #256, and
-ADR-20260712-02.
+D: Owner decision, ADR-20260715-01 at merge `ba662eab...`, raw Git blob and Windows CRLF
+SHA-256 receipts, PR #256, ledger, and ADR-20260712-02.
 Ω: 0.95 for the recorded repository-governance boundary; 0 for unperformed canonical
 activation or verified-live enforcement.
 Λ: prepare a separate activation decision packet only after an exact Core version and

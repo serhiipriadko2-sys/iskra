@@ -92,10 +92,12 @@ The Iskra Constitution v1 review bundle exists in `governance/`, but it is not a
 canon and does not prove runtime enforcement. Its Core, Annexes, Transition Schedule, and
 proposed activation ADR separate durable intent from product mechanics and temporal
 implementation work. ADR-20260715-02 records Owner acceptance of the classes 4–9
-register at merge `ba662eabf1076e940cdbb07f3912dfb732fb881e` and SHA-256
-`10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79` as the governance
-audit baseline. That decision is neither canonical activation nor a runtime-enforcement
-claim.
+register at merge `ba662eabf1076e940cdbb07f3912dfb732fb881e`. Its repository-canonical
+raw Git blob SHA-256 is
+`0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624`; the exact
+Owner-supplied `10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79`
+is preserved as the equivalent Windows CRLF checkout representation. That decision is
+neither canonical activation nor a runtime-enforcement claim.
 
 The first four textual conflict patches and the 19 derived mythic-register markers remain
 implemented. The follow-up carrier review for classes 4–9 is now recorded in

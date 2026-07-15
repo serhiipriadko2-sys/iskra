@@ -44,10 +44,11 @@ proof gaps. Shadow and mandatory-step text received preservation-first supersess
 Shadow promotion integration, exit-pressure application integration, and unknown-safe
 user metrics remain open under the exact statuses in the conflict register. This review
 does not activate the Constitution. ADR-20260715-02 records Owner acceptance of the exact
-register at merge `ba662eabf1076e940cdbb07f3912dfb732fb881e` and SHA-256
-`10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79` as a governance
-audit baseline only. It does not accept an exact Constitution Core version or assert
-runtime enforcement.
+register at merge `ba662eabf1076e940cdbb07f3912dfb732fb881e`, raw Git blob SHA-256
+`0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624`, and the
+Owner-supplied equivalent Windows CRLF digest `10227394...` as a governance audit
+baseline only. It does not accept an exact Constitution Core version or assert runtime
+enforcement.
 
 ## 2. Runtime implementation map
 
