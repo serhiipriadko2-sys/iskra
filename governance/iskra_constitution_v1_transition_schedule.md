@@ -34,9 +34,16 @@ experimental any active text that:
 Historical preservation is not activation. Each conflict patch must name its source,
 replacement, status, test or review method, and rollback/reversal condition.
 
-The current conflict register and activation decision are maintained in
-`runtime/iskraSpace/RELEASE_STATUS.md` and
+The current conflict register and activation decision boundary are maintained in
+`governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md`,
+`runtime/iskraSpace/RELEASE_STATUS.md`, and
 `governance/adr_20260712_iskra_constitution_v1_activation.md`.
+
+The classes 4–9 review found two missed textual conflicts and three material runtime
+proof gaps. Shadow and mandatory-step text received preservation-first supersession;
+Shadow promotion integration, exit-pressure application integration, and unknown-safe
+user metrics remain open under the exact statuses in the conflict register. This review
+does not activate the Constitution.
 
 ## 2. Runtime implementation map
 

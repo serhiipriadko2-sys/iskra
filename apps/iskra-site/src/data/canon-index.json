@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-15T15:34:13.894Z",
-  "total": 2799,
+  "generatedAt": "2026-07-15T17:50:21.190Z",
+  "total": 2802,
   "curated": 20,
   "layers": {
     "root": 334,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 61,
+    "governance": 63,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 348,
+    "runtime": 349,
     "skills": 267,
     "backend": 63,
     "system": 26,
@@ -20963,6 +20963,7 @@
         "governance/adr_20260712_iskra_constitution_v1_activation.md",
         "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
         "governance/adr_20260712_iskra_constitution_v1_redline.md",
+        "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -21282,6 +21283,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+      "name": "adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21416,7 +21428,8 @@
         "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md",
         "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md",
         "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md",
-        "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md"
+        "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+        "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md"
       ]
     },
     {
@@ -21515,6 +21528,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
+      "name": "2026-07-15-constitution-carrier-review-classes-4-9.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
@@ -27215,6 +27239,7 @@
         "runtime/iskraSpace/services/__tests__/betaCapabilityBoundary.test.ts",
         "runtime/iskraSpace/services/__tests__/canonService.test.ts",
         "runtime/iskraSpace/services/__tests__/closedBetaMigration.test.ts",
+        "runtime/iskraSpace/services/__tests__/constitutionalCarrierContract.test.ts",
         "runtime/iskraSpace/services/__tests__/deltaEnforcer.test.ts",
         "runtime/iskraSpace/services/__tests__/deltaProtocol.test.ts",
         "runtime/iskraSpace/services/__tests__/e2eAuthBypass.test.ts",
@@ -27345,6 +27370,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/closedBetaMigration.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/constitutionalCarrierContract.test.ts",
+      "name": "constitutionalCarrierContract.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/constitutionalCarrierContract.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
