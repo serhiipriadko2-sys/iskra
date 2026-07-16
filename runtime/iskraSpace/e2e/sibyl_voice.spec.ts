@@ -20,7 +20,7 @@ test.describe('Voice Engine - SIBYL Activation', () => {
 
     const input = page.locator('textarea').first();
     await expect(input).toBeVisible({ timeout: 10000 });
-    await input.fill('echo echo echo listen listen');
+    await input.fill('echo echo echo echo echo echo echo echo echo echo listen listen listen listen listen listen listen listen listen listen');
     await page.keyboard.press('Enter');
 
     await expect(page.locator('header')).toContainText(/SIBYL/i);

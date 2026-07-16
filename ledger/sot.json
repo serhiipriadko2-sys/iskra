@@ -388,7 +388,7 @@
     "runtime/iskraSpace/e2e/helpers/onboarding.ts": "a21a26d816e3deaf4ea1c813312fcd1bcd6175a5c45e606b53f9c45069c950b6",
     "runtime/iskraSpace/e2e/navigation.spec.ts": "1c15aeed0a644b10e4cef069ee90c6268561d2edb4fa5642f416bbec2e5b2469",
     "runtime/iskraSpace/e2e/onboarding.spec.ts": "2187434fa2908e304462e3042dd5efa28134b3f07b7a953fc8816d5355afef66",
-    "runtime/iskraSpace/e2e/sibyl_voice.spec.ts": "07007f156333c144cfcfe96651d36049f94b9c27dca214bad9f8f496e4b89d3a",
+    "runtime/iskraSpace/e2e/sibyl_voice.spec.ts": "a502d0b93a4e187d04dffa414fcc288df649ab1d6d56f527c61dddce6e1c789e",
     "runtime/iskraSpace/eslint.config.js": "e5781f0e1f69e192c71dc17d1ce80d42f5cac93279ff3b15cdec712397231fd8",
     "runtime/iskraSpace/hooks/useLiveAudio.ts": "39ba73cc51466f6f0dd3d79a10b4cd7aae2c1e19aebf73466c5c6c7d0d16f694",
     "runtime/iskraSpace/hooks/usePWA.ts": "d76f4d2cf12f6eb74ce753948e689060b8021e7414866fbd2ccb76fd020efc7a",

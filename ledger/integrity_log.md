@@ -301,3 +301,28 @@ IntegrityEvent:
     Ω: 0.95
     Λ: "Закоммитить и отправить test-hardening в draft PR #270; дождаться GitHub CI read-back."
 ```
+
+---
+
+### 2026-07-16T21:18:24Z — PR #270 SIBYL E2E threshold alignment
+```yaml
+IntegrityEvent:
+  timestamp: 2026-07-16T21:18:24Z
+  actor: ChatGPT GPT-5.6 Thinking
+  scope: [runtime/iskraSpace/e2e, ledger]
+  files_changed:
+    - runtime/iskraSpace/e2e/sibyl_voice.spec.ts
+    - ledger/sot.json
+    - ledger/checksum.asc
+    - ledger/integrity_log.md
+  reason: "Align the SIBYL activation E2E stimulus with the canonical Shannon minimum of 20 normalized tokens."
+  verification:
+    playwright_targeted: "1 passed"
+    prior_ci_failure: "5-token stimulus no longer satisfies entropy sufficiency"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "E2E теперь проверяет SIBYL на достаточном 20-token input, не отменяя entropy safety boundary."
+    D: "GitHub e2e diagnostics + local Playwright chromium"
+    Ω: 0.95
+    Λ: "Обновить ledger hashes, commit/push и подтвердить повторный GitHub CI."
+```
