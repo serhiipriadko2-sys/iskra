@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-16T19:05:49.195Z",
-  "total": 2921,
+  "generatedAt": "2026-07-16T19:17:16.315Z",
+  "total": 2922,
   "curated": 20,
   "layers": {
     "root": 336,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 147,
+    "governance": 148,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -21832,6 +21832,7 @@
         "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
         "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-1-full-package.md",
+        "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md"
       ]
     },
@@ -22008,6 +22009,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-16-sot30-v5-5-1-full-package.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
+      "name": "2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
       "related": [],
       "parent": "governance/changelog.d"
     },

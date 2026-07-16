@@ -35,7 +35,7 @@ governance/releases/2026-07-16-sot30-v5-5-1-full-package/
 └── support/
     ├── PROJECT_INSTRUCTIONS_SOT30.md   (paste into Project Instructions; raw-equal to 00's pasteable mirror, v5.5.1)
     ├── MANIFEST.json                   (bytes + sha256 for all 30)
-    └── SHA256SUMS                      (all 30 + instructions)
+    └── SHA256SUMS                      (all 30 + instructions + MANIFEST.json; package-root paths, runnable via `sha256sum -c support/SHA256SUMS`)
 ```
 
 ## Upload procedure
