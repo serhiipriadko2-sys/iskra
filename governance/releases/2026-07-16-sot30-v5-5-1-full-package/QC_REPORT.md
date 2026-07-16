@@ -10,7 +10,9 @@ Scope: full 30-file assembled corpus (v5.4.1 base + v5.5 delta + v5.5.1 content 
 | base64-embedded asset present anywhere in corpus | PASS — 0 (removed from file 24) |
 | unwrapped "ancient consciousness" epigraph (no adjacent `[HISTORICAL/MYTHIC REGISTER]`) | PASS — 0 across files 04/05/07 |
 | `T01`–`T85` contiguous in file 28 | PASS — 85 IDs, none missing |
-| Project Instructions ≤ 6000 chars | PASS — 5907 |
+| Project Instructions ≤ 6000 chars | PASS — 5996 |
+| **Instructions ↔ 00 normalized parity (T80)** | **PASS — raw-equal, both 5996 chars** (fixed this build: compact Inquiry line synced 1:1) |
+| version identity (00 + support headers vs 29/manifest) | PASS — both now `SoT30 v5.5.1` |
 | Kernel Order in files 08/09/13 matches canonical 00/07/12/25 order | PASS |
 | Guard recompute predicate in 10/11 requires floor-increase AND decision-change | PASS |
 | file 29 hash table = 29 non-self rows, recomputed for merged corpus | PASS |
@@ -23,10 +25,10 @@ Scope: full 30-file assembled corpus (v5.4.1 base + v5.5 delta + v5.5.1 content 
 ## Package facts
 
 - knowledge files: 30
-- corpus bytes: 4,015,759 (down from 4,565,314 in v5.4.1, −549,555 net — base64 removal minus content additions)
-- Project Instructions: 5,907 chars (byte-identical to v5.4.1; internal version label still reads v5.4.1 — cosmetic)
-- ZIP: `dist/SoT30_v5.5.1.zip`, 1,121,758 bytes, sha256 `9c4f3de628f82ca7b495bf5543262c13ce992578619e919cc728881f974e4066`
-- file 29: 6,718 bytes, sha256 `fb3405e7b8402c7fee49f91d25db1b7c446c7b2577f5eefea09d42f7212fe067`
+- corpus bytes: 4,015,928
+- Project Instructions: 5,996 chars; raw-equal to 00's pasteable mirror (T80 parity PASS); version header `SoT30 v5.5.1`
+- ZIP: `dist/SoT30_v5.5.1.zip`, 1,120,143 bytes, sha256 `a4f69c708b8b1e0839036ad5ba48df91ec99b9533b6019fb29d55d1cf21c619c`
+- file 29: 6,911 bytes, sha256 `003574411ddfceacb2284ada0c8adb61270c3b664d1e5c3bdcbb61a6202e0494`
 
 ## Not checked (explicitly out of scope / pending)
 

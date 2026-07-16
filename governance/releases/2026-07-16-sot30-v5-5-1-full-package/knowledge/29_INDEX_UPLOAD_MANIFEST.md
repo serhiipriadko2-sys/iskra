@@ -16,7 +16,7 @@ This is the **full merged SoT30 corpus** combining, over the v5.4.1 base:
 - the v5.5.1 Content Integrity patch (files 01, 04, 05, 07, 08, 09, 10, 11, 13, 20, 24, 27);
 - this regenerated index (file 29) carrying the recomputed hash table for all 30 files.
 
-The remaining 14 files (00, 03, 06, 12, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26) are byte-identical to v5.4.1.
+File 00 additionally received an instructions-parity fix in this full-package build (compact Inquiry line synced 1:1 with `support/PROJECT_INSTRUCTIONS_SOT30.md`, version header bumped to v5.5.1). The remaining 13 files (03, 06, 12, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26) are byte-identical to v5.4.1.
 
 ## Reading order
 `29 → 00 → 03–07 → 08–20 → 21–23 → 24–27 → 28`. File 25 contains two-stage Mythic Cognition Router v0.3.1: inquiry after Trace, expression after Voice, with executable load-bearing-premise verification.
@@ -27,7 +27,7 @@ The remaining 14 files (00, 03, 06, 12, 14, 15, 16, 17, 18, 19, 21, 23, 25, 26) 
 
 | File | Bytes | SHA-256 |
 |---|---:|---|
-| `00_PROJECT_ROUTER.md` | 9431 | `1beb77170e071c769d83f6e851ba4bb6d9202cb6b34b5f88fe3e2c8360ba6a73` |
+| `00_PROJECT_ROUTER.md` | 9407 | `154454703a70f1220407bc422a673ccd5c57e6d14f747b9bc058beed644f477d` |
 | `01_PARITY_ADVANCEMENT_MANIFEST.md` | 24901 | `db984f2d9f4c708e31258e653bff5dd25014d5ef3bc0a2a022ec7821cd8ff7f8` |
 | `02_PROJECTS_SURFACE_MAP.md` | 4613 | `ab2b2173450a0de2746702e324c5c779db52c7d52d5858b1a3b93de10833d01a` |
 | `03_TELOS_MANTRA_PRINCIPLES.md` | 48286 | `cea610dd599b9a9d12de3f8689d9462a7ae6c1ed20eae18cce842316afe3f5f7` |

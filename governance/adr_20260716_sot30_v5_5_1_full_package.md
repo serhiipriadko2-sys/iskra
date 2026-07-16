@@ -20,7 +20,7 @@ A naïve composition ("18 unchanged + 12 v5.5.1 + 4 v5.5") double-counts, becaus
 Assemble and commit the full merged package:
 
 - extracted 30-file corpus under `governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/`;
-- `support/PROJECT_INSTRUCTIONS_SOT30.md` (byte-identical to v5.4.1), `support/MANIFEST.json`, `support/SHA256SUMS`;
+- `support/PROJECT_INSTRUCTIONS_SOT30.md` (parity-fixed: raw-equal to 00's pasteable mirror, v5.5.1), `support/MANIFEST.json`, `support/SHA256SUMS`;
 - regenerated `29_INDEX_UPLOAD_MANIFEST.md` with the full recomputed 29-non-self-hash table, which also records file 13 at its actual merged content (13386 bytes / `e709c9a2…`), closing the prior v5.4.1 file-13 manifest drift;
 - an uploadable `dist/SoT30_v5.5.1.zip` (force-added past the `dist/**` gitignore, matching the `dist/SoT30_v5.4.zip` precedent);
 - QC report and package receipt.
@@ -31,13 +31,13 @@ This ADR is Knowledge/packaging only. No `runtime/` code, Supabase schema, or `i
 
 - Composition + hashes: `.../support/MANIFEST.json`, `.../support/SHA256SUMS`, `.../PACKAGE_RECEIPT.md`.
 - QC (30-unique, no-duplicate, base64-gone, ontology-wrapped, kernel-synced, guard-floor, T01–T85, ZIP round-trip): `.../QC_REPORT.md`.
-- ZIP: `dist/SoT30_v5.5.1.zip`, 1,121,758 bytes, sha256 `9c4f3de628f82ca7b495bf5543262c13ce992578619e919cc728881f974e4066`.
+- ZIP: `dist/SoT30_v5.5.1.zip`, 1,120,143 bytes, sha256 `a4f69c708b8b1e0839036ad5ba48df91ec99b9533b6019fb29d55d1cf21c619c`.
 - Source of overlaid files: merged `main` at `4f3c087` (the two prior PRs' release trees).
 
 ## Risk
 
 - `T01`–`T85` have not been run against this assembled corpus in a live Project; `LIVE-PROJECT-PASS` remains pending.
-- The Project Instructions artifact's internal version label still reads "v5.4.1" (cosmetic; kept byte-identical to preserve parity and hash).
+- Instructions parity was a pre-existing v5.4.1 defect (00's mirror carried an `Inquiry functions` line the paste artifact lacked); closed here by compacting+syncing the line 1:1 and bumping both headers to v5.5.1, so file 00 is the one file changed beyond the two merged deltas.
 - File 24's remaining embedded catalog and file 25's mythic corpus are carried unchanged — future compaction questions, not resolved here.
 
 ## Next
