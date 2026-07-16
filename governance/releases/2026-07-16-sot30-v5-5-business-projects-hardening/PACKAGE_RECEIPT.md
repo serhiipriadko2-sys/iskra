@@ -9,14 +9,14 @@ This receipt describes the actual `governance/releases/2026-07-16-sot30-v5-5-bus
 - Commit this receipt describes: the commit that adds this file itself (see the commit that introduces `PACKAGE_RECEIPT.md` in `git log -- governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/PACKAGE_RECEIPT.md`)
 - A single aggregate directory-tree hash is intentionally not quoted here: this file is itself part of that directory, so any tree hash including it is self-referential (same discipline the v5.4.1 base package used for its own `29_INDEX_UPLOAD_MANIFEST.md` — see that file's note on avoiding self-reference). Per-file git blob SHAs below are independent of this file's own content and are the verifiable unit instead.
 
-## Contents (10 files incl. this receipt, 40464 bytes total, this session's `find`/`wc -c`, recomputed after adding this file)
+## Contents (10 files incl. this receipt, 41412 bytes total, this session's `find`/`wc -c`, recomputed after adding this file)
 
 | Path | Bytes | SHA-256 | Git blob SHA |
 |---|---:|---|---|
 | `KNOWLEDGE_DIFF.md` | 4319 | `aee92a86e44a3a760dbe921b3922faf36e89212cad204cd765faebd81b5b537e` | `ac294da21f133136cf7d87150722316266a16e26` |
 | `MANIFEST.json` | 1616 | `d54258992e1f7505da6c94d8ebd9f11bdd6f7446a8a4df641e4364e9083d399c` | `5264ced6236f39340205e959135527d617ad48f2` |
 | `PACKAGE_RECEIPT.md` | (this file; not self-hashed) | (see `SHA256SUMS` after commit) | n/a — created after the blob list above was captured |
-| `QC_REPORT.md` | 2507 | `3a3f32788ea54238c65ccb79cce301aca0a6f6e6b9a73352f95409169adaf862` | `b76b1e12581f363bb33c6ede667163b785e7b315` |
+| `QC_REPORT.md` | 2569 | `2dabd548f0a3a13af4f8791ccf01a7b192715ea9619da87c91b9e8a0abaf8924` | `52078cb36dfdb64f0856cba68185883a56c33754` |
 | `README.md` | 2836 | `e002e95949503591f98e1edeb4903a82e497c86e1556cafdec6cc487b57fdf35` | `d431b890c9de724fcb16c142ac21b575fe706d32` |
 | `SHA256SUMS` | 836 | (self, not hashed) | `3668121ad50d65f529ccddf52f3cb34bde1ee2c1` (pre-update blob; regenerated after this file was added) |
 | `knowledge/02_PROJECTS_SURFACE_MAP.md` | 4613 | `ab2b2173450a0de2746702e324c5c779db52c7d52d5858b1a3b93de10833d01a` | `730e473843336bda344d6ca2d7ec0ed954f7cfe4` |
@@ -34,7 +34,7 @@ Full byte-exact hashes for the 4 non-self-referential top-level files are in `SH
 
 ## Verification performed this session
 
-- `find . -type f` / `wc -c` on this exact checked-out tree — 9 files, 36865 bytes.
+- `find . -type f` / `wc -c` on this exact checked-out tree before this receipt — 9 files, 37014 bytes.
 - `git rev-parse HEAD:<path>` for the git-native tree hash (stronger guarantee than an ad-hoc concatenation hash, since it is exactly what `git show`/`git checkout` will reproduce from this commit).
 - `git ls-tree -r HEAD <path>` for per-file git blob SHAs, cross-checked against `SHA256SUMS` file-content hashes.
 - `npx tsx tools/verify_ledger.ts` against this commit — PASS, 654 files (see PR body).

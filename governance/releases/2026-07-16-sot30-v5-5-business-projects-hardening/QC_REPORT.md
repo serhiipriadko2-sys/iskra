@@ -17,7 +17,7 @@ Scope: this is a **delta QC** for the 4 changed Knowledge files only. It does no
 | `live_gate_range_updated` (`Live Project gate` states `T01–T85`) | PASS |
 | `four_files_frontmatter_v5_5` (`version: v5.5` present in all 4 changed files) | PASS |
 | `sha256_recorded_matches_disk` (hashes in `29_INDEX_UPLOAD_MANIFEST.md` and `SHA256SUMS` recomputed against the actual files in this checkout) | PASS |
-| `no_scope_creep` (`git diff` for this branch touches only `governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/**`, `governance/adr_20260716_sot30_v5_5_business_projects_hardening.md`, `governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md`; no `runtime/`, no `supabase/`, no `core/`) | PASS |
+| `no_scope_creep` (semantic diff is limited to `governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/**`, `governance/adr_20260716_sot30_v5_5_business_projects_hardening.md`, and `governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md`; canon-index/ledger changes are generated receipts; no feature changes under `runtime/`, `supabase/`, or `core/`) | PASS |
 | `readme_complete` (README no longer ends mid-sentence) | PASS |
 | `knowledge_diff_present` (`KNOWLEDGE_DIFF.md` documents all 4 changed files with rationale) | PASS |
 

@@ -594,16 +594,16 @@ D: Kimi section 13 structure (source), `CLAUDE.md` vΩ.6 Coder Mode (source), `.
 > **Identity:** Искра-persona instances running inside ChatGPT Projects (e.g. "Искра - Шов Смысла"), reachable only through configured Custom GPT Actions — no filesystem, no shell, no direct git.
 > **Scope:** any ChatGPT Projects Iskra with the `iskra-memory-gateway` Action and/or the GitHub bridge Action enabled.
 > **Relation to this file:** fourth collaborator surface alongside Kimi (§13), Claude Code (§14), and Codex (`governance/codex_local_operating_contract.md`) — but structurally different: it has no local working tree, so §2 "Source of Truth" and §4 "Project-First Tool Discipline" apply through the two Actions below instead of shell/filesystem tools.
-> **Last updated:** 2026-07-11
+> **Last updated:** 2026-07-15
 
 ### 15.1 Two Action Surfaces
 
-`[FACT]` A Projects Iskra persona can be wired with up to two Custom GPT Actions, configured per-GPT in ChatGPT's Action builder (Authentication → API Key → Bearer):
+`[FACT]` A Projects Iskra persona can be wired with up to two Custom GPT Actions, configured per-GPT in ChatGPT's Action builder (Authentication → API Key → Bearer). The UI configuration does not prove which normalized credential class reaches the Edge Function; only the production `auth/whoami` probe may establish that:
 
-1. **`iskra-memory-gateway`** (`supabase/functions/iskra-memory-gateway/index.ts`) — writes to `iskra_memory.*` (archive, shadow, journal, dream_seeds, horizon_events, statecycle_snapshots, gateway_events). This is the persona's own **memory**, not canon. `dream/crystallize` is the only sanctioned path from persona memory into a governance artifact (`target: "shadow" | "archive" | "adr_draft"`) — do not manually duplicate memory content into repo files as a substitute for this pipeline.
+1. **`iskra-memory-gateway`** (`supabase/functions/iskra-memory-gateway/index.ts`) — the accepted 1A.1 source is a temporary probe-only containment. It exposes only exact `auth/whoami`, returns a normalized credential class, and holds all former memory/StateCycle routes with `503`. Source, merged, deployed, invoked, and verified-live are separate statuses. While the hold is active, `memory write unavailable`; do not simulate persistence or treat a GitHub merge as proof of live containment.
 2. **GitHub bridge** (repo `serhiipriadko2-sys/iskra`, fine-grained PAT scoped to Contents/Issues/Pull requests) — read/write access to the actual repository: files, issues, PRs.
 
-`[INTERP]` These two surfaces are independent. Memory-gateway writes do not touch git; GitHub-bridge writes do not touch `iskra_memory.*`. A persona doing real engineering work will typically use both: read/reason via GitHub bridge, journal reasoning/shadow hypotheses via memory-gateway, and open a PR via GitHub bridge for anything meant to become canon.
+`[INTERP]` These two surfaces are independent. During 1A probe-only containment, the memory gateway has no persistence authority; the GitHub bridge remains the only available write path for repository changes and must still use branch → PR. After 1B, any restored memory write remains non-canonical and separate from Git.
 
 ### 15.2 Memory Is Not Canon (the lesson this section exists to prevent repeating)
 
@@ -629,11 +629,11 @@ Rules:
 
 ### 15.4 Known Residual Risk
 
-`HIGH-RISK DRIFT (accepted, tracked): iskra-memory-gateway role scope`. As of 2026-07-11 the gateway verifies the caller's JWT signature but does **not** restrict `role` to `service_role` — the actual Authorization value ChatGPT Projects Actions send was unconfirmed at fix time, and a premature role-gate risked breaking the only working integration. See `[HYP]` comment in `verifyActor()` in the gateway source. Tighten once a persona's Action is confirmed to send a `service_role`-signed token (Bearer = the project's `service_role` key, per §15.1 config instructions) — at that point this DRIFT should be closed and this paragraph removed.
+`HIGH-RISK DRIFT (accepted, containment pending deployment): iskra-memory-gateway credential boundary`. ADR-20260715-01 accepts a probe-only source composition with no PostgreSQL capability and exact `auth/whoami` routing. Until Supabase deployment and source read-back prove that composition is live, the deployed gateway must still be treated as the older privileged v3. After deployment, keep all writes blocked until the real Projects probe records only the normalized credential class. Release 1B requires a dedicated least-privilege credential profile; do not standardize legacy `service_role` merely because the probe observes it.
 
 ### ∆DΩΛ
 
-- ∆: Root `AGENTS.md` gains a fourth collaborator profile (section 15) for ChatGPT Projects Iskra personas — a surface with no filesystem/git, reachable only via two Custom GPT Actions (memory-gateway, GitHub bridge), both configured live in this session.
-- D: Live configuration of both Actions this session (`iskra-memory-gateway` OpenAPI schema + `service_role` Bearer auth; GitHub bridge OpenAPI schema + fine-grained PAT), the `iskra-memory-gateway` unverified-JWT fix and its `[HYP]` role-scope note, and the stale-audit incident from earlier in this session (§15.2).
-- Ω: 0.8 — high for the two Action surfaces and the stale-audit lesson (directly observed this session); moderate for whether personas will actually follow the collision-discipline rules in §15.3 without further reinforcement.
-- Λ: Revisit §15.4 once the gateway's role scope is confirmed and tightened; revisit §15.1 if additional Actions (e.g. a third surface) are wired to a Projects persona.
+- ∆: Section 15 now distinguishes probe-only source containment from merged, deployed, invoked, and verified-live status.
+- D: ADR-20260715-01, production-bound gateway tests, GitHub source state, and live Supabase v3 read-back before deployment.
+- Ω: 0.95 for the source boundary; 0.00 for production containment until deploy and read-back.
+- Λ: Revisit after the real `auth/whoami` probe and the accepted 1B credential design.
