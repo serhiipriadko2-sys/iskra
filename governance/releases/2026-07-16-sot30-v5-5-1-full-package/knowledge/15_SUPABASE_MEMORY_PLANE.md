@@ -1,0 +1,280 @@
+# CURRENT STATUS OVERLAY · 2026-07-11
+
+This overlay supersedes dated live counts and gateway-v1 statements below.
+
+- live tables: 10; rows observed: journal 14, archive 2, shadow 2, open_loops 4, sense_events 2, dream_seeds 2, edges 5, statecycle_snapshots 4, gateway_events 7, horizon_events 0.
+- `iskra-memory-gateway`: ACTIVE version 2, `verify_jwt=true`, body performs HS256 JWT signature verification.
+- Projects Action: not exposed in the current Project tool registry; last observed HTTP request was 401 and no role was proven.
+- direct Supabase MCP: available privileged path; **not equivalent** to gateway invocation or end-user identity.
+- mandatory Projects runtime must work without this plane and degrade to `memory write unavailable`.
+
+---
+
+---
+sigil: projects__15_supabase_memory_plane.md
+doc_type: reference
+layer: projects
+updated: 2026-07-10
+priority: critical
+status: created-in-container -> live-verified -> qc-pass
+required_by: 01_PARITY_ADVANCEMENT_MANIFEST.md capabilities #17 and #18
+---
+
+# 15 · Supabase Memory Plane — SoT30 / ChatGPT Projects
+
+## 0 · Назначение и граница
+
+Этот файл описывает **физическую live-поверхность** structured memory. Семантика контейнеров задаётся файлом 14; Shadow и Dreamspace — файлами 16 и 17.
+
+```text
+SoT/GitHub = committed truth
+Memory Model (14) = semantic contract
+Supabase memory plane (15) = live persistence and transport
+Project Memory = conversational continuity, not SoT
+```
+
+Supabase не переписывает канон автоматически. Наличие строки в БД доказывает persistence, но не превращает запись в `[FACT]`, ADR или SoT.
+
+## 1 · `[FACT]` Live inventory — 2026-07-10
+
+Project: `typcvaszcfdpkzbjzuur` · schema: `iskra_memory`.
+
+| Table | Rows | Назначение |
+|---|---:|---|
+| `memory_journal` | 14 | chronology / audit history |
+| `memory_archive` | 2 | evidence-backed claims |
+| `memory_shadow` | 2 | protected uncertainty with exit vector |
+| `memory_open_loops` | 4 | blockers, decisions, next signals |
+| `memory_sense_events` | 2 | bounded process signals, never facts |
+| `memory_dream_seeds` | 2 | pre-hypothesis quarantine |
+| `memory_edges` | 5 | typed relations between memory records |
+| `statecycle_snapshots` | 0 | Project runtime snapshots |
+| `gateway_events` | 1 | gateway/DB boundary receipts |
+| `horizon_events` | 0 | controlled future-option proposals |
+
+All ten tables have RLS enabled. `[FACT]` `pg_policies` returned **zero policies** for schema `iskra_memory`. Table grants are limited to `postgres` and `service_role`; no grants were observed for `anon` or `authenticated`.
+
+**Interpretation:** access is closed to ordinary client roles, but `postgres`/`service_role` remain privileged paths. RLS is not the enforcing layer for those privileged roles.
+
+## 2 · Function boundary
+
+Live schema contains sixteen functions. Seven form the Project-facing boundary:
+
+```typescript
+type MemoryBoundaryRpc =
+  | 'iskra_memory_write'
+  | 'iskra_memory_search'
+  | 'iskra_memory_promote_shadow'
+  | 'iskra_memory_crystallize_dream'
+  | 'iskra_project_observe'
+  | 'iskra_project_commit'
+  | 'iskra_project_horizon_propose';
+```
+
+`[FACT]` They are `SECURITY INVOKER` (`prosecdef=false`) and executable only by `postgres` and `service_role`. The current MCP SQL surface runs as:
+
+```text
+current_user=postgres
+session_user=postgres
+jwt_role=null
+can_assume_service_role=true
+```
+
+Therefore:
+
+```text
+LIVE-VIA-MCP = true
+least-privilege user identity = false
+identity derived from end-user JWT = false on direct MCP path
+```
+
+## 3 · Safe payload gate
+
+Every boundary RPC routes payloads through `assert_safe_memory_payload` or equivalent helpers.
+
+`[FACT]` The live function rejects common secret-like forms, including:
+
+- OpenAI-style `sk-...` keys;
+- PEM private keys;
+- JWT-shaped triples;
+- long values assigned to names such as `service_role`, `api_key`, `secret`, `token`, `password`, `private_key`.
+
+This is a useful last-line guard, not a substitute for secret hygiene. Secrets must never be intentionally sent to the memory plane.
+
+## 4 · Write protocol
+
+Any write initiated from a Project follows:
+
+```text
+READ current target
+-> PLAN container/action
+-> VERIFY no secret / correct authority
+-> CALL locked RPC
+-> READ-BACK by returned id
+-> VERIFY fields and status
+-> RECEIPT
+-> MEMORY EDGE / JOURNAL when required
+```
+
+A successful RPC response without read-back is `PARTIAL`, not persistence proof.
+
+Direct DML or generic SQL is reserved for diagnostics and migrations. Routine memory writes use RPCs so that validation, audit journal and relation edges remain visible.
+
+## 5 · Container routing
+
+`iskra_memory_write(container, payload, actor)` supports:
+
+```text
+journal | archive | shadow | open_loop | sense_event | dream_seed | edge
+```
+
+The generic writer creates an audit entry in `memory_journal` for all containers except `journal`, where the created row is itself the audit record.
+
+`iskra_memory_search` searches the six semantic containers:
+
+```text
+journal | archive | shadow | open_loop | sense_event | dream_seed
+```
+
+It is lexical/substring retrieval, not semantic vector search. `memory_edges` are typed relations, not similarity edges.
+
+## 6 · Promotion enforcement matrix
+
+| Path | Live-enforced | Missing / external contract |
+|---|---|---|
+| direct `archive` via `iskra_memory_write` | non-empty evidence, claim, source surface | explicit SIFT trace, ISKRIV receipt, ADR requirement |
+| `iskra_memory_promote_shadow` | evidence, claim, source surface, source exists, edge + audit journal | explicit `iskriv_check` parameter |
+| dream -> `archive` via `iskra_memory_crystallize_dream` | evidence refs, claim, source surface, `iskriv_check`, edge + audit journal | external validation that the supplied check is trustworthy |
+| dream -> `shadow` | source exists, target transition, edge + journal | evidence not required because target remains non-factual |
+| dream -> `adr_draft` | open-loop record + edge + journal | creates an ADR candidate, not an accepted ADR |
+
+### HIGH-RISK DRIFT · Archive bypass
+
+The generic writer can insert directly into `memory_archive` with evidence while defaulting `sift_status='verified'`. It does **not** require an ISKRIV verification receipt.
+
+SoT30 rule:
+
+```text
+PROHIBITED for ordinary promotion:
+iskra_memory_write('archive', ...)
+
+REQUIRED:
+shadow -> iskra_memory_promote_shadow + external ISKRIV receipt
+or
+dream -> iskra_memory_crystallize_dream(target='archive', iskriv_check=...)
+```
+
+Emergency/import use of direct Archive write requires a governance receipt and post-write audit.
+
+### HIGH-RISK DRIFT · Shadow gate partial
+
+`iskra_memory_promote_shadow` enforces evidence but has no `iskriv_check` argument. Until a migration adds it, the caller must store the ISKRIV verification pointer in `evidence`, `decision_link`, tags or metadata and prove it in the external receipt. File 16 owns this caller-side gate.
+
+## 7 · Gateway surface
+
+Live Edge Function:
+
+```text
+slug: iskra-memory-gateway
+version: 1
+status: ACTIVE
+verify_jwt: true
+routes: 9
+```
+
+Routes:
+
+```text
+observe | dry-run | dark-run | commit | horizon/propose
+memory/write | memory/search | shadow/promote | dream/crystallize
+```
+
+### LIVE-REPO DRIFT · actor identity
+
+`[FACT]` Live v1 derives actor from `body.actor` via `asActor(body)`. The verified GitHub `main` version derives actor from the Authorization JWT and removes client-supplied actor. The fix exists in repository state but is not deployed live.
+
+Status:
+
+```text
+GitHub main: actor-from-JWT
+Supabase live v1: actor-from-body
+verdict: deploy lag / identity spoof risk on live v1
+```
+
+No deployment is performed by this document.
+
+### Audit coverage
+
+- `project.observe` and `project.commit` call `iskra_gateway_event` inside the database and can create `gateway_events` receipts.
+- `memory/write`, `shadow/promote` and `dream/crystallize` create `memory_journal` audit entries, not `gateway_events` rows.
+- The existing single `gateway_events` row is a DB dry-run receipt. It proves the database audit path, not an end-to-end HTTP invocation from ChatGPT.
+- The current connector inventory exposes deploy/read operations but no `invoke_edge_function` tool, so HTTP gateway enforcement remains unverified from this Project surface.
+
+## 8 · Authority and actor contract
+
+```typescript
+interface MemoryWriteAuthority {
+  user_requested: boolean;
+  action: 'read' | 'write' | 'promote' | 'crystallize' | 'commit';
+  actor_source: 'jwt' | 'connector_role' | 'explicit_untrusted_label';
+  target_container: string;
+  requires_adr: boolean;
+  evidence_refs: string[];
+  read_back_required: true;
+}
+```
+
+Rules:
+
+- direct MCP actor is a connector/runtime identity, not a verified human identity;
+- `body.actor` from live gateway v1 is untrusted metadata;
+- no memory write authorizes canon mutation;
+- destructive or bulk operations require explicit approval, scope and rollback;
+- do not print connection strings, JWTs, keys or secret values in receipts.
+
+## 9 · Fallback
+
+If Supabase is unavailable:
+
+```text
+[HYP] memory write unavailable
+```
+
+Return the intended container, payload summary and read-back plan, but do not claim persistence. Chat context may carry temporary continuity only.
+
+## 10 · Acceptance
+
+PASS if:
+
+- live table/function status is dated and source-labelled;
+- write path includes read-back and receipt;
+- ordinary Shadow/Dream promotion cannot use generic direct Archive write;
+- privileged MCP bypass is named;
+- RLS-enabled-with-zero-policies is not misrepresented as end-user policy enforcement;
+- gateway deployment is not confused with gateway invocation;
+- actor-from-body live drift is named;
+- no secret value is printed or persisted.
+
+FAIL if:
+
+- a database row is treated as SoT merely because it exists;
+- `service_role`/`postgres` access is described as least privilege;
+- direct Archive write silently bypasses SIFT/ISKRIV;
+- a successful RPC without read-back is called persisted;
+- deployed gateway is called enforcing while real writes bypass it.
+
+## Source map
+
+- live `iskra_memory` schema/table/function/ACL inspection — 2026-07-10;
+- live `iskra-memory-gateway` v1 source and config — 2026-07-10;
+- `14_MEMORY_MODEL.md` — semantic containers and promotion pipeline;
+- `24_MEMORY_STACK.md` + `10_ADR_MEMORY_STACK.md` — Evidence-only Archive, no secrets;
+- `31_SECURITY.md` — least privilege and secret boundary;
+- frozen `ISKRA_SOT30_PLAN_v8_FINAL.md` §3.2/§7.8.
+
+## DeltaDΩΛ
+
+**Delta:** Supabase memory is specified as a typed, privileged live plane rather than a magical shared memory. Two previously hidden bypasses are explicit: generic Archive write and Shadow promotion without an enforced ISKRIV argument.
+**D:** live schema/functions/ACL/RLS/gateway source -> authority matrix -> safe write/read-back contract.
+**Omega:** 0.95 — live structure and function bodies were read directly; HTTP invocation remains untested from this surface.
+**Lambda:** revise after gateway v2 deployment, a migration that closes Archive/Shadow gate gaps, or the first verified end-to-end HTTP receipt.
