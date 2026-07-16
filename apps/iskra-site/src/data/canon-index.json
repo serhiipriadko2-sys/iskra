@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-16T10:40:14.200Z",
-  "total": 2864,
+  "generatedAt": "2026-07-16T11:44:42.083Z",
+  "total": 2879,
   "curated": 20,
   "layers": {
     "root": 335,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 92,
+    "governance": 106,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 353,
+    "runtime": 354,
     "skills": 267,
     "backend": 67,
     "system": 26,
@@ -21280,6 +21280,7 @@
         "governance/adr_20260715_iskra_memory_gateway_probe_only_containment.md",
         "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
         "governance/adr_20260716_sot30_content_integrity_patch.md",
+        "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -21654,6 +21655,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
+      "name": "adr_20260716_sot30_v5_5_business_projects_hardening.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21794,7 +21806,8 @@
         "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
         "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
         "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
-        "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md"
+        "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
+        "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md"
       ]
     },
     {
@@ -21963,6 +21976,17 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+      "name": "2026-07-16-sot30-v5-5-business-projects-hardening.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -22062,6 +22086,7 @@
       "parent": "governance",
       "children": [
         "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
         "governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
         "governance/releases/2026-06-24-relational-vow-canon-receipt.md",
         "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md",
@@ -22354,6 +22379,153 @@
       "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
       "related": [],
       "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
+      "name": "2026-07-16-sot30-v5-5-business-projects-hardening",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
+      "related": [],
+      "parent": "governance/releases",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/KNOWLEDGE_DIFF.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/MANIFEST.json",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/PACKAGE_RECEIPT.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/QC_REPORT.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/README.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/SHA256SUMS"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/KNOWLEDGE_DIFF.md",
+      "name": "KNOWLEDGE_DIFF.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/KNOWLEDGE_DIFF.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/PACKAGE_RECEIPT.md",
+      "name": "PACKAGE_RECEIPT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/PACKAGE_RECEIPT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/QC_REPORT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/README.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/SHA256SUMS",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge",
+      "name": "knowledge",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/02_PROJECTS_SURFACE_MAP.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/28_EVALS_ACCEPTANCE.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/29_INDEX_UPLOAD_MANIFEST.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "name": "02_PROJECTS_SURFACE_MAP.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "name": "22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/28_EVALS_ACCEPTANCE.md",
+      "name": "28_EVALS_ACCEPTANCE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/28_EVALS_ACCEPTANCE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "name": "29_INDEX_UPLOAD_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
     },
     {
       "path": "governance/update_protocol.md",
@@ -27936,6 +28108,7 @@
         "runtime/iskraSpace/services/__tests__/memoryService.test.ts",
         "runtime/iskraSpace/services/__tests__/metricsService.test.ts",
         "runtime/iskraSpace/services/__tests__/metricsUtils.test.ts",
+        "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
         "runtime/iskraSpace/services/__tests__/policyEngine.test.ts",
         "runtime/iskraSpace/services/__tests__/ragService.test.ts",
         "runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts",
@@ -28269,6 +28442,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/metricsUtils.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
+      "name": "omegaConfidenceCap.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
