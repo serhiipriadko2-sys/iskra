@@ -67,10 +67,45 @@ describe('Constitution v1 carrier-review contract', () => {
 
   it('keeps the living status on the verified post-merge baseline', () => {
     const status = readRepoFile('runtime/iskraSpace/RELEASE_STATUS.md');
+    const normalizedStatus = status.replace(/\r\n/g, '\n');
 
-    expect(status).toContain('b0851b03187625577ad1b1755d6261be5f7c7f71');
-    expect(status).toContain('29432905117');
+    expect(status).toContain('d42c53ef43a3e08a08c7177d39dfb9a41ae6d340');
+    expect(status).toContain('29445858079');
+    expect(normalizedStatus).toContain(
+      'shadow_promotion_boundary:\n  governance_status: proposed\n  delivery_evidence: merged\n  live_evidence: not_invoked',
+    );
     expect(status).not.toContain('production audit gate under repair');
     expect(status).toContain('canonical_activation: blocked');
+  });
+
+  it('records exact Owner acceptance without activating Constitution or runtime enforcement', () => {
+    const receiptPath =
+      'governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md';
+    expect(existsSync(join(repoRoot, receiptPath))).toBe(true);
+    const receipt = readRepoFile(receiptPath);
+
+    expect(receipt).toContain('Status: accepted');
+    expect(receipt).toContain('ba662eabf1076e940cdbb07f3912dfb732fb881e');
+    expect(receipt).toContain(
+      '0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624',
+    );
+    expect(receipt).toContain(
+      '10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79',
+    );
+    expect(receipt).toContain('canonical_activation: blocked');
+    expect(receipt).toContain('runtime_enforcement: partial / not verified live');
+    expect(receipt).toContain('Memory Gateway: unchanged');
+  });
+
+  it('routes the product Shadow promotion path through the typed policy boundary', () => {
+    const view = readRepoFile('runtime/iskraSpace/components/ShadowView.tsx');
+    const boundary = readRepoFile('runtime/iskraSpace/services/shadowPromotionService.ts');
+
+    expect(view).toContain('shadowPromotionService.promote');
+    expect(view).toContain("symbiosisService.grantConsent(");
+    expect(view).not.toContain('memoryService.promoteToArchive(');
+    expect(boundary).toContain('evaluateShadowPromotionIntent');
+    expect(boundary).toContain('evaluateShadowPromotion');
+    expect(boundary).toContain('recordActionReceipt');
   });
 });

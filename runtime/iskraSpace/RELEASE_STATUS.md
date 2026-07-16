@@ -9,7 +9,8 @@ App path: `runtime/iskraSpace`
 Iskra Space is the repository's current public-release target. The P0 hardening fixes were
 merged through PR #250, the follow-up memory-layer/redirect fix was merged through PR
 #251, the constitutional P0 derived-marker batch was merged through PR #253, and the
-dependency-audit gate repair was merged through PR #254. The app
+dependency-audit gate repair was merged through PR #254. The Constitution v1 classes 4–9
+carrier-review register was then merged through PR #256. The app
 remains pre-release until staging Supabase acceptance is current, the complete release
 matrix passes on the release changeset, and the canonical GHCR image is smoke-tested and
 promoted.
@@ -18,19 +19,19 @@ Other repository areas may still be important, but they are treated as internal 
 
 ## Current verified baseline
 
-- Verified `main` commit: `b0851b03187625577ad1b1755d6261be5f7c7f71`
-  (merge commit for PR #254).
+- Verified implementation baseline: `d42c53ef43a3e08a08c7177d39dfb9a41ae6d340`
+  (merge commit for Shadow promotion boundary PR #260).
 - Target baseline: `2067452527647a7ecfb6c26b2ebed98e3cb5fc12`.
 - Canonical package manager: `pnpm` (`packageManager: pnpm@10.32.1`).
 - The root dependency gate uses pinned `pnpm@11.13.0` with
   `--pm-on-fail=ignore` only as the supported npm bulk-advisory client; workspace install
   and all other package operations remain on the declared pnpm 10 version.
-- Post-merge GitHub receipts on `b0851b03187625577ad1b1755d6261be5f7c7f71`
+- Post-merge GitHub receipts on `d42c53ef43a3e08a08c7177d39dfb9a41ae6d340`
   (2026-07-15):
-  - [SoT integrity run 29432905394](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29432905394) — success;
-  - [Runtime CI run 29432905435](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29432905435) — success;
-  - [iskraSpace CI run 29432905280](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29432905280) — success;
-  - [Production Deployment run 29432905117](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29432905117) — release-gate job success.
+  - [SoT integrity run 29445858093](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29445858093) — success;
+  - [Runtime CI run 29445858146](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29445858146) — success;
+  - [iskraSpace CI run 29445858149](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29445858149) — success, including Chromium E2E;
+  - [Production Deployment run 29445858079](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29445858079) — release-gate job success.
 - Production Deployment passed install, legacy runtime build/tests, IskraSpace typecheck,
   strict lint, unit tests twice, Deno checks, both dependency audits, Supabase repository
   contracts, ledger, production build, and Chromium E2E. Docker smoke/GHCR promotion and
@@ -67,8 +68,10 @@ A release pass should verify:
 - `db-proxy` and canon import/backfill Edge functions need explicit keep/retire/owner decision before public release.
 - Live voice remains out of release scope until a server-side streaming gateway is implemented and tested.
 - The canonical GHCR Docker image has not been produced from this changeset.
-- Shadow promotion in the current `ShadowView` bypasses the typed evidence + SIFT +
-  confirmation + receipt policy gate; a separate integration changeset is required.
+- Shadow promotion is repository-integrated in the current changeset through evidence +
+  SIFT preflight, explicit one-use consent, read-back, and a persistent action receipt.
+  PR #260 is merged and post-merge CI is green. Deployment, live invocation, and
+  verified-live behavior remain pending; see proposed ADR-20260715-03.
 - Initial IskraSpace user metrics are numeric defaults without observation provenance or
   an `unknown` state; a separate unknown-safe metrics changeset is required.
 - Canonical activation of Constitution v1 remains a separate Owner decision; textual P0
@@ -77,8 +80,16 @@ A release pass should verify:
 ## Constitutional review and activation gate
 
 ```text
-governance_status: proposed
-delivery_evidence: tested (carrier-review contract only)
+constitutional_bundle:
+  governance_status: proposed
+  delivery_evidence: implemented
+classes_4_9_conflict_register:
+  governance_status: accepted
+  delivery_evidence: merged
+shadow_promotion_boundary:
+  governance_status: proposed
+  delivery_evidence: merged
+  live_evidence: not_invoked
 canonical_activation: blocked
 runtime_enforcement: partial / not verified live
 ```
@@ -86,7 +97,13 @@ runtime_enforcement: partial / not verified live
 The Iskra Constitution v1 review bundle exists in `governance/`, but it is not active
 canon and does not prove runtime enforcement. Its Core, Annexes, Transition Schedule, and
 proposed activation ADR separate durable intent from product mechanics and temporal
-implementation work.
+implementation work. ADR-20260715-02 records Owner acceptance of the classes 4–9
+register at merge `ba662eabf1076e940cdbb07f3912dfb732fb881e`. Its repository-canonical
+raw Git blob SHA-256 is
+`0f9f564c80170058e042ab3bafe56d933d5d880fb58565b0764e6ad18d453624`; the exact
+Owner-supplied `10227394fee0ff0eaf24d79ac75dfcb4646c1f251c6be1c0a7a2aa405e8e4d79`
+is preserved as the equivalent Windows CRLF checkout representation. That decision is
+neither canonical activation nor a runtime-enforcement claim.
 
 The first four textual conflict patches and the 19 derived mythic-register markers remain
 implemented. The follow-up carrier review for classes 4–9 is now recorded in
@@ -122,16 +139,28 @@ mandatory-step formula in those two layers.
 
 This review corrects the former broad statement that all identified textual P0 carriers
 were closed: `core/telos.md` was a missed class-5 carrier and is patched by this
-changeset. It does not activate the proposed Constitution. Canonical activation still
-requires an accepted conflict register, explicit Owner acceptance naming exact artifact
-versions, an accepted activation ADR, and matching merge/integrity evidence. The open
-Shadow and metrics findings prohibit a complete runtime-enforcement claim.
+changeset. It does not activate the proposed Constitution. The exact conflict register
+is now Owner-accepted, but canonical activation still requires an exact Constitution
+Core version, a separately accepted activation ADR and activation decision, and matching
+merge/integrity evidence. The metrics and remaining relational/UI findings prohibit a
+complete runtime-enforcement claim.
+
+The accepted register remains an immutable baseline: its `CR-P0-04` row correctly
+records the conflict observed at that merge. Proposed ADR-20260715-03 is the separate
+delivery artifact for the current Shadow runtime patch. Deterministic policy, storage,
+source-contract, and behavioral DOM tests are green locally and in post-merge CI at
+`d42c53ef43a3e08a08c7177d39dfb9a41ae6d340`. This is
+`delivery_evidence: merged`, not `deployed`, `invoked`, or `verified_live`.
+Unknown-safe metrics (`CR-P0-08`) and the remaining relational/UI
+integration gaps continue to block a complete runtime-enforcement claim.
 
 The Constitutional activation gate is `governance/adr_20260712_iskra_constitution_v1_activation.md`.
 The proposed narrow P0 patch plan is
 `governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md`.
 The classes 4–9 review register is
 `governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md`.
+Its exact Owner acceptance receipt is
+`governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md`.
 It does not change Memory Gateway, Supabase, Custom GPT Action, runtime behavior, or a future
 real-user authorization model. Public-user authorization remains a separate governance
 and security design question.
