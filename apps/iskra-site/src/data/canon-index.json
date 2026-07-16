@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-16T10:31:12.286Z",
-  "total": 2856,
+  "generatedAt": "2026-07-16T11:40:23.166Z",
+  "total": 2857,
   "curated": 20,
   "layers": {
     "root": 335,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 353,
+    "runtime": 354,
     "skills": 267,
     "backend": 67,
     "system": 26,
@@ -27840,6 +27840,7 @@
         "runtime/iskraSpace/services/__tests__/memoryService.test.ts",
         "runtime/iskraSpace/services/__tests__/metricsService.test.ts",
         "runtime/iskraSpace/services/__tests__/metricsUtils.test.ts",
+        "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
         "runtime/iskraSpace/services/__tests__/policyEngine.test.ts",
         "runtime/iskraSpace/services/__tests__/ragService.test.ts",
         "runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts",
@@ -28173,6 +28174,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/metricsUtils.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
+      "name": "omegaConfidenceCap.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
