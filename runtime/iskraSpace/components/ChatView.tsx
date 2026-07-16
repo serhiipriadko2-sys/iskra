@@ -428,7 +428,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
       <header className={`relative shrink-0 p-4 border-b bg-surface/50 flex flex-col md:flex-row justify-between items-center gap-4 z-10 transition-colors duration-500 ${voiceStyle.split(' ')[0]}`}>
          <div>
             <h2 className="font-serif text-2xl md:text-3xl text-text text-center md:text-left">Чат с Искрой</h2>
-            <div className="flex items-center gap-2 text-sm text-text-muted text-center md:text-left hidden sm:flex flex-wrap">
+            <div className="hidden sm:flex items-center gap-2 text-sm text-text-muted text-center md:text-left flex-wrap">
                 <span>{selectedVoiceName === 'AUTO' ? 'Режим: Резонанс (Авто)' : 'Режим: Фиксация'}</span>
                 {selectedVoiceName === 'AUTO' && currentVoice && (
                     <span className="px-1.5 py-0.5 rounded bg-white/5 text-xs border border-white/10">

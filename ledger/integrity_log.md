@@ -246,4 +246,29 @@ IntegrityEvent:
     D: "ledger/baselines.json + runtime guard trace + tools/check_unreleased_gate.py"
     Ω: 0.86
     Λ: "Собрать checkpoint через tools/build_checkpoint.py и зафиксировать квитанцию"
+
+---
+
+### 2026-07-16T23:45:00+01:00 — vΩ.7.2 (IskraSpace Runtime Hardening and Unification)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-07-16T23:45:00+01:00
+  actor: GitHub Copilot (Gemini 3.5 Flash)
+  scope: [runtime/iskraSpace]
+  files_changed:
+    - runtime/iskraSpace/App.tsx (restrict metrics drift jitter to DEV mode)
+    - runtime/iskraSpace/components/ChatView.tsx (clean up sm:flex/hidden CSS conflict)
+    - runtime/iskraSpace/services/policyEngine.ts (wire runBoundedGuardController and EWS rank local adapter)
+    - runtime/iskraSpace/services/geminiService.ts (intercept terminal CLOSE_HONESTLY outcomes, bypassing model, presenting clear receipt)
+    - runtime/iskraSpace/services/metricsService.ts (constrain Shannon entropy computing to tokens >= 20)
+    - runtime/iskraSpace/services/__tests__/policyEngine.test.ts (harden tests for Bounded Guard controller integration and metrics thresholds)
+    - ledger/integrity_log.md (this entry)
+  reason: "Harden IskraSpace control flows and alignment with target release specifications"
+  hash_update: no
+  ΔDΩΛ:
+    Δ: "Интегрирован Bounded Guard в запросный путь, CLOSE_HONESTLY сделан терминальным, убран периодический дрейф в PROD-режиме, наложен порог длины для энтропии."
+    D: "runtime/iskraSpace/services/policyEngine.ts + geminiService.ts + metricsService.ts + App.tsx + tests"
+    Ω: 0.95
+    Λ: "Выполнить повторные локальные typecheck и test:run контролируемого бандла"
+```
 ```

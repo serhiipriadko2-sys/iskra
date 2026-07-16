@@ -7,8 +7,8 @@ App path: `runtime/iskraSpace`
 ## What this means
 
 Iskra Space is the repository's current public-release target. The P0 hardening fixes were
-merged through PR #250, the follow-up memory-layer/redirect fix was merged through PR
-#251, the constitutional P0 derived-marker batch was merged through PR #253, and the
+merged through PR #250, the follow-up memory-layer/redirect fix was merged through
+PR #251, logging the constitutional P0 derived-marker batch merged through PR #253, and the
 dependency-audit gate repair was merged through PR #254. The Constitution v1 classes 4–9
 carrier-review register was then merged through PR #256. The app
 remains pre-release until staging Supabase acceptance is current, the complete release
