@@ -69,22 +69,32 @@ vi.mock('../evalService', () => ({
 // Mock policy engine with full decision structure
 vi.mock('../policyEngine', () => ({
   policyEngine: {
-    decide: vi.fn((message: string) => ({
-      classification: {
-        playbook: message.includes('умереть') ? 'CRISIS' : 'ROUTINE',
-        risk: message.includes('умереть') ? 'critical' : 'low',
-        stakes: message.includes('умереть') ? 'critical' : 'low',
-        suggestedVoices: message.includes('умереть') ? ['ANHANTRA', 'KAIN'] : ['ISKRA'],
-        confidence: 0.85,
-      },
-      config: {
-        deltaRequired: true,
-        siftDepth: 'light',
-      },
-      preActions: message.includes('умереть')
-        ? [{ type: 'alert', payload: { severity: 'critical' } }]
-        : [],
-    })),
+    decide: vi.fn((message: string) => {
+      const closeHonestly = message.includes('FORCE_CLOSE_TEST');
+      return {
+        classification: {
+          playbook: message.includes('умереть') ? 'CRISIS' : 'ROUTINE',
+          risk: message.includes('умереть') ? 'critical' : 'low',
+          stakes: message.includes('умереть') ? 'critical' : 'low',
+          suggestedVoices: message.includes('умереть') ? ['ANHANTRA', 'KAIN'] : ['ISKRA'],
+          confidence: 0.85,
+        },
+        config: {
+          deltaRequired: true,
+          siftDepth: 'light',
+        },
+        preActions: message.includes('умереть')
+          ? [{ type: 'alert', payload: { severity: 'critical' } }]
+          : [],
+        guardOutcome: closeHonestly
+          ? {
+              decision: 'CLOSE_HONESTLY',
+              why: 'test guard terminal boundary',
+              reasons: ['MAX_GUARD_EVALUATIONS_EXHAUSTED'],
+            }
+          : undefined,
+      };
+    }),
     getConfig: vi.fn(() => ({
       deltaRequired: true,
       siftDepth: 'light',
@@ -425,6 +435,21 @@ describe('GeminiService Streaming Methods', () => {
       errorSpy.mockRestore();
     });
 
+    it('should terminate CLOSE_HONESTLY before any AI provider call', async () => {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+      const history = createHistory([{ role: 'user', text: 'FORCE_CLOSE_TEST' }]);
+
+      const { chunks, result } = await consumeStream(
+        service.getChatResponseStreamWithPolicy(history, createVoice(), createMetrics())
+      );
+
+      const response = chunks.join('');
+      expect(response).toContain('CLOSE_HONESTLY');
+      expect(response).not.toContain('Оффлайн-режим');
+      expect(result.policy.guardOutcome?.decision).toBe('CLOSE_HONESTLY');
+      expect(fetchSpy).not.toHaveBeenCalled();
+      fetchSpy.mockRestore();
+    });
     it('should handle extreme metrics', async () => {
       const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const extremeMetrics = createMetrics({

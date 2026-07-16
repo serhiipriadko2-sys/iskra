@@ -271,4 +271,33 @@ IntegrityEvent:
     Ω: 0.95
     Λ: "Выполнить повторные локальные typecheck и test:run контролируемого бандла"
 ```
+
+---
+
+### 2026-07-16T21:10:53Z — PR #270 terminal Guard verification
+```yaml
+IntegrityEvent:
+  timestamp: 2026-07-16T21:10:53Z
+  actor: ChatGPT GPT-5.6 Thinking
+  scope: [runtime/iskraSpace/tests, ledger]
+  files_changed:
+    - runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts
+    - runtime/iskraSpace/services/__tests__/metricsService.test.ts
+    - ledger/sot.json
+    - ledger/checksum.asc
+    - ledger/integrity_log.md
+  verification:
+    targeted_runtime: "85 passed"
+    guard_controller: "6 passed"
+    full_workspace: "exit 0; iskraSpace 772 passed, 9 skipped"
+    typecheck: PASS
+    build_runtime: PASS
+    ledger: "PASS 722 files"
+    terminal_guard: "CLOSE_HONESTLY precedes offline/provider path; fetch not called"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Добавлены regression-тесты terminal Guard и entropy 19/20; все обязательные gates зелёные."
+    D: "Vitest targeted/full workspace + TypeScript + build:runtime + verify_ledger"
+    Ω: 0.95
+    Λ: "Закоммитить и отправить test-hardening в draft PR #270; дождаться GitHub CI read-back."
 ```
