@@ -1,0 +1,221 @@
+{
+  "package": "SoT30 v5.5.1 Full Merged Package",
+  "version": "v5.5.1-full",
+  "date": "2026-07-16",
+  "base": "SoT30_v5.4.1_Mythic_Corpus_Pass2_T76_Knowledge",
+  "merges": [
+    {
+      "delta": "v5.5 Business Projects Hardening",
+      "adr": "ADR-20260716-01",
+      "pr": 264,
+      "files": [
+        "02_PROJECTS_SURFACE_MAP.md",
+        "22_CONNECTORS_TOOLS_BOUNDARY.md",
+        "28_EVALS_ACCEPTANCE.md"
+      ]
+    },
+    {
+      "delta": "v5.5.1 Content Integrity",
+      "adr": "ADR-20260716-02",
+      "pr": 267,
+      "files": [
+        "01_PARITY_ADVANCEMENT_MANIFEST.md",
+        "04_IDENTITY_NON_MIRROR.md",
+        "05_TRUTH_SIFT_RAG.md",
+        "07_UNIVERSAL_ROUTER.md",
+        "08_STATECYCLE_RUNTIME.md",
+        "09_METRICS_ENGINE.md",
+        "10_ENTROPY_FRACTAL_EWS.md",
+        "11_SLO_PLAYBOOK_CONTROL.md",
+        "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+        "20_GOVERNANCE_ADR.md",
+        "24_INTERFACE_STYLE.md",
+        "27_WHAT_IF_SCENARIO_MATRIX.md"
+      ]
+    },
+    {
+      "regenerated": [
+        "29_INDEX_UPLOAD_MANIFEST.md"
+      ]
+    }
+  ],
+  "unchanged_from_v5_4_1": [
+    "03_TELOS_MANTRA_PRINCIPLES.md",
+    "06_SECURITY_INTEGRITY.md",
+    "12_COUNCIL_VOICES.md",
+    "14_MEMORY_MODEL.md",
+    "15_SUPABASE_MEMORY_PLANE.md",
+    "16_SHADOW_LAYER.md",
+    "17_DREAMSPACE_DREAMSEED.md",
+    "18_HORIZON_WEAVER.md",
+    "19_DRY_DARK_RUN_PROTOCOL.md",
+    "21_WORKFLOW_OPS_LEDGER.md",
+    "23_BUILDER_PROJECTS_COMPAT.md",
+    "25_LIBER_SPACE_BUSIDO.md",
+    "26_SOMATIC_INTUITION.md"
+  ],
+  "knowledge_file_count": 30,
+  "corpus_bytes": 4015928,
+  "project_instructions_chars": 5996,
+  "project_instructions_note": "instructions-parity fixed in this build: compact Inquiry line synced 1:1 with 00's pasteable mirror (raw-equal, 5996 chars <=6000); version header bumped to v5.5.1 in both 00 and support",
+  "acceptance_range": "T01-T85",
+  "files": [
+    {
+      "path": "knowledge/00_PROJECT_ROUTER.md",
+      "bytes": 9407,
+      "sha256": "154454703a70f1220407bc422a673ccd5c57e6d14f747b9bc058beed644f477d"
+    },
+    {
+      "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "bytes": 24901,
+      "sha256": "db984f2d9f4c708e31258e653bff5dd25014d5ef3bc0a2a022ec7821cd8ff7f8"
+    },
+    {
+      "path": "knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "bytes": 4613,
+      "sha256": "ab2b2173450a0de2746702e324c5c779db52c7d52d5858b1a3b93de10833d01a"
+    },
+    {
+      "path": "knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "bytes": 48286,
+      "sha256": "cea610dd599b9a9d12de3f8689d9462a7ae6c1ed20eae18cce842316afe3f5f7"
+    },
+    {
+      "path": "knowledge/04_IDENTITY_NON_MIRROR.md",
+      "bytes": 92408,
+      "sha256": "bfe7b2abef6b72f507b9950baf7656db72b9557115aecbbc322c139ee112abf0"
+    },
+    {
+      "path": "knowledge/05_TRUTH_SIFT_RAG.md",
+      "bytes": 41451,
+      "sha256": "396fffda61a611729a7fb8d82f434b344fb79cf8cb24596b816f05824d54b3c9"
+    },
+    {
+      "path": "knowledge/06_SECURITY_INTEGRITY.md",
+      "bytes": 148332,
+      "sha256": "f594a4bf461460e674d701509cfc814d92b08fbd25a9617a4ee75637f0534cfe"
+    },
+    {
+      "path": "knowledge/07_UNIVERSAL_ROUTER.md",
+      "bytes": 80721,
+      "sha256": "bd4077ee99b525e05c6b7f203c45c145ec62bc0e76f603ffe297d33707e6d5d7"
+    },
+    {
+      "path": "knowledge/08_STATECYCLE_RUNTIME.md",
+      "bytes": 12896,
+      "sha256": "4145175144cfda6c0c24c335f50a6fb27bd44f0846b6eea9d056eba31517b96e"
+    },
+    {
+      "path": "knowledge/09_METRICS_ENGINE.md",
+      "bytes": 13044,
+      "sha256": "e4d7745907f30c62e850b86460d00470170ac121f91d31b3a1610c4fa34a7a1b"
+    },
+    {
+      "path": "knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "bytes": 14874,
+      "sha256": "48df83050f9615207987dcc3e74d35dccf38eeb81a198e7ee5d4fe0378579233"
+    },
+    {
+      "path": "knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "bytes": 14691,
+      "sha256": "969ab3225fecbb8e2cb0c2b5ee3d3481a67af7a5cf42dd42237854798b4014fd"
+    },
+    {
+      "path": "knowledge/12_COUNCIL_VOICES.md",
+      "bytes": 17061,
+      "sha256": "9f5f2b09786b163b6918abf3223de180fcca5195559dc7e4b00fa9769b2545b7"
+    },
+    {
+      "path": "knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "bytes": 13386,
+      "sha256": "e709c9a25ec9e8cfb3836776827e4ecc63f8f0fd568617396c2324e571a1a739"
+    },
+    {
+      "path": "knowledge/14_MEMORY_MODEL.md",
+      "bytes": 14110,
+      "sha256": "fd7016036ec0987845b96b39071339ffd9f9dfc8d0f83435557061936bbc6763"
+    },
+    {
+      "path": "knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "bytes": 11235,
+      "sha256": "5d757e35b82dc60b1471d7f7c6c1f547a84af5e30fcb99d75b1fbc602fe6600d"
+    },
+    {
+      "path": "knowledge/16_SHADOW_LAYER.md",
+      "bytes": 8289,
+      "sha256": "be46e1d9a5898b3d07d3a3813854323a49bd2394a936c7e7928a25eb1daff795"
+    },
+    {
+      "path": "knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "bytes": 11430,
+      "sha256": "dd4d8af3cf88c1088d937ba45f2a6e4f28e8eb14f0373f1a7b6f3c63524f9c9f"
+    },
+    {
+      "path": "knowledge/18_HORIZON_WEAVER.md",
+      "bytes": 13916,
+      "sha256": "282ff5be29df9776cfb881bf8d985744f509413dc7ce19ef827993b9ad4598d3"
+    },
+    {
+      "path": "knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "bytes": 12501,
+      "sha256": "ffb66f7e8293d81f4aa2d526a239efffb0fbb5335ec8e2de8f4ceea8a218c176"
+    },
+    {
+      "path": "knowledge/20_GOVERNANCE_ADR.md",
+      "bytes": 31627,
+      "sha256": "386781894cd92c3f58ee740c062c8a21005bdd96ff512fb048b787844d2c1a9a"
+    },
+    {
+      "path": "knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "bytes": 19105,
+      "sha256": "20a47211734796f4af94ddd1621d19d39474785fbcf9a1570146d3edf9e833a5"
+    },
+    {
+      "path": "knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "bytes": 3761,
+      "sha256": "a18aa78ad414db39faf503ed2230662489c30b550aac7cbeac58700eb125a3d2"
+    },
+    {
+      "path": "knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "bytes": 1091,
+      "sha256": "b5f58d2d1226fff156d5cef4c6e34b9aff0dfe55836a8ca0870fe59201ffd334"
+    },
+    {
+      "path": "knowledge/24_INTERFACE_STYLE.md",
+      "bytes": 2830585,
+      "sha256": "325355071ad410288a09c56948dd424d1eb2d17254e0a79c7b790b9332d44390"
+    },
+    {
+      "path": "knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "bytes": 457439,
+      "sha256": "c58bbb6c10ba353ef12245e55f45386f1390179e4f4d2cd7c25394c74fe39eef"
+    },
+    {
+      "path": "knowledge/26_SOMATIC_INTUITION.md",
+      "bytes": 24288,
+      "sha256": "38f0195f070366cae234583fc3e3dcc30c74a5662fd4bab011f4da77b07672cf"
+    },
+    {
+      "path": "knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "bytes": 20885,
+      "sha256": "01ebc9d963a63ceb747bd5b677326c635e175c04c644d8972ef433c15cad3ef6"
+    },
+    {
+      "path": "knowledge/28_EVALS_ACCEPTANCE.md",
+      "bytes": 12684,
+      "sha256": "4ec727c312afd1d4d75927a9057bef8cf7dd1d2267d6ccef89188caeb1bb6fc8"
+    },
+    {
+      "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "bytes": 6911,
+      "sha256": "003574411ddfceacb2284ada0c8adb61270c3b664d1e5c3bdcbb61a6202e0494"
+    }
+  ],
+  "live_project_verified": false,
+  "parity_fix": {
+    "file": "00_PROJECT_ROUTER.md",
+    "support": "PROJECT_INSTRUCTIONS_SOT30.md",
+    "normalized_equal": true,
+    "raw_equal": true
+  }
+}
