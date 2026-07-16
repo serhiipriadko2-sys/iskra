@@ -1,5 +1,5 @@
 -- Security hardening: preserve graph read/write API while preventing authenticated deletion of shared canon nodes.
--- Live migration applied on project typcvaszcfdpkzbjzuur as harden_graph_destructive_boundaries_v1.
+-- Live migration applied on project typcvaszcfdpkzbjzuur as version 20260709194741 / harden_graph_destructive_boundaries_v1.
 -- Rollback: restore previous graph_delete_node definition from 20260626164633_graph_rpc_boundary.sql if required.
 
 begin;
