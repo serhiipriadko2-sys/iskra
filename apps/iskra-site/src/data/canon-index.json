@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-07-15T15:34:13.894Z",
-  "total": 2799,
+  "generatedAt": "2026-07-15T19:54:03.127Z",
+  "total": 2834,
   "curated": 20,
   "layers": {
     "root": 334,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
-    "research": 12,
+    "research": 36,
     "appendix": 26,
     "site": 69,
     "web": 13,
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 61,
+    "governance": 68,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 348,
+    "runtime": 352,
     "skills": 267,
     "backend": 63,
     "system": 26,
@@ -2072,6 +2072,7 @@
       "sourceRef": "ScienceAndTests",
       "related": [],
       "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08",
         "ScienceAndTests/Gemini_Dialogue_Testing.md",
         "ScienceAndTests/ISKRA_СБОРНИК_МЕТАМОРФОЗ_v0.1.md",
         "ScienceAndTests/new test.txt",
@@ -2107,6 +2108,305 @@
       "sourceRef": "ScienceAndTests/ISKRA_СБОРНИК_МЕТАМОРФОЗ_v0.1.md",
       "related": [],
       "parent": "ScienceAndTests"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+      "name": "iskra_evaluation_release_2026-07-08",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+      "related": [],
+      "parent": "ScienceAndTests",
+      "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/01_paper",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/05_prior_audit",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/MANIFEST.sha256",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/README.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/01_paper",
+      "name": "01_paper",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/01_paper",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+      "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/01_paper/iskra_independent_evaluation_report.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/01_paper/iskra_independent_evaluation_report.md",
+      "name": "iskra_independent_evaluation_report.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/01_paper/iskra_independent_evaluation_report.md",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/01_paper"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus",
+      "name": "02_corpus",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+      "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_answer_key.csv",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_blind_batch.csv",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_questions_tasks_blocks_50.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_answer_key.csv",
+      "name": "unified_1000_answer_key.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_answer_key.csv",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_blind_batch.csv",
+      "name": "unified_1000_blind_batch.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_blind_batch.csv",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_questions_tasks_blocks_50.md",
+      "name": "unified_1000_questions_tasks_blocks_50.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus/unified_1000_questions_tasks_blocks_50.md",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/02_corpus"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts",
+      "name": "03_data_and_scripts",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+      "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/build_corpus.py",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/judge100.py",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/per_domain_effect_sizes.csv",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats.py",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats2.py",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats_main.json"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/build_corpus.py",
+      "name": "build_corpus.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/build_corpus.py",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/judge100.py",
+      "name": "judge100.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/judge100.py",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/per_domain_effect_sizes.csv",
+      "name": "per_domain_effect_sizes.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/per_domain_effect_sizes.csv",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats.py",
+      "name": "stats.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats.py",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats2.py",
+      "name": "stats2.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats2.py",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats_main.json",
+      "name": "stats_main.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts/stats_main.json",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/03_data_and_scripts"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs",
+      "name": "04_raw_runs",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+      "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/GLM-5_2_bare_run.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/GLM-5_2_iskra_build_run.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/chatgpt_5-5_default_run.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/chatgpt_5-5_iskra_canon_run.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/test_bank_793.txt"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/GLM-5_2_bare_run.txt",
+      "name": "GLM-5_2_bare_run.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/GLM-5_2_bare_run.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/GLM-5_2_iskra_build_run.txt",
+      "name": "GLM-5_2_iskra_build_run.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/GLM-5_2_iskra_build_run.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/chatgpt_5-5_default_run.txt",
+      "name": "chatgpt_5-5_default_run.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/chatgpt_5-5_default_run.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/chatgpt_5-5_iskra_canon_run.txt",
+      "name": "chatgpt_5-5_iskra_canon_run.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/chatgpt_5-5_iskra_canon_run.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/test_bank_793.txt",
+      "name": "test_bank_793.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/test_bank_793.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/05_prior_audit",
+      "name": "05_prior_audit",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/05_prior_audit",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+      "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/05_prior_audit/iskra_vs_default_audit.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/05_prior_audit/iskra_vs_default_audit.md",
+      "name": "iskra_vs_default_audit.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/05_prior_audit/iskra_vs_default_audit.md",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/05_prior_audit"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/MANIFEST.sha256",
+      "name": "MANIFEST.sha256",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/MANIFEST.sha256",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/README.md",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08"
     },
     {
       "path": "ScienceAndTests/new test.txt",
@@ -20963,6 +21263,9 @@
         "governance/adr_20260712_iskra_constitution_v1_activation.md",
         "governance/adr_20260712_iskra_constitution_v1_p0_conflict_patches.md",
         "governance/adr_20260712_iskra_constitution_v1_redline.md",
+        "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
+        "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+        "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -21282,6 +21585,39 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
+      "name": "adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+      "name": "adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
+      "name": "adr_20260715_iskraspace_shadow_promotion_boundary.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21416,7 +21752,11 @@
         "governance/changelog.d/2026-06-29-iskra-selfhood-mechanics-hardening.md",
         "governance/changelog.d/2026-07-01-vomega-7-1-runtime-unification.md",
         "governance/changelog.d/2026-07-11-iskraspace-symbiosis-contract-p0.md",
-        "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md"
+        "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+        "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
+        "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
+        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
+        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md"
       ]
     },
     {
@@ -21515,6 +21855,50 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
+      "name": "2026-07-15-constitution-carrier-review-acceptance.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
+      "name": "2026-07-15-constitution-carrier-review-classes-4-9.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
+      "name": "2026-07-15-iskraspace-shadow-promotion-boundary.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
+      "name": "2026-07-15-iskraspace-shadow-promotion-receipt.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
@@ -25579,7 +25963,8 @@
         "runtime/iskraSpace/__tests__/components/CouncilView.test.tsx",
         "runtime/iskraSpace/__tests__/components/IskraStateView.test.tsx",
         "runtime/iskraSpace/__tests__/components/JournalSecurityBoundary.test.tsx",
-        "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx"
+        "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx",
+        "runtime/iskraSpace/__tests__/components/ShadowView.test.tsx"
       ]
     },
     {
@@ -25645,6 +26030,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/ShadowView.test.tsx",
+      "name": "ShadowView.test.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/ShadowView.test.tsx",
       "related": [],
       "parent": "runtime/iskraSpace/__tests__/components"
     },
@@ -27183,6 +27579,7 @@
         "runtime/iskraSpace/services/rule8Service.ts",
         "runtime/iskraSpace/services/searchService.ts",
         "runtime/iskraSpace/services/securityService.ts",
+        "runtime/iskraSpace/services/shadowPromotionService.ts",
         "runtime/iskraSpace/services/soundService.ts",
         "runtime/iskraSpace/services/storageCompat.ts",
         "runtime/iskraSpace/services/storageService.ts",
@@ -27215,6 +27612,7 @@
         "runtime/iskraSpace/services/__tests__/betaCapabilityBoundary.test.ts",
         "runtime/iskraSpace/services/__tests__/canonService.test.ts",
         "runtime/iskraSpace/services/__tests__/closedBetaMigration.test.ts",
+        "runtime/iskraSpace/services/__tests__/constitutionalCarrierContract.test.ts",
         "runtime/iskraSpace/services/__tests__/deltaEnforcer.test.ts",
         "runtime/iskraSpace/services/__tests__/deltaProtocol.test.ts",
         "runtime/iskraSpace/services/__tests__/e2eAuthBypass.test.ts",
@@ -27245,6 +27643,7 @@
         "runtime/iskraSpace/services/__tests__/runtimeConfigDeliveryBoundary.test.ts",
         "runtime/iskraSpace/services/__tests__/searchService.test.ts",
         "runtime/iskraSpace/services/__tests__/securityService.test.ts",
+        "runtime/iskraSpace/services/__tests__/shadowPromotionService.test.ts",
         "runtime/iskraSpace/services/__tests__/soundService.test.ts",
         "runtime/iskraSpace/services/__tests__/storageService.test.ts",
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
@@ -27345,6 +27744,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/closedBetaMigration.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/constitutionalCarrierContract.test.ts",
+      "name": "constitutionalCarrierContract.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/constitutionalCarrierContract.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -27675,6 +28085,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/securityService.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/shadowPromotionService.test.ts",
+      "name": "shadowPromotionService.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/shadowPromotionService.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -28104,6 +28525,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/securityService.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
+      "path": "runtime/iskraSpace/services/shadowPromotionService.ts",
+      "name": "shadowPromotionService.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/shadowPromotionService.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services"
     },
