@@ -19,7 +19,9 @@ Scope: full 30-file assembled corpus (v5.4.1 base + v5.5 delta + v5.5.1 content 
 | file-13 manifest drift resolved (manifest records actual 13386-byte / `e709c9a2…` file) | PASS |
 | every overlaid file's hash matches its source PR manifest (v5.5 / v5.5.1) | PASS |
 | ZIP integrity (`unzip -t`) | PASS |
-| ZIP round-trip: extract → `sha256sum -c SHA256SUMS` for all 30 + instructions | PASS — 0 failures |
+| ZIP round-trip: extract → **single command** `sha256sum -c support/SHA256SUMS` from package root | PASS — 32/32 OK, 0 failures (30 knowledge + instructions + MANIFEST.json) |
+| SHA256SUMS covers every package file except itself (self-gate) | PASS — 32 entries incl. `support/MANIFEST.json` |
+| SHA256SUMS paths runnable in one cwd (package-root-relative) | PASS |
 | secret scan across corpus | PASS except pre-existing, out-of-scope truncated test fixtures in file 24 (known C17) |
 
 ## Package facts
@@ -27,7 +29,7 @@ Scope: full 30-file assembled corpus (v5.4.1 base + v5.5 delta + v5.5.1 content 
 - knowledge files: 30
 - corpus bytes: 4,015,928
 - Project Instructions: 5,996 chars; raw-equal to 00's pasteable mirror (T80 parity PASS); version header `SoT30 v5.5.1`
-- ZIP: `dist/SoT30_v5.5.1.zip`, 1,120,143 bytes, sha256 `a4f69c708b8b1e0839036ad5ba48df91ec99b9533b6019fb29d55d1cf21c619c`
+- ZIP: `dist/SoT30_v5.5.1.zip`, 1,120,234 bytes, sha256 `28748d1323270fda4d28cde0f075e7a327f41957825d0f8874eedddce33ef144`
 - file 29: 6,911 bytes, sha256 `003574411ddfceacb2284ada0c8adb61270c3b664d1e5c3bdcbb61a6202e0494`
 
 ## Not checked (explicitly out of scope / pending)
