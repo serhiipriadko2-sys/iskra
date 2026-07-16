@@ -1,0 +1,33 @@
+{
+  "package": "SoT30 Content Integrity Patch",
+  "atom_id": "ATOM-S30-CONTENT-001",
+  "base_package": "SoT30_v5.4.1_Mythic_Corpus_Pass2_T76_Knowledge",
+  "date": "2026-07-16",
+  "scope": "Knowledge-only content correctness patch; independent of the v5.5 Business Projects delta (PR #264); no runtime code, Supabase schema, or GitHub app behavior changed",
+  "changed_knowledge_files": [
+    { "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md", "bytes_before": 24625, "bytes_after": 24901, "sha256_after": "db984f2d9f4c708e31258e653bff5dd25014d5ef3bc0a2a022ec7821cd8ff7f8", "atom": 3 },
+    { "path": "knowledge/04_IDENTITY_NON_MIRROR.md", "bytes_before": 90938, "bytes_after": 92408, "sha256_after": "bfe7b2abef6b72f507b9950baf7656db72b9557115aecbbc322c139ee112abf0", "atom": 2 },
+    { "path": "knowledge/05_TRUTH_SIFT_RAG.md", "bytes_before": 40716, "bytes_after": 41451, "sha256_after": "396fffda61a611729a7fb8d82f434b344fb79cf8cb24596b816f05824d54b3c9", "atom": 2 },
+    { "path": "knowledge/07_UNIVERSAL_ROUTER.md", "bytes_before": 79251, "bytes_after": 80721, "sha256_after": "bd4077ee99b525e05c6b7f203c45c145ec62bc0e76f603ffe297d33707e6d5d7", "atom": 2 },
+    { "path": "knowledge/08_STATECYCLE_RUNTIME.md", "bytes_before": 12414, "bytes_after": 12896, "sha256_after": "4145175144cfda6c0c24c335f50a6fb27bd44f0846b6eea9d056eba31517b96e", "atom": 3 },
+    { "path": "knowledge/09_METRICS_ENGINE.md", "bytes_before": 12562, "bytes_after": 13044, "sha256_after": "e4d7745907f30c62e850b86460d00470170ac121f91d31b3a1610c4fa34a7a1b", "atom": 3 },
+    { "path": "knowledge/10_ENTROPY_FRACTAL_EWS.md", "bytes_before": 13829, "bytes_after": 14874, "sha256_after": "48df83050f9615207987dcc3e74d35dccf38eeb81a198e7ee5d4fe0378579233", "atom": 4 },
+    { "path": "knowledge/11_SLO_PLAYBOOK_CONTROL.md", "bytes_before": 14579, "bytes_after": 14691, "sha256_after": "969ab3225fecbb8e2cb0c2b5ee3d3481a67af7a5cf42dd42237854798b4014fd", "atom": 4 },
+    { "path": "knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md", "bytes_before": 12958, "bytes_after": 13386, "sha256_after": "e709c9a25ec9e8cfb3836776827e4ecc63f8f0fd568617396c2324e571a1a739", "atom": 3, "note": "bytes_before is the SoT30_v5.4.zip variant (already carries corrected Omega wording), not the stale support/MANIFEST.json-declared 12869-byte variant" },
+    { "path": "knowledge/20_GOVERNANCE_ADR.md", "bytes_before": 31203, "bytes_after": 31627, "sha256_after": "386781894cd92c3f58ee740c062c8a21005bdd96ff512fb048b787844d2c1a9a", "atom": 4 },
+    { "path": "knowledge/24_INTERFACE_STYLE.md", "bytes_before": 3398115, "bytes_after": 2830585, "sha256_after": "325355071ad410288a09c56948dd424d1eb2d17254e0a79c7b790b9332d44390", "atom": 1 },
+    { "path": "knowledge/27_WHAT_IF_SCENARIO_MATRIX.md", "bytes_before": 18510, "bytes_after": 20885, "sha256_after": "01ebc9d963a63ceb747bd5b677326c635e175c04c644d8972ef433c15cad3ef6", "atom": 5 }
+  ],
+  "unchanged_knowledge_file_count": 18,
+  "net_corpus_byte_change": -562980,
+  "atoms": {
+    "1": "externalize base64 asset from file 24 (retrieval-compaction, valid-but-noisy asset removed)",
+    "2": "ontology quarantine: 15 disclaimer wraps in files 04/05/07",
+    "3": "kernel order migration closure in files 01/08/09/13",
+    "4": "guard recompute formula unification in files 10/11/20",
+    "5": "what-if scenario type repair in file 27 (Council default, LAB, PROCEED+SHADOW, metric provenance)"
+  },
+  "live_project_verified": false,
+  "checksum_scope": "knowledge/ changed files only; see SHA256SUMS",
+  "secret_scan": "clean except pre-existing, out-of-scope, truncated test fixtures in file 24 (known, C17)"
+}

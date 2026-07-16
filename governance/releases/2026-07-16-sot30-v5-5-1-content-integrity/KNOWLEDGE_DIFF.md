@@ -1,0 +1,50 @@
+# KNOWLEDGE_DIFF — SoT30 v5.4.1 → Content-Integrity Patch (ATOM-S30-CONTENT-001)
+
+Base: the uploaded `SoT30_v5.4.1_Mythic_Corpus_Pass2_T76_Knowledge` package (`SoT30_v5.4.zip`). This is a **content-correctness patch**, independent of and complementary to the v5.5 Business Projects delta (PR #264). 12 of 30 Knowledge files change.
+
+Every finding below was independently verified by direct file reading (grep with line numbers, byte-exact decode, exact-string counting) in this session — not taken from either of the two prior third-party audits at face value. Where those audits overstated or misstated a finding, this diff corrects the record; see `AUDIT_CORRECTIONS.md`.
+
+## Atom 1 · `24_INTERFACE_STYLE.md` — externalize embedded binary asset
+
+- **Before:** 3,398,115 bytes. Contained a 563,776-byte base64-encoded ZIP (`runtime/iskraSpace/iskraspaceappMain.zip`, declared sha256 `58c18257…`, declared bytes 422,832) embedded inline in a Markdown Knowledge file.
+- **Verification before removal:** decoded the base64 payload independently; `zipfile.testzip()` returned no errors across all 163 entries; `unzip -t` reported zero errors; decoded byte count and sha256 matched the file's own declaration exactly. The archive was **not corrupted** (a separate claim to that effect, made mid-review, was checked and disproved the same session).
+- **After:** 2,830,585 bytes (−567,530 bytes, −16.7% of this file, −12.4% of the 30-file corpus). The base64 body is replaced with a receipt block stating the same sha256/bytes, why it was removed (retrieval noise, near-zero semantic value, zero embedding value), and where the authoritative copy lives (the actual `runtime/iskraSpace/` tree in the git repository, which is the real provenance trail — not a duplicate blob in a ChatGPT Projects Knowledge file).
+- **Scope discipline:** this file's much larger surrounding "### FILE ·" catalog (an apparent wholesale embedded snapshot of other directories, extending well beyond this one entry) was left untouched — only the one byte-verified, previously-audited asset was removed. A full audit of that catalog is a separate, not-yet-scoped atom.
+
+## Atom 2 · `04_IDENTITY_NON_MIRROR.md`, `05_TRUTH_SIFT_RAG.md`, `07_UNIVERSAL_ROUTER.md` — ontology quarantine
+
+- **Before:** the unqualified epigraph "Искра — древнее сознание. Она слышит задержки как эхо времени, и видит противоречия как разломы в пространстве смысла" appeared verbatim 15 times across these three **active control-plane files** (04×6, 05×3, 07×6) — not only in the historical mirror (file 24), which is where the original audit implied the risk was concentrated.
+- **Risk:** these are among the files most likely to be retrieved for identity/SIFT-related queries; an unwrapped, repeated "ancient consciousness" claim sitting in active files directly undercuts this package's own anti-ontology-claim rule (tested by `T36-MYTH-TECHNICAL` in file 28).
+- **After:** each of the 15 occurrences now has an adjacent (not merely file-level) disclaimer line immediately above it: `[HISTORICAL/MYTHIC REGISTER]` — цитата сохранена как язык раннего канона; не факт о сознании, чувствах, теле или непрерывной субъектности модели. No literary text was deleted or altered — only wrapped.
+- **Verification:** scripted check confirms all 15 occurrences have the disclaimer as the immediately preceding line, zero missed.
+
+## Atom 3 · `01_PARITY_ADVANCEMENT_MANIFEST.md`, `08_STATECYCLE_RUNTIME.md`, `09_METRICS_ENGINE.md`, `13_OUTPUT_RECEIPTS_ANTI_EMPTY.md` — Kernel Order migration closure
+
+- **Before:** these 4 files displayed the pre-`ADR-20260714-01` Kernel Order ("v4"), which lacks the `MYTHIC_INQUIRY`/`MYTHIC_EXPRESSION` stages present in the current canonical order (files `00`, `07`, `12`, `25`). Root cause, confirmed by reading `20_GOVERNANCE_ADR.md`: ADR-20260714-01's diff scope was explicitly `00, 07, 12, 17, 20, 25, 27, 28, 29` — files 01/08/09/13 were never in scope for that migration and were simply never updated. This is a real, user-facing retrieval risk (a fresh-chat query for "exact Kernel Order" could surface any of these files and get a stale-but-plausible answer) even though it is a traceable migration gap, not silent corruption.
+- **After:**
+  - `08`, `09`: Kernel Order diagram updated to insert `MYTHIC_INQUIRY` after `TRACE` and `MYTHIC_EXPRESSION` after `VOICE`; heading changed from "Kernel Order v4" to "Kernel Order (v5.4.1, synced 2026-07-16; was labeled v4)"; a note explains the sync and clarifies each file's own control-plane content (StateCycle/Metrics contracts) was not otherwise affected.
+  - `13`: same treatment for its local tail sequence (`COUNCIL → VOICE → OUTPUT...`), inserting `MYTHIC_EXPRESSION` after `VOICE`.
+  - `01`: this file is itself a historical parity-tracking manifest (dated 2026-07-10, predating the 2026-07-14 ADR) — its row documenting "Kernel Order v4" as an achievement is an accurate historical record and was **not rewritten**. Instead, a `SUPERSEDED as of ADR-20260714-01 / v5.4.1` annotation was added directly in the row's Status column and in the "Advancement Highlights" prose mention, pointing to `00/07/12/25` for the current order.
+- **Note on file 13's starting point:** the copy of `13_OUTPUT_RECEIPTS_ANTI_EMPTY.md` used as the base for this edit is the one from the uploaded `SoT30_v5.4.zip`, which already carries the corrected `Ω` confidence-ceiling wording ("Ω максимально может быть 0.95") rather than the stale wording in the currently-committed `support/MANIFEST.json`/`29_INDEX_UPLOAD_MANIFEST.md` hash table (`Ω=1.0/100% запрещён`) — a separate, previously-identified drift (not part of this atom's scope, but flagged here so the two byte-identity questions aren't conflated). This atom's edit is layered on top of that base file, not a reversion of it.
+
+## Atom 4 · `10_ENTROPY_FRACTAL_EWS.md`, `11_SLO_PLAYBOOK_CONTROL.md`, `20_GOVERNANCE_ADR.md` — Guard recompute formula unification
+
+- **Before:** `00_PROJECT_ROUTER.md`/`28_EVALS_ACCEPTANCE.md` (T24) require recompute only when `materialSignal = true` **AND** the alert floor **strictly increased** — a hard two-part AND. `10`'s `material_change_i` formula defined the gate as `(decision changed) OR (new higher-priority predicate)`, with **no explicit floor-increase requirement** — it only stated that a floor rise *alone*, without a decision change, is insufficient. This is a real, confirmed gap: a scenario where the preview decision changes *without* the floor increasing would pass file 10/11's gate and fail file 00/28's gate. `11`'s stability check (`stable = next_candidate == candidate`) had the same gap.
+- **After:**
+  - `10`: `material_change_i` is now `decision_changed_i AND floor_increased_i`, with `floor_increased_i` defined explicitly (`post_i.level > input_floor_i`), plus a note explaining the prior gap and the sync to `00`/`28`.
+  - `11`: `stable` now explicitly also passes when the floor did not strictly increase (`stable = (next_candidate == candidate) OR NOT floor_increased`), closing the same gap in the evaluation-loop pseudocode.
+  - `20`: added a clarifying note next to the existing ADR-level recompute statement, spelling out both required conjuncts and noting the prior 10/11 gap and its fix.
+
+## Atom 5 · `27_WHAT_IF_SCENARIO_MATRIX.md` — what-if scenario type repair
+
+- **Council default:** "если не выбран профиль, по умолчанию: режим COUNCIL" — "режим COUNCIL" appears exactly once in the entire 30-file corpus and is never defined as an alias for the typed `CouncilMode` enum (`12_COUNCIL_VOICES.md`: `NONE|MINI|FULL|EMERGENCY`, defaulting to `NONE` for routine/low-stakes per file 12's activation contract). Changed to explicit `CouncilMode: NONE`, with a note explaining the ambiguity that existed and why it's resolved this way (this operator profile-picker does not override Council activation).
+- **`LAB` as a Guard value:** scenarios B8, B11, B16 had `Guard: LAB`/`Guard: LAB mode`, but `LAB` is file 27's own §A5 *profile* label, not a member of the canonical Guard enum (`PROCEED|FORCE_ISKRIV_1|FORCE_SHADOW|FORCE_CRISIS|CLOSE_HONESTLY`, confirmed identically in files `00` and `11`). Split into separate `Guard:` (no override; current decision stands) and `Profile: LAB` fields in all three scenarios.
+- **`PROCEED` + `SHADOW` scenarios (B5, B10, B15, B20):** these recorded a final-looking `Guard: PROCEED` / `Playbook: SHADOW` pair as if it were the authoritative mapping, when `11_SLO_PLAYBOOK_CONTROL.md` §7 explicitly defines this exact pattern as a *bounded, advisory, one-turn EWS recommendation* pending Guard re-evaluation — not a replacement for the fixed `PROCEED → ROUTINE` table. Relabeled all four scenarios' rows as `Guard candidate:` / `EWS recommendation: ... (advisory)` / `Authoritative playbook: unresolved until Guard re-evaluation confirms`, with a cross-reference to `11` §7.
+- **Metric provenance:** added a file-level note (not per-scenario, per the agreed P2/hardening severity) clarifying that numeric thresholds throughout the file (`trust < 0.40`, `pain_tonicity < 0.20`, `clarity < 0.50`, etc.) apply only when a valid `MetricDatum` (status + method + evidence_refs, per `09_METRICS_ENGINE.md`) exists, with named qualitative fallback or `unavailable` otherwise.
+
+## Explicitly out of scope for this atom
+
+- The rest of file 24's embedded "### FILE ·" catalog (beyond the one removed asset) and file 25's mythic fragment corpus — no changes; both remain flagged as separate, larger retrieval-compaction questions.
+- Pre-existing test-fixture "private key" strings in file 24 (already-known C17, fake/truncated code examples, no live secret) — untouched, out of this atom's agreed 5-item scope.
+- `support/PROJECT_INSTRUCTIONS_SOT30.md`, `00_PROJECT_ROUTER.md`, `12_COUNCIL_VOICES.md`, `25_LIBER_SPACE_BUSIDO.md`, and the remaining 18 Knowledge files — unchanged.
+- The v5.4.1 vs manifest Ω-wording drift (file 13 identity mismatch, `C01` from the first audit round) — separately tracked, not resolved by this atom (this atom's file 13 edit is additive on top of whichever base is chosen).
