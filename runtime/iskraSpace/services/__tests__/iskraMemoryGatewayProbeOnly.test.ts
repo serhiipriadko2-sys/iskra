@@ -187,6 +187,16 @@ describe('iskra-memory-gateway production-bound probe-only handler', () => {
     expect(response.status).toBe(401);
   });
 
+  it('accepts harmless trailing whitespace after a bearer token', async () => {
+    const token = await signToken({ role: 'authenticated' });
+
+    await expect(createVerifier()(`Bearer ${token}  \t`)).resolves.toEqual({
+      credentialClass: 'authenticated',
+      issuerValidated: true,
+      audienceValidated: true,
+    });
+  });
+
   it('returns 405 for non-POST methods without parsing credentials', async () => {
     const response = await createProbeHandler()(
       requestFor(`${EXTERNAL_PREFIX}/auth/whoami`, undefined, 'GET'),
@@ -208,6 +218,23 @@ describe('iskra-memory-gateway production-bound probe-only handler', () => {
 
     expect(response.status).toBe(204);
     expect(verifier).not.toHaveBeenCalled();
+  });
+
+  it('normalizes trailing slashes in configured CORS origins', async () => {
+    const handler = createGatewayHandler({
+      mode: 'probe_only',
+      verifyCredential: createVerifier(),
+      allowedOrigins: ['https://chatgpt.com/'],
+    });
+
+    const response = await handler(
+      requestFor(`${EXTERNAL_PREFIX}/auth/whoami`, undefined, 'OPTIONS'),
+    );
+
+    expect(response.status).toBe(204);
+    expect(response.headers.get('access-control-allow-origin')).toBe(
+      'https://chatgpt.com',
+    );
   });
 
   it('never invokes an injected privileged capability in probe-only mode', async () => {

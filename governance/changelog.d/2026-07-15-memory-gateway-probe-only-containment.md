@@ -8,5 +8,8 @@
   privileged routes.
 - Added real HS256 JWT behavioral tests, strict issuer/audience checks when configured,
   frozen pnpm verification, and Deno check/bundle gates.
-- Deployment and the real Projects credential probe remain separate, approval-gated
-  operations.
+- Supabase v4 is `ACTIVE` with `verify_jwt=true`; management-plane source read-back
+  confirmed the probe-only composition.
+- Normalized configured CORS origins and trimmed captured Bearer tokens during review;
+  these two fixes are newer than live v4 and still need a post-merge deployment/read-back.
+- The real Projects credential probe remains pending; no credential class is claimed.

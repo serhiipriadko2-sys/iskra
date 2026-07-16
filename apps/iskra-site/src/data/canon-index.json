@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-15T19:54:03.127Z",
-  "total": 2834,
+  "generatedAt": "2026-07-16T09:50:45.049Z",
+  "total": 2842,
   "curated": 20,
   "layers": {
-    "root": 334,
+    "root": 335,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 68,
+    "governance": 70,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,9 +23,9 @@
     "engine": 41,
     "math": 18,
     "reference": 82,
-    "runtime": 352,
+    "runtime": 353,
     "skills": 267,
-    "backend": 63,
+    "backend": 67,
     "system": 26,
     "tools": 53
   },
@@ -4806,8 +4806,20 @@
       "related": [],
       "children": [
         "dist/agent-builder",
-        "dist/sot40"
+        "dist/sot40",
+        "dist/SoT30_v5.4.zip"
       ]
+    },
+    {
+      "path": "dist/SoT30_v5.4.zip",
+      "name": "SoT30_v5.4.zip",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "dist/SoT30_v5.4.zip",
+      "related": [],
+      "parent": "dist"
     },
     {
       "path": "dist/agent-builder",
@@ -21265,6 +21277,7 @@
         "governance/adr_20260712_iskra_constitution_v1_redline.md",
         "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
         "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+        "governance/adr_20260715_iskra_memory_gateway_probe_only_containment.md",
         "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
@@ -21607,6 +21620,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260715_iskra_memory_gateway_probe_only_containment.md",
+      "name": "adr_20260715_iskra_memory_gateway_probe_only_containment.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260715_iskra_memory_gateway_probe_only_containment.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
       "name": "adr_20260715_iskraspace_shadow_promotion_boundary.md",
       "kind": "file",
@@ -21756,7 +21780,8 @@
         "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
         "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
         "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
-        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md"
+        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
+        "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md"
       ]
     },
     {
@@ -21899,6 +21924,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
+      "name": "2026-07-15-memory-gateway-probe-only-containment.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
@@ -27625,6 +27661,7 @@
         "runtime/iskraSpace/services/__tests__/graphSharedRowGuardMigration.test.ts",
         "runtime/iskraSpace/services/__tests__/healthService.test.ts",
         "runtime/iskraSpace/services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts",
+        "runtime/iskraSpace/services/__tests__/iskraMemoryGatewayProbeOnly.test.ts",
         "runtime/iskraSpace/services/__tests__/iskraMemoryGatewaySecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/kainEdgeFunctionSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/makiService.test.ts",
@@ -27887,6 +27924,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/iskraMemoryGatewayProbeOnly.test.ts",
+      "name": "iskraMemoryGatewayProbeOnly.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/iskraMemoryGatewayProbeOnly.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -33644,6 +33692,9 @@
       "parent": "supabase/functions",
       "children": [
         "supabase/functions/iskra-memory-gateway/README.md",
+        "supabase/functions/iskra-memory-gateway/deno.json",
+        "supabase/functions/iskra-memory-gateway/deno.lock",
+        "supabase/functions/iskra-memory-gateway/handler.ts",
         "supabase/functions/iskra-memory-gateway/index.ts",
         "supabase/functions/iskra-memory-gateway/manifest.json"
       ]
@@ -33656,6 +33707,39 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "supabase/functions/iskra-memory-gateway/README.md",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/deno.json",
+      "name": "deno.json",
+      "kind": "file",
+      "layer": "backend",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/deno.json",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/deno.lock",
+      "name": "deno.lock",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/deno.lock",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/handler.ts",
+      "name": "handler.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/handler.ts",
       "related": [],
       "parent": "supabase/functions/iskra-memory-gateway"
     },
@@ -33782,6 +33866,7 @@
         "supabase/migrations/20260709170000_closed_beta_access_boundary.sql",
         "supabase/migrations/20260709180000_audit_log_append_only.sql",
         "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
+        "supabase/migrations/20260709194741_harden_graph_destructive_boundaries_v1.sql",
         "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
         "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
@@ -34105,6 +34190,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260709194741_harden_graph_destructive_boundaries_v1.sql",
+      "name": "20260709194741_harden_graph_destructive_boundaries_v1.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260709194741_harden_graph_destructive_boundaries_v1.sql",
       "related": [],
       "parent": "supabase/migrations"
     },

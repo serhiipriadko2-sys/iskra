@@ -29,6 +29,7 @@ describe('iskra-memory-gateway production composition security boundary', () => 
     expect(handlerSource).toContain("from 'jose'");
     expect(handlerSource).toContain('jwtVerify(token, options.secret');
     expect(handlerSource).toContain("algorithms: ['HS256']");
+    expect(handlerSource).toContain('?.[1]?.trim()');
     expect(handlerSource).not.toContain('decodeJwtPayload');
   });
 

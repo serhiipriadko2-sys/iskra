@@ -104,7 +104,7 @@ export function createJwtCredentialVerifier(
   options: JwtCredentialVerifierOptions,
 ): CredentialVerifier {
   return async (authorizationHeader) => {
-    const token = authorizationHeader?.match(/^Bearer\s+(.+)$/i)?.[1];
+    const token = authorizationHeader?.match(/^Bearer\s+(.+)$/i)?.[1]?.trim();
     if (!token) {
       throw new Error('missing_authorization_bearer');
     }
@@ -128,6 +128,14 @@ export function createJwtCredentialVerifier(
       throw new Error('invalid_authorization_jwt');
     }
   };
+}
+
+export function normalizeAllowedOrigins(
+  origins: readonly string[],
+): string[] {
+  return origins
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
 }
 
 function corsHeaders(
@@ -171,10 +179,12 @@ function unauthorizedError(error: unknown): string {
 export function createGatewayHandler(
   options: GatewayHandlerOptions,
 ): (request: Request) => Promise<Response> {
-  const allowedOrigins =
-    options.allowedOrigins && options.allowedOrigins.length > 0
-      ? options.allowedOrigins
-      : DEFAULT_ALLOWED_ORIGINS;
+  const configuredOrigins = normalizeAllowedOrigins(
+    options.allowedOrigins ?? [],
+  );
+  const allowedOrigins = configuredOrigins.length > 0
+    ? configuredOrigins
+    : DEFAULT_ALLOWED_ORIGINS;
 
   return async (request) => {
     if (request.method === 'OPTIONS') {

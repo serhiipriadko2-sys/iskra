@@ -2,20 +2,31 @@
 
 Project-facing Supabase Edge Function for ChatGPT Projects.
 
-## Current source status: 1A.1 probe-only containment
+## Current status: 1A.1 probe-only containment
 
 The repository source is intentionally fail-closed while the credential class sent by the
 real ChatGPT Projects Action is measured.
 
 ```text
-source implementation: probe_only
-GitHub merge: not implied by this file
-Supabase deployment: requires separate approval and read-back
-Projects probe: not implied by deployment
+repository source: probe_only, including post-review CORS/token normalization
+GitHub merge: pending for this pull request
+Supabase deployment: v4 ACTIVE, verify_jwt=true
+live source read-back: completed 2026-07-16
+repository/live source parity: pending deployment of the post-review normalization delta
+Projects probe: pending
 ```
 
-The source status is not evidence that production is contained. Read the live Edge
-Function before making a deployed claim.
+The management-plane read-back confirmed that deployed v4 contains the probe-only
+composition. It matched the branch before the two review fixes; therefore deployed
+containment is verified, while exact current-branch source parity is not yet claimed.
+
+### Live v4 receipt
+
+- updated: `2026-07-15T17:45:47.938Z`;
+- bundle SHA-256: `765837f2f580764a608d9b0dc64f993c51020f5e30d5df5229d82f14bca511c2`;
+- read back: `index.ts`, `handler.ts`, and `deno.json`;
+- Projects `auth/whoami`: not yet observed successfully;
+- credential class: unknown.
 
 ## Available route
 
@@ -38,6 +49,8 @@ segments return `404` after authentication.
 
 - Supabase must keep `verify_jwt=true`.
 - The function also verifies the JWT in-process with `jose` and permits only HS256.
+- Captured Bearer tokens are trimmed before verification.
+- Configured CORS origins are trimmed and normalized without trailing slashes.
 - Expected issuer and audience are enforced only when
   `ISKRA_GATEWAY_EXPECTED_ISSUER` and `ISKRA_GATEWAY_EXPECTED_AUDIENCE` are set.
 - The response never reports issuer/audience validation fields and never returns token,
@@ -79,16 +92,18 @@ pnpm dlx deno bundle --config deno.json --lock deno.lock index.ts --output gatew
 
 Delete the temporary bundle after recording its byte count.
 
-## Deploy gate
+## Next deploy gate
 
-Do not deploy directly from an unreviewed working tree. Required order:
+Deployed v4 already provides fail-closed containment. The next deployment is only for the
+post-review CORS/token normalization delta. Do not deploy directly from an unreviewed
+working tree. Required order:
 
 1. focused branch and draft pull request;
 2. green repository and Deno gates;
 3. independent review;
 4. explicit production deploy approval;
 5. deploy with `verify_jwt=true`;
-6. live source read-back;
+6. live source read-back proving current-branch parity;
 7. one real Projects probe.
 
 ## 1B boundary
@@ -99,9 +114,7 @@ dedicated, least-privilege credential and an explicit route allowlist.
 
 ## Rollback
 
-Before deployment, revert the branch or close the pull request.
-
-After deployment, prefer disabling the Action or retaining a fail-closed function while
+Prefer disabling the Action or retaining a fail-closed function while
 repairing the probe. Routine rollback to privileged v3 is forbidden because it restores
 the known authorization defect.
 

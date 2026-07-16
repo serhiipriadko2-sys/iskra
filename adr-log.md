@@ -169,10 +169,14 @@ production adapter. Design 1B only after the real probe and use a dedicated leas
 credential profile.
 
 ### Verification
-Focused production-bound Vitest tests, strict TypeScript typecheck, frozen pnpm install,
-Deno check/bundle, ADR/secret/ledger gates, branch review, approved Supabase deploy, live
-source read-back, and a real Projects probe.
+Supabase v4 is `ACTIVE` with `verify_jwt=true`; management-plane read-back confirmed the
+probe-only `index.ts`, `handler.ts`, and `deno.json`. Focused production-bound Vitest tests,
+strict TypeScript typecheck, frozen pnpm install, Deno check/bundle, ADR/secret/ledger gates,
+and branch review cover the source. The real Projects probe and credential classification
+remain pending. Review-time CORS/token normalization is newer than v4 and requires a
+separate post-merge deployment/read-back for exact source parity.
 
 ### Rollback / Reversal Trigger
-Before deploy, revert the branch. After deploy, retain fail-closed behavior or disable the
-Action/function; do not routinely restore privileged v3.
+Retain fail-closed behavior or disable the Action/function; do not routinely restore
+privileged v3. Before deploying the post-review normalization delta, revert or close this
+pull request if its verification gates fail.

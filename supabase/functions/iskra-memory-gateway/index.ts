@@ -3,6 +3,7 @@ import 'supabase-edge-runtime';
 import {
   createGatewayHandler,
   createJwtCredentialVerifier,
+  normalizeAllowedOrigins,
 } from './handler.ts';
 
 const jwtSecretRaw = Deno.env.get('SUPABASE_JWT_SECRET') ?? '';
@@ -10,12 +11,11 @@ if (!jwtSecretRaw) {
   throw new Error('SUPABASE_JWT_SECRET is not configured');
 }
 
-const allowedOrigins = (
-  Deno.env.get('ISKRA_GATEWAY_ALLOWED_ORIGINS') ?? 'https://chatgpt.com'
-)
-  .split(',')
-  .map((item) => item.trim())
-  .filter(Boolean);
+const allowedOrigins = normalizeAllowedOrigins(
+  (
+    Deno.env.get('ISKRA_GATEWAY_ALLOWED_ORIGINS') ?? 'https://chatgpt.com'
+  ).split(','),
+);
 
 const handler = createGatewayHandler({
   mode: 'probe_only',
