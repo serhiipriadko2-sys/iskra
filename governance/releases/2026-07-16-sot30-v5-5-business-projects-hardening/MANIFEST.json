@@ -1,0 +1,7 @@
+{
+  "package": "SoT30 Business Projects Runtime Hardening",
+  "version": "v5.5",
+  "date": "2026-07-16",
+  "scope": "Knowledge-only canon/runtime-envelope update; no application runtime, Supabase schema, RLS or Edge Function changes",
+  "knowledge_file_count": 30,
+  "changed_knowledge_files": ["00_PROJECT_ROUTER.md","02_PROJECTS_SURFACE_MAP.md","20_GOVERNANCE_ADR.md","22_CONNECTORS_TOOLS_BOUNDARY.md","23_BU
