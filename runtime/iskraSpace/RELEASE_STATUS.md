@@ -1,6 +1,6 @@
 # Iskra Space Release Status
 
-Status: production and canonical activation blocked; source-only audit closure in progress; not deployed
+Status: production and canonical activation blocked; source-only audit closure verified in PR #273 and awaiting merge; not deployed
 Last updated: 2026-07-17
 App path: `runtime/iskraSpace`
 
@@ -18,6 +18,12 @@ App path: `runtime/iskraSpace`
 - This branch adds only source artifacts: tests, CI gates, a proposed SQL
   migration and documentation. No Supabase migration was applied, no Edge
   Function deployed, and `iskra-memory-gateway` was not changed.
+- Source-only closure receipt: PR [#273](https://github.com/serhiipriadko2-sys/iskra/pull/273),
+  head `bcf1dc3b208597c6d5d9a120fba275b9bca526d8`, is mergeable and its
+  repository gates are green: runtime tests (twice with `threads`/two workers),
+  Chromium E2E, SoT hash/ingest, voice/metrics contracts, site index/build and
+  preview. These are CI receipts for a proposed changeset, not a merge, Docker,
+  staging, production, or verified-live receipt.
 
 ## Current release and activation blockers
 
