@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-17T03:02:01.667Z",
-  "total": 2921,
+  "generatedAt": "2026-07-17T03:07:38.659Z",
+  "total": 2922,
   "curated": 20,
   "layers": {
     "root": 335,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 148,
+    "governance": 149,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -21818,6 +21818,7 @@
         "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
         "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
         "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
+        "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
         "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-1-full-package.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
@@ -21975,6 +21976,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
+      "name": "2026-07-16-remove-stale-sot30-v5-4-zip.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
