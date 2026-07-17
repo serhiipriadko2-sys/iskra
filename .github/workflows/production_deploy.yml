@@ -85,15 +85,19 @@ jobs:
         run: pnpm --filter iskra-space lint:strict
 
       - name: Unit tests pass 1
-        run: pnpm --filter iskra-space test:run
+        run: pnpm --filter iskra-space test:run -- --pool=threads --maxWorkers=2
 
       - name: Unit tests pass 2
-        run: pnpm --filter iskra-space test:run
+        run: pnpm --filter iskra-space test:run -- --pool=threads --maxWorkers=2
+
+      - name: Verify Edge metrics parity with canonical math
+        run: pnpm check:iskra-metrics-parity
 
       - name: Check Edge Function source with Deno
         run: |
           deno test --no-lock runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy_test.ts
           deno test --no-lock runtime/iskraSpace/supabase/functions/_shared/aiBoundary_test.ts
+          deno test --no-lock supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts
           deno check --frozen --lock runtime/iskraSpace/supabase/functions/gemini/deno.lock --config runtime/iskraSpace/supabase/functions/gemini/deno.json runtime/iskraSpace/supabase/functions/gemini/index.ts
           deno check --no-lock --config runtime/iskraSpace/supabase/functions/iskra-agent/deno.json runtime/iskraSpace/supabase/functions/iskra-agent/index.ts
 
@@ -115,6 +119,7 @@ jobs:
 
       - name: Supabase repository contracts
         run: |
+          pnpm check:no-graphql-clients
           pnpm check:supabase-graph-contract:repo
           pnpm check:supabase-voice-metrics-contract:repo
 

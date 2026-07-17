@@ -1,3 +1,5 @@
+[SUPERSEDED: see RELEASE_STATUS.md]
+
 # ISKRA Space — Комплексный аудит и дорожная карта к production-ready
 
 > **Дата аудита:** 2026-07-09  
