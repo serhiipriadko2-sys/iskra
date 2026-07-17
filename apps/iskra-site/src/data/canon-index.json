@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-17T03:10:34.299Z",
-  "total": 2923,
+  "generatedAt": "2026-07-17T18:38:10.302Z",
+  "total": 2938,
   "curated": 20,
   "layers": {
     "root": 336,
@@ -14,18 +14,18 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 149,
+    "governance": 153,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
     "mind": 13,
-    "engine-core": 17,
+    "engine-core": 19,
     "engine": 41,
     "math": 18,
     "reference": 82,
     "runtime": 354,
     "skills": 267,
-    "backend": 67,
+    "backend": 76,
     "system": 26,
     "tools": 53
   },
@@ -21294,6 +21294,8 @@
         "governance/adr_20260716_sot30_content_integrity_patch.md",
         "governance/adr_20260716_sot30_v5_5_1_full_package.md",
         "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
+        "governance/adr_20260717_research_router_capability.md",
+        "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -21690,6 +21692,28 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260717_research_router_capability.md",
+      "name": "adr_20260717_research_router_capability.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260717_research_router_capability.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
+      "name": "adr_20260717_supabase_metrics_compute_plane_v1.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21834,7 +21858,9 @@
         "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-1-full-package.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
-        "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md"
+        "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+        "governance/changelog.d/2026-07-17-research-router-capability.md",
+        "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md"
       ]
     },
     {
@@ -22043,6 +22069,28 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-17-research-router-capability.md",
+      "name": "2026-07-17-research-router-capability.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-17-research-router-capability.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
+      "name": "2026-07-17-supabase-metrics-compute-plane-atom1.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
@@ -24138,6 +24186,7 @@
         "packages/core/src/fractal.types.ts",
         "packages/core/src/index.ts",
         "packages/core/src/protocol.types.ts",
+        "packages/core/src/research.types.ts",
         "packages/core/src/types.ts",
         "packages/core/src/xcode.types.ts"
       ]
@@ -24153,7 +24202,8 @@
       "related": [],
       "parent": "packages/core/src",
       "children": [
-        "packages/core/src/__tests__/core.test.ts"
+        "packages/core/src/__tests__/core.test.ts",
+        "packages/core/src/__tests__/researchCapability.test.ts"
       ]
     },
     {
@@ -24164,6 +24214,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "packages/core/src/__tests__/core.test.ts",
+      "related": [],
+      "parent": "packages/core/src/__tests__"
+    },
+    {
+      "path": "packages/core/src/__tests__/researchCapability.test.ts",
+      "name": "researchCapability.test.ts",
+      "kind": "file",
+      "layer": "engine-core",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/core/src/__tests__/researchCapability.test.ts",
       "related": [],
       "parent": "packages/core/src/__tests__"
     },
@@ -24244,6 +24305,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "packages/core/src/protocol.types.ts",
+      "related": [],
+      "parent": "packages/core/src"
+    },
+    {
+      "path": "packages/core/src/research.types.ts",
+      "name": "research.types.ts",
+      "kind": "file",
+      "layer": "engine-core",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/core/src/research.types.ts",
       "related": [],
       "parent": "packages/core/src"
     },
@@ -34627,6 +34699,7 @@
       "related": [],
       "parent": "supabase/functions",
       "children": [
+        "supabase/functions/_shared/iskra-metrics",
         "supabase/functions/_shared/cors.ts"
       ]
     },
@@ -34640,6 +34713,115 @@
       "sourceRef": "supabase/functions/_shared/cors.ts",
       "related": [],
       "parent": "supabase/functions/_shared"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics",
+      "name": "iskra-metrics",
+      "kind": "directory",
+      "layer": "backend",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics",
+      "related": [],
+      "parent": "supabase/functions/_shared",
+      "children": [
+        "supabase/functions/_shared/iskra-metrics/README.md",
+        "supabase/functions/_shared/iskra-metrics/calculator.ts",
+        "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+        "supabase/functions/_shared/iskra-metrics/contracts.ts",
+        "supabase/functions/_shared/iskra-metrics/entropy.ts",
+        "supabase/functions/_shared/iskra-metrics/fractal.ts",
+        "supabase/functions/_shared/iskra-metrics/hash.ts",
+        "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts"
+      ]
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "backend",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/README.md",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/calculator.ts",
+      "name": "calculator.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/calculator.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+      "name": "canonicalJson.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/contracts.ts",
+      "name": "contracts.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/contracts.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/entropy.ts",
+      "name": "entropy.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/entropy.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/fractal.ts",
+      "name": "fractal.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/fractal.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/hash.ts",
+      "name": "hash.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/hash.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts",
+      "name": "iskra-metrics_test.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
     },
     {
       "path": "supabase/functions/embed",

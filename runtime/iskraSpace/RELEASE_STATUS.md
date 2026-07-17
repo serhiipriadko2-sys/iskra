@@ -1,8 +1,40 @@
 # Iskra Space Release Status
 
-Status: pre-release hardening target, post-merge release gates green, canonical image/staging acceptance pending, not deployed
-Last updated: 2026-07-15
+Status: production and canonical activation blocked; source-only audit closure in progress; not deployed
+Last updated: 2026-07-17
 App path: `runtime/iskraSpace`
+
+## Current verified baseline
+
+- Repository baseline: GitHub `main` `cd0b98f54d9a706b06647498e569175bc120b5fc`.
+  Its only SoT30 change removes the stale v5.4 archive; it is not a runtime,
+  staging, Docker, Supabase-live, or activation receipt.
+- SoT30 v5.5.1 self-check: 32/32 `SHA256SUMS` entries verified from the
+  committed package receipt. The attached external audit targeted `d7c96c4` and
+  must not be treated as a receipt for later commits.
+- Live Supabase migration history was inspected read-only and matched the 32
+  committed SQL migrations. This does not clear the observed 44 security and 73
+  performance advisor findings.
+- This branch adds only source artifacts: tests, CI gates, a proposed SQL
+  migration and documentation. No Supabase migration was applied, no Edge
+  Function deployed, and `iskra-memory-gateway` was not changed.
+
+## Current release and activation blockers
+
+- Staging closed-beta acceptance is required: magic-link invite allow; anonymous
+  and non-member deny; two active users cannot read, write, update or delete one
+  another's data/RPC rows.
+- The proposed SQL ACL/search-path migration requires those staging contracts
+  before application. Graph RPC `SECURITY DEFINER` grants are intentionally not
+  revoked by source review alone.
+- Advisor remediation remains incomplete: GraphQL table visibility must be
+  resolved without breaking the REST Data API, and `pg_trgm`, policy, index and
+  query-plan changes need a staged receipt.
+- Production dispatch remains required: release gates, Docker smoke, canonical
+  GHCR digest and a live acceptance receipt. An Owner activation decision must
+  name exact Constitution, conflict-register, runtime and package hashes.
+
+## Historical 2026-07-15 status [SUPERSEDED: see current sections above]
 
 ## What this means
 
@@ -17,7 +49,7 @@ promoted.
 
 Other repository areas may still be important, but they are treated as internal support unless explicitly promoted by a later ADR.
 
-## Current verified baseline
+## Verified baseline as of 2026-07-15 [historical]
 
 - Verified implementation baseline: `d42c53ef43a3e08a08c7177d39dfb9a41ae6d340`
   (merge commit for Shadow promotion boundary PR #260).

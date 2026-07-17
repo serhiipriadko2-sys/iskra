@@ -8,6 +8,7 @@ on:
       - "runtime/package*.json"
       - "packages/core/**"
       - "packages/math/**"
+      - "supabase/**"
       - "deploy/**"
       - "Dockerfile"
       - "nginx.conf"
@@ -24,6 +25,7 @@ on:
       - "runtime/package*.json"
       - "packages/core/**"
       - "packages/math/**"
+      - "supabase/**"
       - "deploy/**"
       - "Dockerfile"
       - "nginx.conf"
@@ -54,6 +56,11 @@ jobs:
           node-version: "22"
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.8.x
 
       - name: Install workspace dependencies
         working-directory: .
@@ -93,14 +100,26 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          pnpm test:run 2>&1 | tee iskraspace-unit.log
+          pnpm test:run -- --pool=threads --maxWorkers=2 2>&1 | tee iskraspace-unit.log
 
       - name: Run unit tests pass 2
         working-directory: runtime/iskraSpace
         shell: bash
         run: |
           set -o pipefail
-          pnpm test:run 2>&1 | tee iskraspace-unit-repeat.log
+          pnpm test:run -- --pool=threads --maxWorkers=2 2>&1 | tee iskraspace-unit-repeat.log
+
+      - name: Verify Edge metrics parity with canonical math
+        working-directory: .
+        run: pnpm check:iskra-metrics-parity
+
+      - name: Verify no GraphQL client surface
+        working-directory: .
+        run: pnpm check:no-graphql-clients
+
+      - name: Test Edge metrics atom
+        working-directory: .
+        run: deno test --no-lock supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts
 
       - name: Build iskraSpace
         working-directory: runtime/iskraSpace
