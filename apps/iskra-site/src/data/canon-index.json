@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-16T19:17:16.315Z",
-  "total": 2922,
+  "generatedAt": "2026-07-17T03:02:01.667Z",
+  "total": 2921,
   "curated": 20,
   "layers": {
-    "root": 336,
+    "root": 335,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
@@ -4807,20 +4807,8 @@
       "children": [
         "dist/agent-builder",
         "dist/sot40",
-        "dist/SoT30_v5.4.zip",
         "dist/SoT30_v5.5.1.zip"
       ]
-    },
-    {
-      "path": "dist/SoT30_v5.4.zip",
-      "name": "SoT30_v5.4.zip",
-      "kind": "file",
-      "layer": "root",
-      "role": "data",
-      "coverage": "indexed",
-      "sourceRef": "dist/SoT30_v5.4.zip",
-      "related": [],
-      "parent": "dist"
     },
     {
       "path": "dist/SoT30_v5.5.1.zip",
