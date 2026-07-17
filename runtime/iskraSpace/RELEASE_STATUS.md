@@ -19,7 +19,7 @@ App path: `runtime/iskraSpace`
   migration and documentation. No Supabase migration was applied, no Edge
   Function deployed, and `iskra-memory-gateway` was not changed.
 - Source-only closure receipt: PR [#273](https://github.com/serhiipriadko2-sys/iskra/pull/273),
-  head `bcf1dc3b208597c6d5d9a120fba275b9bca526d8`, is mergeable and its
+  is mergeable and its current source revision's
   repository gates are green: runtime tests (twice with `threads`/two workers),
   Chromium E2E, SoT hash/ingest, voice/metrics contracts, site index/build and
   preview. These are CI receipts for a proposed changeset, not a merge, Docker,
