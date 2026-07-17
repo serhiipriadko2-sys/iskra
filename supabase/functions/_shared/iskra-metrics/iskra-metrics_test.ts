@@ -67,7 +67,7 @@ Deno.test('missing data → unavailable/null, never fabricated', async () => {
   assertEquals(r.metrics.shannon_entropy.unavailable, true);
   assertEquals(r.metrics.hfd.value, null);
   assertEquals(r.metrics.dfa.value, null);
-  assertEquals(r.unavailable.sort(), ['dfa', 'entropy_regime', 'hfd', 'shannon_entropy']);
+  assertEquals([...r.unavailable].sort(), ['dfa', 'entropy_regime', 'hfd', 'shannon_entropy']);
 });
 
 Deno.test('short present signal → unavailable, not a 1.5/0.5 placeholder', async () => {

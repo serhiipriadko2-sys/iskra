@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-17T18:38:10.302Z",
-  "total": 2938,
+  "generatedAt": "2026-07-17T18:44:26.907Z",
+  "total": 2943,
   "curated": 20,
   "layers": {
     "root": 336,
@@ -21,13 +21,13 @@
     "mind": 13,
     "engine-core": 19,
     "engine": 41,
-    "math": 18,
+    "math": 19,
     "reference": 82,
-    "runtime": 354,
+    "runtime": 356,
     "skills": 267,
-    "backend": 76,
+    "backend": 77,
     "system": 26,
-    "tools": 53
+    "tools": 54
   },
   "nodes": [
     {
@@ -24932,9 +24932,21 @@
       "children": [
         "packages/math/src/__tests__/entropy",
         "packages/math/src/__tests__/quantum",
+        "packages/math/src/__tests__/edgeMetricsParity.test.ts",
         "packages/math/src/__tests__/fractal.test.ts",
         "packages/math/src/__tests__/validation.test.ts"
       ]
+    },
+    {
+      "path": "packages/math/src/__tests__/edgeMetricsParity.test.ts",
+      "name": "edgeMetricsParity.test.ts",
+      "kind": "file",
+      "layer": "math",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/math/src/__tests__/edgeMetricsParity.test.ts",
+      "related": [],
+      "parent": "packages/math/src/__tests__"
     },
     {
       "path": "packages/math/src/__tests__/entropy",
@@ -27137,8 +27149,20 @@
       "related": [],
       "parent": "runtime/iskraSpace/__tests__",
       "children": [
+        "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
         "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
+      "name": "graphIsolation.staging.e2e.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/e2e"
     },
     {
       "path": "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts",
@@ -28732,6 +28756,7 @@
         "runtime/iskraSpace/services/__tests__/storageService.test.ts",
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+        "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts",
         "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts",
@@ -29246,6 +29271,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
+      "name": "supabaseAclHardeningMigration.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -35037,6 +35073,7 @@
         "supabase/migrations/20260709194741_harden_graph_destructive_boundaries_v1.sql",
         "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
         "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
+        "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
         "supabase/migrations/README_LEGACY_DATA_MIGRATION.sql"
@@ -35391,6 +35428,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
+      "name": "20260717183002_supabase_acl_and_graph_contract_hardening.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
       "related": [],
       "parent": "supabase/migrations"
     },
@@ -35848,6 +35896,7 @@
         "tools/build_sot40_artifact.py",
         "tools/build_workspace_agent_synthesis.py",
         "tools/check_core_adr_gate.py",
+        "tools/check_no_graphql_clients.ts",
         "tools/check_no_sensitive_status_dumps.py",
         "tools/check_no_src_imports.py",
         "tools/check_pgvector_hnsw_schema.py",
@@ -35972,6 +36021,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/check_core_adr_gate.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/check_no_graphql_clients.ts",
+      "name": "check_no_graphql_clients.ts",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/check_no_graphql_clients.ts",
       "related": [],
       "parent": "tools"
     },
