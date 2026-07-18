@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-16T19:17:16.315Z",
-  "total": 2922,
+  "generatedAt": "2026-07-17T18:54:13.284Z",
+  "total": 2943,
   "curated": 20,
   "layers": {
     "root": 336,
@@ -14,20 +14,20 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 148,
+    "governance": 153,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
     "mind": 13,
-    "engine-core": 17,
+    "engine-core": 19,
     "engine": 41,
-    "math": 18,
+    "math": 19,
     "reference": 82,
-    "runtime": 354,
+    "runtime": 356,
     "skills": 267,
-    "backend": 67,
+    "backend": 77,
     "system": 26,
-    "tools": 53
+    "tools": 54
   },
   "nodes": [
     {
@@ -4807,18 +4807,18 @@
       "children": [
         "dist/agent-builder",
         "dist/sot40",
-        "dist/SoT30_v5.4.zip",
+        "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
         "dist/SoT30_v5.5.1.zip"
       ]
     },
     {
-      "path": "dist/SoT30_v5.4.zip",
-      "name": "SoT30_v5.4.zip",
+      "path": "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
+      "name": "ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
       "kind": "file",
       "layer": "root",
       "role": "data",
       "coverage": "indexed",
-      "sourceRef": "dist/SoT30_v5.4.zip",
+      "sourceRef": "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
       "related": [],
       "parent": "dist"
     },
@@ -21294,6 +21294,8 @@
         "governance/adr_20260716_sot30_content_integrity_patch.md",
         "governance/adr_20260716_sot30_v5_5_1_full_package.md",
         "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
+        "governance/adr_20260717_research_router_capability.md",
+        "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -21690,6 +21692,28 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260717_research_router_capability.md",
+      "name": "adr_20260717_research_router_capability.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260717_research_router_capability.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
+      "name": "adr_20260717_supabase_metrics_compute_plane_v1.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21830,10 +21854,13 @@
         "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
         "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
         "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
+        "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
         "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-1-full-package.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
-        "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md"
+        "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+        "governance/changelog.d/2026-07-17-research-router-capability.md",
+        "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md"
       ]
     },
     {
@@ -21991,6 +22018,17 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
+      "name": "2026-07-16-remove-stale-sot30-v5-4-zip.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
       "name": "2026-07-16-sot30-content-integrity-patch.md",
       "kind": "file",
@@ -22031,6 +22069,28 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-17-research-router-capability.md",
+      "name": "2026-07-17-research-router-capability.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-17-research-router-capability.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
+      "name": "2026-07-17-supabase-metrics-compute-plane-atom1.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
@@ -24126,6 +24186,7 @@
         "packages/core/src/fractal.types.ts",
         "packages/core/src/index.ts",
         "packages/core/src/protocol.types.ts",
+        "packages/core/src/research.types.ts",
         "packages/core/src/types.ts",
         "packages/core/src/xcode.types.ts"
       ]
@@ -24141,7 +24202,8 @@
       "related": [],
       "parent": "packages/core/src",
       "children": [
-        "packages/core/src/__tests__/core.test.ts"
+        "packages/core/src/__tests__/core.test.ts",
+        "packages/core/src/__tests__/researchCapability.test.ts"
       ]
     },
     {
@@ -24152,6 +24214,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "packages/core/src/__tests__/core.test.ts",
+      "related": [],
+      "parent": "packages/core/src/__tests__"
+    },
+    {
+      "path": "packages/core/src/__tests__/researchCapability.test.ts",
+      "name": "researchCapability.test.ts",
+      "kind": "file",
+      "layer": "engine-core",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/core/src/__tests__/researchCapability.test.ts",
       "related": [],
       "parent": "packages/core/src/__tests__"
     },
@@ -24232,6 +24305,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "packages/core/src/protocol.types.ts",
+      "related": [],
+      "parent": "packages/core/src"
+    },
+    {
+      "path": "packages/core/src/research.types.ts",
+      "name": "research.types.ts",
+      "kind": "file",
+      "layer": "engine-core",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/core/src/research.types.ts",
       "related": [],
       "parent": "packages/core/src"
     },
@@ -24848,9 +24932,21 @@
       "children": [
         "packages/math/src/__tests__/entropy",
         "packages/math/src/__tests__/quantum",
+        "packages/math/src/__tests__/edgeMetricsParity.test.ts",
         "packages/math/src/__tests__/fractal.test.ts",
         "packages/math/src/__tests__/validation.test.ts"
       ]
+    },
+    {
+      "path": "packages/math/src/__tests__/edgeMetricsParity.test.ts",
+      "name": "edgeMetricsParity.test.ts",
+      "kind": "file",
+      "layer": "math",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/math/src/__tests__/edgeMetricsParity.test.ts",
+      "related": [],
+      "parent": "packages/math/src/__tests__"
     },
     {
       "path": "packages/math/src/__tests__/entropy",
@@ -27053,8 +27149,20 @@
       "related": [],
       "parent": "runtime/iskraSpace/__tests__",
       "children": [
+        "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
         "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
+      "name": "graphIsolation.staging.e2e.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/e2e"
     },
     {
       "path": "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts",
@@ -28648,6 +28756,7 @@
         "runtime/iskraSpace/services/__tests__/storageService.test.ts",
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+        "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts",
         "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts",
@@ -29162,6 +29271,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
+      "name": "supabaseAclHardeningMigration.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -34615,6 +34735,7 @@
       "related": [],
       "parent": "supabase/functions",
       "children": [
+        "supabase/functions/_shared/iskra-metrics",
         "supabase/functions/_shared/cors.ts"
       ]
     },
@@ -34628,6 +34749,115 @@
       "sourceRef": "supabase/functions/_shared/cors.ts",
       "related": [],
       "parent": "supabase/functions/_shared"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics",
+      "name": "iskra-metrics",
+      "kind": "directory",
+      "layer": "backend",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics",
+      "related": [],
+      "parent": "supabase/functions/_shared",
+      "children": [
+        "supabase/functions/_shared/iskra-metrics/README.md",
+        "supabase/functions/_shared/iskra-metrics/calculator.ts",
+        "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+        "supabase/functions/_shared/iskra-metrics/contracts.ts",
+        "supabase/functions/_shared/iskra-metrics/entropy.ts",
+        "supabase/functions/_shared/iskra-metrics/fractal.ts",
+        "supabase/functions/_shared/iskra-metrics/hash.ts",
+        "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts"
+      ]
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "backend",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/README.md",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/calculator.ts",
+      "name": "calculator.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/calculator.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+      "name": "canonicalJson.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/contracts.ts",
+      "name": "contracts.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/contracts.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/entropy.ts",
+      "name": "entropy.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/entropy.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/fractal.ts",
+      "name": "fractal.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/fractal.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/hash.ts",
+      "name": "hash.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/hash.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts",
+      "name": "iskra-metrics_test.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
     },
     {
       "path": "supabase/functions/embed",
@@ -34843,6 +35073,7 @@
         "supabase/migrations/20260709194741_harden_graph_destructive_boundaries_v1.sql",
         "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
         "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
+        "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
         "supabase/migrations/README_LEGACY_DATA_MIGRATION.sql"
@@ -35197,6 +35428,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
+      "name": "20260717183002_supabase_acl_and_graph_contract_hardening.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
       "related": [],
       "parent": "supabase/migrations"
     },
@@ -35654,6 +35896,7 @@
         "tools/build_sot40_artifact.py",
         "tools/build_workspace_agent_synthesis.py",
         "tools/check_core_adr_gate.py",
+        "tools/check_no_graphql_clients.ts",
         "tools/check_no_sensitive_status_dumps.py",
         "tools/check_no_src_imports.py",
         "tools/check_pgvector_hnsw_schema.py",
@@ -35778,6 +36021,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/check_core_adr_gate.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/check_no_graphql_clients.ts",
+      "name": "check_no_graphql_clients.ts",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/check_no_graphql_clients.ts",
       "related": [],
       "parent": "tools"
     },

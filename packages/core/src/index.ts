@@ -5,3 +5,4 @@ export * from './ews.types.js';
 export * from './coherence.types.js';
 export * from './fractal.types.js';
 export * from './protocol.types.js';
+export * from './research.types.js';

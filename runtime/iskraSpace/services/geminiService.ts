@@ -867,6 +867,15 @@ ${deltaInstruction}`;
     const policyDecision = policyEngine.decide(lastUserMessage, metrics, history);
     const { classification, config, preActions } = policyDecision;
 
+    // A terminal guard outcome is intentionally side-effect free. It must not
+    // contact a provider, request a token, evaluate/audit a response, persist
+    // integrity, or fall through to an offline generation placeholder.
+    if (policyDecision.guardOutcome?.decision === 'CLOSE_HONESTLY') {
+      const reasons = policyDecision.guardOutcome.reasons.join(', ');
+      yield `CLOSE_HONESTLY\nReason: ${policyDecision.guardOutcome.why} [${reasons}]\n\nPause or set a boundary before starting another cycle.`;
+      return { eval: null, policy: policyDecision, integrity: null };
+    }
+
     // Execute pre-actions
     for (const action of preActions) {
       if (action.type === 'pause' && action.payload?.durationMs) {

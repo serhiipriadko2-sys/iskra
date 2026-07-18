@@ -1,5 +1,7 @@
 
 
+[SUPERSEDED: see RELEASE_STATUS.md]
+
 ---
 
 ## 14. Receipt — CB-1 Hardening of `gemini` Edge Function
