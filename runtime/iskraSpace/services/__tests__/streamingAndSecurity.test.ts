@@ -451,7 +451,6 @@ describe('GeminiService Streaming Methods', () => {
       errorSpy.mockRestore();
     });
 
-<<<<<<< HEAD
     it('should terminate CLOSE_HONESTLY before any AI provider call', async () => {
       const fetchSpy = vi.spyOn(globalThis, 'fetch');
       const history = createHistory([{ role: 'user', text: 'FORCE_CLOSE_TEST' }]);
@@ -467,7 +466,7 @@ describe('GeminiService Streaming Methods', () => {
       expect(fetchSpy).not.toHaveBeenCalled();
       fetchSpy.mockRestore();
     });
-=======
+
     it('terminates CLOSE_HONESTLY without provider, sync, or cloud-write side effects', async () => {
       vi.mocked(policyEngine.decide).mockReturnValueOnce({
         classification: {
@@ -509,7 +508,6 @@ describe('GeminiService Streaming Methods', () => {
       fetchSpy.mockRestore();
     });
 
->>>>>>> origin/main
     it('should handle extreme metrics', async () => {
       const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const extremeMetrics = createMetrics({
