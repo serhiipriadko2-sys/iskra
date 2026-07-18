@@ -64,3 +64,6 @@ yarn-error.log*
 coverage/
 *.lcov
 ```
+
+# Claude Code
+.claude/
