@@ -13,19 +13,22 @@ class MetricsService {
     const targets: Partial<IskraMetrics> = {};
 
     // 1. Calculate Shannon Entropy and map to Chaos / Echo targets
-    try {
-      const entropy = calculateShannonEntropy(text);
-      const entropyState = interpretEntropy(entropy);
-      if (entropyState === 'CHAOS') {
-        targets.chaos = 0.8;
-      } else if (entropyState === 'LOOP') {
-        targets.echo = 0.85;
-      } else if (entropyState === 'FLOW') {
-        targets.clarity = 0.8;
-        targets.trust = 0.85;
+    const tokenCount = text.trim().split(/\s+/).filter(Boolean).length;
+    if (tokenCount >= 20) {
+      try {
+        const entropy = calculateShannonEntropy(text);
+        const entropyState = interpretEntropy(entropy);
+        if (entropyState === 'CHAOS') {
+          targets.chaos = 0.8;
+        } else if (entropyState === 'LOOP') {
+          targets.echo = 0.85;
+        } else if (entropyState === 'FLOW') {
+          targets.clarity = 0.8;
+          targets.trust = 0.85;
+        }
+      } catch (e) {
+        console.warn('Entropy calculation failed:', e);
       }
-    } catch (e) {
-      console.warn('Entropy calculation failed:', e);
     }
 
     // 2. Standard heuristic signal calculation

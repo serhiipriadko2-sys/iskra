@@ -2,7 +2,7 @@
  * Tests for PolicyEngine - Central Playbook Dispatcher
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   classifyRequest,
   makeDecision,
@@ -13,6 +13,7 @@ import {
   PlaybookType,
 } from '../policyEngine';
 import { IskraMetrics } from '../../types';
+import { safeStorage } from '../storageCompat';
 
 // Default metrics for testing
 const defaultMetrics: IskraMetrics = {
@@ -28,6 +29,16 @@ const defaultMetrics: IskraMetrics = {
   interrupt: 0.2,
   ctxSwitch: 0.3,
 };
+
+beforeEach(() => {
+  safeStorage.removeItem('iskra_last_playbook');
+  safeStorage.removeItem('iskra_integrity_state');
+  safeStorage.removeItem('iskra_guard_counters');
+  safeStorage._clearMemoryFallback();
+  if (typeof localStorage !== 'undefined') {
+    localStorage.clear();
+  }
+});
 
 describe('PolicyEngine', () => {
   describe('classifyRequest', () => {
@@ -219,6 +230,35 @@ describe('PolicyEngine', () => {
     it('COUNCIL should have largest council size', () => {
       const config = getPlaybookConfig('COUNCIL');
       expect(config.councilSize).toBe(9);
+    });
+  });
+
+  describe('Bounded Guard Controller Integration', () => {
+    it('should run bounded guard and stabilize on first turn if metrics are normal', () => {
+      const decision = makeDecision('Привет', defaultMetrics);
+      expect(decision.guardOutcome).toBeDefined();
+      expect(decision.guardOutcome?.decision).toBe('PROCEED');
+    });
+
+    it('should trigger and escalate on high drift metrics', () => {
+      const highDriftMetrics: IskraMetrics = {
+        ...defaultMetrics,
+        drift: 0.5,
+      };
+      const decision = makeDecision('Привет', highDriftMetrics);
+      expect(decision.guardOutcome).toBeDefined();
+      expect(decision.guardOutcome?.decision).toBe('FORCE_CRISIS');
+      expect(decision.classification.playbook).toBe('CRISIS');
+    });
+
+    it('should trigger FORCE_SHADOW on high chaos metrics', () => {
+      const highChaosMetrics: IskraMetrics = {
+        ...defaultMetrics,
+        chaos: 0.9,
+      };
+      const decision = makeDecision('Привет', highChaosMetrics);
+      expect(decision.guardOutcome?.decision).toBe('FORCE_SHADOW');
+      expect(decision.classification.playbook).toBe('SHADOW');
     });
   });
 });

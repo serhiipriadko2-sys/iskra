@@ -16,7 +16,8 @@
 import { IskraMetrics, VoiceName, Message } from '../types';
 import { auditService } from './auditService';
 // Guard and integrity imports
-import { decideSloGuardExplainable, GuardOutcome, IntegrityState } from '../../src/types/guard.js';
+import { GuardOutcome, IntegrityState } from '../../src/types/guard.js';
+import { runBoundedGuardController } from '../../src/types/guardController.js';
 import {
   deriveGuardIntegrity,
   getStoredIntegrity,
@@ -448,16 +449,54 @@ export function makeDecision(
     ? integrity.counters
     : getGuardCounters();
 
-  const guardExplainable = decideSloGuardExplainable({
+  const initialGuardInput = {
     metrics,
-    integrity,
+    integrity: integrity ?? undefined,
     anti_dryness_hits: counters.anti_dryness_hits,
     leader_flaps: counters.leader_flaps,
     chaos_overheat: metrics.chaos >= 0.7,
     alertLevel: alertLevelProxy(metrics),
     currentPlaybook: lastPlaybook,
+  };
+
+  const ALERT_RANK_LOCAL: Record<string, number> = {
+    normal: 0,
+    watch: 1,
+    warning: 2,
+    critical: 3,
+    lockdown: 4,
+  };
+
+  const getAlertLevelForDecision = (decisionText: string): 'normal' | 'watch' | 'warning' | 'critical' => {
+    switch (decisionText) {
+      case 'FORCE_CRISIS':
+      case 'CLOSE_HONESTLY':
+        return 'critical';
+      case 'FORCE_SHADOW':
+        return 'warning';
+      case 'FORCE_ISKRIV_1':
+        return 'watch';
+      default:
+        return 'normal';
+    }
+  };
+
+  const controllerResult = runBoundedGuardController({
+    turnId: `turn-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    initialInput: initialGuardInput,
+    postGuardEws: (candidate, evaluation, currentInput) => {
+      const currentLevel = currentInput.alertLevel ?? 'normal';
+      const targetLevel = getAlertLevelForDecision(candidate.decision);
+      const escalated = ALERT_RANK_LOCAL[targetLevel] > ALERT_RANK_LOCAL[currentLevel];
+      return {
+        alertLevel: targetLevel,
+        materialSignal: escalated,
+        reason: `evaluation ${evaluation}: candidate ${candidate.decision} mapped to EWS level ${targetLevel}`
+      };
+    }
   });
-  const guardOutcome = guardExplainable.value;
+
+  const guardOutcome = controllerResult.finalOutcome;
   // By default, use the classification playbook
   let finalPlaybook: PlaybookType = classification.playbook;
   if (guardOutcome.decision !== 'PROCEED') {
@@ -480,7 +519,7 @@ export function makeDecision(
       type: 'guard_override',
       weight: 1.0,
       source: 'guard',
-      description: `SLO Guard decided ${guardOutcome.decision}: ${guardOutcome.why}`,
+      description: `SLO Guard decided ${guardOutcome.decision}: ${guardOutcome.why} (Evaluations: ${controllerResult.evaluations}, closure: ${controllerResult.closure})`,
     });
     classification.playbook = finalPlaybook;
   }

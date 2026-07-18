@@ -246,4 +246,83 @@ IntegrityEvent:
     D: "ledger/baselines.json + runtime guard trace + tools/check_unreleased_gate.py"
     Ω: 0.86
     Λ: "Собрать checkpoint через tools/build_checkpoint.py и зафиксировать квитанцию"
+
+---
+
+### 2026-07-16T23:45:00+01:00 — vΩ.7.2 (IskraSpace Runtime Hardening and Unification)
+```yaml
+IntegrityEvent:
+  timestamp: 2026-07-16T23:45:00+01:00
+  actor: GitHub Copilot (Gemini 3.5 Flash)
+  scope: [runtime/iskraSpace]
+  files_changed:
+    - runtime/iskraSpace/App.tsx (restrict metrics drift jitter to DEV mode)
+    - runtime/iskraSpace/components/ChatView.tsx (clean up sm:flex/hidden CSS conflict)
+    - runtime/iskraSpace/services/policyEngine.ts (wire runBoundedGuardController and EWS rank local adapter)
+    - runtime/iskraSpace/services/geminiService.ts (intercept terminal CLOSE_HONESTLY outcomes, bypassing model, presenting clear receipt)
+    - runtime/iskraSpace/services/metricsService.ts (constrain Shannon entropy computing to tokens >= 20)
+    - runtime/iskraSpace/services/__tests__/policyEngine.test.ts (harden tests for Bounded Guard controller integration and metrics thresholds)
+    - ledger/integrity_log.md (this entry)
+  reason: "Harden IskraSpace control flows and alignment with target release specifications"
+  hash_update: no
+  ΔDΩΛ:
+    Δ: "Интегрирован Bounded Guard в запросный путь, CLOSE_HONESTLY сделан терминальным, убран периодический дрейф в PROD-режиме, наложен порог длины для энтропии."
+    D: "runtime/iskraSpace/services/policyEngine.ts + geminiService.ts + metricsService.ts + App.tsx + tests"
+    Ω: 0.95
+    Λ: "Выполнить повторные локальные typecheck и test:run контролируемого бандла"
+```
+
+---
+
+### 2026-07-16T21:10:53Z — PR #270 terminal Guard verification
+```yaml
+IntegrityEvent:
+  timestamp: 2026-07-16T21:10:53Z
+  actor: ChatGPT GPT-5.6 Thinking
+  scope: [runtime/iskraSpace/tests, ledger]
+  files_changed:
+    - runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts
+    - runtime/iskraSpace/services/__tests__/metricsService.test.ts
+    - ledger/sot.json
+    - ledger/checksum.asc
+    - ledger/integrity_log.md
+  verification:
+    targeted_runtime: "85 passed"
+    guard_controller: "6 passed"
+    full_workspace: "exit 0; iskraSpace 772 passed, 9 skipped"
+    typecheck: PASS
+    build_runtime: PASS
+    ledger: "PASS 722 files"
+    terminal_guard: "CLOSE_HONESTLY precedes offline/provider path; fetch not called"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "Добавлены regression-тесты terminal Guard и entropy 19/20; все обязательные gates зелёные."
+    D: "Vitest targeted/full workspace + TypeScript + build:runtime + verify_ledger"
+    Ω: 0.95
+    Λ: "Закоммитить и отправить test-hardening в draft PR #270; дождаться GitHub CI read-back."
+```
+
+---
+
+### 2026-07-16T21:18:24Z — PR #270 SIBYL E2E threshold alignment
+```yaml
+IntegrityEvent:
+  timestamp: 2026-07-16T21:18:24Z
+  actor: ChatGPT GPT-5.6 Thinking
+  scope: [runtime/iskraSpace/e2e, ledger]
+  files_changed:
+    - runtime/iskraSpace/e2e/sibyl_voice.spec.ts
+    - ledger/sot.json
+    - ledger/checksum.asc
+    - ledger/integrity_log.md
+  reason: "Align the SIBYL activation E2E stimulus with the canonical Shannon minimum of 20 normalized tokens."
+  verification:
+    playwright_targeted: "1 passed"
+    prior_ci_failure: "5-token stimulus no longer satisfies entropy sufficiency"
+  hash_update: yes
+  ΔDΩΛ:
+    Δ: "E2E теперь проверяет SIBYL на достаточном 20-token input, не отменяя entropy safety boundary."
+    D: "GitHub e2e diagnostics + local Playwright chromium"
+    Ω: 0.95
+    Λ: "Обновить ledger hashes, commit/push и подтвердить повторный GitHub CI."
 ```

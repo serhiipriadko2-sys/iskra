@@ -2,7 +2,17 @@
  * Tests for Metrics Service - Phase Detection and Metric Updates
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+const { mockCalculateShannonEntropy, mockInterpretEntropy } = vi.hoisted(() => ({
+  mockCalculateShannonEntropy: vi.fn(() => 3),
+  mockInterpretEntropy: vi.fn(() => 'FLOW'),
+}));
+
+vi.mock('@iskra/math', () => ({
+  calculateShannonEntropy: mockCalculateShannonEntropy,
+  interpretEntropy: mockInterpretEntropy,
+}));
 import { metricsService } from '../metricsService';
 import { IskraMetrics } from '../../types';
 
@@ -22,6 +32,12 @@ const createMetrics = (overrides: Partial<IskraMetrics> = {}): IskraMetrics => (
 });
 
 describe('metricsService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
   describe('calculateMetricsUpdate', () => {
     it('returns empty object for neutral text', () => {
       const updates = metricsService.calculateMetricsUpdate('привет как дела');
@@ -51,6 +67,19 @@ describe('metricsService', () => {
           expect(value).toBeLessThanOrEqual(1);
         }
       });
+    });
+
+    it('does not calculate Shannon entropy below 20 normalized tokens', () => {
+      const text = Array.from({ length: 19 }, (_, index) => `token${index}`).join(' ');
+      metricsService.calculateMetricsUpdate(text);
+      expect(mockCalculateShannonEntropy).not.toHaveBeenCalled();
+    });
+
+    it('calculates Shannon entropy at 20 normalized tokens', () => {
+      const text = Array.from({ length: 20 }, (_, index) => `token${index}`).join(' ');
+      metricsService.calculateMetricsUpdate(text);
+      expect(mockCalculateShannonEntropy).toHaveBeenCalledTimes(1);
+      expect(mockInterpretEntropy).toHaveBeenCalledTimes(1);
     });
 
     it('handles empty text', () => {

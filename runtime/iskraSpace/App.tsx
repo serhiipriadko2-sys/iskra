@@ -189,6 +189,11 @@ export function IskraSpaceApp() {
     }, []);
 
     useEffect(() => {
+        // Only run simplified rhythm simulation in development/test to avoid random drift in production
+        if (typeof import.meta !== 'undefined' && import.meta.env && !import.meta.env.DEV) {
+            return;
+        }
+
         // Simplified Rhythm Simulation - gently nudges chaos/drift to keep rhythm responsive
         const interval = setInterval(() => {
             updateMetrics((prev: IskraMetrics) => ({
