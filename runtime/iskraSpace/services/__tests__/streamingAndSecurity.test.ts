@@ -26,6 +26,12 @@ const { mockGenerateContentStream, mockGenerateContent, mockEmbedContent } = vi.
   mockEmbedContent: vi.fn(),
 }));
 
+const { mockComputeIntegrityState, mockSaveIntegrityState, mockGetAccessToken } = vi.hoisted(() => ({
+  mockComputeIntegrityState: vi.fn(),
+  mockSaveIntegrityState: vi.fn(),
+  mockGetAccessToken: vi.fn(),
+}));
+
 // Mock Google GenAI with streaming support
 vi.mock('@google/genai', () => ({
   GoogleGenAI: vi.fn(() => ({
@@ -108,8 +114,18 @@ vi.mock('../deltaProtocol', () => ({
   DELTA_PROTOCOL_INSTRUCTION: 'Always include ∆DΩΛ signature',
 }));
 
+vi.mock('../integrityService', () => ({
+  computeIntegrityStateV02: mockComputeIntegrityState,
+  saveIntegrityState: mockSaveIntegrityState,
+}));
+
+vi.mock('../supabaseClient', () => ({
+  getAccessToken: mockGetAccessToken,
+}));
+
 // Import after mocks
 import { IskraAIService } from '../geminiService';
+import { policyEngine } from '../policyEngine';
 import { SECURITY_ACTIONS, securityService } from '../securityService';
 
 // Mock localStorage
@@ -450,6 +466,48 @@ describe('GeminiService Streaming Methods', () => {
       expect(fetchSpy).not.toHaveBeenCalled();
       fetchSpy.mockRestore();
     });
+
+    it('terminates CLOSE_HONESTLY without provider, sync, or cloud-write side effects', async () => {
+      vi.mocked(policyEngine.decide).mockReturnValueOnce({
+        classification: {
+          playbook: 'SIFT',
+          risk: 'low',
+          stakes: 'low',
+          suggestedVoices: ['ISKRA'],
+          confidence: 1,
+        },
+        config: { deltaRequired: true, siftDepth: 'light' },
+        preActions: [],
+        guardOutcome: {
+          decision: 'CLOSE_HONESTLY',
+          why: 'test terminal boundary',
+          reasons: ['MAX_GUARD_EVALUATIONS_EXHAUSTED'],
+        },
+        timestamp: Date.now(),
+      } as unknown as ReturnType<typeof policyEngine.decide>);
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
+
+      const { chunks, result } = await consumeStream(
+        service.getChatResponseStreamWithPolicy(
+          createHistory([{ role: 'user', text: 'stop safely' }]),
+          createVoice(),
+          createMetrics(),
+        ),
+      );
+
+      expect(chunks.join('')).toContain('CLOSE_HONESTLY');
+      expect(result.policy.guardOutcome?.decision).toBe('CLOSE_HONESTLY');
+      expect(result.eval).toBeNull();
+      expect(result.integrity).toBeNull();
+      expect(fetchSpy).not.toHaveBeenCalled();
+      expect(mockGenerateContent).not.toHaveBeenCalled();
+      expect(mockGenerateContentStream).not.toHaveBeenCalled();
+      expect(mockGetAccessToken).not.toHaveBeenCalled();
+      expect(mockComputeIntegrityState).not.toHaveBeenCalled();
+      expect(mockSaveIntegrityState).not.toHaveBeenCalled();
+      fetchSpy.mockRestore();
+    });
+
     it('should handle extreme metrics', async () => {
       const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const extremeMetrics = createMetrics({

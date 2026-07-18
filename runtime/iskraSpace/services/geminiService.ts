@@ -867,6 +867,15 @@ ${deltaInstruction}`;
     const policyDecision = policyEngine.decide(lastUserMessage, metrics, history);
     const { classification, config, preActions } = policyDecision;
 
+    // A terminal guard outcome is intentionally side-effect free. It must not
+    // contact a provider, request a token, evaluate/audit a response, persist
+    // integrity, or fall through to an offline generation placeholder.
+    if (policyDecision.guardOutcome?.decision === 'CLOSE_HONESTLY') {
+      const reasons = policyDecision.guardOutcome.reasons.join(', ');
+      yield `CLOSE_HONESTLY\nReason: ${policyDecision.guardOutcome.why} [${reasons}]\n\nPause or set a boundary before starting another cycle.`;
+      return { eval: null, policy: policyDecision, integrity: null };
+    }
+
     // Execute pre-actions
     for (const action of preActions) {
       if (action.type === 'pause' && action.payload?.durationMs) {
@@ -900,47 +909,6 @@ Stakes: ${classification.stakes}
 Delta Required: ${config.deltaRequired ? 'YES - Include ∆DΩΛ signature' : 'Optional'}
 SIFT Depth: ${config.siftDepth}
 `;
-
-    if (policyDecision.guardOutcome?.decision === 'CLOSE_HONESTLY') {
-      const why = policyDecision.guardOutcome.why;
-      const reasons = policyDecision.guardOutcome.reasons.join(', ');
-      
-      const responseText = `⚑ **CLOSE_HONESTLY**: Внутреннее состояние системы требует прозрачного завершения диалога.
-Причина: ${why} [${reasons}]
-
-Пожалуйста, сделайте паузу, обратитесь к Дневнику или проясните ваши намерения, прежде чем запускать новый цикл.
-
-∆DΩΛ
-∆: Диалог приостановлен для защиты целостности системы.
-D: SLO-Guard → CLOSE_HONESTLY
-Ω: 0.95
-Λ: Сделайте паузу не менее 15 минут, перезапустите поток после рефлексии.`;
-
-      yield responseText;
-
-      const responseId = `policy_CLOSE_${Date.now()}`;
-      const evalResult = evaluateResponse(responseText, {
-        userQuery: lastUserMessage,
-        logToAudit: true,
-        responseId,
-      });
-
-      let integrity: ReturnType<typeof computeIntegrityStateV02> | null = null;
-      try {
-        integrity = computeIntegrityStateV02({
-          responseText,
-          playbook: policyDecision.classification.playbook as PlaybookType,
-          responseId,
-          voiceName: effectiveVoice.name,
-          evalFlags: [],
-        });
-        saveIntegrityState(integrity);
-      } catch (_e) {
-        // ignore
-      }
-
-      return { eval: evalResult, policy: policyDecision, integrity };
-    }
 
     // Stream response
     let fullResponse = '';
