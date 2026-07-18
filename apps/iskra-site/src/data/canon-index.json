@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-07-17T18:54:13.284Z",
-  "total": 2943,
+  "generatedAt": "2026-07-18T20:26:24.070Z",
+  "total": 3004,
   "curated": 20,
   "layers": {
-    "root": 336,
-    "agents": 44,
+    "root": 337,
+    "agents": 46,
     "devcontainer": 2,
     "ci": 12,
-    "research": 36,
+    "research": 51,
     "appendix": 26,
     "site": 69,
     "web": 13,
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 153,
+    "governance": 194,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -25,7 +25,7 @@
     "reference": 82,
     "runtime": 356,
     "skills": 267,
-    "backend": 77,
+    "backend": 79,
     "system": 26,
     "tools": 54
   },
@@ -71,6 +71,7 @@
       "children": [
         ".agents/skills/supabase/assets",
         ".agents/skills/supabase/references",
+        ".agents/skills/supabase/CHANGELOG.md",
         ".agents/skills/supabase/SKILL.md"
       ]
     },
@@ -86,8 +87,20 @@
       "parent": ".agents/skills",
       "children": [
         ".agents/skills/supabase-postgres-best-practices/references",
+        ".agents/skills/supabase-postgres-best-practices/CHANGELOG.md",
         ".agents/skills/supabase-postgres-best-practices/SKILL.md"
       ]
+    },
+    {
+      "path": ".agents/skills/supabase-postgres-best-practices/CHANGELOG.md",
+      "name": "CHANGELOG.md",
+      "kind": "file",
+      "layer": "agents",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": ".agents/skills/supabase-postgres-best-practices/CHANGELOG.md",
+      "related": [],
+      "parent": ".agents/skills/supabase-postgres-best-practices"
     },
     {
       "path": ".agents/skills/supabase-postgres-best-practices/SKILL.md",
@@ -522,6 +535,17 @@
       "parent": ".agents/skills/supabase-postgres-best-practices/references"
     },
     {
+      "path": ".agents/skills/supabase/CHANGELOG.md",
+      "name": "CHANGELOG.md",
+      "kind": "file",
+      "layer": "agents",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": ".agents/skills/supabase/CHANGELOG.md",
+      "related": [],
+      "parent": ".agents/skills/supabase"
+    },
+    {
       "path": ".agents/skills/supabase/SKILL.md",
       "name": "SKILL.md",
       "kind": "file",
@@ -819,6 +843,16 @@
       "sourceRef": ".kimi/AGENTS.md",
       "related": [],
       "parent": ".kimi"
+    },
+    {
+      "path": ".mcp.json",
+      "name": ".mcp.json",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".mcp.json",
+      "related": []
     },
     {
       "path": ".playwright-mcp",
@@ -2299,6 +2333,7 @@
       "related": [],
       "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
       "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели",
         "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/GLM-5_2_bare_run.txt",
         "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/GLM-5_2_iskra_build_run.txt",
         "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/chatgpt_5-5_default_run.txt",
@@ -2360,6 +2395,187 @@
       "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/test_bank_793.txt",
       "related": [],
       "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели",
+      "name": "модели",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs",
+      "children": [
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/GLM-5.2 Искра build.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/GLM-5.2.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Qwen3.7-Plus.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/chatgpt 5.5 .txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/claude-sonnet-5.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/gemini 3.1 pro.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/kimi 2.6.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/minimax-m3.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра agent workspace.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра agent.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра projects.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/дефолт.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/искра.txt",
+        "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/контур.txt"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/GLM-5.2 Искра build.txt",
+      "name": "GLM-5.2 Искра build.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/GLM-5.2 Искра build.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/GLM-5.2.txt",
+      "name": "GLM-5.2.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/GLM-5.2.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Qwen3.7-Plus.txt",
+      "name": "Qwen3.7-Plus.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Qwen3.7-Plus.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/chatgpt 5.5 .txt",
+      "name": "chatgpt 5.5 .txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/chatgpt 5.5 .txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/claude-sonnet-5.txt",
+      "name": "claude-sonnet-5.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/claude-sonnet-5.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/gemini 3.1 pro.txt",
+      "name": "gemini 3.1 pro.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/gemini 3.1 pro.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/kimi 2.6.txt",
+      "name": "kimi 2.6.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/kimi 2.6.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/minimax-m3.txt",
+      "name": "minimax-m3.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/minimax-m3.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра agent workspace.txt",
+      "name": "Искра agent workspace.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра agent workspace.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра agent.txt",
+      "name": "Искра agent.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра agent.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра projects.txt",
+      "name": "Искра projects.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/Искра projects.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/дефолт.txt",
+      "name": "дефолт.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/дефолт.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/искра.txt",
+      "name": "искра.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/искра.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
+    },
+    {
+      "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/контур.txt",
+      "name": "контур.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели/контур.txt",
+      "related": [],
+      "parent": "ScienceAndTests/iskra_evaluation_release_2026-07-08/04_raw_runs/модели"
     },
     {
       "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08/05_prior_audit",
@@ -21296,6 +21512,7 @@
         "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
         "governance/adr_20260717_research_router_capability.md",
         "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
+        "governance/adr_20260718_sot30_v5_5_2_backlog_batch.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -21714,6 +21931,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260718_sot30_v5_5_2_backlog_batch.md",
+      "name": "adr_20260718_sot30_v5_5_2_backlog_batch.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260718_sot30_v5_5_2_backlog_batch.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -21860,7 +22088,8 @@
         "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
         "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
         "governance/changelog.d/2026-07-17-research-router-capability.md",
-        "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md"
+        "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
+        "governance/changelog.d/2026-07-18-sot30-v5-5-2-backlog-batch.md"
       ]
     },
     {
@@ -22095,6 +22324,17 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-18-sot30-v5-5-2-backlog-batch.md",
+      "name": "2026-07-18-sot30-v5-5-2-backlog-batch.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-18-sot30-v5-5-2-backlog-batch.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -22196,6 +22436,7 @@
         "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity",
         "governance/releases/2026-07-16-sot30-v5-5-1-full-package",
         "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch",
         "governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
         "governance/releases/2026-06-24-relational-vow-canon-receipt.md",
         "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md",
@@ -23108,6 +23349,479 @@
       "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
       "related": [],
       "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch",
+      "name": "2026-07-18-sot30-v5-5-2-backlog-batch",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch",
+      "related": [],
+      "parent": "governance/releases",
+      "children": [
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/PACKAGE_RECEIPT.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/QC_REPORT.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/README.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/PACKAGE_RECEIPT.md",
+      "name": "PACKAGE_RECEIPT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/PACKAGE_RECEIPT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/QC_REPORT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/README.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge",
+      "name": "knowledge",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch",
+      "children": [
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/00_PROJECT_ROUTER.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/02_PROJECTS_SURFACE_MAP.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/04_IDENTITY_NON_MIRROR.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/05_TRUTH_SIFT_RAG.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/06_SECURITY_INTEGRITY.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/07_UNIVERSAL_ROUTER.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/08_STATECYCLE_RUNTIME.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/09_METRICS_ENGINE.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/12_COUNCIL_VOICES.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/14_MEMORY_MODEL.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/16_SHADOW_LAYER.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/17_DREAMSPACE_DREAMSEED.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/18_HORIZON_WEAVER.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/20_GOVERNANCE_ADR.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/24_INTERFACE_STYLE.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/25_LIBER_SPACE_BUSIDO.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/26_SOMATIC_INTUITION.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/28_EVALS_ACCEPTANCE.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/29_INDEX_UPLOAD_MANIFEST.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/00_PROJECT_ROUTER.md",
+      "name": "00_PROJECT_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/00_PROJECT_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "name": "01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "name": "02_PROJECTS_SURFACE_MAP.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "name": "03_TELOS_MANTRA_PRINCIPLES.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "name": "04_IDENTITY_NON_MIRROR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/05_TRUTH_SIFT_RAG.md",
+      "name": "05_TRUTH_SIFT_RAG.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/05_TRUTH_SIFT_RAG.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/06_SECURITY_INTEGRITY.md",
+      "name": "06_SECURITY_INTEGRITY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/06_SECURITY_INTEGRITY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/07_UNIVERSAL_ROUTER.md",
+      "name": "07_UNIVERSAL_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/07_UNIVERSAL_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/08_STATECYCLE_RUNTIME.md",
+      "name": "08_STATECYCLE_RUNTIME.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/08_STATECYCLE_RUNTIME.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/09_METRICS_ENGINE.md",
+      "name": "09_METRICS_ENGINE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/09_METRICS_ENGINE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "name": "10_ENTROPY_FRACTAL_EWS.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "name": "11_SLO_PLAYBOOK_CONTROL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/12_COUNCIL_VOICES.md",
+      "name": "12_COUNCIL_VOICES.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/12_COUNCIL_VOICES.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "name": "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/14_MEMORY_MODEL.md",
+      "name": "14_MEMORY_MODEL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/14_MEMORY_MODEL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "name": "15_SUPABASE_MEMORY_PLANE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/16_SHADOW_LAYER.md",
+      "name": "16_SHADOW_LAYER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/16_SHADOW_LAYER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "name": "17_DREAMSPACE_DREAMSEED.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/18_HORIZON_WEAVER.md",
+      "name": "18_HORIZON_WEAVER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/18_HORIZON_WEAVER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "name": "19_DRY_DARK_RUN_PROTOCOL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/20_GOVERNANCE_ADR.md",
+      "name": "20_GOVERNANCE_ADR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/20_GOVERNANCE_ADR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "name": "21_WORKFLOW_OPS_LEDGER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "name": "22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "name": "23_BUILDER_PROJECTS_COMPAT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/24_INTERFACE_STYLE.md",
+      "name": "24_INTERFACE_STYLE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/24_INTERFACE_STYLE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "name": "25_LIBER_SPACE_BUSIDO.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/26_SOMATIC_INTUITION.md",
+      "name": "26_SOMATIC_INTUITION.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/26_SOMATIC_INTUITION.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "name": "27_WHAT_IF_SCENARIO_MATRIX.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/28_EVALS_ACCEPTANCE.md",
+      "name": "28_EVALS_ACCEPTANCE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/28_EVALS_ACCEPTANCE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "name": "29_INDEX_UPLOAD_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support",
+      "name": "support",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch",
+      "children": [
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/MANIFEST.json",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/PROJECT_INSTRUCTIONS_SOT30.md",
+        "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/SHA256SUMS"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "name": "PROJECT_INSTRUCTIONS_SOT30.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support"
+    },
+    {
+      "path": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support/SHA256SUMS",
+      "related": [],
+      "parent": "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch/support"
     },
     {
       "path": "governance/update_protocol.md",
@@ -35074,6 +35788,8 @@
         "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
         "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
         "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
+        "supabase/migrations/20260718000000_optimize_rls_initplan.sql",
+        "supabase/migrations/20260718000001_consolidate_rls_policies.sql",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
         "supabase/migrations/README_LEGACY_DATA_MIGRATION.sql"
@@ -35439,6 +36155,28 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260718000000_optimize_rls_initplan.sql",
+      "name": "20260718000000_optimize_rls_initplan.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260718000000_optimize_rls_initplan.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260718000001_consolidate_rls_policies.sql",
+      "name": "20260718000001_consolidate_rls_policies.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260718000001_consolidate_rls_policies.sql",
       "related": [],
       "parent": "supabase/migrations"
     },
