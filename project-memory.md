@@ -43,3 +43,40 @@
 - **[FACT] 2026-06-09 Supabase read-only baseline confirms live `gemini` version `5` with `verify_jwt=true`, dual-provider source posture, `gemini-embedding-001`, normalized `embedding.values`, and `outputDimensionality=1536`; `db-proxy` remains JWT-protected, while canon import/backfill/diagnostic functions remain live with `verify_jwt=false`.**
 - **[FACT] PR #202 is merged into `main` at `169b16b`; observed post-merge release-relevant checks are green (`hash-check`, `ingest-stage-checks`, both Cloud Run checks).**
 - **[FACT] `docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md` prepares live Supabase cleanup without mutation: remove `iskra-canon-import-diagnostic` first, retire/protect or ADR-exempt import/backfill, and keep `db-proxy` under owner/caller/allowlist/disable-policy review. Explicit approval remains required before any live deletion.**
+
+## 2026-07-18 Full Audit Baseline
+
+### GitHub State
+- **[FACT] main HEAD:** `f8a45ca` ≡ `origin/main`. Working tree clean, 0 uncommitted changes.
+- **[FACT] Latest merged PRs:** #270 (production-hardening + Bounded Guard + RLS), #274 (conflict resolve), #262 (evaluation release), #273 (audit reconciliation).
+- **[FACT] Open release-gate issues:** #200 (dual-provider smoke), #192 (Supabase cleanup), #190 (provenance + advisors), #168 (PWA salvage, blocked).
+- **[FACT] Branch count:** 34 local, ~115 remote. Most `codex/*` and `copilot/*` branches are merged/stale.
+
+### Supabase Live State (`AgiIskra / typcvaszcfdpkzbjzuur`)
+- **[FACT] 8 Edge Functions, ALL `verify_jwt=true`:** `gemini v9`, `embed v3`, `iskra-agent v4`, `iskra-memory-gateway v4`, `kain v2`, `db-proxy v6`, `iskra-canon-import-1536 v7` (410 stub), `iskra-canon-backfill-1536 v7` (410 stub).
+- **[FACT] `iskra-canon-import-diagnostic` is absent from live function list.** Retired per ADR.
+- **[FACT] 12 public tables, ALL RLS enabled.** Total rows: 14 (9 graph_nodes, 2 chat_history, 1 metrics_snapshots, 1 memory_nodes, 1 graph_edges).
+- **[FACT] Additional schemas:** `iskra.*` (canon/RAG), `iskra_memory.*` (memory gateway, 10 tables with RLS but no policies), `private.*` (beta access, 2 tables with RLS but no policies).
+- **[FACT] 32 applied migrations.** Migration `20260717183002_supabase_acl_and_graph_contract_hardening.sql` exists in repo but IS NOT APPLIED to live.
+- **[FACT] Pending migration fixes:** revoke anon EXECUTE on 3 SECURITY DEFINER functions, fix search_path on 2 iskra_memory functions, disable GraphQL introspection. Header marks it "source-only" until staging verification.
+
+### Security Advisors
+- **[FACT] CRITICAL:** 3 `SECURITY DEFINER` functions callable by `anon` via PostgREST: `consume_ai_quota(text)`, `resolve_beta_access()`, `prevent_graph_node_cross_owner_cascade()`. All fixed by pending migration.
+- **[FACT] WARN:** 2 mutable search_path functions (`iskra_memory.*`), 1 extension in public (`pg_trgm`), 10 GraphQL authenticated table exposures, 12 authenticated SECURITY DEFINER function exposures.
+- **[FACT] INFO:** 13 tables with RLS enabled but no policies (`iskra_memory.*`, `private.*`).
+
+### Performance Advisors
+- **[FACT] WARN:** 18 RLS policies with auth initplan re-evaluation (wrap `auth.uid()` in `(select ...)`), 10+ multiple permissive policies on `audit_log`/`graph_nodes`/`graph_edges`.
+- **[FACT] INFO:** ~35 unused indexes (mostly `iskra.canon_*` and `public.graph_*`), 4 unindexed foreign keys (`iskra_memory.*`, `private.*`).
+
+### Source Provenance Map
+- **[FACT] `gemini` source:** `runtime/iskraSpace/supabase/functions/gemini/index.ts` (15.5KB). Not in canonical `supabase/functions/`.
+- **[FACT] `iskra-agent` source:** `runtime/iskraSpace/supabase/functions/iskra-agent/index.ts` (7.3KB). Not in canonical `supabase/functions/`.
+- **[FACT] `kain` source:** `runtime/iskraSpace/supabase/functions/kain/index.ts` (7KB). Also `runtime/kain/` package. Not in canonical `supabase/functions/`.
+- **[FACT] `embed` source:** `supabase/functions/embed/index.ts` (3.5KB). Canonical location.
+- **[FACT] `iskra-memory-gateway` source:** `supabase/functions/iskra-memory-gateway/` (handler.ts 7KB + manifest.json + README). Canonical location.
+- **[FACT] `db-proxy` source:** NO SOURCE IN REPO. Decision memo at `docs/security/db_proxy_decision_v1.md` says "do not keep in current form." Live function v6 exists without repo provenance.
+
+### Constitution
+- **[FACT] `governance/iskra_constitution_v1_core.md` (8.5KB), annexes, transition schedule, and carrier review ADRs exist.** Constitution governance framework accepted.
+
