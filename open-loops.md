@@ -62,3 +62,28 @@
 - **Status:** Tooling ready, awaiting smoke verification. 
 - **Risk:** OpenAI generation, compatible SSE streaming, embeddings, and fallback behavior must be proven against live Supabase secrets/runtime before claiming verified status in public releases.
 - **Mitigation:** Created `tools/smoke_openai_provider.py` to securely provision the secret via CLI, execute a POST call to Deno Edge Function using anon key auth, and unset the secret immediately. Run the tool to execute the live smoke test.
+
+### OPN-20260718-001: Unapplied P0 Security Migration
+- **Description:** Migration `20260717183002_supabase_acl_and_graph_contract_hardening.sql` exists in repo but is NOT applied to live Supabase. It revokes anon EXECUTE on 3 SECURITY DEFINER functions, fixes 2 mutable search_path functions, and disables GraphQL introspection.
+- **Status:** Open — migration header marks it "source-only" until staging magic-link and two-user Graph isolation pass.
+- **Risk:** 3 SECURITY DEFINER functions (`consume_ai_quota`, `resolve_beta_access`, `prevent_graph_node_cross_owner_cascade`) remain callable by `anon` via PostgREST until this migration is applied.
+- **Mitigation:** Run staging verification for magic-link and Graph isolation, then apply migration. If staging is not available, consider applying the revoke-only subset as an emergency patch.
+
+### OPN-20260718-002: iskra_memory Schema — RLS Enabled but No Policies
+- **Description:** 10 tables in `iskra_memory.*` schema have RLS enabled but zero policies: `gateway_events`, `horizon_events`, `memory_archive`, `memory_dream_seeds`, `memory_edges`, `memory_journal`, `memory_open_loops`, `memory_sense_events`, `memory_shadow`, `statecycle_snapshots`. Same for 2 tables in `private.*`: `ai_rate_limit_windows`, `beta_invites`, `beta_members`.
+- **Status:** Open.
+- **Risk:** RLS-without-policies means all non-service-role access is silently denied. If any client code expects to read/write these tables via anon/authenticated roles, it will fail silently. This is safe-by-default but may mask integration bugs.
+- **Mitigation:** Confirm whether iskra-memory-gateway uses service_role to access these tables (expected). If so, the current state is intentionally locked and policies should only be added when client-side access is designed.
+
+### OPN-20260718-003: Edge Function Source Provenance Split
+- **Description:** 3 Edge Functions (`gemini`, `iskra-agent`, `kain`) have source in `runtime/iskraSpace/supabase/functions/` but NOT in canonical `supabase/functions/`. 2 functions (`embed`, `iskra-memory-gateway`) are in canonical location. `db-proxy` has NO source at all (decision memo says "do not keep").
+- **Status:** Open.
+- **Risk:** Two source locations create confusion about which source is canonical for deployment. Supabase CLI defaults to `supabase/functions/` for `supabase functions deploy`.
+- **Mitigation:** Consider symlinking or mirroring `runtime/iskraSpace/supabase/functions/*` into `supabase/functions/`, or document the deployment path explicitly.
+
+### OPN-20260718-004: Dead Branch Accumulation
+- **Description:** 34 local branches, ~115 remote branches. Most `codex/*`, `copilot/*`, `fix/*`, `docs/*` branches are merged into main.
+- **Status:** Open — low priority.
+- **Risk:** Visual noise, slow git fetch, potential confusion about active work.
+- **Mitigation:** Batch delete merged remote branches: `git branch -r --merged origin/main | grep -v main | xargs git push origin --delete`. Keep release-relevant unmerged branches.
+
