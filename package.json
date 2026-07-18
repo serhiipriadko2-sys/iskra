@@ -18,6 +18,8 @@
     "check:supabase-voice-metrics-contract:repo": "npx tsx tools/verify_supabase_voice_metrics_contract.ts --repo-only",
     "check:supabase-graph-contract": "npx tsx tools/verify_supabase_graph_contract.ts",
     "check:supabase-graph-contract:repo": "npx tsx tools/verify_supabase_graph_contract.ts --repo-only",
+    "check:iskra-metrics-parity": "pnpm --filter @iskra/math test -- edgeMetricsParity.test.ts",
+    "check:no-graphql-clients": "npx tsx tools/check_no_graphql_clients.ts",
     "check:imports": "node tools/run_python.mjs tools/check_no_src_imports.py",
     "check:sensitive-status": "node tools/run_python.mjs tools/check_no_sensitive_status_dumps.py",
     "supabase:start": "pnpm exec supabase start",
@@ -38,6 +40,7 @@
     "prepare:legacy-runtime": "node tools/ensure_runtime_deps.mjs"
   },
   "devDependencies": {
+    "jose": "6.1.0",
     "supabase": "^2.109.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",

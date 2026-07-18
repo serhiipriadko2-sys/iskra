@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-15T19:36:35.678Z",
-  "total": 2833,
+  "generatedAt": "2026-07-17T18:54:13.284Z",
+  "total": 2943,
   "curated": 20,
   "layers": {
-    "root": 334,
+    "root": 336,
     "agents": 44,
     "devcontainer": 2,
     "ci": 12,
@@ -14,20 +14,20 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 67,
+    "governance": 153,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
     "mind": 13,
-    "engine-core": 17,
+    "engine-core": 19,
     "engine": 41,
-    "math": 18,
+    "math": 19,
     "reference": 82,
-    "runtime": 352,
+    "runtime": 356,
     "skills": 267,
-    "backend": 63,
+    "backend": 77,
     "system": 26,
-    "tools": 53
+    "tools": 54
   },
   "nodes": [
     {
@@ -4806,8 +4806,32 @@
       "related": [],
       "children": [
         "dist/agent-builder",
-        "dist/sot40"
+        "dist/sot40",
+        "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
+        "dist/SoT30_v5.5.1.zip"
       ]
+    },
+    {
+      "path": "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
+      "name": "ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
+      "related": [],
+      "parent": "dist"
+    },
+    {
+      "path": "dist/SoT30_v5.5.1.zip",
+      "name": "SoT30_v5.5.1.zip",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "dist/SoT30_v5.5.1.zip",
+      "related": [],
+      "parent": "dist"
     },
     {
       "path": "dist/agent-builder",
@@ -21265,7 +21289,13 @@
         "governance/adr_20260712_iskra_constitution_v1_redline.md",
         "governance/adr_20260715_iskra_constitution_v1_carrier_review_acceptance.md",
         "governance/adr_20260715_iskra_constitution_v1_carrier_review_classes_4_9.md",
+        "governance/adr_20260715_iskra_memory_gateway_probe_only_containment.md",
         "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
+        "governance/adr_20260716_sot30_content_integrity_patch.md",
+        "governance/adr_20260716_sot30_v5_5_1_full_package.md",
+        "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
+        "governance/adr_20260717_research_router_capability.md",
+        "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -21607,6 +21637,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260715_iskra_memory_gateway_probe_only_containment.md",
+      "name": "adr_20260715_iskra_memory_gateway_probe_only_containment.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260715_iskra_memory_gateway_probe_only_containment.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
       "name": "adr_20260715_iskraspace_shadow_promotion_boundary.md",
       "kind": "file",
@@ -21614,6 +21655,61 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/adr_20260715_iskraspace_shadow_promotion_boundary.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260716_sot30_content_integrity_patch.md",
+      "name": "adr_20260716_sot30_content_integrity_patch.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260716_sot30_content_integrity_patch.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260716_sot30_v5_5_1_full_package.md",
+      "name": "adr_20260716_sot30_v5_5_1_full_package.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260716_sot30_v5_5_1_full_package.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
+      "name": "adr_20260716_sot30_v5_5_business_projects_hardening.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260716_sot30_v5_5_business_projects_hardening.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260717_research_router_capability.md",
+      "name": "adr_20260717_research_router_capability.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260717_research_router_capability.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
+      "name": "adr_20260717_supabase_metrics_compute_plane_v1.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
       "related": [],
       "parent": "governance"
     },
@@ -21755,7 +21851,16 @@
         "governance/changelog.d/2026-07-12-iskra-constitution-v1-redline.md",
         "governance/changelog.d/2026-07-15-constitution-carrier-review-acceptance.md",
         "governance/changelog.d/2026-07-15-constitution-carrier-review-classes-4-9.md",
-        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md"
+        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-boundary.md",
+        "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
+        "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
+        "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
+        "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
+        "governance/changelog.d/2026-07-16-sot30-v5-5-1-full-package.md",
+        "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
+        "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+        "governance/changelog.d/2026-07-17-research-router-capability.md",
+        "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md"
       ]
     },
     {
@@ -21891,6 +21996,105 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
+      "name": "2026-07-15-iskraspace-shadow-promotion-receipt.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-iskraspace-shadow-promotion-receipt.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
+      "name": "2026-07-15-memory-gateway-probe-only-containment.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-15-memory-gateway-probe-only-containment.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
+      "name": "2026-07-16-remove-stale-sot30-v5-4-zip.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-remove-stale-sot30-v5-4-zip.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
+      "name": "2026-07-16-sot30-content-integrity-patch.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-sot30-content-integrity-patch.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-16-sot30-v5-5-1-full-package.md",
+      "name": "2026-07-16-sot30-v5-5-1-full-package.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-sot30-v5-5-1-full-package.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
+      "name": "2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-sot30-v5-5-1-package-sha256sums-fix.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+      "name": "2026-07-16-sot30-v5-5-business-projects-hardening.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-16-sot30-v5-5-business-projects-hardening.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-17-research-router-capability.md",
+      "name": "2026-07-17-research-router-capability.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-17-research-router-capability.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
+      "name": "2026-07-17-supabase-metrics-compute-plane-atom1.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -21989,6 +22193,9 @@
       "related": [],
       "parent": "governance",
       "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
         "governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
         "governance/releases/2026-06-24-relational-vow-canon-receipt.md",
         "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md",
@@ -22038,6 +22245,869 @@
       "sourceRef": "governance/releases/2026-07-01-vomega-7-1-runtime-unification-repair-branch-receipt.md",
       "related": [],
       "parent": "governance/releases"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity",
+      "name": "2026-07-16-sot30-v5-5-1-content-integrity",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity",
+      "related": [],
+      "parent": "governance/releases",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/AUDIT_CORRECTIONS.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/KNOWLEDGE_DIFF.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/MANIFEST.json",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/QC_REPORT.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/README.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/SHA256SUMS"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/AUDIT_CORRECTIONS.md",
+      "name": "AUDIT_CORRECTIONS.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/AUDIT_CORRECTIONS.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/KNOWLEDGE_DIFF.md",
+      "name": "KNOWLEDGE_DIFF.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/KNOWLEDGE_DIFF.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/QC_REPORT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/README.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/SHA256SUMS",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge",
+      "name": "knowledge",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/04_IDENTITY_NON_MIRROR.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/05_TRUTH_SIFT_RAG.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/07_UNIVERSAL_ROUTER.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/08_STATECYCLE_RUNTIME.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/09_METRICS_ENGINE.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/20_GOVERNANCE_ADR.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/24_INTERFACE_STYLE.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "name": "01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "name": "04_IDENTITY_NON_MIRROR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/05_TRUTH_SIFT_RAG.md",
+      "name": "05_TRUTH_SIFT_RAG.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/05_TRUTH_SIFT_RAG.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/07_UNIVERSAL_ROUTER.md",
+      "name": "07_UNIVERSAL_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/07_UNIVERSAL_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/08_STATECYCLE_RUNTIME.md",
+      "name": "08_STATECYCLE_RUNTIME.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/08_STATECYCLE_RUNTIME.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/09_METRICS_ENGINE.md",
+      "name": "09_METRICS_ENGINE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/09_METRICS_ENGINE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "name": "10_ENTROPY_FRACTAL_EWS.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "name": "11_SLO_PLAYBOOK_CONTROL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "name": "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/20_GOVERNANCE_ADR.md",
+      "name": "20_GOVERNANCE_ADR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/20_GOVERNANCE_ADR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/24_INTERFACE_STYLE.md",
+      "name": "24_INTERFACE_STYLE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/24_INTERFACE_STYLE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "name": "27_WHAT_IF_SCENARIO_MATRIX.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-content-integrity/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package",
+      "name": "2026-07-16-sot30-v5-5-1-full-package",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package",
+      "related": [],
+      "parent": "governance/releases",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/PACKAGE_RECEIPT.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/QC_REPORT.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/README.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/PACKAGE_RECEIPT.md",
+      "name": "PACKAGE_RECEIPT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/PACKAGE_RECEIPT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/QC_REPORT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/README.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge",
+      "name": "knowledge",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/00_PROJECT_ROUTER.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/02_PROJECTS_SURFACE_MAP.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/04_IDENTITY_NON_MIRROR.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/05_TRUTH_SIFT_RAG.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/06_SECURITY_INTEGRITY.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/07_UNIVERSAL_ROUTER.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/08_STATECYCLE_RUNTIME.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/09_METRICS_ENGINE.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/12_COUNCIL_VOICES.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/14_MEMORY_MODEL.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/16_SHADOW_LAYER.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/17_DREAMSPACE_DREAMSEED.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/18_HORIZON_WEAVER.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/20_GOVERNANCE_ADR.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/24_INTERFACE_STYLE.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/25_LIBER_SPACE_BUSIDO.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/26_SOMATIC_INTUITION.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/28_EVALS_ACCEPTANCE.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/29_INDEX_UPLOAD_MANIFEST.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/00_PROJECT_ROUTER.md",
+      "name": "00_PROJECT_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/00_PROJECT_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "name": "01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "name": "02_PROJECTS_SURFACE_MAP.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "name": "03_TELOS_MANTRA_PRINCIPLES.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "name": "04_IDENTITY_NON_MIRROR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/05_TRUTH_SIFT_RAG.md",
+      "name": "05_TRUTH_SIFT_RAG.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/05_TRUTH_SIFT_RAG.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/06_SECURITY_INTEGRITY.md",
+      "name": "06_SECURITY_INTEGRITY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/06_SECURITY_INTEGRITY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/07_UNIVERSAL_ROUTER.md",
+      "name": "07_UNIVERSAL_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/07_UNIVERSAL_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/08_STATECYCLE_RUNTIME.md",
+      "name": "08_STATECYCLE_RUNTIME.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/08_STATECYCLE_RUNTIME.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/09_METRICS_ENGINE.md",
+      "name": "09_METRICS_ENGINE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/09_METRICS_ENGINE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "name": "10_ENTROPY_FRACTAL_EWS.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "name": "11_SLO_PLAYBOOK_CONTROL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/12_COUNCIL_VOICES.md",
+      "name": "12_COUNCIL_VOICES.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/12_COUNCIL_VOICES.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "name": "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/14_MEMORY_MODEL.md",
+      "name": "14_MEMORY_MODEL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/14_MEMORY_MODEL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "name": "15_SUPABASE_MEMORY_PLANE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/16_SHADOW_LAYER.md",
+      "name": "16_SHADOW_LAYER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/16_SHADOW_LAYER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "name": "17_DREAMSPACE_DREAMSEED.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/18_HORIZON_WEAVER.md",
+      "name": "18_HORIZON_WEAVER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/18_HORIZON_WEAVER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "name": "19_DRY_DARK_RUN_PROTOCOL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/20_GOVERNANCE_ADR.md",
+      "name": "20_GOVERNANCE_ADR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/20_GOVERNANCE_ADR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "name": "21_WORKFLOW_OPS_LEDGER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "name": "22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "name": "23_BUILDER_PROJECTS_COMPAT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/24_INTERFACE_STYLE.md",
+      "name": "24_INTERFACE_STYLE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/24_INTERFACE_STYLE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "name": "25_LIBER_SPACE_BUSIDO.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/26_SOMATIC_INTUITION.md",
+      "name": "26_SOMATIC_INTUITION.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/26_SOMATIC_INTUITION.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "name": "27_WHAT_IF_SCENARIO_MATRIX.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/28_EVALS_ACCEPTANCE.md",
+      "name": "28_EVALS_ACCEPTANCE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/28_EVALS_ACCEPTANCE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "name": "29_INDEX_UPLOAD_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support",
+      "name": "support",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/MANIFEST.json",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/PROJECT_INSTRUCTIONS_SOT30.md",
+        "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/SHA256SUMS"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "name": "PROJECT_INSTRUCTIONS_SOT30.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support/SHA256SUMS",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-1-full-package/support"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
+      "name": "2026-07-16-sot30-v5-5-business-projects-hardening",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
+      "related": [],
+      "parent": "governance/releases",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/KNOWLEDGE_DIFF.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/MANIFEST.json",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/PACKAGE_RECEIPT.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/QC_REPORT.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/README.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/SHA256SUMS"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/KNOWLEDGE_DIFF.md",
+      "name": "KNOWLEDGE_DIFF.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/KNOWLEDGE_DIFF.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/PACKAGE_RECEIPT.md",
+      "name": "PACKAGE_RECEIPT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/PACKAGE_RECEIPT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/QC_REPORT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/README.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/SHA256SUMS",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge",
+      "name": "knowledge",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
+      "children": [
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/02_PROJECTS_SURFACE_MAP.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/28_EVALS_ACCEPTANCE.md",
+        "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/29_INDEX_UPLOAD_MANIFEST.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "name": "02_PROJECTS_SURFACE_MAP.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "name": "22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/28_EVALS_ACCEPTANCE.md",
+      "name": "28_EVALS_ACCEPTANCE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/28_EVALS_ACCEPTANCE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "name": "29_INDEX_UPLOAD_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening/knowledge"
     },
     {
       "path": "governance/update_protocol.md",
@@ -23116,6 +24186,7 @@
         "packages/core/src/fractal.types.ts",
         "packages/core/src/index.ts",
         "packages/core/src/protocol.types.ts",
+        "packages/core/src/research.types.ts",
         "packages/core/src/types.ts",
         "packages/core/src/xcode.types.ts"
       ]
@@ -23131,7 +24202,8 @@
       "related": [],
       "parent": "packages/core/src",
       "children": [
-        "packages/core/src/__tests__/core.test.ts"
+        "packages/core/src/__tests__/core.test.ts",
+        "packages/core/src/__tests__/researchCapability.test.ts"
       ]
     },
     {
@@ -23142,6 +24214,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "packages/core/src/__tests__/core.test.ts",
+      "related": [],
+      "parent": "packages/core/src/__tests__"
+    },
+    {
+      "path": "packages/core/src/__tests__/researchCapability.test.ts",
+      "name": "researchCapability.test.ts",
+      "kind": "file",
+      "layer": "engine-core",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/core/src/__tests__/researchCapability.test.ts",
       "related": [],
       "parent": "packages/core/src/__tests__"
     },
@@ -23222,6 +24305,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "packages/core/src/protocol.types.ts",
+      "related": [],
+      "parent": "packages/core/src"
+    },
+    {
+      "path": "packages/core/src/research.types.ts",
+      "name": "research.types.ts",
+      "kind": "file",
+      "layer": "engine-core",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/core/src/research.types.ts",
       "related": [],
       "parent": "packages/core/src"
     },
@@ -23838,9 +24932,21 @@
       "children": [
         "packages/math/src/__tests__/entropy",
         "packages/math/src/__tests__/quantum",
+        "packages/math/src/__tests__/edgeMetricsParity.test.ts",
         "packages/math/src/__tests__/fractal.test.ts",
         "packages/math/src/__tests__/validation.test.ts"
       ]
+    },
+    {
+      "path": "packages/math/src/__tests__/edgeMetricsParity.test.ts",
+      "name": "edgeMetricsParity.test.ts",
+      "kind": "file",
+      "layer": "math",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "packages/math/src/__tests__/edgeMetricsParity.test.ts",
+      "related": [],
+      "parent": "packages/math/src/__tests__"
     },
     {
       "path": "packages/math/src/__tests__/entropy",
@@ -26043,8 +27149,20 @@
       "related": [],
       "parent": "runtime/iskraSpace/__tests__",
       "children": [
+        "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
         "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
+      "name": "graphIsolation.staging.e2e.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/e2e"
     },
     {
       "path": "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts",
@@ -27613,12 +28731,14 @@
         "runtime/iskraSpace/services/__tests__/graphSharedRowGuardMigration.test.ts",
         "runtime/iskraSpace/services/__tests__/healthService.test.ts",
         "runtime/iskraSpace/services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts",
+        "runtime/iskraSpace/services/__tests__/iskraMemoryGatewayProbeOnly.test.ts",
         "runtime/iskraSpace/services/__tests__/iskraMemoryGatewaySecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/kainEdgeFunctionSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/makiService.test.ts",
         "runtime/iskraSpace/services/__tests__/memoryService.test.ts",
         "runtime/iskraSpace/services/__tests__/metricsService.test.ts",
         "runtime/iskraSpace/services/__tests__/metricsUtils.test.ts",
+        "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
         "runtime/iskraSpace/services/__tests__/policyEngine.test.ts",
         "runtime/iskraSpace/services/__tests__/ragService.test.ts",
         "runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts",
@@ -27636,6 +28756,7 @@
         "runtime/iskraSpace/services/__tests__/storageService.test.ts",
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+        "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts",
         "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts",
@@ -27879,6 +29000,17 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/iskraMemoryGatewayProbeOnly.test.ts",
+      "name": "iskraMemoryGatewayProbeOnly.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/iskraMemoryGatewayProbeOnly.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/iskraMemoryGatewaySecurity.test.ts",
       "name": "iskraMemoryGatewaySecurity.test.ts",
       "kind": "file",
@@ -27941,6 +29073,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/metricsUtils.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
+      "name": "omegaConfidenceCap.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -28128,6 +29271,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
+      "name": "supabaseAclHardeningMigration.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -33581,6 +34735,7 @@
       "related": [],
       "parent": "supabase/functions",
       "children": [
+        "supabase/functions/_shared/iskra-metrics",
         "supabase/functions/_shared/cors.ts"
       ]
     },
@@ -33594,6 +34749,115 @@
       "sourceRef": "supabase/functions/_shared/cors.ts",
       "related": [],
       "parent": "supabase/functions/_shared"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics",
+      "name": "iskra-metrics",
+      "kind": "directory",
+      "layer": "backend",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics",
+      "related": [],
+      "parent": "supabase/functions/_shared",
+      "children": [
+        "supabase/functions/_shared/iskra-metrics/README.md",
+        "supabase/functions/_shared/iskra-metrics/calculator.ts",
+        "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+        "supabase/functions/_shared/iskra-metrics/contracts.ts",
+        "supabase/functions/_shared/iskra-metrics/entropy.ts",
+        "supabase/functions/_shared/iskra-metrics/fractal.ts",
+        "supabase/functions/_shared/iskra-metrics/hash.ts",
+        "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts"
+      ]
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "backend",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/README.md",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/calculator.ts",
+      "name": "calculator.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/calculator.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+      "name": "canonicalJson.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/canonicalJson.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/contracts.ts",
+      "name": "contracts.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/contracts.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/entropy.ts",
+      "name": "entropy.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/entropy.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/fractal.ts",
+      "name": "fractal.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/fractal.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/hash.ts",
+      "name": "hash.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/hash.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts",
+      "name": "iskra-metrics_test.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts",
+      "related": [],
+      "parent": "supabase/functions/_shared/iskra-metrics"
     },
     {
       "path": "supabase/functions/embed",
@@ -33632,6 +34896,9 @@
       "parent": "supabase/functions",
       "children": [
         "supabase/functions/iskra-memory-gateway/README.md",
+        "supabase/functions/iskra-memory-gateway/deno.json",
+        "supabase/functions/iskra-memory-gateway/deno.lock",
+        "supabase/functions/iskra-memory-gateway/handler.ts",
         "supabase/functions/iskra-memory-gateway/index.ts",
         "supabase/functions/iskra-memory-gateway/manifest.json"
       ]
@@ -33644,6 +34911,39 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "supabase/functions/iskra-memory-gateway/README.md",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/deno.json",
+      "name": "deno.json",
+      "kind": "file",
+      "layer": "backend",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/deno.json",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/deno.lock",
+      "name": "deno.lock",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/deno.lock",
+      "related": [],
+      "parent": "supabase/functions/iskra-memory-gateway"
+    },
+    {
+      "path": "supabase/functions/iskra-memory-gateway/handler.ts",
+      "name": "handler.ts",
+      "kind": "file",
+      "layer": "backend",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "supabase/functions/iskra-memory-gateway/handler.ts",
       "related": [],
       "parent": "supabase/functions/iskra-memory-gateway"
     },
@@ -33770,8 +35070,10 @@
         "supabase/migrations/20260709170000_closed_beta_access_boundary.sql",
         "supabase/migrations/20260709180000_audit_log_append_only.sql",
         "supabase/migrations/20260709190000_iskra_memory_gateway_rpc_contract.sql",
+        "supabase/migrations/20260709194741_harden_graph_destructive_boundaries_v1.sql",
         "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
         "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
+        "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
         "supabase/migrations/README_LEGACY_DATA_MIGRATION.sql"
@@ -34097,6 +35399,17 @@
       "parent": "supabase/migrations"
     },
     {
+      "path": "supabase/migrations/20260709194741_harden_graph_destructive_boundaries_v1.sql",
+      "name": "20260709194741_harden_graph_destructive_boundaries_v1.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260709194741_harden_graph_destructive_boundaries_v1.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
       "path": "supabase/migrations/20260710100000_ai_edge_quota_boundary.sql",
       "name": "20260710100000_ai_edge_quota_boundary.sql",
       "kind": "file",
@@ -34115,6 +35428,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260710110000_graph_shared_row_guard.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
+      "name": "20260717183002_supabase_acl_and_graph_contract_hardening.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql",
       "related": [],
       "parent": "supabase/migrations"
     },
@@ -34572,6 +35896,7 @@
         "tools/build_sot40_artifact.py",
         "tools/build_workspace_agent_synthesis.py",
         "tools/check_core_adr_gate.py",
+        "tools/check_no_graphql_clients.ts",
         "tools/check_no_sensitive_status_dumps.py",
         "tools/check_no_src_imports.py",
         "tools/check_pgvector_hnsw_schema.py",
@@ -34696,6 +36021,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/check_core_adr_gate.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/check_no_graphql_clients.ts",
+      "name": "check_no_graphql_clients.ts",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/check_no_graphql_clients.ts",
       "related": [],
       "parent": "tools"
     },

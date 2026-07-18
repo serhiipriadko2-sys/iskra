@@ -1,14 +1,14 @@
 # ADR-20260715-03: IskraSpace Shadow Promotion Runtime Boundary
 
-Status: proposed pending merge and post-merge verification
+Status: proposed; implementation merged and post-merge gates verified
 Date: 2026-07-15
 Owner / Builder: Семён / Искра
 
 ```text
 governance_status: proposed
-delivery_evidence: tested (local changeset; not merged, deployed, invoked, or verified live)
+delivery_evidence: merged
 canonical_activation: blocked
-runtime_enforcement: repository-integrated for the current ShadowView path / not verified live
+runtime_enforcement: repository-integrated and tested for the current ShadowView path / not deployed, invoked, or verified live
 Memory Gateway: unchanged
 Supabase live state: unchanged
 ```
@@ -80,8 +80,23 @@ The changeset contains deterministic tests for:
 - visible denial with no raw storage mutation;
 - source-level exclusion of the raw mutation from `ShadowView`.
 
-These are repository/local test claims until the PR is merged and post-merge CI is
-observed. They are not deployment, invocation, or verified-live evidence.
+Implementation merge and post-merge receipts:
+
+```text
+PR: 260
+merge: d42c53ef43a3e08a08c7177d39dfb9a41ae6d340
+SoT integrity: 29445858093 / success
+Runtime CI: 29445858146 / success
+iskraSpace CI: 29445858149 / success, including Chromium E2E
+Production Deployment: 29445858079 / release-gate job success
+Docker smoke and GHCR push: skipped
+Vercel preview: skipped
+```
+
+The successful Production job includes typecheck, zero-warning lint, unit tests twice,
+Deno source checks, dependency audits, repository Supabase contracts, ledger, production
+build, and Chromium E2E. These receipts prove merged repository behavior at that SHA;
+they are not deployment, live invocation, or verified-live evidence.
 
 ## Risks and residual boundary
 
@@ -103,8 +118,8 @@ must not be described as preserving the promotion invariant.
 
 ## Activation boundary
 
-This ADR does not activate Constitution v1. After merge and green post-merge gates,
-`CR-P0-04` may advance from `open_runtime_conflict` to
+This ADR does not activate Constitution v1. With the exact merge and green post-merge
+gates above, `CR-P0-04` advances from the immutable baseline's `open_runtime_conflict` to
 `repository_implemented_and_tested / not_verified_live` in the living status. Exact
 canonical activation still requires a separate Owner decision naming exact artifacts
 and versions.
