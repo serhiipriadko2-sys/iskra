@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 const thisFile = fileURLToPath(import.meta.url);
 const migrationPath = join(
   dirname(thisFile),
-  '../../../../supabase/migrations/20260717183002_supabase_acl_and_graph_contract_hardening.sql',
+  '../../../../supabase/migrations/20260718191950_supabase_acl_and_graph_contract_hardening.sql',
 );
 const migration = existsSync(migrationPath) ? readFileSync(migrationPath, 'utf8') : '';
 

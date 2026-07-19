@@ -82,6 +82,17 @@ describe('IskraSpace release workflow contract', () => {
     expect(pagesWorkflow).not.toMatch(/^\s+push:/m);
   });
 
+  it('requires public closed-beta configuration before building the Pages preview', () => {
+    for (const marker of [
+      'ISKRASPACE_SUPABASE_URL',
+      'ISKRASPACE_SUPABASE_PUBLISHABLE_KEY',
+      'Verify GitHub Pages closed-beta configuration',
+      'VITE_APP_VERSION: ${{ github.sha }}',
+    ]) {
+      expect(pagesWorkflow).toContain(marker);
+    }
+  });
+
   it('runs when build inputs and release surfaces change', () => {
     for (const marker of [
       'packages/**',
@@ -122,6 +133,10 @@ describe('IskraSpace release workflow contract', () => {
 
   it('injects validated public config when the canonical container starts', () => {
     expect(sourceIndex).toContain('runtime-config.js');
+    expect(sourceIndex).toContain('src="/index.tsx"');
+    expect(sourceIndex).toContain('href="/index.css"');
+    expect(sourceIndex).not.toContain('%BASE_URL%index.tsx');
+    expect(sourceIndex).not.toContain('%BASE_URL%index.css');
     expect(dockerfile).toContain('/docker-entrypoint.d/40-iskraspace-runtime-config.sh');
     expect(runtimeConfigEntrypoint).toContain('VITE_SUPABASE_URL is required');
     expect(runtimeConfigEntrypoint).toContain('service-role credentials are forbidden');

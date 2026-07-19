@@ -42,10 +42,21 @@ jobs:
         working-directory: runtime
         run: npm run build
 
+      - name: Verify GitHub Pages closed-beta configuration
+        env:
+          VITE_SUPABASE_URL: ${{ vars.ISKRASPACE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.ISKRASPACE_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          test -n "$VITE_SUPABASE_URL"
+          test -n "$VITE_SUPABASE_ANON_KEY"
+
       - name: Build iskraSpace for GitHub Pages
         run: pnpm --filter iskra-space build
         env:
           VITE_BASE_PATH: /iskra/
+          VITE_SUPABASE_URL: ${{ vars.ISKRASPACE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.ISKRASPACE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_APP_VERSION: ${{ github.sha }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
