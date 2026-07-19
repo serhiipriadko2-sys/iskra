@@ -1,0 +1,13 @@
+{
+  "version": "v3.5-rc.3-projects-p1",
+  "created": "2026-07-19",
+  "payload_files": 121,
+  "manifest_sha256": "50e5174eb6030f3713dfbb88dbc579e805fd8fb7c6dde43ab3acc0989e48b551",
+  "final_zip_attestation": "EXTERNAL_SIDECAR_ONLY",
+  "external_sidecar_repository_path": "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.receipt.json",
+  "static_qc": "PASS",
+  "dynamic_qc": "20/20 PASS",
+  "live_project_acceptance": "NOT_RUN",
+  "study_readiness": "BLOCKED_UNTIL_126x3_ANSWERS_REGENERATED_AND_OWNER_ACCEPTANCE",
+  "adr": "ADR-20260719-05_V35_RC3_FAIL_CLOSED_RELEASE.md"
+}

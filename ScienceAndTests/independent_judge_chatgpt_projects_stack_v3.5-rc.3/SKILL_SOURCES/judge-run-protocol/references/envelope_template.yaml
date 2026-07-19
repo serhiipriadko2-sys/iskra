@@ -1,0 +1,32 @@
+run_id: RUN-...
+run_date: YYYY-MM-DD
+protocol_version: v3.5-rc.3-projects
+judge: {model: "...", provider: "...", family_relation: UNKNOWN, memory_isolation_mode: FRESH_SINGLE_USE_PROJECT, strict_blind_eligible: false}
+unit: SINGLE_RESPONSE
+evaluated_object_refs: [OBJECT-...]
+independence: I1_PROCESS_SEPARATED
+blindness: NATURALISTIC_UNBLINDED
+estimand: EST-...
+claim_ceiling: L1
+package: {processing_status: VERIFIED, integrity_status: PASS, seal_status: LOGICAL_SEAL, package_ref: PKG-...}
+primary_disposition: PROCEED_WITH_LIMITATIONS
+eligibility: ELIGIBLE_WITH_LIMITATIONS
+hard_gates: []
+criterion_results: []
+domain_vector:
+  Q100: {score: null, coverage: 0, status: NOT_RUN}
+  S100: {score: null, coverage: 0, status: NOT_RUN}
+  A100: {score: null, coverage: 0, status: NOT_RUN}
+  R100: {score: null, coverage: 0, status: NOT_RUN}
+  G100: {score: null, coverage: 0, status: NOT_RUN}
+C100: {score: null, status: NOT_ACTIVATED}
+aux_metrics: {length_report: []}
+comparison: {status: NOT_REQUESTED, winner: null, order_robustness: NOT_TESTED, swap_runs: []}
+evidence_trace: []
+unknowns: []
+conflicts: []
+limitations: []
+judge_reliability: {status: NOT_MEASURED, unknown_reason: SAMPLE_INSUFFICIENT}
+validity_class: DIAGNOSTIC_ONLY
+revalidation_trigger: "..."
+receipt: {authoritative: true, package_ref: PKG-..., protocol_version: v3.5-rc.3-projects, run_date: YYYY-MM-DD, evidence_refs: [], writes_performed: [], artifact_hashes: [], verification_status: PASS}

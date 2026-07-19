@@ -1,0 +1,25 @@
+{
+  "passed": 20,
+  "tests": [
+    "stable tie is robust and winnerless",
+    "swap flip becomes tie",
+    "hard-failed run excluded from study mean",
+    "aggregate_eligible=true cannot re-admit hard-failed run",
+    "missing run_status fails closed",
+    "missing hard_failures fails closed",
+    "wrong field types fail closed",
+    "invalid run enum fails closed",
+    "invalid result enum fails closed",
+    "NaN score fails closed",
+    "Infinity score fails closed",
+    "out-of-range score fails closed",
+    "negative score fails closed",
+    "hard_failures wrong type fails closed",
+    "domain_scores wrong type fails closed",
+    "statuses wrong type fails closed",
+    "length wrong type fails closed",
+    "non-object run record fails closed without crashing",
+    "blind outputs physically separated",
+    "strict skill pack QC passes"
+  ]
+}
