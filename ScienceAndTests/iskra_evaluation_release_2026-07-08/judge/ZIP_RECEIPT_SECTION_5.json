@@ -1,0 +1,11 @@
+{
+  "receipt_id": "IJP-v3.3-alpha.6-section5-zip",
+  "storage": "EXTERNAL_SIDECAR",
+  "archive_path": "/mnt/data/INDEPENDENT_JUDGE_PROTOCOL_V3_3_SECTION_5_EXPORT.zip",
+  "bytes": 241899,
+  "sha256": "b20a3af023694c5072747af7801a82f30c9515e16e4de8d4f6f22c5c49f8f7c2",
+  "files_total": 126,
+  "zip_integrity": "PASS",
+  "included_inside_archive": false,
+  "created": "2026-07-17"
+}
