@@ -1,5 +1,7 @@
 {
   "status": "PASS_STRUCTURAL_QC",
+  "bank_version": "v1.1",
+  "date": "2026-07-19",
   "task_count": 1000,
   "task_id_range": [
     1,
@@ -8,27 +10,32 @@
   "bnat_positions_count": 50,
   "canonical_count": 18,
   "mutation_count": 32,
-  "unchanged_non_bnat_tasks": 950,
-  "unchanged_mismatches": [],
-  "canonical_exact_mismatches": [],
-  "mutation_lint_flags": [],
-  "minimal_question_failures": [],
-  "unique_mutation_hashes": 32,
-  "mutation_word_count": {
-    "min": 121,
-    "max": 214,
-    "mean": 144.25
+  "bnat_bodies_byte_identical_to_v1_0": true,
+  "bnat_hash_match": true,
+  "authored_strengthened_count": 126,
+  "markers_privatized_count": 495,
+  "markers_remaining_in_candidate": 0,
+  "unchanged_non_bnat_non_authored": 329,
+  "authored_word_count": {
+    "min": 21,
+    "max": 37,
+    "mean": 28.14
   },
   "canonical_word_count": {
-    "min": 288,
-    "max": 342,
-    "mean": 311.0
+    "min": 282,
+    "max": 336,
+    "mean": 304.78
   },
-  "max_pairwise_3gram_jaccard_mutations": 0.1227,
-  "max_similarity_pair": [
-    143,
-    943
+  "mutation_word_count": {
+    "min": 119,
+    "max": 210,
+    "mean": 140.62
+  },
+  "max_pairwise_3gram_jaccard_authored": 0.087,
+  "max_similarity_pair_authored": [
+    145,
+    982
   ],
-  "candidate_bank_sha256": "50c65aecf399e6cc0ea3124b50cabb0d9fbef0092a26bc60ab3e8e6b20a6978e",
-  "source_bank_sha256": "5be3b2b35de7c0e6f8cf19997b9817b158dec0b695efbcc48ef624606a2731a9"
+  "candidate_bank_v1_1_sha256": "2cc6b9ccd1d80f222a56a26bb3dabdaa6eff2504716396923b528f3f96c8c7db",
+  "candidate_bank_v1_0_sha256": "50c65aecf399e6cc0ea3124b50cabb0d9fbef0092a26bc60ab3e8e6b20a6978e"
 }

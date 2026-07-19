@@ -4,10 +4,11 @@ This package replaces the fifty disclosed pseudo-BNAT entries in the uploaded 1,
 
 ## Main deliverable
 
-`candidate/unified_1000_questions_tasks_bnat50_v1_0.md`
+`candidate/unified_1000_questions_tasks_bnat50_v1_1.md` (v1.0 archived in `versions/`)
 
 ## Composition
 
+- v1.1: 126 topic-label stubs strengthened, 495 variant markers privatized, BNAT-50 preserved byte-exact;
 - 18 exact canonical BNAT prompts;
 - 32 newly authored full narrative BNAT mutations;
 - 950 unchanged non-BNAT tasks;

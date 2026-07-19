@@ -228,3 +228,11 @@
 - **Next:** Owner review of the exact rc.1 ZIP; live acceptance run; first supervised study run with operator Семён.
 - **Status:** Local build and attestation verified; live acceptance open.
 
+### JRN-20260719-002: Unified-1000/BNAT-50 bank strengthened to v1.1
+- **Context:** Owner asked to strengthen the 1000-task bank, cover blind zones and conflicts, with a hard rule that the 50 embedded BNAT tasks must not be simplified/explained — only preserved or made stronger.
+- **Actions:** Task-by-task audit; preserved BNAT-50 byte-for-byte (50/50 bodies identical, 50/50 registry hashes match); privatized 495 visible `Маркер варианта: VNNNN` codes to `evaluator_private/variant_marker_map.csv`; strengthened 126 topic-label stubs into real discriminating tasks (max pairwise 3-gram Jaccard 0.087); preserved ~70 intentional terse probes/creative items by design; recorded the frozen-answer staleness dependency (`answer_staleness_v1_1.json`); documented template redundancy as an open limitation with a held-out-rotation mitigation. Regenerated QC/design report/ADR/manifests and repackaged the stack ZIP.
+- **Evidence:** `candidate/unified_1000_questions_tasks_bnat50_v1_1.md` sha256 `2cc6b9ccd1d80f222a56a26bb3dabdaa6eff2504716396923b528f3f96c8c7db`; v1.0 archived in `versions/`; stack ZIP `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.1.zip` sha256 `1f01a3cbbf42dce83b6efdc77c8be774480385190cdd9db256b968c1e8672d18`; static QC PASS, dynamic 5/5, both manifests consistent.
+- **Risk:** 126 authored items lack owner semantic review and their three frozen answers must be regenerated before scoring; template redundancy of the 495-grid is mitigated methodologically, not eliminated; empirical difficulty/validity unproven.
+- **Next:** Owner review of the 126 authored items; regenerate stale answer sets; first supervised study run under fresh single-use Project isolation.
+- **Status:** Structural strengthening verified; empirical acceptance open.
+

@@ -86,3 +86,33 @@ For a blind study, the candidate bank and evaluator-private material must be sep
 ## 8. Claim boundary
 
 This package establishes a designed and structurally checked test bank. It does not establish empirical construct validity, inter-rater reliability, model rankings, deployment safety, or publication-grade performance. Those require new blinded runs, repeated attempts, rater agreement, and study-level aggregation.
+
+---
+
+## 9. v1.1 strengthening pass (2026-07-19)
+
+The v1.0 bank was audited task-by-task. Three blind zones and one dependency were found and addressed without weakening any BNAT position.
+
+### 9.1 Blind zone A — visible variant markers (495 tasks)
+
+Every templated task ended with `Маркер варианта: VNNNN`. This code means nothing to a candidate and signals "you are inside a controlled test grid," which is a contamination and gaming risk (a model can learn that V-coded prompts are evaluations). All 495 markers were moved to `evaluator_private/variant_marker_map.csv`; the task instruction was kept intact. This is a construct-validity fix, not a simplification.
+
+### 9.2 Blind zone B — topic-label stubs (126 tasks)
+
+126 positions were bare topic labels, not answerable tasks (e.g. `Sharding → data distribution.`, `API monetization strategies.`, `Data visualization principles.`). A candidate cannot be scored on a topic label. Each was rewritten into a real task that preserves the topic and adds a concrete deliverable plus one discriminating constraint (name a failure mode / what the solution does NOT cover). Max pairwise 3-gram Jaccard among the rewrites is 0.087 — the pass did not create a new template cluster.
+
+### 9.3 Preserved by design — intentional terse probes (≈70 tasks)
+
+Prompt-injection, emotional-pressure, boundary-erosion, multi-turn memory, and creative-constraint items were preserved verbatim. Their power is in their terseness — the same reason the owner forbade simplifying BNAT. Expanding them would change the measured construct, so they were left unchanged and documented rather than "strengthened."
+
+### 9.4 Dependency — frozen answer staleness
+
+The three `aimodels/` answer sets are keyed by task number. Privatizing markers does not affect answer validity (answers only echoed the code in a heading). The 126 authored rewrites DO change the question, so their frozen answers are stale and listed in `evaluator_private/answer_staleness_v1_1.json`; they must be regenerated before scoring those positions.
+
+### 9.5 Residual weakness — template redundancy (documented, not silently "fixed")
+
+The 495 templated tasks derive from ~60 kernels × a few requirement forms × 20 twists, so they are combinatorially similar by construction. This is an inherent low-diversity property that a single authoring pass cannot honestly eliminate without rewriting all 495 from scratch. Mitigation is methodological, not cosmetic: for any strong claim, draw a **held-out rotation** of templated items per run instead of scoring the whole grid, and treat the grid as a difficulty-controlled family, not 495 independent items. Recorded as an open limitation, not resolved.
+
+## 10. Claim boundary (unchanged)
+
+v1.1 is a structurally strengthened, better-isolated test bank. It still does not establish empirical construct validity, inter-rater reliability, model rankings, or publication-grade performance. Those require blinded runs, repeated attempts, rater agreement, and study-level aggregation with the corrected isolation model (fresh single-use Project).

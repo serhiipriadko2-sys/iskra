@@ -1,14 +1,15 @@
 {
   "version": "v3.5-rc.1-projects-p1",
   "created": "2026-07-19",
-  "payload_files": 113,
-  "manifest_sha256": "ecd858ffe20bf289f82c8f6f96ce9d06cdbff9cea17aaff228360ed00d64575e",
+  "payload_files": 117,
+  "manifest_sha256": "59c1065ff4ad9e7eaf98ff9b8ca120452eb22603a13cc097060d4cf341caaa16",
   "static_qc": "PASS",
   "dynamic_qc": "5/5 PASS",
   "instruction_chars": 5500,
   "acceptance_suite": "T01-T40",
-  "study_package": "STUDY_PACKAGES/unified1000_bnat50_v1_0 (PROPOSED_OWNER_REVIEW)",
+  "study_package": "STUDY_PACKAGES/unified1000_bnat50_v1_0 (bank v1.1 active, v1.0 archived; PROPOSED_OWNER_REVIEW)",
   "live_project_acceptance": "NOT_RUN",
   "empirical_reliability": "NOT_RUN",
-  "adr": "ADR-20260719-03_V35_RC1_INTEGRATION_RELEASE.md"
+  "adr": "ADR-20260719-03_V35_RC1_INTEGRATION_RELEASE.md",
+  "bank_v1_1_changes": "126 stubs strengthened, 495 markers privatized, BNAT-50 byte-exact preserved"
 }

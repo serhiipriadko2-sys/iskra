@@ -2,8 +2,8 @@
   "schema": "judge-projects-pack-manifest-v2",
   "version": "v3.5-rc.1-projects-p1",
   "created": "2026-07-19",
-  "scope_note": "Full release scope. Excludes only MANIFEST.json itself and BUILD_RECEIPT_PREZIP.json (generated after this manifest).",
-  "payload_files": 113,
+  "scope_note": "Full release scope incl. Unified-1000/BNAT-50 v1.1. Excludes only MANIFEST.json and BUILD_RECEIPT_PREZIP.json.",
+  "payload_files": 117,
   "entries": [
     {
       "path": "JUDGE_SKILLS/judge-bias-calibration/skill.zip",
@@ -74,8 +74,8 @@
     {
       "path": "OPERATOR_SUPPORT/FILE_INVENTORY.csv",
       "scope": "operator_support",
-      "bytes": 8670,
-      "sha256": "53a89ba0309d47042c2f59baeebed80cb52ddee3474bd4110b12c8b6ef677221"
+      "bytes": 9089,
+      "sha256": "9bdd7f2f2a12b9c33d75b957a689e688584383c5a700301b5e813912a9d9901a"
     },
     {
       "path": "OPERATOR_SUPPORT/FRESH_PROJECT_ACCEPTANCE_SUITE.md",
@@ -318,6 +318,12 @@
       "sha256": "5447ab0df79ee5293469fbf02370dc055bca3bd981a3c6bc78078dbdf3582acf"
     },
     {
+      "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/ADR-2026-07-19-BNAT50-STRENGTHEN-v1_1.md",
+      "scope": "study_package",
+      "bytes": 4026,
+      "sha256": "45c64d5aa155febe38b370f9a06358efd5281464f20f4abf539c481632a40e76"
+    },
+    {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/BBXMKJX6Iwf_CAO9YzDojpHlRR8XmgD01EdLUDaajeU.md",
       "scope": "study_package",
       "bytes": 46920,
@@ -338,14 +344,14 @@
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/DESIGN_REPORT.md",
       "scope": "study_package",
-      "bytes": 5016,
-      "sha256": "762a30bd82a33608064f90e96290f8021f51fd72256fd9e291be5d94122f61da"
+      "bytes": 8128,
+      "sha256": "947655aa9b0147d794d28b21e18f16b98228fa38ad93e5ae2b342e7f1950bfda"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/MANIFEST.sha256",
       "scope": "study_package",
-      "bytes": 3571,
-      "sha256": "fab0af30da7e71a5916890768ed8c567ad143fa4570429963e95f741bfde1798"
+      "bytes": 3908,
+      "sha256": "72eb7916ef7c5d8fb7a306581059bde37b052c6cff57ff6bd8aaddbc316c6431"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/METHODOLOGY_AND_DEPENDENCY_AUDIT.md",
@@ -356,14 +362,14 @@
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/QC_REPORT.md",
       "scope": "study_package",
-      "bytes": 1853,
-      "sha256": "51689e8eedbca57c2108f2037b09c9780ab2be036576b031f348b3a4ba823c32"
+      "bytes": 3477,
+      "sha256": "e06fa0a21ebde0ba04b866ab65f57005c66f94debeff8a51ba9ac7de1de947e3"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/README.md",
       "scope": "study_package",
-      "bytes": 1347,
-      "sha256": "62b4d440312a500096edab0934705bc665b42812288c161c83f424d556648d2c"
+      "bytes": 1484,
+      "sha256": "36a1b6123b481021464e87e854f0a68072a5ba5850a716803595894a3e727320"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/RUNTIME_BOUNDARY.md",
@@ -422,8 +428,8 @@
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/qc_summary.json",
       "scope": "study_package",
-      "bytes": 829,
-      "sha256": "5a78d277d0d86555b71a99d7d188fc2afb9ab6399e2fbb704ffd4b8d238320bf"
+      "bytes": 1009,
+      "sha256": "61bf554e56a95a09c610265c84d54068762e83cb821f66c0c6b40b0b69184332"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_academic_research_v0_7.md",
@@ -468,10 +474,16 @@
       "sha256": "32e14058105d1b0396df46f37b017fc00547fb7f44c39d18ddc00c8f5daee882"
     },
     {
-      "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate/unified_1000_questions_tasks_bnat50_v1_0.md",
+      "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate/unified_1000_questions_tasks_bnat50_v1_1.md",
       "scope": "study_package",
-      "bytes": 459027,
-      "sha256": "50c65aecf399e6cc0ea3124b50cabb0d9fbef0092a26bc60ab3e8e6b20a6978e"
+      "bytes": 481085,
+      "sha256": "2cc6b9ccd1d80f222a56a26bb3dabdaa6eff2504716396923b528f3f96c8c7db"
+    },
+    {
+      "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/evaluator_private/answer_staleness_v1_1.json",
+      "scope": "study_package",
+      "bytes": 1402,
+      "sha256": "280b3f3228f887de3502ab03fde2194e485a8624c7ef7de9af8ee7df4980b799"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/evaluator_private/bnat50_position_map.csv",
@@ -496,6 +508,18 @@
       "scope": "study_package",
       "bytes": 48549,
       "sha256": "ca7986c44b7fee0c2a3c65d253f9cbb544b34047e2481c5265751e984f6f64e3"
+    },
+    {
+      "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/evaluator_private/variant_marker_map.csv",
+      "scope": "study_package",
+      "bytes": 5419,
+      "sha256": "2ee4d98acd3d27ed51c886dddf3948a2093c1da08b2d545b3f0b8f5a6fafb53d"
+    },
+    {
+      "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/versions/unified_1000_questions_tasks_bnat50_v1_0.md",
+      "scope": "study_package",
+      "bytes": 459027,
+      "sha256": "50c65aecf399e6cc0ea3124b50cabb0d9fbef0092a26bc60ab3e8e6b20a6978e"
     },
     {
       "path": "UPLOAD_TO_PROJECT/PROJECT_INSTRUCTIONS.txt",
