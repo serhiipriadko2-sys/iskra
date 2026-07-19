@@ -1,0 +1,11 @@
+{
+  "passed": 6,
+  "tests": [
+    "stable tie is robust and winnerless",
+    "swap flip becomes tie",
+    "hard-failed run excluded from study mean",
+    "aggregate_eligible=true cannot re-admit hard-failed run",
+    "blind outputs physically separated",
+    "strict skill pack QC passes"
+  ]
+}

@@ -6,4 +6,6 @@
 5. [ ] Unified-1000/BNAT-50 v1.1: owner semantic review of the 126 authored task rewrites (`evaluator_private/answer_staleness_v1_1.json` lists the IDs).
 6. [ ] Regenerate the three `aimodels/` answer sets for the 126 stale positions before any study that scores them.
 7. [ ] Apply held-out rotation over the 495 templated tasks for strong claims (template redundancy is documented, not eliminated).
+8. [ ] Judge v3.5-rc.2: regenerate the 126×3 model answers before scoring authored positions (study BLOCKED until then).
+9. [ ] Run live T01–T40 in a fresh single-use Project and confirm judge_stack_qc CI is green on the rc.2 PR.
 

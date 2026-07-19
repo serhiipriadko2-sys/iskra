@@ -270,3 +270,9 @@
   - Governance: `OPERATOR_SUPPORT/ADR-20260719-03_V35_RC1_INTEGRATION_RELEASE.md`.
 - **Status:** Local artifact facts verified; live Projects acceptance and empirical calibration NOT_RUN.
 
+### EVI-20260719-002: Judge stack v3.5-rc.2 authoritative artifact
+- **Assertion:** rc.2 supersedes rc.1 with a single authoritative release receipt.
+- **Evidence:** ZIP `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.2.zip` sha256 `9a5766a2dea8a6a411ba4b23f57f99dc5ac75211f9b30224d683f8af7f67ae4b`; `OPERATOR_SUPPORT/BUILD_RECEIPT_PREZIP.json` records it as authoritative and lists the superseded rc.1 hashes; static QC PASS, dynamic 6/6.
+- **Supersede:** the rc.1 hash `844a80d6…` recorded in EVI-20260719-001 is no longer the release artifact; rc.2 is authoritative.
+- **Status:** Local attestation verified; live acceptance NOT_RUN.
+
