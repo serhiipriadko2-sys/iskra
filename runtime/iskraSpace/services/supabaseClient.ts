@@ -171,7 +171,7 @@ export async function requestMagicLink(email: string): Promise<MagicLinkRequestR
 
   const redirectOptions = typeof window === 'undefined'
     ? {}
-    : { emailRedirectTo: window.location.origin };
+    : { emailRedirectTo: window.location.href };
 
   const { error } = await supabase.auth.signInWithOtp({
     email: normalizedEmail,
