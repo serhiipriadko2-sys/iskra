@@ -260,3 +260,13 @@
   - Security and performance advisors were available and summarized as hardening work separate from first Edge Function cleanup.
   - No live Supabase mutation was performed.
 - **Status:** Approval packet prepared; deletion/removal execution pending explicit owner approval.
+
+### EVI-20260719-001: Independent Judge v3.5-rc.1 Release Artifacts
+- **Assertion:** The judge stack for ChatGPT Projects is rebuilt, attested and locally verified as `v3.5-rc.1-projects-p1`.
+- **Evidence:**
+  - Tree: `ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.1/` — 30 Knowledge + 6 EXT + 5 skills + operator support + `STUDY_PACKAGES/unified1000_bnat50_v1_0/`.
+  - ZIP: `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.1.zip`, 3,742,329 bytes, sha256 `844a80d6f0bfa44555b6ef3b4064d04244272170e7b9995a6273a9d5136cc6e4`.
+  - QC: `OPERATOR_SUPPORT/STATIC_QC.json` PASS (30 knowledge, 40 criteria/8 per domain, 56 gates, 11 methods, T01–T40, instructions 5,500 chars); `DYNAMIC_QC.json` 5/5.
+  - Governance: `OPERATOR_SUPPORT/ADR-20260719-03_V35_RC1_INTEGRATION_RELEASE.md`.
+- **Status:** Local artifact facts verified; live Projects acceptance and empirical calibration NOT_RUN.
+
