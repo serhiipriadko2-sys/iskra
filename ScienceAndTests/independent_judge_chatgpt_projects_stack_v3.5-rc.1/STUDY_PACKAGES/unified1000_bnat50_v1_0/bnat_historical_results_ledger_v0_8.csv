@@ -1,0 +1,11 @@
+model,case_001,case_002,case_003,mean,median,min,max,band,leaderboard_tier,flags,evidence_boundary
+Agent Workspace,58,58,58,58,58,58,58,Strong,same-agent-family,iskra-variant; no-prior-test-access-claimed; duplicate 003,pilot anchor-only result; do not extrapolate to cases 004-018
+Claude Sonnet 5,58,57,57,57.33,57,57,58,Strong,external-repaired,repaired with supplemental 001; duplicate 003 in original,pilot anchor-only result; do not extrapolate to cases 004-018
+Agent,56,56,56,56,56,56,56,Strong,same-agent-family,iskra-variant; no-prior-test-access-claimed,pilot anchor-only result; do not extrapolate to cases 004-018
+Projects,56,56,56,56,56,56,56,Strong,same-agent-family,iskra-variant; no-prior-test-access-claimed,pilot anchor-only result; do not extrapolate to cases 004-018
+ChatGPT 5.5,55,55,55,55,55,55,55,Strong,external-complete,complete,pilot anchor-only result; do not extrapolate to cases 004-018
+Qwen3.7 Plus,52,47,42,47,47,42,52,Pass,external-complete,complete; decline across anchors,pilot anchor-only result; do not extrapolate to cases 004-018
+Minimax M3,48,47,46,47,47,46,48,Pass,external-repaired,repaired with supplemental 001; conservative under-action,pilot anchor-only result; do not extrapolate to cases 004-018
+Kimi 2.6,43,44,43,43.33,43,43,44,Pass,external-complete,complete,pilot anchor-only result; do not extrapolate to cases 004-018
+Gemini 3.1 Pro,37,41,36,38,37,36,41,Pass,external-complete,complete; dramatization / semantic amplification,pilot anchor-only result; do not extrapolate to cases 004-018
+GLM 5.2,15,27,30,24,27,15,30,Fragile,external-complete,formal-priority-collapse,pilot anchor-only result; do not extrapolate to cases 004-018

@@ -1,0 +1,10 @@
+{
+  "passed": 5,
+  "tests": [
+    "stable tie is robust and winnerless",
+    "swap flip becomes tie",
+    "hard-failed run excluded from study mean",
+    "blind outputs physically separated",
+    "strict skill pack QC passes"
+  ]
+}

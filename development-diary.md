@@ -219,3 +219,12 @@
 - **Risk:** No live Supabase mutation has occurred. Diagnostic/import/backfill functions remain public-release blockers until removed, protected, or ADR-exempted. OpenAI live provider behavior remains unverified.
 - **Next:** Request explicit owner approval for diagnostic removal, then execute deletion through Supabase Dashboard/CLI or an available delete-capable connector and verify the post-change function list.
 - **Status:** Approval packet prepared; live cleanup pending explicit approval.
+
+### JRN-20260719-001: Independent Judge Projects Stack v3.5-rc.1 Integration Release
+- **Context:** Owner uploaded `INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3_1.zip` (actually containing the v3.4-beta.3-p3 stack plus an unmanifested Unified-1000/BNAT-50 study package) and requested full completion of the judge for the ChatGPT Projects environment.
+- **Actions:** Audited the archive against its own MANIFEST/QC (found post-packaging edit of PROJECT_INSTRUCTIONS.txt: 4,967→7,014 bytes, hash broken; 38 unlisted files), web-verified Projects/Skills constraints (project-only memory references same-Project chats; Free 5 / Go·Plus 25 / 40 on higher tiers with an official Plus 20-vs-25 drift; Skills GA, Enterprise default-on 2026-07-23), then built `v3.5-rc.1-projects-p1`: canonized owner persona/operator edits, integrated the study package as `STUDY_PACKAGES/` with corrected isolation model (fresh single-use Project instead of «disable memory»), reconciled EXT35 limits, extended acceptance to T01–T40, rebuilt skills, regenerated full-scope MANIFEST/QC, packaged the release ZIP.
+- **Evidence:** `ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.1/` (113 files, MANIFEST v2 full-scope) and `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.1.zip` (3,742,329 bytes, sha256 `844a80d6f0bfa44555b6ef3b4064d04244272170e7b9995a6273a9d5136cc6e4`); STATIC_QC PASS, DYNAMIC_QC 5/5; ADR-20260719-03 inside the stack.
+- **Risk:** Live T01–T40 in a fresh single-use Project, empirical judge calibration, and owner semantic acceptance of the BNAT-50 bank are NOT run; Plus file-limit ambiguity is external.
+- **Next:** Owner review of the exact rc.1 ZIP; live acceptance run; first supervised study run with operator Семён.
+- **Status:** Local build and attestation verified; live acceptance open.
+

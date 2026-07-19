@@ -1,0 +1,3 @@
+interface:
+  display_name: "Judge Run Protocol"
+  short_description: "Run one evidence-backed Independent Judge evaluation."
