@@ -32,8 +32,8 @@
     {
       "path": "JUDGE_SKILLS/judge-study-aggregation/skill.zip",
       "scope": "skill_package",
-      "bytes": 5698,
-      "sha256": "4ae594af8cbd84aa75a56182ad6bacb5ad0eaeb1090315d6e75fa01c3e25ea75"
+      "bytes": 5953,
+      "sha256": "4541f773c21a8ac27c4c982bfa3d9e18e483064e325537612f18c9c255ce6a1d"
     },
     {
       "path": "OPERATOR_SUPPORT/ADR-20260719-02_V34_BETA3_CONTRACT_CLOSURE.md",
@@ -56,8 +56,8 @@
     {
       "path": "OPERATOR_SUPPORT/ADR-20260719-05_V35_RC3_FAIL_CLOSED_RELEASE.md",
       "scope": "operator_support",
-      "bytes": 3181,
-      "sha256": "5318f7c32c52cb7379bf7d577523d73ca382129a199e6b16c0090b52e4b00218"
+      "bytes": 3480,
+      "sha256": "ac5b10100513f4b2e980bb8dcfa371c845b85fcfec6219b26dba36b19bd3fcdd"
     },
     {
       "path": "OPERATOR_SUPPORT/ADR_2026-07-19_JUDGE_V34_SOURCE.md",
@@ -74,20 +74,20 @@
     {
       "path": "OPERATOR_SUPPORT/CHANGELOG.md",
       "scope": "operator_support",
-      "bytes": 4958,
-      "sha256": "b293deb78c2e87510273617240bd9e68dda3ea791bb6b8d81ad6bf7b3593c143"
+      "bytes": 5260,
+      "sha256": "dc5ff5d17e1543d7d51c1754ee6f29030a327c37ce5f587b86b6895e67827a93"
     },
     {
       "path": "OPERATOR_SUPPORT/DYNAMIC_QC.json",
       "scope": "operator_support",
-      "bytes": 951,
-      "sha256": "2efcf585ecd3a31d5eed90c4c4a32e93e006272f4189a4baaf7fd3dc035cc036"
+      "bytes": 1104,
+      "sha256": "51717df877c3915b0d1e762841a8f803fc92f777be1c5ffa20488487316a8174"
     },
     {
       "path": "OPERATOR_SUPPORT/FILE_INVENTORY.csv",
       "scope": "operator_support",
-      "bytes": 9302,
-      "sha256": "6a1c43bac520999c2500951881bc3efbe83af3f09d66aff3e4032d81bac31395"
+      "bytes": 9305,
+      "sha256": "cfe2b8715f9651f8851c12736a77d5aa824e7f33f90a182ad957ed1b10a4a748"
     },
     {
       "path": "OPERATOR_SUPPORT/FRESH_PROJECT_ACCEPTANCE_SUITE.md",
@@ -140,20 +140,20 @@
     {
       "path": "OPERATOR_SUPPORT/STATIC_QC.json",
       "scope": "operator_support",
-      "bytes": 973,
-      "sha256": "c613e684c90fcffb82c2f56d88afd8e9479733f03a5be188e5e2faa725132c16"
+      "bytes": 1103,
+      "sha256": "55b0ab5c9f67a515d1e212bc3202d8ec543458b43da81422a838067fe88e72be"
     },
     {
       "path": "OPERATOR_SUPPORT/tests/test_dynamic.py",
       "scope": "operator_support",
-      "bytes": 7356,
-      "sha256": "65067f5b5f48104682a38ab5c8111c0c53a4176f967365e8588b4188713be454"
+      "bytes": 8574,
+      "sha256": "981fea250737feeb0969a1ffe42ef439a41345adfc9f529e1d7400ea031a6f8a"
     },
     {
       "path": "OPERATOR_SUPPORT/tools/validate_pack.py",
       "scope": "operator_support",
-      "bytes": 4817,
-      "sha256": "7bfa3b73c7da4c39a3af59081a7b63de6fb39dd7b365ea9aa5cc6937d3893caf"
+      "bytes": 5341,
+      "sha256": "84dfba20ea9067040cde36a63a86f9f399b4af38af33eae3f3afbf0f4fea086f"
     },
     {
       "path": "OPERATOR_SUPPORT/tools/verify_release.py",
@@ -170,8 +170,8 @@
     {
       "path": "RUNTIME_EXTENSIONS/EXT32_BIAS_GUARD.md",
       "scope": "runtime_extension",
-      "bytes": 2572,
-      "sha256": "edec58a215edb0f48766c51f5936094795bfe859e3314f11e09ad5847a7f06f9"
+      "bytes": 2592,
+      "sha256": "11dd46270ea7a28fa666ecc72b9c96d6b498dec4bcc7752e39e0e436316e5536"
     },
     {
       "path": "RUNTIME_EXTENSIONS/EXT33_BLIND_WORKFLOW.md",
@@ -284,14 +284,14 @@
     {
       "path": "SKILL_SOURCES/judge-study-aggregation/references/runs_schema.md",
       "scope": "skill_source",
-      "bytes": 2051,
-      "sha256": "e5d546f6a1f30fff9712debba8f823a22a954dbccbcea771ac1f15f87e45d862"
+      "bytes": 2191,
+      "sha256": "5d090a4dcc7ac4d84336bae90a13199207d2267bb5ed41025e0405dc017670a2"
     },
     {
       "path": "SKILL_SOURCES/judge-study-aggregation/scripts/study_stats.py",
       "scope": "skill_source",
-      "bytes": 9861,
-      "sha256": "5e3e8a882fda1d173d9cd6434b16f651bc669cebbec8a8652bbb7d6cfd0fabc2"
+      "bytes": 10709,
+      "sha256": "992343848df95c07e6cdd4833d5937e0270e086320393ef4ac3474b797ed0326"
     },
     {
       "path": "SKILL_SOURCES/judge-study-aggregation/SKILL.md",
@@ -680,8 +680,8 @@
     {
       "path": "UPLOAD_TO_PROJECT/knowledge/22_OUTPUT_CONTRACT.md",
       "scope": "core_upload",
-      "bytes": 3537,
-      "sha256": "37d7c8229c6c949093adc263803ebe0439a457a6a6df23298c17140de2524566"
+      "bytes": 3730,
+      "sha256": "e2e93f79b3fd74f4313ca33059fd69a335693c84a6f8d18e04223535ff2fb0c4"
     },
     {
       "path": "UPLOAD_TO_PROJECT/knowledge/23_SINGLE_RUN_EXAMPLE.md",

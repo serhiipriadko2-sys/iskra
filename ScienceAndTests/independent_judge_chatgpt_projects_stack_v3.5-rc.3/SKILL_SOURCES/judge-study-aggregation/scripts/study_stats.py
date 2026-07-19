@@ -5,6 +5,8 @@ import json
 import math
 import random
 from collections import Counter, defaultdict
+from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP
 from numbers import Real
 
 RUN_STATUSES = {"VALID", "INVALID"}
@@ -23,13 +25,27 @@ def mean(values):
     return sum(values) / len(values) if values else None
 
 
+def round_half_up(value, digits=1):
+    if value is None:
+        return None
+    quantum = Decimal("1").scaleb(-digits)
+    return float(Decimal(str(value)).quantize(quantum, rounding=ROUND_HALF_UP))
+
+
+def round_half_up(value, digits=1):
+    if value is None:
+        return None
+    quantum = Decimal("1").scaleb(-digits)
+    return float(Decimal(str(value)).quantize(quantum, rounding=ROUND_HALF_UP))
+
+
 def bootstrap_interval(values, iters=2000, seed=42):
     if not values:
         return None
     rng = random.Random(seed)
     n = len(values)
     means = sorted(mean([rng.choice(values) for _ in range(n)]) for _ in range(iters))
-    return [round(means[int(0.025 * iters)], 1), round(means[min(iters - 1, int(0.975 * iters))], 1)]
+    return [round_half_up(means[int(0.025 * iters)], 1), round_half_up(means[min(iters - 1, int(0.975 * iters))], 1)]
 
 
 def _string_list(value):
@@ -140,7 +156,9 @@ def summarize(runs, stratum, candidate):
     domains = sorted({
         domain
         for run in runs
-        for domain in ((run.get("domain_scores") or {}) if isinstance(run.get("domain_scores"), dict) else {})
+        for mapping in (run.get("domain_scores"), run.get("statuses"))
+        if isinstance(mapping, dict)
+        for domain in mapping
         if domain in DOMAINS
     })
     reason_counts = Counter(reason for run in invalid for reason in _invalid_reasons(run))
@@ -170,10 +188,17 @@ def summarize(runs, stratum, candidate):
             and run["statuses"].get(domain) == "SCORED"
             and run["domain_scores"].get(domain) is not None
         ]
+        applicable = [
+            run for run in valid
+            if not isinstance(run.get("statuses"), dict)
+            or run["statuses"].get(domain) != "NOT_APPLICABLE"
+        ]
         row[domain] = {
-            "mean": round(mean(values), 1) if values else None,
+            "mean": round_half_up(mean(values), 1) if values else None,
             "n_scored": len(values),
-            "missingness_rate": round(1 - len(values) / len(runs), 4) if runs else None,
+            "n_applicable": len(applicable),
+            "n_not_applicable": len(valid) - len(applicable),
+            "missingness_rate": round(1 - len(values) / len(applicable), 4) if applicable else None,
             "descriptive_interval": bootstrap_interval(values),
         }
     return row

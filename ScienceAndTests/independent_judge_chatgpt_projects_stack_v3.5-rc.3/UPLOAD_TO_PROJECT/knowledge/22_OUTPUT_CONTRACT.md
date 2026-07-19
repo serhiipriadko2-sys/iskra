@@ -36,7 +36,7 @@ Criterion and domain records use only:
 SCORED | UNKNOWN | UNSCORABLE | CONFLICTED | NOT_APPLICABLE | NOT_RUN
 ```
 
-Use `coverage`, `limitations`, and `unknown_reason` for partial or insufficient evidence. Do not invent alternative status values.
+Use `coverage`, `limitations`, and `unknown_reason` for partial or insufficient evidence. Do not invent alternative status values. `C100` is the sole exception: when no composite profile is active it MUST use `score=null, status=NOT_ACTIVATED`; `NOT_ACTIVATED` is forbidden for Q/S/A/R/G and criterion records.
 
 `JudgeReliabilityProfile.status` is a separate namespace and may be `NOT_MEASURED`; `receipt.verification_status` is a separate namespace (`PASS | PARTIAL | FAIL`). Ни один не копируется в criterion/domain status.
 
@@ -79,7 +79,7 @@ aux_metrics:
 comparison:
   status: NOT_REQUESTED
   winner: null
-  order_robustness: NOT_TESTED | PASS | INCONSISTENT_AS_TIE
+  order_robustness: NOT_TESTED | PASS | TIE_STABLE | INCONSISTENT_AS_TIE
   swap_runs: []
 evidence_trace: []
 unknowns: []

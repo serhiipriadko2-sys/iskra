@@ -46,6 +46,14 @@ def main(root):
     for token in forbidden:
         hits=[p.name for p in active if token in p.read_text(encoding='utf-8')]
         (passed if not hits else errors).append(f'active token {token!r} hits={hits}')
+    required_contract_tokens = {
+        "22_OUTPUT_CONTRACT.md": ["C100` is the sole exception", "TIE_STABLE"],
+        "EXT32_BIAS_GUARD.md": ["suite_total: 40"],
+    }
+    active_by_name = {p.name: p.read_text(encoding="utf-8") for p in active}
+    for name, tokens in required_contract_tokens.items():
+        missing_tokens = [token for token in tokens if token not in active_by_name.get(name, "")]
+        (passed if not missing_tokens else errors).append(f"{name}: required contract tokens missing={missing_tokens}")
     # skill packages
     skill_zips=sorted((root/'JUDGE_SKILLS').glob('*/skill.zip'))
     if len(skill_zips)!=5: errors.append(f'skill packages={len(skill_zips)} expected=5')

@@ -1,5 +1,5 @@
 {
-  "passed": 22,
+  "passed": 25,
   "tests": [
     "stable tie is robust and winnerless",
     "swap flip becomes tie",
@@ -21,6 +21,9 @@
     "statuses wrong type fails closed",
     "length wrong type fails closed",
     "non-object run record fails closed without crashing",
+    "status-only domains remain visible in aggregates",
+    "NOT_APPLICABLE excluded from missingness denominator",
+    "study means use round-half-up",
     "blind outputs physically separated",
     "strict skill pack QC passes"
   ]

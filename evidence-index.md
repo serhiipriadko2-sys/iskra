@@ -289,3 +289,8 @@
   - Manifest exact two-way coverage 121/121; archive 123 files; round-trip tree identity 123/123; no cache/symlink artifacts.
 - **Limitations:** live T01–T40, empirical calibration, owner acceptance, and 126×3 answer regeneration are NOT_RUN/open.
 - **Status:** Local release candidate verified; GitHub PR/CI and live acceptance pending.
+
+### EVI-20260719-004: Independent Judge rc.3 second-review closure
+- **Assertion:** six additional P2 contract/aggregation findings are closed on the exact release artifact.
+- **Evidence:** ZIP `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip`, 1,178,388 bytes, sha256 `73d7ee6f7e77926234be7250fd3ab7b1b4957abb0361dbf51e4bbb90ae587e25`; static PASS; dynamic 25/25; manifest 121/121; archive 123 files; round-trip 123/123.
+- **Supersedes:** prior rc.3 post-review ZIP hash `c882136db4882582fe5dfdb709bf8d1bf9d033d9f7bf1933afd79300357ddbc9`.

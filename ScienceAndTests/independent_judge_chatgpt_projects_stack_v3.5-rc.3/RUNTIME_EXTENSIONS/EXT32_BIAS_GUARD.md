@@ -29,7 +29,7 @@ environment: "ChatGPT Projects (reserved slot)"
 
 1. Прогон acceptance suite (26) → pass-rate anchor с датой и judge model.
 2. Perturbation tests: swap, padding (добавить воды), style flip, identity mask.
-3. Фиксация: `bias_report {date, judge_model, suite_pass/34, swap_consistency, verbosity_flag_rate}`.
+3. Фиксация: `bias_report {date, judge_model, suite_pass_count, suite_total: 40, swap_consistency, verbosity_flag_rate}`.
 4. Ре-калибровка при смене judge model, rubric или протокола.
 
 ## Пороговая дисциплина

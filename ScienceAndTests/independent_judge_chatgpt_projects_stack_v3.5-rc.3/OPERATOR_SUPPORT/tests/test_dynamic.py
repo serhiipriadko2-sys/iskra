@@ -147,6 +147,30 @@ def main():
     assert row_for(non_object)["Q100"]["mean"] == 80.0
     results.append("non-object run record fails closed without crashing")
 
+    status_only = base_run("status-only", 80)
+    status_only["statuses"]["R100"] = "NOT_RUN"
+    status_only_output = study.aggregate([status_only])
+    status_only_row = row_for(status_only_output)
+    assert status_only_row["R100"]["mean"] is None
+    assert status_only_row["R100"]["n_scored"] == 0
+    assert status_only_row["R100"]["n_applicable"] == 1
+    assert status_only_row["R100"]["missingness_rate"] == 1.0
+    results.append("status-only domains remain visible in aggregates")
+
+    not_applicable = base_run("na", 80)
+    not_applicable["domain_scores"]["Q100"] = None
+    not_applicable["statuses"]["Q100"] = "NOT_APPLICABLE"
+    applicability_output = study.aggregate([base_run("scored", 80), not_applicable])
+    applicability_row = row_for(applicability_output)["Q100"]
+    assert applicability_row["n_applicable"] == 1
+    assert applicability_row["n_not_applicable"] == 1
+    assert applicability_row["missingness_rate"] == 0.0
+    results.append("NOT_APPLICABLE excluded from missingness denominator")
+
+    half_up_output = study.aggregate([base_run("a", 66.2), base_run("b", 66.3)])
+    assert row_for(half_up_output)["Q100"]["mean"] == 66.3
+    results.append("study means use round-half-up")
+
     with tempfile.TemporaryDirectory() as temp_dir:
         script = ROOT / "SKILL_SOURCES/judge-blind-workflow/scripts/blind_mapping.py"
         subprocess.run(

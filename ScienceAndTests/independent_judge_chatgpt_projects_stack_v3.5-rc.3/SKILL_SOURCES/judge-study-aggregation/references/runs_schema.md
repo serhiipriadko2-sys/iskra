@@ -31,7 +31,7 @@
 
 ## Result status and score constraints
 
-Allowed statuses are `SCORED`, `UNKNOWN`, `UNSCORABLE`, `CONFLICTED`, `NOT_APPLICABLE`, and `NOT_RUN`.
+Allowed statuses are `SCORED`, `UNKNOWN`, `UNSCORABLE`, `CONFLICTED`, `NOT_APPLICABLE`, and `NOT_RUN`. `C100` alone may use `NOT_ACTIVATED` with a null or absent score when no composite profile is active; that status is invalid for Q/S/A/R/G.
 
 - `SCORED` requires a finite numeric score in `[0,100]`.
 - All other statuses require `score=null` or no score key.

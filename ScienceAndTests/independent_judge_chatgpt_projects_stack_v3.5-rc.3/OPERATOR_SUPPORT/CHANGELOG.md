@@ -95,3 +95,10 @@ Status: `PROPOSED_OWNER_REVIEW`
 - skill ZIP validation supports flat and nested layouts;
 - rotation sampler reads UTF-8 deterministically and closes its file handle;
 - study submanifest and all derived release artifacts are regenerated after these changes.
+
+### Second review P2 closure
+- synchronized C100 and swap enums across runtime/output/schema surfaces;
+- updated bias anchor to T01-T40;
+- preserved status-only domains in study output;
+- enforced round-half-up means and applicability-aware missingness;
+- added regression and static contract checks.

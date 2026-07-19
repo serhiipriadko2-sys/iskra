@@ -252,3 +252,9 @@
 - **Risk:** Live ChatGPT Projects acceptance, empirical reliability, owner semantic acceptance, and regeneration of 126×3 stale answers remain open. No live Supabase write, migration, Edge Function deploy, or Project upload occurred.
 - **Next:** Push branch, open PR, require green Judge Stack QC on exact head, then owner review and live T01–T40.
 - **Status:** Local rc.3 candidate verified; merge/deploy/live acceptance pending.
+
+### JRN-20260719-006: Judge rc.3 second-review P2 closure
+- **Context:** a new review pass found output-enum, T40 anchor, status-only aggregation, rounding, and applicability-denominator drift.
+- **Actions:** synchronized runtime/schema contracts, added 3 regression tests and static token gates, rebuilt skill ZIP, study submanifest, full manifest, release ZIP and sidecar.
+- **Evidence:** static PASS; dynamic 25/25; manifest 121/121; archive 123 files; round-trip 123/123; ZIP sha256 `73d7ee6f7e77926234be7250fd3ab7b1b4957abb0361dbf51e4bbb90ae587e25`, bytes `1178388`.
+- **Next:** fresh-checkout verification, push, green CI, review-thread closure, merge decision.

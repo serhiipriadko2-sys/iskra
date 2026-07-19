@@ -47,3 +47,7 @@ D: rc.2 source audit, mutation counterexamples, PR review threads, and round-tri
 ## Post-review addendum
 
 The final review gate additionally requires safe-member ZIP extraction, manifest-hash binding in both receipts, `C100=NOT_ACTIVATED` compatibility, active-pointer-derived archive names, deterministic UTF-8 study tooling, and a regenerated study submanifest. These are release-contract closures, not a new protocol version.
+
+## Second review closure
+
+The merge gate additionally aligned the machine-output contract and study aggregator: C100-only `NOT_ACTIVATED`, `TIE_STABLE`, T01-T40 bias anchors, status-only domain visibility, round-half-up study means, and exclusion of `NOT_APPLICABLE` from missingness denominators.

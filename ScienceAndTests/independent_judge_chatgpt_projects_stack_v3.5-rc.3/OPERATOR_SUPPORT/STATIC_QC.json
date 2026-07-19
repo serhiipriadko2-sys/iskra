@@ -18,6 +18,8 @@
     "active token 'A-EXTERNAL_ACTION' hits=[]",
     "active token 'pass_count/34' hits=[]",
     "active token 'memory_status: OFF' hits=[]",
+    "22_OUTPUT_CONTRACT.md: required contract tokens missing=[]",
+    "EXT32_BIAS_GUARD.md: required contract tokens missing=[]",
     "five skill packages",
     "skill package structure clean",
     "cache/symlink artifacts=[]"
