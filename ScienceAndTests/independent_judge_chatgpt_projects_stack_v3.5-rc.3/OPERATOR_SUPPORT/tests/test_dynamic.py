@@ -95,6 +95,20 @@ def main():
     assert_mutation_excluded(study, invalid_result_enum, "INVALID_RESULT_STATUS_Q100")
     results.append("invalid result enum fails closed")
 
+    inactive = base_run("inactive", 80)
+    inactive["domain_scores"]["C100"] = None
+    inactive["statuses"]["C100"] = "NOT_ACTIVATED"
+    inactive_output = study.aggregate([inactive])
+    assert inactive_output["record_validation"]["n_schema_invalid"] == 0
+    assert row_for(inactive_output)["Q100"]["mean"] == 80.0
+    results.append("C100 NOT_ACTIVATED envelope is accepted")
+
+    def invalid_inactive_domain(run):
+        run["domain_scores"]["Q100"] = None
+        run["statuses"]["Q100"] = "NOT_ACTIVATED"
+    assert_mutation_excluded(study, invalid_inactive_domain, "NOT_ACTIVATED_ONLY_ALLOWED_FOR_C100")
+    results.append("NOT_ACTIVATED outside C100 fails closed")
+
     def nan_score(run):
         run["domain_scores"]["Q100"] = float("nan")
     assert_mutation_excluded(study, nan_score, "NON_FINITE_SCORE_Q100")

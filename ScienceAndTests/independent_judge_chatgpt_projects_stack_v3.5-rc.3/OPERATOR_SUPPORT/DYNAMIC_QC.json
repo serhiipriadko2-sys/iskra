@@ -1,5 +1,5 @@
 {
-  "passed": 20,
+  "passed": 22,
   "tests": [
     "stable tie is robust and winnerless",
     "swap flip becomes tie",
@@ -10,6 +10,8 @@
     "wrong field types fail closed",
     "invalid run enum fails closed",
     "invalid result enum fails closed",
+    "C100 NOT_ACTIVATED envelope is accepted",
+    "NOT_ACTIVATED outside C100 fails closed",
     "NaN score fails closed",
     "Infinity score fails closed",
     "out-of-range score fails closed",

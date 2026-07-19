@@ -32,8 +32,8 @@
     {
       "path": "JUDGE_SKILLS/judge-study-aggregation/skill.zip",
       "scope": "skill_package",
-      "bytes": 5650,
-      "sha256": "9a12f341fefcd2d8dd29dfc1eda9db5da8120606fe5a7ab6b9fd8c7439dfb370"
+      "bytes": 5698,
+      "sha256": "4ae594af8cbd84aa75a56182ad6bacb5ad0eaeb1090315d6e75fa01c3e25ea75"
     },
     {
       "path": "OPERATOR_SUPPORT/ADR-20260719-02_V34_BETA3_CONTRACT_CLOSURE.md",
@@ -56,8 +56,8 @@
     {
       "path": "OPERATOR_SUPPORT/ADR-20260719-05_V35_RC3_FAIL_CLOSED_RELEASE.md",
       "scope": "operator_support",
-      "bytes": 2832,
-      "sha256": "d897a814052c12d3ca08a367cf3ef04988b46ac011b4944d68e6a6a20fcd2319"
+      "bytes": 3181,
+      "sha256": "5318f7c32c52cb7379bf7d577523d73ca382129a199e6b16c0090b52e4b00218"
     },
     {
       "path": "OPERATOR_SUPPORT/ADR_2026-07-19_JUDGE_V34_SOURCE.md",
@@ -74,20 +74,20 @@
     {
       "path": "OPERATOR_SUPPORT/CHANGELOG.md",
       "scope": "operator_support",
-      "bytes": 4377,
-      "sha256": "673fdd7aa4f203c80c7ecc31681ff2d32a061964f9ab6d61b25963e8e5057cd6"
+      "bytes": 4958,
+      "sha256": "b293deb78c2e87510273617240bd9e68dda3ea791bb6b8d81ad6bf7b3593c143"
     },
     {
       "path": "OPERATOR_SUPPORT/DYNAMIC_QC.json",
       "scope": "operator_support",
-      "bytes": 857,
-      "sha256": "124c42ee77e6c470ff7512c98deec969c32b9a90a8efe7b2377c06ff1804ed17"
+      "bytes": 951,
+      "sha256": "2efcf585ecd3a31d5eed90c4c4a32e93e006272f4189a4baaf7fd3dc035cc036"
     },
     {
       "path": "OPERATOR_SUPPORT/FILE_INVENTORY.csv",
       "scope": "operator_support",
       "bytes": 9302,
-      "sha256": "5f8066228bacdd6f8967365b7f0601d7b856e184733833d1b8f24ce13fdc254e"
+      "sha256": "6a1c43bac520999c2500951881bc3efbe83af3f09d66aff3e4032d81bac31395"
     },
     {
       "path": "OPERATOR_SUPPORT/FRESH_PROJECT_ACCEPTANCE_SUITE.md",
@@ -146,20 +146,20 @@
     {
       "path": "OPERATOR_SUPPORT/tests/test_dynamic.py",
       "scope": "operator_support",
-      "bytes": 6679,
-      "sha256": "d3eccfd8183c00accc460339dc1094e65a05813a4888f3cafef3e1077183236c"
+      "bytes": 7356,
+      "sha256": "65067f5b5f48104682a38ab5c8111c0c53a4176f967365e8588b4188713be454"
     },
     {
       "path": "OPERATOR_SUPPORT/tools/validate_pack.py",
       "scope": "operator_support",
-      "bytes": 4769,
-      "sha256": "66d08da018d6f3cfcac6b2902804887e60405406a4231418a02cecc17583d302"
+      "bytes": 4817,
+      "sha256": "7bfa3b73c7da4c39a3af59081a7b63de6fb39dd7b365ea9aa5cc6937d3893caf"
     },
     {
       "path": "OPERATOR_SUPPORT/tools/verify_release.py",
       "scope": "operator_support",
-      "bytes": 5963,
-      "sha256": "b4e77f99ad349028456c3a284fa6fed3284ea1843f4cde0cf7d4b78c5a8cdd7c"
+      "bytes": 6667,
+      "sha256": "9c857ee1ef8512e49e337ebd2c27eb5a8c9276b112100418982d0cbbb8412049"
     },
     {
       "path": "RUNTIME_EXTENSIONS/EXT31_STUDY_AGGREGATION.md",
@@ -290,8 +290,8 @@
     {
       "path": "SKILL_SOURCES/judge-study-aggregation/scripts/study_stats.py",
       "scope": "skill_source",
-      "bytes": 9571,
-      "sha256": "bb2473c641d70339468c11292598eeb04ad4747d810acaf822519006ec83be11"
+      "bytes": 9861,
+      "sha256": "5e3e8a882fda1d173d9cd6434b16f651bc669cebbec8a8652bbb7d6cfd0fabc2"
     },
     {
       "path": "SKILL_SOURCES/judge-study-aggregation/SKILL.md",
@@ -488,8 +488,8 @@
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/evaluator_private/rotation_sampler.py",
       "scope": "study_package",
-      "bytes": 2507,
-      "sha256": "ae5271cdfbd878ef3a6fead9f709934f700a344bf06e8b5c65c2cfd18dcc5b2c"
+      "bytes": 2572,
+      "sha256": "fc2e8ed7ecc006ada82e99ea52a2fd0e1a55fdb31da6876a0c0fd231ddfd2507"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/evaluator_private/variant_marker_map.csv",
@@ -501,7 +501,7 @@
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/MANIFEST.sha256",
       "scope": "study_package",
       "bytes": 4119,
-      "sha256": "92f27ccf05425ba1e19d8a9bbe6eb3530e616d659825b000c24d6c4343a4f61b"
+      "sha256": "84f267c59cb2eec4ae8bd96201a068fe5be39cdb817d4fedb04c7121d6ee2aa1"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/METHODOLOGY_AND_DEPENDENCY_AUDIT.md",

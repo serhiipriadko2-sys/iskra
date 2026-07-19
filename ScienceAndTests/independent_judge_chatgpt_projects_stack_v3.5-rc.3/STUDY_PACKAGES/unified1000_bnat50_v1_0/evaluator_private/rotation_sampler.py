@@ -20,7 +20,8 @@ BANK = HERE.parent / "candidate" / "unified_1000_questions_tasks_bnat50_v1_1.md"
 def load_templated():
     text = BANK.read_text(encoding="utf-8")
     pat = re.compile(r"^(\d{1,4})\.\s", re.M); ms = list(pat.finditer(text))
-    marker_ids = {int(r["task_id"]) for r in csv.DictReader(open(HERE / "variant_marker_map.csv"))}
+    with open(HERE / "variant_marker_map.csv", encoding="utf-8-sig", newline="") as handle:
+        marker_ids = {int(r["task_id"]) for r in csv.DictReader(handle)}
     tasks = {}
     for i, m in enumerate(ms):
         tid = int(m.group(1)); end = ms[i + 1].start() if i + 1 < len(ms) else len(text)

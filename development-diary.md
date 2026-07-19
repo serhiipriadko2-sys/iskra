@@ -247,8 +247,8 @@
 
 ### JRN-20260719-004: Judge v3.5-rc.3 fail-closed study and release closure
 - **Context:** Independent verification of merged rc.2 found malformed study records defaulting to valid, v1.0/v1.1 runtime drift, residual manual blind mapping, recursive ZIP receipt inconsistency, and incomplete CI coverage.
-- **Actions:** Created rc.3 as a separate tree; added explicit schema validation and invalid-record reporting; added 20 dynamic/mutation tests; corrected `RUNTIME_BOUNDARY.md`, EXT33, and Study Guide; moved final ZIP attestation to an external sidecar; added `ACTIVE_JUDGE_STACK`; replaced heuristic CI selection; enforced two-way manifest coverage and full ZIP round-trip verification; updated open loops and ADR-05.
-- **Evidence:** Static PASS; dynamic 20/20; manifest 121/121; archive 123 files; byte-identical round trip 123/123; ZIP sha256 `3ee3bfb5da68aeacec6e5aa37047c0908a2390b80b6154919fd43581a13581c1`, bytes `1176060`.
+- **Actions:** Created rc.3 as a separate tree; added explicit schema validation and invalid-record reporting; added 22 dynamic/mutation tests; corrected `RUNTIME_BOUNDARY.md`, EXT33, and Study Guide; moved final ZIP attestation to an external sidecar; added `ACTIVE_JUDGE_STACK`; replaced heuristic CI selection; enforced two-way manifest coverage and full ZIP round-trip verification; updated open loops and ADR-05.
+- **Evidence:** Static PASS; dynamic 22/22; manifest 121/121; archive 123 files; byte-identical round trip 123/123; ZIP sha256 `c882136db4882582fe5dfdb709bf8d1bf9d033d9f7bf1933afd79300357ddbc9`, bytes `1176932` (supersedes pre-review build `3ee3bfb5da68aeacec6e5aa37047c0908a2390b80b6154919fd43581a13581c1`).
 - **Risk:** Live ChatGPT Projects acceptance, empirical reliability, owner semantic acceptance, and regeneration of 126×3 stale answers remain open. No live Supabase write, migration, Edge Function deploy, or Project upload occurred.
 - **Next:** Push branch, open PR, require green Judge Stack QC on exact head, then owner review and live T01–T40.
 - **Status:** Local rc.3 candidate verified; merge/deploy/live acceptance pending.

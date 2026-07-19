@@ -53,8 +53,8 @@ def main(root):
     for z in skill_zips:
         with zipfile.ZipFile(z) as f:
             names=f.namelist()
-            if not any(n.endswith('/SKILL.md') for n in names): errors.append(f'{z}: missing SKILL.md')
-            if not any(n.endswith('/agents/openai.yaml') for n in names): errors.append(f'{z}: missing agents/openai.yaml')
+            if not any(n == 'SKILL.md' or n.endswith('/SKILL.md') for n in names): errors.append(f'{z}: missing SKILL.md')
+            if not any(n == 'agents/openai.yaml' or n.endswith('/agents/openai.yaml') for n in names): errors.append(f'{z}: missing agents/openai.yaml')
             if any('__pycache__' in n or n.endswith('.pyc') for n in names): errors.append(f'{z}: cache artifact')
             if f.testzip(): errors.append(f'{z}: corrupt')
     if not any('skill' in e for e in errors): passed.append('skill package structure clean')

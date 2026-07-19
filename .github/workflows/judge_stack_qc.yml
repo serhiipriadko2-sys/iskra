@@ -30,10 +30,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          NAME="$(tr -d '\r\n' < ScienceAndTests/ACTIVE_JUDGE_STACK)"
+          NAME="$(python3 -c 'from pathlib import Path; print(Path("ScienceAndTests/ACTIVE_JUDGE_STACK").read_text(encoding="utf-8-sig").strip())')"
           DIR="ScienceAndTests/${NAME}"
+          VERSION="${NAME#independent_judge_chatgpt_projects_stack_}"
+          test -n "$NAME"
+          test "$VERSION" != "$NAME"
           test -d "$DIR"
           echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "dir=$DIR" >> "$GITHUB_OUTPUT"
 
       - name: Static pack validation (exit-coded)
@@ -49,7 +53,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          VERSION="v3.5-rc.3"
+          VERSION="${{ steps.stack.outputs.version }}"
           ZIP="ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_${VERSION}.zip"
           RECEIPT="ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_${VERSION}.receipt.json"
           python3 "${{ steps.stack.outputs.dir }}/OPERATOR_SUPPORT/tools/verify_release.py" \

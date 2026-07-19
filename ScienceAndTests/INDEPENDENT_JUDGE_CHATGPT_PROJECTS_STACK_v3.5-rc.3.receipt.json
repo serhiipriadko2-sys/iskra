@@ -4,10 +4,10 @@
   "created": "2026-07-19",
   "archive": "INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip",
   "root_directory": "independent_judge_chatgpt_projects_stack_v3.5-rc.3",
-  "bytes": 1176060,
-  "sha256": "3ee3bfb5da68aeacec6e5aa37047c0908a2390b80b6154919fd43581a13581c1",
+  "bytes": 1176932,
+  "sha256": "c882136db4882582fe5dfdb709bf8d1bf9d033d9f7bf1933afd79300357ddbc9",
   "archive_file_count": 123,
-  "manifest_sha256": "50e5174eb6030f3713dfbb88dbc579e805fd8fb7c6dde43ab3acc0989e48b551",
+  "manifest_sha256": "9289950a01f5ecb8873fc41335df641dff0471db2206d49632b6d5ab9bde93e1",
   "receipt_location": "EXTERNAL_TO_ARCHIVE",
   "live_project_acceptance": "NOT_RUN",
   "production_scoring_profile": "INACTIVE"

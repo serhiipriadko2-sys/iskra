@@ -86,3 +86,12 @@ Status: `PROPOSED_OWNER_REVIEW`
 - Moved final ZIP attestation to an external sidecar.
 - Added explicit `ACTIVE_JUDGE_STACK`, two-way manifest verification, top-level ZIP triggers, exact file count, and round-trip archive verification.
 - Live Projects acceptance and empirical calibration remain NOT_RUN.
+
+## v3.5-rc.3 post-review closure — 2026-07-19
+
+- fail-closed `C100=NOT_ACTIVATED` compatibility added without permitting that status on Q/S/A/R/G;
+- release verification filters unsafe ZIP members and binds both receipts to the actual manifest hash;
+- active-stack CI derives archive names from the explicit pointer and tolerates UTF-8 BOM defensively;
+- skill ZIP validation supports flat and nested layouts;
+- rotation sampler reads UTF-8 deterministically and closes its file handle;
+- study submanifest and all derived release artifacts are regenerated after these changes.

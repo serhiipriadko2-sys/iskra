@@ -10,7 +10,7 @@ from numbers import Real
 RUN_STATUSES = {"VALID", "INVALID"}
 RESULT_STATUSES = {
     "SCORED", "UNKNOWN", "UNSCORABLE", "CONFLICTED",
-    "NOT_APPLICABLE", "NOT_RUN",
+    "NOT_APPLICABLE", "NOT_RUN", "NOT_ACTIVATED",
 }
 DOMAINS = {"Q100", "S100", "A100", "R100", "G100", "C100"}
 REQUIRED_FIELDS = {
@@ -80,7 +80,12 @@ def validate_run(run, index=None):
         if status not in RESULT_STATUSES:
             errors.append(f"{prefix}: INVALID_RESULT_STATUS_{domain}")
             continue
-        if status == "SCORED":
+        if status == "NOT_ACTIVATED":
+            if domain != "C100":
+                errors.append(f"{prefix}: NOT_ACTIVATED_ONLY_ALLOWED_FOR_C100")
+            if score is not None:
+                errors.append(f"{prefix}: NON_NULL_SCORE_FOR_NOT_ACTIVATED_{domain}")
+        elif status == "SCORED":
             if isinstance(score, bool) or not isinstance(score, Real):
                 errors.append(f"{prefix}: INVALID_SCORE_TYPE_{domain}")
             elif not math.isfinite(float(score)):

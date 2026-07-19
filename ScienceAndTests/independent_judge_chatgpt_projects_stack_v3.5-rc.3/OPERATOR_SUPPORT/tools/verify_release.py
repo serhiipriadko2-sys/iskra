@@ -35,6 +35,8 @@ def safe_member(info):
     name = PurePosixPath(info.filename)
     if name.is_absolute() or ".." in name.parts or "\\" in info.filename:
         return False
+    if name.parts and ":" in name.parts[0]:
+        return False
     mode = info.external_attr >> 16
     return not stat.S_ISLNK(mode)
 
@@ -94,6 +96,17 @@ def verify(root, archive, sidecar):
     else:
         passed.append("external sidecar matches ZIP bytes and SHA-256")
 
+    manifest_digest = sha256(manifest_path)
+    manifest_receipts = {
+        "external_sidecar": receipt.get("manifest_sha256"),
+        "internal_receipt": internal_receipt.get("manifest_sha256"),
+    }
+    bad_manifest_receipts = {name: value for name, value in manifest_receipts.items() if value != manifest_digest}
+    if bad_manifest_receipts:
+        errors.append({"manifest_receipt_mismatch": bad_manifest_receipts, "actual": manifest_digest})
+    else:
+        passed.append("internal and external receipts match MANIFEST.json SHA-256")
+
     with zipfile.ZipFile(archive) as zf:
         corrupt = zf.testzip()
         infos = zf.infolist()
@@ -112,7 +125,8 @@ def verify(root, archive, sidecar):
             passed.append(f"archive exact file count={len(file_infos)}")
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            zf.extractall(temp_dir)
+            safe_infos = [info for info in infos if safe_member(info)]
+            zf.extractall(temp_dir, members=safe_infos)
             top = [path for path in Path(temp_dir).iterdir()]
             if len(top) != 1 or not top[0].is_dir() or top[0].name != root.name:
                 errors.append({"archive_root": [path.name for path in top], "expected": root.name})

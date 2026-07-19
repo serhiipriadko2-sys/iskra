@@ -43,3 +43,7 @@ Revert the rc.3 PR and restore `ACTIVE_JUDGE_STACK` to rc.2. rc.2 artifacts rema
 D: rc.2 source audit, mutation counterexamples, PR review threads, and round-trip packaging tests.
 Ω: 0.95 for local source/package behavior; live Projects validity remains unmeasured.
 Λ: owner review, green CI on exact PR head, then live T01–T40 and answer regeneration.
+
+## Post-review addendum
+
+The final review gate additionally requires safe-member ZIP extraction, manifest-hash binding in both receipts, `C100=NOT_ACTIVATED` compatibility, active-pointer-derived archive names, deterministic UTF-8 study tooling, and a regenerated study submanifest. These are release-contract closures, not a new protocol version.
