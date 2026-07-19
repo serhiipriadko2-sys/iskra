@@ -61,3 +61,24 @@ The review does **not** establish equal difficulty to the public canon, psychome
 3. The remaining 950 tasks still contain many visible template markers and “additional twist” clauses. Their different style may make long BNAT narratives detectable as a family even though BNAT metadata is absent.
 4. Public canonical anchors may already be present in model training or prior conversations. They cannot serve as private holdout evidence.
 5. No target-model run, two-rater scoring, mutation survival analysis, or statistical calibration was performed in this construction pass.
+
+---
+
+## Second pass — v1.1 authored items (2026-07-19)
+
+Scope: the 126 topic-label stubs strengthened in v1.1 (the 32 BNAT mutations above are unchanged and re-confirmed byte-exact).
+
+Method: automated lint + manual read of every authored item for (1) English words left mid-Russian-sentence outside accepted parenthetical tech terms, (2) near-duplicate pairs (3-gram Jaccard), (3) rubric/answer-leakage tokens (PASS/FAIL/рубрика/blind check/Маркер), (4) well-formed ending and a real deliverable.
+
+Result: `PASS_MODEL_SECOND_PASS_WITH_LIMITATIONS`.
+
+- Near-duplicate pairs > 0.12 Jaccard: none (max 0.087, pair 145/982).
+- Leak tokens in authored items: none.
+- Malformed endings: none.
+- Defects fixed: 1 — task 201 had the English word "places" mid-sentence; corrected to "места". Re-verified BNAT-50 hashes unaffected.
+
+Limitation: this is a model second pass, not independent human review, and does not establish equal item difficulty or psychometric validity. The 126 authored items still require owner semantic sign-off (`open-loops.md`).
+
+## Rotation tooling
+
+`evaluator_private/rotation_sampler.py` provides a deterministic held-out rotation over the 495 templated tasks (≤ per_kernel tasks per kernel, seedable) so strong claims sample the grid instead of scoring all 495 as if independent. Self-tested: deterministic, 60 kernels, per-kernel cap enforced, distinct seeds give substantially different subsets (seed 7 vs 42 overlap 0.24).

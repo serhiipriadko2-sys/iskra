@@ -2,8 +2,8 @@
   "schema": "judge-projects-pack-manifest-v2",
   "version": "v3.5-rc.1-projects-p1",
   "created": "2026-07-19",
-  "scope_note": "Full release scope incl. Unified-1000/BNAT-50 v1.1. Excludes only MANIFEST.json and BUILD_RECEIPT_PREZIP.json.",
-  "payload_files": 117,
+  "scope_note": "Full release scope incl. Unified-1000/BNAT-50 v1.1 (second pass). Excludes only MANIFEST.json and BUILD_RECEIPT_PREZIP.json.",
+  "payload_files": 118,
   "entries": [
     {
       "path": "JUDGE_SKILLS/judge-bias-calibration/skill.zip",
@@ -74,8 +74,8 @@
     {
       "path": "OPERATOR_SUPPORT/FILE_INVENTORY.csv",
       "scope": "operator_support",
-      "bytes": 9089,
-      "sha256": "9bdd7f2f2a12b9c33d75b957a689e688584383c5a700301b5e813912a9d9901a"
+      "bytes": 9308,
+      "sha256": "c47071006beb35d6bcd35184715d6033644ea2243e00640460e0ae51284d1cc0"
     },
     {
       "path": "OPERATOR_SUPPORT/FRESH_PROJECT_ACCEPTANCE_SUITE.md",
@@ -350,8 +350,8 @@
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/MANIFEST.sha256",
       "scope": "study_package",
-      "bytes": 3908,
-      "sha256": "72eb7916ef7c5d8fb7a306581059bde37b052c6cff57ff6bd8aaddbc316c6431"
+      "bytes": 4119,
+      "sha256": "55c62bc23b7de322a673ae064d9b28582045362e1230a20bd28efee1fa253a47"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/METHODOLOGY_AND_DEPENDENCY_AUDIT.md",
@@ -410,8 +410,8 @@
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/SEMANTIC_REVIEW_32.md",
       "scope": "study_package",
-      "bytes": 12244,
-      "sha256": "105c51cbbc86c5a4aa4a75895425ee9cdef4ff589cc812358f7a36fc44789a24"
+      "bytes": 13716,
+      "sha256": "e8e6ea3b70b8bbe23b964ec0a2b30bfe9bcb04abb62f8427a547ccfa2af4f8da"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/bnat50_task_qc.csv",
@@ -428,8 +428,8 @@
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/qc_summary.json",
       "scope": "study_package",
-      "bytes": 1009,
-      "sha256": "61bf554e56a95a09c610265c84d54068762e83cb821f66c0c6b40b0b69184332"
+      "bytes": 1254,
+      "sha256": "e8442c3a6d13b95dc116291d16e71a36d91d4b58f75bf48fc71de5f8ebd7dbcf"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_academic_research_v0_7.md",
@@ -476,8 +476,8 @@
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate/unified_1000_questions_tasks_bnat50_v1_1.md",
       "scope": "study_package",
-      "bytes": 481085,
-      "sha256": "2cc6b9ccd1d80f222a56a26bb3dabdaa6eff2504716396923b528f3f96c8c7db"
+      "bytes": 481089,
+      "sha256": "3b1e15afc2b3fbffab58660d85afd96c4687f93d624591c37128571ab4e50906"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/evaluator_private/answer_staleness_v1_1.json",
@@ -508,6 +508,12 @@
       "scope": "study_package",
       "bytes": 48549,
       "sha256": "ca7986c44b7fee0c2a3c65d253f9cbb544b34047e2481c5265751e984f6f64e3"
+    },
+    {
+      "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/evaluator_private/rotation_sampler.py",
+      "scope": "study_package",
+      "bytes": 2507,
+      "sha256": "ae5271cdfbd878ef3a6fead9f709934f700a344bf06e8b5c65c2cfd18dcc5b2c"
     },
     {
       "path": "STUDY_PACKAGES/unified1000_bnat50_v1_0/evaluator_private/variant_marker_map.csv",
