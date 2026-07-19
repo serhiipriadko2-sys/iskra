@@ -1,0 +1,20 @@
+{
+  "version": "v3.5-rc.2-projects-p1",
+  "created": "2026-07-19",
+  "payload_files": 119,
+  "manifest_sha256": "7522e2667d82af0426eaf4ea3a867d2629a6091a1fe824daa5fe763d469407df",
+  "authoritative_release_zip": "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.2.zip",
+  "authoritative_zip_sha256": "9a5766a2dea8a6a411ba4b23f57f99dc5ac75211f9b30224d683f8af7f67ae4b",
+  "authoritative_zip_bytes": 4257522,
+  "static_qc": "PASS",
+  "dynamic_qc": "6/6 PASS",
+  "pack_qc_exit_coded": true,
+  "supersedes_zip_hashes": [
+    "844a80d6... (rc.1 build 1)",
+    "1f01a3cb... (rc.1 build 2)",
+    "14138362... (rc.1 build 3)"
+  ],
+  "live_project_acceptance": "NOT_RUN",
+  "study_readiness": "BLOCKED_UNTIL_126_ANSWERS_REGENERATED",
+  "adr": "ADR-20260719-04_V35_RC2_POST_MERGE_HOTFIX.md"
+}

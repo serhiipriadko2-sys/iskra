@@ -236,3 +236,11 @@
 - **Next:** Owner review of the 126 authored items; regenerate stale answer sets; first supervised study run under fresh single-use Project isolation.
 - **Status:** Structural strengthening verified; empirical acceptance open.
 
+### JRN-20260719-003: Judge stack v3.5-rc.2 post-merge audit hotfix
+- **Context:** Independent post-merge audit (ISKRIV) of merged PR #280 raised nine findings blocking valid study/comparative use of rc.1.
+- **Actions:** Adjudicated each finding against source, restarted the designated branch from merged `main`, renamed the tree to v3.5-rc.2, and fixed: F1 unconditional hard-failure veto in `eligible()` + adversarial test (dynamic 6/6); F2 study guide active v1_1 path + 126-position staleness hard stop; F3 forbid manual blind mapping + sealed mapping outside Judge Project; F4 `pack_qc.py` exit code (validate_pack already correct); F5 single authoritative ZIP + supersede notes; F6 clean FILE_INVENTORY + CI cache gate; F7 SUPERSEDED banner on KIMI README; F8 file 29 real manifest path; F9 CI workflow `judge_stack_qc.yml`. Bumped version rc.1→rc.2, regenerated manifests/QC, ADR-20260719-04.
+- **Evidence:** `ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.2/`; **authoritative** release ZIP `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.2.zip` sha256 `9a5766a2dea8a6a411ba4b23f57f99dc5ac75211f9b30224d683f8af7f67ae4b`. Static QC PASS, dynamic 6/6, manifest consistent, no cache artifacts.
+- **Supersede note (F5):** the three prior rc.1 ZIP hashes recorded earlier (`844a80d6…`, `1f01a3cb…`, `141383620c…`) are superseded and non-authoritative; the rc.2 hash above is the single receipt. Prior entries are kept for lineage, not rewritten.
+- **Risk:** rc.2 fixes are local-verified only; study of the 126 authored positions still needs answer regeneration; live T01–T40 and empirical calibration NOT_RUN.
+- **Status:** Post-merge blockers addressed; owner acceptance and live acceptance open.
+

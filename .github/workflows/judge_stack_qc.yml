@@ -1,0 +1,42 @@
+name: Judge Stack QC
+
+on:
+  push:
+    paths:
+      - 'ScienceAndTests/independent_judge_chatgpt_projects_stack_*/**'
+  pull_request:
+    paths:
+      - 'ScienceAndTests/independent_judge_chatgpt_projects_stack_*/**'
+
+jobs:
+  judge-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Locate active judge stack
+        id: stack
+        run: |
+          DIR=$(ls -d ScienceAndTests/independent_judge_chatgpt_projects_stack_* | sort | tail -1)
+          echo "dir=$DIR" >> "$GITHUB_OUTPUT"
+      - name: Static pack validation (exit-coded)
+        run: python3 "${{ steps.stack.outputs.dir }}/OPERATOR_SUPPORT/tools/validate_pack.py" "${{ steps.stack.outputs.dir }}"
+      - name: Dynamic tests (incl. adversarial hard-failure)
+        run: python3 "${{ steps.stack.outputs.dir }}/OPERATOR_SUPPORT/tests/test_dynamic.py"
+      - name: Skill pack QC (exit-coded)
+        run: python3 "${{ steps.stack.outputs.dir }}/SKILL_SOURCES/judge-bias-calibration/scripts/pack_qc.py" --knowledge "${{ steps.stack.outputs.dir }}/UPLOAD_TO_PROJECT/knowledge"
+      - name: Manifest integrity + no cache artifacts
+        run: |
+          python3 - "${{ steps.stack.outputs.dir }}" <<'PY'
+          import hashlib, json, sys
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          m=json.loads((root/'OPERATOR_SUPPORT/MANIFEST.json').read_text())
+          bad=[e['path'] for e in m['entries'] if hashlib.sha256((root/e['path']).read_bytes()).hexdigest()!=e['sha256']]
+          assert not bad, f'manifest hash mismatch: {bad}'
+          cache=[str(p) for p in root.rglob('*') if '__pycache__' in p.parts or p.suffix=='.pyc']
+          assert not cache, f'cache artifacts present: {cache}'
+          print('manifest integrity PASS; no cache artifacts')
+          PY
