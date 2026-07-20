@@ -1,0 +1,5 @@
+# Independent Judge rc.3 release tree is byte-attested; never rewrite line endings.
+ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/** -text
+ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.receipt.json text eol=lf
+ScienceAndTests/ACTIVE_JUDGE_STACK text eol=lf
+.github/workflows/judge_stack_qc.yml text eol=lf

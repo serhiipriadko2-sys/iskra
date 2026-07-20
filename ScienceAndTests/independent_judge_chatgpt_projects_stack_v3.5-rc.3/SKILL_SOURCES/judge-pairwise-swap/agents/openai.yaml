@@ -1,0 +1,3 @@
+interface:
+  display_name: "Judge Pairwise Swap"
+  short_description: "Compare candidates with order-swap and tie safety."

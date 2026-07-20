@@ -1,0 +1,42 @@
+{
+  "status": "PASS_STRUCTURAL_QC",
+  "bank_version": "v1.1",
+  "date": "2026-07-19",
+  "task_count": 1000,
+  "task_id_range": [
+    1,
+    1000
+  ],
+  "bnat_positions_count": 50,
+  "canonical_count": 18,
+  "mutation_count": 32,
+  "bnat_bodies_byte_identical_to_v1_0": true,
+  "bnat_hash_match": true,
+  "authored_strengthened_count": 126,
+  "markers_privatized_count": 495,
+  "markers_remaining_in_candidate": 0,
+  "unchanged_non_bnat_non_authored": 329,
+  "authored_word_count": {
+    "min": 21,
+    "max": 37,
+    "mean": 28.14
+  },
+  "canonical_word_count": {
+    "min": 282,
+    "max": 336,
+    "mean": 304.78
+  },
+  "mutation_word_count": {
+    "min": 119,
+    "max": 210,
+    "mean": 140.62
+  },
+  "max_pairwise_3gram_jaccard_authored": 0.087,
+  "max_similarity_pair_authored": [
+    145,
+    982
+  ],
+  "candidate_bank_v1_1_sha256": "3b1e15afc2b3fbffab58660d85afd96c4687f93d624591c37128571ab4e50906",
+  "candidate_bank_v1_0_sha256": "50c65aecf399e6cc0ea3124b50cabb0d9fbef0092a26bc60ab3e8e6b20a6978e",
+  "second_pass_review": "PASS_MODEL_SECOND_PASS: 126 authored items linted (latin-in-russian, near-dup, leak-token, well-formedness); 1 typo fixed (t201 places->места); max authored jaccard 0.087; no near-duplicate pairs; no leak tokens."
+}

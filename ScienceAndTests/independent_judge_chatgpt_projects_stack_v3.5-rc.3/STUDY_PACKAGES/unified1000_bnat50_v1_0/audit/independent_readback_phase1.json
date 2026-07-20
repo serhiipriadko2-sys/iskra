@@ -1,0 +1,15 @@
+{
+  "status": "PASS_INDEPENDENT_READBACK",
+  "bank_sha256": "50c65aecf399e6cc0ea3124b50cabb0d9fbef0092a26bc60ab3e8e6b20a6978e",
+  "package_zip_sha256": "526e8f7bc4664485982613a83e9d6178bb4918117c37e3dc08ea4b0cc2a8bdf3",
+  "task_count": 1000,
+  "registered_bnat_positions": 50,
+  "canonical_exact": 18,
+  "mutations_strict_lint": 32,
+  "unchanged_other_tasks": 950,
+  "private_marker_leaks": [],
+  "manifest_entries": 13,
+  "zip_entries": 14,
+  "scope": "pre-final package before adding semantic/dependency audit documents",
+  "note": "A final readback is run again after manifest and ZIP regeneration."
+}
