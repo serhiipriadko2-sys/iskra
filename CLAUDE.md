@@ -62,8 +62,8 @@ cd runtime/iskraSpace && npm run test:e2e
 
 ### Инструменты верификации (Python)
 ```bash
-python tools/verify_ledger.py      # Проверка SHA-256 хешей SoT
-python tools/update_ledger.py      # Регенерация ledger/sot.json
+npx tsx tools/verify_ledger.ts     # Проверка SHA-256 хешей SoT
+npx tsx tools/update_ledger.ts     # Регенерация ledger/sot.json
 python tools/horizon_validator.py  # Валидация структуры
 python tools/validate_terms.py     # Проверка терминологии (HUYNDUN, SAM)
 python tools/validate_delta.py     # Проверка формата ΔDΩΛ в .md/.txt файлах

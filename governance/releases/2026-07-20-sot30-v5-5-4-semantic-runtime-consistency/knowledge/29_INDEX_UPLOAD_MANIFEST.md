@@ -43,12 +43,15 @@ correct for `01` but was itself already wrong for `06/09/24` (it matched the
 divergent v5.5.2 zip, not the committed blob). v5.5.4 inherits v5.5.3's
 reconciled, git-blob-derived content and does not re-litigate that chain.
 
-### File 24 provenance (partial — not closed)
-`24_INTERFACE_STYLE.md`'s 18-byte / hash gap first recorded at v5.5.1 is real and
-carried forward at its true current hash. A raw-blob diff receipt is produced
-under `governance/audits/2026-07-20-sot30-v554/`; the **root cause is promoted to
-FACT only if that receipt proves an exact, fully-explaining change** — otherwise
-it stays `partial`/`unknown`. It is not asserted as closed here.
+### File 24 provenance (resolved this build)
+`24_INTERFACE_STYLE.md`'s 18-byte / hash gap first recorded at v5.5.1 is real. The
+raw-blob diff receipt under `governance/audits/2026-07-20-sot30-v554/`
+(`FILE24_PROVENANCE_RECEIPT.json`, `root_cause_status: verified`) shows the v5.5.1→v5.5.3
+change is **exactly two** `auth.uid()` → `(select auth.uid())` RLS-initplan
+optimizations (9 bytes ×2 = 18, zero CRLF in both blobs) — the byte delta is fully
+accounted, so the cause is promoted to FACT: a benign RLS optimization whose hash the
+manifest previously lagged, not a corruption and not a CRLF artifact. (This build's
+file 24 additionally carries the v5.5.4 quarantine overlay, so its hash differs again.)
 
 > **STATIC-PACKAGE-PASS does not imply LIVE-PROJECT-PASS.** A green
 > `sha256sum -c` and a passing semantic verifier attest the *package*. A
@@ -65,8 +68,8 @@ it stays `partial`/`unknown`. It is not asserted as closed here.
 | File | Bytes | SHA-256 |
 |---|---:|---|
 | `00_PROJECT_ROUTER.md` | 9407 | `fc15a177a85ba42eecc94f61ea3b1ad45335815a890ab8b487f91ba9ac656b67` |
-| `01_PARITY_ADVANCEMENT_MANIFEST.md` | 24901 | `db984f2d9f4c708e31258e653bff5dd25014d5ef3bc0a2a022ec7821cd8ff7f8` |
-| `02_PROJECTS_SURFACE_MAP.md` | 4615 | `03189cfc0a81e7435ef6d8f522a66edf04551434bd89fcb563c88e12d02084fa` |
+| `01_PARITY_ADVANCEMENT_MANIFEST.md` | 26301 | `6acb11569c5f74b30e58f0fbe8c3cbc27d4e2a4c857daa0bb7248c5c168a81cd` |
+| `02_PROJECTS_SURFACE_MAP.md` | 4615 | `1b4e291208a6783053fc19a417edd2de15b5d19dbe261d86846c097a59e5a281` |
 | `03_TELOS_MANTRA_PRINCIPLES.md` | 48286 | `cea610dd599b9a9d12de3f8689d9462a7ae6c1ed20eae18cce842316afe3f5f7` |
 | `04_IDENTITY_NON_MIRROR.md` | 92421 | `949614681a70fbd339f476959db21b5a6c42602d03f2dee19b50d8a48cf298f8` |
 | `05_TRUTH_SIFT_RAG.md` | 41451 | `396fffda61a611729a7fb8d82f434b344fb79cf8cb24596b816f05824d54b3c9` |
@@ -75,25 +78,24 @@ it stays `partial`/`unknown`. It is not asserted as closed here.
 | `08_STATECYCLE_RUNTIME.md` | 12896 | `4145175144cfda6c0c24c335f50a6fb27bd44f0846b6eea9d056eba31517b96e` |
 | `09_METRICS_ENGINE.md` | 15215 | `0a5d3951ba57b0e6760332a641cd9f2abd625d6cb00e1584c58a8af7e8553b5a` |
 | `10_ENTROPY_FRACTAL_EWS.md` | 14874 | `48df83050f9615207987dcc3e74d35dccf38eeb81a198e7ee5d4fe0378579233` |
-| `11_SLO_PLAYBOOK_CONTROL.md` | 14691 | `969ab3225fecbb8e2cb0c2b5ee3d3481a67af7a5cf42dd42237854798b4014fd` |
+| `11_SLO_PLAYBOOK_CONTROL.md` | 16074 | `60f9f043b7eb71c3f47a38d36604c6b9fd228ea8b76d8ce8a65405106966553c` |
 | `12_COUNCIL_VOICES.md` | 19361 | `a6def4250944e28ccd7d67b10cfffc88b524ddd0fad3658c1f3cf454b9caa846` |
 | `13_OUTPUT_RECEIPTS_ANTI_EMPTY.md` | 13386 | `e709c9a25ec9e8cfb3836776827e4ecc63f8f0fd568617396c2324e571a1a739` |
 | `14_MEMORY_MODEL.md` | 14110 | `fd7016036ec0987845b96b39071339ffd9f9dfc8d0f83435557061936bbc6763` |
-| `15_SUPABASE_MEMORY_PLANE.md` | 11235 | `5d757e35b82dc60b1471d7f7c6c1f547a84af5e30fcb99d75b1fbc602fe6600d` |
+| `15_SUPABASE_MEMORY_PLANE.md` | 12574 | `c67f62e9cb33bec161c347eff9894ba47724e324b4ac0b7d1a007bad469732af` |
 | `16_SHADOW_LAYER.md` | 8289 | `be46e1d9a5898b3d07d3a3813854323a49bd2394a936c7e7928a25eb1daff795` |
 | `17_DREAMSPACE_DREAMSEED.md` | 11430 | `dd4d8af3cf88c1088d937ba45f2a6e4f28e8eb14f0373f1a7b6f3c63524f9c9f` |
 | `18_HORIZON_WEAVER.md` | 13916 | `282ff5be29df9776cfb881bf8d985744f509413dc7ce19ef827993b9ad4598d3` |
 | `19_DRY_DARK_RUN_PROTOCOL.md` | 12501 | `ffb66f7e8293d81f4aa2d526a239efffb0fbb5335ec8e2de8f4ceea8a218c176` |
-| `20_GOVERNANCE_ADR.md` | 31627 | `386781894cd92c3f58ee740c062c8a21005bdd96ff512fb048b787844d2c1a9a` |
+| `20_GOVERNANCE_ADR.md` | 32537 | `fa80f1f4e06650c1269e65bae4ba412a5351d4d2142330fb74728979cb6151fd` |
 | `21_WORKFLOW_OPS_LEDGER.md` | 19105 | `20a47211734796f4af94ddd1621d19d39474785fbcf9a1570146d3edf9e833a5` |
-| `22_CONNECTORS_TOOLS_BOUNDARY.md` | 3763 | `60f2a36f20bc2463114ded7b65b04cb59a0943bdbbf5cdc4b332bc78ae3b4da4` |
+| `22_CONNECTORS_TOOLS_BOUNDARY.md` | 3763 | `4f9b022567be9ccbfcef48d62c504a82352f5f0b264a2f3c955243ba798e2ffd` |
 | `23_BUILDER_PROJECTS_COMPAT.md` | 1091 | `b5f58d2d1226fff156d5cef4c6e34b9aff0dfe55836a8ca0870fe59201ffd334` |
-| `24_INTERFACE_STYLE.md` | 2830603 | `364380ff0f3e5f5910ef2443a90bc249c3549aec4a37eb2a219c247a1b4f6abd` |
-| `25_LIBER_SPACE_BUSIDO.md` | 457439 | `c58bbb6c10ba353ef12245e55f45386f1390179e4f4d2cd7c25394c74fe39eef` |
+| `24_INTERFACE_STYLE.md` | 2831441 | `576b0c881d5c0a889898ca7e668c48a46f816203fde720865914785cc69f380b` |
+| `25_LIBER_SPACE_BUSIDO.md` | 458073 | `f151ccfd187be0c67e281ec50aa38c3a66714350effd8408646dbfa8a43b62a6` |
 | `26_SOMATIC_INTUITION.md` | 24590 | `1a704c9fc494166ed01c643a770e703afdd44b36296aad9101696cef1fc12bf5` |
 | `27_WHAT_IF_SCENARIO_MATRIX.md` | 22008 | `a9f187e0727c86d449fe40fa787d329049076c1e05723aa768eb0b05ba1a3d9a` |
-| `28_EVALS_ACCEPTANCE.md` | 13401 | `890d6c3a0a1a83d7932dae3f582355402eefb2d8ac695bdfcb79c0a0ee5a2ce9` |
-
+| `28_EVALS_ACCEPTANCE.md` | 15492 | `5f48404930145728e6e9f5947d8935331f5eeec491ea5fd7c372e2360de89ce4` |
 File 29 hash is stored in external `support/MANIFEST.json` and `support/SHA256SUMS` to avoid self-reference.
 
 ## v5.5.4 semantic & runtime-status consistency (this build)
@@ -134,7 +136,7 @@ This regenerated table records file 13 at its actual merged content — **13386 
 - T01–T93 are not yet live-run;
 - the bounded-Guard controller is implemented and wired, but `postGuardEws` is a decision-derived **proxy**, not an independently-observed true late-signal EWS (see `11`); the true-late-signal path is E2E-unverified;
 - file 15's Supabase overlay is a read-only observation stamped with `observed_at`; migration parity, live schema, live data counts, edge-function deployment, and Projects-Action invocation are independent facts and none is inferred from another;
-- file 24's root-cause status is `partial`/`unknown` unless the raw-blob receipt under `governance/audits/2026-07-20-sot30-v554/` fully explains the gap;
+- file 24's root cause is `verified` this build (raw-blob receipt: two RLS-initplan optimizations, +18 bytes fully accounted);
 - T76 F1/F2/F3 falsifier behavior is statically specified, not verified-live;
 - gateway Projects Action/JWT role and Archive/Shadow DB enforcement remain pending;
 - current Project memory mode (project-only vs default) for any specific live Project is unknown until explicitly checked;

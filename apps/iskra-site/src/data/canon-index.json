@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-20T12:02:12.101Z",
-  "total": 3401,
+  "generatedAt": "2026-07-20T13:12:48.635Z",
+  "total": 3447,
   "curated": 20,
   "layers": {
-    "root": 338,
+    "root": 339,
     "agents": 46,
     "devcontainer": 2,
     "ci": 13,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 238,
+    "governance": 281,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -27,7 +27,7 @@
     "skills": 267,
     "backend": 79,
     "system": 26,
-    "tools": 54
+    "tools": 56
   },
   "nodes": [
     {
@@ -9404,7 +9404,8 @@
         "dist/agent-builder",
         "dist/sot40",
         "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
-        "dist/SoT30_v5.5.3.zip"
+        "dist/SoT30_v5.5.3.zip",
+        "dist/SoT30_v5.5.4.zip"
       ]
     },
     {
@@ -9426,6 +9427,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "dist/SoT30_v5.5.3.zip",
+      "related": [],
+      "parent": "dist"
+    },
+    {
+      "path": "dist/SoT30_v5.5.4.zip",
+      "name": "SoT30_v5.5.4.zip",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "dist/SoT30_v5.5.4.zip",
       "related": [],
       "parent": "dist"
     },
@@ -25895,6 +25907,7 @@
         "governance/adr_20260718_sot30_v5_5_2_backlog_batch.md",
         "governance/adr_20260719_sot30_v5_5_3_instructions_version_sync.md",
         "governance/adr_20260720_prune_stale_sot30_dist_zips.md",
+        "governance/adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -26346,6 +26359,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md",
+      "name": "adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -26411,6 +26435,7 @@
       "related": [],
       "parent": "governance",
       "children": [
+        "governance/audits/2026-07-20-sot30-v554",
         "governance/audits/2026-06-05-migration-provenance-pr.md",
         "governance/audits/2026-06-05-supabase-repo-drift.md",
         "governance/audits/2026-06-06-repair-pr-supabase-drift-decision.md",
@@ -26460,6 +26485,43 @@
       "sourceRef": "governance/audits/2026-06-27-supabase-non-graph-migration-drift-audit.md",
       "related": [],
       "parent": "governance/audits"
+    },
+    {
+      "path": "governance/audits/2026-07-20-sot30-v554",
+      "name": "2026-07-20-sot30-v554",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/audits/2026-07-20-sot30-v554",
+      "related": [],
+      "parent": "governance/audits",
+      "children": [
+        "governance/audits/2026-07-20-sot30-v554/FILE24_PROVENANCE_RECEIPT.json",
+        "governance/audits/2026-07-20-sot30-v554/FILE24_RAW_BLOB_DIFF.patch"
+      ]
+    },
+    {
+      "path": "governance/audits/2026-07-20-sot30-v554/FILE24_PROVENANCE_RECEIPT.json",
+      "name": "FILE24_PROVENANCE_RECEIPT.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/audits/2026-07-20-sot30-v554/FILE24_PROVENANCE_RECEIPT.json",
+      "related": [],
+      "parent": "governance/audits/2026-07-20-sot30-v554"
+    },
+    {
+      "path": "governance/audits/2026-07-20-sot30-v554/FILE24_RAW_BLOB_DIFF.patch",
+      "name": "FILE24_RAW_BLOB_DIFF.patch",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/audits/2026-07-20-sot30-v554/FILE24_RAW_BLOB_DIFF.patch",
+      "related": [],
+      "parent": "governance/audits/2026-07-20-sot30-v554"
     },
     {
       "path": "governance/changelog.d",
@@ -26878,6 +26940,7 @@
         "governance/releases/2026-07-16-sot30-v5-5-business-projects-hardening",
         "governance/releases/2026-07-18-sot30-v5-5-2-backlog-batch",
         "governance/releases/2026-07-19-sot30-v5-5-3-instructions-version-sync",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency",
         "governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
         "governance/releases/2026-06-24-relational-vow-canon-receipt.md",
         "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md",
@@ -28736,6 +28799,479 @@
       "sourceRef": "governance/releases/2026-07-19-sot30-v5-5-3-instructions-version-sync/support/SHA256SUMS",
       "related": [],
       "parent": "governance/releases/2026-07-19-sot30-v5-5-3-instructions-version-sync/support"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency",
+      "name": "2026-07-20-sot30-v5-5-4-semantic-runtime-consistency",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency",
+      "related": [],
+      "parent": "governance/releases",
+      "children": [
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/PACKAGE_RECEIPT.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/QC_REPORT.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/README.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/PACKAGE_RECEIPT.md",
+      "name": "PACKAGE_RECEIPT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/PACKAGE_RECEIPT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/QC_REPORT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/README.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge",
+      "name": "knowledge",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency",
+      "children": [
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/00_PROJECT_ROUTER.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/02_PROJECTS_SURFACE_MAP.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/04_IDENTITY_NON_MIRROR.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/05_TRUTH_SIFT_RAG.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/06_SECURITY_INTEGRITY.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/07_UNIVERSAL_ROUTER.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/08_STATECYCLE_RUNTIME.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/09_METRICS_ENGINE.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/12_COUNCIL_VOICES.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/14_MEMORY_MODEL.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/16_SHADOW_LAYER.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/17_DREAMSPACE_DREAMSEED.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/18_HORIZON_WEAVER.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/20_GOVERNANCE_ADR.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/24_INTERFACE_STYLE.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/25_LIBER_SPACE_BUSIDO.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/26_SOMATIC_INTUITION.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/28_EVALS_ACCEPTANCE.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/29_INDEX_UPLOAD_MANIFEST.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/00_PROJECT_ROUTER.md",
+      "name": "00_PROJECT_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/00_PROJECT_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "name": "01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "name": "02_PROJECTS_SURFACE_MAP.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "name": "03_TELOS_MANTRA_PRINCIPLES.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "name": "04_IDENTITY_NON_MIRROR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/05_TRUTH_SIFT_RAG.md",
+      "name": "05_TRUTH_SIFT_RAG.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/05_TRUTH_SIFT_RAG.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/06_SECURITY_INTEGRITY.md",
+      "name": "06_SECURITY_INTEGRITY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/06_SECURITY_INTEGRITY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/07_UNIVERSAL_ROUTER.md",
+      "name": "07_UNIVERSAL_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/07_UNIVERSAL_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/08_STATECYCLE_RUNTIME.md",
+      "name": "08_STATECYCLE_RUNTIME.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/08_STATECYCLE_RUNTIME.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/09_METRICS_ENGINE.md",
+      "name": "09_METRICS_ENGINE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/09_METRICS_ENGINE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "name": "10_ENTROPY_FRACTAL_EWS.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "name": "11_SLO_PLAYBOOK_CONTROL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/12_COUNCIL_VOICES.md",
+      "name": "12_COUNCIL_VOICES.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/12_COUNCIL_VOICES.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "name": "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/14_MEMORY_MODEL.md",
+      "name": "14_MEMORY_MODEL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/14_MEMORY_MODEL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "name": "15_SUPABASE_MEMORY_PLANE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/16_SHADOW_LAYER.md",
+      "name": "16_SHADOW_LAYER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/16_SHADOW_LAYER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "name": "17_DREAMSPACE_DREAMSEED.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/18_HORIZON_WEAVER.md",
+      "name": "18_HORIZON_WEAVER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/18_HORIZON_WEAVER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "name": "19_DRY_DARK_RUN_PROTOCOL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/20_GOVERNANCE_ADR.md",
+      "name": "20_GOVERNANCE_ADR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/20_GOVERNANCE_ADR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "name": "21_WORKFLOW_OPS_LEDGER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "name": "22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "name": "23_BUILDER_PROJECTS_COMPAT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/24_INTERFACE_STYLE.md",
+      "name": "24_INTERFACE_STYLE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/24_INTERFACE_STYLE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "name": "25_LIBER_SPACE_BUSIDO.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/26_SOMATIC_INTUITION.md",
+      "name": "26_SOMATIC_INTUITION.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/26_SOMATIC_INTUITION.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "name": "27_WHAT_IF_SCENARIO_MATRIX.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/28_EVALS_ACCEPTANCE.md",
+      "name": "28_EVALS_ACCEPTANCE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/28_EVALS_ACCEPTANCE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "name": "29_INDEX_UPLOAD_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support",
+      "name": "support",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency",
+      "children": [
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/MANIFEST.json",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/PROJECT_INSTRUCTIONS_SOT30.md",
+        "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/SHA256SUMS"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "name": "PROJECT_INSTRUCTIONS_SOT30.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support"
+    },
+    {
+      "path": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/SHA256SUMS",
+      "related": [],
+      "parent": "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support"
     },
     {
       "path": "governance/update_protocol.md",
@@ -41545,6 +42081,7 @@
         "tools/build_checkpoint.py",
         "tools/build_phase1_classification.py",
         "tools/build_projects_stack.py",
+        "tools/build_sot30_release.py",
         "tools/build_sot40_artifact.py",
         "tools/build_workspace_agent_synthesis.py",
         "tools/check_core_adr_gate.py",
@@ -41581,6 +42118,7 @@
         "tools/validate_delta.py",
         "tools/validate_terms.py",
         "tools/verify_ledger.ts",
+        "tools/verify_sot30_release.ts",
         "tools/verify_sot40_receipt.py",
         "tools/verify_sot40_scope.py",
         "tools/verify_supabase_contract_sources.test.ts",
@@ -41640,6 +42178,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/build_projects_stack.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/build_sot30_release.py",
+      "name": "build_sot30_release.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/build_sot30_release.py",
       "related": [],
       "parent": "tools"
     },
@@ -42133,6 +42682,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "tools/verify_ledger.ts",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/verify_sot30_release.ts",
+      "name": "verify_sot30_release.ts",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/verify_sot30_release.ts",
       "related": [],
       "parent": "tools"
     },

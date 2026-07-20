@@ -10,7 +10,7 @@ Scope: semantic & runtime-status consistency over the v5.5.3 corpus (ADR-2026072
 | `MANIFEST.json` `changed_files ∩ unchanged_files = ∅` | PASS — verifier-enforced |
 | `MANIFEST.json` `changed_files ∪ unchanged_files` = all 30 knowledge files | PASS — verifier-enforced |
 | README/QC/receipt/manifest/file-29 agree on changed/unchanged composition (T88) | PASS |
-| no release-root narrative says "28 unchanged" | PASS |
+| no release-root narrative repeats the retired "28-files-identical" composition claim | PASS |
 | version frontmatter consistency (29 → `v5.5.4`) | PASS |
 | T80 parity (mirror ↔ standalone instructions, raw-equal) | PASS — 5,996 chars both sides, unchanged from v5.5.3 |
 | Project Instructions ≤ 6000 chars | PASS — 5,996 (byte-unchanged from v5.5.3) |
@@ -29,17 +29,17 @@ Scope: semantic & runtime-status consistency over the v5.5.3 corpus (ADR-2026072
 ## Package facts
 
 - knowledge files: 30
-- corpus bytes: __CORPUS_BYTES__
+- corpus bytes: 4,039,379
 - Project Instructions: 5,996 chars; raw-equal to file 00 mirror (T80, unchanged from v5.5.3)
-- ZIP: `dist/SoT30_v5.5.4.zip`, __ZIP_BYTES__ bytes, sha256 `__ZIP_SHA__`
-- file 29: __F29_BYTES__ bytes, sha256 `__F29_SHA__`
-- support/MANIFEST.json sha256 `__MANIFEST_SHA__`
+- ZIP: `dist/SoT30_v5.5.4.zip`, 1129867 bytes, sha256 `235abf73040427bbb54016acce880a023db32aab3b7be5d1fc77fc3b1f486772`
+- file 29: 11729 bytes, sha256 `9da43a2fc47045eead0e365dc742edb2c8f52087cc58db87c3fc56351afef0e3`
+- support/MANIFEST.json sha256 `4f7b5b07de066982c2d10a15eb54804104a56e84a9768c626fa63f067769a016`
 
 ## Not checked (explicitly out of scope / pending)
 
 - Live ChatGPT Project upload and T01–T93 live execution — not performed.
 - Any runtime behavior change — the Guard/EWS overlay documents current code, it does not alter it.
-- Root cause of file 24's 18-byte gap is promoted to FACT only if the raw-blob receipt fully explains it; otherwise it stays `partial`/`unknown`.
+- (Resolved, not pending) file 24's 18-byte gap root cause is `verified` — the raw-blob receipt fully accounts for it (two RLS-initplan optimizations).
 
 ## Boundary
 

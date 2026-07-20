@@ -41,6 +41,12 @@ jobs:
       - name: Verify SoT hashes (ledger/sot.json)
         run: npx tsx tools/verify_ledger.ts
 
+      - name: Verify SoT30 v5.5.4 release semantics (fail-closed)
+        run: >-
+          npx tsx tools/verify_sot30_release.ts
+          governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency
+          dist/SoT30_v5.5.4.zip
+
       - name: Verify package boundaries (no deep src imports)
         run: python tools/check_no_src_imports.py
 

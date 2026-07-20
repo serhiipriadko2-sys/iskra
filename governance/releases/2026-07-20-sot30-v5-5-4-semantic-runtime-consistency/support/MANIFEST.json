@@ -1,47 +1,30 @@
 {
-  "package": "SoT30 v5.5.3 Instructions Version Sync + Hash-Chain Repair (embedded manifest + version-frontmatter + kernel-anchor)",
-  "version": "v5.5.3-instructions-version-sync",
+  "package": "SoT30 v5.5.4 Semantic & Runtime-Status Consistency",
+  "package_version": "v5.5.4",
+  "baseline_release": "v5.5.3",
   "date": "2026-07-20",
-  "base": "SoT30_v5.5.2_Backlog_Batch (verified-correct commit 31340c5, not the corrupted working copy)",
-  "adr": "ADR-20260719-01",
+  "adr": "ADR-20260720-02",
+  "generated_from": "canonical_git_blobs",
+  "line_ending_policy": "LF",
+  "knowledge_file_count": 30,
+  "corpus_bytes": 4039379,
+  "project_instructions_chars": 5996,
+  "project_instructions_bytes": 8200,
+  "acceptance_range": "T01-T93",
   "changed_files": [
-    "00_PROJECT_ROUTER.md",
-    "02_PROJECTS_SURFACE_MAP.md",
-    "22_CONNECTORS_TOOLS_BOUNDARY.md",
-    "26_SOMATIC_INTUITION.md",
-    "28_EVALS_ACCEPTANCE.md"
-  ],
-  "regenerated": [
-    "29_INDEX_UPLOAD_MANIFEST.md (embedded table + frontmatter)",
-    "support/SHA256SUMS",
-    "support/MANIFEST.json"
-  ],
-  "hash_chain_repaired": {
-    "reason": "external commit 82191ce overwrote v5.5.2 SHA256SUMS/MANIFEST.json with incorrect values",
-    "files_affected_in_verification_only": [
-      "00_PROJECT_ROUTER.md (also legitimately content-changed this build)",
-      "01_PARITY_ADVANCEMENT_MANIFEST.md",
-      "others — see ADR-20260719-01"
-    ],
-    "content_unaffected": true
-  },
-  "known_preexisting_mismatch": {
-    "file": "24_INTERFACE_STYLE.md",
-    "recorded_since": "v5.5.1",
-    "stale_value": {
-      "bytes": 2830585,
-      "sha256": "325355071ad410288a09c56948dd424d1eb2d17254e0a79c7b790b9332d44390"
-    },
-    "true_value_this_build": {
-      "file": "24_INTERFACE_STYLE.md",
-      "bytes": 2830603,
-      "sha256": "364380ff0f3e5f5910ef2443a90bc249c3549aec4a37eb2a219c247a1b4f6abd"
-    },
-    "note": "root cause unresolved, out of scope; recorded honestly rather than propagated"
-  },
-  "unchanged_content_from_v5_5_2": [
     "01_PARITY_ADVANCEMENT_MANIFEST.md",
     "02_PROJECTS_SURFACE_MAP.md",
+    "11_SLO_PLAYBOOK_CONTROL.md",
+    "15_SUPABASE_MEMORY_PLANE.md",
+    "20_GOVERNANCE_ADR.md",
+    "22_CONNECTORS_TOOLS_BOUNDARY.md",
+    "24_INTERFACE_STYLE.md",
+    "25_LIBER_SPACE_BUSIDO.md",
+    "28_EVALS_ACCEPTANCE.md",
+    "29_INDEX_UPLOAD_MANIFEST.md"
+  ],
+  "unchanged_files": [
+    "00_PROJECT_ROUTER.md",
     "03_TELOS_MANTRA_PRINCIPLES.md",
     "04_IDENTITY_NON_MIRROR.md",
     "05_TRUTH_SIFT_RAG.md",
@@ -50,30 +33,18 @@
     "08_STATECYCLE_RUNTIME.md",
     "09_METRICS_ENGINE.md",
     "10_ENTROPY_FRACTAL_EWS.md",
-    "11_SLO_PLAYBOOK_CONTROL.md",
     "12_COUNCIL_VOICES.md",
     "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
     "14_MEMORY_MODEL.md",
-    "15_SUPABASE_MEMORY_PLANE.md",
     "16_SHADOW_LAYER.md",
     "17_DREAMSPACE_DREAMSEED.md",
     "18_HORIZON_WEAVER.md",
     "19_DRY_DARK_RUN_PROTOCOL.md",
-    "20_GOVERNANCE_ADR.md",
     "21_WORKFLOW_OPS_LEDGER.md",
-    "22_CONNECTORS_TOOLS_BOUNDARY.md",
     "23_BUILDER_PROJECTS_COMPAT.md",
-    "24_INTERFACE_STYLE.md",
-    "25_LIBER_SPACE_BUSIDO.md",
     "26_SOMATIC_INTUITION.md",
-    "27_WHAT_IF_SCENARIO_MATRIX.md",
-    "28_EVALS_ACCEPTANCE.md"
+    "27_WHAT_IF_SCENARIO_MATRIX.md"
   ],
-  "knowledge_file_count": 30,
-  "corpus_bytes": 4028009,
-  "project_instructions_chars": 5996,
-  "project_instructions_note": "version-label sync only: \"SoT30 v5.5.1\" -> \"SoT30 v5.5.3\" in both 00 and this file; raw-equal (T80) verified before and after",
-  "acceptance_range": "T01-T87",
   "files": [
     {
       "path": "knowledge/00_PROJECT_ROUTER.md",
@@ -82,13 +53,13 @@
     },
     {
       "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
-      "bytes": 24901,
-      "sha256": "db984f2d9f4c708e31258e653bff5dd25014d5ef3bc0a2a022ec7821cd8ff7f8"
+      "bytes": 26301,
+      "sha256": "6acb11569c5f74b30e58f0fbe8c3cbc27d4e2a4c857daa0bb7248c5c168a81cd"
     },
     {
       "path": "knowledge/02_PROJECTS_SURFACE_MAP.md",
       "bytes": 4615,
-      "sha256": "03189cfc0a81e7435ef6d8f522a66edf04551434bd89fcb563c88e12d02084fa"
+      "sha256": "1b4e291208a6783053fc19a417edd2de15b5d19dbe261d86846c097a59e5a281"
     },
     {
       "path": "knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
@@ -132,8 +103,8 @@
     },
     {
       "path": "knowledge/11_SLO_PLAYBOOK_CONTROL.md",
-      "bytes": 14691,
-      "sha256": "969ab3225fecbb8e2cb0c2b5ee3d3481a67af7a5cf42dd42237854798b4014fd"
+      "bytes": 16074,
+      "sha256": "60f9f043b7eb71c3f47a38d36604c6b9fd228ea8b76d8ce8a65405106966553c"
     },
     {
       "path": "knowledge/12_COUNCIL_VOICES.md",
@@ -152,8 +123,8 @@
     },
     {
       "path": "knowledge/15_SUPABASE_MEMORY_PLANE.md",
-      "bytes": 11235,
-      "sha256": "5d757e35b82dc60b1471d7f7c6c1f547a84af5e30fcb99d75b1fbc602fe6600d"
+      "bytes": 12574,
+      "sha256": "c67f62e9cb33bec161c347eff9894ba47724e324b4ac0b7d1a007bad469732af"
     },
     {
       "path": "knowledge/16_SHADOW_LAYER.md",
@@ -177,8 +148,8 @@
     },
     {
       "path": "knowledge/20_GOVERNANCE_ADR.md",
-      "bytes": 31627,
-      "sha256": "386781894cd92c3f58ee740c062c8a21005bdd96ff512fb048b787844d2c1a9a"
+      "bytes": 32537,
+      "sha256": "fa80f1f4e06650c1269e65bae4ba412a5351d4d2142330fb74728979cb6151fd"
     },
     {
       "path": "knowledge/21_WORKFLOW_OPS_LEDGER.md",
@@ -188,7 +159,7 @@
     {
       "path": "knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
       "bytes": 3763,
-      "sha256": "60f2a36f20bc2463114ded7b65b04cb59a0943bdbbf5cdc4b332bc78ae3b4da4"
+      "sha256": "4f9b022567be9ccbfcef48d62c504a82352f5f0b264a2f3c955243ba798e2ffd"
     },
     {
       "path": "knowledge/23_BUILDER_PROJECTS_COMPAT.md",
@@ -197,13 +168,13 @@
     },
     {
       "path": "knowledge/24_INTERFACE_STYLE.md",
-      "bytes": 2830603,
-      "sha256": "364380ff0f3e5f5910ef2443a90bc249c3549aec4a37eb2a219c247a1b4f6abd"
+      "bytes": 2831441,
+      "sha256": "576b0c881d5c0a889898ca7e668c48a46f816203fde720865914785cc69f380b"
     },
     {
       "path": "knowledge/25_LIBER_SPACE_BUSIDO.md",
-      "bytes": 457439,
-      "sha256": "c58bbb6c10ba353ef12245e55f45386f1390179e4f4d2cd7c25394c74fe39eef"
+      "bytes": 458073,
+      "sha256": "f151ccfd187be0c67e281ec50aa38c3a66714350effd8408646dbfa8a43b62a6"
     },
     {
       "path": "knowledge/26_SOMATIC_INTUITION.md",
@@ -217,13 +188,13 @@
     },
     {
       "path": "knowledge/28_EVALS_ACCEPTANCE.md",
-      "bytes": 13401,
-      "sha256": "890d6c3a0a1a83d7932dae3f582355402eefb2d8ac695bdfcb79c0a0ee5a2ce9"
+      "bytes": 15492,
+      "sha256": "5f48404930145728e6e9f5947d8935331f5eeec491ea5fd7c372e2360de89ce4"
     },
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
-      "bytes": 8954,
-      "sha256": "a0ddf4deb0551392558715a3a4a9dd94250c18e3c404b5734a5bed8743d20eab"
+      "bytes": 11729,
+      "sha256": "9da43a2fc47045eead0e365dc742edb2c8f52087cc58db87c3fc56351afef0e3"
     }
   ],
   "live_project_verified": false

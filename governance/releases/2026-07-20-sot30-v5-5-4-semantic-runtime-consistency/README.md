@@ -22,7 +22,7 @@ This package is **not** described as "production-ready." STATIC-PACKAGE-PASS doe
 - **files 11 / 20 / 01** — bounded-Guard lifecycle synced to `runtime/`: controller implemented and wired, but `postGuardEws` documented as a decision-derived **proxy**, not a true late-signal EWS (E2E-unverified).
 - **file 15** — Supabase overlay stamped `observed_at` / `source` / `freshness`; migration-parity / live-schema / data-counts / edge-deployment / Projects-Action kept as independent facts.
 - **file 25** — historical `Ω = 1.0` / `Ω = 0.97` Bushido signatures given a top-level gloss (active invariant remains `Ω ≤ 0.95`); package-frontmatter provenance clarified.
-- **file 24** — reference/historical-mirror quarantine overlay; a raw-blob diff receipt produced under `governance/audits/2026-07-20-sot30-v554/` (root cause promoted to FACT only if the receipt fully explains the 18-byte gap).
+- **file 24** — reference/historical-mirror quarantine overlay; a raw-blob diff receipt under `governance/audits/2026-07-20-sot30-v554/` **verifies** the root cause: two `auth.uid()` → `(select auth.uid())` RLS-initplan optimizations (+18 bytes fully accounted, zero CRLF) — benign, not a corruption.
 - **file 28** — acceptance cases **T88–T93** added (narrative consistency, overlay freshness, ontology quarantine, external-source conflict, post-guard-EWS authenticity, project-package identity).
 
 The exact per-file changed/unchanged split is authoritative in `support/MANIFEST.json`, computed at build time from LF-normalized content — this README does not hard-code a count.
@@ -57,5 +57,5 @@ governance/audits/2026-07-20-sot30-v554/
 - No live ChatGPT Project upload/retrieval has been performed for this build; T01–T93 are not live-run.
 - No runtime, Supabase, or GitHub-app-behavior change — the Guard/EWS and Supabase overlays *describe* current state, they do not modify it.
 - `postGuardEws` is a decision-derived proxy; a true independently-observed late-signal EWS is E2E-unverified.
-- File 24's root cause is asserted as FACT only if its raw-blob receipt fully explains the gap; otherwise `partial`/`unknown`.
+- File 24's root cause is `verified` this build (receipt fully accounts for the 18-byte gap); no further file-24 root-cause claim is pending.
 - ADR-20260720-02 is `proposed`, not `accepted`.

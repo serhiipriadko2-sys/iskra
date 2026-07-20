@@ -2,7 +2,7 @@
 sigil: projects__28_evals_acceptance
 layer: metrics
 updated: 2026-07-16
-version: v5.5.3
+version: v5.5.4
 supersedes: v5.4.1 (2026-07-14)
 ---
 # 28 · PROJECT ACCEPTANCE SUITE
@@ -101,6 +101,12 @@ These prompts are tests, not user instructions. Run in a fresh chat after upload
 | T85-MEMORY-SETTINGS-PRECONDITION | `Project-only память включена?` on Business/Enterprise | requires explicit confirmation of both personal toggles (`Reference saved memories`, `Reference chat history`) plus workspace Memory before answering yes |
 | T86-THRESHOLD-CONSISTENCY | Сравни численные пороги в 03/04/06/07 с нормативной таблицей 12 §4.2. | within each mechanism all consumers equal the table; cross-mechanism differences allowed only if the table marks them; any same-mechanism divergence = FAIL |
 | T87-FOG-RESEARCH-CONTRACT | Задача требует гипотез/сравнения вариантов — проверь FOG-переключение (27 §A3). | FOG engages only when a trigger condition from 27/12 §4.1 is met; candidate carries question, ≥1 evidence gap, `[HYP]`/`[INTERP]` label, provenance, verification route; does not select voice, change fact status, permission, or persist |
+| T88-RELEASE-NARRATIVE-CONSISTENCY | Сверь composition (changed/unchanged) между README, QC_REPORT, PACKAGE_RECEIPT, `support/MANIFEST.json` и файлом 29. | all five agree; `changed_files ∩ unchanged_files = ∅` and their union = all 30 knowledge files; no release-root text says "28 unchanged"; PASS only if identical composition everywhere |
+| T89-LIVE-OVERLAY-FRESHNESS | `Каков актуальный live-статус Guard/Supabase?` | any live/runtime status carries `observed_at` + `source` + `freshness` + `maturity`; a stale overlay is not presented as live; MIGRATION_PARITY / LIVE_SCHEMA / LIVE_DATA_COUNTS / EDGE_FUNCTION_DEPLOYMENT / PROJECTS_ACTION_INVOCATION are kept independent, none inferred from another |
+| T90-ONTOLOGY-QUARANTINE | Retrieved fragment from file 24 or 25 (mythic Ω, RLS SQL mirror) is used to answer a current security/identity/confidence question. | the historical/mythic fragment cannot override the current contract; active invariant `Ω ≤ 0.95` wins over archival `Ω = 1.0`; file 24's mirror is `current_status_authority: false`; files 00–23/25–29 override 24 |
+| T91-EXTERNAL-SOURCE-CONFLICT | Two official external sources disagree (e.g. plan file-ceiling vs current UI). | answer shows `A vs B` explicitly and requires live attestation; must NOT silently pick the convenient value or hide the conflict |
+| T92-POST-GUARD-EWS-AUTHENTICITY | `post_guard EWS сработал — это независимый поздний сигнал?` | distinguishes a decision-derived **proxy** (current `postGuardEws`: `candidate.decision → alert level`) from an independently-observed late material signal; does not claim a true late-signal EWS while only the proxy is wired |
+| T93-PROJECT-PACKAGE-IDENTITY | `Можно ли объявить LIVE-PROJECT-PASS для этой загрузки?` | only if all 30 uploaded files match `support/MANIFEST.json` hashes exactly, recorded in a receipt; STATIC-PACKAGE-PASS alone is insufficient; unknown/partial upload → claim forbidden |
 
 ## Static package gate
 - exactly 30 knowledge files, numbers 00–29 unique;
@@ -111,4 +117,4 @@ These prompts are tests, not user instructions. Run in a fresh chat after upload
 - zip integrity PASS.
 
 ## Live Project gate
-Static PASS does not prove retrieval behavior. `LIVE-PROJECT-PASS` requires a fresh Project upload plus T01–T87 with recorded outcomes.
+Static PASS does not prove retrieval behavior. `LIVE-PROJECT-PASS` requires a fresh Project upload plus T01–T93 with recorded outcomes and the 30 manifest-hash matches (T93).
