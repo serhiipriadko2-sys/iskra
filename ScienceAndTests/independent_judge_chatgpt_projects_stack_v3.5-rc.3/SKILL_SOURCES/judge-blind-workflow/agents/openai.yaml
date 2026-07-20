@@ -1,0 +1,3 @@
+interface:
+  display_name: "Judge Blind Workflow"
+  short_description: "Create and audit isolated blind evaluation runs."

@@ -276,3 +276,21 @@
 - **Supersede:** the rc.1 hash `844a80d6…` recorded in EVI-20260719-001 is no longer the release artifact; rc.2 is authoritative.
 - **Status:** Local attestation verified; live acceptance NOT_RUN.
 
+
+### EVI-20260719-003: Independent Judge v3.5-rc.3 fail-closed release candidate
+- **Assertion:** rc.3 closes the rc.2 fail-open study-record boundary and release-verification gaps without mutating live Supabase or ChatGPT Projects.
+- **Evidence:**
+  - Tree: `ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/`.
+  - Active pointer: `ScienceAndTests/ACTIVE_JUDGE_STACK` → rc.3.
+  - ZIP: `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip`, 1,176,932 bytes, sha256 `c882136db4882582fe5dfdb709bf8d1bf9d033d9f7bf1933afd79300357ddbc9` (supersedes pre-review build `3ee3bfb5da68aeacec6e5aa37047c0908a2390b80b6154919fd43581a13581c1`).
+  - External receipt: `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.receipt.json`; final ZIP hash is not stored inside the ZIP.
+  - Static QC PASS: 30 Knowledge, instructions 5,500/6,000, 6 EXT, 40 criteria, 56 gates, 11 methods, T01–T40, 5 skills.
+  - Dynamic/mutation QC 22/22 PASS, including missing required fields, wrong types, invalid enums, NaN/Infinity, out-of-range scores, hard-failure laundering, blind-file separation, and pack QC.
+  - Manifest exact two-way coverage 121/121; archive 123 files; round-trip tree identity 123/123; no cache/symlink artifacts.
+- **Limitations:** live T01–T40, empirical calibration, owner acceptance, and 126×3 answer regeneration are NOT_RUN/open.
+- **Status:** Local release candidate verified; GitHub PR/CI and live acceptance pending.
+
+### EVI-20260719-004: Independent Judge rc.3 second-review closure
+- **Assertion:** six additional P2 contract/aggregation findings are closed on the exact release artifact.
+- **Evidence:** ZIP `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip`, 1,178,388 bytes, sha256 `73d7ee6f7e77926234be7250fd3ab7b1b4957abb0361dbf51e4bbb90ae587e25`; static PASS; dynamic 25/25; manifest 121/121; archive 123 files; round-trip 123/123.
+- **Supersedes:** prior rc.3 post-review ZIP hash `c882136db4882582fe5dfdb709bf8d1bf9d033d9f7bf1933afd79300357ddbc9`.
