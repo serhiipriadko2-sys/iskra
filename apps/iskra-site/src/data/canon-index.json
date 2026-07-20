@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-20T05:49:47.950Z",
-  "total": 3242,
+  "generatedAt": "2026-07-20T05:56:32.656Z",
+  "total": 3244,
   "curated": 20,
   "layers": {
     "root": 337,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 235,
+    "governance": 237,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23952,6 +23952,7 @@
         "governance/adr_20260717_supabase_metrics_compute_plane_v1.md",
         "governance/adr_20260718_sot30_v5_5_2_backlog_batch.md",
         "governance/adr_20260719_sot30_v5_5_3_instructions_version_sync.md",
+        "governance/adr_20260720_prune_stale_sot30_dist_zips.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -24392,6 +24393,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260720_prune_stale_sot30_dist_zips.md",
+      "name": "adr_20260720_prune_stale_sot30_dist_zips.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260720_prune_stale_sot30_dist_zips.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -24540,7 +24552,8 @@
         "governance/changelog.d/2026-07-17-research-router-capability.md",
         "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
         "governance/changelog.d/2026-07-18-sot30-v5-5-2-backlog-batch.md",
-        "governance/changelog.d/2026-07-19-sot30-v5-5-3-instructions-version-sync.md"
+        "governance/changelog.d/2026-07-19-sot30-v5-5-3-instructions-version-sync.md",
+        "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md"
       ]
     },
     {
@@ -24793,6 +24806,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-19-sot30-v5-5-3-instructions-version-sync.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md",
+      "name": "2026-07-20-prune-stale-sot30-dist-zips.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md",
       "related": [],
       "parent": "governance/changelog.d"
     },

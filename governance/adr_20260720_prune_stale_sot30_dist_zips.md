@@ -30,8 +30,9 @@ removal (`ADR-20260716-03` follow-up).
 ## Decision
 
 Remove `dist/SoT30_v5.5.1.zip` and `dist/SoT30_v5.5.2.zip` so `dist/SoT30_v5.5.3.zip`
-is the single canonical SoT30 package. Regenerate `apps/iskra-site` canon index
-to drop the two stale nodes (3244 → 3242) and the ledger.
+is the single canonical SoT30 package. Regenerate `apps/iskra-site` canon index (the two dist-zip nodes are
+removed; this ADR and its changelog add two governance nodes, so the index nets
+to 3244) and the ledger.
 
 Historical governance records and the extracted release trees
 (`governance/releases/2026-07-16-...v5-5-1-...`, `2026-07-18-...v5-5-2-...`,
@@ -43,10 +44,10 @@ recoverable from git history if ever needed.
 ## Evidence
 
 - Divergence proof: `git show origin/main:dist/SoT30_v5.5.2.zip` extracted and
-  hashed vs the committed release-tree blobs — 06/09/24 mismatch (documented in
+  hashed vs the committed release-tree blobs — mismatch in files 06, 09, and 24 (documented in
   `ADR-20260719-01` Decision 7 and the v5.5.3 PACKAGE_RECEIPT provenance note).
-- Post-prune gates: `canon:index:check` up to date (3242 nodes); `verify_ledger`
-  OK (818 files).
+- Post-prune gates: `canon:index:check` up to date (3244 nodes; two dist-zip nodes removed,
+  two governance nodes added); `verify_ledger` OK (820 files).
 
 ## Risk
 
@@ -56,7 +57,7 @@ recoverable from git history if ever needed.
 
 ## Rollback
 
-`git checkout <prev>^ -- dist/SoT30_v5.5.1.zip dist/SoT30_v5.5.2.zip` and
+`git checkout HEAD~1 -- dist/SoT30_v5.5.1.zip dist/SoT30_v5.5.2.zip` and
 regenerate the index/ledger; this ADR → `superseded`.
 
 ## Status
