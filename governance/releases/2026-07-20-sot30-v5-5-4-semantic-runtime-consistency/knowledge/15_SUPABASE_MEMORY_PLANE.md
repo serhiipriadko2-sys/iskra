@@ -1,12 +1,26 @@
-# CURRENT STATUS OVERLAY · 2026-07-11
+# CURRENT STATUS OVERLAY · 2026-07-20
 
-This overlay supersedes dated live counts and gateway-v1 statements below.
+```yaml
+observed_at: 2026-07-20T12:00Z
+observation_surface: supabase_mcp_read_only
+freshness: live_observation
+maturity: read_only_inspection   # not an end-to-end HTTP/Projects-Action test
+project: typcvaszcfdpkzbjzuur
+```
 
-- live tables: 10; rows observed: journal 14, archive 2, shadow 2, open_loops 4, sense_events 2, dream_seeds 2, edges 5, statecycle_snapshots 4, gateway_events 7, horizon_events 0.
-- `iskra-memory-gateway`: ACTIVE version 2, `verify_jwt=true`, body performs HS256 JWT signature verification.
-- Projects Action: not exposed in the current Project tool registry; last observed HTTP request was 401 and no role was proven.
-- direct Supabase MCP: available privileged path; **not equivalent** to gateway invocation or end-user identity.
-- mandatory Projects runtime must work without this plane and degrade to `memory write unavailable`.
+This overlay supersedes the dated 2026-07-10/2026-07-11 counts and the gateway-v1/v2
+statements further below. The five status facts below are **independent** — none is
+inferred from another:
+
+- **MIGRATION_PARITY** — repo `supabase/migrations/*.sql` = 35 files; `list_migrations` live = 35; in parity. `[FACT]`
+- **LIVE_SCHEMA** — schema `iskra_memory` present; its tables have RLS enabled with **zero policies** (confirmed by security advisors `rls_enabled_no_policy` for gateway_events / horizon_events / memory_archive / memory_dream_seeds / memory_edges / memory_journal / memory_open_loops / memory_sense_events / memory_shadow / statecycle_snapshots). RLS is not the enforcing layer for `postgres`/`service_role`. `[FACT]`
+- **LIVE_DATA_COUNTS** — `iskra_memory` rows (read-only SELECT, 2026-07-20): journal 18, archive 2, shadow 2, open_loops 5, sense_events 2, dream_seeds 2, edges 5, statecycle_snapshots 4, gateway_events 7, horizon_events 0. (Changed vs 2026-07-11: journal 14→18, open_loops 4→5.) `[FACT]`
+- **EDGE_FUNCTION_DEPLOYMENT** — `iskra-memory-gateway`: ACTIVE **version 4**, `verify_jwt=true` (was recorded as v1 in §7 / v2 in the prior overlay — both stale). Deployment ≠ invocation. `[FACT]` This overlay does not re-read the v4 gateway body; the §7 actor-source drift note below is from the v1 read and is `[HYP]` until a fresh body read confirms it on v4.
+- **PROJECTS_ACTION_INVOCATION** — not tested this observation; no `invoke_edge_function`/Projects-Action tool was exercised, so end-to-end HTTP enforcement from a Project surface remains unverified. `[HYP]`
+
+Direct Supabase MCP is a privileged path; it is **not equivalent** to gateway invocation
+or end-user identity. Mandatory Projects runtime must work without this plane and degrade
+to `memory write unavailable`.
 
 ---
 

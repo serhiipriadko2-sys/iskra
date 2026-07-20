@@ -1,12 +1,21 @@
-# CURRENT EVIDENCE OVERLAY · 2026-07-11
+# CURRENT EVIDENCE OVERLAY · 2026-07-20
 
-No policy decision is changed here; lifecycle evidence is updated.
+```yaml
+observed_at: 2026-07-20
+source: repo_read (origin/main) + supabase_mcp_read_only
+freshness: current
+maturity: mixed (see per-line stage)
+```
 
-- ADR bounded Guard: `accepted → mirrored-to-builder → runtime-module-implemented`.
-- production integration remains pending because `policyEngine.ts` is single-pass.
-- linked live persistence receipts exist, but deployed application E2E remains unverified.
-- gateway v2 is deployed; Projects Action 2xx and JWT role remain unverified.
-- Archive/Shadow database enforcement gaps remain pending; policy prohibitions are not DB enforcement.
+No policy decision is changed here; lifecycle evidence is updated. Distinguish
+`accepted` from `implemented` from `wired` from `deployed` from `invoked` from
+`verified-live` — they are separate stages.
+
+- ADR bounded Guard: `accepted → mirrored-to-builder → runtime-module-implemented → APPLICATION_PATH_WIRED`. `[FACT]`
+- **Correction to the 2026-07-11 line:** production integration is **no longer pending** — `policyEngine.ts:484` calls `runBoundedGuardController` and maps the decision into the playbook (it is no longer single-pass). What remains unverified is **DEPLOYED_E2E** (app code on `main`, not proven running on a deployed surface) and the **true-late-signal** path: the wired `postGuardEws` is a decision-derived proxy, not an independent post-guard material signal (see file 11). `[FACT]` / `[HYP]`
+- linked live persistence receipts exist, but deployed application E2E remains unverified. `[HYP]`
+- `iskra-memory-gateway` is deployed at **version 4** (`verify_jwt=true`), not v2 as the prior line said; Projects-Action 2xx and JWT-role remain unverified (not invocation-tested this build). `[FACT]` deployment / `[HYP]` invocation.
+- Archive/Shadow database enforcement gaps remain pending; policy prohibitions are not DB enforcement. `[FACT]`
 
 ---
 

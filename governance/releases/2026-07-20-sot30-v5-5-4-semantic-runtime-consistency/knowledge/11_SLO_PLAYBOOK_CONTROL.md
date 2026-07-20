@@ -1,12 +1,27 @@
-# CURRENT STATUS OVERLAY · 2026-07-11
+# CURRENT STATUS OVERLAY · 2026-07-20
 
-This overlay supersedes stale lifecycle statements below.
+```yaml
+observed_at: 2026-07-20
+source: repo_read (origin/main)
+freshness: current_commit
+maturity: code_wired_not_deployed_e2e
+```
 
-- policy/contract: accepted and mirrored; max 3 evaluations total; #4 forbidden.
-- GitHub runtime module: **implemented in main** by merged PR #246 (`runtime/src/types/guardController.ts`).
-- production request path: **not integrated**; `policyEngine.ts` still calls single-pass `decideSloGuardExplainable()`.
-- live evidence: linked #1→#2→#3 persistence was verified via test runtime + privileged RPC, **not** deployed application E2E.
-- lifecycle: `RUNTIME_MODULE_IMPLEMENTED / APP_WIRING_PENDING / DEPLOYED_E2E_UNVERIFIED`.
+This overlay supersedes the 2026-07-11 lifecycle statement below, which is now
+**stale**: it said the application path was "not integrated" and that
+`policyEngine.ts` "still calls single-pass `decideSloGuardExplainable()`." That
+is no longer true on `main`.
+
+Current lifecycle (independent stages, none inferred from another):
+
+- **BOUNDED_GUARD_CONTROLLER_IMPLEMENTED** — `runtime/src/types/guardController.ts` exports `runBoundedGuardController` with `MAX_GUARD_EVALUATIONS_PER_TURN = 3`, per-evaluation receipts, and `CLOSE_HONESTLY` controller closure. `[FACT]`
+- **APPLICATION_PATH_WIRED** — `runtime/iskraSpace/services/policyEngine.ts:484` calls `runBoundedGuardController(...)` and maps `finalOutcome.decision` into the playbook (`FORCE_CRISIS→CRISIS`, `FORCE_SHADOW→SHADOW`, `FORCE_ISKRIV_1`/`CLOSE_HONESTLY→SIFT`) at lines 499–524. The old single-pass path is no longer the wired one. `[FACT]`
+- **POST_GUARD_EWS_PROXY_ONLY** — the wired `postGuardEws` (policyEngine.ts:487–496) is a **decision-derived proxy**: it maps `candidate.decision → synthetic alert level` via `getAlertLevelForDecision` and sets `materialSignal = (targetLevel > currentLevel)`. It is **not** an independently-observed post-guard material event. `[FACT]`
+- **TRUE_LATE_SIGNAL_E2E_UNVERIFIED** — no independent late-signal source feeds `postGuardEws`; a genuine post-guard material signal (e.g. a real EWS recomputation from fresh evidence after the candidate decision) is not wired and not E2E-verified. `[HYP]`
+- **DEPLOYED_E2E_UNVERIFIED** — the wiring is in app code on `main`; it is not proven running against a deployed production surface this build. `[HYP]`
+
+> The docs describe the code; this build changes **no runtime code** to "match" the
+> docs. If a true late-signal EWS is later wired, revise POST_GUARD_EWS_PROXY_ONLY.
 
 ---
 

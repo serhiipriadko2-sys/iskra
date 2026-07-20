@@ -1,3 +1,23 @@
+# CURRENT STATUS OVERLAY · 2026-07-20 (v5.5.4)
+
+```yaml
+observed_at: 2026-07-20
+source: repo_read (origin/main) + supabase_mcp_read_only
+freshness: current
+```
+
+Lifecycle corrections applied this build (no capability removed):
+
+- **SLO-GUARD dictionary** (row 8): canonical token is `FORCE_ISKRIV_1`, not `FORCE_ISKRIV` (`runtime/src/types/guard.ts`).
+- **Bounded-Guard integration**: `APPLICATION_PATH_WIRED` — `policyEngine.ts:484` calls `runBoundedGuardController`; the old "single-pass / wiring-pending" status is stale. `postGuardEws` is a decision-derived **proxy**, not a true late-signal EWS (file 11). `[FACT]`/`[HYP]`.
+- **Gateway** (row references): `iskra-memory-gateway` deployed **version 4**, `verify_jwt=true`; Projects-Action 2xx / JWT-role invocation still unverified (file 15/20).
+- **Horizon** (row 10): `propose→validate→commit` is a **contract**; a live commit path is not asserted beyond the validator — no commit is claimed as executed.
+- **Dry run** (row 11a): audited dry-run writes **0** rows to the target container and **1** audit receipt — target-writes and audit-writes are distinct.
+
+Row-level statuses below predate this overlay where not corrected here; this overlay wins on conflict.
+
+---
+
 ---
 sigil: projects__01_parity_advancement_manifest.md
 doc_type: reference
@@ -46,7 +66,7 @@ REQUIRES-ADR          — статус не определён без governance
 | 5 | Derived Indices (echo_clearance, alive_index, pain_tonicity) | Вычисляются поверх сырых метрик для SLO/anti-dryness | То же, отдельно от сырых метрик, документируется явно | `LIVE-AS-CONTRACT` | 09 | SLO_GUARD получает оба класса входов, не путает сырое с производным | SLO_GUARD не сможет проверить False Harmony / Drift Loop без `echo_clearance` | `33_SLO_GUARD.md:44`; `15_CHANGELOG.md:81` |
 | 6 | Entropy / Fractal metrics (HFD, DFA, D=2−H, CSI/EI/NC) | Temporal-слой поверх метрик, интерпретация квантовых индикаторов | Формулы сохранены; интерпретация как «квантового сознания» запрещена | `CALIBRATION-REQUIRED` | 10 | Не вычисляет на недостаточном временном ряду; claims о сознании отклоняются | Красивая, но недоказанная метафора выдаётся за факт о модели | `16_COGNITIVE_ARCHITECTURE.md`, `docs_specs/SPEC-001..004` |
 | 7 | Early Warning System (EWS) | `NORMAL→WATCH→WARNING→CRITICAL→LOCKDOWN`, читает решение SLO-GUARD | То же; граф не линеен — `SLO_GUARD→EWS` эскалация подтверждена | `LIVE-AS-CONTRACT` | 10 | EWS ≥ WARNING, если `SLO-GUARD.decision != PROCEED` | Пропущенная эскалация — риск не поднимается, хотя guard уже сработал | `19_EARLY_WARNING.md:92` |
-| 8 | SLO-GUARD (decision gate) | Решение `PROCEED/FORCE_*/CLOSE_HONESTLY` на основе метрик | Тот же словарь, подтверждённый дословно: `PROCEED\|FORCE_ISKRIV\|FORCE_SHADOW\|FORCE_CRISIS\|CLOSE_HONESTLY` | `LIVE-IN-PROJECTS` (протокол) | 11 | Не вызывается без `metric_snapshot` от файла 09 | Playbook выбирается без проверки — пропуск False Harmony/Drift Loop/Overheat паттернов | `33_SLO_GUARD.md` (полный словарь построчно) |
+| 8 | SLO-GUARD (decision gate) | Решение `PROCEED/FORCE_*/CLOSE_HONESTLY` на основе метрик | Тот же словарь, подтверждённый дословно: `PROCEED\|FORCE_ISKRIV_1\|FORCE_SHADOW\|FORCE_CRISIS\|CLOSE_HONESTLY` *(исправлено v5.5.4: было `FORCE_ISKRIV`; каноничный токен — `FORCE_ISKRIV_1`, см. `runtime/src/types/guard.ts` и файл 11)* | `LIVE-IN-PROJECTS` (протокол) | 11 | Не вызывается без `metric_snapshot` от файла 09 | Playbook выбирается без проверки — пропуск False Harmony/Drift Loop/Overheat паттернов | `33_SLO_GUARD.md` (полный словарь построчно) |
 | 9 | Playbooks (ROUTINE/SHADOW/CRISIS + vNext) | `26_PLAYBOOKS_VNEXT.md`, TTL/exit/запреты, SILENCE→CLOSE_HONESTLY | То же, как протокол выбора рамки ответа | `LIVE-AS-CONTRACT` | 11 | Playbook согласован с решением guard, не выбирается произвольно | Голос отвечает вне рамки, разрешённой guard'ом | `26_PLAYBOOKS_VNEXT.md`, `15_CHANGELOG.md:85` |
 | 10 | Horizon (map-shift proposals) | `propose→validate→commit`, epoch log, JSON-контракт квот | То же, но **не имеет собственного SLO-эскалационного выхода** — открытый ADR-вопрос | `LIVE-AS-CONTRACT` + `REQUIRES-ADR` | 18 | `commit` заблокирован без `validate PASS` и permission | Horizon мутирует без разрешения, либо остаётся вечно недостижим по метрике | `canon/horizon/`, `07_SYSTEM_INTEGRITY.md` §HORIZON |
 | 11a | Dry run | `dry_run` — enum-значение в Horizon-схеме архива | Сохранён как протокол: реальный роутинг/метрики/guard, запись симулируется | `LIVE-AS-PROTOCOL` | 19 | 0 новых записей в Supabase + полная квитанция diff | Обещанный безопасный прогон на деле пишет в БД | `HORIZON_PROPOSAL_SCHEMA.json`, эта сессия |
