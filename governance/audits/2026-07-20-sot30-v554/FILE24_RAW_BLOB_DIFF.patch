@@ -1,0 +1,17 @@
+--- a/24_INTERFACE_STYLE.md (v5.5.1 blob a5d9ba98)
++++ b/24_INTERFACE_STYLE.md (v5.5.3 blob 3007c8b6)
+@@ -61568,12 +61568,12 @@
+ -- Policy: Users can only see their own nodes
+ CREATE POLICY graph_nodes_user_isolation ON graph_nodes
+   FOR ALL
+-  USING (user_id = auth.uid() OR user_id IS NULL);
++  USING (user_id = (select auth.uid()) OR user_id IS NULL);
+ 
+ -- Policy: Users can only see their own edges
+ CREATE POLICY graph_edges_user_isolation ON graph_edges
+   FOR ALL
+-  USING (user_id = auth.uid() OR user_id IS NULL);
++  USING (user_id = (select auth.uid()) OR user_id IS NULL);
+ 
+ -- ============================================
+ -- 6. SEED CANONICAL NODES (Optional)
