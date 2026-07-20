@@ -87,8 +87,8 @@ describe('closed-beta Supabase client boundary', () => {
 
   it('requests a magic link without self-service account creation', async () => {
     mocks.auth.signInWithOtp.mockResolvedValue({ error: null });
-    const betaOrigin = 'https://beta.example.test';
-    vi.stubGlobal('window', { location: { origin: betaOrigin } });
+    const betaUrl = 'https://beta.example.test/iskra/';
+    vi.stubGlobal('window', { location: { href: betaUrl } });
 
     const client = await import('../supabaseClient');
 
@@ -96,7 +96,7 @@ describe('closed-beta Supabase client boundary', () => {
     expect(mocks.auth.signInWithOtp).toHaveBeenCalledWith({
       email: 'member@example.test',
       options: {
-        emailRedirectTo: betaOrigin,
+        emailRedirectTo: betaUrl,
         shouldCreateUser: false,
       },
     });
