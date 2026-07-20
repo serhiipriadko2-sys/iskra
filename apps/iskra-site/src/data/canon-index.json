@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-07-20T05:56:32.656Z",
-  "total": 3244,
+  "generatedAt": "2026-07-20T12:02:12.101Z",
+  "total": 3401,
   "curated": 20,
   "layers": {
-    "root": 337,
+    "root": 338,
     "agents": 46,
     "devcontainer": 2,
     "ci": 13,
-    "research": 247,
+    "research": 402,
     "appendix": 26,
     "site": 69,
     "web": 13,
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 237,
+    "governance": 238,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -650,6 +650,16 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": ".dockerignore",
+      "related": []
+    },
+    {
+      "path": ".gitattributes",
+      "name": ".gitattributes",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": ".gitattributes",
       "related": []
     },
     {
@@ -2119,9 +2129,13 @@
       "related": [],
       "children": [
         "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.2",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
         "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+        "ScienceAndTests/ACTIVE_JUDGE_STACK",
         "ScienceAndTests/Gemini_Dialogue_Testing.md",
         "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.2.zip",
+        "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.receipt.json",
+        "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip",
         "ScienceAndTests/ISKRA_СБОРНИК_МЕТАМОРФОЗ_v0.1.md",
         "ScienceAndTests/new test.txt",
         "ScienceAndTests/Кровь_плоть_кости.txt",
@@ -2134,6 +2148,17 @@
         "ScienceAndTests/ответыИскраsemanticMyth.txt",
         "ScienceAndTests/тесты clean.txt"
       ]
+    },
+    {
+      "path": "ScienceAndTests/ACTIVE_JUDGE_STACK",
+      "name": "ACTIVE_JUDGE_STACK",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/ACTIVE_JUDGE_STACK",
+      "related": [],
+      "parent": "ScienceAndTests"
     },
     {
       "path": "ScienceAndTests/Gemini_Dialogue_Testing.md",
@@ -2154,6 +2179,28 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.2.zip",
+      "related": [],
+      "parent": "ScienceAndTests"
+    },
+    {
+      "path": "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.receipt.json",
+      "name": "INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.receipt.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.receipt.json",
+      "related": [],
+      "parent": "ScienceAndTests"
+    },
+    {
+      "path": "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip",
+      "name": "INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip",
       "related": [],
       "parent": "ScienceAndTests"
     },
@@ -4038,6 +4085,1901 @@
       "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.2/UPLOAD_TO_PROJECT/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
       "related": [],
       "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.2/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "name": "independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "related": [],
+      "parent": "ScienceAndTests",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS",
+      "name": "JUDGE_SKILLS",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-bias-calibration",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-blind-workflow",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-pairwise-swap",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-run-protocol",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-study-aggregation"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-bias-calibration",
+      "name": "judge-bias-calibration",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-bias-calibration",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-bias-calibration/skill.zip"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-bias-calibration/skill.zip",
+      "name": "skill.zip",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-bias-calibration/skill.zip",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-bias-calibration"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-blind-workflow",
+      "name": "judge-blind-workflow",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-blind-workflow",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-blind-workflow/skill.zip"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-blind-workflow/skill.zip",
+      "name": "skill.zip",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-blind-workflow/skill.zip",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-blind-workflow"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-pairwise-swap",
+      "name": "judge-pairwise-swap",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-pairwise-swap",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-pairwise-swap/skill.zip"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-pairwise-swap/skill.zip",
+      "name": "skill.zip",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-pairwise-swap/skill.zip",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-pairwise-swap"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-run-protocol",
+      "name": "judge-run-protocol",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-run-protocol",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-run-protocol/skill.zip"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-run-protocol/skill.zip",
+      "name": "skill.zip",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-run-protocol/skill.zip",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-run-protocol"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-study-aggregation",
+      "name": "judge-study-aggregation",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-study-aggregation",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-study-aggregation/skill.zip"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-study-aggregation/skill.zip",
+      "name": "skill.zip",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-study-aggregation/skill.zip",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/JUDGE_SKILLS/judge-study-aggregation"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT",
+      "name": "OPERATOR_SUPPORT",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tests",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-02_V34_BETA3_CONTRACT_CLOSURE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-03_V35_RC1_INTEGRATION_RELEASE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-04_V35_RC2_POST_MERGE_HOTFIX.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-05_V35_RC3_FAIL_CLOSED_RELEASE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR_2026-07-19_JUDGE_V34_SOURCE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/BLIND_RUN_OPERATOR_GUIDE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/BUILD_RECEIPT_PREZIP.json",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/CHANGELOG.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/DYNAMIC_QC.json",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FILE_INVENTORY.csv",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FRESH_PROJECT_ACCEPTANCE_SUITE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FULL_ACADEMIC_AUDIT.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_AUDIT.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_CHANGELOG.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_README.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/MANIFEST.json",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/README_UPLOAD.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/SKILLS_INSTALL_GUIDE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/SOURCE_PROVENANCE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/STATIC_QC.json"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-02_V34_BETA3_CONTRACT_CLOSURE.md",
+      "name": "ADR-20260719-02_V34_BETA3_CONTRACT_CLOSURE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-02_V34_BETA3_CONTRACT_CLOSURE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-03_V35_RC1_INTEGRATION_RELEASE.md",
+      "name": "ADR-20260719-03_V35_RC1_INTEGRATION_RELEASE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-03_V35_RC1_INTEGRATION_RELEASE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-04_V35_RC2_POST_MERGE_HOTFIX.md",
+      "name": "ADR-20260719-04_V35_RC2_POST_MERGE_HOTFIX.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-04_V35_RC2_POST_MERGE_HOTFIX.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-05_V35_RC3_FAIL_CLOSED_RELEASE.md",
+      "name": "ADR-20260719-05_V35_RC3_FAIL_CLOSED_RELEASE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR-20260719-05_V35_RC3_FAIL_CLOSED_RELEASE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR_2026-07-19_JUDGE_V34_SOURCE.md",
+      "name": "ADR_2026-07-19_JUDGE_V34_SOURCE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/ADR_2026-07-19_JUDGE_V34_SOURCE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/BLIND_RUN_OPERATOR_GUIDE.md",
+      "name": "BLIND_RUN_OPERATOR_GUIDE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/BLIND_RUN_OPERATOR_GUIDE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/BUILD_RECEIPT_PREZIP.json",
+      "name": "BUILD_RECEIPT_PREZIP.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/BUILD_RECEIPT_PREZIP.json",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/CHANGELOG.md",
+      "name": "CHANGELOG.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/CHANGELOG.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/DYNAMIC_QC.json",
+      "name": "DYNAMIC_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/DYNAMIC_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FILE_INVENTORY.csv",
+      "name": "FILE_INVENTORY.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FILE_INVENTORY.csv",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FRESH_PROJECT_ACCEPTANCE_SUITE.md",
+      "name": "FRESH_PROJECT_ACCEPTANCE_SUITE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FRESH_PROJECT_ACCEPTANCE_SUITE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FULL_ACADEMIC_AUDIT.md",
+      "name": "FULL_ACADEMIC_AUDIT.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/FULL_ACADEMIC_AUDIT.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_AUDIT.md",
+      "name": "KIMI_SOURCE_AUDIT.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_AUDIT.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_CHANGELOG.md",
+      "name": "KIMI_SOURCE_CHANGELOG.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_CHANGELOG.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_README.md",
+      "name": "KIMI_SOURCE_README.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/KIMI_SOURCE_README.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/MANIFEST.json",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/README_UPLOAD.md",
+      "name": "README_UPLOAD.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/README_UPLOAD.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/SKILLS_INSTALL_GUIDE.md",
+      "name": "SKILLS_INSTALL_GUIDE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/SKILLS_INSTALL_GUIDE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/SOURCE_PROVENANCE.md",
+      "name": "SOURCE_PROVENANCE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/SOURCE_PROVENANCE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/STATIC_QC.json",
+      "name": "STATIC_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/STATIC_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tests",
+      "name": "tests",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tests",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tests/test_dynamic.py"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tests/test_dynamic.py",
+      "name": "test_dynamic.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tests/test_dynamic.py",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tests"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools",
+      "name": "tools",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools/validate_pack.py",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools/verify_release.py"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools/validate_pack.py",
+      "name": "validate_pack.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools/validate_pack.py",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools/verify_release.py",
+      "name": "verify_release.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools/verify_release.py",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/OPERATOR_SUPPORT/tools"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS",
+      "name": "RUNTIME_EXTENSIONS",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT31_STUDY_AGGREGATION.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT32_BIAS_GUARD.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT33_BLIND_WORKFLOW.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT34_ADJUDICATION.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT35_DEPLOYMENT_MATRIX.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT36_SKILL_STACK.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT31_STUDY_AGGREGATION.md",
+      "name": "EXT31_STUDY_AGGREGATION.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT31_STUDY_AGGREGATION.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT32_BIAS_GUARD.md",
+      "name": "EXT32_BIAS_GUARD.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT32_BIAS_GUARD.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT33_BLIND_WORKFLOW.md",
+      "name": "EXT33_BLIND_WORKFLOW.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT33_BLIND_WORKFLOW.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT34_ADJUDICATION.md",
+      "name": "EXT34_ADJUDICATION.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT34_ADJUDICATION.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT35_DEPLOYMENT_MATRIX.md",
+      "name": "EXT35_DEPLOYMENT_MATRIX.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT35_DEPLOYMENT_MATRIX.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT36_SKILL_STACK.md",
+      "name": "EXT36_SKILL_STACK.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS/EXT36_SKILL_STACK.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/RUNTIME_EXTENSIONS"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES",
+      "name": "SKILL_SOURCES",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration",
+      "name": "judge-bias-calibration",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/agents",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/scripts",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/SKILL.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/SKILL.md",
+      "name": "SKILL.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/SKILL.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/agents",
+      "name": "agents",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/agents",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/agents/openai.yaml"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/agents/openai.yaml",
+      "name": "openai.yaml",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/agents/openai.yaml",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/agents"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/scripts",
+      "name": "scripts",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/scripts",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/scripts/pack_qc.py"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/scripts/pack_qc.py",
+      "name": "pack_qc.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/scripts/pack_qc.py",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-bias-calibration/scripts"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow",
+      "name": "judge-blind-workflow",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/agents",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/scripts",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/SKILL.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/SKILL.md",
+      "name": "SKILL.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/SKILL.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/agents",
+      "name": "agents",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/agents",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/agents/openai.yaml"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/agents/openai.yaml",
+      "name": "openai.yaml",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/agents/openai.yaml",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/agents"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/scripts",
+      "name": "scripts",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/scripts",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/scripts/blind_mapping.py"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/scripts/blind_mapping.py",
+      "name": "blind_mapping.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/scripts/blind_mapping.py",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-blind-workflow/scripts"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap",
+      "name": "judge-pairwise-swap",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/agents",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/scripts",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/SKILL.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/SKILL.md",
+      "name": "SKILL.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/SKILL.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/agents",
+      "name": "agents",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/agents",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/agents/openai.yaml"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/agents/openai.yaml",
+      "name": "openai.yaml",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/agents/openai.yaml",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/agents"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/scripts",
+      "name": "scripts",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/scripts",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/scripts/swap_consistency.py"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/scripts/swap_consistency.py",
+      "name": "swap_consistency.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/scripts/swap_consistency.py",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-pairwise-swap/scripts"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol",
+      "name": "judge-run-protocol",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/agents",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/SKILL.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/SKILL.md",
+      "name": "SKILL.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/SKILL.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/agents",
+      "name": "agents",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/agents",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/agents/openai.yaml"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/agents/openai.yaml",
+      "name": "openai.yaml",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/agents/openai.yaml",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/agents"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references",
+      "name": "references",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references/envelope_template.yaml",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references/run_checklist.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references/envelope_template.yaml",
+      "name": "envelope_template.yaml",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references/envelope_template.yaml",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references/run_checklist.md",
+      "name": "run_checklist.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references/run_checklist.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-run-protocol/references"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation",
+      "name": "judge-study-aggregation",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/agents",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/references",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/scripts",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/SKILL.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/SKILL.md",
+      "name": "SKILL.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/SKILL.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/agents",
+      "name": "agents",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/agents",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/agents/openai.yaml"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/agents/openai.yaml",
+      "name": "openai.yaml",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/agents/openai.yaml",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/agents"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/references",
+      "name": "references",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/references",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/references/runs_schema.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/references/runs_schema.md",
+      "name": "runs_schema.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/references/runs_schema.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/references"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/scripts",
+      "name": "scripts",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/scripts",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/scripts/study_stats.py"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/scripts/study_stats.py",
+      "name": "study_stats.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/scripts/study_stats.py",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/SKILL_SOURCES/judge-study-aggregation/scripts"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES",
+      "name": "STUDY_PACKAGES",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0",
+      "name": "unified1000_bnat50_v1_0",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/versions",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/01-07-bnat-academic-research-refresh-2026-07-05.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/03-05-blind-narrative-actuation-protocol-1-1-.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/04-04-narrative-actuation-tests-2-2-.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/05-blind-narrative-actuation-protocol-1- (1).md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/07-bnat-academic-research-refresh-2026-07-05.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/ADR-2026-07-19-BNAT50-RESTORE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/ADR-2026-07-19-BNAT50-STRENGTHEN-v1_1.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BBXMKJX6Iwf_CAO9YzDojpHlRR8XmgD01EdLUDaajeU.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BNAT_v0.6_academic_upgrade_pack.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BNAT_v0.6_stimulus_extension_cases_011_018.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/DESIGN_REPORT.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/MANIFEST.sha256",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/METHODOLOGY_AND_DEPENDENCY_AUDIT.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/QC_REPORT.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/README.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/RUNTIME_BOUNDARY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/STUDY_OPERATOR_GUIDE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/WEB_RESEARCH_NOTES.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_academic_research_v0_7.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_academic_research_v0_8.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_case_evidence_matrix_v0_7.csv",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_case_evidence_matrix_v0_8.csv",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_historical_results_ledger_v0_8.csv",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_preregistration_protocol_v0_8.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_v0_6_publication_grade_protocol.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/01-07-bnat-academic-research-refresh-2026-07-05.md",
+      "name": "01-07-bnat-academic-research-refresh-2026-07-05.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/01-07-bnat-academic-research-refresh-2026-07-05.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/03-05-blind-narrative-actuation-protocol-1-1-.md",
+      "name": "03-05-blind-narrative-actuation-protocol-1-1-.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/03-05-blind-narrative-actuation-protocol-1-1-.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/04-04-narrative-actuation-tests-2-2-.md",
+      "name": "04-04-narrative-actuation-tests-2-2-.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/04-04-narrative-actuation-tests-2-2-.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/05-blind-narrative-actuation-protocol-1- (1).md",
+      "name": "05-blind-narrative-actuation-protocol-1- (1).md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/05-blind-narrative-actuation-protocol-1- (1).md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/07-bnat-academic-research-refresh-2026-07-05.md",
+      "name": "07-bnat-academic-research-refresh-2026-07-05.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/07-bnat-academic-research-refresh-2026-07-05.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/ADR-2026-07-19-BNAT50-RESTORE.md",
+      "name": "ADR-2026-07-19-BNAT50-RESTORE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/ADR-2026-07-19-BNAT50-RESTORE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/ADR-2026-07-19-BNAT50-STRENGTHEN-v1_1.md",
+      "name": "ADR-2026-07-19-BNAT50-STRENGTHEN-v1_1.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/ADR-2026-07-19-BNAT50-STRENGTHEN-v1_1.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BBXMKJX6Iwf_CAO9YzDojpHlRR8XmgD01EdLUDaajeU.md",
+      "name": "BBXMKJX6Iwf_CAO9YzDojpHlRR8XmgD01EdLUDaajeU.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BBXMKJX6Iwf_CAO9YzDojpHlRR8XmgD01EdLUDaajeU.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BNAT_v0.6_academic_upgrade_pack.md",
+      "name": "BNAT_v0.6_academic_upgrade_pack.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BNAT_v0.6_academic_upgrade_pack.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BNAT_v0.6_stimulus_extension_cases_011_018.md",
+      "name": "BNAT_v0.6_stimulus_extension_cases_011_018.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/BNAT_v0.6_stimulus_extension_cases_011_018.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/DESIGN_REPORT.md",
+      "name": "DESIGN_REPORT.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/DESIGN_REPORT.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/MANIFEST.sha256",
+      "name": "MANIFEST.sha256",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/MANIFEST.sha256",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/METHODOLOGY_AND_DEPENDENCY_AUDIT.md",
+      "name": "METHODOLOGY_AND_DEPENDENCY_AUDIT.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/METHODOLOGY_AND_DEPENDENCY_AUDIT.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/QC_REPORT.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/README.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/RUNTIME_BOUNDARY.md",
+      "name": "RUNTIME_BOUNDARY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/RUNTIME_BOUNDARY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/STUDY_OPERATOR_GUIDE.md",
+      "name": "STUDY_OPERATOR_GUIDE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/STUDY_OPERATOR_GUIDE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/WEB_RESEARCH_NOTES.md",
+      "name": "WEB_RESEARCH_NOTES.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/WEB_RESEARCH_NOTES.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels",
+      "name": "aimodels",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель1_answers_001_1000.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель2_answers_001_1000.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель3_answers_001_1000.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель1_answers_001_1000.md",
+      "name": "модель1_answers_001_1000.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель1_answers_001_1000.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель2_answers_001_1000.md",
+      "name": "модель2_answers_001_1000.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель2_answers_001_1000.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель3_answers_001_1000.md",
+      "name": "модель3_answers_001_1000.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels/модель3_answers_001_1000.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/aimodels"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit",
+      "name": "audit",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/SEMANTIC_REVIEW_32.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/bnat50_task_qc.csv",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/independent_readback_phase1.json",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/qc_summary.json"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/SEMANTIC_REVIEW_32.md",
+      "name": "SEMANTIC_REVIEW_32.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/SEMANTIC_REVIEW_32.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/bnat50_task_qc.csv",
+      "name": "bnat50_task_qc.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/bnat50_task_qc.csv",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/independent_readback_phase1.json",
+      "name": "independent_readback_phase1.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/independent_readback_phase1.json",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/qc_summary.json",
+      "name": "qc_summary.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit/qc_summary.json",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/audit"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_academic_research_v0_7.md",
+      "name": "bnat_academic_research_v0_7.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_academic_research_v0_7.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_academic_research_v0_8.md",
+      "name": "bnat_academic_research_v0_8.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_academic_research_v0_8.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_case_evidence_matrix_v0_7.csv",
+      "name": "bnat_case_evidence_matrix_v0_7.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_case_evidence_matrix_v0_7.csv",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_case_evidence_matrix_v0_8.csv",
+      "name": "bnat_case_evidence_matrix_v0_8.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_case_evidence_matrix_v0_8.csv",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_historical_results_ledger_v0_8.csv",
+      "name": "bnat_historical_results_ledger_v0_8.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_historical_results_ledger_v0_8.csv",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_preregistration_protocol_v0_8.md",
+      "name": "bnat_preregistration_protocol_v0_8.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_preregistration_protocol_v0_8.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_v0_6_publication_grade_protocol.md",
+      "name": "bnat_v0_6_publication_grade_protocol.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/bnat_v0_6_publication_grade_protocol.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate",
+      "name": "candidate",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate/unified_1000_questions_tasks_bnat50_v1_1.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate/unified_1000_questions_tasks_bnat50_v1_1.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_1.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate/unified_1000_questions_tasks_bnat50_v1_1.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/candidate"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/versions",
+      "name": "versions",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/versions",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/versions/unified_1000_questions_tasks_bnat50_v1_0.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/versions/unified_1000_questions_tasks_bnat50_v1_0.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_0.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/versions/unified_1000_questions_tasks_bnat50_v1_0.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/STUDY_PACKAGES/unified1000_bnat50_v1_0/versions"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT",
+      "name": "UPLOAD_TO_PROJECT",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/PROJECT_INSTRUCTIONS.txt"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/PROJECT_INSTRUCTIONS.txt",
+      "name": "PROJECT_INSTRUCTIONS.txt",
+      "kind": "file",
+      "layer": "research",
+      "role": "text",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/PROJECT_INSTRUCTIONS.txt",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge",
+      "name": "knowledge",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT",
+      "children": [
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/00_JUDGE_ROUTER.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/01_SYSTEM_CHARTER.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/02_EVALUATION_ONTOLOGY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/03_EVALUATION_PACKAGE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/04_HARD_GATES.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/05_SCORING_MODEL.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/06_TASK_AND_ESTIMAND_TAXONOMY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/07_CRITERION_REGISTRY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/08_Q100_TRUTH_QUALITY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/09_S100_SPACE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/10_A100_AGENCY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/11_R100_RELIABILITY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/12_G100_GOVERNANCE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/13_COMPARISON_PROTOCOL.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/14_EVIDENCE_TYPES.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/15_PROVENANCE_GRAPH.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/16_UNKNOWN_CONFLICT_APPLICABILITY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/17_FAILURE_REGISTRY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/18_JUDGE_SECURITY.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/19_PRIVACY_REDACTION.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/20_CLAIM_CEILING.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/21_RUN_PROTOCOL.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/22_OUTPUT_CONTRACT.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/23_SINGLE_RUN_EXAMPLE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/24_PAIRWISE_RUN_EXAMPLE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/25_ADVERSARIAL_CASES.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/26_ACCEPTANCE_SUITE.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/27_GOVERNANCE_VERSIONING.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/28_CURRENT_STATUS_LIMITATIONS.md",
+        "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/29_INDEX_UPLOAD_MANIFEST.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/00_JUDGE_ROUTER.md",
+      "name": "00_JUDGE_ROUTER.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/00_JUDGE_ROUTER.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/01_SYSTEM_CHARTER.md",
+      "name": "01_SYSTEM_CHARTER.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/01_SYSTEM_CHARTER.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/02_EVALUATION_ONTOLOGY.md",
+      "name": "02_EVALUATION_ONTOLOGY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/02_EVALUATION_ONTOLOGY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/03_EVALUATION_PACKAGE.md",
+      "name": "03_EVALUATION_PACKAGE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/03_EVALUATION_PACKAGE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/04_HARD_GATES.md",
+      "name": "04_HARD_GATES.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/04_HARD_GATES.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/05_SCORING_MODEL.md",
+      "name": "05_SCORING_MODEL.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/05_SCORING_MODEL.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/06_TASK_AND_ESTIMAND_TAXONOMY.md",
+      "name": "06_TASK_AND_ESTIMAND_TAXONOMY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/06_TASK_AND_ESTIMAND_TAXONOMY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/07_CRITERION_REGISTRY.md",
+      "name": "07_CRITERION_REGISTRY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/07_CRITERION_REGISTRY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/08_Q100_TRUTH_QUALITY.md",
+      "name": "08_Q100_TRUTH_QUALITY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/08_Q100_TRUTH_QUALITY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/09_S100_SPACE.md",
+      "name": "09_S100_SPACE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/09_S100_SPACE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/10_A100_AGENCY.md",
+      "name": "10_A100_AGENCY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/10_A100_AGENCY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/11_R100_RELIABILITY.md",
+      "name": "11_R100_RELIABILITY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/11_R100_RELIABILITY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/12_G100_GOVERNANCE.md",
+      "name": "12_G100_GOVERNANCE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/12_G100_GOVERNANCE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/13_COMPARISON_PROTOCOL.md",
+      "name": "13_COMPARISON_PROTOCOL.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/13_COMPARISON_PROTOCOL.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/14_EVIDENCE_TYPES.md",
+      "name": "14_EVIDENCE_TYPES.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/14_EVIDENCE_TYPES.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/15_PROVENANCE_GRAPH.md",
+      "name": "15_PROVENANCE_GRAPH.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/15_PROVENANCE_GRAPH.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/16_UNKNOWN_CONFLICT_APPLICABILITY.md",
+      "name": "16_UNKNOWN_CONFLICT_APPLICABILITY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/16_UNKNOWN_CONFLICT_APPLICABILITY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/17_FAILURE_REGISTRY.md",
+      "name": "17_FAILURE_REGISTRY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/17_FAILURE_REGISTRY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/18_JUDGE_SECURITY.md",
+      "name": "18_JUDGE_SECURITY.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/18_JUDGE_SECURITY.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/19_PRIVACY_REDACTION.md",
+      "name": "19_PRIVACY_REDACTION.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/19_PRIVACY_REDACTION.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/20_CLAIM_CEILING.md",
+      "name": "20_CLAIM_CEILING.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/20_CLAIM_CEILING.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/21_RUN_PROTOCOL.md",
+      "name": "21_RUN_PROTOCOL.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/21_RUN_PROTOCOL.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/22_OUTPUT_CONTRACT.md",
+      "name": "22_OUTPUT_CONTRACT.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/22_OUTPUT_CONTRACT.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/23_SINGLE_RUN_EXAMPLE.md",
+      "name": "23_SINGLE_RUN_EXAMPLE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/23_SINGLE_RUN_EXAMPLE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/24_PAIRWISE_RUN_EXAMPLE.md",
+      "name": "24_PAIRWISE_RUN_EXAMPLE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/24_PAIRWISE_RUN_EXAMPLE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/25_ADVERSARIAL_CASES.md",
+      "name": "25_ADVERSARIAL_CASES.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/25_ADVERSARIAL_CASES.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/26_ACCEPTANCE_SUITE.md",
+      "name": "26_ACCEPTANCE_SUITE.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/26_ACCEPTANCE_SUITE.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/27_GOVERNANCE_VERSIONING.md",
+      "name": "27_GOVERNANCE_VERSIONING.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/27_GOVERNANCE_VERSIONING.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/28_CURRENT_STATUS_LIMITATIONS.md",
+      "name": "28_CURRENT_STATUS_LIMITATIONS.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/28_CURRENT_STATUS_LIMITATIONS.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
+    },
+    {
+      "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "name": "29_INDEX_UPLOAD_MANIFEST.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "related": [],
+      "parent": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/UPLOAD_TO_PROJECT/knowledge"
     },
     {
       "path": "ScienceAndTests/iskra_evaluation_release_2026-07-08",
@@ -24553,7 +26495,8 @@
         "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
         "governance/changelog.d/2026-07-18-sot30-v5-5-2-backlog-batch.md",
         "governance/changelog.d/2026-07-19-sot30-v5-5-3-instructions-version-sync.md",
-        "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md"
+        "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md",
+        "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md"
       ]
     },
     {
@@ -24817,6 +26760,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md",
+      "name": "2026-07-20-sot30-v553-audit-receipt-sync.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md",
       "related": [],
       "parent": "governance/changelog.d"
     },

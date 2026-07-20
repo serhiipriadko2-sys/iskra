@@ -13,7 +13,7 @@ Scope: version-label sync + hash-chain repair over v5.5.2, amended 2026-07-20 to
 | Project Instructions ≤ 6000 chars | PASS — 5,996 (unchanged length: "v5.5.1"→"v5.5.3" is the same character count) |
 | version identity (29/MANIFEST) | PASS — both `v5.5.3-instructions-version-sync` |
 | **Hash-chain corruption identified and repaired** | External commit `82191ce` overwrote v5.5.2's SHA256SUMS/MANIFEST.json with wrong values; every hash in this build re-derived from git's canonical blob content (`git show <commit>:<path>`), not the possibly-corrupted working tree |
-| 28 unchanged-content files verified against canonical git blob, not working tree | PASS — 21 confirmed byte-for-byte identical to the v5.5.1 baseline; the remaining 7 (the v5.5.2 backlog-batch files) unchanged since that build |
+| unchanged-content files verified against canonical git blob, not working tree | PASS — 28 were unchanged at the pre-amendment stage (21 confirmed byte-for-byte identical to the v5.5.1 baseline; the remaining 7 were the v5.5.2 backlog-batch files); after the Decisions 4–6 amendment, 24 remain byte-identical to v5.5.2 (02/22/26/28/29 carry the amendment edits) |
 | `24_INTERFACE_STYLE.md` legacy hash mismatch | **Recorded, not fixed** — true current hash (`364380ff0f3e…`, 2,830,603 bytes) differs from the value on record since v5.5.1 (`325355071ad4…`, 2,830,585 bytes); verified via raw `git cat-file` (zero CRLF in the blob, so not a normalization artifact); root cause predates this session, out of scope |
 | ZIP integrity (`unzip -t`) | PASS |
 | ZIP round-trip: `sha256sum -c support/SHA256SUMS` from a **fresh extraction** in a clean temp directory | PASS — 32/32 OK, 0 failures |
