@@ -2,42 +2,58 @@
 sigil: projects__29_index_upload_manifest
 layer: projects
 updated: 2026-07-20
-version: v5.5.3
-supersedes: v5.4.1 (2026-07-14), v5.5 delta, v5.5.1 content delta
+version: v5.5.4
+supersedes: v5.4.1 (2026-07-14), v5.5 delta, v5.5.1 content delta, v5.5.2 backlog, v5.5.3 instructions-sync
 ---
-# 29 · INDEX & UPLOAD MANIFEST — SoT30 v5.5.3 (instructions version sync)
+# 29 · INDEX & UPLOAD MANIFEST — SoT30 v5.5.4 (semantic & runtime-status consistency)
 
 ## Upload rule
 Upload exactly the 30 files in `knowledge/` and paste `support/PROJECT_INSTRUCTIONS_SOT30.md` into Project Instructions. Support files are receipts/tests, not Knowledge prerequisites. Business/Pro/Enterprise/Edu plans allow up to 40 files/project with a 10-file simultaneous-upload cap — upload in 3 batches of 10 and verify a final count of 30. Go/Plus (25-file ceiling) and Free (5-file ceiling) cannot hold this package.
 
 ## What this package is
-This build fixes two integrity issues discovered while patching v5.5.2:
+v5.5.4 corrects **semantic and runtime-status drift** inside the v5.5.3 corpus.
+v5.5.3 was *physically* intact (its zip passed a fresh-extraction round-trip at
+32/32); the defects fixed here live in the prose an in-Project agent reads, not
+in the hash chain. `dist/SoT30_v5.5.3.zip` is unchanged and remains the
+immutable historical release; v5.5.4 is a separate package built from the
+v5.5.3 corpus as baseline. Governance trace: `ADR-20260720-02`.
 
-1. **Version-label staleness (the intended fix):** the embedded Project
-   Instructions mirror in `00_PROJECT_ROUTER.md` and the standalone
-   `support/PROJECT_INSTRUCTIONS_SOT30.md` both still read "SoT30 v5.5.1" —
-   stale by two package versions, though raw-equal to each other (T80 parity
-   held throughout). Both now read "SoT30 v5.5.3". No other content change.
-2. **Hash-chain corruption (found while building this patch):** an external
-   commit (`82191ce`, "sync live migration timestamps and finalize SoT30
-   package hashes") overwrote v5.5.2's `support/SHA256SUMS`/`MANIFEST.json`
-   with values that do not match the real (LF-normalized) file content — my
-   own original v5.5.2 commit (`31340c5`) had correct values; the later
-   commit broke them. This build re-derives every hash from git's canonical
-   blob content (bypassing any local working-tree/autocrlf ambiguity) and
-   restores a verified-correct chain. Knowledge-file *content* was never
-   affected — only the verification metadata.
-3. **Pre-existing, out-of-scope legacy mismatch (recorded, not fixed):**
-   `24_INTERFACE_STYLE.md`'s hash on record since v5.5.1 (`325355071ad4…`,
-   2,830,585 bytes) does not match that file's actual real content
-   (`364380ff0f3e…`, 2,830,603 bytes — verified via raw `git cat-file`, not a
-   CRLF artifact: zero CRLF sequences found in the raw blob). This predates
-   this session's SoT30 work and its root cause is unresolved; this build
-   records the file's *true* current hash for the first time rather than
-   propagating the stale legacy value.
+### Three baselines (do not conflate)
+- **release_tree_baseline** — the committed `knowledge/` blob content of v5.5.3.
+  This is the authoritative source of truth for v5.5.4's diff.
+- **dist_zip_baseline** — a shipped `.zip` artifact. For v5.5.2 the zip diverged
+  from the release tree for files `06/09/24`; v5.5.3 reconciled them. Do not
+  treat a zip as the content authority.
+- **live_project_baseline** — the 30 files actually uploaded to a running
+  ChatGPT Project. This package has **not** been uploaded for this build; no
+  claim is made about any live Project's contents.
 
-The other 28 files are byte-identical to v5.5.2 (verified against git's
-canonical blob content, not the possibly-corrupted working tree).
+### Composition vs the v5.5.3 release tree
+The per-file `changed`/`unchanged` sets are recomputed at build time from actual
+LF-normalized content, are **disjoint**, and their **union is all 30 files** —
+see `support/MANIFEST.json` (`changed_files` / `unchanged_files`). v5.5.4 does
+**not** claim "28 files unchanged"; the earlier v5.5.3 amendment (Decisions 4–6)
+already made that phrasing false, and v5.5.4 changes further files. The exact
+list is the manifest's, not a hard-coded prose count.
+
+### On the earlier chain (historical, do not over-generalize)
+The v5.5.2→v5.5.3 receipts established that external commit `82191ce` overwrote
+v5.5.2's `support/SHA256SUMS`/`MANIFEST.json`; that `31340c5`'s recorded hash was
+correct for `01` but was itself already wrong for `06/09/24` (it matched the
+divergent v5.5.2 zip, not the committed blob). v5.5.4 inherits v5.5.3's
+reconciled, git-blob-derived content and does not re-litigate that chain.
+
+### File 24 provenance (partial — not closed)
+`24_INTERFACE_STYLE.md`'s 18-byte / hash gap first recorded at v5.5.1 is real and
+carried forward at its true current hash. A raw-blob diff receipt is produced
+under `governance/audits/2026-07-20-sot30-v554/`; the **root cause is promoted to
+FACT only if that receipt proves an exact, fully-explaining change** — otherwise
+it stays `partial`/`unknown`. It is not asserted as closed here.
+
+> **STATIC-PACKAGE-PASS does not imply LIVE-PROJECT-PASS.** A green
+> `sha256sum -c` and a passing semantic verifier attest the *package*. A
+> LIVE-PROJECT-PASS requires an exact 30-file manifest-hash match recorded from
+> a real upload — see `28_EVALS_ACCEPTANCE.md` (T93).
 
 ## Reading order
 `29 → 00 → 03–07 → 08–20 → 21–23 → 24–27 → 28`. File 25 contains two-stage Mythic Cognition Router v0.3.1: inquiry after Trace, expression after Voice, with executable load-bearing-premise verification.
@@ -80,6 +96,14 @@ canonical blob content, not the possibly-corrupted working tree).
 
 File 29 hash is stored in external `support/MANIFEST.json` and `support/SHA256SUMS` to avoid self-reference.
 
+## v5.5.4 semantic & runtime-status consistency (this build)
+Corrects in-corpus prose that no longer matched reality: file 29's own
+composition narrative; `MANIFEST.json` disjoint changed/unchanged sets; the
+bounded-Guard lifecycle and proxy `postGuardEws` status in `11`/`20`/`01`;
+Supabase live-overlay freshness in `15`; historical-Ω / reference quarantine in
+`25`/`24`; and adds acceptance cases T88–T93 in `28`. No runtime, Supabase, or
+live-Project change. Full trace: `governance/adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md`.
+
 ## v5.5.3 instructions-version-sync + hash-chain repair
 Version-label sync (00) + restoration of a verified-correct hash chain after
 external commit `82191ce` corrupted v5.5.2's SHA256SUMS/MANIFEST.json. Full
@@ -101,12 +125,18 @@ This regenerated table records file 13 at its actual merged content — **13386 
 - `ADR-20260716-01` — Business Projects Runtime Hardening (files 02/22/28/29, T77–T85), accepted; merged PR #264.
 - `ADR-20260716-02` — SoT30 Content Integrity (base64 externalize, ontology quarantine, Kernel Order sync, Guard recompute unification, what-if type repair), accepted; merged PR #267.
 - `ADR-20260718-01` — v5.5.2 backlog batch (threshold table, RESEARCH-distributed declaration + FOG strengthening, veto-contract fix, SIBYL activation, Mythic Router triggers + usage tracking), accepted.
+- `ADR-20260719-01` — v5.5.3 instructions version sync + hash-chain repair, accepted; merged PR #285/#288.
+- `ADR-20260720-01` — prune stale SoT30 dist zips (v5.5.2 zip divergent for 06/09/24), accepted; merged PR #286.
+- `ADR-20260720-02` — v5.5.4 semantic & runtime-status consistency (this build), **proposed**.
 
 ## Current non-claims
-- package is not proven uploaded to a live Project;
-- T01–T85 are not yet live-run;
+- package is not proven uploaded to a live Project (STATIC-PACKAGE-PASS ≠ LIVE-PROJECT-PASS);
+- T01–T93 are not yet live-run;
+- the bounded-Guard controller is implemented and wired, but `postGuardEws` is a decision-derived **proxy**, not an independently-observed true late-signal EWS (see `11`); the true-late-signal path is E2E-unverified;
+- file 15's Supabase overlay is a read-only observation stamped with `observed_at`; migration parity, live schema, live data counts, edge-function deployment, and Projects-Action invocation are independent facts and none is inferred from another;
+- file 24's root-cause status is `partial`/`unknown` unless the raw-blob receipt under `governance/audits/2026-07-20-sot30-v554/` fully explains the gap;
 - T76 F1/F2/F3 falsifier behavior is statically specified, not verified-live;
 - gateway Projects Action/JWT role and Archive/Shadow DB enforcement remain pending;
 - current Project memory mode (project-only vs default) for any specific live Project is unknown until explicitly checked;
 - retrieval-order of the 30 files inside a live Project is not guaranteed by this document;
-- T86/T87 are statically specified, not verified-live.
+- ADR-20260720-02 is `proposed`, not `accepted`; this package is not deployed.
