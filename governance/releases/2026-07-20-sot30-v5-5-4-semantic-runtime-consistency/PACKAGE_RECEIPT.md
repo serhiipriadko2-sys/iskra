@@ -1,6 +1,10 @@
 # SoT30 v5.5.4 — Receipt
 
-Assembled in-session 2026-07-20 by Claude Code from the v5.5.3 corpus (`governance/releases/2026-07-19-sot30-v5-5-3-instructions-version-sync/`) as baseline, under ADR-20260720-02 (status `proposed`). v5.5.3 was physically intact; v5.5.4 repairs semantic and runtime-status drift inside the uploadable corpus and adds a fail-closed semantic verifier.
+Assembled in-session 2026-07-20 by Claude Code from the v5.5.3 corpus (`governance/releases/2026-07-19-sot30-v5-5-3-instructions-version-sync/`) as baseline, under ADR-20260720-02 (status `accepted` 2026-07-20). v5.5.3 was physically intact; v5.5.4 repairs semantic and runtime-status drift inside the uploadable corpus and adds a fail-closed semantic verifier.
+
+<!-- composition: changed=10 unchanged=20 baseline=v5.5.3 -->
+
+> **Dated qualification (2026-07-20, PR-C).** The build-time verifier proved T88 / T80 / forbidden-content more weakly than labelled; hardened in PR-C with negative fixtures. Package bytes unchanged. `generated_from: canonical_git_blobs` below is a known inaccuracy (build read release-tree working bytes) — erratum recorded, byte-fix deferred to v5.5.5 (`governance/errata/2026-07-20-sot30-v5-5-4-erratum.md`).
 
 ## Artifact
 

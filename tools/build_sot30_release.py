@@ -3,24 +3,47 @@
 
 Regenerates, in dependency order:
   1. file 29's embedded hash table (from final content of files 00-28),
-  2. support/MANIFEST.json (new v5.5.4 schema: disjoint+total changed/unchanged),
+  2. support/MANIFEST.json (disjoint+total changed/unchanged),
   3. support/SHA256SUMS (30 knowledge + MANIFEST.json + PROJECT_INSTRUCTIONS),
-  4. dist/<zip> from a clean staging directory (forward-slash entries),
-and fills placeholder tokens (__ZIP_SHA__ etc.) in QC_REPORT.md / PACKAGE_RECEIPT.md.
+  4. dist/<zip> from a clean staging directory built from an explicit allowlist,
+and fills the zip-fact tokens in QC_REPORT.md / PACKAGE_RECEIPT.md.
 
-Hashes are computed on raw file bytes; the corpus is LF-only (verified separately),
-so raw == LF-normalized here. Usage:
+Provenance: by default bytes are read from the release-tree working files, so
+`generated_from` is labelled `release_tree_working_bytes`. Pass `--from-git <SHA>`
+to instead extract each knowledge file from a specific commit via `git show`, in
+which case the label becomes `canonical_git_blobs` (honest either way).
 
-  python3 tools/build_sot30_release.py <release_dir> <version> <baseline_manifest> <zip_out>
+Reproducibility: zip entry timestamps are pinned, so re-running in the SAME
+toolchain yields byte-identical output (same-environment reproducibility). This
+does NOT guarantee cross-toolchain reproducibility (a different zlib/Python may
+deflate differently); verify by hash, not by assumption.
+
+Usage:
+  python3 tools/build_sot30_release.py <release_dir> --version v5.5.5 \\
+      --baseline <baseline_manifest.json> --zip-out dist/SoT30_v5.5.5.zip \\
+      [--date 2026-08-01] [--adr ADR-YYYYMMDD-NN] [--package-name "..."] \\
+      [--from-git <commit_sha>]
+
+IMPORTANT: this writes into <release_dir>. Never run it against an immutable,
+already-shipped release directory — build a fresh release dir for a new version.
 """
+import argparse
 import hashlib
 import json
 import os
 import re
-import sys
-import tempfile
 import shutil
+import subprocess
+import tempfile
 import zipfile
+
+SUPPORT_INSTRUCTIONS = "PROJECT_INSTRUCTIONS_SOT30.md"
+KNOWLEDGE_RE = re.compile(r"^\d\d_.*\.md$")
+EXPECTED_INDICES = [f"{i:02d}" for i in range(30)]
+
+
+class BuildError(RuntimeError):
+    """Explicit build failure (never an `assert`, which `python -O` strips)."""
 
 
 def sha256_bytes(b: bytes) -> str:
@@ -32,28 +55,70 @@ def read_bytes(p: str) -> bytes:
         return f.read()
 
 
+def require(cond: bool, msg: str) -> None:
+    if not cond:
+        raise BuildError(msg)
+
+
+def knowledge_source(kdir: str, name: str, from_git: str | None) -> bytes:
+    """Return a knowledge file's bytes from git (if --from-git) or the working tree."""
+    if from_git:
+        try:
+            return subprocess.check_output(
+                ["git", "show", f"{from_git}:{os.path.join(kdir, name)}"]
+            )
+        except subprocess.CalledProcessError as e:  # pragma: no cover - passthrough
+            raise BuildError(f"git show failed for {name}@{from_git}: {e}") from e
+    return read_bytes(os.path.join(kdir, name))
+
+
+def normalize_root(version: str) -> str:
+    v = version if version.startswith("v") else f"v{version}"
+    return f"SoT30_{v}"
+
+
 def main() -> int:
-    release_dir, version, baseline_manifest, zip_out = sys.argv[1:5]
+    ap = argparse.ArgumentParser(description="Build a SoT30 release package.")
+    ap.add_argument("release_dir")
+    ap.add_argument("--version", required=True, help="e.g. v5.5.5")
+    ap.add_argument("--baseline", required=True, help="baseline MANIFEST.json for changed/unchanged")
+    ap.add_argument("--zip-out", required=True)
+    ap.add_argument("--date", default="2026-07-20")
+    ap.add_argument("--adr", default="ADR-20260720-02")
+    ap.add_argument("--baseline-version", default="v5.5.3")
+    ap.add_argument("--package-name", default=None)
+    ap.add_argument("--acceptance-range", default="T01-T93")
+    ap.add_argument("--from-git", default=None, help="commit SHA to extract knowledge blobs from")
+    args = ap.parse_args()
+
+    release_dir, version = args.release_dir, args.version
     kdir = os.path.join(release_dir, "knowledge")
     sdir = os.path.join(release_dir, "support")
 
-    knames = sorted(n for n in os.listdir(kdir) if re.match(r"\d\d_.*\.md$", n))
-    assert len(knames) == 30, f"expected 30 knowledge files, got {len(knames)}"
+    # --- validate knowledge dir is exactly the 30 files {00..29} (allowlist) ---
+    kfiles = sorted(n for n in os.listdir(kdir) if n.endswith(".md"))
+    knames = [n for n in kfiles if KNOWLEDGE_RE.match(n)]
+    require(len(kfiles) == 30 and len(knames) == 30,
+            f"knowledge dir must be exactly 30 .md files, got {len(kfiles)} (.md) / {len(knames)} (numbered)")
+    indices = sorted(n[:2] for n in knames)
+    require(indices == EXPECTED_INDICES, f"knowledge indices must be 00..29 unique, got {indices}")
+
+    from_git = args.from_git
+    generated_from = "canonical_git_blobs" if from_git else "release_tree_working_bytes"
 
     # --- 1. regenerate file 29 embedded table from files 00-28 ---
-    f29_path = os.path.join(kdir, "29_INDEX_UPLOAD_MANIFEST.md")
+    f29_name = "29_INDEX_UPLOAD_MANIFEST.md"
+    f29_path = os.path.join(kdir, f29_name)
     non_self = [n for n in knames if not n.startswith("29_")]
     rows = []
     for n in non_self:
-        b = read_bytes(os.path.join(kdir, n))
+        b = knowledge_source(kdir, n, from_git)
         rows.append(f"| `{n}` | {len(b)} | `{sha256_bytes(b)}` |")
     table_block = "\n".join(rows)
 
     f29 = open(f29_path, encoding="utf-8").read()
-    # Replace the block of table rows (lines beginning with "| `NN_") in-place,
-    # preserving the header/separator above and the prose below.
     pat = re.compile(r"(?ms)^\| `00_.*?\.md` \|.*?(?=\nFile 29 hash is stored)")
-    assert pat.search(f29), "file 29 table anchor not found"
+    require(pat.search(f29) is not None, "file 29 table anchor not found")
     f29_new = pat.sub(table_block, f29)
     if f29_new != f29:
         open(f29_path, "w", encoding="utf-8").write(f29_new)
@@ -61,93 +126,93 @@ def main() -> int:
     # --- 2. compute all 30 hashes (file 29 now final) ---
     entries = []
     for n in knames:
-        b = read_bytes(os.path.join(kdir, n))
+        b = read_bytes(os.path.join(kdir, n))  # final on-disk bytes (29 just rewritten)
         entries.append({"path": f"knowledge/{n}", "bytes": len(b), "sha256": sha256_bytes(b)})
     by_name = {os.path.basename(e["path"]): e for e in entries}
     corpus_bytes = sum(e["bytes"] for e in entries)
 
     # --- 3. changed / unchanged vs baseline (disjoint + total) ---
-    base = json.load(open(baseline_manifest, encoding="utf-8"))
+    base = json.load(open(args.baseline, encoding="utf-8"))
     base_hash = {os.path.basename(f["path"]): f["sha256"] for f in base["files"]}
     changed, unchanged = [], []
     for n in knames:
-        if by_name[n]["sha256"] == base_hash.get(n):
-            unchanged.append(n)
-        else:
-            changed.append(n)
-    assert set(changed).isdisjoint(unchanged), "changed/unchanged not disjoint"
-    assert set(changed) | set(unchanged) == set(knames), "changed union unchanged != 30"
+        (unchanged if by_name[n]["sha256"] == base_hash.get(n) else changed).append(n)
+    require(set(changed).isdisjoint(unchanged), "changed/unchanged not disjoint")
+    require(set(changed) | set(unchanged) == set(knames), "changed ∪ unchanged != knowledge set")
 
-    # --- 4. write MANIFEST.json (new schema) ---
-    instr_name = "PROJECT_INSTRUCTIONS_SOT30.md"
-    instr_bytes = read_bytes(os.path.join(sdir, instr_name))
+    # --- 4. write MANIFEST.json ---
+    instr_bytes = read_bytes(os.path.join(sdir, SUPPORT_INSTRUCTIONS))
     manifest = {
-        "package": "SoT30 v5.5.4 Semantic & Runtime-Status Consistency",
+        "package": args.package_name or f"SoT30 {version} release",
         "package_version": version,
-        "baseline_release": "v5.5.3",
-        "date": "2026-07-20",
-        "adr": "ADR-20260720-02",
-        "generated_from": "canonical_git_blobs",
+        "baseline_release": args.baseline_version,
+        "date": args.date,
+        "adr": args.adr,
+        "generated_from": generated_from,
+        "generated_from_ref": from_git,
         "line_ending_policy": "LF",
+        "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
         "knowledge_file_count": 30,
         "corpus_bytes": corpus_bytes,
         "project_instructions_chars": len(instr_bytes.decode("utf-8")),
         "project_instructions_bytes": len(instr_bytes),
-        "acceptance_range": "T01-T93",
+        "acceptance_range": args.acceptance_range,
         "changed_files": changed,
         "unchanged_files": unchanged,
         "files": entries,
         "live_project_verified": False,
     }
-    manifest_str = json.dumps(manifest, indent=2, ensure_ascii=False) + "\n"
     manifest_path = os.path.join(sdir, "MANIFEST.json")
-    open(manifest_path, "w", encoding="utf-8").write(manifest_str)
+    open(manifest_path, "w", encoding="utf-8").write(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
 
     # --- 5. write SHA256SUMS (two-space separator) ---
     lines = [f"{e['sha256']}  {e['path']}" for e in entries]
     lines.append(f"{sha256_bytes(read_bytes(manifest_path))}  support/MANIFEST.json")
-    lines.append(f"{sha256_bytes(instr_bytes)}  support/{instr_name}")
-    sums_path = os.path.join(sdir, "SHA256SUMS")
-    open(sums_path, "w", encoding="utf-8").write("\n".join(lines) + "\n")
+    lines.append(f"{sha256_bytes(instr_bytes)}  support/{SUPPORT_INSTRUCTIONS}")
+    open(os.path.join(sdir, "SHA256SUMS"), "w", encoding="utf-8").write("\n".join(lines) + "\n")
 
-    # --- 6. build zip from clean staging dir ---
-    root = f"SoT30_{version.lstrip('v')}" if not version.startswith("SoT30") else version
-    root = f"SoT30_{version[1:]}" if version.startswith("v") else f"SoT30_{version}"
+    # --- 6. build zip from a clean staging dir via EXPLICIT allowlist ---
+    root = normalize_root(version)
+    allowlist = (
+        [("knowledge", n) for n in knames]
+        + [("support", s) for s in (SUPPORT_INSTRUCTIONS, "MANIFEST.json", "SHA256SUMS")]
+    )
     staging = tempfile.mkdtemp(prefix="sot30build_")
     try:
-        pkg = os.path.join(staging, root)
-        shutil.copytree(kdir, os.path.join(pkg, "knowledge"))
-        shutil.copytree(sdir, os.path.join(pkg, "support"))
-        os.makedirs(os.path.dirname(zip_out), exist_ok=True)
-        if os.path.exists(zip_out):
-            os.remove(zip_out)
-        fixed_dt = (2026, 7, 20, 0, 0, 0)  # constant -> reproducible zip bytes
-        with zipfile.ZipFile(zip_out, "w", zipfile.ZIP_DEFLATED) as z:
-            for dirpath, dirs, files in os.walk(pkg):
-                dirs.sort()
-                for fn in sorted(files):
-                    full = os.path.join(dirpath, fn)
-                    arc = os.path.relpath(full, staging).replace(os.sep, "/")
-                    zi = zipfile.ZipInfo(arc, date_time=fixed_dt)
-                    zi.compress_type = zipfile.ZIP_DEFLATED
-                    zi.external_attr = 0o644 << 16
-                    z.writestr(zi, read_bytes(full))
+        for sub, name in allowlist:
+            src = os.path.join(release_dir, sub, name)
+            require(os.path.isfile(src), f"allowlisted file missing: {sub}/{name}")
+            dst = os.path.join(staging, root, sub, name)
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copyfile(src, dst)
+        os.makedirs(os.path.dirname(args.zip_out) or ".", exist_ok=True)
+        if os.path.exists(args.zip_out):
+            os.remove(args.zip_out)
+        fixed_dt = (2026, 7, 20, 0, 0, 0)  # pinned -> same-toolchain reproducible
+        with zipfile.ZipFile(args.zip_out, "w", zipfile.ZIP_DEFLATED) as z:
+            for sub, name in allowlist:  # deterministic order = allowlist order
+                arc = f"{root}/{sub}/{name}"
+                zi = zipfile.ZipInfo(arc, date_time=fixed_dt)
+                zi.compress_type = zipfile.ZIP_DEFLATED
+                zi.external_attr = 0o644 << 16
+                z.writestr(zi, read_bytes(os.path.join(staging, root, sub, name)))
     finally:
         shutil.rmtree(staging, ignore_errors=True)
 
-    zip_b = read_bytes(zip_out)
+    zip_b = read_bytes(args.zip_out)
     zip_sha = sha256_bytes(zip_b)
 
-    # --- 7. fill QC_REPORT / PACKAGE_RECEIPT zip facts (idempotent: matches
-    #        the placeholder token OR a previously-filled value at each label) ---
-    f29e = by_name["29_INDEX_UPLOAD_MANIFEST.md"]
+    # --- 7. fill QC_REPORT / PACKAGE_RECEIPT zip-fact tokens (idempotent) ---
+    f29e = by_name[f29_name]
     manifest_sha = sha256_bytes(read_bytes(manifest_path))
     corpus_disp = f"{corpus_bytes:,}"
-    H = r"(?:[0-9a-f]{64}|__[A-Z0-9_]+__)"          # hex or placeholder
-    N = r"(?:[\d,]+|__[A-Z0-9_]+__)"                 # number or placeholder
+    zip_base = re.escape(os.path.basename(args.zip_out))
+    H = r"(?:[0-9a-f]{64}|__[A-Z0-9_]+__)"
+    N = r"(?:[\d,]+|__[A-Z0-9_]+__)"
     subs = [
         (rf"(- corpus bytes: ){N}", rf"\g<1>{corpus_disp}"),
-        (rf"(- ZIP: `dist/SoT30_v5\.5\.4\.zip`, ){N}( bytes, sha256 `){H}(`)",
+        (rf"(- ZIP: `dist/{zip_base}`, ){N}( bytes, sha256 `){H}(`)",
          rf"\g<1>{len(zip_b)}\g<2>{zip_sha}\g<3>"),
         (rf"(- file 29: ){N}( bytes, sha256 `){H}(`)",
          rf"\g<1>{f29e['bytes']}\g<2>{f29e['sha256']}\g<3>"),
@@ -161,12 +226,13 @@ def main() -> int:
         dp = os.path.join(release_dir, doc)
         if os.path.exists(dp):
             t = open(dp, encoding="utf-8").read()
-            for pat, rep in subs:
-                t = re.sub(pat, rep, t)
+            for p, rep in subs:
+                t = re.sub(p, rep, t)
             open(dp, "w", encoding="utf-8").write(t)
 
     print(json.dumps({
-        "zip": zip_out, "zip_bytes": len(zip_b), "zip_sha256": zip_sha,
+        "zip": args.zip_out, "zip_bytes": len(zip_b), "zip_sha256": zip_sha,
+        "root": root, "generated_from": generated_from,
         "corpus_bytes": corpus_bytes, "changed": changed, "unchanged_count": len(unchanged),
         "file29_sha256": f29e["sha256"], "manifest_sha256": manifest_sha,
     }, indent=2, ensure_ascii=False))
@@ -174,4 +240,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

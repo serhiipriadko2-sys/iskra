@@ -1,6 +1,10 @@
 # SoT30 v5.5.4 — Semantic & Runtime-Status Consistency
 
-Status: **proposed** (ADR-20260720-02). Reviewable full-corpus package; live ChatGPT Project verification pending. Built from the v5.5.3 corpus as baseline; `dist/SoT30_v5.5.3.zip` is unchanged and remains the immutable historical release.
+Status: **accepted** (ADR-20260720-02, owner decision 2026-07-20). Full-corpus package merged (PR #289); live ChatGPT Project verification pending. Built from the v5.5.3 corpus as baseline; `dist/SoT30_v5.5.3.zip` is unchanged and remains the immutable historical release.
+
+<!-- composition: changed=10 unchanged=20 baseline=v5.5.3 -->
+
+> **Dated qualification (2026-07-20, PR-C).** The verifier that gated this build proved several properties (T88, T80, forbidden-content scan) more weakly than their labels implied; it is hardened in PR-C (`fix/sot30-v554-verifier-hardening`) with a negative-fixture test matrix. **Package bytes are unchanged.** One internal inaccuracy — `support/MANIFEST.json` `generated_from: canonical_git_blobs` (the build read release-tree working bytes) — is recorded as an erratum with the byte-fix deferred to v5.5.5. See `governance/errata/2026-07-20-sot30-v5-5-4-erratum.md`.
 
 ## What this is
 
