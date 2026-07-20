@@ -11,14 +11,18 @@ A small patch over v5.5.2 that fixes two integrity issues found while syncing a 
 
 **Separately noted, not fixed:** `24_INTERFACE_STYLE.md` carries a hash on record since v5.5.1 that has never matched its real content (18-byte gap; verified via raw `git cat-file`, not a CRLF artifact — the file has zero CRLF sequences). This predates this session's work entirely; root cause unresolved. This build records the file's true current hash for the first time rather than propagating the stale value further. See `governance/adr_20260719_sot30_v5_5_3_instructions_version_sync.md` for full detail.
 
-## Composition arithmetic (30 files, no new content changes)
+## Composition arithmetic (30 files, post-amendment)
 
 ```
-28 unchanged content from v5.5.2 (re-verified against git's canonical blob, not the working tree)
+24 unchanged content from v5.5.2 (re-verified against git's canonical blob, not the working tree)
 +  1 version-label-only change (00 — "v5.5.1" → "v5.5.3", 2 characters)
-+  1 regenerated (29 — hash table)
++  3 version-frontmatter-only changes (02, 22, 28 — stale `v5.5` stamp → `v5.5.3`)
++  1 kernel-anchor SUPERSEDED marker added (26)
++  1 regenerated (29 — hash table + frontmatter)
 = 30
 ```
+
+(The pre-amendment build of this patch changed only 00 and 29; Decisions 4–6 of ADR-20260719-01 added the 02/22/26/28 edits above.)
 
 ## Contents
 
