@@ -544,7 +544,7 @@
     "runtime/iskraSpace/services/__tests__/storageService.test.ts": "91de8212b904b0bd83baf506884d5b3ce0ecbaa2c98c7386a272b8a5e1968f55",
     "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts": "c3e73e914ec0f103f1ebc1780e2f10b0cb78b6ff892e62ee3571a8b49a741fbb",
     "runtime/iskraSpace/services/__tests__/stressTests.test.ts": "aecd2cbb5e04aa3c806396be588d45e772a066978e3999cdd5f5d63e879e4cb7",
-    "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts": "5aef5a1aa4149629b04b242bb6fccdf97f9f38773057e022586bc69784f6ed5c",
+    "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts": "902f751dfcb52ae4335d9f825c9be6200a2ec17a3a612e44ff16cb690bbdab06",
     "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts": "00cbcda34b31be3d88c6d9f11ed289453b73da24721ce51fd4d57ff1d2d76ca0",
     "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts": "d81e98b093c53de4dd2a9e20070b75fbbf1076a92e266b4e6dde093c9c493e1f",
     "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts": "454fe6db1a3341cec9087a5e7c7c705d95e2825d55f9548f8ecc2081dd76d610",
