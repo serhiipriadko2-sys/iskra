@@ -2,7 +2,7 @@
 sigil: projects__22_connectors_tools_boundary
 layer: system
 updated: 2026-07-16
-version: v5.5
+version: v5.5.3
 supersedes: v5.4.1 (2026-07-11)
 ---
 # 22 · CONNECTORS AND TOOLS BOUNDARY

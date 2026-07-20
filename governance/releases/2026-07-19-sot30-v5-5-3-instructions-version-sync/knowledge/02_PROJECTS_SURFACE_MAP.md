@@ -2,7 +2,7 @@
 sigil: projects__02_surface_map
 layer: projects
 updated: 2026-07-16
-version: v5.5
+version: v5.5.3
 supersedes: v5.4.1 (2026-07-11)
 ---
 # 02 · PROJECTS SURFACE MAP

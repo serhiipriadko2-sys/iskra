@@ -1,14 +1,20 @@
 {
-  "package": "SoT30 v5.5.3 Instructions Version Sync + Hash-Chain Repair",
+  "package": "SoT30 v5.5.3 Instructions Version Sync + Hash-Chain Repair (embedded manifest + version-frontmatter + kernel-anchor)",
   "version": "v5.5.3-instructions-version-sync",
-  "date": "2026-07-19",
+  "date": "2026-07-20",
   "base": "SoT30_v5.5.2_Backlog_Batch (verified-correct commit 31340c5, not the corrupted working copy)",
   "adr": "ADR-20260719-01",
   "changed_files": [
-    "00_PROJECT_ROUTER.md"
+    "00_PROJECT_ROUTER.md",
+    "02_PROJECTS_SURFACE_MAP.md",
+    "22_CONNECTORS_TOOLS_BOUNDARY.md",
+    "26_SOMATIC_INTUITION.md",
+    "28_EVALS_ACCEPTANCE.md"
   ],
   "regenerated": [
-    "29_INDEX_UPLOAD_MANIFEST.md"
+    "29_INDEX_UPLOAD_MANIFEST.md (embedded table + frontmatter)",
+    "support/SHA256SUMS",
+    "support/MANIFEST.json"
   ],
   "hash_chain_repaired": {
     "reason": "external commit 82191ce overwrote v5.5.2 SHA256SUMS/MANIFEST.json with incorrect values",
@@ -64,7 +70,7 @@
     "28_EVALS_ACCEPTANCE.md"
   ],
   "knowledge_file_count": 30,
-  "corpus_bytes": 4027706,
+  "corpus_bytes": 4028009,
   "project_instructions_chars": 5996,
   "project_instructions_note": "version-label sync only: \"SoT30 v5.5.1\" -> \"SoT30 v5.5.3\" in both 00 and this file; raw-equal (T80) verified before and after",
   "acceptance_range": "T01-T87",
@@ -81,8 +87,8 @@
     },
     {
       "path": "knowledge/02_PROJECTS_SURFACE_MAP.md",
-      "bytes": 4613,
-      "sha256": "ab2b2173450a0de2746702e324c5c779db52c7d52d5858b1a3b93de10833d01a"
+      "bytes": 4615,
+      "sha256": "03189cfc0a81e7435ef6d8f522a66edf04551434bd89fcb563c88e12d02084fa"
     },
     {
       "path": "knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
@@ -181,8 +187,8 @@
     },
     {
       "path": "knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
-      "bytes": 3761,
-      "sha256": "a18aa78ad414db39faf503ed2230662489c30b550aac7cbeac58700eb125a3d2"
+      "bytes": 3763,
+      "sha256": "60f2a36f20bc2463114ded7b65b04cb59a0943bdbbf5cdc4b332bc78ae3b4da4"
     },
     {
       "path": "knowledge/23_BUILDER_PROJECTS_COMPAT.md",
@@ -201,8 +207,8 @@
     },
     {
       "path": "knowledge/26_SOMATIC_INTUITION.md",
-      "bytes": 24288,
-      "sha256": "38f0195f070366cae234583fc3e3dcc30c74a5662fd4bab011f4da77b07672cf"
+      "bytes": 24590,
+      "sha256": "1a704c9fc494166ed01c643a770e703afdd44b36296aad9101696cef1fc12bf5"
     },
     {
       "path": "knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
@@ -211,13 +217,13 @@
     },
     {
       "path": "knowledge/28_EVALS_ACCEPTANCE.md",
-      "bytes": 13399,
-      "sha256": "ddfc013b44ea60018f1272802181ac17984cd6390149b2988fc691d2f3c26782"
+      "bytes": 13401,
+      "sha256": "890d6c3a0a1a83d7932dae3f582355402eefb2d8ac695bdfcb79c0a0ee5a2ce9"
     },
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
-      "bytes": 8959,
-      "sha256": "8da1b559229e288490372034ec2a4e35cc6672f8b921b7ca3ae401a6d924e0fe"
+      "bytes": 8954,
+      "sha256": "a0ddf4deb0551392558715a3a4a9dd94250c18e3c404b5734a5bed8743d20eab"
     }
   ],
   "live_project_verified": false

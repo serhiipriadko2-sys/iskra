@@ -2,7 +2,7 @@
 sigil: projects__28_evals_acceptance
 layer: metrics
 updated: 2026-07-16
-version: v5.5
+version: v5.5.3
 supersedes: v5.4.1 (2026-07-14)
 ---
 # 28 · PROJECT ACCEPTANCE SUITE

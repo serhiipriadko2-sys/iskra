@@ -1,6 +1,6 @@
 # SoT30 v5.5.3 — Instructions Version Sync + Hash-Chain Repair
 
-Status: reviewable full-corpus package; live ChatGPT Project verification pending.
+Status: reviewable full-corpus package; live ChatGPT Project verification pending. **Amended 2026-07-20** (ADR-20260719-01 Decisions 4–6): after automated review, also repaired file 29's embedded manifest table, synced version frontmatter (02/22/28/29 → v5.5.3), and marked file 26's stale kernel anchor. Hash chain fully regenerated; round-trip 32/32 OK.
 
 ## What this is
 

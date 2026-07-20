@@ -7,11 +7,11 @@ Assembled and verified in-session 2026-07-19 by Claude Code, from the v5.5.2 bac
 | Item | Value |
 |---|---|
 | ZIP | `dist/SoT30_v5.5.3.zip` |
-| ZIP bytes | 1074384 |
-| ZIP sha256 | `3d5471dafd2c5aae39a131ff4e55fba942b6057c2f0f16fbcbeb8c7730fba8c1` |
+| ZIP bytes | 1125899 |
+| ZIP sha256 | `a3c3bfb87e0c1340cfb4067d9f81e50351fdc8fdffccd7a4d4d832a78134c884` |
 | Knowledge files | 30 (00–29, unique) |
-| Corpus bytes | 4027706 |
-| file 29 sha256 | `8da1b559229e288490372034ec2a4e35cc6672f8b921b7ca3ae401a6d924e0fe` |
+| Corpus bytes | 4028009 |
+| file 29 sha256 | `a0ddf4deb0551392558715a3a4a9dd94250c18e3c404b5734a5bed8743d20eab` |
 | Project Instructions | 5996 chars; version header now v5.5.3 |
 | Acceptance range | T01–T87 (unchanged from v5.5.2) |
 | Content-changed files | 1 (`00` — version label only, 2 characters) |
@@ -24,7 +24,7 @@ Assembled and verified in-session 2026-07-19 by Claude Code, from the v5.5.2 bac
 - Cross-checked 21 of those files against the independent v5.5.1 baseline — byte-for-byte identical.
 - Identified and documented (not silently propagated) a separate, pre-existing hash mismatch for `24_INTERFACE_STYLE.md` dating to v5.5.1, proven via raw `git cat-file` extraction to be unrelated to CRLF/autocrlf.
 - T80 parity (Instructions ↔ 00 mirror) re-verified raw-equal after the version-label edit.
-- ZIP `unzip -t` clean; built with 7-Zip (forward-slash entry paths). Round-trip `sha256sum -c support/SHA256SUMS` from a **fresh extraction** in a clean temp directory = 32/32 OK.
+- ZIP `unzip -t` clean; built with Python zipfile (forward-slash entry paths). Round-trip `sha256sum -c support/SHA256SUMS` from a **fresh extraction** in a clean temp directory = 32/32 OK.
 
 ## Boundary
 

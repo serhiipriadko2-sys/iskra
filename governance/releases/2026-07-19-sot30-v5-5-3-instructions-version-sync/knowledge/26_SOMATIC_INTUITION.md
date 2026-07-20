@@ -170,6 +170,7 @@ updated: 2026-04-24
 ## Kernel Alignment
 
 - Pipeline anchor: `SAFETY → METRICS → SLO-GUARD → PLAYBOOK → COUNCIL → VOICE → OUTPUT`.
+  - `[SUPERSEDED LABEL]` pre-v0.2 code-path anchor: it omits `MYTHIC_INQUIRY` (after `TRACE`) and `MYTHIC_EXPRESSION` (after `VOICE`). Canonical Kernel Order is `00_PROJECT_ROUTER.md` / `ADR-20260714-01`; this anchor is retained only as a somatic-hook code-path reference, not as the current pipeline.
 - Роль этого пакета: валидировать слой `METRICS` до того, как решение уйдёт в `SLO-GUARD`, `PLAYBOOK` и выбор голоса.
 - Практический смысл: пакет ловит не только factual quality, но и соматические провалы вида "гладко, но мёртво" или "быстро, но без опоры".
 
