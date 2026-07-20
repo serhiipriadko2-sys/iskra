@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-20T13:12:48.635Z",
-  "total": 3447,
+  "generatedAt": "2026-07-20T16:08:11.747Z",
+  "total": 3448,
   "curated": 20,
   "layers": {
     "root": 339,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 281,
+    "governance": 282,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -26557,6 +26557,7 @@
         "governance/changelog.d/2026-07-17-supabase-metrics-compute-plane-atom1.md",
         "governance/changelog.d/2026-07-18-sot30-v5-5-2-backlog-batch.md",
         "governance/changelog.d/2026-07-19-sot30-v5-5-3-instructions-version-sync.md",
+        "governance/changelog.d/2026-07-20-claude-code-cloud-profile.md",
         "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md",
         "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md"
       ]
@@ -26811,6 +26812,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-19-sot30-v5-5-3-instructions-version-sync.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-20-claude-code-cloud-profile.md",
+      "name": "2026-07-20-claude-code-cloud-profile.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-20-claude-code-cloud-profile.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
