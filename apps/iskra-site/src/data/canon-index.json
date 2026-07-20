@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-20T05:19:30.430Z",
-  "total": 3244,
+  "generatedAt": "2026-07-20T05:49:47.950Z",
+  "total": 3242,
   "curated": 20,
   "layers": {
-    "root": 339,
+    "root": 337,
     "agents": 46,
     "devcontainer": 2,
     "ci": 13,
@@ -7462,8 +7462,6 @@
         "dist/agent-builder",
         "dist/sot40",
         "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
-        "dist/SoT30_v5.5.1.zip",
-        "dist/SoT30_v5.5.2.zip",
         "dist/SoT30_v5.5.3.zip"
       ]
     },
@@ -7475,28 +7473,6 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
-      "related": [],
-      "parent": "dist"
-    },
-    {
-      "path": "dist/SoT30_v5.5.1.zip",
-      "name": "SoT30_v5.5.1.zip",
-      "kind": "file",
-      "layer": "root",
-      "role": "data",
-      "coverage": "indexed",
-      "sourceRef": "dist/SoT30_v5.5.1.zip",
-      "related": [],
-      "parent": "dist"
-    },
-    {
-      "path": "dist/SoT30_v5.5.2.zip",
-      "name": "SoT30_v5.5.2.zip",
-      "kind": "file",
-      "layer": "root",
-      "role": "data",
-      "coverage": "indexed",
-      "sourceRef": "dist/SoT30_v5.5.2.zip",
       "related": [],
       "parent": "dist"
     },
