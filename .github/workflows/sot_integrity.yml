@@ -47,6 +47,9 @@ jobs:
           governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency
           dist/SoT30_v5.5.4.zip
 
+      - name: Verify SoT30 verifier is fail-closed (negative-fixture matrix)
+        run: npx tsx tools/verify_sot30_release.selftest.ts
+
       - name: Verify package boundaries (no deep src imports)
         run: python tools/check_no_src_imports.py
 

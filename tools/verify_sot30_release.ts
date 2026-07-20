@@ -3,27 +3,29 @@
  * Fail-closed semantic verifier for a SoT30 release package.
  *
  * Usage:
- *   npx tsx tools/verify_sot30_release.ts <release_dir> [zip_path] [baseline_manifest]
+ *   npx tsx tools/verify_sot30_release.ts <release_dir> [zip_path] [baseline_manifest] [version]
  *
- * Exits non-zero if ANY check fails. Checks (see ADR-20260720-02 / file 28 T88–T93):
- *  1  exactly 30 knowledge files
- *  2  indices 00–29 unique, no gap
- *  3  SHA256SUMS matches actual file content
- *  4  MANIFEST.json bytes+sha256 match actual
- *  5  file 29 embedded table matches 00–28
- *  6  file 29 does not list its own hash
- *  7  Project Instructions raw-equal to the mirror embedded in file 00
- *  8  project_instructions_chars recorded == actual
- *  9  changed ∩ unchanged = ∅
- * 10  changed ∪ unchanged = 30
- * 11  changed set == files whose content differs from baseline manifest
- * 12  version fields consistent (package-version stamps == package_version)
- * 13  live_project_verified === false
- * 14  ZIP fresh-extraction round-trip (sha256sum -c) 32/32
- * 15  LF line-ending policy (no CRLF in knowledge/support)
- * 16  no absolute paths / .env / secrets / node_modules / build caches
- * 17  PACKAGE_RECEIPT carries the actual zip sha256 + bytes
- * 18  no release-root narrative says "28 unchanged"
+ * Exits non-zero if ANY check fails. Each check verifies an EXACT property, not a
+ * necessary-but-insufficient proxy (hardened per ADR-20260720-02 + PR-C review):
+ *  C1  knowledge dir = exactly the 30 files {00..29}, unique, no extra/missing
+ *  C2  indices 00–29 contiguous
+ *  C3  SHA256SUMS = exactly {30 knowledge + support/MANIFEST.json + support/PROJECT_INSTRUCTIONS_SOT30.md}, each hash correct
+ *  C4  MANIFEST.files = exactly the 30 knowledge paths (unique set), each bytes+sha256 correct
+ *  C5  file-29 table = exactly {00..28} (unique set), each bytes+sha256 correct
+ *  C6  file 29 does not list its own hash
+ *  C7  T80: the mirror region in file 00 (anchored at "## Project Instructions") is BYTE-EQUAL to the standalone instructions
+ *  C8  project_instructions_chars == actual character count
+ *  C9  changed ∩ unchanged = ∅
+ *  C10 changed ∪ unchanged = the actual set of knowledge filenames (set equality, not just size)
+ *  C11 changed set = files whose content differs from the baseline manifest
+ *  C12 package-version stamps consistent with package_version
+ *  C13 live_project_verified === false
+ *  C14 ZIP: single top-level root; every entry under root/knowledge|root/support; file set = exactly {30 knowledge + 3 support}; sha256sum -c 32/32
+ *  C15 LF line-ending policy (no CRLF in knowledge/support)
+ *  C16 package composition safety: no packaged file / zip entry is .env|node_modules|build-cache|absolute-path; no live secrets in knowledge/support/audit/scripts (illustrative bare PEM markers allowed)
+ *  C17 PACKAGE_RECEIPT carries the actual zip sha256 + bytes
+ *  C18 no release-root or file-29 narrative repeats the retired "28 files identical" composition claim
+ *  C19 T88: README/QC/PACKAGE_RECEIPT composition tokens agree with each other AND with MANIFEST's actual changed/unchanged counts; file 29 defers to the manifest (no contradicting hard-coded count)
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -39,88 +41,143 @@ const check = (cond: boolean, id: string, msg: string) => {
   (cond ? oks : fails).push(`${id}: ${msg}`);
 };
 const sha256 = (b: Buffer) => createHash('sha256').update(b).digest('hex');
+const setEq = (a: Set<string>, b: Set<string>) =>
+  a.size === b.size && [...a].every((x) => b.has(x));
 
 const releaseDir = process.argv[2];
-if (!releaseDir) { console.error('usage: verify_sot30_release.ts <release_dir> [zip] [baseline_manifest]'); process.exit(2); }
-const version = 'v5.5.4';
+if (!releaseDir) {
+  console.error('usage: verify_sot30_release.ts <release_dir> [zip] [baseline_manifest] [version]');
+  process.exit(2);
+}
+const version = process.argv[5] ?? 'v5.5.4';
 const zipPath = process.argv[3] ?? `dist/SoT30_${version}.zip`;
 const baselineManifest = process.argv[4]
   ?? 'governance/releases/2026-07-19-sot30-v5-5-3-instructions-version-sync/support/MANIFEST.json';
 
 const kdir = join(releaseDir, 'knowledge');
 const sdir = join(releaseDir, 'support');
+const SUPPORT_FILES = ['MANIFEST.json', 'PROJECT_INSTRUCTIONS_SOT30.md', 'SHA256SUMS'];
+const EXPECTED_KNAMES = new Set(
+  Array.from({ length: 30 }, (_, i) => String(i).padStart(2, '0')),
+);
 
-// knowledge files
-const knames = readdirSync(kdir).filter((n) => /^\d\d_.*\.md$/.test(n)).sort();
-check(knames.length === 30, 'C1', `exactly 30 knowledge files (got ${knames.length})`);
+// ---- knowledge dir = exactly {00..29} ----
+const kfiles = readdirSync(kdir).filter((n) => /\.md$/.test(n)).sort();
+const kIdxSet = new Set(kfiles.map((n) => n.slice(0, 2)));
+const kNumbered = kfiles.filter((n) => /^\d\d_.*\.md$/.test(n));
+check(
+  kfiles.length === 30 && kNumbered.length === 30
+    && new Set(kfiles).size === 30 && setEq(kIdxSet, EXPECTED_KNAMES),
+  'C1', `knowledge dir is exactly the 30 files {00..29} (got ${kfiles.length})`,
+);
+const knames = kNumbered;
 const idx = knames.map((n) => n.slice(0, 2));
 const expected = Array.from({ length: 30 }, (_, i) => String(i).padStart(2, '0'));
-check(JSON.stringify(idx) === JSON.stringify(expected), 'C2', 'indices 00–29 unique, no gap');
+check(JSON.stringify(idx) === JSON.stringify(expected), 'C2', 'indices 00–29 contiguous');
 
 const kbytes: Record<string, Buffer> = {};
 for (const n of knames) kbytes[n] = readFileSync(join(kdir, n));
 const kh: Record<string, string> = {};
 for (const n of knames) kh[n] = sha256(kbytes[n]);
+const knameSet = new Set(knames);
 
-// SHA256SUMS
+// ---- SHA256SUMS = exact expected set + correct hashes ----
 const sumsPath = join(sdir, 'SHA256SUMS');
 const sums = readFileSync(sumsPath, 'utf8').trim().split('\n');
-let sumsOk = true;
+const sumsPaths = new Set<string>();
+let sumsHashOk = true;
 for (const line of sums) {
   const m = line.match(/^([0-9a-f]{64})  (.+)$/);
-  if (!m) { sumsOk = false; continue; }
+  if (!m) { sumsHashOk = false; continue; }
   const [, h, rel] = m;
+  sumsPaths.add(rel);
   const fp = join(releaseDir, rel);
-  if (!existsSync(fp)) { sumsOk = false; continue; }
-  if (sha256(readFileSync(fp)) !== h) sumsOk = false;
+  if (!existsSync(fp) || sha256(readFileSync(fp)) !== h) sumsHashOk = false;
 }
-check(sumsOk && sums.length === 32, 'C3', `SHA256SUMS matches content (${sums.length} entries)`);
+const expectedSumsPaths = new Set<string>([
+  ...knames.map((n) => `knowledge/${n}`),
+  'support/MANIFEST.json',
+  'support/PROJECT_INSTRUCTIONS_SOT30.md',
+]);
+check(
+  sumsHashOk && sums.length === 32 && setEq(sumsPaths, expectedSumsPaths),
+  'C3', `SHA256SUMS = exact expected 32-file set with correct hashes (${sums.length} lines)`,
+);
 
-// MANIFEST
+// ---- MANIFEST.files = exact 30 knowledge set ----
 const manifest = JSON.parse(readFileSync(join(sdir, 'MANIFEST.json'), 'utf8'));
-let manOk = true;
-for (const f of manifest.files) {
+const manPaths = (manifest.files ?? []).map((f: { path: string }) => basename(f.path));
+const manPathSet = new Set<string>(manPaths);
+let manHashOk = true;
+for (const f of manifest.files ?? []) {
   const n = basename(f.path);
-  if (!kbytes[n] || kbytes[n].length !== f.bytes || kh[n] !== f.sha256) manOk = false;
+  if (!kbytes[n] || kbytes[n].length !== f.bytes || kh[n] !== f.sha256) manHashOk = false;
 }
-check(manOk && manifest.files.length === 30, 'C4', 'MANIFEST bytes+sha256 match actual');
+check(
+  manHashOk && manifest.files?.length === 30
+    && manPaths.length === 30 && manPathSet.size === 30 && setEq(manPathSet, knameSet),
+  'C4', 'MANIFEST.files = exact 30 knowledge set, bytes+sha256 correct',
+);
 
-// file 29 embedded table
+// ---- file-29 embedded table = exact {00..28} set ----
 const f29 = readFileSync(join(kdir, '29_INDEX_UPLOAD_MANIFEST.md'), 'utf8');
 const tableRows = [...f29.matchAll(/^\| `(\d\d_[A-Z0-9_]+\.md)` \| (\d+) \| `([0-9a-f]{64})` \|$/gm)];
-let t29Ok = tableRows.length === 29;
+const t29Names = new Set<string>();
+let t29HashOk = true;
 let selfListed = false;
 for (const [, n, bytesStr, h] of tableRows) {
+  t29Names.add(n);
   if (n.startsWith('29_')) selfListed = true;
-  if (!kbytes[n] || kbytes[n].length !== Number(bytesStr) || kh[n] !== h) t29Ok = false;
+  if (!kbytes[n] || kbytes[n].length !== Number(bytesStr) || kh[n] !== h) t29HashOk = false;
 }
-check(t29Ok, 'C5', `file 29 table matches 00–28 (${tableRows.length} rows)`);
+const expected0028 = new Set(knames.filter((n) => !n.startsWith('29_')));
+check(
+  t29HashOk && tableRows.length === 29 && t29Names.size === 29 && setEq(t29Names, expected0028),
+  'C5', `file-29 table = exact {00..28} set (${tableRows.length} rows)`,
+);
 check(!selfListed, 'C6', 'file 29 does not list its own hash');
 
-// Project Instructions parity with mirror in file 00
-const instr = readFileSync(join(sdir, 'PROJECT_INSTRUCTIONS_SOT30.md'), 'utf8');
-const f00 = readFileSync(join(kdir, '00_PROJECT_ROUTER.md'), 'utf8');
-check(f00.includes(instr.trim()) || f00.includes(instr), 'C7', 'instructions raw-equal to file-00 mirror');
+// ---- T80: byte-equal mirror region anchored in file 00 ----
+const instrBuf = readFileSync(join(sdir, 'PROJECT_INSTRUCTIONS_SOT30.md'));
+const instr = instrBuf.toString('utf8');
+const f00Buf = readFileSync(join(kdir, '00_PROJECT_ROUTER.md'));
+const anchor = Buffer.from('## Project Instructions');
+const anchorIdx = f00Buf.indexOf(anchor);
+let t80Ok = false;
+if (anchorIdx !== -1) {
+  let s = anchorIdx + anchor.length;
+  while (s < f00Buf.length && [0x0a, 0x0d, 0x20, 0x09].includes(f00Buf[s])) s += 1;
+  const region = f00Buf.subarray(s, s + instrBuf.length);
+  // byte-equal to the standalone AND anchored at the documented mirror position:
+  // a modified mirror fails even if a pristine copy appears elsewhere as a substring.
+  t80Ok = region.length === instrBuf.length && region.equals(instrBuf);
+}
+check(t80Ok, 'C7', 'T80: file-00 mirror region is BYTE-EQUAL to standalone instructions');
 check(manifest.project_instructions_chars === instr.length, 'C8',
   `project_instructions_chars recorded (${manifest.project_instructions_chars}) == actual (${instr.length})`);
 
-// changed/unchanged sets
+// ---- changed / unchanged sets ----
 const changed: string[] = manifest.changed_files ?? [];
 const unchanged: string[] = manifest.unchanged_files ?? [];
-const cset = new Set(changed); const uset = new Set(unchanged);
-check([...cset].every((x) => !uset.has(x)), 'C9', 'changed ∩ unchanged = ∅');
-check(new Set([...changed, ...unchanged]).size === 30
-  && changed.length + unchanged.length === 30, 'C10', 'changed ∪ unchanged = 30');
+const cset = new Set(changed);
+const uset = new Set(unchanged);
+check(
+  changed.length === cset.size && unchanged.length === uset.size
+    && [...cset].every((x) => !uset.has(x)),
+  'C9', 'changed ∩ unchanged = ∅ (both internally unique)',
+);
+check(setEq(new Set([...changed, ...unchanged]), knameSet), 'C10',
+  'changed ∪ unchanged = actual knowledge filename set');
 
-// composition matches actual diff to baseline
+// ---- composition matches actual diff to baseline ----
 const base = JSON.parse(readFileSync(baselineManifest, 'utf8'));
 const baseHash: Record<string, string> = {};
 for (const f of base.files) baseHash[basename(f.path)] = f.sha256;
 const actualChanged = knames.filter((n) => kh[n] !== baseHash[n]).sort();
-check(JSON.stringify([...cset].sort()) === JSON.stringify(actualChanged), 'C11',
-  `changed set matches actual diff to baseline (${actualChanged.length} changed)`);
+check(setEq(cset, new Set(actualChanged)), 'C11',
+  `changed set = actual diff to baseline (${actualChanged.length} changed)`);
 
-// version consistency
+// ---- version consistency ----
 let verOk = manifest.package_version === version;
 for (const n of knames) {
   const head = kbytes[n].toString('utf8').slice(0, 400);
@@ -130,62 +187,143 @@ for (const n of knames) {
 check(verOk, 'C12', `package-version stamps consistent at ${version}`);
 check(manifest.live_project_verified === false, 'C13', 'live_project_verified === false');
 
-// ZIP round-trip
+// ---- ZIP: single root, allowlisted entries only, round-trip ----
 let zipOk = false;
+let zipMsg = 'zip missing';
 if (existsSync(zipPath)) {
   const tmp = mkdtempSync(join(tmpdir(), 'sot30verify_'));
   try {
+    const listing = execFileSync('unzip', ['-Z1', zipPath], { encoding: 'utf8' })
+      .split('\n').map((l) => l.trim()).filter(Boolean);
+    const roots = new Set(listing.map((e) => e.split('/')[0]));
+    const singleRoot = roots.size === 1;
+    const root = [...roots][0];
+    // relative file entries (exclude dir entries ending in /)
+    const fileEntries = listing.filter((e) => !e.endsWith('/'));
+    const relFiles = new Set(fileEntries.map((e) => e.slice(root.length + 1)));
+    const expectedZip = new Set<string>([
+      ...knames.map((n) => `knowledge/${n}`),
+      ...SUPPORT_FILES.map((s) => `support/${s}`),
+    ]);
+    const noAbsOrDotDot = fileEntries.every((e) => !e.startsWith('/') && !e.includes('..'));
+    const allowlistOk = setEq(relFiles, expectedZip);
     execFileSync('unzip', ['-qq', zipPath, '-d', tmp]);
-    const root = readdirSync(tmp)[0];
     const out = execFileSync('sha256sum', ['-c', 'support/SHA256SUMS'],
       { cwd: join(tmp, root), encoding: 'utf8' });
     const okLines = out.split('\n').filter((l) => l.endsWith(': OK')).length;
     const badLines = out.split('\n').filter((l) => /: FAILED/.test(l)).length;
-    zipOk = okLines === 32 && badLines === 0;
-  } catch { zipOk = false; } finally { rmSync(tmp, { recursive: true, force: true }); }
+    zipOk = singleRoot && allowlistOk && noAbsOrDotDot && okLines === 32 && badLines === 0;
+    zipMsg = `root=${root} entries=${relFiles.size} sha256sum -c ${okLines}/32`;
+  } catch (e) { zipMsg = `error: ${(e as Error).message}`; } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
 }
-check(zipOk, 'C14', 'ZIP fresh-extraction sha256sum -c = 32/32 OK');
+check(zipOk, 'C14', `ZIP single-root + exact allowlist + round-trip (${zipMsg})`);
 
-// LF policy
+// ---- LF policy ----
 let lfOk = true;
 for (const n of knames) if (kbytes[n].includes(Buffer.from('\r\n'))) lfOk = false;
-for (const sf of readdirSync(sdir)) if (readFileSync(join(sdir, sf)).includes(Buffer.from('\r\n'))) lfOk = false;
-check(lfOk, 'C15', 'LF line-ending policy (no CRLF)');
+for (const sf of SUPPORT_FILES) {
+  const p = join(sdir, sf);
+  if (existsSync(p) && readFileSync(p).includes(Buffer.from('\r\n'))) lfOk = false;
+}
+check(lfOk, 'C15', 'LF line-ending policy (no CRLF in knowledge/support)');
 
-// forbidden content
-let cleanOk = true;
-// A real secret, not an illustrative marker: an OpenAI-style key with a body, a
-// JWT triple with real segments, or a PEM block with an actual base64 key body
-// between BEGIN and END (bare "-----BEGIN PRIVATE KEY-----" markers used in the
-// safe-payload-gate documentation are enumerations of rejected forms, not keys).
+// ---- C16: package composition safety + real secret scan ----
+// structural: no packaged file / zip entry is an env/dependency/cache/absolute artifact.
+const FORBIDDEN_PATH = /(^|\/)(\.env(\..*)?|node_modules|\.cache|\.next|coverage|dist|build)(\/|$)/i;
+let structuralOk = true;
+// scan the ACTUAL knowledge/ and support/ directory contents (not just the expected
+// names) so a stray .env / node_modules / cache artifact is caught even if it is
+// absent from SHA256SUMS/MANIFEST.
+const actualPackaged: string[] = [
+  ...readdirSync(kdir).map((f) => `knowledge/${f}`),
+  ...readdirSync(sdir).map((f) => `support/${f}`),
+];
+for (const rel of actualPackaged) {
+  if (FORBIDDEN_PATH.test(rel) || rel.startsWith('/')) structuralOk = false;
+}
+// (zip entry names already allow-listed in C14; this guards the release tree itself.)
+
+// secrets: tight patterns over knowledge + support + (optional) audit dir + tool scripts.
+// Bare "-----BEGIN … PRIVATE KEY-----" markers WITHOUT a base64 body are illustrative
+// (the file-24 historical mirror enumerates rejected forms) and are allowed.
+// A real leaked Supabase service_role / anon key is a JWT (eyJ…) and is caught by
+// the JWT-triple branch regardless of any `SERVICE_ROLE_KEY=` prefix. We deliberately
+// do NOT flag `ANON_KEY=<name>`-style assignments: in the file-24 historical mirror
+// those values are documentation placeholders (`your_supabase_anon_key`,
+// `import.meta.env.VITE_SUPABASE_ANON_KEY`), not real secrets.
 const secretPat = new RegExp(
   '(sk-[A-Za-z0-9]{32,}'
   + '|eyJ[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}'
   + '|-----BEGIN [A-Z ]*PRIVATE KEY-----[\\s\\S]{0,40}?[A-Za-z0-9+/]{60,})',
 );
-for (const n of knames) {
-  const t = kbytes[n].toString('utf8');
-  if (secretPat.test(t)) cleanOk = false;
+const secretScanTargets: string[] = [
+  ...knames.map((n) => join(kdir, n)),
+  ...SUPPORT_FILES.map((s) => join(sdir, s)),
+];
+// audit artifacts + build/verify scripts, when present (advertised coverage).
+const auditDir = 'governance/audits/2026-07-20-sot30-v554';
+if (existsSync(auditDir)) {
+  for (const f of readdirSync(auditDir)) secretScanTargets.push(join(auditDir, f));
 }
-check(cleanOk, 'C16', 'no live secrets (illustrative PEM markers without a key body are allowed)');
+for (const s of ['tools/build_sot30_release.py', 'tools/verify_sot30_release.ts']) {
+  if (existsSync(s)) secretScanTargets.push(s);
+}
+let secretsOk = true;
+for (const p of secretScanTargets) {
+  if (!existsSync(p) || statSync(p).isDirectory()) continue;
+  if (secretPat.test(readFileSync(p, 'utf8'))) { secretsOk = false; }
+}
+check(structuralOk && secretsOk, 'C16',
+  'package composition safe (no env/dep/cache/abs artifacts) + no live secrets in knowledge/support/audit/scripts');
 
-// receipt carries real zip hash+bytes
+// ---- receipt carries real zip hash+bytes ----
 const receipt = existsSync(join(releaseDir, 'PACKAGE_RECEIPT.md'))
   ? readFileSync(join(releaseDir, 'PACKAGE_RECEIPT.md'), 'utf8') : '';
 const zb = existsSync(zipPath) ? readFileSync(zipPath) : Buffer.alloc(0);
-check(receipt.includes(sha256(zb)) && receipt.includes(String(zb.length)), 'C17',
+check(zb.length > 0 && receipt.includes(sha256(zb)) && receipt.includes(String(zb.length)), 'C17',
   'PACKAGE_RECEIPT carries actual zip sha256 + bytes');
 
-// no stale "28 unchanged" narrative
-let stale28 = false;
+// ---- retired "28 identical" claim absent ----
+let retired = false;
+const retiredPat = /28 files (are )?(byte-)?identical|other 28 files|28 unchanged/i;
 for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
   const dp = join(releaseDir, doc);
-  if (existsSync(dp) && /28 unchanged/i.test(readFileSync(dp, 'utf8'))) stale28 = true;
+  if (existsSync(dp) && retiredPat.test(readFileSync(dp, 'utf8'))) retired = true;
 }
-if (/28 files are byte-identical|other 28 files/i.test(f29)) stale28 = true;
-check(!stale28, 'C18', 'no stale "28 unchanged" narrative');
+if (retiredPat.test(f29)) retired = true;
+check(!retired, 'C18', 'retired "28-files-identical" composition claim absent');
 
-// report
+// ---- C19 (T88): composition agreement across README/QC/receipt + MANIFEST + file 29 ----
+// Editable release-root docs carry a machine-readable token:
+//   <!-- composition: changed=N unchanged=M baseline=v5.5.3 -->
+// All three must agree with each other AND with the manifest's actual counts;
+// file 29 must defer to the manifest and carry no contradicting hard-coded count.
+const compToken = (t: string): [number, number] | null => {
+  const m = t.match(/composition:\s*changed=(\d+)\s+unchanged=(\d+)/i);
+  return m ? [Number(m[1]), Number(m[2])] : null;
+};
+const manComp: [number, number] = [changed.length, unchanged.length];
+const rootTokens: Record<string, [number, number] | null> = {};
+for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
+  const dp = join(releaseDir, doc);
+  rootTokens[doc] = existsSync(dp) ? compToken(readFileSync(dp, 'utf8')) : null;
+}
+const allTokens = Object.values(rootTokens);
+const tokensPresent = allTokens.every((x) => x !== null);
+const tokensAgree = tokensPresent && allTokens.every(
+  (x) => x![0] === manComp[0] && x![1] === manComp[1],
+);
+// file 29 must reference the manifest as the composition authority and NOT hard-code a
+// contradicting "N files unchanged" count.
+const f29DefersToManifest = /manifest'?s?\b|support\/MANIFEST\.json/i.test(f29)
+  && !/\b(\d+) files? (are )?(byte-)?identical\b/i.test(f29);
+check(tokensAgree && f29DefersToManifest, 'C19',
+  `T88 composition agreement (manifest changed=${manComp[0]}/unchanged=${manComp[1]}; root tokens ${
+    tokensPresent ? 'present' : 'MISSING'}; file29 defers=${f29DefersToManifest})`);
+
+// ---- report ----
 for (const o of oks) console.log(`PASS ${o}`);
 for (const f of fails) console.error(`FAIL ${f}`);
 console.log(`\n${oks.length} passed, ${fails.length} failed`);

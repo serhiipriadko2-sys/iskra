@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-20T16:08:11.747Z",
-  "total": 3448,
+  "generatedAt": "2026-07-20T18:03:47.410Z",
+  "total": 3452,
   "curated": 20,
   "layers": {
     "root": 339,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 282,
+    "governance": 285,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -27,7 +27,7 @@
     "skills": 267,
     "backend": 79,
     "system": 26,
-    "tools": 56
+    "tools": 57
   },
   "nodes": [
     {
@@ -25867,6 +25867,7 @@
       "children": [
         "governance/audits",
         "governance/changelog.d",
+        "governance/errata",
         "governance/releases",
         "governance/adr.md",
         "governance/adr_20260206_runtime_patches.md",
@@ -26559,7 +26560,8 @@
         "governance/changelog.d/2026-07-19-sot30-v5-5-3-instructions-version-sync.md",
         "governance/changelog.d/2026-07-20-claude-code-cloud-profile.md",
         "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md",
-        "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md"
+        "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md",
+        "governance/changelog.d/2026-07-20-sot30-v554-verifier-hardening.md"
       ]
     },
     {
@@ -26849,6 +26851,17 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-20-sot30-v554-verifier-hardening.md",
+      "name": "2026-07-20-sot30-v554-verifier-hardening.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-20-sot30-v554-verifier-hardening.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -26869,6 +26882,31 @@
       "sourceRef": "governance/codex_local_operating_contract.md",
       "related": [],
       "parent": "governance"
+    },
+    {
+      "path": "governance/errata",
+      "name": "errata",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/errata",
+      "related": [],
+      "parent": "governance",
+      "children": [
+        "governance/errata/2026-07-20-sot30-v5-5-4-erratum.md"
+      ]
+    },
+    {
+      "path": "governance/errata/2026-07-20-sot30-v5-5-4-erratum.md",
+      "name": "2026-07-20-sot30-v5-5-4-erratum.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/errata/2026-07-20-sot30-v5-5-4-erratum.md",
+      "related": [],
+      "parent": "governance/errata"
     },
     {
       "path": "governance/governance_pack.md",
@@ -42130,6 +42168,7 @@
         "tools/validate_delta.py",
         "tools/validate_terms.py",
         "tools/verify_ledger.ts",
+        "tools/verify_sot30_release.selftest.ts",
         "tools/verify_sot30_release.ts",
         "tools/verify_sot40_receipt.py",
         "tools/verify_sot40_scope.py",
@@ -42694,6 +42733,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "tools/verify_ledger.ts",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/verify_sot30_release.selftest.ts",
+      "name": "verify_sot30_release.selftest.ts",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/verify_sot30_release.selftest.ts",
       "related": [],
       "parent": "tools"
     },

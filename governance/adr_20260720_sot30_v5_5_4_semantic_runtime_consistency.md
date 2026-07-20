@@ -1,6 +1,6 @@
 # ADR-20260720-02: SoT30 v5.5.4 — Semantic & Runtime-Status Consistency
 
-Status: proposed
+Status: accepted (2026-07-20, owner decision)
 
 Date: 2026-07-20
 
@@ -8,9 +8,23 @@ Owner: project owner (Семён)
 
 Builder: Claude Code
 
-Package mirror: pending
+Package mirror: done
+
+Implementation: merged (PR #289, merge `1ac741f`)
+
+Conformance hardening: pending PR-C (`fix/sot30-v554-verifier-hardening`)
 
 Live verification: pending
+
+> **Lifecycle note (2026-07-20).** These are distinct stages and are not
+> collapsed. `accepted` records the owner accepting the **architectural
+> decision** below (v5.5.3 immutable; corrections ship as versioned packages;
+> physical / semantic / runtime-status / live-Project readiness stay separate;
+> STATIC-PACKAGE-PASS ≠ LIVE-PROJECT-PASS). It does **not** assert that the
+> shipped `tools/verify_sot30_release.ts` already fully meets its advertised
+> fail-closed contract — an independent review found several checks weaker than
+> their labels; those are being hardened in PR-C. Nor does it assert any
+> live-Project verification (still pending).
 
 ## Context
 
