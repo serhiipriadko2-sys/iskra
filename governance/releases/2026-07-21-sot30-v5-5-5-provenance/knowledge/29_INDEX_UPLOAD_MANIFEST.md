@@ -11,47 +11,53 @@ supersedes: v5.4.1 (2026-07-14), v5.5 delta, v5.5.1 content delta, v5.5.2 backlo
 Upload exactly the 30 files in `knowledge/` and paste `support/PROJECT_INSTRUCTIONS_SOT30.md` into Project Instructions. Support files are receipts/tests, not Knowledge prerequisites. Business/Pro/Enterprise/Edu plans allow up to 40 files/project with a 10-file simultaneous-upload cap — upload in 3 batches of 10 and verify a final count of 30. Go/Plus (25-file ceiling) and Free (5-file ceiling) cannot hold this package.
 
 ## What this package is
-v5.5.4 corrects **semantic and runtime-status drift** inside the v5.5.3 corpus.
-v5.5.3 was *physically* intact (its zip passed a fresh-extraction round-trip at
-32/32); the defects fixed here live in the prose an in-Project agent reads, not
-in the hash chain. `dist/SoT30_v5.5.3.zip` is unchanged and remains the
-immutable historical release; v5.5.4 is a separate package built from the
-v5.5.3 corpus as baseline. Governance trace: `ADR-20260720-02`.
+v5.5.5 is a **provenance / version-identity cleanup** over v5.5.4 — no semantic,
+runtime, Supabase, or memory-policy change (ADR-20260721-01). It resolves the two
+in-ZIP inaccuracies v5.5.4's erratum deferred: **E1** — `support/MANIFEST.json`
+`generated_from: canonical_git_blobs` is now *genuinely true* (built from a
+source-freeze commit via a real `--from-git`, with 30/30 knowledge files + the
+instructions in the ZIP byte-equal to the git blobs at that commit, recorded in
+`generated_from_ref`); **E2** — the ZIP root is now `SoT30_v5.5.5/`. It also makes
+the active package identity consistent at v5.5.5 (both Project Instructions copies
+and the version stamps in `00/01/02/22/25/28/29`). Baseline: v5.5.4. Live-Project
+verification pending. Governance trace: `ADR-20260721-01`.
+
+v5.5.4 (semantic & runtime-status consistency), v5.5.3 and earlier are **historical
+previous releases**, not this package; their sections lower in this file are kept
+for provenance only.
 
 ### Three baselines (do not conflate)
-- **release_tree_baseline** — the committed `knowledge/` blob content of v5.5.3.
-  This is the authoritative source of truth for v5.5.4's diff.
-- **dist_zip_baseline** — a shipped `.zip` artifact. For v5.5.2 the zip diverged
-  from the release tree for files `06/09/24`; v5.5.3 reconciled them. Do not
-  treat a zip as the content authority.
-- **live_project_baseline** — the 30 files actually uploaded to a running
-  ChatGPT Project. This package has **not** been uploaded for this build; no
-  claim is made about any live Project's contents.
+- **release_tree_baseline** — the committed v5.5.4 release-tree `knowledge/` content;
+  the authoritative source of truth for v5.5.5's diff.
+- **dist_zip_baseline** — the immutable shipped v5.5.4 ZIP, used only as an artifact
+  comparison surface, **not** as a source of new bytes. (Historically the v5.5.2 zip
+  diverged from its release tree for `06/09/24`; v5.5.3 reconciled it. Do not treat a
+  zip as the content authority.)
+- **live_project_baseline** — **absent**: v5.5.5 has not been uploaded to any live
+  ChatGPT Project; no claim is made about a live Project's contents.
 
-### Composition vs the v5.5.3 release tree
+### Composition vs the v5.5.4 release tree
 The per-file `changed`/`unchanged` sets are recomputed at build time from actual
-LF-normalized content, are **disjoint**, and their **union is all 30 files** —
-see `support/MANIFEST.json` (`changed_files` / `unchanged_files`). v5.5.4 does
-**not** claim "28 files unchanged"; the earlier v5.5.3 amendment (Decisions 4–6)
-already made that phrasing false, and v5.5.4 changes further files. The exact
-list is the manifest's, not a hard-coded prose count.
+LF-normalized content, are **disjoint** (intersection empty), and their **union is
+all 30 files** — see `support/MANIFEST.json` (`changed_files` / `unchanged_files`).
+For v5.5.5 the expected changed set is `{00, 01, 02, 22, 25, 28, 29}` — **7 changed /
+23 unchanged**. The exact list is the manifest's, not a hard-coded prose count.
 
 ### On the earlier chain (historical, do not over-generalize)
 The v5.5.2→v5.5.3 receipts established that external commit `82191ce` overwrote
 v5.5.2's `support/SHA256SUMS`/`MANIFEST.json`; that `31340c5`'s recorded hash was
 correct for `01` but was itself already wrong for `06/09/24` (it matched the
-divergent v5.5.2 zip, not the committed blob). v5.5.4 inherits v5.5.3's
-reconciled, git-blob-derived content and does not re-litigate that chain.
+divergent v5.5.2 zip, not the committed blob). v5.5.4 inherited v5.5.3's
+reconciled, git-blob-derived content; v5.5.5 does not re-litigate that chain.
 
-### File 24 provenance (resolved this build)
-`24_INTERFACE_STYLE.md`'s 18-byte / hash gap first recorded at v5.5.1 is real. The
-raw-blob diff receipt under `governance/audits/2026-07-20-sot30-v554/`
-(`FILE24_PROVENANCE_RECEIPT.json`, `root_cause_status: verified`) shows the v5.5.1→v5.5.3
-change is **exactly two** `auth.uid()` → `(select auth.uid())` RLS-initplan
-optimizations (9 bytes ×2 = 18, zero CRLF in both blobs) — the byte delta is fully
-accounted, so the cause is promoted to FACT: a benign RLS optimization whose hash the
-manifest previously lagged, not a corruption and not a CRLF artifact. (This build's
-file 24 additionally carries the v5.5.4 quarantine overlay, so its hash differs again.)
+### File 24 provenance (resolved in v5.5.4)
+`24_INTERFACE_STYLE.md`'s 18-byte / hash gap first recorded at v5.5.1 was **resolved
+in v5.5.4**: the raw-blob receipt under `governance/audits/2026-07-20-sot30-v554/`
+(`FILE24_PROVENANCE_RECEIPT.json`, `root_cause_status: verified`) showed the change is
+**exactly two** `auth.uid()` → `(select auth.uid())` RLS-initplan optimizations
+(9 bytes ×2 = 18, zero CRLF in both blobs) — a benign optimization the manifest hash
+previously lagged, not a corruption and not a CRLF artifact. **v5.5.5 keeps file 24
+byte-identical to v5.5.4** and makes no new file-24 claim.
 
 > **STATIC-PACKAGE-PASS does not imply LIVE-PROJECT-PASS.** A green
 > `sha256sum -c` and a passing semantic verifier attest the *package*. A
@@ -140,9 +146,9 @@ This regenerated table records file 13 at its actual merged content — **13386 
 - T01–T93 are not yet live-run;
 - the bounded-Guard controller is implemented and wired, but `postGuardEws` is a decision-derived **proxy**, not an independently-observed true late-signal EWS (see `11`); the true-late-signal path is E2E-unverified;
 - file 15's Supabase overlay is a read-only observation stamped with `observed_at`; migration parity, live schema, live data counts, edge-function deployment, and Projects-Action invocation are independent facts and none is inferred from another;
-- file 24's root cause is `verified` this build (raw-blob receipt: two RLS-initplan optimizations, +18 bytes fully accounted);
+- file 24's root cause was `verified` in v5.5.4 (raw-blob receipt: two RLS-initplan optimizations, +18 bytes fully accounted); v5.5.5 keeps file 24 byte-identical and makes no new file-24 claim;
 - T76 F1/F2/F3 falsifier behavior is statically specified, not verified-live;
 - gateway Projects Action/JWT role and Archive/Shadow DB enforcement remain pending;
 - current Project memory mode (project-only vs default) for any specific live Project is unknown until explicitly checked;
 - retrieval-order of the 30 files inside a live Project is not guaranteed by this document;
-- ADR-20260720-02 is `proposed`, not `accepted`; this package is not deployed.
+- lifecycle (do not conflate stages): ADR-20260720-02 (v5.5.4) is **accepted** and v5.5.4 is merged and immutable; ADR-20260721-01 (v5.5.5) is **accepted**, but this v5.5.5 package/PR is **not yet merged**; live-Project verification is pending; "deployed" is not a synonym for merged or live-verified.
