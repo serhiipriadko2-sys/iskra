@@ -19,15 +19,16 @@ does NOT guarantee cross-toolchain reproducibility (a different zlib/Python may
 deflate differently); verify by hash, not by assumption.
 
 Usage:
-  python3 tools/build_sot30_release.py <release_dir> --version v5.5.5 \\
-      --baseline <baseline_manifest.json> --zip-out dist/SoT30_v5.5.5.zip \\
-      [--date 2026-08-01] [--adr ADR-YYYYMMDD-NN] [--package-name "..."] \\
+  python3 tools/build_sot30_release.py <release_dir> --version v5.5.5 \
+      --baseline <baseline_manifest.json> --zip-out dist/SoT30_v5.5.5.zip \
+      [--date 2026-08-01] [--adr ADR-YYYYMMDD-NN] [--package-name "..."] \
       [--from-git <commit_sha>]
 
 IMPORTANT: this writes into <release_dir>. Never run it against an immutable,
 already-shipped release directory — build a fresh release dir for a new version.
 """
 import argparse
+import atexit
 import hashlib
 import json
 import os
@@ -67,21 +68,25 @@ def git_show(ref: str, path: str) -> bytes:
         raise BuildError(f"git show failed for {path}@{ref}: {e}") from e
 
 
-def materialize_git_source(release_dir: str, kdir: str, sdir: str, knames: list[str],
+def materialize_git_source(kdir: str, sdir: str, knames: list[str],
                            from_git: str) -> str:
     """Extract every SOURCE file (30 knowledge + PROJECT_INSTRUCTIONS) from a commit
     into a temp working tree, so the ENTIRE package (file-29 table, all-30 hashes,
     manifest, zip, instructions) is genuinely built from git blobs. Returns the temp
     release-dir root. (SHA256SUMS/MANIFEST are generated, not sourced.)"""
     work = tempfile.mkdtemp(prefix="sot30gitsrc_")
-    os.makedirs(os.path.join(work, "knowledge"))
-    os.makedirs(os.path.join(work, "support"))
-    for n in knames:
-        with open(os.path.join(work, "knowledge", n), "wb") as f:
-            f.write(git_show(from_git, os.path.join(kdir, n)))
-    with open(os.path.join(work, "support", SUPPORT_INSTRUCTIONS), "wb") as f:
-        f.write(git_show(from_git, os.path.join(sdir, SUPPORT_INSTRUCTIONS)))
-    return work
+    try:
+        os.makedirs(os.path.join(work, "knowledge"))
+        os.makedirs(os.path.join(work, "support"))
+        for n in knames:
+            with open(os.path.join(work, "knowledge", n), "wb") as f:
+                f.write(git_show(from_git, os.path.join(kdir, n)))
+        with open(os.path.join(work, "support", SUPPORT_INSTRUCTIONS), "wb") as f:
+            f.write(git_show(from_git, os.path.join(sdir, SUPPORT_INSTRUCTIONS)))
+        return work
+    except Exception:
+        shutil.rmtree(work, ignore_errors=True)
+        raise
 
 
 def normalize_root(version: str) -> str:
@@ -125,10 +130,13 @@ def main() -> int:
     # from the commit into a temp tree and build the whole package from it, so
     # `canonical_git_blobs` is literally true. Generated artifacts (file 29 table,
     # MANIFEST, SHA256SUMS) are copied back to release_dir afterwards.
-    git_work = materialize_git_source(git_source_dir,
-                                      os.path.join(git_source_dir, "knowledge"),
+    git_work = materialize_git_source(os.path.join(git_source_dir, "knowledge"),
                                       os.path.join(git_source_dir, "support"),
                                       knames, from_git) if from_git else None
+    if git_work:
+        # Fallback cleanup for any exception after materialization. The explicit
+        # successful-path cleanup below remains; rmtree(ignore_errors=True) is idempotent.
+        atexit.register(shutil.rmtree, git_work, ignore_errors=True)
     build_dir = git_work or release_dir
     kdir = os.path.join(build_dir, "knowledge")
     sdir = os.path.join(build_dir, "support")
