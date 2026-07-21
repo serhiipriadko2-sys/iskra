@@ -27,11 +27,11 @@ Scope: provenance/label cleanup (E1/E2) + version-identity consistency over v5.5
 ## Package facts
 
 - knowledge files: 30 (changed 7: `00,01,02,22,25,28,29`; unchanged 23)
-- corpus bytes: 4,039,379
+- corpus bytes: 4,039,886
 - Project Instructions: 5,996 chars; byte-equal to the file-00 mirror (T80); header `SoT30 v5.5.5`
-- ZIP: `dist/SoT30_v5.5.5.zip`, 1130036 bytes, sha256 `58ea31c020359c83d161c94710fc50b432b81efb4a4c1f6f6c024e6230246db6`, root `SoT30_v5.5.5/`
-- file 29: 11729 bytes, sha256 `4f03d12eec560a12649dd2c74cf5b17ac236f5c928398eac1aa683d541d3a974`
-- support/MANIFEST.json sha256 `3d3cae4c62d5352f712d59e569df37b3d80c49f0c53437da267a0e85261da553`
+- ZIP: `dist/SoT30_v5.5.5.zip`, 1130206 bytes, sha256 `aae8255e79db539010921dcf9059450563a26fdd8f524be1776c5354f0895ac9`, root `SoT30_v5.5.5/`
+- file 29: 12236 bytes, sha256 `678ca93c7977db4649c96c1a87cafd50e3ab345fc0b56551bb2a6df2bc963507`
+- support/MANIFEST.json sha256 `b665c8679c4e1a4d21e8b29b996394adf8f82468e6e7325008b42fd2d6d42739`
 - generated_from: `canonical_git_blobs`; generated_from_ref: `56ad422b4dfd89d9d563b6e36c63bae9444182cf`
 
 ## Not checked (out of scope / pending)

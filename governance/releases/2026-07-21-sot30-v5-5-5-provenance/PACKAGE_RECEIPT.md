@@ -9,12 +9,12 @@ Assembled in-session 2026-07-21 by Claude Code from a **source-freeze commit** v
 | Item | Value |
 |---|---|
 | ZIP | `dist/SoT30_v5.5.5.zip` |
-| ZIP bytes | 1130036 |
-| ZIP sha256 | `58ea31c020359c83d161c94710fc50b432b81efb4a4c1f6f6c024e6230246db6` |
+| ZIP bytes | 1130206 |
+| ZIP sha256 | `aae8255e79db539010921dcf9059450563a26fdd8f524be1776c5354f0895ac9` |
 | ZIP root | `SoT30_v5.5.5/` (E2 resolved) |
 | Knowledge files | 30 (00–29, unique) |
-| Corpus bytes | 4,039,379 |
-| file 29 sha256 | `4f03d12eec560a12649dd2c74cf5b17ac236f5c928398eac1aa683d541d3a974` |
+| Corpus bytes | 4,039,886 |
+| file 29 sha256 | `678ca93c7977db4649c96c1a87cafd50e3ab345fc0b56551bb2a6df2bc963507` |
 | support/MANIFEST.json sha256 | `3d3cae4c62d5352f712d59e569df37b3d80c49f0c53437da267a0e85261da553` |
 | Project Instructions | 5996 chars; T80 byte-equal to file 00 mirror; header `SoT30 v5.5.5` |
 | Acceptance range | T01–T93 |
