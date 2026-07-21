@@ -20,17 +20,17 @@ Assembled in-session 2026-07-21 by Claude Code from a **source-freeze commit** v
 | Acceptance range | T01–T93 |
 | Baseline | v5.5.4 (immutable) |
 | generated_from | `canonical_git_blobs` (E1 resolved — genuinely true) |
-| generated_from_ref | `56ad422b4dfd89d9d563b6e36c63bae9444182cf` (source-freeze commit) |
+| generated_from_ref | `ed8f3660c1c425d51c02c04c150fefd1b4041154` (source-freeze commit) |
 | Changed vs v5.5.4 | `00, 01, 02, 22, 25, 28, 29` (active identity) |
 
 ## Provenance (two-stage)
 
-1. **Source freeze** (`56ad422b`): final v5.5.5 knowledge (00–29 with the regenerated file-29 table) + byte-equal Project Instructions committed.
-2. **Canonical build**: `build_sot30_release.py --version v5.5.5 --from-git 56ad422b --git-source-dir <v5.5.5 release> --baseline governance/releases/2026-07-20-…/support/MANIFEST.json --baseline-version v5.5.4 --date 2026-07-21 --adr ADR-20260721-01`. Every source byte was extracted from `56ad422b` via `git show`, so `canonical_git_blobs` is literally true.
+1. **Source freeze** (`ed8f3660`): final v5.5.5 knowledge (00–29 with the regenerated file-29 table) + byte-equal Project Instructions committed.
+2. **Canonical build**: `build_sot30_release.py --version v5.5.5 --from-git ed8f3660 --git-source-dir <v5.5.5 release> --baseline governance/releases/2026-07-20-…/support/MANIFEST.json --baseline-version v5.5.4 --date 2026-07-21 --adr ADR-20260721-01`. Every source byte was extracted from `ed8f3660` via `git show`, so `canonical_git_blobs` is literally true.
 
 ## Verification performed
 
-- 30/30 knowledge + instructions in the ZIP are byte-equal to the git blobs at `56ad422b`.
+- 30/30 knowledge + instructions in the ZIP are byte-equal to the git blobs at `ed8f3660`.
 - T80: file-00 mirror byte-equal to the standalone, re-proven after the `SoT30 v5.5.3 → v5.5.5` identity bump.
 - Semantic verifier C1–C21 PASS; verify selftest 18/18; build selftest 8/8; same-toolchain double build byte-identical.
 - ZIP `unzip -t` clean; round-trip `sha256sum -c support/SHA256SUMS` from a fresh extraction = 32/32 OK; release-tree ↔ extracted-ZIP byte parity (33 files).

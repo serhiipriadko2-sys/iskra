@@ -13,7 +13,7 @@ Scope: provenance/label cleanup (E1/E2) + version-identity consistency over v5.5
 | changed ∩ unchanged = ∅; changed ∪ unchanged = 30 (C9/C10) | PASS |
 | changed set = actual diff to v5.5.4 baseline (C11) | PASS — 7 changed |
 | package-version stamps consistent at v5.5.5 (C12) | PASS |
-| **E1 — `generated_from: canonical_git_blobs` genuinely true** | PASS — built `--from-git 56ad422b`; 30/30 knowledge + instructions in ZIP byte-equal the git blobs; `generated_from_ref` set |
+| **E1 — `generated_from: canonical_git_blobs` genuinely true** | PASS — built `--from-git ed8f3660`; 30/30 knowledge + instructions in ZIP byte-equal the git blobs; `generated_from_ref` set |
 | **E2 — ZIP root `SoT30_v5.5.5/`** | PASS |
 | ZIP single-root + exact allowlist + no dup/stray-dir + round-trip (C14) | PASS — 32/32 |
 | release-tree ↔ extracted-ZIP byte parity, 33 files (C20) | PASS |
@@ -32,7 +32,7 @@ Scope: provenance/label cleanup (E1/E2) + version-identity consistency over v5.5
 - ZIP: `dist/SoT30_v5.5.5.zip`, 1130206 bytes, sha256 `aae8255e79db539010921dcf9059450563a26fdd8f524be1776c5354f0895ac9`, root `SoT30_v5.5.5/`
 - file 29: 12236 bytes, sha256 `678ca93c7977db4649c96c1a87cafd50e3ab345fc0b56551bb2a6df2bc963507`
 - support/MANIFEST.json sha256 `b665c8679c4e1a4d21e8b29b996394adf8f82468e6e7325008b42fd2d6d42739`
-- generated_from: `canonical_git_blobs`; generated_from_ref: `56ad422b4dfd89d9d563b6e36c63bae9444182cf`
+- generated_from: `canonical_git_blobs`; generated_from_ref: `ed8f3660c1c425d51c02c04c150fefd1b4041154`
 
 ## Not checked (out of scope / pending)
 
