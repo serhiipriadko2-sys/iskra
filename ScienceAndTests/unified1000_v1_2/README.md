@@ -23,7 +23,7 @@ Construct-preserving scenario-diversification workstream.
 - Branch: `feature/judge-unified1000-v1.2-diversification`.
 - Batch-01: 50/495 drafted.
 - Automated structural QC: PASS.
-- Manual semantic review: PENDING.
+- Manual semantic review: PASS (owner, 2026-07-21).
 - Blind pilot: NOT RUN.
 - Merge/release: BLOCKED.
 

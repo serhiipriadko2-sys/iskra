@@ -118,7 +118,7 @@
     "docs/specs/SPEC-003_ENTROPY.md": "0083324d6fe9f0d1bb7b0d1663f62e5e6a3603578d89de249f79db103076c1ba",
     "docs/specs/SPEC-004_HOLOGRAPHIC_UI.md": "d7c548570d443d71f7d18a3deb7bf5150460d2d386fb419f05a5365b2f3e243b",
     "docs/upload_sets.md": "270d546489b6b44cf1327f68a22658478aee51b5d153fbd513d65cd45f130cda",
-    "governance/ADR-20260721-UNIFIED1000-V12-TEMPLATE-DIVERSIFICATION.md": "38c7ba4a6ad44e95794bf3819f8a1d2062e6b03ac2522144b17ee22d71146ab4",
+    "governance/ADR-20260721-UNIFIED1000-V12-TEMPLATE-DIVERSIFICATION.md": "d7d84cfda2b373377a9486a261cd53af9370d430fa26921e240f7db38fd4d915",
     "governance/adr.md": "9efb2835e017e3cc3b27c5fb51b3fb2c1f6a80bc8f1685e16bdd2407b37e5889",
     "governance/adr_20260206_runtime_patches.md": "612c31fbbbcf02197f3c6f0ef4497bd8c47727af5e292f5728ea0395b2d378ec",
     "governance/adr_20260214_gemini_sdk_unification.md": "e6a6a1a639e3fabd7c7aeda056d8b48f602f0b46a1656cc17c3e8316fcf63cf2",

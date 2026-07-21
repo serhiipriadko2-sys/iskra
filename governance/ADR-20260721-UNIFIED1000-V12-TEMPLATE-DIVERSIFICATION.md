@@ -64,6 +64,7 @@ Delete the unmerged v1.2 branch or revert batch commits. The merged rc.3 baselin
 
 accepted: yes
 implemented: partial, Batch-01 only
+Batch-01 owner semantic review: PASS (2026-07-21)
 merged: no
 deployed: no
 invoked: no
