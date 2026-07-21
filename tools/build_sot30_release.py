@@ -60,16 +60,28 @@ def require(cond: bool, msg: str) -> None:
         raise BuildError(msg)
 
 
-def knowledge_source(kdir: str, name: str, from_git: str | None) -> bytes:
-    """Return a knowledge file's bytes from git (if --from-git) or the working tree."""
-    if from_git:
-        try:
-            return subprocess.check_output(
-                ["git", "show", f"{from_git}:{os.path.join(kdir, name)}"]
-            )
-        except subprocess.CalledProcessError as e:  # pragma: no cover - passthrough
-            raise BuildError(f"git show failed for {name}@{from_git}: {e}") from e
-    return read_bytes(os.path.join(kdir, name))
+def git_show(ref: str, path: str) -> bytes:
+    try:
+        return subprocess.check_output(["git", "show", f"{ref}:{path}"])
+    except subprocess.CalledProcessError as e:  # pragma: no cover - passthrough
+        raise BuildError(f"git show failed for {path}@{ref}: {e}") from e
+
+
+def materialize_git_source(release_dir: str, kdir: str, sdir: str, knames: list[str],
+                           from_git: str) -> str:
+    """Extract every SOURCE file (30 knowledge + PROJECT_INSTRUCTIONS) from a commit
+    into a temp working tree, so the ENTIRE package (file-29 table, all-30 hashes,
+    manifest, zip, instructions) is genuinely built from git blobs. Returns the temp
+    release-dir root. (SHA256SUMS/MANIFEST are generated, not sourced.)"""
+    work = tempfile.mkdtemp(prefix="sot30gitsrc_")
+    os.makedirs(os.path.join(work, "knowledge"))
+    os.makedirs(os.path.join(work, "support"))
+    for n in knames:
+        with open(os.path.join(work, "knowledge", n), "wb") as f:
+            f.write(git_show(from_git, os.path.join(kdir, n)))
+    with open(os.path.join(work, "support", SUPPORT_INSTRUCTIONS), "wb") as f:
+        f.write(git_show(from_git, os.path.join(sdir, SUPPORT_INSTRUCTIONS)))
+    return work
 
 
 def normalize_root(version: str) -> str:
@@ -89,14 +101,17 @@ def main() -> int:
     ap.add_argument("--package-name", default=None)
     ap.add_argument("--acceptance-range", default="T01-T93")
     ap.add_argument("--from-git", default=None, help="commit SHA to extract knowledge blobs from")
+    ap.add_argument("--git-source-dir", default=None,
+                    help="repo-relative release dir whose paths --from-git resolves against "
+                         "(default: release_dir). Lets you build into a fresh output dir from a git source.")
     args = ap.parse_args()
 
     release_dir, version = args.release_dir, args.version
-    kdir = os.path.join(release_dir, "knowledge")
-    sdir = os.path.join(release_dir, "support")
+    rel_kdir = os.path.join(release_dir, "knowledge")
+    git_source_dir = args.git_source_dir or release_dir
 
     # --- validate knowledge dir is exactly the 30 files {00..29} (allowlist) ---
-    kfiles = sorted(n for n in os.listdir(kdir) if n.endswith(".md"))
+    kfiles = sorted(n for n in os.listdir(rel_kdir) if n.endswith(".md"))
     knames = [n for n in kfiles if KNOWLEDGE_RE.match(n)]
     require(len(kfiles) == 30 and len(knames) == 30,
             f"knowledge dir must be exactly 30 .md files, got {len(kfiles)} (.md) / {len(knames)} (numbered)")
@@ -106,13 +121,25 @@ def main() -> int:
     from_git = args.from_git
     generated_from = "canonical_git_blobs" if from_git else "release_tree_working_bytes"
 
+    # With --from-git, materialize EVERY source file (30 knowledge + instructions)
+    # from the commit into a temp tree and build the whole package from it, so
+    # `canonical_git_blobs` is literally true. Generated artifacts (file 29 table,
+    # MANIFEST, SHA256SUMS) are copied back to release_dir afterwards.
+    git_work = materialize_git_source(git_source_dir,
+                                      os.path.join(git_source_dir, "knowledge"),
+                                      os.path.join(git_source_dir, "support"),
+                                      knames, from_git) if from_git else None
+    build_dir = git_work or release_dir
+    kdir = os.path.join(build_dir, "knowledge")
+    sdir = os.path.join(build_dir, "support")
+
     # --- 1. regenerate file 29 embedded table from files 00-28 ---
     f29_name = "29_INDEX_UPLOAD_MANIFEST.md"
     f29_path = os.path.join(kdir, f29_name)
     non_self = [n for n in knames if not n.startswith("29_")]
     rows = []
     for n in non_self:
-        b = knowledge_source(kdir, n, from_git)
+        b = read_bytes(os.path.join(kdir, n))  # build_dir = git tree (if --from-git) else release
         rows.append(f"| `{n}` | {len(b)} | `{sha256_bytes(b)}` |")
     table_block = "\n".join(rows)
 
@@ -167,8 +194,9 @@ def main() -> int:
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
 
     # --- 5. write SHA256SUMS (two-space separator) ---
+    manifest_sha = sha256_bytes(read_bytes(manifest_path))  # capture before any temp cleanup
     lines = [f"{e['sha256']}  {e['path']}" for e in entries]
-    lines.append(f"{sha256_bytes(read_bytes(manifest_path))}  support/MANIFEST.json")
+    lines.append(f"{manifest_sha}  support/MANIFEST.json")
     lines.append(f"{sha256_bytes(instr_bytes)}  support/{SUPPORT_INSTRUCTIONS}")
     open(os.path.join(sdir, "SHA256SUMS"), "w", encoding="utf-8").write("\n".join(lines) + "\n")
 
@@ -181,7 +209,7 @@ def main() -> int:
     staging = tempfile.mkdtemp(prefix="sot30build_")
     try:
         for sub, name in allowlist:
-            src = os.path.join(release_dir, sub, name)
+            src = os.path.join(build_dir, sub, name)
             require(os.path.isfile(src), f"allowlisted file missing: {sub}/{name}")
             dst = os.path.join(staging, root, sub, name)
             os.makedirs(os.path.dirname(dst), exist_ok=True)
@@ -200,12 +228,24 @@ def main() -> int:
     finally:
         shutil.rmtree(staging, ignore_errors=True)
 
+    # --from-git: reflect the git-built artifacts back into the release dir so the
+    # on-disk release tree matches the git-derived package (parity with the ZIP).
+    if git_work:
+        for rel in (os.path.join("knowledge", f29_name),
+                    os.path.join("support", "MANIFEST.json"),
+                    os.path.join("support", "SHA256SUMS"),
+                    os.path.join("support", SUPPORT_INSTRUCTIONS)):
+            shutil.copyfile(os.path.join(build_dir, rel), os.path.join(release_dir, rel))
+        for n in knames:
+            shutil.copyfile(os.path.join(build_dir, "knowledge", n),
+                            os.path.join(release_dir, "knowledge", n))
+        shutil.rmtree(git_work, ignore_errors=True)
+
     zip_b = read_bytes(args.zip_out)
     zip_sha = sha256_bytes(zip_b)
 
     # --- 7. fill QC_REPORT / PACKAGE_RECEIPT zip-fact tokens (idempotent) ---
     f29e = by_name[f29_name]
-    manifest_sha = sha256_bytes(read_bytes(manifest_path))
     corpus_disp = f"{corpus_bytes:,}"
     zip_base = re.escape(os.path.basename(args.zip_out))
     H = r"(?:[0-9a-f]{64}|__[A-Z0-9_]+__)"

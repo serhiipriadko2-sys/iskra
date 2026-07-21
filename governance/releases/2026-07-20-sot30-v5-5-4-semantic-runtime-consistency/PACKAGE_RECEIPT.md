@@ -40,4 +40,4 @@ Content edits (in-zip, affect hashes): file 29 (narrative), 11/20/01 (Guard life
 
 - NOT uploaded to a live ChatGPT Project. NOT T01–T93-run live.
 - NOT a runtime / Supabase-write / deployment change. `iskra-memory-gateway` untouched.
-- ADR-20260720-02 is `proposed`, not `accepted`.
+- ADR-20260720-02 is `accepted` (2026-07-20); conformance hardening done (PR #291). Acceptance is architectural, **not** live-Project verification (T01–T93 not live-run).

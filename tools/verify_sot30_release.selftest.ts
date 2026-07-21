@@ -52,7 +52,8 @@ const zipRoot = execFileSync('unzip', ['-Z1', ZIP], { encoding: 'utf8' })
 // ---- positive ----
 {
   const r = runVerifier(RELEASE, ZIP);
-  expect('positive: real v5.5.4 PASS', r.code === 0 && /19 passed, 0 failed/.test(r.out), `code=${r.code}`);
+  expect('positive: real v5.5.4 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
+    `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
 }
 
 // helper: negative fixture that only mutates the release dir (real zip reused)
@@ -132,6 +133,39 @@ negRelease('neg: mirror substring-but-not-byte-equal', 'C7', (dir) => {
   writeFileSync(p, t);
 });
 
+// 11. extra non-md file in knowledge/ (C1 exact-dir)
+negRelease('neg: extra non-md in knowledge', 'C1', (dir) => {
+  writeFileSync(join(dir, 'knowledge/EXTRA.txt'), 'x\n');
+});
+
+// 12. wrong manifest path prefix (right basename)
+negRelease('neg: wrong manifest path prefix', 'C4', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  const i0 = m.files.findIndex((f: { path: string }) => f.path.endsWith('00_PROJECT_ROUTER.md'));
+  m.files[i0].path = 'wrong-prefix/00_PROJECT_ROUTER.md';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+
+// 13. mirror duplicate-copy injection (C7 uniqueness)
+negRelease('neg: mirror duplicate-copy injection', 'C7', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  const instr = readFileSync(join(dir, 'support/PROJECT_INSTRUCTIONS_SOT30.md'), 'utf8');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\n\n<!-- injected duplicate -->\n${instr}\n`);
+});
+
+// 14. ADR-lifecycle contradiction in README (C21)
+negRelease('neg: lifecycle accepted-vs-proposed contradiction', 'C21', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\n\n- ADR-20260720-02 is \`proposed\`, not \`accepted\`.\n`);
+});
+
+// 15. split-brain: release-tree file differs from the (unchanged) ZIP (C20 parity)
+negRelease('neg: release-tree ≠ ZIP (split-brain)', 'C20', (dir) => {
+  const p = join(dir, 'knowledge/16_SHADOW_LAYER.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\n<!-- drift -->\n`);
+});
+
 // helper: negative fixture that tampers the ZIP (release dir reused)
 function negZip(name: string, expectCheck: string, tamper: (zipCopy: string) => void) {
   const d = mkdtempSync(join(tmpdir(), 'sot30fz_'));
@@ -162,6 +196,12 @@ negZip('neg: extra ZIP entry', 'C14', (zc) => addZipEntry(zc, `${zipRoot}/knowle
 
 // 7. second ZIP root
 negZip('neg: second ZIP root', 'C14', (zc) => addZipEntry(zc, 'SECOND_ROOT/__r.md'));
+
+// 16. duplicate ZIP entry (same allowlisted arcname twice)
+negZip('neg: duplicate ZIP entry', 'C14', (zc) => addZipEntry(zc, `${zipRoot}/knowledge/00_PROJECT_ROUTER.md`));
+
+// 17. extra ZIP directory entry
+negZip('neg: extra ZIP directory', 'C14', (zc) => addZipEntry(zc, `${zipRoot}/EXTRA/`));
 
 // ---- report ----
 for (const r of results) (r.startsWith('OK') ? console.log : console.error)(r);

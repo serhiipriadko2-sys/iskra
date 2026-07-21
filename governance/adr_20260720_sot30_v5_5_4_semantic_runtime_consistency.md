@@ -12,7 +12,7 @@ Package mirror: done
 
 Implementation: merged (PR #289, merge `1ac741f`)
 
-Conformance hardening: pending PR-C (`fix/sot30-v554-verifier-hardening`)
+Conformance hardening: done (PR #291, merge `da276e0`)
 
 Live verification: pending
 
@@ -20,11 +20,12 @@ Live verification: pending
 > collapsed. `accepted` records the owner accepting the **architectural
 > decision** below (v5.5.3 immutable; corrections ship as versioned packages;
 > physical / semantic / runtime-status / live-Project readiness stay separate;
-> STATIC-PACKAGE-PASS ≠ LIVE-PROJECT-PASS). It does **not** assert that the
-> shipped `tools/verify_sot30_release.ts` already fully meets its advertised
-> fail-closed contract — an independent review found several checks weaker than
-> their labels; those are being hardened in PR-C. Nor does it assert any
-> live-Project verification (still pending).
+> STATIC-PACKAGE-PASS ≠ LIVE-PROJECT-PASS). Conformance hardening (PR #291)
+> replaced the weaker-than-labelled verifier checks with exact-set / byte-level
+> checks and a fail-closed negative-fixture matrix; PR-D (`fix/sot30-v554-lifecycle-provenance`)
+> then fixed this document's own lifecycle wording, made `--from-git` genuinely
+> git-derived, and added release-tree↔ZIP byte parity. Live-Project verification
+> remains pending.
 
 ## Context
 
@@ -73,4 +74,12 @@ Truth-ladder note: audit reports are hypothesis sources, not final SoT. Every ma
 
 ## Status
 
-`proposed`. Not `accepted` absent an explicit owner decision. Not deployed. No runtime, Supabase, or GitHub-app-behavior change. `iskra-memory-gateway` untouched. Live-Project verification pending.
+`accepted` (2026-07-20, owner decision — supersedes the earlier `proposed` state recorded during drafting). Stages, kept distinct:
+
+- Status: **accepted**
+- Package mirror: **done**
+- Implementation: **merged** (PR #289, merge `1ac741f`)
+- Conformance hardening: **done** (PR #291, merge `da276e0`; verifier exact-set/byte checks + fail-closed negative-fixture matrix)
+- Live verification: **pending** (T01–T93 not live-run; no live-Project upload)
+
+Not deployed to a live Project. No runtime, Supabase, or GitHub-app-behavior change. `iskra-memory-gateway` untouched.

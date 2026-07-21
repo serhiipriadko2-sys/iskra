@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-20T18:03:47.410Z",
-  "total": 3452,
+  "generatedAt": "2026-07-21T05:44:16.350Z",
+  "total": 3454,
   "curated": 20,
   "layers": {
     "root": 339,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 285,
+    "governance": 286,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -27,7 +27,7 @@
     "skills": 267,
     "backend": 79,
     "system": 26,
-    "tools": 57
+    "tools": 58
   },
   "nodes": [
     {
@@ -26561,6 +26561,7 @@
         "governance/changelog.d/2026-07-20-claude-code-cloud-profile.md",
         "governance/changelog.d/2026-07-20-prune-stale-sot30-dist-zips.md",
         "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md",
+        "governance/changelog.d/2026-07-20-sot30-v554-lifecycle-provenance.md",
         "governance/changelog.d/2026-07-20-sot30-v554-verifier-hardening.md"
       ]
     },
@@ -26847,6 +26848,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-20-sot30-v554-lifecycle-provenance.md",
+      "name": "2026-07-20-sot30-v554-lifecycle-provenance.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-20-sot30-v554-lifecycle-provenance.md",
       "related": [],
       "parent": "governance/changelog.d"
     },
@@ -42132,6 +42144,7 @@
         "tools/build_phase1_classification.py",
         "tools/build_projects_stack.py",
         "tools/build_sot30_release.py",
+        "tools/build_sot30_release.selftest.ts",
         "tools/build_sot40_artifact.py",
         "tools/build_workspace_agent_synthesis.py",
         "tools/check_core_adr_gate.py",
@@ -42240,6 +42253,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/build_sot30_release.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/build_sot30_release.selftest.ts",
+      "name": "build_sot30_release.selftest.ts",
+      "kind": "file",
+      "layer": "tools",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "tools/build_sot30_release.selftest.ts",
       "related": [],
       "parent": "tools"
     },
