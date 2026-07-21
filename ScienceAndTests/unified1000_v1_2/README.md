@@ -1,23 +1,43 @@
 # Unified-1000 v1.2
 
-Template diversification workstream.
+Construct-preserving scenario-diversification workstream.
 
-Frozen:
-- BNAT-50
-- 126 strengthened tasks
+## Frozen sets
 
-Target:
-- 495 marker-grid tasks
+- BNAT-50: byte-identical.
+- 126 tasks strengthened in v1.1: unchanged during the first pass.
 
-Method:
-- preserve construct
-- replace scenario
-- reduce kernel repetition
-- add realistic constraints
-- maintain hidden evaluator registry
+## Target
 
-Current status:
-- branch created
-- ADR created
-- registry schema created
-- task rewrite batch pending
+- 495 positions listed by the v1.1 private variant-marker map.
+- Replace operational scenarios, not merely vocabulary.
+- Keep evaluator metadata outside candidate context.
+
+## Required private metadata
+
+`construct`, `domain`, `difficulty`, `expected_evidence`, `failure_mode`, `sibling_family`, `contamination_risk`.
+
+## Current status
+
+- Governance decision: accepted.
+- Branch: `feature/judge-unified1000-v1.2-diversification`.
+- Batch-01: 50/495 drafted.
+- Automated structural QC: PASS.
+- Manual semantic review: PENDING.
+- Blind pilot: NOT RUN.
+- Merge/release: BLOCKED.
+
+## Batch-01 artifacts
+
+- `batches/batch01/replacements.jsonl`
+- `candidate/unified_1000_questions_tasks_bnat50_v1_2_batch01.md`
+- `registry/batch01.jsonl`
+- `registry/inventory_495.csv`
+- `qc/BATCH01_QC.json`
+- `tools/build_batch01.py`
+
+Run from repository root:
+
+```powershell
+py ScienceAndTests/unified1000_v1_2/tools/build_batch01.py
+```
