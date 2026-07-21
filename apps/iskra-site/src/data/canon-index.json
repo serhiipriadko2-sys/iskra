@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-21T18:26:51.232Z",
-  "total": 3531,
+  "generatedAt": "2026-07-21T18:28:07.085Z",
+  "total": 3539,
   "curated": 20,
   "layers": {
-    "root": 340,
+    "root": 341,
     "agents": 46,
     "devcontainer": 2,
     "ci": 13,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 362,
+    "governance": 369,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -9406,7 +9406,8 @@
         "dist/ISKRA_MYTHIC_ROUTER_v0_1_1.zip",
         "dist/SoT30_v5.5.3.zip",
         "dist/SoT30_v5.5.4.zip",
-        "dist/SoT30_v5.5.5.zip"
+        "dist/SoT30_v5.5.5.zip",
+        "dist/SoT30_v5.5.6.zip"
       ]
     },
     {
@@ -9450,6 +9451,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "dist/SoT30_v5.5.5.zip",
+      "related": [],
+      "parent": "dist"
+    },
+    {
+      "path": "dist/SoT30_v5.5.6.zip",
+      "name": "SoT30_v5.5.6.zip",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "dist/SoT30_v5.5.6.zip",
       "related": [],
       "parent": "dist"
     },
@@ -26599,7 +26611,8 @@
         "governance/changelog.d/2026-07-20-sot30-v553-audit-receipt-sync.md",
         "governance/changelog.d/2026-07-20-sot30-v554-lifecycle-provenance.md",
         "governance/changelog.d/2026-07-20-sot30-v554-verifier-hardening.md",
-        "governance/changelog.d/2026-07-21-sot30-v5-5-5-provenance.md"
+        "governance/changelog.d/2026-07-21-sot30-v5-5-5-provenance.md",
+        "governance/changelog.d/2026-07-21-sot30-v5-5-6-acceptance-repair.md"
       ]
     },
     {
@@ -26922,6 +26935,17 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-21-sot30-v5-5-6-acceptance-repair.md",
+      "name": "2026-07-21-sot30-v5-5-6-acceptance-repair.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-21-sot30-v5-5-6-acceptance-repair.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -26954,7 +26978,8 @@
       "related": [],
       "parent": "governance",
       "children": [
-        "governance/errata/2026-07-20-sot30-v5-5-4-erratum.md"
+        "governance/errata/2026-07-20-sot30-v5-5-4-erratum.md",
+        "governance/errata/2026-07-21-sot30-v5-5-5-acceptance-erratum.md"
       ]
     },
     {
@@ -26965,6 +26990,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/errata/2026-07-20-sot30-v5-5-4-erratum.md",
+      "related": [],
+      "parent": "governance/errata"
+    },
+    {
+      "path": "governance/errata/2026-07-21-sot30-v5-5-5-acceptance-erratum.md",
+      "name": "2026-07-21-sot30-v5-5-5-acceptance-erratum.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/errata/2026-07-21-sot30-v5-5-5-acceptance-erratum.md",
       "related": [],
       "parent": "governance/errata"
     },
@@ -29870,8 +29906,44 @@
       "parent": "governance/releases",
       "children": [
         "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge",
-        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support"
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support",
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/PACKAGE_RECEIPT.md",
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/QC_REPORT.md",
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/README.md"
       ]
+    },
+    {
+      "path": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/PACKAGE_RECEIPT.md",
+      "name": "PACKAGE_RECEIPT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/PACKAGE_RECEIPT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair"
+    },
+    {
+      "path": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/QC_REPORT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair"
+    },
+    {
+      "path": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/README.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair"
     },
     {
       "path": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge",
@@ -30257,8 +30329,21 @@
       "related": [],
       "parent": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair",
       "children": [
-        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/PROJECT_INSTRUCTIONS_SOT30.md"
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json",
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/PROJECT_INSTRUCTIONS_SOT30.md",
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/SHA256SUMS"
       ]
+    },
+    {
+      "path": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support"
     },
     {
       "path": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/PROJECT_INSTRUCTIONS_SOT30.md",
@@ -30268,6 +30353,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support"
+    },
+    {
+      "path": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/SHA256SUMS",
       "related": [],
       "parent": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support"
     },
