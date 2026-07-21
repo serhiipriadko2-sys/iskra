@@ -56,17 +56,24 @@ def read_bytes(p: str) -> bytes:
         return f.read()
 
 
+def write_text_lf(p: str, text: str) -> None:
+    """Write UTF-8 text with LF on every host (including Windows)."""
+    with open(p, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+
+
 def require(cond: bool, msg: str) -> None:
     if not cond:
         raise BuildError(msg)
 
 
 def git_show(ref: str, path: str) -> bytes:
+    # Git object paths are POSIX-style even when the host is Windows.
+    git_path = path.replace("\\", "/")
     try:
-        return subprocess.check_output(["git", "show", f"{ref}:{path}"])
+        return subprocess.check_output(["git", "show", f"{ref}:{git_path}"])
     except subprocess.CalledProcessError as e:  # pragma: no cover - passthrough
-        raise BuildError(f"git show failed for {path}@{ref}: {e}") from e
-
+        raise BuildError(f"git show failed for {git_path}@{ref}: {e}") from e
 
 def materialize_git_source(kdir: str, sdir: str, knames: list[str],
                            from_git: str) -> str:
@@ -156,7 +163,7 @@ def main() -> int:
     require(pat.search(f29) is not None, "file 29 table anchor not found")
     f29_new = pat.sub(table_block, f29)
     if f29_new != f29:
-        open(f29_path, "w", encoding="utf-8").write(f29_new)
+        write_text_lf(f29_path, f29_new)
 
     # --- 2. compute all 30 hashes (file 29 now final) ---
     entries = []
@@ -198,15 +205,14 @@ def main() -> int:
         "live_project_verified": False,
     }
     manifest_path = os.path.join(sdir, "MANIFEST.json")
-    open(manifest_path, "w", encoding="utf-8").write(
-        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+    write_text_lf(manifest_path, json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
 
     # --- 5. write SHA256SUMS (two-space separator) ---
     manifest_sha = sha256_bytes(read_bytes(manifest_path))  # capture before any temp cleanup
     lines = [f"{e['sha256']}  {e['path']}" for e in entries]
     lines.append(f"{manifest_sha}  support/MANIFEST.json")
     lines.append(f"{sha256_bytes(instr_bytes)}  support/{SUPPORT_INSTRUCTIONS}")
-    open(os.path.join(sdir, "SHA256SUMS"), "w", encoding="utf-8").write("\n".join(lines) + "\n")
+    write_text_lf(os.path.join(sdir, "SHA256SUMS"), "\n".join(lines) + "\n")
 
     # --- 6. build zip from a clean staging dir via EXPLICIT allowlist ---
     root = normalize_root(version)
@@ -276,7 +282,7 @@ def main() -> int:
             t = open(dp, encoding="utf-8").read()
             for p, rep in subs:
                 t = re.sub(p, rep, t)
-            open(dp, "w", encoding="utf-8").write(t)
+            write_text_lf(dp, t)
 
     print(json.dumps({
         "zip": args.zip_out, "zip_bytes": len(zip_b), "zip_sha256": zip_sha,
