@@ -21,23 +21,30 @@ Construct-preserving scenario-diversification workstream.
 
 - Governance decision: accepted.
 - Branch: `feature/judge-unified1000-v1.2-diversification`.
-- Batch-01: 50/495 drafted.
-- Automated structural QC: PASS.
-- Manual semantic review: PASS (owner, 2026-07-21).
+- Cumulative rewrite: 100/495.
+- Batch-01: owner semantic review PASS (2026-07-21).
+- Batch-02: automated structural QC PASS; owner semantic review PENDING.
 - Blind pilot: NOT RUN.
 - Merge/release: BLOCKED.
 
-## Batch-01 artifacts
+## Batch artifacts
 
 - `batches/batch01/replacements.jsonl`
+- `batches/batch02/replacements.jsonl`
 - `candidate/unified_1000_questions_tasks_bnat50_v1_2_batch01.md`
+- `candidate/unified_1000_questions_tasks_bnat50_v1_2_batch02.md`
 - `registry/batch01.jsonl`
+- `registry/batch02.jsonl`
 - `registry/inventory_495.csv`
 - `qc/BATCH01_QC.json`
+- `qc/BATCH01_OWNER_REVIEW.json`
+- `qc/BATCH02_QC.json`
 - `tools/build_batch01.py`
+- `tools/build_batch02.py`
 
 Run from repository root:
 
 ```powershell
 py ScienceAndTests/unified1000_v1_2/tools/build_batch01.py
+py ScienceAndTests/unified1000_v1_2/tools/build_batch02.py
 ```

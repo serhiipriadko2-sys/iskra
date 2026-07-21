@@ -1,7 +1,7 @@
 # ADR-20260721 — Unified-1000 v1.2 Template Diversification
 
 Status: ACCEPTED (owner decision, 2026-07-21)
-Implementation: PARTIAL — Batch-01 is 50/495; no merge or release claim
+Implementation: PARTIAL — Batches 01–02 are 100/495; no merge or release claim
 
 ## Context
 
@@ -63,8 +63,10 @@ Delete the unmerged v1.2 branch or revert batch commits. The merged rc.3 baselin
 ## Lifecycle
 
 accepted: yes
-implemented: partial, Batch-01 only
+implemented: partial, Batches 01–02, 100/495
 Batch-01 owner semantic review: PASS (2026-07-21)
+Batch-02 automated structural QC: PASS
+Batch-02 owner semantic review: PENDING
 merged: no
 deployed: no
 invoked: no
