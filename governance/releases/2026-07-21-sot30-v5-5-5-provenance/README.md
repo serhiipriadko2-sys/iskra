@@ -24,7 +24,7 @@ Changed (7, active identity): `00, 01, 02, 22, 25, 28, 29`. Unchanged (23): `03�
 ## Contents
 
 ```text
-dist/SoT30_v5.5.5.zip   (root SoT30_v5.5.5/, 1,130,036 bytes)
+dist/SoT30_v5.5.5.zip   (root SoT30_v5.5.5/, 1,130,433 bytes)
 governance/releases/2026-07-21-sot30-v5-5-5-provenance/
 ├── README.md · QC_REPORT.md · PACKAGE_RECEIPT.md
 ├── knowledge/00..29.md
