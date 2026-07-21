@@ -166,6 +166,40 @@ negRelease('neg: release-tree ≠ ZIP (split-brain)', 'C20', (dir) => {
   writeFileSync(p, `${readFileSync(p, 'utf8')}\n<!-- drift -->\n`);
 });
 
+// --- C22 file-29 active-identity fixtures (tamper v5.5.4's file 29) ---
+const F29 = 'knowledge/29_INDEX_UPLOAD_MANIFEST.md';
+// 18. wrong-version "(this build)" heading
+negRelease('neg: wrong-version this-build heading', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, readFileSync(p, 'utf8')
+    .replace('## v5.5.4 semantic & runtime-status consistency (this build)',
+      '## v5.4.1 semantic & runtime-status consistency (this build)'));
+});
+// 19. duplicate "(this build)" heading
+negRelease('neg: duplicate this-build heading', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\n## v5.5.3 duplicate section (this build)\nx\n`);
+});
+// 20. missing baseline in supersedes
+negRelease('neg: supersedes missing baseline', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, readFileSync(p, 'utf8')
+    .replace(', v5.5.2 backlog, v5.5.3 instructions-sync', ''));
+});
+// 21. wrong composition baseline
+negRelease('neg: wrong composition baseline', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, readFileSync(p, 'utf8')
+    .replace('### Composition vs the v5.5.3 release tree', '### Composition vs the v5.5.2 release tree'));
+});
+// 22. accepted-vs-proposed internal contradiction in file 29
+negRelease('neg: file-29 accepted-vs-proposed contradiction', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, readFileSync(p, 'utf8')
+    .replace('- `ADR-20260720-02` — v5.5.4 semantic & runtime-status consistency (this build), **proposed**.',
+      '- `ADR-20260720-02` — v5.5.4 semantic & runtime-status consistency, **accepted**; merged.'));
+});
+
 // helper: negative fixture that tampers the ZIP (release dir reused)
 function negZip(name: string, expectCheck: string, tamper: (zipCopy: string) => void) {
   const d = mkdtempSync(join(tmpdir(), 'sot30fz_'));

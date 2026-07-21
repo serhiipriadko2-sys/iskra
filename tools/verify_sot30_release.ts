@@ -29,6 +29,7 @@
  *  C19 T88: README/QC/PACKAGE_RECEIPT composition tokens agree with each other AND with MANIFEST's actual changed/unchanged counts; file 29 defers to the manifest (no contradicting hard-coded count)
  *  C20 release-tree ↔ extracted-ZIP byte parity for all 33 files (catches a split-brain tree/zip)
  *  C21 no ADR-lifecycle self-contradiction (a doc claiming `accepted` while also stating `proposed`/`not accepted`)
+ *  C22 file-29 active-identity consistency: exactly one "(this build)" version-section == MANIFEST.package_version; supersedes ⊇ baseline_release; active composition heading ⊇ baseline_release; no "proposed, not accepted" ADR claim
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -401,6 +402,45 @@ const contradictions = Object.entries(statusDocs)
 check(contradictions.length === 0, 'C21',
   `no ADR-lifecycle self-contradiction (accepted vs proposed) ${
     contradictions.length ? `— FAIL in ${contradictions.join(', ')}` : ''}`);
+
+// ---- C22: file-29 active-identity consistency (exact properties, not keyword proxy) ----
+// Catches the class where file 29's active narrative labels an OLD version as
+// "(this build)", or the composition/supersedes reference the wrong baseline, or an
+// accepted ADR is called "proposed". Version resolved from the MANIFEST, not hard-coded.
+{
+  const pkgVer: string = manifest.package_version ?? '';           // e.g. "v5.5.5"
+  const baseVer: string = manifest.baseline_release ?? '';         // e.g. "v5.5.4"
+  const thisBuildHeadings = [...f29.matchAll(/^##\s+(v\d+\.\d+\.\d+)\b[^\n]*\(this build\)/gim)]
+    .map((m) => m[1]);
+  // 1+2: exactly one "(this build)" version-section, and it is the package version
+  const c22a = thisBuildHeadings.length === 1 && thisBuildHeadings[0] === pkgVer;
+  // 3: frontmatter supersedes lists the baseline release
+  const supersedesM = f29.match(/^supersedes:\s*(.+)$/mi);
+  const c22b = !!baseVer && !!supersedesM && supersedesM[1].includes(baseVer);
+  // 4: active composition heading references the baseline release
+  const compM = f29.match(/^###\s+Composition[^\n]*$/mi);
+  const c22c = !!baseVer && !!compM && compM[0].includes(baseVer);
+  // 5: no INTERNAL contradiction — an ADR must not be both listed as `accepted` in
+  // file 29 and called "proposed, not accepted" in the same file. (An immutable
+  // historical package that consistently says its own ADR was `proposed` at its build
+  // time is NOT flagged — this checks self-contradiction, not current repo state.)
+  const acceptedAdrs = new Set<string>();
+  const proposedNotAccepted = new Set<string>();
+  for (const line of f29.split('\n')) {
+    const ids = [...line.matchAll(/ADR-\d{8}-\d{2}/g)].map((m) => m[0]);
+    if (!ids.length) continue;
+    const isProposedNotAcc = /is\s+`?proposed`?\s*,?\s*not\s+`?accepted`?/i.test(line);
+    if (isProposedNotAcc) ids.forEach((id) => proposedNotAccepted.add(id));
+    // "accepted" declaration = the word accepted, but NOT "not accepted" and NOT "proposed"
+    else if (/\baccepted\b/i.test(line) && !/not\s+`?accepted`?/i.test(line) && !/\bproposed\b/i.test(line)) {
+      ids.forEach((id) => acceptedAdrs.add(id));
+    }
+  }
+  const c22d = ![...proposedNotAccepted].some((a) => acceptedAdrs.has(a));
+  check(c22a && c22b && c22c && c22d, 'C22',
+    `file-29 active identity consistent (this-build=${JSON.stringify(thisBuildHeadings)} `
+    + `pkg=${pkgVer}; supersedes⊇${baseVer}:${c22b}; comp⊇${baseVer}:${c22c}; no-internal-contradiction:${c22d})`);
+}
 
 // ---- report ----
 for (const o of oks) console.log(`PASS ${o}`);
