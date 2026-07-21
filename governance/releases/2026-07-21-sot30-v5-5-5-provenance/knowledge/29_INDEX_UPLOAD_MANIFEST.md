@@ -3,7 +3,7 @@ sigil: projects__29_index_upload_manifest
 layer: projects
 updated: 2026-07-21
 version: v5.5.5
-supersedes: v5.4.1 (2026-07-14), v5.5 delta, v5.5.1 content delta, v5.5.2 backlog, v5.5.3 instructions-sync
+supersedes: v5.4.1 (2026-07-14), v5.5 delta, v5.5.1 content delta, v5.5.2 backlog, v5.5.3 instructions-sync, v5.5.4 semantic-consistency
 ---
 # 29 · INDEX & UPLOAD MANIFEST — SoT30 v5.5.5 (provenance & version-identity cleanup)
 
@@ -98,7 +98,10 @@ file 24 additionally carries the v5.5.4 quarantine overlay, so its hash differs 
 | `28_EVALS_ACCEPTANCE.md` | 15492 | `2bcb21d0f4a2deb23cf6b29653218752280f92053249f429f6cab7a5851f90e3` |
 File 29 hash is stored in external `support/MANIFEST.json` and `support/SHA256SUMS` to avoid self-reference.
 
-## v5.5.4 semantic & runtime-status consistency (this build)
+## v5.5.5 provenance & version-identity cleanup (this build)
+Resolves the two in-ZIP inaccuracies deferred from v5.5.4 (E1 untrue `generated_from` label, E2 ZIP root missing `v`) and makes the active package identity consistent at v5.5.5. Built from a source-freeze commit via genuine `--from-git` under ADR-20260721-01.
+
+## v5.5.4 semantic & runtime-status consistency
 Corrects in-corpus prose that no longer matched reality: file 29's own
 composition narrative; `MANIFEST.json` disjoint changed/unchanged sets; the
 bounded-Guard lifecycle and proxy `postGuardEws` status in `11`/`20`/`01`;
@@ -129,7 +132,8 @@ This regenerated table records file 13 at its actual merged content — **13386 
 - `ADR-20260718-01` — v5.5.2 backlog batch (threshold table, RESEARCH-distributed declaration + FOG strengthening, veto-contract fix, SIBYL activation, Mythic Router triggers + usage tracking), accepted.
 - `ADR-20260719-01` — v5.5.3 instructions version sync + hash-chain repair, accepted; merged PR #285/#288.
 - `ADR-20260720-01` — prune stale SoT30 dist zips (v5.5.2 zip divergent for 06/09/24), accepted; merged PR #286.
-- `ADR-20260720-02` — v5.5.4 semantic & runtime-status consistency (this build), **proposed**.
+- `ADR-20260720-02` — v5.5.4 semantic & runtime-status consistency, accepted; merged PR #289, hardened by PR #291/#292.
+- `ADR-20260721-01` — v5.5.5 provenance & version-identity cleanup (this build), accepted; package review pending, live verification pending.
 
 ## Current non-claims
 - package is not proven uploaded to a live Project (STATIC-PACKAGE-PASS ≠ LIVE-PROJECT-PASS);
