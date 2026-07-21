@@ -1,7 +1,7 @@
 # ADR-20260721 — Unified-1000 v1.2 Template Diversification
 
 Status: ACCEPTED (owner decision, 2026-07-21)
-Implementation: PARTIAL — Batches 01–03 are 150/495; no merge or release claim
+Implementation: PARTIAL — Batches 01–04 are 200/495; no merge or release claim
 
 ## Context
 
@@ -64,12 +64,14 @@ Delete the unmerged v1.2 branch or revert batch commits. The merged rc.3 baselin
 ## Lifecycle
 
 accepted: yes
-implemented: partial, Batches 01–03, 150/495
+implemented: partial, Batches 01–04, 200/495
 Batch-01 owner semantic review: PASS (2026-07-21)
 Batch-02 automated structural QC: PASS
 Batch-02 Iskra model semantic review: PASS; owner acknowledgement pending
 Batch-03 automated structural QC: PASS
 Batch-03 Iskra model semantic review: PASS; owner acknowledgement pending
+Batch-04 automated structural QC: PASS
+Batch-04 Iskra model semantic review: PASS; owner acknowledgement pending
 merged: no
 deployed: no
 invoked: no
