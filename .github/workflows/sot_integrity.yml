@@ -47,6 +47,14 @@ jobs:
           governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency
           dist/SoT30_v5.5.4.zip
 
+      - name: Verify SoT30 v5.5.5 release semantics (fail-closed)
+        run: >-
+          npx tsx tools/verify_sot30_release.ts
+          governance/releases/2026-07-21-sot30-v5-5-5-provenance
+          dist/SoT30_v5.5.5.zip
+          governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency/support/MANIFEST.json
+          v5.5.5
+
       - name: Verify SoT30 verifier is fail-closed (negative-fixture matrix)
         run: npx tsx tools/verify_sot30_release.selftest.ts
 
