@@ -5,11 +5,11 @@
   "date": "2026-07-21",
   "adr": "ADR-20260721-01",
   "generated_from": "canonical_git_blobs",
-  "generated_from_ref": "ed8f3660c1c425d51c02c04c150fefd1b4041154",
+  "generated_from_ref": "374d8714748252e979c51a94f3d1ee8a4a458693",
   "line_ending_policy": "LF",
   "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
   "knowledge_file_count": 30,
-  "corpus_bytes": 4039886,
+  "corpus_bytes": 4040610,
   "project_instructions_chars": 5996,
   "project_instructions_bytes": 8200,
   "acceptance_range": "T01-T93",
@@ -195,8 +195,8 @@
     },
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
-      "bytes": 12236,
-      "sha256": "678ca93c7977db4649c96c1a87cafd50e3ab345fc0b56551bb2a6df2bc963507"
+      "bytes": 12960,
+      "sha256": "3af7f29fde13d2210e362d28a1be47dc82da22ed9b17df5a4803aabdea3fc729"
     }
   ],
   "live_project_verified": false
