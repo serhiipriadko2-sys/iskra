@@ -275,11 +275,10 @@ let structuralOk = true;
 // SHA256SUMS/MANIFEST.
 const walk = (dir: string, prefix: string): string[] => {
   const out: string[] = [];
-  for (const e of readdirSync(dir)) {
-    const full = join(dir, e);
-    const rel = `${prefix}/${e}`;
+  for (const d of readdirSync(dir, { withFileTypes: true })) {
+    const rel = `${prefix}/${d.name}`;
     out.push(rel);
-    if (statSync(full).isDirectory()) out.push(...walk(full, rel));
+    if (d.isDirectory()) out.push(...walk(join(dir, d.name), rel));
   }
   return out;
 };
@@ -379,8 +378,23 @@ for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
   const dp = join(releaseDir, doc);
   if (existsSync(dp)) statusDocs[doc] = readFileSync(dp, 'utf8');
 }
-const adrPath = 'governance/adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md';
-if (existsSync(adrPath)) statusDocs[adrPath] = readFileSync(adrPath, 'utf8');
+// Resolve the ADR file from the manifest's `adr` id (e.g. "ADR-20260720-02")
+// rather than hard-coding the filename, so a renamed/re-versioned ADR still binds.
+const adrId: string = manifest.adr ?? '';
+const govDir = 'governance';
+let adrPath = '';
+if (adrId && existsSync(govDir)) {
+  for (const f of readdirSync(govDir)) {
+    if (/^adr_.*\.md$/i.test(f)) {
+      const t = readFileSync(join(govDir, f), 'utf8');
+      if (new RegExp(`^#\\s+${adrId.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}\\b`, 'm').test(t)) {
+        adrPath = join(govDir, f);
+        break;
+      }
+    }
+  }
+}
+if (adrPath) statusDocs[adrPath] = readFileSync(adrPath, 'utf8');
 const contradictions = Object.entries(statusDocs)
   .filter(([, t]) => /status[:*\s]*.{0,20}accepted/i.test(t) && contradictionPat.test(t))
   .map(([d]) => basename(d));
