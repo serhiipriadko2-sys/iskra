@@ -50,6 +50,9 @@ jobs:
       - name: Verify SoT30 verifier is fail-closed (negative-fixture matrix)
         run: npx tsx tools/verify_sot30_release.selftest.ts
 
+      - name: Verify SoT30 build path (default + --from-git + reproducibility)
+        run: npx tsx tools/build_sot30_release.selftest.ts
+
       - name: Verify package boundaries (no deep src imports)
         run: python tools/check_no_src_imports.py
 

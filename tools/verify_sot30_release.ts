@@ -7,7 +7,8 @@
  *
  * Exits non-zero if ANY check fails. Each check verifies an EXACT property, not a
  * necessary-but-insufficient proxy (hardened per ADR-20260720-02 + PR-C review):
- *  C1  knowledge dir = exactly the 30 files {00..29}, unique, no extra/missing
+ *  C1  knowledge dir = exactly the 30 files {00..29}, unique, no extra/non-md/missing
+ *  C1b support dir = exactly {MANIFEST.json, PROJECT_INSTRUCTIONS_SOT30.md, SHA256SUMS}
  *  C2  indices 00–29 contiguous
  *  C3  SHA256SUMS = exactly {30 knowledge + support/MANIFEST.json + support/PROJECT_INSTRUCTIONS_SOT30.md}, each hash correct
  *  C4  MANIFEST.files = exactly the 30 knowledge paths (unique set), each bytes+sha256 correct
@@ -26,6 +27,8 @@
  *  C17 PACKAGE_RECEIPT carries the actual zip sha256 + bytes
  *  C18 no release-root or file-29 narrative repeats the retired "28 files identical" composition claim
  *  C19 T88: README/QC/PACKAGE_RECEIPT composition tokens agree with each other AND with MANIFEST's actual changed/unchanged counts; file 29 defers to the manifest (no contradicting hard-coded count)
+ *  C20 release-tree ↔ extracted-ZIP byte parity for all 33 files (catches a split-brain tree/zip)
+ *  C21 no ADR-lifecycle self-contradiction (a doc claiming `accepted` while also stating `proposed`/`not accepted`)
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -61,15 +64,21 @@ const EXPECTED_KNAMES = new Set(
   Array.from({ length: 30 }, (_, i) => String(i).padStart(2, '0')),
 );
 
-// ---- knowledge dir = exactly {00..29} ----
-const kfiles = readdirSync(kdir).filter((n) => /\.md$/.test(n)).sort();
+// ---- knowledge dir = EXACTLY {00..29}, nothing else (no non-md / stray files) ----
+const kEntries = readdirSync(kdir);
+const kfiles = kEntries.filter((n) => /\.md$/.test(n)).sort();
 const kIdxSet = new Set(kfiles.map((n) => n.slice(0, 2)));
 const kNumbered = kfiles.filter((n) => /^\d\d_.*\.md$/.test(n));
 check(
-  kfiles.length === 30 && kNumbered.length === 30
-    && new Set(kfiles).size === 30 && setEq(kIdxSet, EXPECTED_KNAMES),
-  'C1', `knowledge dir is exactly the 30 files {00..29} (got ${kfiles.length})`,
+  kEntries.length === 30 && kfiles.length === 30 && kNumbered.length === 30
+    && new Set(kEntries).size === 30 && setEq(new Set(kEntries), new Set(kNumbered))
+    && setEq(kIdxSet, EXPECTED_KNAMES),
+  'C1', `knowledge dir is exactly the 30 files {00..29}, no extras (got ${kEntries.length} entries)`,
 );
+// support dir = exactly the 3 support files, nothing else
+const sEntries = readdirSync(sdir);
+check(sEntries.length === 3 && setEq(new Set(sEntries), new Set(SUPPORT_FILES)),
+  'C1b', `support dir is exactly {${SUPPORT_FILES.join(', ')}} (got ${sEntries.length})`);
 const knames = kNumbered;
 const idx = knames.map((n) => n.slice(0, 2));
 const expected = Array.from({ length: 30 }, (_, i) => String(i).padStart(2, '0'));
@@ -104,19 +113,23 @@ check(
   'C3', `SHA256SUMS = exact expected 32-file set with correct hashes (${sums.length} lines)`,
 );
 
-// ---- MANIFEST.files = exact 30 knowledge set ----
+// ---- MANIFEST.files = exact 30 knowledge set, with EXACT full paths ----
 const manifest = JSON.parse(readFileSync(join(sdir, 'MANIFEST.json'), 'utf8'));
-const manPaths = (manifest.files ?? []).map((f: { path: string }) => basename(f.path));
-const manPathSet = new Set<string>(manPaths);
+const manFullPaths = (manifest.files ?? []).map((f: { path: string }) => f.path);
+const manFullSet = new Set<string>(manFullPaths);
+const expectedManPaths = new Set<string>(knames.map((n) => `knowledge/${n}`));
 let manHashOk = true;
 for (const f of manifest.files ?? []) {
   const n = basename(f.path);
-  if (!kbytes[n] || kbytes[n].length !== f.bytes || kh[n] !== f.sha256) manHashOk = false;
+  // full path must be exactly knowledge/<name> (rejects wrong-prefix/00_… with a right basename)
+  if (f.path !== `knowledge/${n}` || !kbytes[n] || kbytes[n].length !== f.bytes || kh[n] !== f.sha256) {
+    manHashOk = false;
+  }
 }
 check(
   manHashOk && manifest.files?.length === 30
-    && manPaths.length === 30 && manPathSet.size === 30 && setEq(manPathSet, knameSet),
-  'C4', 'MANIFEST.files = exact 30 knowledge set, bytes+sha256 correct',
+    && manFullPaths.length === 30 && manFullSet.size === 30 && setEq(manFullSet, expectedManPaths),
+  'C4', 'MANIFEST.files = exact 30 knowledge paths (full-path set), bytes+sha256 correct',
 );
 
 // ---- file-29 embedded table = exact {00..28} set ----
@@ -148,11 +161,14 @@ if (anchorIdx !== -1) {
   let s = anchorIdx + anchor.length;
   while (s < f00Buf.length && [0x0a, 0x0d, 0x20, 0x09].includes(f00Buf[s])) s += 1;
   const region = f00Buf.subarray(s, s + instrBuf.length);
-  // byte-equal to the standalone AND anchored at the documented mirror position:
-  // a modified mirror fails even if a pristine copy appears elsewhere as a substring.
-  t80Ok = region.length === instrBuf.length && region.equals(instrBuf);
+  // byte-equal to the standalone AND anchored at the documented mirror position AND
+  // present exactly once: a modified mirror fails even if a pristine copy appears
+  // elsewhere as a substring, and a duplicate-copy injection fails on uniqueness.
+  const first = f00Buf.indexOf(instrBuf);
+  const last = f00Buf.lastIndexOf(instrBuf);
+  t80Ok = region.length === instrBuf.length && region.equals(instrBuf) && first !== -1 && first === last;
 }
-check(t80Ok, 'C7', 'T80: file-00 mirror region is BYTE-EQUAL to standalone instructions');
+check(t80Ok, 'C7', 'T80: file-00 mirror region is BYTE-EQUAL to standalone instructions and unique');
 check(manifest.project_instructions_chars === instr.length, 'C8',
   `project_instructions_chars recorded (${manifest.project_instructions_chars}) == actual (${instr.length})`);
 
@@ -187,9 +203,12 @@ for (const n of knames) {
 check(verOk, 'C12', `package-version stamps consistent at ${version}`);
 check(manifest.live_project_verified === false, 'C13', 'live_project_verified === false');
 
-// ---- ZIP: single root, allowlisted entries only, round-trip ----
+// ---- ZIP: single root, exact allowlist (no dup entries / extra dirs), round-trip ----
+// ---- C20: every extracted file is BYTE-EQUAL to its release-tree counterpart ----
 let zipOk = false;
+let parityOk = false;
 let zipMsg = 'zip missing';
+let parityMsg = 'zip missing';
 if (existsSync(zipPath)) {
   const tmp = mkdtempSync(join(tmpdir(), 'sot30verify_'));
   try {
@@ -198,13 +217,18 @@ if (existsSync(zipPath)) {
     const roots = new Set(listing.map((e) => e.split('/')[0]));
     const singleRoot = roots.size === 1;
     const root = [...roots][0];
-    // relative file entries (exclude dir entries ending in /)
+    // file entries as an ARRAY (so duplicate arcnames are detectable), dir entries too
     const fileEntries = listing.filter((e) => !e.endsWith('/'));
-    const relFiles = new Set(fileEntries.map((e) => e.slice(root.length + 1)));
+    const dirEntries = listing.filter((e) => e.endsWith('/'));
+    const relFileArr = fileEntries.map((e) => e.slice(root.length + 1));
+    const relFiles = new Set(relFileArr);
     const expectedZip = new Set<string>([
       ...knames.map((n) => `knowledge/${n}`),
       ...SUPPORT_FILES.map((s) => `support/${s}`),
     ]);
+    const noDupEntries = relFileArr.length === relFiles.size;             // no duplicate arcnames
+    const expectedDirs = new Set([`${root}/`, `${root}/knowledge/`, `${root}/support/`]);
+    const dirsOk = dirEntries.every((d) => expectedDirs.has(d));          // no stray directories
     const noAbsOrDotDot = fileEntries.every((e) => !e.startsWith('/') && !e.includes('..'));
     const allowlistOk = setEq(relFiles, expectedZip);
     execFileSync('unzip', ['-qq', zipPath, '-d', tmp]);
@@ -212,13 +236,26 @@ if (existsSync(zipPath)) {
       { cwd: join(tmp, root), encoding: 'utf8' });
     const okLines = out.split('\n').filter((l) => l.endsWith(': OK')).length;
     const badLines = out.split('\n').filter((l) => /: FAILED/.test(l)).length;
-    zipOk = singleRoot && allowlistOk && noAbsOrDotDot && okLines === 32 && badLines === 0;
-    zipMsg = `root=${root} entries=${relFiles.size} sha256sum -c ${okLines}/32`;
-  } catch (e) { zipMsg = `error: ${(e as Error).message}`; } finally {
+    zipOk = singleRoot && allowlistOk && noDupEntries && dirsOk && noAbsOrDotDot
+      && okLines === 32 && badLines === 0;
+    zipMsg = `root=${root} entries=${relFileArr.length} dup=${!noDupEntries} dirs=${dirsOk} sha256sum -c ${okLines}/32`;
+
+    // C20: extracted ZIP bytes must equal the release-tree bytes for all 33 files
+    let par = true;
+    for (const n of knames) {
+      if (!readFileSync(join(tmp, root, 'knowledge', n)).equals(kbytes[n])) par = false;
+    }
+    for (const sf of SUPPORT_FILES) {
+      if (!readFileSync(join(tmp, root, 'support', sf)).equals(readFileSync(join(sdir, sf)))) par = false;
+    }
+    parityOk = par;
+    parityMsg = par ? '33/33 byte-equal to release tree' : 'ZIP diverges from release tree';
+  } catch (e) { zipMsg = `error: ${(e as Error).message}`; parityMsg = zipMsg; } finally {
     rmSync(tmp, { recursive: true, force: true });
   }
 }
-check(zipOk, 'C14', `ZIP single-root + exact allowlist + round-trip (${zipMsg})`);
+check(zipOk, 'C14', `ZIP single-root + exact allowlist + no-dup/no-stray-dir + round-trip (${zipMsg})`);
+check(parityOk, 'C20', `release-tree ↔ extracted-ZIP byte parity (${parityMsg})`);
 
 // ---- LF policy ----
 let lfOk = true;
@@ -233,13 +270,19 @@ check(lfOk, 'C15', 'LF line-ending policy (no CRLF in knowledge/support)');
 // structural: no packaged file / zip entry is an env/dependency/cache/absolute artifact.
 const FORBIDDEN_PATH = /(^|\/)(\.env(\..*)?|node_modules|\.cache|\.next|coverage|dist|build)(\/|$)/i;
 let structuralOk = true;
-// scan the ACTUAL knowledge/ and support/ directory contents (not just the expected
-// names) so a stray .env / node_modules / cache artifact is caught even if it is
-// absent from SHA256SUMS/MANIFEST.
-const actualPackaged: string[] = [
-  ...readdirSync(kdir).map((f) => `knowledge/${f}`),
-  ...readdirSync(sdir).map((f) => `support/${f}`),
-];
+// RECURSIVELY walk knowledge/ and support/ so a stray .env / node_modules / cache
+// artifact is caught even inside an injected sub-directory and even if absent from
+// SHA256SUMS/MANIFEST.
+const walk = (dir: string, prefix: string): string[] => {
+  const out: string[] = [];
+  for (const d of readdirSync(dir, { withFileTypes: true })) {
+    const rel = `${prefix}/${d.name}`;
+    out.push(rel);
+    if (d.isDirectory()) out.push(...walk(join(dir, d.name), rel));
+  }
+  return out;
+};
+const actualPackaged = [...walk(kdir, 'knowledge'), ...walk(sdir, 'support')];
 for (const rel of actualPackaged) {
   if (FORBIDDEN_PATH.test(rel) || rel.startsWith('/')) structuralOk = false;
 }
@@ -267,7 +310,8 @@ const auditDir = 'governance/audits/2026-07-20-sot30-v554';
 if (existsSync(auditDir)) {
   for (const f of readdirSync(auditDir)) secretScanTargets.push(join(auditDir, f));
 }
-for (const s of ['tools/build_sot30_release.py', 'tools/verify_sot30_release.ts']) {
+for (const s of ['tools/build_sot30_release.py', 'tools/verify_sot30_release.ts',
+  'tools/verify_sot30_release.selftest.ts']) {
   if (existsSync(s)) secretScanTargets.push(s);
 }
 let secretsOk = true;
@@ -276,7 +320,7 @@ for (const p of secretScanTargets) {
   if (secretPat.test(readFileSync(p, 'utf8'))) { secretsOk = false; }
 }
 check(structuralOk && secretsOk, 'C16',
-  'package composition safe (no env/dep/cache/abs artifacts) + no live secrets in knowledge/support/audit/scripts');
+  'package tree (recursive) has no env/dep/cache/abs-path artifact + no live secrets in knowledge/support/audit/scripts');
 
 // ---- receipt carries real zip hash+bytes ----
 const receipt = existsSync(join(releaseDir, 'PACKAGE_RECEIPT.md'))
@@ -322,6 +366,41 @@ const f29DefersToManifest = /manifest'?s?\b|support\/MANIFEST\.json/i.test(f29)
 check(tokensAgree && f29DefersToManifest, 'C19',
   `T88 composition agreement (manifest changed=${manComp[0]}/unchanged=${manComp[1]}; root tokens ${
     tokensPresent ? 'present' : 'MISSING'}; file29 defers=${f29DefersToManifest})`);
+
+// ---- C21: lifecycle/status self-consistency across ADR + release-root docs ----
+// Catches the P0a class: a doc claiming ADR `accepted` while also stating it is
+// `proposed` / `not accepted`. (A historical "supersedes the earlier proposed
+// state" reference is allowed; only an active "is `proposed`, not `accepted`"
+// contradiction fails.)
+const contradictionPat = /is\s+`?proposed`?\s*,?\s*(and\s+)?not\s+`?accepted`?|not\s+`?accepted`?\s+absent/i;
+const statusDocs: Record<string, string> = {};
+for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
+  const dp = join(releaseDir, doc);
+  if (existsSync(dp)) statusDocs[doc] = readFileSync(dp, 'utf8');
+}
+// Resolve the ADR file from the manifest's `adr` id (e.g. "ADR-20260720-02")
+// rather than hard-coding the filename, so a renamed/re-versioned ADR still binds.
+const adrId: string = manifest.adr ?? '';
+const govDir = 'governance';
+let adrPath = '';
+if (adrId && existsSync(govDir)) {
+  for (const f of readdirSync(govDir)) {
+    if (/^adr_.*\.md$/i.test(f)) {
+      const t = readFileSync(join(govDir, f), 'utf8');
+      if (new RegExp(`^#\\s+${adrId.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}\\b`, 'm').test(t)) {
+        adrPath = join(govDir, f);
+        break;
+      }
+    }
+  }
+}
+if (adrPath) statusDocs[adrPath] = readFileSync(adrPath, 'utf8');
+const contradictions = Object.entries(statusDocs)
+  .filter(([, t]) => /status[:*\s]*.{0,20}accepted/i.test(t) && contradictionPat.test(t))
+  .map(([d]) => basename(d));
+check(contradictions.length === 0, 'C21',
+  `no ADR-lifecycle self-contradiction (accepted vs proposed) ${
+    contradictions.length ? `— FAIL in ${contradictions.join(', ')}` : ''}`);
 
 // ---- report ----
 for (const o of oks) console.log(`PASS ${o}`);

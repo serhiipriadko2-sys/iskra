@@ -62,4 +62,4 @@ governance/audits/2026-07-20-sot30-v554/
 - No runtime, Supabase, or GitHub-app-behavior change — the Guard/EWS and Supabase overlays *describe* current state, they do not modify it.
 - `postGuardEws` is a decision-derived proxy; a true independently-observed late-signal EWS is E2E-unverified.
 - File 24's root cause is `verified` this build (receipt fully accounts for the 18-byte gap); no further file-24 root-cause claim is pending.
-- ADR-20260720-02 is `proposed`, not `accepted`.
+- ADR-20260720-02 is `accepted` (2026-07-20); conformance hardening done (PR #291). This is an architectural-decision acceptance, **not** a live-Project verification — T01–T93 remain not-live-run.
