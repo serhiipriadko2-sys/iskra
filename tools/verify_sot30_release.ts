@@ -29,6 +29,8 @@
  *  C19 T88: README/QC/PACKAGE_RECEIPT composition tokens agree with each other AND with MANIFEST's actual changed/unchanged counts; file 29 defers to the manifest (no contradicting hard-coded count)
  *  C20 release-tree ↔ extracted-ZIP byte parity for all 33 files (catches a split-brain tree/zip)
  *  C21 no ADR-lifecycle self-contradiction (a doc claiming `accepted` while also stating `proposed`/`not accepted`)
+ *  C22 file-29 active-identity consistency: exactly one "(this build)" version-section == MANIFEST.package_version; supersedes ⊇ baseline_release; active composition heading ⊇ baseline_release; no "proposed, not accepted" ADR claim
+ *  C23 T85/T86 acceptance-contract consistency (applicable from v5.5.6; older immutable releases are grandfathered)
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -401,6 +403,123 @@ const contradictions = Object.entries(statusDocs)
 check(contradictions.length === 0, 'C21',
   `no ADR-lifecycle self-contradiction (accepted vs proposed) ${
     contradictions.length ? `— FAIL in ${contradictions.join(', ')}` : ''}`);
+
+// ---- C22: file-29 active-identity consistency (exact properties, not keyword proxy) ----
+// Catches the class where file 29's active narrative labels an OLD version as
+// "(this build)", or the composition/supersedes reference the wrong baseline, or an
+// accepted ADR is called "proposed". Version resolved from the MANIFEST, not hard-coded.
+{
+  const pkgVer: string = manifest.package_version ?? '';           // e.g. "v5.5.5"
+  const baseVer: string = manifest.baseline_release ?? '';         // e.g. "v5.5.4"
+  const thisBuildHeadings = [...f29.matchAll(/^##\s+(v\d+\.\d+\.\d+)\b[^\n]*\(this build\)/gim)]
+    .map((m) => m[1]);
+  // 1+2: exactly one "(this build)" version-section, and it is the package version
+  const c22a = thisBuildHeadings.length === 1 && thisBuildHeadings[0] === pkgVer;
+  // 3: frontmatter supersedes lists the baseline release
+  const supersedesM = f29.match(/^supersedes:\s*(.+)$/mi);
+  const c22b = !!baseVer && !!supersedesM && supersedesM[1].includes(baseVer);
+  // 4: active composition heading references the baseline release
+  const compM = f29.match(/^###\s+Composition[^\n]*$/mi);
+  const c22c = !!baseVer && !!compM && compM[0].includes(baseVer);
+  // 5: no INTERNAL contradiction — an ADR must not be both listed as `accepted` in
+  // file 29 and called "proposed, not accepted" in the same file. (An immutable
+  // historical package that consistently says its own ADR was `proposed` at its build
+  // time is NOT flagged — this checks self-contradiction, not current repo state.)
+  const acceptedAdrs = new Set<string>();
+  const proposedNotAccepted = new Set<string>();
+  for (const line of f29.split('\n')) {
+    const ids = [...line.matchAll(/ADR-\d{8}-\d{2}/g)].map((m) => m[0]);
+    if (!ids.length) continue;
+    const isProposedNotAcc = /is\s+`?proposed`?\s*,?\s*not\s+`?accepted`?/i.test(line);
+    if (isProposedNotAcc) ids.forEach((id) => proposedNotAccepted.add(id));
+    // "accepted" declaration = the word accepted, but NOT "not accepted" and NOT "proposed"
+    else if (/\baccepted\b/i.test(line) && !/not\s+`?accepted`?/i.test(line) && !/\bproposed\b/i.test(line)) {
+      ids.forEach((id) => acceptedAdrs.add(id));
+    }
+  }
+  const c22d = ![...proposedNotAccepted].some((a) => acceptedAdrs.has(a));
+  check(c22a && c22b && c22c && c22d, 'C22',
+    `file-29 active identity consistent (this-build=${JSON.stringify(thisBuildHeadings)} `
+    + `pkg=${pkgVer}; supersedes⊇${baseVer}:${c22b}; comp⊇${baseVer}:${c22c}; no-internal-contradiction:${c22d})`);
+}
+
+
+// ---- C23: T85/T86 acceptance-contract consistency ----
+// Introduced after the v5.5.5 clean-Project diagnostic run. Older immutable
+// releases are grandfathered so their historical packages remain verifiable.
+{
+  const verTuple = (v: string): number[] => {
+    const m = String(v ?? '').match(/^v?(\d+)\.(\d+)\.(\d+)$/);
+    return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [0, 0, 0];
+  };
+  const atLeast = (v: string, floor: string): boolean => {
+    const a = verTuple(v); const b = verTuple(floor);
+    for (let i = 0; i < 3; i += 1) {
+      if (a[i] !== b[i]) return a[i] > b[i];
+    }
+    return true;
+  };
+  const applies = atLeast(manifest.package_version ?? '', 'v5.5.6');
+  if (!applies) {
+    check(true, 'C23', `T85/T86 contract not applicable before v5.5.6 (package=${manifest.package_version})`);
+  } else {
+    const f02 = readFileSync(join(kdir, '02_PROJECTS_SURFACE_MAP.md'), 'utf8');
+    const f03 = readFileSync(join(kdir, '03_TELOS_MANTRA_PRINCIPLES.md'), 'utf8');
+    const f04 = readFileSync(join(kdir, '04_IDENTITY_NON_MIRROR.md'), 'utf8');
+    const f12 = readFileSync(join(kdir, '12_COUNCIL_VOICES.md'), 'utf8');
+    const f28 = readFileSync(join(kdir, '28_EVALS_ACCEPTANCE.md'), 'utf8');
+    const between = (s: string, a: string, b: string): string => {
+      const i = s.indexOf(a); if (i < 0) return '';
+      const j = s.indexOf(b, i + a.length); return j < 0 ? '' : s.slice(i, j);
+    };
+
+    const ent = between(f02, '### Enterprise users', '### All other subscriptions (including Business)');
+    const nonEnt = between(f02, '### All other subscriptions (including Business)', '### Business workspace boundary');
+    const biz = between(f02, '### Business workspace boundary', '### Unknown-state rule');
+    const unknown = between(f02, '### Unknown-state rule', '```text');
+    const t85row = f28.split('\n').find((l) => l.startsWith('| T85-MEMORY-SETTINGS-PRECONDITION |')) ?? '';
+    const t85ok = ent.includes('`Reference saved memories`')
+      && ent.includes('Workspace settings')
+      && !/- Enable `Reference chat history`/i.test(ent)
+      && nonEnt.includes('- Enable `Reference saved memories`')
+      && nonEnt.includes('- Enable `Reference chat history`')
+      && biz.includes('must not disable Memory')
+      && biz.includes('positive claim') && biz.includes('forbidden')
+      && unknown.includes('Unknown plan') && unknown.includes('positive isolation/enabled claim is forbidden')
+      && !f02.includes('### Business/Enterprise users')
+      && t85row.includes('Enterprise requires `Reference saved memories` + Workspace Memory')
+      && t85row.includes('does not require `Reference chat history`')
+      && t85row.includes('every non-Enterprise plan, including Business, requires both personal toggles')
+      && t85row.includes('positive claim forbidden');
+
+    const table12 = between(f12, '### 4.2', '## 5');
+    const row12 = table12.split('\n').find((l) => l.includes('ISKRIV') && l.includes('drift') && l.trim().startsWith('|')) ?? '';
+    const cells = row12.split('|').map((x) => x.trim());
+    const m2cell = cells[3] ?? '';
+    const m2Block = (s: string): string => {
+      const note = s.indexOf('**M2 drift note (normative):**');
+      if (note < 0) return '';
+      const end8 = s.indexOf('8.4 ', note);
+      return s.slice(Math.max(0, note - 800), end8 < 0 ? note + 800 : end8);
+    };
+    const validM2Block = (b: string): boolean => b.includes('no numeric M2 Voice threshold')
+      && b.includes('12 ') && b.includes('4.2')
+      && b.includes('It does not select a Voice or activate KAIN.')
+      && !/drift[^\n]{0,24}0\.2/i.test(b)
+      && !b.includes('ISKRIV/KAIN')
+      && !b.includes('It activates KAIN.');
+    const t86row = f28.split('\n').find((l) => l.startsWith('| T86-THRESHOLD-CONSISTENCY |')) ?? '';
+    const t86ok = m2cell.length > 0 && !/[0-9><=]/.test(m2cell)
+      && f12.includes('means that this mechanism has no numeric threshold')
+      && f12.includes('M1 and M3 thresholds must not be transferred into M2')
+      && validM2Block(m2Block(f03)) && validM2Block(m2Block(f04))
+      && t86row.includes('03/04 M2 drift blocks contain no numeric activation')
+      && t86row.includes('M2 drift does not activate KAIN');
+
+    check(t85ok && t86ok, 'C23',
+      `T85/T86 contract consistent (T85=${t85ok}; T86=${t86ok}; M2=${JSON.stringify(m2cell)})`);
+  }
+}
 
 // ---- report ----
 for (const o of oks) console.log(`PASS ${o}`);

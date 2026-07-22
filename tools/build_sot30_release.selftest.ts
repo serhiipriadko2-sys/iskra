@@ -9,6 +9,9 @@ import { execFileSync } from 'node:child_process';
 import { cpSync, readFileSync, rmSync, mkdtempSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+
+const PYTHON = process.platform === 'win32' ? 'py' : 'python3';
+const TSX_CLI = join(process.cwd(), 'node_modules/tsx/dist/cli.mjs');
 import { execSync } from 'node:child_process';
 
 const RELEASE = 'governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency';
@@ -22,14 +25,14 @@ const expect = (name: string, cond: boolean, detail = '') => {
 };
 
 function build(outRelease: string, zipOut: string, extra: string[] = []): Record<string, unknown> {
-  const out = execFileSync('python3', [
+  const out = execFileSync(PYTHON, [
     'tools/build_sot30_release.py', outRelease,
     '--version', 'v5.5.4', '--baseline', BASELINE, '--zip-out', zipOut, ...extra,
   ], { encoding: 'utf8' });
   return JSON.parse(out);
 }
 function verify(dir: string, zip: string): number {
-  try { execFileSync('npx', ['tsx', 'tools/verify_sot30_release.ts', dir, zip, BASELINE]); return 0; }
+  try { execFileSync(process.execPath, [TSX_CLI, 'tools/verify_sot30_release.ts', dir, zip, BASELINE]); return 0; }
   catch (e) { return (e as { status?: number }).status ?? 1; }
 }
 function sha(p: string): string {
@@ -47,6 +50,13 @@ function tmp(): string { return mkdtempSync(join(tmpdir(), 'sot30bt_')); }
       r.generated_from === 'release_tree_working_bytes', JSON.stringify(r.generated_from));
     expect('default: root=SoT30_v5.5.4', r.root === 'SoT30_v5.5.4', String(r.root));
     expect('default: build → verifier PASS', verify(join(d, 'rel'), join(d, 'def.zip')) === 0);
+    const generatedText = [
+      'knowledge/29_INDEX_UPLOAD_MANIFEST.md',
+      'support/MANIFEST.json', 'support/SHA256SUMS',
+      'QC_REPORT.md', 'PACKAGE_RECEIPT.md',
+    ].map((x) => readFileSync(join(d, 'rel', x)));
+    expect('default: generated text is LF-only on every host',
+      generatedText.every((b) => !b.includes(Buffer.from('\r\n'))));
   } finally { rmSync(d, { recursive: true, force: true }); }
 }
 
@@ -67,7 +77,7 @@ function tmp(): string { return mkdtempSync(join(tmpdir(), 'sot30bt_')); }
       "bad=sum(1 for n in names if z.read(n)!=subprocess.check_output(['git','show',f\"HEAD:{REAL}/knowledge/\"+n.split('/knowledge/')[1]]))",
       'print(f"{len(names)-bad}/{len(names)}")',
     ].join('\n');
-    const parity = execFileSync('python3', ['-c', py, join(d, 'git.zip'), RELEASE], { encoding: 'utf8' }).trim();
+    const parity = execFileSync(PYTHON, ['-c', py, join(d, 'git.zip'), RELEASE], { encoding: 'utf8' }).trim();
     expect('from-git: 30/30 zip knowledge == git@HEAD blobs', parity === '30/30', parity);
     expect('from-git: build → verifier PASS', verify(join(d, 'rel'), join(d, 'git.zip')) === 0);
   } finally { rmSync(d, { recursive: true, force: true }); }

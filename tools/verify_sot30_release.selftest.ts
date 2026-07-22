@@ -16,15 +16,23 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+const PYTHON = process.platform === 'win32' ? 'py' : 'python3';
+const TSX_CLI = join(process.cwd(), 'node_modules/tsx/dist/cli.mjs');
+
 const RELEASE = 'governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency';
 const ZIP = 'dist/SoT30_v5.5.4.zip';
 const BASELINE = 'governance/releases/2026-07-19-sot30-v5-5-3-instructions-version-sync/support/MANIFEST.json';
 const VERIFIER = 'tools/verify_sot30_release.ts';
+const RELEASE_556 = 'governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair';
+const ZIP_556 = 'dist/SoT30_v5.5.6.zip';
+const BASELINE_556 = 'governance/releases/2026-07-21-sot30-v5-5-5-provenance/support/MANIFEST.json';
 
 type Run = { code: number; out: string };
-function runVerifier(dir: string, zip: string): Run {
+function runVerifier(
+  dir: string, zip: string, baseline = BASELINE, version = 'v5.5.4',
+): Run {
   try {
-    const out = execFileSync('npx', ['tsx', VERIFIER, dir, zip, BASELINE], { encoding: 'utf8' });
+    const out = execFileSync(process.execPath, [TSX_CLI, VERIFIER, dir, zip, baseline, version], { encoding: 'utf8' });
     return { code: 0, out };
   } catch (e) {
     const err = e as { status?: number; stdout?: string; stderr?: string };
@@ -39,11 +47,12 @@ function expect(name: string, cond: boolean, detail = '') {
   else { results.push(`FAIL ${name} ${detail}`); failures += 1; }
 }
 
-function tmpCopy(): string {
+function tmpCopyFrom(release: string): string {
   const d = mkdtempSync(join(tmpdir(), 'sot30ft_'));
-  cpSync(RELEASE, join(d, 'rel'), { recursive: true });
+  cpSync(release, join(d, 'rel'), { recursive: true });
   return join(d, 'rel');
 }
+function tmpCopy(): string { return tmpCopyFrom(RELEASE); }
 
 // zip root name (v5.5.4 shipped as "SoT30_5.5.4")
 const zipRoot = execFileSync('unzip', ['-Z1', ZIP], { encoding: 'utf8' })
@@ -55,6 +64,11 @@ const zipRoot = execFileSync('unzip', ['-Z1', ZIP], { encoding: 'utf8' })
   expect('positive: real v5.5.4 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
     `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
 }
+{
+  const r = runVerifier(RELEASE_556, ZIP_556, BASELINE_556, 'v5.5.6');
+  expect('positive: real v5.5.6 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
+    `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
+}
 
 // helper: negative fixture that only mutates the release dir (real zip reused)
 function negRelease(name: string, expectCheck: string, mutate: (dir: string) => void) {
@@ -63,6 +77,16 @@ function negRelease(name: string, expectCheck: string, mutate: (dir: string) => 
     mutate(dir);
     const r = runVerifier(dir, ZIP);
     expect(name, r.code !== 0 && new RegExp(`FAIL ${expectCheck}:`).test(r.out),
+      `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
+  } finally { rmSync(join(dir, '..'), { recursive: true, force: true }); }
+}
+
+function negRelease556(name: string, mutate: (dir: string) => void) {
+  const dir = tmpCopyFrom(RELEASE_556);
+  try {
+    mutate(dir);
+    const r = runVerifier(dir, ZIP_556, BASELINE_556, 'v5.5.6');
+    expect(name, r.code !== 0 && /FAIL C23:/.test(r.out),
       `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
   } finally { rmSync(join(dir, '..'), { recursive: true, force: true }); }
 }
@@ -166,6 +190,92 @@ negRelease('neg: release-tree ≠ ZIP (split-brain)', 'C20', (dir) => {
   writeFileSync(p, `${readFileSync(p, 'utf8')}\n<!-- drift -->\n`);
 });
 
+// --- C22 file-29 active-identity fixtures (tamper v5.5.4's file 29) ---
+const F29 = 'knowledge/29_INDEX_UPLOAD_MANIFEST.md';
+// 18. wrong-version "(this build)" heading
+negRelease('neg: wrong-version this-build heading', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, readFileSync(p, 'utf8')
+    .replace('## v5.5.4 semantic & runtime-status consistency (this build)',
+      '## v5.4.1 semantic & runtime-status consistency (this build)'));
+});
+// 19. duplicate "(this build)" heading
+negRelease('neg: duplicate this-build heading', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\n## v5.5.3 duplicate section (this build)\nx\n`);
+});
+// 20. missing baseline in supersedes
+negRelease('neg: supersedes missing baseline', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, readFileSync(p, 'utf8')
+    .replace(', v5.5.2 backlog, v5.5.3 instructions-sync', ''));
+});
+// 21. wrong composition baseline
+negRelease('neg: wrong composition baseline', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, readFileSync(p, 'utf8')
+    .replace('### Composition vs the v5.5.3 release tree', '### Composition vs the v5.5.2 release tree'));
+});
+// 22. accepted-vs-proposed internal contradiction in file 29
+negRelease('neg: file-29 accepted-vs-proposed contradiction', 'C22', (dir) => {
+  const p = join(dir, F29);
+  writeFileSync(p, readFileSync(p, 'utf8')
+    .replace('- `ADR-20260720-02` — v5.5.4 semantic & runtime-status consistency (this build), **proposed**.',
+      '- `ADR-20260720-02` — v5.5.4 semantic & runtime-status consistency, **accepted**; merged.'));
+});
+
+
+// --- C23 T85/T86 fixtures (tamper v5.5.6 candidate) ---
+negRelease556('neg: Enterprise wrongly requires chat history', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '- Enable `Reference saved memories` in personal settings.\n- Memory must be enabled in Workspace settings.',
+    '- Enable `Reference saved memories` in personal settings.\n- Enable `Reference chat history` in personal settings.\n- Memory must be enabled in Workspace settings.'));
+});
+negRelease556('neg: Business missing chat history', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '- Enable `Reference chat history` in personal settings.\n\n### Business workspace boundary',
+    '\n### Business workspace boundary'));
+});
+negRelease556('neg: Business and Enterprise collapsed', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace('### Enterprise users', '### Business/Enterprise users'));
+});
+negRelease556('neg: unknown workspace permits positive claim', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'a positive claim that project-only memory is enabled is forbidden',
+    'a positive claim that project-only memory is enabled is allowed'));
+});
+negRelease556('neg: file03 restores numeric M2 drift threshold', (dir) => {
+  const p = join(dir, 'knowledge/03_TELOS_MANTRA_PRINCIPLES.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'DRIFT emits an integrity review signal only.', 'DRIFT emits an integrity review signal at drift > 0.2.'));
+});
+negRelease556('neg: file04 restores numeric M2 drift threshold', (dir) => {
+  const p = join(dir, 'knowledge/04_IDENTITY_NON_MIRROR.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'DRIFT emits an integrity review signal only.', 'DRIFT emits an integrity review signal at drift > 0.2.'));
+});
+negRelease556('neg: M2 drift activates KAIN', (dir) => {
+  const p = join(dir, 'knowledge/03_TELOS_MANTRA_PRINCIPLES.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'It does not select a Voice or activate KAIN.', 'It activates KAIN.'));
+});
+negRelease556('neg: M1 threshold copied into M2 table cell', (dir) => {
+  const p = join(dir, 'knowledge/12_COUNCIL_VOICES.md');
+  const lines = readFileSync(p, 'utf8').split('\n');
+  const start = lines.findIndex((l) => l.startsWith('### 4.2'));
+  const end = lines.findIndex((l, index) => index > start && l.startsWith('## 5'));
+  const i = lines.findIndex((l, index) => index > start && index < end
+    && l.includes('ISKRIV') && l.includes('drift') && l.trim().startsWith('|'));
+  const cells = lines[i].split('|');
+  cells[3] = ' `0.2` ';
+  lines[i] = cells.join('|');
+  writeFileSync(p, lines.join('\n'));
+});
+
 // helper: negative fixture that tampers the ZIP (release dir reused)
 function negZip(name: string, expectCheck: string, tamper: (zipCopy: string) => void) {
   const d = mkdtempSync(join(tmpdir(), 'sot30fz_'));
@@ -188,7 +298,7 @@ function addZipEntry(zc: string, arcname: string) {
     '[zo.writestr(i,zi.read(i.filename)) for i in zi.infolist()]',
     'zo.writestr(arc,"x"); zo.close(); zi.close(); shutil.move(tmp,z)',
   ].join('\n');
-  execFileSync('python3', ['-c', py, zc, arcname]);
+  execFileSync(PYTHON, ['-c', py, zc, arcname]);
 }
 
 // 6. extra ZIP entry under the package root
