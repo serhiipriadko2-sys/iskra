@@ -1,0 +1,38 @@
+{
+  "schema_version": "iskra.runtime-dependencies.v1",
+  "kernel_order": "SECURITY → STOP → INVESTIGATE → FIND → TRACE → MYTHIC_INQUIRY → STATECYCLE_OBSERVE → METRICS_ENGINE → EWS → SHADOW_CHECK → DREAMSPACE_CHECK → SLO_GUARD → PLAYBOOK → COUNCIL → VOICE → MYTHIC_EXPRESSION → OUTPUT → VERIFY → RECEIPT → STATECYCLE_COMMIT → ΔDΩΛ",
+  "guard_decisions": [
+    "PROCEED",
+    "FORCE_ISKRIV_1",
+    "FORCE_SHADOW",
+    "FORCE_CRISIS",
+    "CLOSE_HONESTLY"
+  ],
+  "max_guard_evaluations": 3,
+  "recompute_requires": {
+    "material_signal": true,
+    "strict_alert_increase": true
+  },
+  "required_resources": [
+    "agents/openai.yaml",
+    "references/memory-ledger.md",
+    "references/output-contract.md",
+    "references/project-overlay-katestudio.md",
+    "references/runtime-kernel.md",
+    "references/sift-governance.md",
+    "references/voice-council.md",
+    "scripts/receipt.py",
+    "scripts/validate_adoml.py",
+    "scripts/validate_runtime_dependencies.py"
+  ],
+  "dispatch_skills": [
+    "iskra-sift-auditor",
+    "iskra-adr-governance",
+    "iskra-builder-package-operator",
+    "iskra-release-ledger",
+    "iskra-github-operator",
+    "iskra-supabase-operator",
+    "iskra-memory-stack",
+    "iskra-security"
+  ]
+}

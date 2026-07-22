@@ -1,0 +1,200 @@
+{
+  "artifacts": [
+    {
+      "bytes": 5752,
+      "lines": 103,
+      "path": "governance/adr_20260722_runtime_authority_repair.md",
+      "sha256": "3d15ea5b016f3701a8b789311fd5483eb58de9c0eb1e403b6e75b047d4c79e9c"
+    },
+    {
+      "bytes": 3775,
+      "lines": 101,
+      "path": "governance/audits/2026-07-22-runtime-authority-repair/SECURITY_REVIEW.md",
+      "sha256": "6b579ebde05892703c6608e8af88a3cac7d525d5280917d5c532af41cb81b452"
+    },
+    {
+      "bytes": 35446,
+      "lines": 1089,
+      "path": "docs/skills/registry-v1.json",
+      "sha256": "87074f9e1f9d5476c9841be6d8dbdae9f0997c97afa771d1f8814cf48158154c"
+    },
+    {
+      "bytes": 2926,
+      "lines": 58,
+      "path": "docs/skills/iskra-metrics-acceptance-v1.md",
+      "sha256": "61ba47dd30146e0e6e64afdf6ad3589a50377d25d57be0d32b61db9a9eb195d1"
+    },
+    {
+      "bytes": 4013,
+      "lines": 70,
+      "path": "package.json",
+      "sha256": "61235f1e156b15715a172dd200c381aedd53b4b117b92e95f5f8ab8de344dfb6"
+    },
+    {
+      "bytes": 19048,
+      "lines": 157,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/MANIFEST.sha256",
+      "sha256": "22b073447d314195c44eb007b7d9e620eb1e161f5dc5dd1d66a838f4cbe74217"
+    },
+    {
+      "bytes": 5984,
+      "lines": 134,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-canon-runtime/SKILL.md",
+      "sha256": "ba53c2a856f60445e81bcd38a00ef627fad5a4fc353af2cbd8353ec9a97c5193"
+    },
+    {
+      "bytes": 1481,
+      "lines": 42,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-canon-runtime/references/runtime-kernel.md",
+      "sha256": "417cbdd4e566cb1f40155124b8210c47deca0405ba6ae27f4f0e36dbd14c99b5"
+    },
+    {
+      "bytes": 1272,
+      "lines": 38,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-canon-runtime/references/runtime-dependencies.json",
+      "sha256": "569fa86d60b38e25028cddfed2c6d8a368812fb660bfb39e1b0714a54496cd70"
+    },
+    {
+      "bytes": 11493,
+      "lines": 238,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-canon-runtime/scripts/validate_runtime_dependencies.py",
+      "sha256": "46ea37ea36ce60f5d2b27ef5ea061fdb3a4fdb64d2fe186bdbe6bd58f6ccd351"
+    },
+    {
+      "bytes": 5404,
+      "lines": 112,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-canon-runtime/scripts/test_validate_runtime_dependencies.py",
+      "sha256": "ae0df5db97ff49d869b8a1036e466fb19a6398e5b28e0ba35fe2546ed652baa3"
+    },
+    {
+      "bytes": 3894,
+      "lines": 96,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-sift-auditor/SKILL.md",
+      "sha256": "c09480b3696cb7c73a07e2c2330371148353bccc8f1e5152802df6d2d15f4aa4"
+    },
+    {
+      "bytes": 891,
+      "lines": 25,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-sift-auditor/references/sift-checklist.md",
+      "sha256": "b6654e2b3a3ce86466fbfe63755845edc292220b59bb7cbdd50ba5001c61400c"
+    },
+    {
+      "bytes": 3780,
+      "lines": 103,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-supabase-operator/SKILL.md",
+      "sha256": "43fafb93aedabbfa1579c41bd8ad64865c82387a8d37a2703f63f49e019f67b5"
+    },
+    {
+      "bytes": 909,
+      "lines": 31,
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-supabase-operator/references/supabase-workflow.md",
+      "sha256": "ef6d456adbbadbd86d4032039317c07fdec738761b819b7b73657e4074829484"
+    }
+  ],
+  "authoritative_scope": "source package and local packaging only",
+  "base_pr": 296,
+  "boundaries": [
+    "PR review and merge remain pending",
+    "historical dist/agent-builder mirrors were not regenerated",
+    "package creation does not prove Builder upload or implicit invocation",
+    "iskra-metrics was not created or activated"
+  ],
+  "branch": "chore/runtime-authority-repair-v1",
+  "builder_uploaded": false,
+  "live_verified": false,
+  "observed_at": "2026-07-22",
+  "packages": [
+    {
+      "bytes": 13552,
+      "contains_python_cache": false,
+      "entries": 13,
+      "path": "C:/Users/gabra/Documents/iskra-runtime-authority-packages/iskra-canon-runtime/skill.zip",
+      "sha256": "652f2c8294641d38364b348113f9d79e0f1d12434ac7e832421519753c674be5",
+      "skill": "iskra-canon-runtime"
+    },
+    {
+      "bytes": 5230,
+      "contains_python_cache": false,
+      "entries": 7,
+      "path": "C:/Users/gabra/Documents/iskra-runtime-authority-packages/iskra-sift-auditor/skill.zip",
+      "sha256": "4c15b48d9dc5167e17ba451a89394d5ff79f56e21d0565f7208ddd672da02b99",
+      "skill": "iskra-sift-auditor"
+    },
+    {
+      "bytes": 5345,
+      "contains_python_cache": false,
+      "entries": 7,
+      "path": "C:/Users/gabra/Documents/iskra-runtime-authority-packages/iskra-supabase-operator/skill.zip",
+      "sha256": "2cf2468c47a31b260cf0d997afdf0f71730aa6b26df17cbde4b734ae08f86454",
+      "skill": "iskra-supabase-operator"
+    }
+  ],
+  "registry": {
+    "absorb": 27,
+    "active": 24,
+    "codex_only": 17,
+    "inventory_total": 68,
+    "metrics_target": "PLANNED",
+    "operational_stack": 41,
+    "repaired_owners": 3,
+    "runtime_dispatch_owners": 8
+  },
+  "schema_version": "iskra.runtime-authority-receipt.v1",
+  "stacked_on": "chore/skills-refresh-v1",
+  "status": "PASS_REPOSITORY_AND_PACKAGE",
+  "supabase_mutation": {
+    "audit_writes": 0,
+    "edge_function_deployments": 0,
+    "migrations": 0,
+    "parity_read": "PASS: both connector namespaces returned the same ten iskra_memory tables and counts",
+    "target_writes": 0
+  },
+  "tests": [
+    {
+      "command": "pnpm run check:runtime-authority",
+      "detail": "errors=0 warnings=0 resources=10 dispatch=8",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm run test:runtime-authority",
+      "detail": "7/7",
+      "result": "PASS"
+    },
+    {
+      "command": "targeted skill tree validation --strict",
+      "detail": "3/3 skills, zero warnings",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm run check:skill-registry",
+      "detail": "68 entries, zero errors/warnings",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm run test:skill-registry",
+      "detail": "6 PASS, Windows symlink fixture SKIP",
+      "result": "PASS"
+    },
+    {
+      "command": "source MANIFEST.sha256 verify",
+      "detail": "157 entries",
+      "result": "PASS"
+    },
+    {
+      "command": "Code Tytor static review",
+      "detail": "no security/bug issue; one non-blocking performance suggestion",
+      "result": "PASS_WITH_NOTE"
+    },
+    {
+      "command": "Codex Security scoped review",
+      "detail": "see SECURITY_REVIEW.md",
+      "result": "PASS_SCOPED_NON_EXHAUSTIVE"
+    }
+  ],
+  "wolfram": {
+    "inventory_sum": 68,
+    "operational_stack": 41,
+    "package_bytes": 24127,
+    "reduction_percent": 39.705882352941174
+  }
+}

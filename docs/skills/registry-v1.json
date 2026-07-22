@@ -29,7 +29,8 @@
       "skill": "iskra-metrics",
       "status": "PLANNED",
       "owner": "iskra-metrics",
-      "acceptance_gate": "Merged metrics owner preserves deterministic calculations, missing-input behavior, and provenance before metric-runner is absorbed."
+      "acceptance_gate": "Merged metrics owner preserves deterministic calculations, missing-input behavior, and provenance before metric-runner is absorbed.",
+      "acceptance_spec": "docs/skills/iskra-metrics-acceptance-v1.md"
     }
   ],
   "skills": [
@@ -337,12 +338,17 @@
         "iskra-release-ledger"
       ],
       "replacement": null,
-      "readiness": "BLOCKED_REPAIR",
+      "readiness": "SOURCE_REPAIRED_PACKAGE_VALIDATED",
       "evidence": [
         "audit:2026-07-22",
         "source:project-skill-directory",
         "finding:P0-kernel-order-stale",
-        "finding:missing-resource-links"
+        "finding:missing-resource-links",
+        "adr:ADR-20260722-04",
+        "source:skills/iskra-skill-pack-builder-2026-06-25",
+        "gate:runtime-authority-repair",
+        "receipt:governance/audits/2026-07-22-runtime-authority-repair/receipt.json",
+        "package:skill.zip-validated"
       ]
     },
     {
@@ -599,10 +605,15 @@
       "trigger_scope": "Primary owner for iskra sift auditor requests on its supported surface.",
       "dependencies": [],
       "replacement": null,
-      "readiness": "READY_FOR_ROUTING",
+      "readiness": "SOURCE_REPAIRED_PACKAGE_VALIDATED",
       "evidence": [
         "audit:2026-07-22",
-        "source:project-skill-directory"
+        "source:project-skill-directory",
+        "adr:ADR-20260722-04",
+        "source:skills/iskra-skill-pack-builder-2026-06-25",
+        "gate:runtime-authority-repair",
+        "receipt:governance/audits/2026-07-22-runtime-authority-repair/receipt.json",
+        "package:skill.zip-validated"
       ]
     },
     {
@@ -645,10 +656,15 @@
       "trigger_scope": "Primary owner for iskra supabase operator requests on its supported surface.",
       "dependencies": [],
       "replacement": null,
-      "readiness": "READY_FOR_ROUTING",
+      "readiness": "SOURCE_REPAIRED_PACKAGE_VALIDATED",
       "evidence": [
         "audit:2026-07-22",
-        "source:project-skill-directory"
+        "source:project-skill-directory",
+        "adr:ADR-20260722-04",
+        "source:skills/iskra-skill-pack-builder-2026-06-25",
+        "gate:runtime-authority-repair",
+        "receipt:governance/audits/2026-07-22-runtime-authority-repair/receipt.json",
+        "package:skill.zip-validated"
       ]
     },
     {
