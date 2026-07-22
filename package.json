@@ -39,7 +39,9 @@
     "import:shard2": "node tools/run_python.mjs tools/import_phase1_shard2.py",
     "import:shard3": "node tools/run_python.mjs tools/import_phase1_shard3.py",
     "import:shard": "node tools/run_python.mjs tools/import_phase1_shard.py",
-    "prepare:legacy-runtime": "node tools/ensure_runtime_deps.mjs"
+    "prepare:legacy-runtime": "node tools/ensure_runtime_deps.mjs",
+    "check:runtime-authority": "node tools/run_python.mjs skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-canon-runtime/scripts/validate_runtime_dependencies.py --skill-dir skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-canon-runtime --skill-root skills/iskra-skill-pack-builder-2026-06-25/skills/hermes --registry docs/skills/registry-v1.json",
+    "test:runtime-authority": "node tools/run_python.mjs skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-canon-runtime/scripts/test_validate_runtime_dependencies.py"
   },
   "devDependencies": {
     "jose": "6.1.0",
