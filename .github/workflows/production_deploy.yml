@@ -48,6 +48,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -85,9 +87,13 @@ jobs:
         run: pnpm --filter iskra-space lint:strict
 
       - name: Unit tests pass 1
+        env:
+          ISKRA_ACCEPTANCE_BASE_SHA: ${{ github.event.before }}
         run: pnpm --filter iskra-space test:run -- --pool=threads --maxWorkers=2
 
       - name: Unit tests pass 2
+        env:
+          ISKRA_ACCEPTANCE_BASE_SHA: ${{ github.event.before }}
         run: pnpm --filter iskra-space test:run -- --pool=threads --maxWorkers=2
 
       - name: Verify Edge metrics parity with canonical math
