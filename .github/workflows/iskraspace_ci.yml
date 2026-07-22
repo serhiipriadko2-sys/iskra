@@ -101,7 +101,7 @@ jobs:
         working-directory: runtime/iskraSpace
         shell: bash
         env:
-          ISKRA_ACCEPTANCE_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          ISKRA_ACCEPTANCE_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || '' }}
         run: |
           set -o pipefail
           pnpm test:run -- --pool=threads --maxWorkers=2 2>&1 | tee iskraspace-unit.log
@@ -110,7 +110,7 @@ jobs:
         working-directory: runtime/iskraSpace
         shell: bash
         env:
-          ISKRA_ACCEPTANCE_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          ISKRA_ACCEPTANCE_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || '' }}
         run: |
           set -o pipefail
           pnpm test:run -- --pool=threads --maxWorkers=2 2>&1 | tee iskraspace-unit-repeat.log

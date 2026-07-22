@@ -7,7 +7,7 @@
     ".github/workflows/github_pages.yml": "6ea337c54867a0638e3ffbd0653fd0a91bdae415a92310b32e5118c3678647b1",
     ".github/workflows/iskra-site_ci.yml": "aee40f79489eba45b56f8561814e901e6fc4cf3df018276d2cc55faf5065cc60",
     ".github/workflows/iskra-site_deploy.yml": "396a8354c3bafd319be4330819574a28c76c8fe5deaab4b2cf9af1cf04f395bc",
-    ".github/workflows/iskraspace_ci.yml": "1cdaede7e5d08c793dee909ded4c4c69a72098481ea38f65293c43166cb1d4c4",
+    ".github/workflows/iskraspace_ci.yml": "c15a088f6375187d300e4914b6ea5ba6c56a9e76ed61e88c5e03071c06602943",
     ".github/workflows/judge_stack_qc.yml": "8c53e82bbb624fc209432222bdfadf2f47323a4709756db058233e0124b9306f",
     ".github/workflows/production_deploy.yml": "fb2f00bf530a8e0b3f73d4881965d5aa3accbf795fc816a2afdb51bf7941ee7d",
     ".github/workflows/runtime_ci.yml": "6c9a86746911c9545a7d668098c42460ced45bc6c602a7928aca9a4cceecba8e",
