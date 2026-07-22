@@ -20,7 +20,7 @@ Treat requests formerly routed to `checkpoint-builder`, `iskra-workflow-ops`, or
 
 1. Read the source, expected file set, governing ADR, and repository release commands.
 2. State the exact scope and exclusions before writing or packaging.
-3. Run `scripts/release_manifest.py build <artifact>` to generate a deterministic inventory.
+3. Run `scripts/release_manifest.py build <artifact> --output <manifest.json>` with the manifest outside the artifact.
 4. Run `scripts/release_manifest.py verify <artifact> --manifest <manifest.json>` after any copy, ZIP, upload preparation, or repackaging.
 5. For a Skill, also run the platform `package_skill.py`; return the complete package as `skill.zip`.
 6. Run relevant smoke, unit, routing-contract, and repository integrity checks.
@@ -61,6 +61,6 @@ DeltaDOL:
 
 ## References
 
-- Read `references/release-ledger.md` for mode-specific gates and repository integration.
+- Read `references/release-contract.md` for mode-specific gates and repository integration.
 - Read `references/artifact-qc.md` for archive and receipt interpretation.
 - Read `references/routing-contract.md` when changing triggers or testing ownership boundaries.
