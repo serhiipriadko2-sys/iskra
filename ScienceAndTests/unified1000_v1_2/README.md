@@ -2,6 +2,8 @@
 
 Construct-preserving scenario-diversification workstream.
 
+**Operator (non-technical) testing guide:** [`OPERATOR_TESTING_GUIDE.md`](OPERATOR_TESTING_GUIDE.md) — step-by-step, jargon-explained instructions for reviewing Batches 02-10 and running the blind/swap pilot.
+
 ## Frozen sets
 
 - BNAT-50: byte-identical.
