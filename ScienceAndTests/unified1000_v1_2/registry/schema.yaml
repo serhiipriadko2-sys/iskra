@@ -1,0 +1,13 @@
+version: v1.2
+purpose: hidden_task_metadata
+fields:
+  - construct
+  - domain
+  - difficulty
+  - expected_evidence
+  - failure_mode
+  - sibling_family
+  - contamination_risk
+constraints:
+  candidate_visibility: false
+  rubric_visibility: false

@@ -1,0 +1,20 @@
+{
+  "schema": "unified1000-v1.2-owner-review-v1",
+  "batch": "batch01",
+  "decision": "PASS",
+  "decided_at": "2026-07-21",
+  "reviewer_role": "owner",
+  "scope": [
+    "construct preservation for 50 rewritten marker-grid tasks",
+    "scenario diversification quality",
+    "acceptance to proceed to Batch-02"
+  ],
+  "evidence": "Explicit owner response in the project conversation: PASS",
+  "does_not_assert": [
+    "full 495-task completion",
+    "blind-pilot success",
+    "publication-grade construct validity",
+    "merge, deployment, or live invocation"
+  ],
+  "next_gate": "Batch-02 automated QC and owner semantic review"
+}
