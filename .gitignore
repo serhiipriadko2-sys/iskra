@@ -44,6 +44,8 @@ pip-delete-this-message.txt
 .env
 .env.local
 .env.*
+runtime/iskraSpace/.env.staging.local
+!runtime/iskraSpace/.env.staging.acceptance.example
 !supabase/.env.example
 
 # IDE
