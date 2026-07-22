@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-22T18:41:23.389Z",
-  "total": 3623,
+  "generatedAt": "2026-07-22T19:03:37.572Z",
+  "total": 3629,
   "curated": 20,
   "layers": {
     "root": 341,
@@ -13,8 +13,8 @@
     "web": 13,
     "canon": 16,
     "builder": 1187,
-    "docs": 71,
-    "governance": 370,
+    "docs": 74,
+    "governance": 371,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -27,7 +27,7 @@
     "skills": 267,
     "backend": 80,
     "system": 26,
-    "tools": 58
+    "tools": 60
   },
   "nodes": [
     {
@@ -25889,6 +25889,7 @@
         "docs/repair",
         "docs/research",
         "docs/security",
+        "docs/skills",
         "docs/specs",
         "docs/AUDIT_INTERFACES.md",
         "docs/AUDIT_REPORT.md",
@@ -26684,6 +26685,43 @@
       "parent": "docs/security"
     },
     {
+      "path": "docs/skills",
+      "name": "skills",
+      "kind": "directory",
+      "layer": "docs",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "docs/skills",
+      "related": [],
+      "parent": "docs",
+      "children": [
+        "docs/skills/README.md",
+        "docs/skills/registry-v1.json"
+      ]
+    },
+    {
+      "path": "docs/skills/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/skills/README.md",
+      "related": [],
+      "parent": "docs/skills"
+    },
+    {
+      "path": "docs/skills/registry-v1.json",
+      "name": "registry-v1.json",
+      "kind": "file",
+      "layer": "docs",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "docs/skills/registry-v1.json",
+      "related": [],
+      "parent": "docs/skills"
+    },
+    {
       "path": "docs/specs",
       "name": "specs",
       "kind": "directory",
@@ -26832,6 +26870,7 @@
         "governance/adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md",
         "governance/adr_20260721_sot30_v5_5_5_provenance.md",
         "governance/adr_20260721_sot30_v5_5_6_acceptance_repair.md",
+        "governance/adr_20260722_skill_registry_consolidation.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -27323,6 +27362,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/adr_20260721_sot30_v5_5_6_acceptance_repair.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260722_skill_registry_consolidation.md",
+      "name": "adr_20260722_skill_registry_consolidation.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260722_skill_registry_consolidation.md",
       "related": [],
       "parent": "governance"
     },
@@ -44249,8 +44299,10 @@
         "tools/sot40_scope_manifest.json",
         "tools/sync_chatgpt_exports.py",
         "tools/test_check_scientific_turn_xcode_impl.py",
+        "tools/test_validate_skill_integrity.py",
         "tools/update_ledger.ts",
         "tools/validate_delta.py",
+        "tools/validate_skill_integrity.py",
         "tools/validate_terms.py",
         "tools/verify_ledger.ts",
         "tools/verify_sot30_release.selftest.ts",
@@ -44789,6 +44841,17 @@
       "parent": "tools"
     },
     {
+      "path": "tools/test_validate_skill_integrity.py",
+      "name": "test_validate_skill_integrity.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/test_validate_skill_integrity.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
       "path": "tools/update_ledger.ts",
       "name": "update_ledger.ts",
       "kind": "file",
@@ -44807,6 +44870,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/validate_delta.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/validate_skill_integrity.py",
+      "name": "validate_skill_integrity.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/validate_skill_integrity.py",
       "related": [],
       "parent": "tools"
     },
