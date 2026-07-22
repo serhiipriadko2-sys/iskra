@@ -6,8 +6,8 @@ App path: `runtime/iskraSpace`
 
 ## Current verified baseline
 
-- GitHub `main`: `76c6f2fdb312c39e12c1c407d6aefe8f687a720d`
-  (PR [#294](https://github.com/serhiipriadko2-sys/iskra/pull/294) merge).
+- GitHub `main`: `805b26e3ecea29c6a352b84887b0472d9d71ec74`
+  (PR [#297](https://github.com/serhiipriadko2-sys/iskra/pull/297) merge).
 - Supabase remediation baseline: PR
   [#275](https://github.com/serhiipriadko2-sys/iskra/pull/275), merge SHA
   `8442bc42ad38854e2a0e8b01d160984c24bfdbb5`.
@@ -16,6 +16,10 @@ App path: `runtime/iskraSpace`
   `f8a45cafdecaa4d08b0436e7c18af7bf4f838a1f`.
 - PR [#273](https://github.com/serhiipriadko2-sys/iskra/pull/273) merge SHA:
   `bb495b40cf0c9c31a7ecd9cc5122404252806e50`.
+- Staging-acceptance source PR [#297](https://github.com/serhiipriadko2-sys/iskra/pull/297)
+  merged at `805b26e3ecea29c6a352b84887b0472d9d71ec74` from source tip
+  `deb1d23321d0fe0185ce2605e98e84f24ab3b081`. Its repository delivery
+  evidence is `merged`; it is not a staging/live/deployment receipt.
 - Post-merge Production Deployment receipts: runs
   [29610431050](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29610431050)
   and [29630043054](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29630043054).
@@ -26,7 +30,7 @@ App path: `runtime/iskraSpace`
   SHA-256 `d86959641c9d78fea321a837d2ebf58e9406cf75acec84b9ea98b3d9d2dd9764`.
   It remains `live_project_verified=false`; the attached external audit targeted
   `d7c96c4` and is not a receipt for later commits.
-- Production Supabase has 35 migrations; this source changeset has 36 after a
+- Production Supabase has 35 migrations; repository `main` has 36 after the
   forward-only trigger-helper ACL reconciliation discovered by local-vs-live
   DDL comparison.
   Production already applied `20260718191950_supabase_acl_and_graph_contract_hardening`.
@@ -67,8 +71,8 @@ App path: `runtime/iskraSpace`
   preview branch is `pg-trgm-relocation-staging` (`vusqhidsspbcuknsfdcm`), which
   is data-less but `MIGRATIONS_FAILED` at 33 migrations. It is not an acceptance
   baseline. Staging acceptance remains pending a separately authorized rebuild.
-- This branch adds only source artifacts: tests, one historical replay repair,
-  one proposed forward migration, and documentation.
+- Merged PR #297 added only source artifacts: tests, one historical replay
+  repair, one proposed forward migration, CI base-SHA wiring, and documentation.
   No Supabase migration was applied by this branch, no Edge
   Function deployed, and `iskra-memory-gateway` was not changed.
 - Source-only work adds an opt-in staging harness and a redacted receipt schema;
@@ -79,6 +83,9 @@ App path: `runtime/iskraSpace`
 ```text
 status: pending branch rebuild and Owner-controlled acceptance
 scope: staging_only
+source_pr: 297
+source_merge_sha: 805b26e3ecea29c6a352b84887b0472d9d71ec74
+delivery_evidence: merged
 live receipt: absent
 provider_invocations: not yet observed
 cleanup: not yet observed
