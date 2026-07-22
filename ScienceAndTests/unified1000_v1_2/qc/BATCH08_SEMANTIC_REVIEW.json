@@ -1,0 +1,23 @@
+{
+  "schema": "unified1000-v1.2-semantic-review-v1",
+  "batch": "batch08",
+  "reviewer_mode": "ISKRA_MODEL_SEMANTIC_REVIEW",
+  "reviewed_task_count": 50,
+  "result": "PASS_OWNER_ACK_PENDING",
+  "construct_preservation": "50/50 PASS",
+  "scenario_replacement": "50/50 PASS",
+  "expected_evidence_alignment": "50/50 PASS",
+  "hidden_rubric_exposure": 0,
+  "semantic_issues_found": 0,
+  "unique_domains": 48,
+  "unique_constructs": 34,
+  "construct_repetition": "INTENTIONAL_SIBLING_MEASUREMENT",
+  "difficulty": {"hard": 41, "medium": 9},
+  "cumulative_rewritten_count": 400,
+  "cumulative_unique_domains": 388,
+  "cumulative_unique_constructs": 243,
+  "cumulative_max_3gram_jaccard": 0.157407,
+  "owner_acceptance": "NOT_RECORDED",
+  "promotion": "BLOCKED_UNTIL_OWNER_ACK_OR_FINAL_OWNER_REVIEW",
+  "next_action": "BATCH09_DRAFT_ALLOWED"
+}

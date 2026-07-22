@@ -21,7 +21,7 @@ Construct-preserving scenario-diversification workstream.
 
 - Governance decision: accepted.
 - Branch: `feature/judge-unified1000-v1.2-diversification`.
-- Cumulative rewrite: 350/495.
+- Cumulative rewrite: 400/495.
 - Batch-01: automated QC PASS; owner semantic review PASS (2026-07-21).
 - Batch-02: automated QC PASS; Iskra semantic review PASS; owner acknowledgement pending.
 - Batch-03: automated QC PASS; Iskra semantic review PASS; owner acknowledgement pending.
@@ -29,6 +29,7 @@ Construct-preserving scenario-diversification workstream.
 - Batch-05: automated QC PASS; Iskra semantic review PASS; owner acknowledgement pending.
 - Batch-06: automated QC PASS; Iskra semantic review PASS; owner acknowledgement pending.
 - Batch-07: automated QC PASS; Iskra semantic review PASS; owner acknowledgement pending.
+- Batch-08: automated QC PASS; Iskra semantic review PASS; owner acknowledgement pending.
 - Blind/swap pilot: NOT RUN.
 - Merge/release: BLOCKED.
 
@@ -70,6 +71,11 @@ Construct-preserving scenario-diversification workstream.
 - `registry/batch07.jsonl`
 - `qc/BATCH07_QC.json`
 - `qc/BATCH07_SEMANTIC_REVIEW.json`
+- `batches/batch08/replacements.jsonl`
+- `candidate/unified_1000_questions_tasks_bnat50_v1_2_batch08.md`
+- `registry/batch08.jsonl`
+- `qc/BATCH08_QC.json`
+- `qc/BATCH08_SEMANTIC_REVIEW.json`
 
 ## Build
 
