@@ -6,8 +6,10 @@ App path: `runtime/iskraSpace`
 
 ## Current verified baseline
 
-- GitHub `main`: `805b26e3ecea29c6a352b84887b0472d9d71ec74`
-  (PR [#297](https://github.com/serhiipriadko2-sys/iskra/pull/297) merge).
+- GitHub `main` at this status refresh: `60591a34aa832bd32314bbf91c344286e1015502`
+  (PR [#296](https://github.com/serhiipriadko2-sys/iskra/pull/296) merge).
+  It contains the staging-acceptance source merge from PR #297 at
+  `805b26e3ecea29c6a352b84887b0472d9d71ec74`.
 - Supabase remediation baseline: PR
   [#275](https://github.com/serhiipriadko2-sys/iskra/pull/275), merge SHA
   `8442bc42ad38854e2a0e8b01d160984c24bfdbb5`.
