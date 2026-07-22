@@ -1,0 +1,31 @@
+{
+  "schema_version": "iskra.skill-registry.v1",
+  "generated_at": "2026-07-22",
+  "authority": "ADR-20260722-03",
+  "scope": "Current 68-skill project/plugin inventory audited on 2026-07-22.",
+  "allowed_statuses": ["ACTIVE", "ABSORB", "DEPRECATED", "CODEX_ONLY"],
+  "summary": {
+    "inventory_total": 68,
+    "active": 24,
+    "absorb": 27,
+    "deprecated": 0,
+    "codex_only": 17,
+    "planned_targets": 2,
+    "target_operational_stack": 41
+  },
+  "targets": [
+    {
+      "skill": "fixar-project-ops",
+      "status": "PLANNED",
+      "owner": "fixar",
+      "acceptance_gate": "Umbrella skill routes Fixar workflows without trigger loss."
+    },
+    {
+      "skill": "iskra-metrics",
+      "status": "PLANNED",
+      "owner": "iskra-metrics",
+      "acceptance_gate": "Merged metrics owner preserves deterministic calculations and provenance."
+    }
+  ],
+  "skills": []
+}
