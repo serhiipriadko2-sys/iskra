@@ -46,6 +46,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -98,6 +100,8 @@ jobs:
       - name: Run unit tests pass 1
         working-directory: runtime/iskraSpace
         shell: bash
+        env:
+          ISKRA_ACCEPTANCE_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
         run: |
           set -o pipefail
           pnpm test:run -- --pool=threads --maxWorkers=2 2>&1 | tee iskraspace-unit.log
@@ -105,6 +109,8 @@ jobs:
       - name: Run unit tests pass 2
         working-directory: runtime/iskraSpace
         shell: bash
+        env:
+          ISKRA_ACCEPTANCE_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
         run: |
           set -o pipefail
           pnpm test:run -- --pool=threads --maxWorkers=2 2>&1 | tee iskraspace-unit-repeat.log

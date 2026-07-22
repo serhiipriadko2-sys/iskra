@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-07-21T18:28:07.085Z",
-  "total": 3539,
+  "generatedAt": "2026-07-22T18:41:23.389Z",
+  "total": 3623,
   "curated": 20,
   "layers": {
     "root": 341,
     "agents": 46,
     "devcontainer": 2,
     "ci": 13,
-    "research": 402,
+    "research": 474,
     "appendix": 26,
     "site": 69,
     "web": 13,
     "canon": 16,
     "builder": 1187,
     "docs": 71,
-    "governance": 369,
+    "governance": 370,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,9 +23,9 @@
     "engine": 41,
     "math": 19,
     "reference": 82,
-    "runtime": 356,
+    "runtime": 366,
     "skills": 267,
-    "backend": 79,
+    "backend": 80,
     "system": 26,
     "tools": 58
   },
@@ -2131,6 +2131,7 @@
         "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.2",
         "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
         "ScienceAndTests/iskra_evaluation_release_2026-07-08",
+        "ScienceAndTests/unified1000_v1_2",
         "ScienceAndTests/ACTIVE_JUDGE_STACK",
         "ScienceAndTests/Gemini_Dialogue_Testing.md",
         "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.2.zip",
@@ -7014,6 +7015,901 @@
       "sourceRef": "ScienceAndTests/new test.txt",
       "related": [],
       "parent": "ScienceAndTests"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2",
+      "name": "unified1000_v1_2",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2",
+      "related": [],
+      "parent": "ScienceAndTests",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches",
+        "ScienceAndTests/unified1000_v1_2/candidate",
+        "ScienceAndTests/unified1000_v1_2/qc",
+        "ScienceAndTests/unified1000_v1_2/registry",
+        "ScienceAndTests/unified1000_v1_2/tools",
+        "ScienceAndTests/unified1000_v1_2/README.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/README.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches",
+      "name": "batches",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch01",
+        "ScienceAndTests/unified1000_v1_2/batches/batch02",
+        "ScienceAndTests/unified1000_v1_2/batches/batch03",
+        "ScienceAndTests/unified1000_v1_2/batches/batch04",
+        "ScienceAndTests/unified1000_v1_2/batches/batch05",
+        "ScienceAndTests/unified1000_v1_2/batches/batch06",
+        "ScienceAndTests/unified1000_v1_2/batches/batch07",
+        "ScienceAndTests/unified1000_v1_2/batches/batch08",
+        "ScienceAndTests/unified1000_v1_2/batches/batch09",
+        "ScienceAndTests/unified1000_v1_2/batches/batch10"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch01",
+      "name": "batch01",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch01",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch01/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch01/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch01/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch01"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch02",
+      "name": "batch02",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch02",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch02/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch02/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch02/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch02"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch03",
+      "name": "batch03",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch03",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch03/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch03/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch03/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch03"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch04",
+      "name": "batch04",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch04",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch04/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch04/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch04/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch04"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch05",
+      "name": "batch05",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch05",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch05/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch05/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch05/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch05"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch06",
+      "name": "batch06",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch06",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch06/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch06/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch06/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch06"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch07",
+      "name": "batch07",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch07",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch07/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch07/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch07/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch07"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch08",
+      "name": "batch08",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch08",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch08/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch08/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch08/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch08"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch09",
+      "name": "batch09",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch09",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch09/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch09/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch09/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch09"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch10",
+      "name": "batch10",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch10",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/batches/batch10/replacements.jsonl"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/batches/batch10/replacements.jsonl",
+      "name": "replacements.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/batches/batch10/replacements.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/batches/batch10"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate",
+      "name": "candidate",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch01.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch02.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch03.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch04.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch05.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch06.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch07.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch08.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch09.md",
+        "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch10.md"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch01.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch01.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch01.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch02.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch02.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch02.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch03.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch03.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch03.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch04.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch04.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch04.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch05.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch05.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch05.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch06.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch06.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch06.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch07.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch07.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch07.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch08.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch08.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch08.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch09.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch09.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch09.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch10.md",
+      "name": "unified_1000_questions_tasks_bnat50_v1_2_batch10.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/candidate/unified_1000_questions_tasks_bnat50_v1_2_batch10.md",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/candidate"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc",
+      "name": "qc",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH01_OWNER_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH01_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH02_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH02_SEMANTIC_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH03_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH03_SEMANTIC_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH04_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH04_SEMANTIC_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH05_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH05_SEMANTIC_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH06_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH06_SEMANTIC_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH07_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH07_SEMANTIC_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH08_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH08_SEMANTIC_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH09_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH09_SEMANTIC_REVIEW.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH10_QC.json",
+        "ScienceAndTests/unified1000_v1_2/qc/BATCH10_SEMANTIC_REVIEW.json"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH01_OWNER_REVIEW.json",
+      "name": "BATCH01_OWNER_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH01_OWNER_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH01_QC.json",
+      "name": "BATCH01_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH01_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH02_QC.json",
+      "name": "BATCH02_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH02_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH02_SEMANTIC_REVIEW.json",
+      "name": "BATCH02_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH02_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH03_QC.json",
+      "name": "BATCH03_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH03_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH03_SEMANTIC_REVIEW.json",
+      "name": "BATCH03_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH03_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH04_QC.json",
+      "name": "BATCH04_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH04_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH04_SEMANTIC_REVIEW.json",
+      "name": "BATCH04_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH04_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH05_QC.json",
+      "name": "BATCH05_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH05_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH05_SEMANTIC_REVIEW.json",
+      "name": "BATCH05_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH05_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH06_QC.json",
+      "name": "BATCH06_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH06_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH06_SEMANTIC_REVIEW.json",
+      "name": "BATCH06_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH06_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH07_QC.json",
+      "name": "BATCH07_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH07_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH07_SEMANTIC_REVIEW.json",
+      "name": "BATCH07_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH07_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH08_QC.json",
+      "name": "BATCH08_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH08_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH08_SEMANTIC_REVIEW.json",
+      "name": "BATCH08_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH08_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH09_QC.json",
+      "name": "BATCH09_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH09_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH09_SEMANTIC_REVIEW.json",
+      "name": "BATCH09_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH09_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH10_QC.json",
+      "name": "BATCH10_QC.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH10_QC.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/qc/BATCH10_SEMANTIC_REVIEW.json",
+      "name": "BATCH10_SEMANTIC_REVIEW.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/qc/BATCH10_SEMANTIC_REVIEW.json",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/qc"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry",
+      "name": "registry",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/registry/batch01.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch02.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch03.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch04.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch05.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch06.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch07.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch08.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch09.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/batch10.jsonl",
+        "ScienceAndTests/unified1000_v1_2/registry/inventory_495.csv",
+        "ScienceAndTests/unified1000_v1_2/registry/schema.yaml"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch01.jsonl",
+      "name": "batch01.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch01.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch02.jsonl",
+      "name": "batch02.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch02.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch03.jsonl",
+      "name": "batch03.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch03.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch04.jsonl",
+      "name": "batch04.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch04.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch05.jsonl",
+      "name": "batch05.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch05.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch06.jsonl",
+      "name": "batch06.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch06.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch07.jsonl",
+      "name": "batch07.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch07.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch08.jsonl",
+      "name": "batch08.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch08.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch09.jsonl",
+      "name": "batch09.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch09.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/batch10.jsonl",
+      "name": "batch10.jsonl",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/batch10.jsonl",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/inventory_495.csv",
+      "name": "inventory_495.csv",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/inventory_495.csv",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/registry/schema.yaml",
+      "name": "schema.yaml",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/registry/schema.yaml",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/registry"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/tools",
+      "name": "tools",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/tools",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2",
+      "children": [
+        "ScienceAndTests/unified1000_v1_2/tools/build_batch.py",
+        "ScienceAndTests/unified1000_v1_2/tools/build_batch01.py",
+        "ScienceAndTests/unified1000_v1_2/tools/build_batch02.py"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/tools/build_batch.py",
+      "name": "build_batch.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/tools/build_batch.py",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/tools"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/tools/build_batch01.py",
+      "name": "build_batch01.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/tools/build_batch01.py",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/tools"
+    },
+    {
+      "path": "ScienceAndTests/unified1000_v1_2/tools/build_batch02.py",
+      "name": "build_batch02.py",
+      "kind": "file",
+      "layer": "research",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/unified1000_v1_2/tools/build_batch02.py",
+      "related": [],
+      "parent": "ScienceAndTests/unified1000_v1_2/tools"
     },
     {
       "path": "ScienceAndTests/Кровь_плоть_кости.txt",
@@ -25893,6 +26789,7 @@
         "governance/changelog.d",
         "governance/errata",
         "governance/releases",
+        "governance/ADR-20260721-UNIFIED1000-V12-TEMPLATE-DIVERSIFICATION.md",
         "governance/adr.md",
         "governance/adr_20260206_runtime_patches.md",
         "governance/adr_20260214_gemini_sdk_unification.md",
@@ -25950,6 +26847,17 @@
         "governance/policy.md",
         "governance/update_protocol.md"
       ]
+    },
+    {
+      "path": "governance/ADR-20260721-UNIFIED1000-V12-TEMPLATE-DIVERSIFICATION.md",
+      "name": "ADR-20260721-UNIFIED1000-V12-TEMPLATE-DIVERSIFICATION.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/ADR-20260721-UNIFIED1000-V12-TEMPLATE-DIVERSIFICATION.md",
+      "related": [],
+      "parent": "governance"
     },
     {
       "path": "governance/adr.md",
@@ -34081,7 +34989,8 @@
         "runtime/iskraSpace/tailwind.config.js",
         "runtime/iskraSpace/tsconfig.json",
         "runtime/iskraSpace/types.ts",
-        "runtime/iskraSpace/vite.config.ts"
+        "runtime/iskraSpace/vite.config.ts",
+        "runtime/iskraSpace/vitest.staging.config.ts"
       ]
     },
     {
@@ -34407,9 +35316,24 @@
       "related": [],
       "parent": "runtime/iskraSpace/__tests__",
       "children": [
+        "runtime/iskraSpace/__tests__/e2e/edgeBoundary.staging.e2e.test.ts",
         "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
-        "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts"
+        "runtime/iskraSpace/__tests__/e2e/rlsIsolation.staging.e2e.test.ts",
+        "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts",
+        "runtime/iskraSpace/__tests__/e2e/stagingPreflight.acceptance.ts",
+        "runtime/iskraSpace/__tests__/e2e/stagingSourceContract.test.ts"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/e2e/edgeBoundary.staging.e2e.test.ts",
+      "name": "edgeBoundary.staging.e2e.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/e2e/edgeBoundary.staging.e2e.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/e2e"
     },
     {
       "path": "runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts",
@@ -34423,6 +35347,17 @@
       "parent": "runtime/iskraSpace/__tests__/e2e"
     },
     {
+      "path": "runtime/iskraSpace/__tests__/e2e/rlsIsolation.staging.e2e.test.ts",
+      "name": "rlsIsolation.staging.e2e.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/e2e/rlsIsolation.staging.e2e.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/e2e"
+    },
+    {
       "path": "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts",
       "name": "security.e2e.test.ts",
       "kind": "file",
@@ -34430,6 +35365,28 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/__tests__/e2e/security.e2e.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/e2e"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/e2e/stagingPreflight.acceptance.ts",
+      "name": "stagingPreflight.acceptance.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/e2e/stagingPreflight.acceptance.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/e2e"
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/e2e/stagingSourceContract.test.ts",
+      "name": "stagingSourceContract.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/e2e/stagingSourceContract.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/__tests__/e2e"
     },
@@ -35945,6 +36902,9 @@
         "runtime/iskraSpace/services/securityService.ts",
         "runtime/iskraSpace/services/shadowPromotionService.ts",
         "runtime/iskraSpace/services/soundService.ts",
+        "runtime/iskraSpace/services/stagingAcceptanceConfig.ts",
+        "runtime/iskraSpace/services/stagingAcceptanceReceipt.ts",
+        "runtime/iskraSpace/services/stagingAcceptanceSourceContract.ts",
         "runtime/iskraSpace/services/storageCompat.ts",
         "runtime/iskraSpace/services/storageService.ts",
         "runtime/iskraSpace/services/supabaseClient.ts",
@@ -36011,6 +36971,8 @@
         "runtime/iskraSpace/services/__tests__/securityService.test.ts",
         "runtime/iskraSpace/services/__tests__/shadowPromotionService.test.ts",
         "runtime/iskraSpace/services/__tests__/soundService.test.ts",
+        "runtime/iskraSpace/services/__tests__/stagingAcceptanceConfig.test.ts",
+        "runtime/iskraSpace/services/__tests__/stagingAcceptanceReceipt.test.ts",
         "runtime/iskraSpace/services/__tests__/storageService.test.ts",
         "runtime/iskraSpace/services/__tests__/streamingAndSecurity.test.ts",
         "runtime/iskraSpace/services/__tests__/stressTests.test.ts",
@@ -36500,6 +37462,28 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/stagingAcceptanceConfig.test.ts",
+      "name": "stagingAcceptanceConfig.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/stagingAcceptanceConfig.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/stagingAcceptanceReceipt.test.ts",
+      "name": "stagingAcceptanceReceipt.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/stagingAcceptanceReceipt.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/storageService.test.ts",
       "name": "storageService.test.ts",
       "kind": "file",
@@ -36947,6 +37931,39 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/soundService.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
+      "path": "runtime/iskraSpace/services/stagingAcceptanceConfig.ts",
+      "name": "stagingAcceptanceConfig.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/stagingAcceptanceConfig.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
+      "path": "runtime/iskraSpace/services/stagingAcceptanceReceipt.ts",
+      "name": "stagingAcceptanceReceipt.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/stagingAcceptanceReceipt.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
+      "path": "runtime/iskraSpace/services/stagingAcceptanceSourceContract.ts",
+      "name": "stagingAcceptanceSourceContract.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/stagingAcceptanceSourceContract.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services"
     },
@@ -37512,6 +38529,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/vite.config.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace"
+    },
+    {
+      "path": "runtime/iskraSpace/vitest.staging.config.ts",
+      "name": "vitest.staging.config.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/vitest.staging.config.ts",
       "related": [],
       "parent": "runtime/iskraSpace"
     },
@@ -42334,6 +43362,7 @@
         "supabase/migrations/20260718191950_supabase_acl_and_graph_contract_hardening.sql",
         "supabase/migrations/20260718194551_optimize_rls_initplan.sql",
         "supabase/migrations/20260718194835_consolidate_rls_policies.sql",
+        "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
         "supabase/migrations/README_LEGACY_DATA_MIGRATION.sql"
@@ -42721,6 +43750,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260718194835_consolidate_rls_policies.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
+      "name": "20260718200634_restore_closed_beta_graph_acl.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
       "related": [],
       "parent": "supabase/migrations"
     },

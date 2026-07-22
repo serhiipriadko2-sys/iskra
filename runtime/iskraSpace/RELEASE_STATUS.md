@@ -1,38 +1,97 @@
 # Iskra Space Release Status
 
-Status: production and canonical activation blocked; source-only audit closure verified in PR #273 and awaiting merge; not deployed
-Last updated: 2026-07-17
+Status: staging acceptance pending branch rebuild; production_deployed: false; canonical_activation: blocked
+Last updated: 2026-07-22
 App path: `runtime/iskraSpace`
 
 ## Current verified baseline
 
-- Repository baseline: GitHub `main` `cd0b98f54d9a706b06647498e569175bc120b5fc`.
-  Its only SoT30 change removes the stale v5.4 archive; it is not a runtime,
-  staging, Docker, Supabase-live, or activation receipt.
-- SoT30 v5.5.1 self-check: 32/32 `SHA256SUMS` entries verified from the
-  committed package receipt. The attached external audit targeted `d7c96c4` and
-  must not be treated as a receipt for later commits.
-- Live Supabase migration history was inspected read-only and matched the 32
-  committed SQL migrations. This does not clear the observed 44 security and 73
-  performance advisor findings.
-- This branch adds only source artifacts: tests, CI gates, a proposed SQL
-  migration and documentation. No Supabase migration was applied, no Edge
+- GitHub `main`: `76c6f2fdb312c39e12c1c407d6aefe8f687a720d`
+  (PR [#294](https://github.com/serhiipriadko2-sys/iskra/pull/294) merge).
+- Supabase remediation baseline: PR
+  [#275](https://github.com/serhiipriadko2-sys/iskra/pull/275), merge SHA
+  `8442bc42ad38854e2a0e8b01d160984c24bfdbb5`.
+- Earlier release-gate baseline: PR
+  [#270](https://github.com/serhiipriadko2-sys/iskra/pull/270), merge SHA
+  `f8a45cafdecaa4d08b0436e7c18af7bf4f838a1f`.
+- PR [#273](https://github.com/serhiipriadko2-sys/iskra/pull/273) merge SHA:
+  `bb495b40cf0c9c31a7ecd9cc5122404252806e50`.
+- Post-merge Production Deployment receipts: runs
+  [29610431050](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29610431050)
+  and [29630043054](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29630043054).
+  Docker/GHCR and Vercel jobs were skipped; these runs do not prove an image,
+  Vercel deployment, staging acceptance, or canonical activation.
+- Current SoT30 package is v5.5.6; its committed receipt records a canonical
+  source-freeze build, 24/24 current and regression verifier checks, and ZIP
+  SHA-256 `d86959641c9d78fea321a837d2ebf58e9406cf75acec84b9ea98b3d9d2dd9764`.
+  It remains `live_project_verified=false`; the attached external audit targeted
+  `d7c96c4` and is not a receipt for later commits.
+- Production Supabase has 35 migrations; this source changeset has 36 after a
+  forward-only trigger-helper ACL reconciliation discovered by local-vs-live
+  DDL comparison.
+  Production already applied `20260718191950_supabase_acl_and_graph_contract_hardening`.
+  PR #275 also applied `20260718194551_optimize_rls_initplan` and
+  `20260718194835_consolidate_rls_policies`.
+- GitHub `main` already reconciles those three migration filenames to the live
+  versions. The ACL and consolidation bodies remain equivalent to their live
+  statements. The ACL body's normalized receipt is 646 chars, SHA-256
+  `22a205c44f7d0dad10305be099647ac6a8577a91343f49740f19ac2d6184b246`.
+  Clean replay proved that the live initplan body depended on a legacy Graph
+  policy absent from canonical history; its live LF-normalized SHA-256
+  `1b773fdd0ec82486754cceccacf15dc5c1f882b8d9a2a98ffb9939cf4af145ef`
+  is retained as provenance while its two drift-dependent ALTERs are guarded.
+  This source changeset makes only the historical initplan migration
+  replay-compatible and adds one forward-only ACL correction; neither is a
+  migration application claim.
+- HIGH-RISK DRIFT: production grants direct `authenticated` and `service_role`
+  EXECUTE on trigger-only SECURITY DEFINER function
+  `prevent_graph_node_cross_owner_cascade()`, while a clean replay before live
+  provenance reconciliation
+  grants neither. Proposed migration
+  `20260718200634_restore_closed_beta_graph_acl.sql` removes that direct surface
+  on staging first; it is not applied to production.
+- HIGH-RISK DRIFT: PR #275's `graph_nodes_read_public` and
+  `graph_edges_read_public` policies omit `TO authenticated`, so their shared-row
+  SELECT path applies to `public`/anonymous and contradicts closed-beta
+  acceptance. The same proposed staging-first migration restores explicit
+  authenticated-only read/write policies, endpoint guards, and the four
+  residual initplan expressions. No production repair is claimed.
+- Production advisors are 40 security (13 `rls_enabled_no_policy`, 1
+  `extension_in_public`, 11 `pg_graphql_authenticated_table_exposed`, 14
+  `authenticated_security_definer_function_executable`, 1
+  `auth_leaked_password_protection`) and 51 performance
+  (4 `unindexed_foreign_keys`, 4 `auth_rls_initplan`, 40 `unused_index`, 2
+  `multiple_permissive_policies`, 1 `auth_db_connections_absolute`). This is a
+  read-only 2026-07-22 observation, not staging acceptance.
+- The prior staging ref `epfkrivqfopjmovfokbs` no longer exists. The only current
+  preview branch is `pg-trgm-relocation-staging` (`vusqhidsspbcuknsfdcm`), which
+  is data-less but `MIGRATIONS_FAILED` at 33 migrations. It is not an acceptance
+  baseline. Staging acceptance remains pending a separately authorized rebuild.
+- This branch adds only source artifacts: tests, one historical replay repair,
+  one proposed forward migration, and documentation.
+  No Supabase migration was applied by this branch, no Edge
   Function deployed, and `iskra-memory-gateway` was not changed.
-- Source-only closure receipt: PR [#273](https://github.com/serhiipriadko2-sys/iskra/pull/273),
-  is mergeable and its current source revision's
-  repository gates are green: runtime tests (twice with `threads`/two workers),
-  Chromium E2E, SoT hash/ingest, voice/metrics contracts, site index/build and
-  preview. These are CI receipts for a proposed changeset, not a merge, Docker,
-  staging, production, or verified-live receipt.
+- Source-only work adds an opt-in staging harness and a redacted receipt schema;
+  it does not insert or imply a live acceptance receipt.
+
+## Reserved staging acceptance receipt slot (status-only follow-up PR)
+
+```text
+status: pending branch rebuild and Owner-controlled acceptance
+scope: staging_only
+live receipt: absent
+provider_invocations: not yet observed
+cleanup: not yet observed
+```
 
 ## Current release and activation blockers
 
-- Staging closed-beta acceptance is required: magic-link invite allow; anonymous
+- Staging closed-beta acceptance is required after rebuild: magic-link invite allow; anonymous
   and non-member deny; two active users cannot read, write, update or delete one
   another's data/RPC rows.
-- The proposed SQL ACL/search-path migration requires those staging contracts
-  before application. Graph RPC `SECURITY DEFINER` grants are intentionally not
-  revoked by source review alone.
+- The applied SQL ACL/search-path migration still requires staged acceptance
+  contracts. Graph RPC `SECURITY DEFINER` grants are intentionally not treated as
+  safe by source review alone.
 - Advisor remediation remains incomplete: GraphQL table visibility must be
   resolved without breaking the REST Data API, and `pg_trgm`, policy, index and
   query-plan changes need a staged receipt.

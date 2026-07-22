@@ -1,5 +1,8 @@
--- Source-only hardening. Do not apply this migration to a live project until
--- the staging magic-link and two-user Graph isolation contracts have passed.
+-- Provenance reconciliation: production recorded this migration as
+-- 20260718191950 on 2026-07-18 before the required staging acceptance existed.
+-- The executable SQL below is unchanged from the source-reviewed
+-- 20260717183002 artifact. Matching the live version prevents a fresh branch
+-- from applying the same DDL twice; it is not a staging or activation receipt.
 --
 -- Scope:
 --   * remove anon execution of closed-beta helper functions;

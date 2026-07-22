@@ -421,6 +421,14 @@ Deno.serve(async (req) => {
     return json({ error: 'Invalid or expired token' }, { status: 401 }, origin);
   }
 
+  // Membership and quota are security boundaries, not payload-dependent
+  // validation. Run them before parsing or routing so inactive/anonymous
+  // sessions cannot probe provider behavior through alternate error paths.
+  const boundary = await enforceAiRequestBoundary(req, token, jwt, boundaryConfig());
+  if (!boundary.allowed) {
+    return json({ error: boundary.error }, { status: boundary.status }, origin);
+  }
+
   let payload: AiProxyPayload;
   try {
     payload = await req.json();
@@ -431,11 +439,6 @@ Deno.serve(async (req) => {
   const action = payload.action;
   if (!action) {
     return json({ error: 'Missing action' }, { status: 400 }, origin);
-  }
-
-  const boundary = await enforceAiRequestBoundary(req, token, jwt, boundaryConfig());
-  if (!boundary.allowed) {
-    return json({ error: boundary.error }, { status: boundary.status }, origin);
   }
 
   try {
