@@ -22,11 +22,13 @@ describe('gemini Edge Function security boundary', () => {
     const tokenCheck = edgeFunctionSource.indexOf('const token = extractBearerToken(req);');
     const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token);');
     const quotaCheck = edgeFunctionSource.indexOf('const boundary = await enforceAiRequestBoundary(');
+    const payloadRead = edgeFunctionSource.indexOf('payload = await req.json()');
     const providerCall = edgeFunctionSource.indexOf('await runWithFallback(action, payload)');
 
     expect(tokenCheck).toBeGreaterThan(-1);
     expect(jwtCheck).toBeGreaterThan(tokenCheck);
     expect(quotaCheck).toBeGreaterThan(jwtCheck);
+    expect(payloadRead).toBeGreaterThan(quotaCheck);
     expect(providerCall).toBeGreaterThan(quotaCheck);
     expect(edgeFunctionSource).toContain("from '../_shared/aiBoundary.ts'");
     expect(edgeFunctionSource).not.toContain('rlBuckets');

@@ -168,6 +168,13 @@ Deno.serve(async (req) => {
     return json({ error: "Invalid or expired token" }, { status: 401 }, origin);
   }
 
+  // Resolve membership and consume quota before inspecting payload/provider
+  // configuration. Every direct HTTP path therefore has the same beta gate.
+  const boundary = await enforceAiRequestBoundary(req, token, jwt, boundaryConfig());
+  if (!boundary.allowed) {
+    return json({ error: boundary.error }, { status: boundary.status }, origin);
+  }
+
   const agentId = Deno.env.get("AGENT_ID");
   const agentToken = Deno.env.get("AGENT_ACCESS_TOKEN");
 
@@ -182,11 +189,6 @@ Deno.serve(async (req) => {
 
   const input = normalizePayload(payload, jwt.sub);
   const rid = typeof input.request_id === "string" ? input.request_id : requestId();
-
-  const boundary = await enforceAiRequestBoundary(req, token, jwt, boundaryConfig());
-  if (!boundary.allowed) {
-    return json({ error: boundary.error }, { status: boundary.status }, origin);
-  }
 
   try {
     const agentResponse = await fetch(`${AGENT_API_BASE_ENV}/${agentId}/trigger`, {
