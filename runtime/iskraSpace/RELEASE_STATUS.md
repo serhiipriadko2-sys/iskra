@@ -22,11 +22,13 @@ App path: `runtime/iskraSpace`
   merged at `805b26e3ecea29c6a352b84887b0472d9d71ec74` from source tip
   `deb1d23321d0fe0185ce2605e98e84f24ab3b081`. Its repository delivery
   evidence is `merged`; it is not a staging/live/deployment receipt.
-- Post-merge Production Deployment receipts: runs
+- Historical Production Deployment receipts for earlier baselines PR #273
+  (`bb495b40cf0c9c31a7ecd9cc5122404252806e50`) and PR #270
+  (`f8a45cafdecaa4d08b0436e7c18af7bf4f838a1f`): runs
   [29610431050](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29610431050)
   and [29630043054](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29630043054).
-  Docker/GHCR and Vercel jobs were skipped; these runs do not prove an image,
-  Vercel deployment, staging acceptance, or canonical activation.
+  Docker/GHCR and Vercel jobs were skipped; these historical runs do not prove
+  a PR #297 image or deployment, staging acceptance, or canonical activation.
 - Current SoT30 package is v5.5.6; its committed receipt records a canonical
   source-freeze build, 24/24 current and regression verifier checks, and ZIP
   SHA-256 `d86959641c9d78fea321a837d2ebf58e9406cf75acec84b9ea98b3d9d2dd9764`.
@@ -73,10 +75,12 @@ App path: `runtime/iskraSpace`
   preview branch is `pg-trgm-relocation-staging` (`vusqhidsspbcuknsfdcm`), which
   is data-less but `MIGRATIONS_FAILED` at 33 migrations. It is not an acceptance
   baseline. Staging acceptance remains pending a separately authorized rebuild.
-- Merged PR #297 added only source artifacts: tests, one historical replay
-  repair, one proposed forward migration, CI base-SHA wiring, and documentation.
-  No Supabase migration was applied by this branch, no Edge
-  Function deployed, and `iskra-memory-gateway` was not changed.
+- Merged PR #297 added source artifacts: tests, one historical replay repair,
+  one proposed forward migration, CI base-SHA wiring, documentation, and Edge
+  Function source changes that move `enforceAiRequestBoundary` before payload
+  or provider handling in `gemini` and `iskra-agent`. No Supabase migration was
+  applied by this branch, no Edge Function deployed, and
+  `iskra-memory-gateway` was not changed.
 - Source-only work adds an opt-in staging harness and a redacted receipt schema;
   it does not insert or imply a live acceptance receipt.
 
