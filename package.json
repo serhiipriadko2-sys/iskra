@@ -13,6 +13,8 @@
     "typecheck": "pnpm run build:runtime && pnpm -r --if-present typecheck",
     "build:runtime": "pnpm run prepare:legacy-runtime && cd runtime && npm run build",
     "verify": "pnpm run build:runtime && npm run check:shard-registry && npm run check:sensitive-status && npm run typecheck && pnpm test && npx tsx tools/verify_ledger.ts",
+    "check:skill-registry": "node tools/run_python.mjs tools/validate_skill_integrity.py docs/skills/registry-v1.json --registry-only --strict",
+    "test:skill-registry": "node tools/run_python.mjs tools/test_validate_skill_integrity.py",
     "ledger:update": "npx tsx tools/update_ledger.ts",
     "check:supabase-voice-metrics-contract": "npx tsx tools/verify_supabase_voice_metrics_contract.ts",
     "check:supabase-voice-metrics-contract:repo": "npx tsx tools/verify_supabase_voice_metrics_contract.ts --repo-only",

@@ -1,0 +1,1073 @@
+{
+  "schema_version": "iskra.skill-registry.v1",
+  "generated_at": "2026-07-22",
+  "authority": "ADR-20260722-03",
+  "scope": "Current 68-skill project/plugin inventory audited on 2026-07-22.",
+  "allowed_statuses": [
+    "ACTIVE",
+    "ABSORB",
+    "DEPRECATED",
+    "CODEX_ONLY"
+  ],
+  "summary": {
+    "inventory_total": 68,
+    "active": 24,
+    "absorb": 27,
+    "deprecated": 0,
+    "codex_only": 17,
+    "planned_targets": 2,
+    "target_operational_stack": 41
+  },
+  "targets": [
+    {
+      "skill": "fixar-project-ops",
+      "status": "PLANNED",
+      "owner": "fixar",
+      "acceptance_gate": "Umbrella skill routes Fixar workflows without trigger loss and replaces fixar-code-review only after packaging and routing tests pass."
+    },
+    {
+      "skill": "iskra-metrics",
+      "status": "PLANNED",
+      "owner": "iskra-metrics",
+      "acceptance_gate": "Merged metrics owner preserves deterministic calculations, missing-input behavior, and provenance before metric-runner is absorbed."
+    }
+  ],
+  "skills": [
+    {
+      "skill": "agents-sdk",
+      "status": "CODEX_ONLY",
+      "owner": "openai-developers",
+      "source_surface": "plugin",
+      "trigger_scope": "agents sdk workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "attack-path-analysis",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "attack path analysis workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "build-chatgpt-app",
+      "status": "CODEX_ONLY",
+      "owner": "openai-developers",
+      "source_surface": "plugin",
+      "trigger_scope": "build chatgpt app workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "chatgpt-app-submission",
+      "status": "CODEX_ONLY",
+      "owner": "openai-developers",
+      "source_surface": "plugin",
+      "trigger_scope": "chatgpt app submission workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "checkpoint-builder",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping checkpoint builder workflow retained as a transition alias; route new work to iskra-release-ledger.",
+      "dependencies": [
+        "iskra-release-ledger"
+      ],
+      "replacement": "iskra-release-ledger",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "council-router",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping council router workflow retained as a transition alias; route new work to iskra-canon-runtime.",
+      "dependencies": [
+        "iskra-canon-runtime"
+      ],
+      "replacement": "iskra-canon-runtime",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "deep-security-scan",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "deep security scan workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "docx",
+      "status": "ACTIVE",
+      "owner": "openai-artifacts",
+      "source_surface": "builtin",
+      "trigger_scope": "Primary owner for docx requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "finding-discovery",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "finding discovery workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "fix-finding",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "fix finding workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "fixar-code-review",
+      "status": "ACTIVE",
+      "owner": "fixar",
+      "source_surface": "project",
+      "trigger_scope": "Transitional owner for Fixar code review until fixar-project-ops passes packaging and routing acceptance.",
+      "dependencies": [
+        "iskra-code-review"
+      ],
+      "replacement": null,
+      "readiness": "TRANSITIONAL",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "fixar-deploy-audit",
+      "status": "ABSORB",
+      "owner": "fixar",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping fixar deploy audit workflow retained as a transition alias; route new work to fixar-project-ops.",
+      "dependencies": [
+        "fixar-project-ops"
+      ],
+      "replacement": "fixar-project-ops",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "fixar-mobile-qa",
+      "status": "ABSORB",
+      "owner": "fixar",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping fixar mobile qa workflow retained as a transition alias; route new work to fixar-project-ops.",
+      "dependencies": [
+        "fixar-project-ops"
+      ],
+      "replacement": "fixar-project-ops",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "fixar-security-sift",
+      "status": "ABSORB",
+      "owner": "fixar",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping fixar security sift workflow retained as a transition alias; route new work to fixar-project-ops.",
+      "dependencies": [
+        "fixar-project-ops"
+      ],
+      "replacement": "fixar-project-ops",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "fixar-supabase-ops",
+      "status": "ABSORB",
+      "owner": "fixar",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping fixar supabase ops workflow retained as a transition alias; route new work to fixar-project-ops.",
+      "dependencies": [
+        "fixar-project-ops"
+      ],
+      "replacement": "fixar-project-ops",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "graphrag-operator",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping graphrag operator workflow retained as a transition alias; route new work to iskra-sift-auditor.",
+      "dependencies": [
+        "iskra-sift-auditor"
+      ],
+      "replacement": "iskra-sift-auditor",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-adr-governance",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra adr governance requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-architecture",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra architecture requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-builder-package-operator",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra builder package operator requests on its supported surface.",
+      "dependencies": [
+        "skill-creator",
+        "iskra-release-ledger"
+      ],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-canon-runtime",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Top-level Iskra runtime routing and Kernel Order enforcement; blocked from readiness claims until SoT30 order and bundled references are repaired.",
+      "dependencies": [
+        "iskra-sift-auditor",
+        "iskra-adr-governance",
+        "iskra-release-ledger"
+      ],
+      "replacement": null,
+      "readiness": "BLOCKED_REPAIR",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "finding:P0-kernel-order-stale",
+        "finding:missing-resource-links"
+      ]
+    },
+    {
+      "skill": "iskra-code-review",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra code review requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-code-style",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra code style workflow retained as a transition alias; route new work to iskra-code-review.",
+      "dependencies": [
+        "iskra-code-review"
+      ],
+      "replacement": "iskra-code-review",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-council",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra council workflow retained as a transition alias; route new work to iskra-canon-runtime.",
+      "dependencies": [
+        "iskra-canon-runtime"
+      ],
+      "replacement": "iskra-canon-runtime",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-cycle-engine",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra cycle engine workflow retained as a transition alias; route new work to iskra-canon-runtime.",
+      "dependencies": [
+        "iskra-canon-runtime"
+      ],
+      "replacement": "iskra-canon-runtime",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-git-workflow",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra git workflow workflow retained as a transition alias; route new work to iskra-github-operator.",
+      "dependencies": [
+        "iskra-github-operator"
+      ],
+      "replacement": "iskra-github-operator",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-github-operator",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra github operator requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-governance-adr",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra governance adr workflow retained as a transition alias; route new work to iskra-adr-governance.",
+      "dependencies": [
+        "iskra-adr-governance"
+      ],
+      "replacement": "iskra-adr-governance",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-ledger-integrity",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra ledger integrity workflow retained as a transition alias; route new work to iskra-release-ledger.",
+      "dependencies": [
+        "iskra-release-ledger"
+      ],
+      "replacement": "iskra-release-ledger",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-memory-stack",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra memory stack requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-metrics-evaluator",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra metrics evaluator workflow retained as a transition alias; route new work to iskra-metrics.",
+      "dependencies": [
+        "iskra-metrics"
+      ],
+      "replacement": "iskra-metrics",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-migration",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra migration workflow retained as a transition alias; route new work to iskra-architecture.",
+      "dependencies": [
+        "iskra-architecture"
+      ],
+      "replacement": "iskra-architecture",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-playbook-selector",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra playbook selector workflow retained as a transition alias; route new work to iskra-canon-runtime.",
+      "dependencies": [
+        "iskra-canon-runtime"
+      ],
+      "replacement": "iskra-canon-runtime",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-rag-truth-ladder",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra rag truth ladder workflow retained as a transition alias; route new work to iskra-sift-auditor.",
+      "dependencies": [
+        "iskra-sift-auditor"
+      ],
+      "replacement": "iskra-sift-auditor",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-release-ledger",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra release ledger requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-security",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra security requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-shadow-repair",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra shadow repair workflow retained as a transition alias; route new work to iskra-sift-auditor.",
+      "dependencies": [
+        "iskra-sift-auditor"
+      ],
+      "replacement": "iskra-sift-auditor",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-sift-auditor",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra sift auditor requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-sift-extended",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra sift extended workflow retained as a transition alias; route new work to iskra-sift-auditor.",
+      "dependencies": [
+        "iskra-sift-auditor"
+      ],
+      "replacement": "iskra-sift-auditor",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-sift-verifier",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra sift verifier workflow retained as a transition alias; route new work to iskra-sift-auditor.",
+      "dependencies": [
+        "iskra-sift-auditor"
+      ],
+      "replacement": "iskra-sift-auditor",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-supabase-operator",
+      "status": "ACTIVE",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for iskra supabase operator requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-supabase-ops",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra supabase ops workflow retained as a transition alias; route new work to iskra-supabase-operator.",
+      "dependencies": [
+        "iskra-supabase-operator"
+      ],
+      "replacement": "iskra-supabase-operator",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-test-strategy",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra test strategy workflow retained as a transition alias; route new work to iskra-code-review.",
+      "dependencies": [
+        "iskra-code-review"
+      ],
+      "replacement": "iskra-code-review",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-voice-router",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra voice router workflow retained as a transition alias; route new work to iskra-canon-runtime.",
+      "dependencies": [
+        "iskra-canon-runtime"
+      ],
+      "replacement": "iskra-canon-runtime",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "iskra-workflow-ops",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping iskra workflow ops workflow retained as a transition alias; route new work to iskra-release-ledger.",
+      "dependencies": [
+        "iskra-release-ledger"
+      ],
+      "replacement": "iskra-release-ledger",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "judge-bias-calibration",
+      "status": "ACTIVE",
+      "owner": "independent-judge",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for judge bias calibration requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "judge-blind-workflow",
+      "status": "ACTIVE",
+      "owner": "independent-judge",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for judge blind workflow requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "judge-pairwise-swap",
+      "status": "ACTIVE",
+      "owner": "independent-judge",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for judge pairwise swap requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "judge-run-protocol",
+      "status": "ACTIVE",
+      "owner": "independent-judge",
+      "source_surface": "project",
+      "trigger_scope": "Execute one Independent Judge evaluation under the canonical run protocol.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "judge-study-aggregation",
+      "status": "ACTIVE",
+      "owner": "independent-judge",
+      "source_surface": "project",
+      "trigger_scope": "Primary owner for judge study aggregation requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "katestudio-project-ops",
+      "status": "ACTIVE",
+      "owner": "katestudio",
+      "source_surface": "project",
+      "trigger_scope": "Operate the Kate Studio repository and production stack under its source-of-truth ladder.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "metric-runner",
+      "status": "ACTIVE",
+      "owner": "iskra-metrics",
+      "source_surface": "project",
+      "trigger_scope": "Transitional deterministic metric calculator until iskra-metrics passes provenance and parity acceptance.",
+      "dependencies": [
+        "iskra-metrics"
+      ],
+      "replacement": null,
+      "readiness": "TRANSITIONAL",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "openai-api-troubleshooting",
+      "status": "CODEX_ONLY",
+      "owner": "openai-developers",
+      "source_surface": "plugin",
+      "trigger_scope": "openai api troubleshooting workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "openai-platform-api-key",
+      "status": "CODEX_ONLY",
+      "owner": "openai-developers",
+      "source_surface": "plugin",
+      "trigger_scope": "openai platform api key workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "pdfs",
+      "status": "ACTIVE",
+      "owner": "openai-artifacts",
+      "source_surface": "builtin",
+      "trigger_scope": "Primary owner for pdfs requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "propose-security-hardening",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "propose security hardening workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "scientific-turn-architect",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping scientific turn architect workflow retained as a transition alias; route new work to iskra-architecture.",
+      "dependencies": [
+        "iskra-architecture"
+      ],
+      "replacement": "iskra-architecture",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "security-diff-scan",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "security diff scan workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "security-scan",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "security scan workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "sift-verifier",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping sift verifier workflow retained as a transition alias; route new work to iskra-sift-auditor.",
+      "dependencies": [
+        "iskra-sift-auditor"
+      ],
+      "replacement": "iskra-sift-auditor",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "skill-creator",
+      "status": "ACTIVE",
+      "owner": "openai-skills",
+      "source_surface": "builtin",
+      "trigger_scope": "Create, update, validate, and package reusable ChatGPT Skills.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "slides",
+      "status": "ACTIVE",
+      "owner": "openai-artifacts",
+      "source_surface": "builtin",
+      "trigger_scope": "Primary owner for slides requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "sot-auditor",
+      "status": "ABSORB",
+      "owner": "iskra",
+      "source_surface": "project",
+      "trigger_scope": "Legacy or overlapping sot auditor workflow retained as a transition alias; route new work to iskra-sift-auditor.",
+      "dependencies": [
+        "iskra-sift-auditor"
+      ],
+      "replacement": "iskra-sift-auditor",
+      "readiness": "TRANSITION_ALIAS",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "spreadsheets",
+      "status": "ACTIVE",
+      "owner": "openai-artifacts",
+      "source_surface": "builtin",
+      "trigger_scope": "Primary owner for spreadsheets requests on its supported surface.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "READY_FOR_ROUTING",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory"
+      ]
+    },
+    {
+      "skill": "threat-model",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "threat model workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "track-findings",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "track findings workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "triage-finding",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "triage finding workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "validation",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "validation workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    },
+    {
+      "skill": "vulnerability-writeup",
+      "status": "CODEX_ONLY",
+      "owner": "codex-security",
+      "source_surface": "plugin",
+      "trigger_scope": "vulnerability writeup workflow available on Codex surfaces only; do not claim execution from ordinary ChatGPT.",
+      "dependencies": [],
+      "replacement": null,
+      "readiness": "SURFACE_BOUND",
+      "evidence": [
+        "audit:2026-07-22",
+        "source:project-skill-directory",
+        "surface:installed-plugin-metadata"
+      ]
+    }
+  ]
+}
