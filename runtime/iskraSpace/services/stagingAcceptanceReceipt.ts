@@ -105,3 +105,37 @@ export function createStagingAcceptanceReceipt(input: StagingAcceptanceReceiptIn
     sha256: createHash('sha256').update(canonical).digest('hex'),
   };
 }
+
+const receiptStartMarker = '<!-- STAGING_ACCEPTANCE_RECEIPT_START -->';
+const receiptEndMarker = '<!-- STAGING_ACCEPTANCE_RECEIPT_END -->';
+
+export function parseAndVerifyStagingAcceptanceReceiptBlock(markdown: string): StagingAcceptanceReceipt {
+  const start = markdown.indexOf(receiptStartMarker);
+  const end = markdown.indexOf(receiptEndMarker, start + receiptStartMarker.length);
+  if (start < 0 || end < 0) {
+    throw new Error('Staging acceptance receipt block is missing');
+  }
+
+  const fencedBlock = markdown.slice(start + receiptStartMarker.length, end).trim();
+  const match = fencedBlock.match(/^```json\s*\r?\n([\s\S]+?)\r?\n```$/);
+  if (!match) {
+    throw new Error('Staging acceptance receipt block must contain one JSON fence');
+  }
+
+  let parsed: StagingAcceptanceReceipt;
+  try {
+    parsed = JSON.parse(match[1]!) as StagingAcceptanceReceipt;
+  } catch {
+    throw new Error('Staging acceptance receipt block contains invalid JSON');
+  }
+  if (parsed.schema_version !== 1 || parsed.scope !== 'staging_only') {
+    throw new Error('Staging acceptance receipt schema or scope is invalid');
+  }
+
+  const { schema_version: _schemaVersion, scope: _scope, sha256, ...input } = parsed;
+  const verified = createStagingAcceptanceReceipt(input);
+  if (sha256 !== verified.sha256) {
+    throw new Error('Staging acceptance receipt SHA-256 does not match canonical JSON');
+  }
+  return parsed;
+}

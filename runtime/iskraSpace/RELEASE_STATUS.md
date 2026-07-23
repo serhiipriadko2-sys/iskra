@@ -1,15 +1,19 @@
 # Iskra Space Release Status
 
-Status: staging acceptance pending branch rebuild; production_deployed: false; canonical_activation: blocked
-Last updated: 2026-07-22
+Status: staging acceptance failed before S0 and the branch was deleted; production_deployed: false; canonical_activation: blocked
+Last updated: 2026-07-23
 App path: `runtime/iskraSpace`
 
 ## Current verified baseline
 
-- GitHub `main` at this status refresh: `60591a34aa832bd32314bbf91c344286e1015502`
-  (PR [#296](https://github.com/serhiipriadko2-sys/iskra/pull/296) merge).
-  It contains the staging-acceptance source merge from PR #297 at
-  `805b26e3ecea29c6a352b84887b0472d9d71ec74`.
+- GitHub `main` at this status refresh: `29843783b0e4bb3ecaf4e74c00e4423991b33152`
+  (PR [#300](https://github.com/serhiipriadko2-sys/iskra/pull/300) merge).
+  PR #300 changes only repository skills/governance. It contains the latest
+  staging-status source merge from PR
+  [#299](https://github.com/serhiipriadko2-sys/iskra/pull/299) at
+  `4dd29c64e24a3f0333ca4d350154380dc1dd8ae0` (source tip
+  `5cb4688b64b76d4103c4d47d67646236a7cb0bc6`) and the earlier staging harness
+  merge from PR #297 at `805b26e3ecea29c6a352b84887b0472d9d71ec74`.
 - Supabase remediation baseline: PR
   [#275](https://github.com/serhiipriadko2-sys/iskra/pull/275), merge SHA
   `8442bc42ad38854e2a0e8b01d160984c24bfdbb5`.
@@ -29,6 +33,11 @@ App path: `runtime/iskraSpace`
   and [29630043054](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29630043054).
   Docker/GHCR and Vercel jobs were skipped; these historical runs do not prove
   a PR #297 image or deployment, staging acceptance, or canonical activation.
+- Post-merge Production Deployment run
+  [29949746917](https://github.com/serhiipriadko2-sys/iskra/actions/runs/29949746917)
+  passed the IskraSpace release-gate job for PR #299 merge
+  `4dd29c64e24a3f0333ca4d350154380dc1dd8ae0`. Docker/GHCR and Vercel jobs
+  were skipped, so this is not an image or deployment receipt.
 - Current SoT30 package is v5.5.6; its committed receipt records a canonical
   source-freeze build, 24/24 current and regression verifier checks, and ZIP
   SHA-256 `d86959641c9d78fea321a837d2ebf58e9406cf75acec84b9ea98b3d9d2dd9764`.
@@ -70,11 +79,26 @@ App path: `runtime/iskraSpace`
   `auth_leaked_password_protection`) and 51 performance
   (4 `unindexed_foreign_keys`, 4 `auth_rls_initplan`, 40 `unused_index`, 2
   `multiple_permissive_policies`, 1 `auth_db_connections_absolute`). This is a
-  read-only 2026-07-22 observation, not staging acceptance.
-- The prior staging ref `epfkrivqfopjmovfokbs` no longer exists. The only current
-  preview branch is `pg-trgm-relocation-staging` (`vusqhidsspbcuknsfdcm`), which
-  is data-less but `MIGRATIONS_FAILED` at 33 migrations. It is not an acceptance
-  baseline. Staging acceptance remains pending a separately authorized rebuild.
+  read-only 2026-07-23 observation, not staging acceptance.
+- The old failed preview `pg-trgm-relocation-staging`
+  (`vusqhidsspbcuknsfdcm`) was deleted. Its data-less replacement,
+  `staging-closed-beta-acceptance-20260718`
+  (`xabbdxdnhkcrepbffxfg`, branch ID
+  `a3e73206-b8f2-4735-9f76-6c7ded2e044c`), also reached
+  `MIGRATIONS_FAILED`: 33 migrations were recorded versus 35 in production and
+  36 in the repository. S0/S1, Auth fixtures and Edge deploys were not started.
+  The replacement was made non-persistent and deleted on 2026-07-23; a
+  post-delete branch list contained production only.
+- During read-only diagnosis, Supabase CLI `branches get --output json` emitted
+  branch-only credentials in command output. Their values are deliberately not
+  recorded here. Deleting the data-less branch invalidated them and stopped its
+  billing; no production credential was emitted.
+- A clean local replay with pinned Supabase CLI `2.109.0` reset exactly through
+  migration `20260718191950`, then applied migrations
+  `20260718194551`, `20260718194835` and `20260718200634` both individually
+  with `ON_ERROR_STOP=1` and through `supabase migration up --local`. Both paths
+  passed. Therefore the cloud branch failure is not reproduced as a canonical
+  SQL or ordering failure; no speculative migration rewrite is accepted.
 - Merged PR #297 added source artifacts: tests, one historical replay repair,
   one proposed forward migration, CI base-SHA wiring, documentation, and Edge
   Function source changes that move `enforceAiRequestBoundary` before payload
@@ -84,22 +108,22 @@ App path: `runtime/iskraSpace`
 - Source-only work adds an opt-in staging harness and a redacted receipt schema;
   it does not insert or imply a live acceptance receipt.
 
-## Reserved staging acceptance receipt slot (status-only follow-up PR)
+## Canonical failed-staging receipt
 
-```text
-status: pending branch rebuild and Owner-controlled acceptance
-scope: staging_only
-source_pr: 297
-source_merge_sha: 805b26e3ecea29c6a352b84887b0472d9d71ec74
-delivery_evidence: merged
-live receipt: absent
-provider_invocations: not yet observed
-cleanup: not yet observed
+This receipt proves a fail-closed pre-S0 stop and cleanup only. It does not
+claim `delivery_evidence: verified_live_staging`.
+
+<!-- STAGING_ACCEPTANCE_RECEIPT_START -->
+```json
+{"schema_version":1,"scope":"staging_only","source_pr":299,"source_merge_sha":"4dd29c64e24a3f0333ca4d350154380dc1dd8ae0","production_ref":"typcvaszcfdpkzbjzuur","production_migration_count":35,"staging_ref_and_branch_id":{"ref":"xabbdxdnhkcrepbffxfg","id":"a3e73206-b8f2-4735-9f76-6c7ded2e044c"},"staging_migrations_before_and_after":{"before":33,"after":33},"function_source_hashes":{},"auth_config_before_and_after":{"before":"not_observed","after":"not_observed"},"test_matrix":{"branch_creation":"failed_migrations_33_of_36","branch_replay":"failed_before_S0","local_replay_33_to_36":"passed_cli_2_109_0","staging_advisors":"not_observed_branch_failed","S0":"not_started","S1":"not_started","edge_boundary":"not_started"},"advisor_counts_by_class_before_and_after":{"before":{"security":{},"performance":{}},"after":{"security":{},"performance":{}}},"provider_invocations":0,"memory_gateway_changed":false,"cleanup":{"completed":true,"branch_deleted":true,"fixtures_created":false,"edge_functions_deployed":false,"branch_credentials_invalidated":true},"started_at":"2026-07-22T19:25:20.447927Z","completed_at":"2026-07-23T15:41:32.527Z","sha256":"e146fe606f98df8bd245d45530af0e77cc0e60beae9eccdca5f814d5af66de90"}
 ```
+<!-- STAGING_ACCEPTANCE_RECEIPT_END -->
 
 ## Current release and activation blockers
 
-- Staging closed-beta acceptance is required after rebuild: magic-link invite allow; anonymous
+- A new data-less branch may be created only after the branch migration failure
+  has an exact platform log or a source-reproducible cause. Staging closed-beta
+  acceptance is then required: magic-link invite allow; anonymous
   and non-member deny; two active users cannot read, write, update or delete one
   another's data/RPC rows.
 - The applied SQL ACL/search-path migration still requires staged acceptance
