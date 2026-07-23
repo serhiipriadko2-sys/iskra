@@ -1,21 +1,20 @@
 # Iskra Space Release Status
 
-Status: staging acceptance failed before S0 and the branch was deleted; production_deployed: false; canonical_activation: blocked
+Status: staging source integration drift blocks branch creation; production_deployed: false; canonical_activation: blocked
 Last updated: 2026-07-23
 App path: `runtime/iskraSpace`
 
 ## Current verified baseline
 
-- GitHub `main` at this status refresh: `978c7b4a22e7f50d27e0203f9cfa8052747dd395`
-  (PR [#301](https://github.com/serhiipriadko2-sys/iskra/pull/301) merge).
-  PR #301 contains the canonical failed-staging receipt and its SHA-256
-  verifier. It descends from PR #300 at
-  `29843783b0e4bb3ecaf4e74c00e4423991b33152`, the latest staging-status source
-  merge from PR
-  [#299](https://github.com/serhiipriadko2-sys/iskra/pull/299) at
-  `4dd29c64e24a3f0333ca4d350154380dc1dd8ae0` (source tip
-  `5cb4688b64b76d4103c4d47d67646236a7cb0bc6`) and the earlier staging harness
-  merge from PR #297 at `805b26e3ecea29c6a352b84887b0472d9d71ec74`.
+- GitHub `main` at this status refresh:
+  `d2ce040643a120916fc62f7fe09e10f49463dfb2` (PR
+  [#303](https://github.com/serhiipriadko2-sys/iskra/pull/303) merge).
+  PR #303 records and contract-tests the exact migration-34 source cause. It
+  descends from the status merge PR #302 at
+  `bcb37d0e2821098eca91a3014aee58569d278aae`, the canonical failed-staging
+  receipt merge PR #301 at `978c7b4a22e7f50d27e0203f9cfa8052747dd395`
+  and the staging source PR #299 at
+  `4dd29c64e24a3f0333ca4d350154380dc1dd8ae0`.
 - Supabase remediation baseline: PR
   [#275](https://github.com/serhiipriadko2-sys/iskra/pull/275), merge SHA
   `8442bc42ad38854e2a0e8b01d160984c24bfdbb5`.
@@ -46,6 +45,15 @@ App path: `runtime/iskraSpace`
   [Runtime CI 30024770433](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30024770433),
   [iskraSpace CI 30024769716](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30024769716)
   and [Production Deployment 30024769670](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30024769670)
+  all completed successfully. The Production Deployment release-gate job
+  passed; Docker/GHCR and Vercel jobs were skipped, so no image or deployment
+  receipt exists.
+- Post-merge receipts for PR #303 merge
+  `d2ce040643a120916fc62f7fe09e10f49463dfb2`:
+  [SoT integrity 30029422051](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30029422051),
+  [Runtime CI 30029420072](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30029420072),
+  [iskraSpace CI 30029420026](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30029420026)
+  and [Production Deployment 30029420038](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30029420038)
   all completed successfully. The Production Deployment release-gate job
   passed; Docker/GHCR and Vercel jobs were skipped, so no image or deployment
   receipt exists.
@@ -120,6 +128,19 @@ App path: `runtime/iskraSpace`
   repository migrations `20260718194551`, `20260718194835` and
   `20260718200634` to the same state passed and recorded all three versions.
   This reproduces the exact 33-of-36 stop without a new cloud branch.
+- HIGH-RISK DRIFT: a Git-linked branch-create attempt was rejected before
+  provisioning because live Supabase is connected to
+  `serhiipriadko2-sys/Iskraspace`, not the canonical
+  `serhiipriadko2-sys/iskra` repository. The rejected target created no
+  Supabase branch; a post-attempt list contained production only.
+- Supabase action-run metadata independently confirms
+  `git_config.owner=serhiipriadko2-sys`, `git_config.repo=Iskraspace`,
+  `git_config.ref=main` and `workdir=Iskraspace`. That connected repository is
+  at `e66da7044627b7058e961a5a0619ef32d3980dd3` from 2026-05-28 and has no
+  `supabase/migrations/` directory. The canonical repository has 36 migrations.
+  Git branch `staging/iskraspace-acceptance-d2ce040` is an immutable pointer to
+  `d2ce040643a120916fc62f7fe09e10f49463dfb2`, but Supabase cannot use it until
+  the integration source is explicitly corrected.
 - Merged PR #297 added source artifacts: tests, one historical replay repair,
   one proposed forward migration, CI base-SHA wiring, documentation, and Edge
   Function source changes that move `enforceAiRequestBoundary` before payload
@@ -148,6 +169,11 @@ claim `delivery_evidence: verified_live_staging`.
   production-stored body. The next branch must be tied to an exact Git source
   or follow an accepted migration-history reconciliation path, and must prove
   that the guarded migration body is the one replayed.
+- Rebinding the production project's GitHub integration from `Iskraspace` to
+  `iskra` is an Owner-approved live configuration change. Its blast radius
+  includes production deploy-on-push and automatic branch creation settings.
+  Until that decision is explicit and the resulting integration metadata is
+  verified, no further staging branch create is permitted.
 - Staging closed-beta acceptance is still required: magic-link invite allow;
   anonymous and non-member deny; two active users cannot read, write, update or
   delete one another's data/RPC rows.
