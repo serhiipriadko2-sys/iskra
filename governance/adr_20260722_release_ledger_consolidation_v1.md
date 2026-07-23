@@ -83,3 +83,19 @@ This ADR does not change Supabase schema, memory data, Builder deployment, or li
 D: registry → package → receipt → verification.
 Ω: pending until PR review and live routing checks.
 Λ: revisit after acceptance tests and merge.
+
+## Lifecycle disposition (append-only, 2026-07-23)
+
+The original `status: proposed` above remains unchanged and continues to describe the governance state at authorship. The implementation event is recorded separately so merge history is not rewritten as approval.
+
+```yaml
+governance_status: proposed
+implementation_state: merged_without_formal_premerge_review
+implementation_merge_commit: 29843783b0e4bb3ecaf4e74c00e4423991b33152
+formal_premerge_review: absent
+post_merge_audit_status: partial
+live_routing_verification: pending
+required_action: >-
+  Owner must explicitly accept the decision after the required review and live routing probes,
+  or authorize a rollback or superseding ADR. Do not rewrite the historical proposed state.
+```

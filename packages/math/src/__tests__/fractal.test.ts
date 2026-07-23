@@ -206,6 +206,12 @@ describe('fractal', () => {
       expect(hfd).toBe(1.5);
     });
 
+    it('includes the final Higuchi segment for the linear reference vector', () => {
+      const linear = Array.from({ length: 20 }, (_, index) => index / 10);
+
+      expect(calculateHFD(linear)).toBeCloseTo(0.9979367669339503, 12);
+    });
+
     it('should return value for sufficient data', () => {
       const series = Array.from({ length: 50 }, (_, i) => Math.sin(i * 0.5) + Math.random() * 0.1);
       const hfd = calculateHFD(series);

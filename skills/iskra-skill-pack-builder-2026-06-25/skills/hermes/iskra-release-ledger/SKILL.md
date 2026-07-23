@@ -21,7 +21,7 @@ Treat requests formerly routed to `checkpoint-builder`, `iskra-workflow-ops`, or
 1. Read the source, expected file set, governing ADR, and repository release commands.
 2. State the exact scope and exclusions before writing or packaging.
 3. Run `scripts/release_manifest.py build <artifact> --output <manifest.json>` with the manifest outside the artifact.
-4. Run `scripts/release_manifest.py verify <artifact> --manifest <manifest.json>` after any copy, ZIP, upload preparation, or repackaging.
+4. Run `scripts/release_manifest.py verify <artifact> --manifest <manifest.json>` after any same-form copy or upload preparation. For an intentional directory-to-ZIP repackaging, add `--transport-transition directory:zip`; all path, byte, sha256, archive-safety, and secret checks remain strict.
 5. For a Skill, also run the platform `package_skill.py`; return the complete package as `skill.zip`.
 6. Run relevant smoke, unit, routing-contract, and repository integrity checks.
 7. Produce a receipt with path or link, bytes, sha256, file count, commands, and PASS/FAIL.

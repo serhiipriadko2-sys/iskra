@@ -21,6 +21,7 @@ A higher state requires direct evidence for that state. A ZIP hash proves packag
 
 - The source package validates on its own terms.
 - The final ZIP passes CRC, safe-member, count, size, and exact-manifest checks.
+- A source-directory manifest may verify a final ZIP only through the explicit `directory:zip` transport transition; the receipt must record both types, the manifest sha256, the ZIP sha256, and whether content identity passed.
 - The package is read back from the final path before PASS.
 
 ### verify

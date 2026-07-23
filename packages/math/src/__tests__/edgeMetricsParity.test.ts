@@ -40,6 +40,14 @@ describe('Edge metrics Atom 1 parity with @iskra/math', () => {
     expect(calculateEdgeDFA(values)).toBeCloseTo(calculateCanonicalDFA(values), 14);
   });
 
+  it('keeps the final-segment HFD reference vector identical', () => {
+    const linear = Array.from({ length: 20 }, (_, index) => index / 10);
+    const expected = 0.9979367669339503;
+
+    expect(calculateCanonicalHFD(linear)).toBeCloseTo(expected, 12);
+    expect(calculateEdgeHFD(linear)).toBeCloseTo(expected, 12);
+  });
+
   it('preserves canonical short-series fallbacks only for present signals', () => {
     const values = signal(5);
 
