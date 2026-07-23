@@ -94,4 +94,18 @@ describe('staging acceptance source contract', () => {
     expect(releaseStatus).toContain('must prove');
     expect(releaseStatus).toContain('guarded migration body');
   });
+
+  it('records the live GitHub integration drift as a branch-creation blocker', () => {
+    const releaseStatus = readFileSync(
+      join(resolveRepositoryRoot(), 'runtime', 'iskraSpace', 'RELEASE_STATUS.md'),
+      'utf8',
+    );
+
+    expect(releaseStatus).toContain('serhiipriadko2-sys/Iskraspace');
+    expect(releaseStatus).toContain('serhiipriadko2-sys/iskra');
+    expect(releaseStatus).toContain('e66da7044627b7058e961a5a0619ef32d3980dd3');
+    expect(releaseStatus).toContain('staging/iskraspace-acceptance-d2ce040');
+    expect(releaseStatus).toContain('Owner-approved live configuration change');
+    expect(releaseStatus).toContain('no further staging branch create is permitted');
+  });
 });
