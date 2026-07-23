@@ -104,12 +104,22 @@ App path: `runtime/iskraSpace`
   branch-only credentials in command output. Their values are deliberately not
   recorded here. Deleting the data-less branch invalidated them and stopped its
   billing; no production credential was emitted.
+- The branch failure now has a source-reproducible cause. Production stores
+  migration `20260718194551_optimize_rls_initplan` as the pre-guard body from
+  commit `82191ce0899bedb04bcd4345e0c7ee28adb65258`: 1,674 bytes without the
+  final LF, SHA-256
+  `c8251c707d7bee66ece9c874c27c1ebe5833024a0573169df00f53a330a2be93`.
+  The same body with its final LF is the already-recorded provenance SHA-256
+  `1b773fdd0ec82486754cceccacf15dc5c1f882b8d9a2a98ffb9939cf4af145ef`.
 - A clean local replay with pinned Supabase CLI `2.109.0` reset exactly through
-  migration `20260718191950`, then applied migrations
-  `20260718194551`, `20260718194835` and `20260718200634` both individually
-  with `ON_ERROR_STOP=1` and through `supabase migration up --local`. Both paths
-  passed. Therefore the cloud branch failure is not reproduced as a canonical
-  SQL or ordering failure; no speculative migration rewrite is accepted.
+  migration `20260718191950` (the branch's 33 recorded migrations). Applying
+  the production-stored migration 34 with `ON_ERROR_STOP=1` then failed at its
+  first unconditional Graph-policy ALTER: policy
+  `Users can manage own graph nodes (secure)` does not exist. The transaction
+  rolled back and migration 34 was not recorded. Applying the current guarded
+  repository migrations `20260718194551`, `20260718194835` and
+  `20260718200634` to the same state passed and recorded all three versions.
+  This reproduces the exact 33-of-36 stop without a new cloud branch.
 - Merged PR #297 added source artifacts: tests, one historical replay repair,
   one proposed forward migration, CI base-SHA wiring, documentation, and Edge
   Function source changes that move `enforceAiRequestBoundary` before payload
@@ -132,11 +142,15 @@ claim `delivery_evidence: verified_live_staging`.
 
 ## Current release and activation blockers
 
-- A new data-less branch may be created only after the branch migration failure
-  has an exact platform log or a source-reproducible cause. Staging closed-beta
-  acceptance is then required: magic-link invite allow; anonymous
-  and non-member deny; two active users cannot read, write, update or delete one
-  another's data/RPC rows.
+- The prerequisite to identify an exact platform log or source-reproducible
+  cause is satisfied by the migration-34 replay above. Do not blindly recreate
+  the same dashboard-style branch: its pull step can reuse the unguarded
+  production-stored body. The next branch must be tied to an exact Git source
+  or follow an accepted migration-history reconciliation path, and must prove
+  that the guarded migration body is the one replayed.
+- Staging closed-beta acceptance is still required: magic-link invite allow;
+  anonymous and non-member deny; two active users cannot read, write, update or
+  delete one another's data/RPC rows.
 - The applied SQL ACL/search-path migration still requires staged acceptance
   contracts. Graph RPC `SECURITY DEFINER` grants are intentionally not treated as
   safe by source review alone.
