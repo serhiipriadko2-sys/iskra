@@ -11,6 +11,7 @@ import {
   calculateDFA as calculateEdgeDFA,
   calculateHFD as calculateEdgeHFD,
 } from '../../../../supabase/functions/_shared/iskra-metrics/fractal';
+import { ALGORITHM_VERSION } from '../../../../supabase/functions/_shared/iskra-metrics/contracts';
 import {
   calculateShannonEntropy as calculateEdgeEntropy,
   interpretEntropy as interpretEdgeEntropy,
@@ -22,6 +23,10 @@ const signal = (length: number) =>
   );
 
 describe('Edge metrics Atom 1 parity with @iskra/math', () => {
+  it('stamps the revised HFD formula with a new algorithm version', () => {
+    expect(ALGORITHM_VERSION).toBe('iskra-metrics-compute-v1.1.0');
+  });
+
   it.each([
     '',
     'one one two',

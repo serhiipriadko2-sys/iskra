@@ -10,16 +10,23 @@ import io
 import json
 import stat
 import sys
+import types
 import tempfile
 import unittest
 import warnings
 import zipfile
 from pathlib import Path
 
+sys.dont_write_bytecode = True
+
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / (
     "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/"
     "iskra-release-ledger/scripts/release_manifest.py"
+)
+PACKAGER = ROOT / (
+    "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/"
+    "skill-creator/scripts/package_skill.py"
 )
 SPEC = importlib.util.spec_from_file_location("release_manifest", SCRIPT)
 if SPEC is None or SPEC.loader is None:
@@ -178,6 +185,82 @@ class ReleaseManifestTransportTests(unittest.TestCase):
             hashlib.sha256(archive.read_bytes()).hexdigest(),
         )
         self.assertRegex(payload["manifest_sha256"], r"^[0-9a-f]{64}$")
+
+
+    def test_t8_actual_package_skill_layout_passes(self) -> None:
+        staged_root = self.root / "staged"
+        skill = staged_root / "fixture-skill"
+        skill.mkdir(parents=True)
+        (skill / "SKILL.md").write_text(
+            "---\n"
+            "name: fixture-skill\n"
+            "description: Minimal fixture for the real package_skill workflow.\n"
+            "---\n\n"
+            "# Fixture Skill\n",
+            encoding="utf-8",
+        )
+        (skill / "payload.txt").write_bytes(b"same-content\n")
+
+        staged_manifest = self.root / "staged-manifest.json"
+        code, payload, _ = self.run_cli(
+            ["build", str(staged_root), "--output", str(staged_manifest)]
+        )
+        self.assertEqual(code, 0, payload)
+
+        output_dir = self.root / "dist"
+        validator_stub = types.ModuleType("quick_validate")
+        validator_stub.validate_skill = lambda _: (True, "Skill is valid!")
+        previous_validator = sys.modules.get("quick_validate")
+        sys.modules["quick_validate"] = validator_stub
+        package_spec = importlib.util.spec_from_file_location(
+            "package_skill_under_test", PACKAGER
+        )
+        if package_spec is None or package_spec.loader is None:
+            self.fail(f"cannot import {PACKAGER}")
+        package_skill = importlib.util.module_from_spec(package_spec)
+        sys.modules[package_spec.name] = package_skill
+        try:
+            package_spec.loader.exec_module(package_skill)
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(
+                io.StringIO()
+            ):
+                archive = package_skill.package_skill(skill, output_dir)
+        finally:
+            sys.modules.pop(package_spec.name, None)
+            if previous_validator is None:
+                sys.modules.pop("quick_validate", None)
+            else:
+                sys.modules["quick_validate"] = previous_validator
+
+        self.assertEqual(archive, output_dir / "skill.zip")
+        self.assertTrue(archive.is_file())
+        with zipfile.ZipFile(archive, "r") as package:
+            self.assertEqual(
+                sorted(package.namelist()),
+                ["fixture-skill/SKILL.md", "fixture-skill/payload.txt"],
+            )
+
+        code, payload, _ = self.run_cli(
+            [
+                "verify",
+                str(archive),
+                "--manifest",
+                str(staged_manifest),
+                "--transport-transition",
+                "directory:zip",
+            ]
+        )
+        self.assertEqual(code, 0, payload)
+        self.assertTrue(payload["transport_transition"]["content_identity_verified"])
+
+        generated = sorted(
+            str(path.relative_to(ROOT))
+            for base in (SCRIPT.parent, PACKAGER.parent)
+            for pattern in ("__pycache__", "*.pyc")
+            for path in base.rglob(pattern)
+        )
+        self.assertEqual(generated, [])
+
 
 
 if __name__ == "__main__":

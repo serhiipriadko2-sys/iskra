@@ -13,7 +13,7 @@
 // =============================================================================
 
 /** Algorithm version stamped onto every result. Bump on ANY formula change. */
-export const ALGORITHM_VERSION = 'iskra-metrics-compute-v1.0.0';
+export const ALGORITHM_VERSION = 'iskra-metrics-compute-v1.1.0';
 
 /** Entropy regime labels (parity with @iskra/math interpretEntropy). */
 export type EntropyRegime = 'LOOP' | 'FLOW' | 'CHAOS';
