@@ -6,10 +6,12 @@ App path: `runtime/iskraSpace`
 
 ## Current verified baseline
 
-- GitHub `main` at this status refresh: `29843783b0e4bb3ecaf4e74c00e4423991b33152`
-  (PR [#300](https://github.com/serhiipriadko2-sys/iskra/pull/300) merge).
-  PR #300 changes only repository skills/governance. It contains the latest
-  staging-status source merge from PR
+- GitHub `main` at this status refresh: `978c7b4a22e7f50d27e0203f9cfa8052747dd395`
+  (PR [#301](https://github.com/serhiipriadko2-sys/iskra/pull/301) merge).
+  PR #301 contains the canonical failed-staging receipt and its SHA-256
+  verifier. It descends from PR #300 at
+  `29843783b0e4bb3ecaf4e74c00e4423991b33152`, the latest staging-status source
+  merge from PR
   [#299](https://github.com/serhiipriadko2-sys/iskra/pull/299) at
   `4dd29c64e24a3f0333ca4d350154380dc1dd8ae0` (source tip
   `5cb4688b64b76d4103c4d47d67646236a7cb0bc6`) and the earlier staging harness
@@ -38,6 +40,15 @@ App path: `runtime/iskraSpace`
   passed the IskraSpace release-gate job for PR #299 merge
   `4dd29c64e24a3f0333ca4d350154380dc1dd8ae0`. Docker/GHCR and Vercel jobs
   were skipped, so this is not an image or deployment receipt.
+- Post-merge receipts for PR #301 merge
+  `978c7b4a22e7f50d27e0203f9cfa8052747dd395`:
+  [SoT integrity 30024769920](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30024769920),
+  [Runtime CI 30024770433](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30024770433),
+  [iskraSpace CI 30024769716](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30024769716)
+  and [Production Deployment 30024769670](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30024769670)
+  all completed successfully. The Production Deployment release-gate job
+  passed; Docker/GHCR and Vercel jobs were skipped, so no image or deployment
+  receipt exists.
 - Current SoT30 package is v5.5.6; its committed receipt records a canonical
   source-freeze build, 24/24 current and regression verifier checks, and ZIP
   SHA-256 `d86959641c9d78fea321a837d2ebf58e9406cf75acec84b9ea98b3d9d2dd9764`.
