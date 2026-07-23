@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   canonicalizeStagingAcceptanceReceipt,
   createStagingAcceptanceReceipt,
+  parseAndVerifyStagingAcceptanceReceiptBlock,
   type StagingAcceptanceReceiptInput,
 } from '../stagingAcceptanceReceipt';
 
@@ -87,5 +88,21 @@ describe('staging acceptance receipt', () => {
     expect(() => createStagingAcceptanceReceipt({ ...validReceipt, cleanup: { completed: false } })).toThrow(
       /cleanup/,
     );
+  });
+
+  it('parses the canonical status block and rejects a receipt whose hash was changed', () => {
+    const receipt = createStagingAcceptanceReceipt(validReceipt);
+    const markdown = [
+      '<!-- STAGING_ACCEPTANCE_RECEIPT_START -->',
+      '```json',
+      JSON.stringify(receipt),
+      '```',
+      '<!-- STAGING_ACCEPTANCE_RECEIPT_END -->',
+    ].join('\n');
+
+    expect(parseAndVerifyStagingAcceptanceReceiptBlock(markdown)).toEqual(receipt);
+    expect(
+      () => parseAndVerifyStagingAcceptanceReceiptBlock(markdown.replace(receipt.sha256, '0'.repeat(64))),
+    ).toThrow(/sha-256/i);
   });
 });

@@ -4,9 +4,10 @@ import {
   findForbiddenMemoryGatewayPaths,
   resolveRepositoryRoot,
 } from '../../services/stagingAcceptanceSourceContract';
+import { parseAndVerifyStagingAcceptanceReceiptBlock } from '../../services/stagingAcceptanceReceipt';
 import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -64,5 +65,19 @@ describe('staging acceptance source contract', () => {
       'supabase/functions/iskra-memory-gateway/index.ts',
       'supabase/functions/iskra-memory-gateway/untracked.ts',
     ]);
+  });
+
+  it('keeps one canonical failed-staging receipt in the living release status', () => {
+    const releaseStatus = readFileSync(
+      join(resolveRepositoryRoot(), 'runtime', 'iskraSpace', 'RELEASE_STATUS.md'),
+      'utf8',
+    );
+    const receipt = parseAndVerifyStagingAcceptanceReceiptBlock(releaseStatus);
+
+    expect(receipt.source_pr).toBe(299);
+    expect(receipt.source_merge_sha).toBe('4dd29c64e24a3f0333ca4d350154380dc1dd8ae0');
+    expect(receipt.staging_migrations_before_and_after).toEqual({ before: 33, after: 33 });
+    expect(receipt.test_matrix.branch_replay).toBe('failed_before_S0');
+    expect(receipt.cleanup).toMatchObject({ branch_deleted: true, completed: true });
   });
 });
