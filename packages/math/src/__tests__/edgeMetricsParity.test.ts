@@ -11,6 +11,7 @@ import {
   calculateDFA as calculateEdgeDFA,
   calculateHFD as calculateEdgeHFD,
 } from '../../../../supabase/functions/_shared/iskra-metrics/fractal';
+import { ALGORITHM_VERSION } from '../../../../supabase/functions/_shared/iskra-metrics/contracts';
 import {
   calculateShannonEntropy as calculateEdgeEntropy,
   interpretEntropy as interpretEdgeEntropy,
@@ -22,6 +23,10 @@ const signal = (length: number) =>
   );
 
 describe('Edge metrics Atom 1 parity with @iskra/math', () => {
+  it('stamps the revised HFD formula with a new algorithm version', () => {
+    expect(ALGORITHM_VERSION).toBe('iskra-metrics-compute-v1.1.0');
+  });
+
   it.each([
     '',
     'one one two',
@@ -38,6 +43,14 @@ describe('Edge metrics Atom 1 parity with @iskra/math', () => {
 
     expect(calculateEdgeHFD(values)).toBeCloseTo(calculateCanonicalHFD(values), 14);
     expect(calculateEdgeDFA(values)).toBeCloseTo(calculateCanonicalDFA(values), 14);
+  });
+
+  it('keeps the final-segment HFD reference vector identical', () => {
+    const linear = Array.from({ length: 20 }, (_, index) => index / 10);
+    const expected = 0.9979367669339503;
+
+    expect(calculateCanonicalHFD(linear)).toBeCloseTo(expected, 12);
+    expect(calculateEdgeHFD(linear)).toBeCloseTo(expected, 12);
   });
 
   it('preserves canonical short-series fallbacks only for present signals', () => {

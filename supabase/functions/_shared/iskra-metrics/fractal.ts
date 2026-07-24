@@ -51,7 +51,7 @@ export function calculateHFD(timeSeries: readonly number[], kMax = 10): number {
       let Lmk = 0;
       const limit = Math.floor((N - m) / k);
 
-      for (let i = 1; i < limit; i++) {
+      for (let i = 1; i <= limit; i++) {
         const idx1 = m + i * k - 1;
         const idx2 = m + (i - 1) * k - 1;
         const val1 = timeSeries[idx1];

@@ -12,7 +12,7 @@
     "lint": "pnpm -r lint",
     "typecheck": "pnpm run build:runtime && pnpm -r --if-present typecheck",
     "build:runtime": "pnpm run prepare:legacy-runtime && cd runtime && npm run build",
-    "verify": "pnpm run build:runtime && npm run check:shard-registry && npm run check:sensitive-status && npm run typecheck && pnpm test && npx tsx tools/verify_ledger.ts",
+    "verify": "pnpm run build:runtime && npm run check:shard-registry && npm run check:sensitive-status && npm run typecheck && pnpm test && npm run check:release-manifest && npx tsx tools/verify_ledger.ts",
     "check:skill-registry": "node tools/run_python.mjs tools/validate_skill_integrity.py docs/skills/registry-v1.json --registry-only --strict",
     "test:skill-registry": "node tools/run_python.mjs tools/test_validate_skill_integrity.py",
     "ledger:update": "npx tsx tools/update_ledger.ts",
@@ -39,7 +39,8 @@
     "import:shard2": "node tools/run_python.mjs tools/import_phase1_shard2.py",
     "import:shard3": "node tools/run_python.mjs tools/import_phase1_shard3.py",
     "import:shard": "node tools/run_python.mjs tools/import_phase1_shard.py",
-    "prepare:legacy-runtime": "node tools/ensure_runtime_deps.mjs"
+    "prepare:legacy-runtime": "node tools/ensure_runtime_deps.mjs",
+    "check:release-manifest": "node tools/run_python.mjs tools/test_release_manifest.py"
   },
   "devDependencies": {
     "jose": "6.1.0",

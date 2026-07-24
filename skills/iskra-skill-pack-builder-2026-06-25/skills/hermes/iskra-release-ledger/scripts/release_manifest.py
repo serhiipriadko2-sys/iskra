@@ -22,6 +22,7 @@ DEFAULT_MAX_FILES = 5000
 DEFAULT_MAX_TOTAL_BYTES = 256 * 1024 * 1024
 DEFAULT_MAX_FILE_BYTES = 64 * 1024 * 1024
 DEFAULT_MAX_COMPRESSION_RATIO = 200.0
+ALLOWED_TRANSPORT_TRANSITIONS = {"directory:zip"}
 
 GENERATED_PARTS = {
     "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache",
@@ -310,9 +311,46 @@ def validate_manifest_shape(manifest: Any) -> dict[str, Any]:
     return manifest
 
 
-def compare_manifests(expected: dict[str, Any], actual: dict[str, Any]) -> list[dict[str, Any]]:
+def resolve_transport_transition(
+    expected_type: str,
+    actual_type: str,
+    declared: str | None,
+) -> dict[str, Any] | None:
+    if expected_type == actual_type:
+        if declared is not None:
+            raise ReleaseError(
+                f"transport transition {declared!r} is not applicable when both artifacts are {actual_type!r}"
+            )
+        return None
+
+    actual_transition = f"{expected_type}:{actual_type}"
+    if declared is None:
+        return None
+    if declared not in ALLOWED_TRANSPORT_TRANSITIONS:
+        raise ReleaseError(f"unsupported transport transition: {declared!r}")
+    if declared != actual_transition:
+        raise ReleaseError(
+            f"transport transition {declared!r} does not match actual transition {actual_transition!r}"
+        )
+    return {
+        "declared": declared,
+        "source_type": expected_type,
+        "target_type": actual_type,
+        "content_identity_verified": True,
+    }
+
+
+def compare_manifests(
+    expected: dict[str, Any],
+    actual: dict[str, Any],
+    *,
+    allow_type_transition: bool = False,
+) -> list[dict[str, Any]]:
     differences: list[dict[str, Any]] = []
-    if expected["artifact_type"] != actual["artifact_type"]:
+    if (
+        expected["artifact_type"] != actual["artifact_type"]
+        and not allow_type_transition
+    ):
         differences.append({"kind": "artifact_type", "expected": expected["artifact_type"], "actual": actual["artifact_type"]})
 
     expected_map = {item["path"]: item for item in expected["items"]}
@@ -374,6 +412,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     verify_parser = subparsers.add_parser("verify", help="verify an artifact against a manifest")
     verify_parser.add_argument("artifact", type=Path)
     verify_parser.add_argument("--manifest", type=Path, required=True)
+    verify_parser.add_argument(
+        "--transport-transition",
+        choices=sorted(ALLOWED_TRANSPORT_TRANSITIONS),
+        help="allow one explicit source:target repackaging transition while keeping content checks strict",
+    )
     add_policy_args(verify_parser)
 
     return parser.parse_args(argv)
@@ -391,13 +434,28 @@ def main(argv: list[str] | None = None) -> int:
         else:
             raw = args.manifest.read_bytes()
             expected = validate_manifest_shape(json.loads(raw.decode("utf-8")))
-            differences = compare_manifests(expected, actual)
+            transition = resolve_transport_transition(
+                expected["artifact_type"],
+                actual["artifact_type"],
+                args.transport_transition,
+            )
+            differences = compare_manifests(
+                expected,
+                actual,
+                allow_type_transition=transition is not None,
+            )
+            if transition is not None and differences:
+                transition["content_identity_verified"] = False
             payload = {
                 "ok": not differences,
                 "mode": "verify",
                 "artifact": str(args.artifact),
+                "artifact_sha256": (
+                    sha256_file(args.artifact) if args.artifact.is_file() else None
+                ),
                 "manifest": str(args.manifest),
                 "manifest_sha256": sha256_bytes(raw),
+                "transport_transition": transition,
                 "differences": differences,
                 "counts": actual["counts"],
             }
