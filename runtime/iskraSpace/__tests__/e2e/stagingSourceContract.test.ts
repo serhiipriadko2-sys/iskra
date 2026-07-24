@@ -80,4 +80,32 @@ describe('staging acceptance source contract', () => {
     expect(receipt.test_matrix.branch_replay).toBe('failed_before_S0');
     expect(receipt.cleanup).toMatchObject({ branch_deleted: true, completed: true });
   });
+
+  it('records the reproduced migration-34 cause without authorizing blind branch recreation', () => {
+    const releaseStatus = readFileSync(
+      join(resolveRepositoryRoot(), 'runtime', 'iskraSpace', 'RELEASE_STATUS.md'),
+      'utf8',
+    );
+
+    expect(releaseStatus).toContain('82191ce0899bedb04bcd4345e0c7ee28adb65258');
+    expect(releaseStatus).toContain('c8251c707d7bee66ece9c874c27c1ebe5833024a0573169df00f53a330a2be93');
+    expect(releaseStatus).toContain('Users can manage own graph nodes (secure)');
+    expect(releaseStatus).toContain('Do not blindly recreate');
+    expect(releaseStatus).toContain('must prove');
+    expect(releaseStatus).toContain('guarded migration body');
+  });
+
+  it('records the live GitHub integration drift as a branch-creation blocker', () => {
+    const releaseStatus = readFileSync(
+      join(resolveRepositoryRoot(), 'runtime', 'iskraSpace', 'RELEASE_STATUS.md'),
+      'utf8',
+    );
+
+    expect(releaseStatus).toContain('serhiipriadko2-sys/Iskraspace');
+    expect(releaseStatus).toContain('serhiipriadko2-sys/iskra');
+    expect(releaseStatus).toContain('e66da7044627b7058e961a5a0619ef32d3980dd3');
+    expect(releaseStatus).toContain('staging/iskraspace-acceptance-d2ce040');
+    expect(releaseStatus).toContain('Owner-approved live configuration change');
+    expect(releaseStatus).toContain('no further staging branch create is permitted');
+  });
 });

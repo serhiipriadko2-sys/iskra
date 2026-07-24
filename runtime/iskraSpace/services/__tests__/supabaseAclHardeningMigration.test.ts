@@ -17,6 +17,13 @@ const triggerAclMigrationPath = join(
 const triggerAclMigration = existsSync(triggerAclMigrationPath)
   ? readFileSync(triggerAclMigrationPath, 'utf8')
   : '';
+const initplanMigrationPath = join(
+  dirname(thisFile),
+  '../../../../supabase/migrations/20260718194551_optimize_rls_initplan.sql',
+);
+const initplanMigration = existsSync(initplanMigrationPath)
+  ? readFileSync(initplanMigrationPath, 'utf8')
+  : '';
 const provenanceMigrations = [
   {
     path: '../../../../supabase/migrations/20260718194551_optimize_rls_initplan.sql',
@@ -63,6 +70,23 @@ describe('Supabase ACL hardening migration', () => {
     expect(
       existsSync(join(dirname(thisFile), '../../../../supabase/migrations/20260718000001_consolidate_rls_policies.sql')),
     ).toBe(false);
+  });
+
+  it('guards the two legacy Graph policies that are absent on a clean replay', () => {
+    for (const [table, policy] of [
+      ['graph_nodes', 'Users can manage own graph nodes (secure)'],
+      ['graph_edges', 'Users can manage own graph edges (secure)'],
+    ] as const) {
+      const guardedAlter = new RegExp(
+        String.raw`if exists \([\s\S]*tablename = '${table}'[\s\S]*policyname = '${policy.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}'[\s\S]*\) then[\s\S]*execute 'alter policy`,
+        'i',
+      );
+      expect(initplanMigration, `${table}.${policy}`).toMatch(guardedAlter);
+    }
+
+    expect(initplanMigration).not.toMatch(
+      /begin;\s*alter policy "Users can manage own graph (?:nodes|edges) \(secure\)"/i,
+    );
   });
 
   it('removes anon execution without removing authenticated closed-beta paths', () => {
