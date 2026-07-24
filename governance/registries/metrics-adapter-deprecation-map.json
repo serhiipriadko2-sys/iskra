@@ -1,0 +1,109 @@
+{
+  "schema_version": "iskra.metrics-adapter-deprecation-map.v1",
+  "status": "accepted_mirror_unactivated",
+  "repository": "serhiipriadko2-sys/iskra",
+  "commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "entries": [
+    {
+      "surface": "packages/math/src/entropy.ts",
+      "current_role": "shared primitive with ASCII tokenizer defect",
+      "target_role": "pure formula owner implementation",
+      "authority_after_activation": "formula_owner",
+      "action": "repair_unicode_tokenizer_and_version",
+      "rollback": "restore prior algorithm only as separately versioned compatibility implementation"
+    },
+    {
+      "surface": "packages/math/src/fractal.ts",
+      "current_role": "shared primitive with legacy sufficiency/stand-in behavior",
+      "target_role": "pure HFD/DFA formula owner implementation",
+      "authority_after_activation": "formula_owner",
+      "action": "typed_unavailable_N20_kMax5_N50_reference_vectors",
+      "rollback": "versioned compatibility only; no fabricated stand-ins in authoritative path"
+    },
+    {
+      "surface": "packages/engine/src/services/metricsService.ts",
+      "current_role": "stateful metric mutation + history + memory heuristics",
+      "target_role": "state/history compatibility adapter",
+      "authority_after_activation": "state_owner_not_formula_owner",
+      "action": "extract_formula_calls_and_quarantine_heuristic_thresholds",
+      "rollback": "retain adapter interface; do not restore formula ownership"
+    },
+    {
+      "surface": "runtime/iskraSpace/services/metricsService.ts",
+      "current_role": "keyword targets + meta indices + UI phase router",
+      "target_role": "SomaticMetricsAdapter / UiPhaseRouter",
+      "authority_after_activation": "ui_advisory",
+      "action": "namespace_phase_and_remove_direct_guard_authority",
+      "rollback": "UI adapter can remain, but Guard boundary cannot be bypassed"
+    },
+    {
+      "surface": "runtime/src/types/fractal.ts",
+      "current_role": "legacy duplicate formula implementation",
+      "target_role": "deprecated adapter",
+      "authority_after_activation": "none",
+      "action": "route to packages/math and remove duplicate after parity horizon",
+      "rollback": "temporary adapter only"
+    },
+    {
+      "surface": "supabase/functions/_shared/iskra-metrics",
+      "current_role": "Edge calculator copy",
+      "target_role": "generated Edge mirror",
+      "authority_after_activation": "generated_mirror",
+      "action": "generate_from_active_formula_owner_with_hash_receipt",
+      "rollback": "redeploy previous verified generated artifact"
+    },
+    {
+      "surface": "runtime/iskraSpace/services/policyEngine.ts::alertLevelProxy",
+      "current_role": "local EWS proxy",
+      "target_role": "consumer of EwsAssessment from frozen snapshot",
+      "authority_after_activation": "none",
+      "action": "remove_from_authority_path",
+      "rollback": "fallback may be observability-only; never authoritative"
+    },
+    {
+      "surface": "runtime/iskraSpace/services/voiceEngine.ts",
+      "current_role": "metric-driven active voice selector",
+      "target_role": "voice candidate generator",
+      "authority_after_activation": "advisory_only",
+      "action": "Council/Voice finalizes selection",
+      "rollback": "candidate scoring may remain; finalization boundary cannot roll back"
+    },
+    {
+      "surface": "packages/engine/src/services/voiceSystem.ts",
+      "current_role": "random quantum collapse to final voice",
+      "target_role": "simulation/advisory candidate generator",
+      "authority_after_activation": "advisory_only",
+      "action": "remove final authority and seed tests if simulation retained",
+      "rollback": "simulation can remain outside authoritative response path"
+    },
+    {
+      "surface": "docs/skills/registry-v1.json::iskra-metrics",
+      "current_role": "PLANNED target",
+      "target_role": "orchestration/contract Skill",
+      "authority_after_activation": "skill_owner_not_formula_owner",
+      "action": "promote only after package/routing/parity acceptance",
+      "rollback": "remain PLANNED; legacy aliases continue"
+    },
+    {
+      "surface": "metric-runner",
+      "current_role": "transitional legacy Skill",
+      "target_role": "ABSORB after iskra-metrics acceptance",
+      "authority_after_activation": "none",
+      "action": "retain until routing acceptance",
+      "rollback": "keep transition alias"
+    },
+    {
+      "surface": "iskra-metrics-evaluator",
+      "current_role": "transitional epistemic evaluator",
+      "target_role": "ABSORB/adapter after acceptance",
+      "authority_after_activation": "none",
+      "action": "preserve evaluation behavior separately from math core",
+      "rollback": "keep transition alias"
+    }
+  ],
+  "accepted_at": "2026-07-24",
+  "accepted_by": "Семён",
+  "acceptance_ref": "ADR-20260724-01",
+  "source_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "mirror_branch": "governance/atom1-metrics-authority-20260724"
+}

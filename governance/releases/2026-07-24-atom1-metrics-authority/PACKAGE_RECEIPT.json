@@ -1,0 +1,32 @@
+{
+  "schema_version": "iskra.governance-mirror-receipt.v1",
+  "status": "accepted_mirror_unactivated",
+  "adr": "ADR-20260724-01",
+  "owner_acceptance": "ПРИНИМАЮ ADR-20260724-01",
+  "accepted_at": "2026-07-24",
+  "repository": "serhiipriadko2-sys/iskra",
+  "base_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "branch": "governance/atom1-metrics-authority-20260724",
+  "manifest_path": "governance/releases/2026-07-24-atom1-metrics-authority/MANIFEST.json",
+  "manifest_sha256": "a79ed2d7f25698e88b04234d9ec05147a7afb7beb2f516520f12a605c5801b31",
+  "runtime_changes": 0,
+  "formula_changes": 0,
+  "target_writes": "repository branch only",
+  "live_verification": "pending",
+  "qc_required": [
+    "json_parse",
+    "adr_gate",
+    "ledger_verify",
+    "sensitive_status",
+    "skill_registry"
+  ],
+  "lifecycle": {
+    "accepted": true,
+    "mirrored_to_builder": "pending_repository_commit_and_readback",
+    "implemented": false,
+    "merged": false,
+    "deployed": false,
+    "invoked": false,
+    "verified_live": false
+  }
+}
