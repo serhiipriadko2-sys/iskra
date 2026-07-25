@@ -1,0 +1,23 @@
+{
+  "schema_version": "iskra.implementation-authorization.v1",
+  "status": "accepted",
+  "adr_id": "ADR-20260724-01",
+  "authorized_at": "2026-07-25",
+  "authorized_by": "Семён",
+  "authorization_surface": "project_chat",
+  "implementation_phrase": "Решение1. Да начинаем.",
+  "regression_gate_phrase": "Решение 2. Думаю делать прогон нужно",
+  "continuation_confirmation": "Принял👌продолжай",
+  "scope": [
+    "test-first executable G01-G18 baseline",
+    "current-turn MetricSnapshot and Guard remediation after baseline evidence",
+    "no live deployment or Supabase mutation"
+  ],
+  "constraints": {
+    "first_pr_changes_production_behavior": false,
+    "first_pr_expected_guard_check": "failure",
+    "guard_enum_change_allowed": false,
+    "ruleset_change_requires_owner_confirmation": true
+  },
+  "source_main_commit": "001cdef6c8777aaded526858921df626635abb88"
+}

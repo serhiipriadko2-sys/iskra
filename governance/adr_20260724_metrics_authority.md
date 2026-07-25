@@ -25,7 +25,14 @@ accepted_by: Семён
 acceptance_phrase: "ПРИНИМАЮ ADR-20260724-01"
 acceptance_surface: project_chat
 repository_mirror_branch: governance/atom1-metrics-authority-20260724
-implementation_authorized: false
+repository_mirror_status: merged_to_main
+repository_merge_pr: 306
+repository_merge_commit: 001cdef6c8777aaded526858921df626635abb88
+implementation_authorized: true
+implementation_authorized_at: 2026-07-25
+implementation_authorization_phrase: "Решение1. Да начинаем."
+implementation_authorization_confirmation: "Принял👌продолжай"
+implementation_authorization_scope: test-first Guard remediation under G01-G18
 ```
 
 This acceptance establishes the governance decision. It does not claim implementation, merge, deployment, invocation, or verified-live behavior.
@@ -215,7 +222,7 @@ After implementation: rollback may restore compatibility adapters, but may not r
 
 ## Builder/package mirror
 
-`branch_mirror_pending_merge` — `governance/atom1-metrics-authority-20260724`
+`merged_to_main` — PR `#306`, merge commit `001cdef6c8777aaded526858921df626635abb88`
 
 ## Live verification
 

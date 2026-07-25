@@ -1,0 +1,36 @@
+name: Guard remediation regression baseline
+
+on:
+  pull_request:
+    paths:
+      - "runtime/**"
+      - "packages/math/**"
+      - "governance/evidence/metrics/**"
+      - "governance/adr_20260724_metrics_authority.md"
+      - ".github/workflows/guard_remediation_regression.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "runtime/**"
+      - "packages/math/**"
+      - "governance/evidence/metrics/**"
+      - "governance/adr_20260724_metrics_authority.md"
+      - ".github/workflows/guard_remediation_regression.yml"
+
+jobs:
+  guard-regression:
+    name: guard-regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run accepted G01-G18 Guard remediation matrix
+        run: pnpm --filter @iskra/runtime exec vitest run --config vitest.guard-remediation.config.ts

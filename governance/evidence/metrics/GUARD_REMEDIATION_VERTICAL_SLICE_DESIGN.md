@@ -1,16 +1,25 @@
 ---
 sigil: governance__guard_remediation_vertical_slice
 layer: system
-status: accepted-design
-updated: 2026-07-24
+status: implementation-authorized
+updated: 2026-07-25
 authority: ADR-20260724-01
 ---
 
 # Narrow Guard Remediation Vertical Slice — design candidate
 
-**Status:** `design-candidate / no code mutation`
+**Status:** `implementation-authorized / test-first baseline`
 **Repository:** `serhiipriadko2-sys/iskra`
 **Evidence commit:** `3d57b25a45cd7842a9a238c1214cd24e25694316`
+
+## Owner implementation authorization
+
+- authorized: `true`
+- authorized at: `2026-07-25`
+- exact phrase: `Решение1. Да начинаем.`
+- continuation confirmation: `Принял👌продолжай`
+- first implementation slice: executable G01-G18 tests and CI workflow only
+- production Guard/tokenizer behavior in first slice: unchanged
 
 ## 1. Objective
 
