@@ -1,0 +1,765 @@
+{
+  "schema_version": "iskra.threshold-registry.v1",
+  "status": "accepted_mirror_unactivated",
+  "observed_at": "2026-07-24",
+  "repository": "serhiipriadko2-sys/iskra",
+  "commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "authority": "derived executable mirror candidate; SoT30 files 09/10/11 remain normative",
+  "invariants": [
+    "Registry mismatch with SoT is build FAIL; SoT wins.",
+    "Calibration hypotheses are never eligible for Guard before LAB promotion ADR.",
+    "Keyword rubric weights are excluded and live in rubric-registry.",
+    "Unknown inputs are unknown, not false.",
+    "No runtime code is changed by this candidate."
+  ],
+  "entries": [
+    {
+      "id": "DOMAIN-RHYTHM",
+      "domain": "state_domain",
+      "subject": "rhythm",
+      "operator": "range",
+      "value": [
+        0,
+        100
+      ],
+      "unit": "percent",
+      "authority_class": "canonical_domain_constraint",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/09_METRICS_ENGINE.md#1.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "DOMAIN-STATE-01",
+      "domain": "state_domain",
+      "subject": "trust,pain,chaos,drift,echo,clarity,silence_mass,mirror_sync,interrupt,ctxSwitch",
+      "operator": "range",
+      "value": [
+        0,
+        1
+      ],
+      "unit": "ratio",
+      "authority_class": "canonical_domain_constraint",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/09_METRICS_ENGINE.md#1.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "SUFF-BASELINE-N",
+      "domain": "sufficiency",
+      "subject": "baseline.sample_count",
+      "operator": ">=",
+      "value": 30,
+      "unit": "snapshots",
+      "authority_class": "canonical_sufficiency",
+      "eligible_for_guard": true,
+      "guard_path": "via_derived",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/09_METRICS_ENGINE.md#4"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "SUFF-ENTROPY-N",
+      "domain": "sufficiency",
+      "subject": "normalized_token_count",
+      "operator": ">=",
+      "value": 20,
+      "unit": "normalized_tokens",
+      "authority_class": "canonical_sufficiency",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#1"
+      ],
+      "runtime_conflict_ids": [
+        "SPACE-ENT-MIN"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": "Calibration labels are not Guard authority."
+    },
+    {
+      "id": "SUFF-HFD-N",
+      "domain": "sufficiency",
+      "subject": "hfd.series_length",
+      "operator": ">=",
+      "value": 20,
+      "unit": "points",
+      "authority_class": "canonical_sufficiency",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#1"
+      ],
+      "runtime_conflict_ids": [
+        "ENG-HFD-MIN",
+        "ENG-HFD-STANDIN"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "SUFF-HFD-KMAX",
+      "domain": "sufficiency",
+      "subject": "hfd.k_max",
+      "operator": "=",
+      "value": 5,
+      "unit": "integer",
+      "authority_class": "canonical_sufficiency",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#1"
+      ],
+      "runtime_conflict_ids": [
+        "ENG-HFD-MIN"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "SUFF-DFA-N",
+      "domain": "sufficiency",
+      "subject": "dfa.series_length",
+      "operator": ">=",
+      "value": 50,
+      "unit": "points",
+      "authority_class": "canonical_sufficiency",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "DERIVED-CHAOS-OVERHEAT",
+      "domain": "derived_formula",
+      "subject": "chaos_overheat",
+      "operator": ">=",
+      "value": "max(0.70, baseline_chaos + 0.20)",
+      "unit": "ratio",
+      "authority_class": "derived_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/09_METRICS_ENGINE.md#1.2"
+      ],
+      "runtime_conflict_ids": [
+        "DOWN-CHAOS-OVERHEAT"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "CAL-ENTROPY-LOW",
+      "domain": "calibration",
+      "subject": "shannon_entropy",
+      "operator": "<",
+      "value": 2.0,
+      "unit": "bits",
+      "authority_class": "calibration_hypothesis",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#2.1"
+      ],
+      "runtime_conflict_ids": [
+        "ENG-ENT-LOW"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": "LAB promotion required."
+    },
+    {
+      "id": "CAL-ENTROPY-HIGH",
+      "domain": "calibration",
+      "subject": "shannon_entropy",
+      "operator": ">",
+      "value": 5.0,
+      "unit": "bits",
+      "authority_class": "calibration_hypothesis",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#2.1"
+      ],
+      "runtime_conflict_ids": [
+        "ENG-ENT-HIGH"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": "LAB promotion required."
+    },
+    {
+      "id": "CAL-HFD-RIGID",
+      "domain": "calibration",
+      "subject": "hfd",
+      "operator": "<",
+      "value": 1.4,
+      "unit": "dimension",
+      "authority_class": "calibration_hypothesis",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#3.1"
+      ],
+      "runtime_conflict_ids": [
+        "ENG-HFD-BAND-LOW"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "CAL-HFD-EDGE",
+      "domain": "calibration",
+      "subject": "hfd",
+      "operator": "range",
+      "value": [
+        1.4,
+        1.6
+      ],
+      "unit": "dimension",
+      "authority_class": "calibration_hypothesis",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#3.1"
+      ],
+      "runtime_conflict_ids": [
+        "ENG-HFD-BAND-LOW",
+        "ENG-HFD-BAND-HIGH"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "CAL-HFD-NOISE",
+      "domain": "calibration",
+      "subject": "hfd",
+      "operator": ">",
+      "value": 1.6,
+      "unit": "dimension",
+      "authority_class": "calibration_hypothesis",
+      "eligible_for_guard": false,
+      "guard_path": "none",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#3.1"
+      ],
+      "runtime_conflict_ids": [
+        "ENG-HFD-BAND-HIGH"
+      ],
+      "activation_status": "accepted_unactivated",
+      "notes": ""
+    },
+    {
+      "id": "EWS-NORMAL-ALIVE-DELTA",
+      "domain": "ews_baseline",
+      "subject": "alive_delta",
+      "operator": ">=",
+      "value": -0.1,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to NORMAL."
+    },
+    {
+      "id": "EWS-NORMAL-DRIFT",
+      "domain": "ews_baseline",
+      "subject": "drift",
+      "operator": "<",
+      "value": 0.18,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to NORMAL."
+    },
+    {
+      "id": "EWS-NORMAL-ECHO-CLEAR",
+      "domain": "ews_baseline",
+      "subject": "echo_clearance",
+      "operator": ">=",
+      "value": 0.6,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to NORMAL."
+    },
+    {
+      "id": "EWS-NORMAL-TRUST",
+      "domain": "ews_baseline",
+      "subject": "trust",
+      "operator": ">=",
+      "value": 0.6,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to NORMAL."
+    },
+    {
+      "id": "EWS-NORMAL-CLARITY",
+      "domain": "ews_baseline",
+      "subject": "clarity",
+      "operator": ">=",
+      "value": 0.6,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to NORMAL."
+    },
+    {
+      "id": "EWS-WATCH-ALIVE-DELTA",
+      "domain": "ews_baseline",
+      "subject": "alive_delta",
+      "operator": "<",
+      "value": -0.1,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to WATCH."
+    },
+    {
+      "id": "EWS-WATCH-DRIFT",
+      "domain": "ews_baseline",
+      "subject": "drift",
+      "operator": ">=",
+      "value": 0.18,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to WATCH."
+    },
+    {
+      "id": "EWS-WATCH-TRUST",
+      "domain": "ews_baseline",
+      "subject": "trust",
+      "operator": "<=",
+      "value": 0.55,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to WATCH."
+    },
+    {
+      "id": "EWS-WATCH-CLARITY",
+      "domain": "ews_baseline",
+      "subject": "clarity",
+      "operator": "<",
+      "value": 0.6,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to WATCH."
+    },
+    {
+      "id": "EWS-WARNING-ALIVE-DELTA",
+      "domain": "ews_baseline",
+      "subject": "alive_delta",
+      "operator": "<",
+      "value": -0.2,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to WARNING."
+    },
+    {
+      "id": "EWS-WARNING-DRIFT",
+      "domain": "ews_baseline",
+      "subject": "drift",
+      "operator": ">=",
+      "value": 0.22,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to WARNING."
+    },
+    {
+      "id": "EWS-WARNING-ECHO-CLEAR",
+      "domain": "ews_baseline",
+      "subject": "echo_clearance",
+      "operator": "<=",
+      "value": 0.4,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to WARNING."
+    },
+    {
+      "id": "EWS-CRITICAL-ALIVE-DELTA",
+      "domain": "ews_baseline",
+      "subject": "alive_delta",
+      "operator": "<",
+      "value": -0.3,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to CRITICAL."
+    },
+    {
+      "id": "EWS-CRITICAL-DRIFT",
+      "domain": "ews_baseline",
+      "subject": "drift",
+      "operator": ">=",
+      "value": 0.3,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to CRITICAL."
+    },
+    {
+      "id": "EWS-CRITICAL-ECHO-CLEAR",
+      "domain": "ews_baseline",
+      "subject": "echo_clearance",
+      "operator": "<",
+      "value": 0.25,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.1"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Contributes to CRITICAL."
+    },
+    {
+      "id": "EWS-FB-WATCH-ALIVE",
+      "domain": "ews_absolute_fallback",
+      "subject": "alive_index",
+      "operator": "<",
+      "value": 0.55,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.2"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Used only without valid baseline; contributes to WATCH."
+    },
+    {
+      "id": "EWS-FB-WATCH-DRIFT",
+      "domain": "ews_absolute_fallback",
+      "subject": "drift",
+      "operator": ">=",
+      "value": 0.18,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.2"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Used only without valid baseline; contributes to WATCH."
+    },
+    {
+      "id": "EWS-FB-WARNING-ALIVE",
+      "domain": "ews_absolute_fallback",
+      "subject": "alive_index",
+      "operator": "<",
+      "value": 0.45,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.2"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Used only without valid baseline; contributes to WARNING."
+    },
+    {
+      "id": "EWS-FB-WARNING-DRIFT",
+      "domain": "ews_absolute_fallback",
+      "subject": "drift",
+      "operator": ">=",
+      "value": 0.22,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.2"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Used only without valid baseline; contributes to WARNING."
+    },
+    {
+      "id": "EWS-FB-WARNING-CHAOS",
+      "domain": "ews_absolute_fallback",
+      "subject": "chaos",
+      "operator": ">=",
+      "value": 0.7,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.2"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Used only without valid baseline; contributes to WARNING."
+    },
+    {
+      "id": "EWS-FB-CRITICAL-ALIVE",
+      "domain": "ews_absolute_fallback",
+      "subject": "alive_index",
+      "operator": "<",
+      "value": 0.35,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.2"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Used only without valid baseline; contributes to CRITICAL."
+    },
+    {
+      "id": "EWS-FB-CRITICAL-DRIFT",
+      "domain": "ews_absolute_fallback",
+      "subject": "drift",
+      "operator": ">=",
+      "value": 0.3,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.2"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Used only without valid baseline; contributes to CRITICAL."
+    },
+    {
+      "id": "EWS-FB-CRITICAL-ECHO",
+      "domain": "ews_absolute_fallback",
+      "subject": "echo_clearance",
+      "operator": "<",
+      "value": 0.25,
+      "unit": "ratio",
+      "authority_class": "ews_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "via_ews",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md#4.2"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Used only without valid baseline; contributes to CRITICAL."
+    },
+    {
+      "id": "GUARD-DRIFT-CRISIS",
+      "domain": "guard",
+      "subject": "drift",
+      "operator": ">=",
+      "value": 0.4,
+      "unit": "ratio",
+      "authority_class": "guard_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md#3"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Candidate decision: FORCE_CRISIS; compound predicates still required where specified."
+    },
+    {
+      "id": "GUARD-DRIFT-ISKRIV",
+      "domain": "guard",
+      "subject": "drift",
+      "operator": ">=",
+      "value": 0.2,
+      "unit": "ratio",
+      "authority_class": "guard_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md#3"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Candidate decision: FORCE_ISKRIV_1; compound predicates still required where specified."
+    },
+    {
+      "id": "GUARD-ANTI-DRYNESS",
+      "domain": "guard",
+      "subject": "anti_dryness_hits",
+      "operator": ">=",
+      "value": 2,
+      "unit": "count",
+      "authority_class": "guard_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md#3"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Candidate decision: FORCE_SHADOW; compound predicates still required where specified."
+    },
+    {
+      "id": "GUARD-ECHO-REPEAT",
+      "domain": "guard",
+      "subject": "echo_clearance",
+      "operator": "<",
+      "value": 0.25,
+      "unit": "ratio",
+      "authority_class": "guard_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md#3"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Candidate decision: FORCE_SHADOW; compound predicates still required where specified."
+    },
+    {
+      "id": "GUARD-SILENCE",
+      "domain": "guard",
+      "subject": "silence_mass",
+      "operator": ">=",
+      "value": 0.7,
+      "unit": "ratio",
+      "authority_class": "guard_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md#3"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Candidate decision: CLOSE_HONESTLY; compound predicates still required where specified."
+    },
+    {
+      "id": "GUARD-LEADER-FLAPS",
+      "domain": "guard",
+      "subject": "leader_flaps",
+      "operator": ">",
+      "value": 1,
+      "unit": "count",
+      "authority_class": "guard_canonical",
+      "eligible_for_guard": true,
+      "guard_path": "direct",
+      "source_refs": [
+        "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md#3"
+      ],
+      "runtime_conflict_ids": [],
+      "activation_status": "accepted_unactivated",
+      "notes": "Candidate decision: PROCEED+ttl_adjustment; compound predicates still required where specified."
+    }
+  ],
+  "accepted_at": "2026-07-24",
+  "accepted_by": "Семён",
+  "acceptance_ref": "ADR-20260724-01",
+  "source_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "mirror_branch": "governance/atom1-metrics-authority-20260724"
+}

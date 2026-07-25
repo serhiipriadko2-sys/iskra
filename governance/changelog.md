@@ -24,6 +24,7 @@ layer: governance
 - version: vΩ.SoT40.2
 
 ## [Unreleased]
+- **Atom 1 / Metrics Authority** — Owner accepted `ADR-20260724-01`; added unactivated threshold/rubric/profile registries, adapter-deprecation map, Guard remediation design and regression matrix. This is a governance/Builder mirror only: `iskra-metrics` remains `PLANNED`; runtime/formula changes = 0; live verification pending.
 <!-- empty: promote to a versioned release before checkpoint -->
 
 ## vΩ.5.15 — 2026-03-01

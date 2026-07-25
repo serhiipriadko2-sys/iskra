@@ -1,0 +1,498 @@
+{
+  "schema_version": "iskra.rubric-registry.v1",
+  "status": "accepted_mirror_unactivated",
+  "repository": "serhiipriadko2-sys/iskra",
+  "commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "entries": [
+    {
+      "id": "SPACE-KW-TRUST-BASE",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.trust.base",
+      "value": 0.85,
+      "effect": "Initial trust keyword score",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-TRUST-IMPACT-1",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.trust.signals[0].impact",
+      "value": 0.1,
+      "effect": "Adjusts trust score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-TRUST-IMPACT-2",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.trust.signals[1].impact",
+      "value": -0.25,
+      "effect": "Adjusts trust score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-CLARITY-BASE",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.clarity.base",
+      "value": 0.65,
+      "effect": "Initial clarity keyword score",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-CLARITY-IMPACT-1",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.clarity.signals[0].impact",
+      "value": 0.15,
+      "effect": "Adjusts clarity score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-CLARITY-IMPACT-2",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.clarity.signals[1].impact",
+      "value": -0.2,
+      "effect": "Adjusts clarity score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-PAIN-BASE",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.pain.base",
+      "value": 0.1,
+      "effect": "Initial pain keyword score",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-PAIN-IMPACT-1",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.pain.signals[0].impact",
+      "value": 0.4,
+      "effect": "Adjusts pain score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-PAIN-IMPACT-2",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.pain.signals[1].impact",
+      "value": 0.15,
+      "effect": "Adjusts pain score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-DRIFT-BASE",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.drift.base",
+      "value": 0.1,
+      "effect": "Initial drift keyword score",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-DRIFT-IMPACT-1",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.drift.signals[0].impact",
+      "value": 0.3,
+      "effect": "Adjusts drift score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-DRIFT-IMPACT-2",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.drift.signals[1].impact",
+      "value": 0.15,
+      "effect": "Adjusts drift score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-CHAOS-BASE",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.chaos.base",
+      "value": 0.2,
+      "effect": "Initial chaos keyword score",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-CHAOS-IMPACT-1",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.chaos.signals[0].impact",
+      "value": 0.35,
+      "effect": "Adjusts chaos score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-CHAOS-IMPACT-2",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.chaos.signals[1].impact",
+      "value": 0.1,
+      "effect": "Adjusts chaos score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-ECHO-BASE",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.echo.base",
+      "value": 0.4,
+      "effect": "Initial echo keyword score",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-ECHO-IMPACT-1",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.echo.signals[0].impact",
+      "value": 0.2,
+      "effect": "Adjusts echo score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-ECHO-IMPACT-2",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.echo.signals[1].impact",
+      "value": -0.15,
+      "effect": "Adjusts echo score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-SILENCE_MASS-BASE",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.silence_mass.base",
+      "value": 0.1,
+      "effect": "Initial silence_mass keyword score",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-SILENCE_MASS-IMPACT-1",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.silence_mass.signals[0].impact",
+      "value": 0.4,
+      "effect": "Adjusts silence_mass score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-SILENCE_MASS-IMPACT-2",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.silence_mass.signals[1].impact",
+      "value": -0.2,
+      "effect": "Adjusts silence_mass score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-FORESIGHT-BASE",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.foresight.base",
+      "value": 0.0,
+      "effect": "Initial foresight keyword score",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-FORESIGHT-IMPACT-1",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.foresight.signals[0].impact",
+      "value": 0.35,
+      "effect": "Adjusts foresight score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    },
+    {
+      "id": "SPACE-KW-FORESIGHT-IMPACT-2",
+      "path": "runtime/iskraSpace/config/metricsConfig.ts",
+      "symbol": "metricsConfig.foresight.signals[1].impact",
+      "value": -0.2,
+      "effect": "Adjusts foresight score by keyword matches",
+      "authority_class": "local_rubric",
+      "eligible_for_guard": false,
+      "allowed_consumers": [
+        "metrics.ui.somatic.v1",
+        "metrics.keyword_rubric.v1"
+      ],
+      "forbidden_consumers": [
+        "SLO_GUARD",
+        "EWS",
+        "authoritative selected_voice"
+      ],
+      "status": "quarantine_until_profile_adapter",
+      "source_ref": "No deterministic measurement method in SoT"
+    }
+  ],
+  "invariants": [
+    "Rubric values are not mathematical thresholds.",
+    "eligible_for_guard is always false for this registry.",
+    "Keyword lists and weights require their own version and corpus tests."
+  ],
+  "accepted_at": "2026-07-24",
+  "accepted_by": "Семён",
+  "acceptance_ref": "ADR-20260724-01",
+  "source_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "mirror_branch": "governance/atom1-metrics-authority-20260724"
+}

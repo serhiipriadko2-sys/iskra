@@ -1,0 +1,48 @@
+{
+  "schema_version": "iskra.governance-mirror-manifest.v1",
+  "status": "accepted_mirror_unactivated",
+  "repository": "serhiipriadko2-sys/iskra",
+  "base_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "branch": "governance/atom1-metrics-authority-20260724",
+  "adr": "ADR-20260724-01",
+  "created_at": "2026-07-24",
+  "runtime_changes": 0,
+  "formula_changes": 0,
+  "files": [
+    {
+      "path": "governance/adr_20260724_metrics_authority.md",
+      "bytes": 10741,
+      "sha256": "c18e2e795ace959c81301b4fd276afa9566ef8b35d9e3dae3ad7ad92b4e102e1"
+    },
+    {
+      "path": "governance/evidence/metrics/GUARD_REMEDIATION_VERTICAL_SLICE_DESIGN.md",
+      "bytes": 7081,
+      "sha256": "2c7cc346e131c4835be0b7b0986268043b237fcc7894bf25795f2f15bbfef4aa"
+    },
+    {
+      "path": "governance/evidence/metrics/guard-remediation-test-matrix.json",
+      "bytes": 4223,
+      "sha256": "baa2232516640e903f58de4596077dd20b20c1bc2a22b9700b4c92d002490d54"
+    },
+    {
+      "path": "governance/registries/metrics-adapter-deprecation-map.json",
+      "bytes": 5021,
+      "sha256": "02ed550afce222286dacceb9b6d66779d139d2b937cb2ccaffad545803701cd6"
+    },
+    {
+      "path": "governance/registries/rubric-registry.json",
+      "bytes": 16434,
+      "sha256": "00bce6d1fbf54d061c0e3d4186ae3a7bf6e29d66078ea4f2265452f7dbc37f2e"
+    },
+    {
+      "path": "governance/registries/semantic-profiles.json",
+      "bytes": 3850,
+      "sha256": "aa9b03d79d51ff80145c0f284b3652c83214395c1aa8faf00d4cdb3d92a9c4f7"
+    },
+    {
+      "path": "governance/registries/threshold-registry.json",
+      "bytes": 25237,
+      "sha256": "3bcfc014fb83b09985e30fce3b389f1e6a5edbb7af13909d90cb487cba93022e"
+    }
+  ]
+}

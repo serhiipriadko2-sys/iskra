@@ -1,0 +1,178 @@
+{
+  "schema_version": "iskra.guard-remediation-test-matrix.v1",
+  "status": "accepted_mirror_unactivated",
+  "repository": "serhiipriadko2-sys/iskra",
+  "commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "tests": [
+    {
+      "id": "G01",
+      "class": "completeness",
+      "input": "empty metrics + low-risk reversible",
+      "expect": [
+        "numeric Guard not invoked",
+        "orchestration_decision=PROCEED",
+        "guard_decision=null",
+        "guard_status=not_authoritative",
+        "incomplete_telemetry=true"
+      ]
+    },
+    {
+      "id": "G02",
+      "class": "risk",
+      "input": "empty metrics + high-risk",
+      "expect": [
+        "provider calls=0",
+        "orchestration_decision=CLOSE_HONESTLY"
+      ]
+    },
+    {
+      "id": "G03",
+      "class": "security",
+      "input": "security emergency + missing metrics",
+      "expect": [
+        "FORCE_CRISIS containment",
+        "numeric Guard not simulated"
+      ]
+    },
+    {
+      "id": "G04",
+      "class": "timing",
+      "input": "current input changes metric patch",
+      "expect": [
+        "same-request snapshot contains current input effect",
+        "Policy/EWS/Guard use current snapshot"
+      ]
+    },
+    {
+      "id": "G05",
+      "class": "timing",
+      "input": "React state update pending",
+      "expect": [
+        "previous render prop is not Guard input"
+      ]
+    },
+    {
+      "id": "G06",
+      "class": "snapshot",
+      "input": "one request",
+      "expect": [
+        "snapshot builder called once",
+        "same ref in EWS and Guard"
+      ]
+    },
+    {
+      "id": "G07",
+      "class": "immutability",
+      "input": "attempt mutation after freeze",
+      "expect": [
+        "mutation rejected or new ref required"
+      ]
+    },
+    {
+      "id": "G08",
+      "class": "unknowns",
+      "input": "missing predicate operand",
+      "expect": [
+        "NOT_EVALUABLE_MISSING",
+        "listed in unknown_inputs",
+        "not false"
+      ]
+    },
+    {
+      "id": "G09",
+      "class": "priority",
+      "input": "unknown higher-priority rule + high risk",
+      "expect": [
+        "INSUFFICIENT_BLOCKING",
+        "CLOSE_HONESTLY"
+      ]
+    },
+    {
+      "id": "G10",
+      "class": "authority",
+      "input": "unstable candidate decision",
+      "expect": [
+        "candidate cannot select Playbook"
+      ]
+    },
+    {
+      "id": "G11",
+      "class": "bounded_guard",
+      "input": "two material changes",
+      "expect": [
+        "three receipts maximum",
+        "previousReceiptId chain",
+        "only final authoritative"
+      ]
+    },
+    {
+      "id": "G12",
+      "class": "bounded_guard",
+      "input": "equal or lower floor",
+      "expect": [
+        "no recompute"
+      ]
+    },
+    {
+      "id": "G13",
+      "class": "side_effects",
+      "input": "terminal CLOSE_HONESTLY",
+      "expect": [
+        "provider=0",
+        "token request=0",
+        "eval=0",
+        "integrity persistence=0"
+      ]
+    },
+    {
+      "id": "G14",
+      "class": "voice_boundary",
+      "input": "metric-driven voice candidate",
+      "expect": [
+        "candidate only",
+        "Council/Voice finalizes"
+      ]
+    },
+    {
+      "id": "G15",
+      "class": "unicode",
+      "input": "Cyrillic/Latin/mixed/emoji corpus",
+      "expect": [
+        "shared tokenizer used",
+        "no Cyrillic collapse to zero solely from script"
+      ]
+    },
+    {
+      "id": "G16",
+      "class": "sufficiency",
+      "input": "19 and 20 normalized tokens",
+      "expect": [
+        "19 unavailable",
+        "20 computed"
+      ]
+    },
+    {
+      "id": "G17",
+      "class": "sufficiency",
+      "input": "HFD N=19,20; DFA N=49,50",
+      "expect": [
+        "typed unavailable below threshold",
+        "computed at threshold",
+        "no stand-ins"
+      ]
+    },
+    {
+      "id": "G18",
+      "class": "skill_registry",
+      "input": "pre-promotion state",
+      "expect": [
+        "iskra-metrics remains PLANNED"
+      ]
+    }
+  ],
+  "accepted_at": "2026-07-24",
+  "accepted_by": "Семён",
+  "acceptance_ref": "ADR-20260724-01",
+  "source_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "mirror_branch": "governance/atom1-metrics-authority-20260724"
+}

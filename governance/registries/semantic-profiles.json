@@ -1,0 +1,117 @@
+{
+  "schema_version": "iskra.semantic-profiles.v1",
+  "status": "accepted_mirror_unactivated",
+  "repository": "serhiipriadko2-sys/iskra",
+  "commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "profiles": [
+    {
+      "id": "metrics.snapshot.state.v1",
+      "purpose": "Frozen current-turn state snapshot",
+      "canonical_state_metrics": [
+        "rhythm",
+        "trust",
+        "pain",
+        "chaos",
+        "drift",
+        "echo",
+        "clarity",
+        "silence_mass",
+        "mirror_sync",
+        "interrupt",
+        "ctxSwitch"
+      ],
+      "authority": "SoT30/09",
+      "owner_candidate": "iskra-metrics orchestration contract",
+      "eligible_for_guard": true,
+      "timing": "current_turn_before_ews_guard",
+      "persistence": "immutable ref; optional durable snapshot after policy",
+      "forbidden": [
+        "foresight as canonical 12th state metric",
+        "values without method/evidence"
+      ]
+    },
+    {
+      "id": "metrics.temporal.science.v1",
+      "purpose": "Entropy/HFD/DFA and temporal sufficiency",
+      "authority": "SoT30/10",
+      "owner_candidate": "packages/math after activation gates",
+      "eligible_for_guard": "only through registered derived/EWS inputs",
+      "timing": "before EWS when sufficient",
+      "persistence": "versioned result + algorithm/tokenizer refs",
+      "forbidden": [
+        "stand-ins",
+        "unversioned tokenizer",
+        "calibration labels as Guard truth"
+      ]
+    },
+    {
+      "id": "metrics.state.adapter.v1",
+      "purpose": "History/state transport and transitions",
+      "authority": "adapter-only",
+      "owner_candidate": "packages/engine",
+      "eligible_for_guard": false,
+      "timing": "state update around snapshot builder",
+      "persistence": "history store owned separately from formula owner",
+      "forbidden": [
+        "owning formulas",
+        "owning Guard thresholds"
+      ]
+    },
+    {
+      "id": "metrics.ui.somatic.v1",
+      "purpose": "UI phases, haptics and ritual suggestions",
+      "authority": "view/advisory",
+      "owner_candidate": "runtime/iskraSpace",
+      "eligible_for_guard": false,
+      "timing": "after or alongside frozen snapshot without mutating it",
+      "persistence": "UI state only unless separately versioned",
+      "forbidden": [
+        "control-plane phase name collision",
+        "authoritative Guard/EWS outcome"
+      ]
+    },
+    {
+      "id": "metrics.voice.suggestion.v1",
+      "purpose": "Provisional voice weights",
+      "authority": "advisory",
+      "owner_candidate": "Council/Voice input adapter",
+      "eligible_for_guard": false,
+      "timing": "after Guard/Playbook constraints",
+      "persistence": "optional trace",
+      "forbidden": [
+        "final selected_voice",
+        "random collapse as authority"
+      ]
+    },
+    {
+      "id": "metrics.eval.post_output.v1",
+      "purpose": "Evaluate completed output",
+      "authority": "VERIFY/RECEIPT",
+      "owner_candidate": "eval layer",
+      "eligible_for_guard": false,
+      "timing": "after OUTPUT",
+      "persistence": "evaluation receipt",
+      "forbidden": [
+        "pre-output SLO selection"
+      ]
+    },
+    {
+      "id": "metrics.keyword_rubric.v1",
+      "purpose": "Local keyword heuristic scoring",
+      "authority": "local_rubric",
+      "owner_candidate": "IskraSpace UI adapter",
+      "eligible_for_guard": false,
+      "timing": "UI/advisory only",
+      "persistence": "versioned rubric config if retained",
+      "forbidden": [
+        "claiming observation",
+        "direct Guard/EWS or final voice authority"
+      ]
+    }
+  ],
+  "accepted_at": "2026-07-24",
+  "accepted_by": "Семён",
+  "acceptance_ref": "ADR-20260724-01",
+  "source_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "mirror_branch": "governance/atom1-metrics-authority-20260724"
+}
