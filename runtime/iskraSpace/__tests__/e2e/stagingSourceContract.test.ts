@@ -74,11 +74,18 @@ describe('staging acceptance source contract', () => {
     );
     const receipt = parseAndVerifyStagingAcceptanceReceiptBlock(releaseStatus);
 
-    expect(receipt.source_pr).toBe(299);
-    expect(receipt.source_merge_sha).toBe('4dd29c64e24a3f0333ca4d350154380dc1dd8ae0');
-    expect(receipt.staging_migrations_before_and_after).toEqual({ before: 33, after: 33 });
-    expect(receipt.test_matrix.branch_replay).toBe('failed_before_S0');
-    expect(receipt.cleanup).toMatchObject({ branch_deleted: true, completed: true });
+    expect(receipt.source_pr).toBe(303);
+    expect(receipt.source_merge_sha).toBe('d2ce040643a120916fc62f7fe09e10f49463dfb2');
+    expect(receipt.staging_migrations_before_and_after).toEqual({ before: 35, after: 36 });
+    expect(receipt.test_matrix.branch_replay).toBe('passed_36_of_36');
+    expect(receipt.test_matrix.function_deploy).toBe(
+      'failed_missing_supabase_functions_kain_entrypoint',
+    );
+    expect(receipt.cleanup).toMatchObject({
+      branch_deleted: true,
+      branch_credentials_rotated: true,
+      completed: true,
+    });
   });
 
   it('records the reproduced migration-34 cause without authorizing blind branch recreation', () => {
@@ -90,22 +97,39 @@ describe('staging acceptance source contract', () => {
     expect(releaseStatus).toContain('82191ce0899bedb04bcd4345e0c7ee28adb65258');
     expect(releaseStatus).toContain('c8251c707d7bee66ece9c874c27c1ebe5833024a0573169df00f53a330a2be93');
     expect(releaseStatus).toContain('Users can manage own graph nodes (secure)');
-    expect(releaseStatus).toContain('Do not blindly recreate');
-    expect(releaseStatus).toContain('must prove');
-    expect(releaseStatus).toContain('guarded migration body');
+    expect(releaseStatus).toMatch(/Do not recreate\s+the same Git-linked branch/);
+    expect(releaseStatus).toMatch(/transaction\s+rolled back and migration 34 was not recorded/);
+    expect(releaseStatus).toMatch(/current guarded\s+repository migrations/);
   });
 
-  it('records the live GitHub integration drift as a branch-creation blocker', () => {
+  it('records the corrected GitHub integration and the function-deploy blocker', () => {
     const releaseStatus = readFileSync(
       join(resolveRepositoryRoot(), 'runtime', 'iskraSpace', 'RELEASE_STATUS.md'),
       'utf8',
     );
 
-    expect(releaseStatus).toContain('serhiipriadko2-sys/Iskraspace');
     expect(releaseStatus).toContain('serhiipriadko2-sys/iskra');
-    expect(releaseStatus).toContain('e66da7044627b7058e961a5a0619ef32d3980dd3');
+    expect(releaseStatus).toContain('workdir="."');
+    expect(releaseStatus).toContain('git_branch=""');
     expect(releaseStatus).toContain('staging/iskraspace-acceptance-d2ce040');
-    expect(releaseStatus).toContain('Owner-approved live configuration change');
-    expect(releaseStatus).toContain('no further staging branch create is permitted');
+    expect(releaseStatus).toContain('2a5b741b8c9940d8ab4f33816615c671');
+    expect(releaseStatus).toContain('a50db03940f9e9a4e0b39ddf963a9a32876dac0eeb526b0166f0c8287b6e47ac');
+    expect(releaseStatus).toContain(
+      'entrypoint path does not exist (supabase/functions/kain/index.ts)',
+    );
+    expect(releaseStatus).toContain('Do not recreate');
+  });
+
+  it('records the current main dependency-audit failure without implying a deployment', () => {
+    const releaseStatus = readFileSync(
+      join(resolveRepositoryRoot(), 'runtime', 'iskraSpace', 'RELEASE_STATUS.md'),
+      'utf8',
+    );
+
+    expect(releaseStatus).toContain('001cdef6c8777aaded526858921df626635abb88');
+    expect(releaseStatus).toContain('30158322726');
+    expect(releaseStatus).toContain('postcss <=8.5.17');
+    expect(releaseStatus).toContain('brace-expansion <=5.0.7');
+    expect(releaseStatus).toContain('it did not deploy production');
   });
 });
