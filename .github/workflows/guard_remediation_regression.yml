@@ -22,6 +22,9 @@ jobs:
   guard-regression:
     name: guard-regression
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: runtime
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -31,6 +34,9 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
       - name: Install workspace dependencies
+        working-directory: .
         run: pnpm install --frozen-lockfile
+      - name: Install legacy runtime dependencies
+        run: npm ci --ignore-scripts
       - name: Run accepted G01-G18 Guard remediation matrix
-        run: pnpm --filter @iskra/runtime exec vitest run --config vitest.guard-remediation.config.ts
+        run: npm exec -- vitest run --config vitest.guard-remediation.config.ts

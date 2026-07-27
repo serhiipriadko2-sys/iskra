@@ -171,7 +171,7 @@
     }
   ],
   "accepted_at": "2026-07-24",
-  "accepted_by": "Р РЋР ВµР СРЎвЂР Р…",
+  "accepted_by": "Семён",
   "acceptance_ref": "ADR-20260724-01",
   "source_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
   "mirror_branch": "governance/atom1-metrics-authority-20260724",

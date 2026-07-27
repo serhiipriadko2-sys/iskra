@@ -224,14 +224,14 @@ describe('ADR-20260724-01 executable Guard remediation baseline', () => {
   });
 
   it('G15: Cyrillic and mixed-script entropy do not collapse solely because of script', () => {
-    expect(calculateShannonEntropy('РїСЂРёРІРµС‚ РјРёСЂ РёСЃРєСЂР° РґРѕРІРµСЂРёРµ')).toBeGreaterThan(0);
-    expect(calculateShannonEntropy('hello РјРёСЂ iskra РґРѕРІРµСЂРёРµ')).toBeGreaterThan(0);
+    expect(calculateShannonEntropy('\u043f\u0440\u0438\u0432\u0435\u0442 \u043c\u0438\u0440 \u0438\u0441\u043a\u0440\u0430 \u0434\u043e\u0432\u0435\u0440\u0438\u0435')).toBeGreaterThan(0);
+    expect(calculateShannonEntropy('hello \u043c\u0438\u0440 iskra \u0434\u043e\u0432\u0435\u0440\u0438\u0435')).toBeGreaterThan(0);
   });
 
   it('G16: normalized-token sufficiency distinguishes 19 unavailable from 20 computed', () => {
     const calculateEntropyMetric = requireFunction(mathExports, 'calculateEntropyMetric');
-    const nineteen = Array.from({ length: 19 }, (_, index) => `СЃР»РѕРІРѕ${index}`).join(' ');
-    const twenty = Array.from({ length: 20 }, (_, index) => `СЃР»РѕРІРѕ${index}`).join(' ');
+    const nineteen = Array.from({ length: 19 }, (_, index) => `\u0441\u043b\u043e\u0432\u043e${index}`).join(' ');
+    const twenty = Array.from({ length: 20 }, (_, index) => `\u0441\u043b\u043e\u0432\u043e${index}`).join(' ');
     expect(calculateEntropyMetric(nineteen)).toMatchObject({ status: 'unavailable', normalized_token_count: 19 });
     expect(calculateEntropyMetric(twenty)).toMatchObject({ status: 'computed', normalized_token_count: 20 });
   });
