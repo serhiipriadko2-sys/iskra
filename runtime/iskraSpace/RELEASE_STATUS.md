@@ -1,14 +1,20 @@
 # Iskra Space Release Status
 
-Status: staging source integration drift blocks branch creation; production_deployed: false; canonical_activation: blocked
-Last updated: 2026-07-23
+Status: Git-linked staging replayed 36 migrations but function deploy failed; current main release gate is blocked by dependency audit; production_deployed: false; canonical_activation: blocked
+Last updated: 2026-07-27
 App path: `runtime/iskraSpace`
 
 ## Current verified baseline
 
 - GitHub `main` at this status refresh:
-  `d2ce040643a120916fc62f7fe09e10f49463dfb2` (PR
-  [#303](https://github.com/serhiipriadko2-sys/iskra/pull/303) merge).
+  `001cdef6c8777aaded526858921df626635abb88` (PR
+  [#306](https://github.com/serhiipriadko2-sys/iskra/pull/306) merge on 2026-07-25).
+  PR #306 changes metrics-governance artifacts; it does not alter the staging
+  function topology. Its parent `f25d43e91c29040e251400fb85c57b87ee7a691f`
+  (PR #305) records the now-superseded GitHub integration drift. Its parent
+  `d2ce040643a120916fc62f7fe09e10f49463dfb2` is PR
+  [#303](https://github.com/serhiipriadko2-sys/iskra/pull/303), the exact Git
+  source used by the live staging attempt below.
   PR #303 records and contract-tests the exact migration-34 source cause. It
   descends from the status merge PR #302 at
   `bcb37d0e2821098eca91a3014aee58569d278aae`, the canonical failed-staging
@@ -57,6 +63,21 @@ App path: `runtime/iskraSpace`
   all completed successfully. The Production Deployment release-gate job
   passed; Docker/GHCR and Vercel jobs were skipped, so no image or deployment
   receipt exists.
+- Post-merge receipts for PR #305 merge
+  `f25d43e91c29040e251400fb85c57b87ee7a691f`:
+  [SoT integrity 30030363752](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30030363752),
+  [Runtime CI 30030363648](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30030363648),
+  [iskraSpace CI 30030363745](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30030363745)
+  and [Production Deployment 30030363722](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30030363722)
+  all completed successfully. The release-gate job passed; Docker/GHCR and
+  Vercel jobs were skipped, so no image or deployment receipt exists.
+- Current-main Production Deployment run
+  [30158322726](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30158322726)
+  for `001cdef6c8777aaded526858921df626635abb88` failed in the root dependency
+  audit before deploy: `postcss <=8.5.17` and `brace-expansion <=5.0.7` are
+  reported as high vulnerabilities by the supported audit client. This is a
+  separate source remediation blocker; it did not deploy production, create a
+  staging branch, or alter the Function-deploy failure receipt.
 - Current SoT30 package is v5.5.6; its committed receipt records a canonical
   source-freeze build, 24/24 current and regression verifier checks, and ZIP
   SHA-256 `d86959641c9d78fea321a837d2ebf58e9406cf75acec84b9ea98b3d9d2dd9764`.
@@ -128,19 +149,37 @@ App path: `runtime/iskraSpace`
   repository migrations `20260718194551`, `20260718194835` and
   `20260718200634` to the same state passed and recorded all three versions.
   This reproduces the exact 33-of-36 stop without a new cloud branch.
-- HIGH-RISK DRIFT: a Git-linked branch-create attempt was rejected before
-  provisioning because live Supabase is connected to
-  `serhiipriadko2-sys/Iskraspace`, not the canonical
-  `serhiipriadko2-sys/iskra` repository. The rejected target created no
-  Supabase branch; a post-attempt list contained production only.
-- Supabase action-run metadata independently confirms
-  `git_config.owner=serhiipriadko2-sys`, `git_config.repo=Iskraspace`,
-  `git_config.ref=main` and `workdir=Iskraspace`. That connected repository is
-  at `e66da7044627b7058e961a5a0619ef32d3980dd3` from 2026-05-28 and has no
-  `supabase/migrations/` directory. The canonical repository has 36 migrations.
-  Git branch `staging/iskraspace-acceptance-d2ce040` is an immutable pointer to
-  `d2ce040643a120916fc62f7fe09e10f49463dfb2`, but Supabase cannot use it until
-  the integration source is explicitly corrected.
+- `[FACT]` The Owner-approved live integration change is complete. Connection
+  `446222` now points to `serhiipriadko2-sys/iskra` with `workdir="."`,
+  `new_branch_per_pr=true`, `supabase_changes_only=true` and branch limit 3.
+  `workdir="."` is the supported representation for the requested root
+  `supabase/` directory: Supabase defines this field as the parent directory
+  containing `supabase/`.
+- `[FACT]` Deploy to production is disabled: the default Supabase branch remains
+  named `main`, but its Git sync field is empty (`git_branch=""`). Production
+  remained at 35 migrations before and after the integration change and staging
+  attempt.
+- `[FACT]` Git-linked data-less micro branch
+  `staging-closed-beta-acceptance-20260723-git`
+  (`jvcxaccvntyjvtfmykum`, branch ID
+  `c5096221-2750-4817-b1f1-54e4ba17bb8d`) used exact Git source
+  `staging/iskraspace-acceptance-d2ce040` at
+  `d2ce040643a120916fc62f7fe09e10f49463dfb2`. Action
+  `2a5b741b8c9940d8ab4f33816615c671` independently records
+  `git_config.repo=iskra`, the same Git ref and `workdir="."`.
+- `[FACT]` The Git-linked replay applied all 36 repository migrations; production
+  stayed at 35. Function deployment then failed before S0 with
+  `entrypoint path does not exist (supabase/functions/kain/index.ts)`.
+  The redacted platform log is 13,366 bytes, SHA-256
+  `a50db03940f9e9a4e0b39ddf963a9a32876dac0eeb526b0166f0c8287b6e47ac`;
+  the bounded secret-pattern scan found no JWT, Postgres URL or `sb_*` key in
+  that platform log.
+- During verification, Supabase CLI `branches get --output json` emitted
+  branch-only credentials to command output. Their values are deliberately not
+  retained here. The data-less branch was made non-persistent and deleted,
+  invalidating those credentials and stopping billing. No fixtures, Auth users,
+  provider calls or S0/S1 tests were started. A post-cleanup list contained only
+  production.
 - Merged PR #297 added source artifacts: tests, one historical replay repair,
   one proposed forward migration, CI base-SHA wiring, documentation, and Edge
   Function source changes that move `enforceAiRequestBoundary` before payload
@@ -157,23 +196,21 @@ claim `delivery_evidence: verified_live_staging`.
 
 <!-- STAGING_ACCEPTANCE_RECEIPT_START -->
 ```json
-{"schema_version":1,"scope":"staging_only","source_pr":299,"source_merge_sha":"4dd29c64e24a3f0333ca4d350154380dc1dd8ae0","production_ref":"typcvaszcfdpkzbjzuur","production_migration_count":35,"staging_ref_and_branch_id":{"ref":"xabbdxdnhkcrepbffxfg","id":"a3e73206-b8f2-4735-9f76-6c7ded2e044c"},"staging_migrations_before_and_after":{"before":33,"after":33},"function_source_hashes":{},"auth_config_before_and_after":{"before":"not_observed","after":"not_observed"},"test_matrix":{"branch_creation":"failed_migrations_33_of_36","branch_replay":"failed_before_S0","local_replay_33_to_36":"passed_cli_2_109_0","staging_advisors":"not_observed_branch_failed","S0":"not_started","S1":"not_started","edge_boundary":"not_started"},"advisor_counts_by_class_before_and_after":{"before":{"security":{},"performance":{}},"after":{"security":{},"performance":{}}},"provider_invocations":0,"memory_gateway_changed":false,"cleanup":{"completed":true,"branch_deleted":true,"fixtures_created":false,"edge_functions_deployed":false,"branch_credentials_invalidated":true},"started_at":"2026-07-22T19:25:20.447927Z","completed_at":"2026-07-23T15:41:32.527Z","sha256":"e146fe606f98df8bd245d45530af0e77cc0e60beae9eccdca5f814d5af66de90"}
+{"schema_version":1,"scope":"staging_only","source_pr":303,"source_merge_sha":"d2ce040643a120916fc62f7fe09e10f49463dfb2","production_ref":"typcvaszcfdpkzbjzuur","production_migration_count":35,"staging_ref_and_branch_id":{"ref":"jvcxaccvntyjvtfmykum","id":"c5096221-2750-4817-b1f1-54e4ba17bb8d"},"staging_migrations_before_and_after":{"before":35,"after":36},"function_source_hashes":{},"auth_config_before_and_after":{"before":"not_observed","after":"not_observed"},"test_matrix":{"github_integration":"passed_repo_iskra_workdir_dot_supabase_changes_only","production_sync":"disabled_git_branch_empty","branch_creation":"created_data_less_persistent_micro","branch_replay":"passed_36_of_36","function_deploy":"failed_missing_supabase_functions_kain_entrypoint","S0":"not_started","S1":"not_started","edge_boundary":"not_started"},"advisor_counts_by_class_before_and_after":{"before":{"security":{},"performance":{}},"after":{"security":{},"performance":{}}},"provider_invocations":0,"memory_gateway_changed":false,"cleanup":{"completed":true,"branch_deleted":true,"fixtures_created":false,"branch_credentials_rotated":true,"provider_keys_set":false},"started_at":"2026-07-23T18:11:24.806923Z","completed_at":"2026-07-23T18:22:53.883Z","sha256":"fc1499c56286f75a08825cbe0101f89f22c88c63e70a43e753938412f80962ab"}
 ```
 <!-- STAGING_ACCEPTANCE_RECEIPT_END -->
 
 ## Current release and activation blockers
 
-- The prerequisite to identify an exact platform log or source-reproducible
-  cause is satisfied by the migration-34 replay above. Do not blindly recreate
-  the same dashboard-style branch: its pull step can reuse the unguarded
-  production-stored body. The next branch must be tied to an exact Git source
-  or follow an accepted migration-history reconciliation path, and must prove
-  that the guarded migration body is the one replayed.
-- Rebinding the production project's GitHub integration from `Iskraspace` to
-  `iskra` is an Owner-approved live configuration change. Its blast radius
-  includes production deploy-on-push and automatic branch creation settings.
-  Until that decision is explicit and the resulting integration metadata is
-  verified, no further staging branch create is permitted.
+- The migration-history blocker is closed for Git-linked replay: exact source
+  `d2ce040...` reached 36/36 while production remained at 35. Do not recreate
+  the same Git-linked branch until the function topology is corrected.
+- Root `supabase/config.toml` declares `gemini`, `iskra-agent` and `kain` at
+  default root paths, while those entrypoints exist only under
+  `runtime/iskraSpace/supabase/functions/`. The accepted staging boundary also
+  excludes `kain` and requires only `gemini` and `iskra-agent`. A narrow source
+  decision must reconcile these paths and deploy scope without changing or
+  deploying `iskra-memory-gateway`.
 - Staging closed-beta acceptance is still required: magic-link invite allow;
   anonymous and non-member deny; two active users cannot read, write, update or
   delete one another's data/RPC rows.
