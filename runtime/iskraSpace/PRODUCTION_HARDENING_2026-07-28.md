@@ -6,7 +6,7 @@ Status: source implementation candidate; verified-live-staging; production not d
 
 This document describes repository source on branch
 `fix/iskraspace-p0-production-hardening-20260728`, refreshed onto GitHub
-`origin/main` `0fd486b3ab57237668cd3a253a7db58792119b25`. Staging evidence
+`origin/main` `288b3b7cf0f2c7f9348d7afb64b56d71f9dbadca`. Staging evidence
 is scoped to the data-less preview project and exact Edge source recorded in
 `docs/operations/iskraspace_staging_acceptance_2026-07-28.md`. It does not
 prove GitHub merge, production deployment, production traffic, Builder state,
@@ -37,21 +37,23 @@ Read-only observations on 2026-07-28:
 ## Verified staging receipt
 
 - Git branch: `fix/iskraspace-p0-production-hardening-20260728`;
-- Edge source commit:
-  `e7bed692753a9131c8b7b53f0c2e60b210e118d3`;
+- final deployed Edge/shared source snapshot:
+  `67c8a512253404a52f0084a801b6acc231233c85`;
 - staging migrations: 36/36;
 - `gemini`: ACTIVE, `verify_jwt=true`, bundle SHA-256
-  `48c984f06a3d7be92600c93f20d79438a5afa157679d89b531eabcd7e781ef9d`;
+  `2fae94308eae99ac4c12d9ac4a1159c94660991f2debd30df37ae9ca6d6caf3d`;
 - `iskra-agent`: ACTIVE, `verify_jwt=true`, bundle SHA-256
-  `c29e975e86cf4ac5907a90f9538ae785852b5df4eb36a3ff59521a1930b57ed7`;
+  `7087ffb78320af157f69d40055730fce5c947edf97cb220e103a3a728ceb6d98`;
 - downloaded read-back: 6/6 Edge and shared files byte-identical to local
   source;
-- live matrix: 7/7 files and 60/60 tests PASS;
+- live matrix: 7/7 files and 61/61 tests PASS;
 - principals: two active members plus valid non-member and suspended-member
-  controls; all four principals and fixtures removed after the run;
+  controls; all four principals and fixtures removed after the run; rate-window
+  cleanup is fixture-subject scoped and preserves unrelated shared-IP windows;
 - advisors: 0 ERROR; 33 security notices and 31 performance INFO notices;
-- scoped logs: only expected negative-test denials; no Edge panic, uncaught
-  exception, fatal or out-of-memory marker.
+- scoped logs: only expected negative-test denials (`audit_log` permission and
+  Graph ownership); no Edge panic, uncaught exception, fatal or out-of-memory
+  marker.
 
 The ingress spoof test rejected `x-forwarded-for` as a trusted identity source:
 eleven caller-selected values bypassed the limiter under that configuration.
@@ -202,15 +204,15 @@ Final local run on the refreshed source candidate:
 - Deno 2.8.3: 21/21 shared boundary/metrics tests PASS; both Edge
   entrypoints typecheck;
 - IskraSpace TypeScript and strict ESLint: PASS;
-- IskraSpace Vitest: 73 files PASS, 4 skipped; 831 tests PASS, 27 skipped;
+- IskraSpace Vitest: 76 files PASS, 4 skipped; 841 tests PASS, 27 skipped;
 - Chromium Playwright: 28/28 PASS;
 - IskraSpace production build and bundle budget: PASS; largest JS chunk
   492,244 raw / 162,526 gzip bytes; total JS gzip 500,712 bytes;
 - legacy runtime: build and strict lint PASS; 17 files / 265 tests PASS;
 - canonical Edge metrics parity: 5 files / 65 tests PASS;
 - GraphQL-client, Supabase graph and voice/metrics repository contracts: PASS;
-- canon index: current at 3,661 nodes / 20 curated;
-- ledger: PASS at 985 tracked files;
+- canon index: current at 3,665 nodes / 20 curated;
+- ledger: PASS at 989 tracked files;
 - added-line credential-shape scan and `git diff --check`: PASS.
 - root `pnpm verify`: PASS, including shard registry, sensitive-status scan,
   workspace typechecks/tests, release-manifest tests and final ledger read-back.

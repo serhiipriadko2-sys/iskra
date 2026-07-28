@@ -12,10 +12,11 @@ Edge source, JWT setting and acceptance behavior observed on that preview
 project. It does not prove production deployment, provider availability,
 provider billing behavior, browser UI acceptance or GitHub merge.
 
-The deployed Edge source is the source committed at
-`e7bed692753a9131c8b7b53f0c2e60b210e118d3`. The follow-up acceptance-harness
-and dependency changes do not modify either Edge Function or their shared
-runtime files.
+The final deployed Edge/shared source snapshot is commit
+`67c8a512253404a52f0084a801b6acc231233c85`. A later receipt-only commit may
+move the PR head without changing any of the six deployed files; in that case
+the file hashes below, not the documentation commit, remain the exact
+deployment identity.
 
 ## Environment and deployment
 
@@ -46,21 +47,21 @@ manual runtime path and the corrected repository-root config with Supabase CLI
 
 | Function | Version | Status | JWT | Bundle SHA-256 |
 | --- | ---: | --- | --- | --- |
-| `gemini` | 2 | ACTIVE | `verify_jwt=true` | `48c984f06a3d7be92600c93f20d79438a5afa157679d89b531eabcd7e781ef9d` |
-| `iskra-agent` | 2 | ACTIVE | `verify_jwt=true` | `c29e975e86cf4ac5907a90f9538ae785852b5df4eb36a3ff59521a1930b57ed7` |
+| `gemini` | 7 | ACTIVE | `verify_jwt=true` | `2fae94308eae99ac4c12d9ac4a1159c94660991f2debd30df37ae9ca6d6caf3d` |
+| `iskra-agent` | 5 | ACTIVE | `verify_jwt=true` | `7087ffb78320af157f69d40055730fce5c947edf97cb220e103a3a728ceb6d98` |
 
 Downloaded source read-back matched the local source byte-for-byte:
 
 | File | SHA-256 |
 | --- | --- |
-| `gemini/index.ts` | `64fd8ad8dfe7927425337023d551263046c771ce08cacf91eced46fd3996ffdc` |
+| `gemini/index.ts` | `9e5e125697b02b62ae6cf22644e9c6291ee3040f9bd6576060a529943ded472c` |
 | `gemini/deno.json` | `4d444edb3fa4635e953876515e0734be0fc3ba3135947a8d351f5b0ad6b6187d` |
-| `iskra-agent/index.ts` | `9d091b9f73a0680c851c7f3a2372dafd58811fc29097b798a7146c7bc26fc3bd` |
+| `iskra-agent/index.ts` | `fa7c13a26213b020ded806a0589ec1b3541e0e68551d861dab6909555c8e6c4d` |
 | `iskra-agent/deno.json` | `0ffef2083b62eb573cdf5e311dc06dfb6aedcbb84b641a5531f2243420d374ee` |
 | `_shared/aiBoundary.ts` | `890759c41023a9558f634d728cd6aa7d1d8d9a1c4ef5289d920fc85ff506d052` |
-| `_shared/aiContentPolicy.ts` | `3a0bc91c4c4583552616db04e4108237e07141c04901ea2df7e89b23332ab327` |
+| `_shared/aiContentPolicy.ts` | `d77100776f975bfd1668718ee67a5a43be7cb504f2df77c6f87c9a91d99a90dc` |
 
-The second version of each function was deployed through the repository-root
+The final versions of both functions were deployed through the repository-root
 `supabase/config.toml` after adding explicit entrypoint/import-map paths. This
 proved that the branch automation and the manual operator path resolve the same
 runtime source. The automatic preview also deployed the unchanged
@@ -81,7 +82,7 @@ It also created a correctly signed but expired JWT. Platform anonymous signup
 is disabled and returned `422`; the receipt records that platform denial
 instead of weakening Auth configuration for a test.
 
-Result: 7/7 files and 60/60 tests passed.
+Result: 7/7 files and 61/61 tests passed.
 
 The matrix proved:
 
@@ -108,8 +109,8 @@ Safe receipt hashes from the final run:
 
 ```text
 anonymous_signup_deny_sha256=ed2bb4d6d643bb4ca71888a42975a23b2e06905ecaa7368d087111595438f77f
-principal_a_bootstrap_sha256=18454f4792dbdf65bbfe3872316a41df8c93705841410f8e2d26f35c3abd3c94
-principal_b_bootstrap_sha256=e69071646e47059f17a41450311ec2d9362fa5b4e135ef3f293396bf50eaa87b
+principal_a_bootstrap_sha256=66c4ff4fc33497a5ea95555dffae4f9d99738c924034c19910b42bf7619362c3
+principal_b_bootstrap_sha256=46e46a2f73fc40317aebeeae79b36601c00789b0c8de2fe069ee34732983d891
 ```
 
 Cleanup receipt:
@@ -121,6 +122,11 @@ cleanup_auth_errors=0
 cleanup_principals=4
 cleanup_ok=true
 ```
+
+Cleanup deletes only rate windows attributable to the four fixture subjects;
+it intentionally does not delete shared-IP windows belonging to other traffic.
+The harness snapshots all 17 acceptance environment variables and restores
+them in an outer `finally`, including when setup or cleanup fails.
 
 ## Advisors and logs
 
@@ -137,14 +143,14 @@ Post-acceptance log review:
 
 - Edge: 11 scoped requests, statuses `401×3`, `403×3`, `502×5`; no panic,
   uncaught exception, fatal or out-of-memory marker;
-- Auth: the expected anonymous-signup `422`, principal lifecycle operations and
-  cleanup; no unexplained authentication failure;
-- Postgres: four ERROR rows, all expected negative-test denials
-  (`audit_log` permission denied ×2, foreign Graph node denied ×2);
-- branch-action: pre-fix automatic bundling recorded missing default
-  entrypoints. Corrected explicit paths were then proven by repository-root
-  deployments; the GitHub preview check remains the independent automation
-  receipt.
+- Auth: the 24-hour capped snapshot contains expected anonymous-signup `422`
+  events, principal lifecycle operations and cleanup; no unexplained
+  authentication failure was identified;
+- Postgres: eight ERROR rows, all expected negative-test denials
+  (`audit_log` permission denied ×4, Graph-node ownership denied ×4);
+- branch-action: no rows in the post-run 24-hour snapshot. Corrected explicit
+  paths were proven by repository-root deployments; the GitHub preview check
+  remains the independent automation receipt.
 
 Advisor remediation references:
 
@@ -168,7 +174,7 @@ replacement branch named in this receipt.
 
 Production promotion remains blocked until all of the following are true:
 
-1. the follow-up commit is pushed and PR #316 is green on its exact head;
+1. the receipt refresh is pushed and PR #316 is green on its exact head;
 2. required production secret names are present, with
    `AI_EDGE_TEST_MODE=false` and `AI_EDGE_INGRESS_IP_HEADER=cf-connecting-ip`;
 3. production pre-deploy function versions, bundle hashes, advisors and recent

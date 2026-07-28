@@ -8,17 +8,18 @@ App path: `runtime/iskraSpace`
 
 - `[FACT] github-verified` PR
   [#316](https://github.com/serhiipriadko2-sys/iskra/pull/316) is open from
-  `fix/iskraspace-p0-production-hardening-20260728`; Edge source commit
-  `e7bed692753a9131c8b7b53f0c2e60b210e118d3` is pushed but not merged.
+  `fix/iskraspace-p0-production-hardening-20260728`; final deployed
+  Edge/shared source snapshot
+  `67c8a512253404a52f0084a801b6acc231233c85` is pushed but not merged.
 - `[FACT] supabase-verified` Data-less preview project
   `rejqxblontqjycldniyz` replayed all 36 migrations. Manual scoped deployment
   made `gemini` and `iskra-agent` ACTIVE with `verify_jwt=true`.
 - `[FACT] supabase-verified` Bundle SHA-256:
-  `gemini=48c984f06a3d7be92600c93f20d79438a5afa157679d89b531eabcd7e781ef9d`;
-  `iskra-agent=c29e975e86cf4ac5907a90f9538ae785852b5df4eb36a3ff59521a1930b57ed7`.
+  `gemini=2fae94308eae99ac4c12d9ac4a1159c94660991f2debd30df37ae9ca6d6caf3d`;
+  `iskra-agent=7087ffb78320af157f69d40055730fce5c947edf97cb220e103a3a728ceb6d98`.
   Six downloaded Edge/shared files matched the local source byte-for-byte.
 - `[FACT] local-test-pass + supabase-verified` Live acceptance passed 7/7
-  files and 60/60 tests: missing/malformed/expired JWT, non-member and suspended
+  files and 61/61 tests: missing/malformed/expired JWT, non-member and suspended
   member, Origin/CORS, quota-spoof, two-active-principal RLS and Graph
   isolation, append-only audit and cleanup.
 - `[FACT] supabase-verified` The staging-proven ingress header is

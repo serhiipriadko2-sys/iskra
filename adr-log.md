@@ -238,7 +238,7 @@ production build and release-workflow contract tests.
 The data-less preview receipt at
 `docs/operations/iskraspace_staging_acceptance_2026-07-28.md` additionally
 proves 36/36 migrations, exact downloaded Edge source, `verify_jwt=true`,
-7/7 files and 60/60 live acceptance tests, two-active-principal RLS/Graph
+7/7 files and 61/61 live acceptance tests, two-active-principal RLS/Graph
 isolation, quota spoof resistance under `cf-connecting-ip`, fixture cleanup and
 post-run advisor/log review. It uses `AI_EDGE_TEST_MODE=true`, so it does not
 prove real provider availability, billing behavior, production traffic or
