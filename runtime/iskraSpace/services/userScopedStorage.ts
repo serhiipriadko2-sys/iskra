@@ -1,4 +1,5 @@
 const USER_STORAGE_PREFIX = 'iskra:v2:user';
+const LEGACY_OWNER_KEY = 'iskra:v2:legacy-storage-owner';
 
 export const LEGACY_USER_STORAGE_KEYS = [
   'iskra-space-tasks',
@@ -26,6 +27,7 @@ export interface UserStorageActivationReceipt {
   scopePrefix: string;
   migratedKeys: string[];
   failedKeys: string[];
+  blockedKeys: string[];
 }
 
 export class StorageScopeUnavailableError extends Error {
@@ -66,35 +68,66 @@ function requireActiveScopeToken(): string {
   return activeScopeToken;
 }
 
-function migrateLegacyKeys(storage: Storage, scopeToken: string): UserStorageActivationReceipt {
-  const migratedKeys: string[] = [];
-  const failedKeys: string[] = [];
+function emptyReceipt(scopeToken: string): UserStorageActivationReceipt {
+  return {
+    scopePrefix: buildScopePrefix(scopeToken),
+    migratedKeys: [],
+    failedKeys: [],
+    blockedKeys: [],
+  };
+}
 
-  for (const legacyKey of LEGACY_USER_STORAGE_KEYS) {
+function migrateLegacyKeys(storage: Storage, scopeToken: string): UserStorageActivationReceipt {
+  const receipt = emptyReceipt(scopeToken);
+  const presentLegacyKeys = LEGACY_USER_STORAGE_KEYS.filter(key => storage.getItem(key) !== null);
+  if (presentLegacyKeys.length === 0) return receipt;
+
+  const existingOwner = storage.getItem(LEGACY_OWNER_KEY);
+  if (existingOwner && existingOwner !== scopeToken) {
+    receipt.blockedKeys.push(...presentLegacyKeys);
+    return receipt;
+  }
+
+  if (!existingOwner) {
+    try {
+      storage.setItem(LEGACY_OWNER_KEY, scopeToken);
+    } catch {
+      receipt.failedKeys.push(...presentLegacyKeys);
+      return receipt;
+    }
+
+    if (storage.getItem(LEGACY_OWNER_KEY) !== scopeToken) {
+      receipt.failedKeys.push(...presentLegacyKeys);
+      return receipt;
+    }
+  }
+
+  for (const legacyKey of presentLegacyKeys) {
     const legacyValue = storage.getItem(legacyKey);
     if (legacyValue === null) continue;
 
     const scopedKey = buildScopedKey(scopeToken, legacyKey);
     try {
-      if (storage.getItem(scopedKey) === null) {
+      const existingValue = storage.getItem(scopedKey);
+      if (existingValue === null) {
         storage.setItem(scopedKey, legacyValue);
       }
-      if (storage.getItem(scopedKey) !== null) {
+
+      const persistedValue = storage.getItem(scopedKey);
+      if (persistedValue === legacyValue) {
         storage.removeItem(legacyKey);
-        migratedKeys.push(legacyKey);
+        receipt.migratedKeys.push(legacyKey);
+      } else if (persistedValue !== null) {
+        receipt.blockedKeys.push(legacyKey);
       } else {
-        failedKeys.push(legacyKey);
+        receipt.failedKeys.push(legacyKey);
       }
     } catch {
-      failedKeys.push(legacyKey);
+      receipt.failedKeys.push(legacyKey);
     }
   }
 
-  return {
-    scopePrefix: buildScopePrefix(scopeToken),
-    migratedKeys,
-    failedKeys,
-  };
+  return receipt;
 }
 
 export function activateUserStorage(
@@ -105,14 +138,7 @@ export function activateUserStorage(
   activeScopeToken = scopeToken;
 
   const storage = getBrowserStorage();
-  if (!storage || options.migrateLegacy === false) {
-    return {
-      scopePrefix: buildScopePrefix(scopeToken),
-      migratedKeys: [],
-      failedKeys: [],
-    };
-  }
-
+  if (!storage || options.migrateLegacy === false) return emptyReceipt(scopeToken);
   return migrateLegacyKeys(storage, scopeToken);
 }
 
