@@ -1,7 +1,7 @@
-
 import type { MemoryMode } from '@iskra/runtime';
 import { Task, JournalEntry, DuoSharePrefs, DuoCanvasNote, Habit, VoicePreferences, VoiceName, ResponseMode } from '../types';
 import { memoryService } from './memoryService';
+import { storageBoundary } from './storageBoundary';
 import { symbiosisService, type SymbiosisState } from './symbiosisService';
 
 const TASKS_KEY = 'iskra-space-tasks';
@@ -21,7 +21,7 @@ export const storageService = {
   // Tasks
   getTasks(): Task[] {
     try {
-      const tasksJson = localStorage.getItem(TASKS_KEY);
+      const tasksJson = storageBoundary.getItem(TASKS_KEY);
       return tasksJson ? JSON.parse(tasksJson) : [];
     } catch (error) {
       console.error("Error reading tasks from localStorage", error);
@@ -31,7 +31,7 @@ export const storageService = {
 
   saveTasks(tasks: Task[]): void {
     try {
-      localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+      storageBoundary.setItem(TASKS_KEY, JSON.stringify(tasks));
     } catch (error) {
       console.error("Error saving tasks to localStorage", error);
     }
@@ -40,7 +40,7 @@ export const storageService = {
   // Habits
   getHabits(): Habit[] {
     try {
-      const habitsJson = localStorage.getItem(HABITS_KEY);
+      const habitsJson = storageBoundary.getItem(HABITS_KEY);
       if (habitsJson) {
           return JSON.parse(habitsJson);
       }
@@ -59,7 +59,7 @@ export const storageService = {
 
   saveHabits(habits: Habit[]): void {
       try {
-          localStorage.setItem(HABITS_KEY, JSON.stringify(habits));
+          storageBoundary.setItem(HABITS_KEY, JSON.stringify(habits));
       } catch (error) {
           console.error("Error saving habits", error);
       }
@@ -68,7 +68,7 @@ export const storageService = {
   // Journal Entries
   getJournalEntries(): JournalEntry[] {
     try {
-      const entriesJson = localStorage.getItem(JOURNAL_ENTRIES_KEY);
+      const entriesJson = storageBoundary.getItem(JOURNAL_ENTRIES_KEY);
       const entries: JournalEntry[] = entriesJson ? JSON.parse(entriesJson) : [];
       // Sort by timestamp descending to show newest first
       return entries.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
@@ -83,7 +83,7 @@ export const storageService = {
       const entries = this.getJournalEntries();
       // Prepend the new entry to maintain sort order
       const updatedEntries = [entry, ...entries];
-      localStorage.setItem(JOURNAL_ENTRIES_KEY, JSON.stringify(updatedEntries));
+      storageBoundary.setItem(JOURNAL_ENTRIES_KEY, JSON.stringify(updatedEntries));
     } catch (error)      {
       console.error("Error adding journal entry to localStorage", error);
     }
@@ -91,17 +91,17 @@ export const storageService = {
 
   // Journal Security
   getJournalPin(): string | null {
-    return localStorage.getItem(JOURNAL_PIN_KEY);
+    return storageBoundary.getItem(JOURNAL_PIN_KEY);
   },
 
   saveJournalPin(pin: string): void {
-    localStorage.setItem(JOURNAL_PIN_KEY, pin);
+    storageBoundary.setItem(JOURNAL_PIN_KEY, pin);
   },
 
   // Duo Preferences
   getDuoPrefs(): DuoSharePrefs {
     try {
-      const prefsJson = localStorage.getItem(DUO_PREFS_KEY);
+      const prefsJson = storageBoundary.getItem(DUO_PREFS_KEY);
       if (prefsJson) {
         return JSON.parse(prefsJson);
       }
@@ -118,7 +118,7 @@ export const storageService = {
 
   saveDuoPrefs(prefs: DuoSharePrefs): void {
     try {
-      localStorage.setItem(DUO_PREFS_KEY, JSON.stringify(prefs));
+      storageBoundary.setItem(DUO_PREFS_KEY, JSON.stringify(prefs));
     } catch (error) {
       console.error("Error saving duo prefs to localStorage", error);
     }
@@ -127,7 +127,7 @@ export const storageService = {
   // Duo Canvas Notes
   getDuoCanvasNotes(): DuoCanvasNote[] {
     try {
-      const notesJson = localStorage.getItem(DUO_CANVAS_NOTES_KEY);
+      const notesJson = storageBoundary.getItem(DUO_CANVAS_NOTES_KEY);
       return notesJson ? JSON.parse(notesJson) : [];
     } catch (error) {
       console.error("Error reading duo canvas notes from localStorage", error);
@@ -137,7 +137,7 @@ export const storageService = {
 
   saveDuoCanvasNotes(notes: DuoCanvasNote[]): void {
     try {
-      localStorage.setItem(DUO_CANVAS_NOTES_KEY, JSON.stringify(notes));
+      storageBoundary.setItem(DUO_CANVAS_NOTES_KEY, JSON.stringify(notes));
     } catch (error) {
       console.error("Error saving duo canvas notes to localStorage", error);
     }
@@ -145,13 +145,13 @@ export const storageService = {
 
   // User Identity & Onboarding
   isOnboardingComplete(): boolean {
-    return localStorage.getItem(ONBOARDING_KEY) === 'true' && symbiosisService.getProfile() !== null;
+    return storageBoundary.getItem(ONBOARDING_KEY) === 'true' && symbiosisService.getProfile() !== null;
   },
 
   completeOnboarding(userName: string, memoryMode: MemoryMode): SymbiosisState {
     const state = symbiosisService.completeOnboarding(memoryMode);
-    localStorage.setItem(ONBOARDING_KEY, 'true');
-    localStorage.setItem(USER_NAME_KEY, userName);
+    storageBoundary.setItem(ONBOARDING_KEY, 'true');
+    storageBoundary.setItem(USER_NAME_KEY, userName);
     return state;
   },
 
@@ -162,28 +162,28 @@ export const storageService = {
   restoreSymbiosisState(state: unknown): boolean {
     const restored = symbiosisService.importState(state);
     if (restored) {
-      localStorage.setItem(ONBOARDING_KEY, 'true');
+      storageBoundary.setItem(ONBOARDING_KEY, 'true');
     }
     return restored;
   },
 
   getUserName(): string {
-    return localStorage.getItem(USER_NAME_KEY) || 'Спутник';
+    return storageBoundary.getItem(USER_NAME_KEY) || 'Спутник';
   },
 
   // Tutorial / Onboarding Tour
   hasSeenTutorial(): boolean {
-    return localStorage.getItem(TUTORIAL_KEY) === 'true';
+    return storageBoundary.getItem(TUTORIAL_KEY) === 'true';
   },
 
   completeTutorial(): void {
-    localStorage.setItem(TUTORIAL_KEY, 'true');
+    storageBoundary.setItem(TUTORIAL_KEY, 'true');
   },
 
   // Voice Preferences & State
   getVoicePreferences(): VoicePreferences {
       try {
-          const raw = localStorage.getItem(VOICE_PREFS_KEY);
+          const raw = storageBoundary.getItem(VOICE_PREFS_KEY);
           return raw ? JSON.parse(raw) : {};
       } catch (_e) {
           return {};
@@ -191,25 +191,25 @@ export const storageService = {
   },
 
   saveVoicePreferences(prefs: VoicePreferences): void {
-      localStorage.setItem(VOICE_PREFS_KEY, JSON.stringify(prefs));
+      storageBoundary.setItem(VOICE_PREFS_KEY, JSON.stringify(prefs));
   },
 
   // Returns { mode: 'AUTO' | VoiceName, lastVoice: VoiceName }
   getLastVoiceState(): { mode: string, lastVoice: VoiceName } {
       try {
-          const raw = localStorage.getItem(LAST_VOICE_STATE_KEY);
+          const raw = storageBoundary.getItem(LAST_VOICE_STATE_KEY);
           if (raw) return JSON.parse(raw);
       } catch (_e) { /* intentionally empty */ }
       return { mode: 'AUTO', lastVoice: 'ISKRA' };
   },
 
   saveLastVoiceState(mode: string, lastVoice: VoiceName): void {
-      localStorage.setItem(LAST_VOICE_STATE_KEY, JSON.stringify({ mode, lastVoice }));
+      storageBoundary.setItem(LAST_VOICE_STATE_KEY, JSON.stringify({ mode, lastVoice }));
   },
 
   // Response Mode (Simple / Deep / Debate)
   getResponseMode(): ResponseMode {
-      const raw = localStorage.getItem(RESPONSE_MODE_KEY);
+      const raw = storageBoundary.getItem(RESPONSE_MODE_KEY);
       if (raw === 'simple' || raw === 'deep' || raw === 'debate') {
           return raw;
       }
@@ -217,7 +217,7 @@ export const storageService = {
   },
 
   saveResponseMode(mode: ResponseMode): void {
-      localStorage.setItem(RESPONSE_MODE_KEY, mode);
+      storageBoundary.setItem(RESPONSE_MODE_KEY, mode);
   },
 
   // Data Management (Privacy & Sovereignty)
@@ -253,7 +253,7 @@ export const storageService = {
           
           if (data.tasks) this.saveTasks(data.tasks);
           if (data.habits) this.saveHabits(data.habits);
-          if (data.journal) localStorage.setItem(JOURNAL_ENTRIES_KEY, JSON.stringify(data.journal));
+          if (data.journal) storageBoundary.setItem(JOURNAL_ENTRIES_KEY, JSON.stringify(data.journal));
           if (data.duo) {
               if (data.duo.prefs) this.saveDuoPrefs(data.duo.prefs);
               if (data.duo.notes) this.saveDuoCanvasNotes(data.duo.notes);
@@ -281,7 +281,7 @@ export const storageService = {
   },
 
   clearAllData(): void {
-    localStorage.clear();
+    storageBoundary.clear();
     window.location.reload();
   }
 };
