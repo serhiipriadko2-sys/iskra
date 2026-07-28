@@ -51,7 +51,7 @@ jobs:
           test -n "$VITE_SUPABASE_ANON_KEY"
 
       - name: Build iskraSpace for GitHub Pages
-        run: pnpm --filter iskra-space build
+        run: pnpm --filter iskra-space --fail-if-no-match build
         env:
           VITE_BASE_PATH: /iskra/
           VITE_SUPABASE_URL: ${{ vars.ISKRASPACE_SUPABASE_URL }}
