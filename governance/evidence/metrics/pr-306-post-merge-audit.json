@@ -1,0 +1,40 @@
+{
+  "schema_version": "iskra.single-owner-merge-audit.v1",
+  "status": "verified_post_merge",
+  "timing": "post_merge",
+  "pr_number": 306,
+  "merged_at": "2026-07-25T12:39:36Z",
+  "base_sha": "3d57b25a45cd7842a9a238c1214cd24e25694316",
+  "reviewed_head_sha": "274ddd3f66dd198f45c31c4ca3a69884884350a9",
+  "merge_commit_sha": "001cdef6c8777aaded526858921df626635abb88",
+  "merge_parents": [
+    "3d57b25a45cd7842a9a238c1214cd24e25694316",
+    "274ddd3f66dd198f45c31c4ca3a69884884350a9"
+  ],
+  "tree_sha": "f7fe801cf1970ace6d2ed6eabde5898e8f4fb93c",
+  "content_equivalence": {
+    "head_tree_equals_merge_tree": true,
+    "git_diff_head_to_merge_exit": 0,
+    "content_drift": false
+  },
+  "independent_review": {
+    "present": false
+  },
+  "pre_merge_exception_receipt_present": false,
+  "required_ci": {
+    "status": "passed",
+    "head_sha": "274ddd3f66dd198f45c31c4ca3a69884884350a9",
+    "checks": [
+      "hash-check",
+      "ingest-stage-checks"
+    ],
+    "evidence": "GitHub Checks API parallel read-back; SoT integrity workflow run 30104461654 success"
+  },
+  "policy_control": {
+    "new_commit_invalidates_prior_evidence": true,
+    "machine_enforced": false
+  },
+  "runtime_changes": 0,
+  "formula_changes": 0,
+  "database_changes": 0
+}

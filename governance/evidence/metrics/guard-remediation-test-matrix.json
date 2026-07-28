@@ -1,6 +1,6 @@
 {
   "schema_version": "iskra.guard-remediation-test-matrix.v1",
-  "status": "accepted_mirror_unactivated",
+  "status": "implementation_authorized_executable_baseline",
   "repository": "serhiipriadko2-sys/iskra",
   "commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
   "tests": [
@@ -174,5 +174,10 @@
   "accepted_by": "Семён",
   "acceptance_ref": "ADR-20260724-01",
   "source_commit": "3d57b25a45cd7842a9a238c1214cd24e25694316",
-  "mirror_branch": "governance/atom1-metrics-authority-20260724"
+  "mirror_branch": "governance/atom1-metrics-authority-20260724",
+  "implementation_authorization_ref": "governance/evidence/metrics/implementation-authorization-2026-07-25.json",
+  "executable_test_path": "runtime/guard-regression/guardRemediationBaseline.test.ts",
+  "workflow_check": "guard-regression",
+  "baseline_expectation": "FAIL until the Guard/MetricSnapshot remediation is implemented",
+  "updated_at": "2026-07-25"
 }

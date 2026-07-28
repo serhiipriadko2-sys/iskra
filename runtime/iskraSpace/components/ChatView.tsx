@@ -13,6 +13,7 @@ import VoiceExplainableDisplay from './ExplainableTrace';
 import { createAudioContext, decode, decodeAudioData } from '../css/audioUtils';
 import { Volume2Icon, VolumeXIcon, SparkleIcon, XIcon } from './icons';
 import type { IntegrityState } from '../../src/types/guard.js';
+import type { GuardExecutionResult } from '../../src/types/guardExecution.js';
 
 // Response mode display config
 const RESPONSE_MODE_DISPLAY: Record<ResponseMode, { label: string; icon: string; color: string }> = {
@@ -27,7 +28,7 @@ const service = new IskraAIService();
 
 interface ChatViewProps {
   metrics: IskraMetrics;
-  onUserInput: (input: string) => void;
+  onUserInput: (input: string) => Promise<GuardExecutionResult>;
 }
 
 interface PendingRedactedQuery {
@@ -265,7 +266,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
     }
 
     const userMessage: Message = { role: 'user', text: safeQuery, image: image };
-    onUserInput(safeQuery);
+    const guardExecutionEnvelope = await onUserInput(safeQuery);
     
     if (safeQuery.trim().startsWith('/search ')) {
       setHistory(prev => [...prev, userMessage]);
@@ -315,7 +316,7 @@ const ChatView: React.FC<ChatViewProps> = ({ metrics, onUserInput }) => {
 
     try {
       // Use policy-routed stream with eval
-      const stream = service.getChatResponseStreamWithPolicy(currentHistory, responseVoice, metrics);
+      const stream = service.getChatResponseStreamWithPolicy(currentHistory, responseVoice, guardExecutionEnvelope);
       let fullResponse = '';
       let streamResult: PolicyStreamResult | null = null;
 

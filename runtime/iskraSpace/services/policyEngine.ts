@@ -18,6 +18,7 @@ import { auditService } from './auditService';
 // Guard and integrity imports
 import { GuardOutcome, IntegrityState } from '../../src/types/guard.js';
 import { runBoundedGuardController } from '../../src/types/guardController.js';
+import type { GuardExecutionResult } from '../../src/types/guardExecution.js';
 import {
   deriveGuardIntegrity,
   getStoredIntegrity,
@@ -429,7 +430,8 @@ export function classifyRequest(
 export function makeDecision(
   message: string,
   metrics: IskraMetrics,
-  history?: Message[]
+  history?: Message[],
+  guardExecution?: GuardExecutionResult
 ): PolicyDecision {
   const classification = classifyRequest(message, metrics, history);
   // ======== SLO GUARD INTEGRATION ========
@@ -481,20 +483,35 @@ export function makeDecision(
     }
   };
 
-  const controllerResult = runBoundedGuardController({
-    turnId: `turn-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-    initialInput: initialGuardInput,
-    postGuardEws: (candidate, evaluation, currentInput) => {
-      const currentLevel = currentInput.alertLevel ?? 'normal';
-      const targetLevel = getAlertLevelForDecision(candidate.decision);
-      const escalated = ALERT_RANK_LOCAL[targetLevel] > ALERT_RANK_LOCAL[currentLevel];
-      return {
-        alertLevel: targetLevel,
-        materialSignal: escalated,
-        reason: `evaluation ${evaluation}: candidate ${candidate.decision} mapped to EWS level ${targetLevel}`
-      };
-    }
-  });
+  const controllerResult = guardExecution
+    ? {
+        finalOutcome: guardExecution.guard_outcome ?? {
+          decision: guardExecution.orchestration_decision,
+          why: guardExecution.numeric_guard_invoked
+            ? 'Frozen snapshot Guard outcome'
+            : 'Risk-aware orchestration fallback; numeric Guard not invoked',
+          reasons: guardExecution.incomplete_telemetry
+            ? ['incomplete metric telemetry']
+            : [],
+          rule_refs: ['governance/adr_20260724_metrics_authority.md'],
+        } as GuardOutcome,
+        evaluations: guardExecution.numeric_guard_invoked ? 1 : 0,
+        closure: guardExecution.numeric_guard_invoked ? 'stable' : 'not_invoked',
+      }
+    : runBoundedGuardController({
+        turnId: `turn-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        initialInput: initialGuardInput,
+        postGuardEws: (candidate, evaluation, currentInput) => {
+          const currentLevel = currentInput.alertLevel ?? 'normal';
+          const targetLevel = getAlertLevelForDecision(candidate.decision);
+          const escalated = ALERT_RANK_LOCAL[targetLevel] > ALERT_RANK_LOCAL[currentLevel];
+          return {
+            alertLevel: targetLevel,
+            materialSignal: escalated,
+            reason: `evaluation ${evaluation}: candidate ${candidate.decision} mapped to EWS level ${targetLevel}`
+          };
+        }
+      });
 
   const guardOutcome = controllerResult.finalOutcome;
   // By default, use the classification playbook
