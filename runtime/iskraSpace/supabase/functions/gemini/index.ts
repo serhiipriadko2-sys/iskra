@@ -150,6 +150,7 @@ function stream(payload: ValidatedGeminiRequest, parentSignal: AbortSignal): Rea
       const deadline = createDeadline(parentSignal, MAX_AI_STREAM_DURATION_MS);
       activeDeadline = deadline;
       let bytes = 0;
+      let streamErrored = false;
 
       const enqueue = (value: string): boolean => {
         const chunk = encoder.encode(value);
@@ -181,14 +182,19 @@ function stream(payload: ValidatedGeminiRequest, parentSignal: AbortSignal): Rea
 
         enqueue('data: [DONE]\n\n');
       } catch {
-        if (!deadline.signal.aborted) {
-          enqueue(`data: ${JSON.stringify({ error: 'stream_upstream_unavailable' })}\n\n`);
+        if (!parentSignal.aborted) {
+          streamErrored = true;
+          controller.error(new Error(
+            deadline.signal.aborted
+              ? 'stream_limit_exceeded'
+              : 'stream_upstream_unavailable',
+          ));
         }
       } finally {
         deadline.abort();
         deadline.dispose();
         activeDeadline = null;
-        controller.close();
+        if (!streamErrored) controller.close();
       }
     },
     cancel() {

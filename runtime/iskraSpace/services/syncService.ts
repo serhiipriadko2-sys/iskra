@@ -8,6 +8,7 @@
 import { ensureSupabaseSession, getLegacyDeviceId, isSupabaseAvailable } from './supabaseClient';
 import { supabaseService } from './supabaseService';
 import { graphServiceSupabase } from './graphServiceSupabase';
+import { principalStorage } from './principalStorage';
 import {
   isMemoryLayer,
   isMemoryNodeType,
@@ -148,7 +149,12 @@ export class SyncService {
       }
     }
 
-    // 2. Primary path: current app-local memory stores.
+    // 2. Primary path: current principal-scoped app-local memory stores.
+    //    Never bind here: AuthGate owns the identity transition. A mismatch
+    //    fails closed instead of reading another principal's cache.
+    const activePrincipal = principalStorage.activePrincipal();
+    if (!activePrincipal || !ownerKeys.includes(activePrincipal)) return;
+
     const storageKeys: Record<typeof layers[number], string> = {
       archive: 'iskra-space-archive',
       shadow: 'iskra-space-shadow',
@@ -156,7 +162,7 @@ export class SyncService {
 
     for (const layer of layers) {
       const cachedKey = storageKeys[layer];
-      const cachedData = localStorage.getItem(cachedKey);
+      const cachedData = principalStorage.getItem(cachedKey);
       if (!cachedData) continue;
 
       try {
@@ -188,8 +194,8 @@ export class SyncService {
           }
         }
 
-        // Persist updated sync flags back to localStorage
-        localStorage.setItem(cachedKey, JSON.stringify(updatedNodes));
+        // Persist updated sync flags back to the same principal namespace.
+        principalStorage.setItem(cachedKey, JSON.stringify(updatedNodes));
       } catch (e) {
         console.warn(`[SyncService] Failed to sync memory layer from ${cachedKey}:`, e);
       }

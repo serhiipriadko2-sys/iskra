@@ -21,7 +21,7 @@ Object.defineProperty(global, 'document', {
 });
 
 import { storageService } from '../storageService';
-import { principalStorageKey } from '../principalStorage';
+import { principalStorage, principalStorageKey } from '../principalStorage';
 
 describe('storageService symbiosis onboarding', () => {
   beforeEach(() => {
@@ -105,13 +105,29 @@ describe('storageService symbiosis onboarding', () => {
     }]);
     localStorageMock.setItem('chat_history_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('memory_archive_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('memory_shadow_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('memory_all_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('metrics_latest_test-principal', '{"secret":true}');
     localStorageMock.setItem('device-consent', 'preserve');
 
     storageService.releasePrincipal({ clear: true });
 
     expect(localStorageMock.getItem('chat_history_test-principal')).toBeNull();
     expect(localStorageMock.getItem('memory_archive_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('memory_shadow_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('memory_all_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('metrics_latest_test-principal')).toBeNull();
     expect(localStorageMock.getItem('device-consent')).toBe('preserve');
+  });
+
+  it('unbinds the principal when legacy migration cannot use browser storage', () => {
+    localStorageMock.removeItem('iskra.principal.legacy-owner.v1');
+    localStorageMock.setItem.mockImplementationOnce(() => {
+      throw new DOMException('blocked', 'SecurityError');
+    });
+
+    expect(() => storageService.bindPrincipal('failing-principal')).toThrow();
+    expect(principalStorage.activePrincipal()).toBeNull();
   });
 
   it('validates the complete backup before applying any import mutation', () => {
@@ -135,9 +151,19 @@ describe('storageService symbiosis onboarding', () => {
 
   it('clears all local state', () => {
     storageService.completeOnboarding('TestUser', 'CONSENTED');
+    localStorageMock.setItem('chat_history_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('memory_archive_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('memory_shadow_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('memory_all_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('metrics_latest_test-principal', '{"secret":true}');
     localStorageMock.setItem('unrelated-device-setting', 'preserve');
     storageService.clearAllData();
     expect(localStorageMock.getItem(principalStorageKey('iskra-onboarding-complete'))).toBeNull();
+    expect(localStorageMock.getItem('chat_history_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('memory_archive_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('memory_shadow_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('memory_all_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('metrics_latest_test-principal')).toBeNull();
     expect(localStorageMock.getItem('unrelated-device-setting')).toBe('preserve');
     expect(localStorageMock.clear).not.toHaveBeenCalled();
     expect(window.location.reload).toHaveBeenCalled();

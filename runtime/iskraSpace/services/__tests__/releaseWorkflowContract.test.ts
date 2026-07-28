@@ -45,7 +45,9 @@ describe('IskraSpace release workflow contract', () => {
   it('makes security, integrity, browser and Docker smoke checks release gates', () => {
     for (const marker of [
       'lint:strict',
-      'pnpm audit --audit-level moderate',
+      'npx --yes pnpm@11.13.0',
+      '--pm-on-fail=ignore',
+      'audit --audit-level moderate',
       'npm audit --audit-level moderate',
       'check:supabase-graph-contract:repo',
       'check:supabase-voice-metrics-contract:repo',
@@ -71,13 +73,13 @@ describe('IskraSpace release workflow contract', () => {
       expect(productionWorkflow).toContain(marker);
     }
 
-    expect(productionWorkflow).not.toContain('pnpm@11');
-    expect(productionWorkflow).not.toContain('--pm-on-fail=ignore');
   });
 
-  it('uses one pinned pnpm authority and patched workspace overrides', () => {
+  it('uses one pinned install authority, a separate audit-only client and patched workspace overrides', () => {
     expect(rootPackage.packageManager).toBe('pnpm@10.32.1');
     expect(rootPackage.pnpm).toBeUndefined();
+    expect(productionWorkflow).toContain('npx --yes pnpm@11.13.0');
+    expect(productionWorkflow).toContain('packageManager remains authoritative for install/build');
     expect(pnpmWorkspace).toContain('overrides:');
     expect(pnpmWorkspace).toContain("postcss: '8.5.18'");
     expect(pnpmWorkspace).toContain("brace-expansion: '5.0.8'");

@@ -1,4 +1,4 @@
-import { type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
+import { Fragment, type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
 import {
   type BetaAccess,
   type BetaAccessDenyReason,
@@ -16,12 +16,13 @@ interface AuthGateProps {
 
 type GateState =
   | { kind: 'loading' }
-  | { kind: 'granted' }
+  | { kind: 'granted'; principalId: string }
+  | { kind: 'storage-error' }
   | { kind: 'denied'; reason: BetaAccessDenyReason };
 
 function toGateState(access: BetaAccess): GateState {
   if (access.status === 'granted') {
-    return { kind: 'granted' };
+    return { kind: 'granted', principalId: access.session.userId };
   }
 
   return { kind: 'denied', reason: access.reason };
@@ -56,29 +57,44 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   const [email, setEmail] = useState('');
   const [requestState, setRequestState] = useState<{ kind: 'idle' | 'sending' | 'sent' | 'error'; message?: string }>({ kind: 'idle' });
 
+  const applyAccess = useCallback((access: BetaAccess): void => {
+    try {
+      if (access.status === 'granted') {
+        storageService.bindPrincipal(access.session.userId);
+      } else {
+        storageService.releasePrincipal();
+      }
+      setGate(toGateState(access));
+    } catch {
+      storageService.releasePrincipal();
+      setGate({ kind: 'storage-error' });
+    }
+  }, []);
+
   const refreshAccess = useCallback(async (): Promise<void> => {
     const access = await getBetaSession();
-    if (access.status === 'granted') storageService.bindPrincipal(access.session.userId);
-    setGate(toGateState(access));
-  }, []);
+    applyAccess(access);
+  }, [applyAccess]);
 
   useEffect(() => {
     let active = true;
 
     void getBetaSession().then(access => {
       if (active) {
-        if (access.status === 'granted') storageService.bindPrincipal(access.session.userId);
-        setGate(toGateState(access));
+        applyAccess(access);
       }
+    }).catch(() => {
+      if (active) applyAccess({ status: 'denied', reason: 'membership-unavailable' });
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') storageService.releasePrincipal({ clear: true });
       void getBetaSession().then(access => {
         if (active) {
-          if (access.status === 'granted') storageService.bindPrincipal(access.session.userId);
-          setGate(toGateState(access));
+          applyAccess(access);
         }
+      }).catch(() => {
+        if (active) applyAccess({ status: 'denied', reason: 'membership-unavailable' });
       });
     });
 
@@ -86,7 +102,7 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
       active = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [applyAccess]);
 
   const submitMagicLink = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -112,13 +128,23 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   };
 
   if (gate.kind === 'granted') {
-    return <>{children}</>;
+    return <Fragment key={gate.principalId}>{children}</Fragment>;
   }
 
   if (gate.kind === 'loading') {
     return (
       <main className="flex min-h-screen items-center justify-center bg-bg px-6 text-text" aria-busy="true">
         <p className="text-sm text-text-muted">Проверяем доступ к закрытой beta…</p>
+      </main>
+    );
+  }
+
+  if (gate.kind === 'storage-error') {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-bg px-6 text-text">
+        <p className="text-sm text-red-400" role="alert">
+          Не удалось безопасно открыть локальное хранилище. Разрешите доступ к данным сайта и обновите страницу.
+        </p>
       </main>
     );
   }

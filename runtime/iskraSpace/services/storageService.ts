@@ -49,6 +49,22 @@ const PRINCIPAL_LEGACY_KEYS = [
   'iskra-ritual-metrics-history',
   'iskra-canon-seeded-v2',
 ] as const;
+
+function legacyPrincipalQueueKeys(principalId: string): string[] {
+  return [
+    `metrics_latest_${principalId}`,
+    `chat_history_${principalId}`,
+    `memory_archive_${principalId}`,
+    `memory_shadow_${principalId}`,
+    `memory_all_${principalId}`,
+  ];
+}
+
+function clearLegacyPrincipalQueues(principalId: string): void {
+  for (const key of legacyPrincipalQueueKeys(principalId)) {
+    localStorage.removeItem(key);
+  }
+}
 export const MAX_BACKUP_BYTES = 1024 * 1024;
 const MAX_IMPORTED_ITEMS = 10_000;
 const RITUAL_TAGS = new Set(['FIRE', 'WATER', 'SUN', 'BALANCE', 'DELTA']);
@@ -113,7 +129,12 @@ function serializeImport(value: unknown): string {
 export const storageService = {
   bindPrincipal(principalId: string): void {
     principalStorage.bind(principalId);
-    principalStorage.migrateLegacy(PRINCIPAL_LEGACY_KEYS);
+    try {
+      principalStorage.migrateLegacy(PRINCIPAL_LEGACY_KEYS);
+    } catch (error) {
+      principalStorage.unbind();
+      throw error;
+    }
   },
 
   releasePrincipal(options: { clear?: boolean } = {}): void {
@@ -122,8 +143,7 @@ export const storageService = {
       if (options.clear && principalId) {
         try {
           principalStorage.clearBoundPrincipal();
-          localStorage.removeItem(`chat_history_${principalId}`);
-          localStorage.removeItem(`memory_archive_${principalId}`);
+          clearLegacyPrincipalQueues(principalId);
         } finally {
           safeStorage.clearBoundPrincipalFallback();
         }
@@ -434,7 +454,13 @@ export const storageService = {
   },
 
   clearAllData(): void {
-    principalStorage.clearBoundPrincipal();
+    const principalId = principalStorage.activePrincipal();
+    try {
+      principalStorage.clearBoundPrincipal();
+      if (principalId) clearLegacyPrincipalQueues(principalId);
+    } finally {
+      safeStorage.clearBoundPrincipalFallback();
+    }
     window.location.reload();
   }
 };

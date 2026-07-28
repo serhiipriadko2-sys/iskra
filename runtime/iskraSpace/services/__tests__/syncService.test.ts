@@ -62,6 +62,7 @@ vi.mock('../graphServiceSupabase', () => ({
 }));
 
 import { SyncService } from '../syncService';
+import { principalStorage } from '../principalStorage';
 
 describe('SyncService identity migration boundary', () => {
   beforeEach(() => {
@@ -73,6 +74,7 @@ describe('SyncService identity migration boundary', () => {
     addChatMessageMock.mockReset().mockResolvedValue(undefined);
     addNodeMock.mockReset().mockResolvedValue({ id: 'node-1' });
     buildConnectionsMock.mockReset().mockResolvedValue(undefined);
+    principalStorage.bind('auth-user-id');
   });
 
   it('syncs authenticated and legacy chat queues through the current Supabase session path', async () => {
@@ -123,8 +125,8 @@ describe('SyncService identity migration boundary', () => {
       evidence: [{ source: 'test', inference: 'test', fact: 'true' as const, trace: 'test' }],
       synced_to_cloud: false,
     };
-    localStorage.setItem('iskra-space-archive', JSON.stringify([archiveNode]));
-    localStorage.setItem('iskra-space-shadow', JSON.stringify([shadowNode]));
+    principalStorage.setItem('iskra-space-archive', JSON.stringify([archiveNode]));
+    principalStorage.setItem('iskra-space-shadow', JSON.stringify([shadowNode]));
 
     await new SyncService().syncAllPending();
 
@@ -132,8 +134,8 @@ describe('SyncService identity migration boundary', () => {
     expect(addNodeMock).toHaveBeenCalledWith('shadow', 'event', 'shadow note');
     expect(buildConnectionsMock).toHaveBeenCalledTimes(2);
 
-    const syncedArchive = JSON.parse(localStorage.getItem('iskra-space-archive') ?? '[]');
-    const syncedShadow = JSON.parse(localStorage.getItem('iskra-space-shadow') ?? '[]');
+    const syncedArchive = JSON.parse(principalStorage.getItem('iskra-space-archive') ?? '[]');
+    const syncedShadow = JSON.parse(principalStorage.getItem('iskra-space-shadow') ?? '[]');
     expect(syncedArchive[0].synced_to_cloud).toBe(true);
     expect(syncedShadow[0].synced_to_cloud).toBe(true);
   });
@@ -149,10 +151,29 @@ describe('SyncService identity migration boundary', () => {
       evidence: [{ source: 'test', inference: 'test', fact: 'true' as const, trace: 'test' }],
       synced_to_cloud: true,
     };
-    localStorage.setItem('iskra-space-archive', JSON.stringify([archiveNode]));
+    principalStorage.setItem('iskra-space-archive', JSON.stringify([archiveNode]));
 
     await new SyncService().syncAllPending();
 
     expect(addNodeMock).not.toHaveBeenCalled();
+  });
+
+  it('fails closed when the bound local principal differs from the authenticated session', async () => {
+    principalStorage.bind('different-principal');
+    principalStorage.setItem('iskra-space-archive', JSON.stringify([{
+      id: 'arc-private',
+      layer: 'archive',
+      type: 'insight',
+      content: 'must not sync',
+      title: 'Private',
+      timestamp: new Date().toISOString(),
+      evidence: [],
+      synced_to_cloud: false,
+    }]));
+
+    await new SyncService().syncAllPending();
+
+    expect(addNodeMock).not.toHaveBeenCalled();
+    expect(principalStorage.getItem('iskra-space-archive')).not.toBeNull();
   });
 });

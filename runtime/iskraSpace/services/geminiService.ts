@@ -11,6 +11,7 @@ import { storageService } from "./storageService";
 import { getAccessToken } from './supabaseClient';
 import { isBetaCapabilityEnabled, normalizeResponseModeForBeta } from '../config/betaCapabilities';
 import { getRuntimeConfig } from '../config/runtimeConfig';
+import { selectRecentAiContents } from './aiRequestBudget';
 import type { GuardExecutionResult } from '../../src/types/guardExecution.js';
 
 
@@ -264,6 +265,7 @@ async function* streamGenerateContentText(args: {
   signal?: AbortSignal;
 }): AsyncGenerator<string> {
   const config = args.config ?? {};
+  let streamEstablished = false;
 
   // Best-effort streaming: if anything goes wrong, fall back to single-chunk generation.
   try {
@@ -285,6 +287,7 @@ async function* streamGenerateContentText(args: {
       const txt = await res.text();
       throw new Error(`AI stream proxy error: ${res.status} ${txt}`);
     }
+    streamEstablished = true;
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -333,8 +336,11 @@ async function* streamGenerateContentText(args: {
       }
     }
   } catch (err) {
-    // Do not fall back on abort — surface the cancellation cleanly
-    if (err instanceof DOMException && err.name === 'AbortError') return;
+    // A caller cancellation is expected. Server deadline/cap failures arrive
+    // as stream read errors and must propagate once streaming was established,
+    // even if the provider failed before yielding the first content chunk.
+    if (args.signal?.aborted) return;
+    if (streamEstablished) throw err;
     const text = await generateContentText({
       model: args.model,
       contents: args.contents,
@@ -768,10 +774,7 @@ ${metricsContext}
 ${responseModeInstruction}
 ${deltaInstruction}`;
 
-      const contents: Content[] = history.map(msg => ({
-        role: msg.role,
-        parts: [{ text: msg.text }]
-      }));
+      const contents: Content[] = selectRecentAiContents(history, fullInstruction);
 
       if (OFFLINE_MODE) {
           yield "⚑ Оффлайн-режим: я фиксирую тишину и вернусь к диалогу, когда связь появится.";
@@ -911,10 +914,7 @@ SIFT Depth: ${config.siftDepth}
 
     // Stream response
     let fullResponse = '';
-    const contents: Content[] = history.map(msg => ({
-      role: msg.role,
-      parts: [{ text: msg.text }]
-    }));
+    const contents: Content[] = selectRecentAiContents(history, fullInstruction);
     const safeContents = contents.length > 0 ? contents : toGeminiContents('');
 
     if (OFFLINE_MODE) {

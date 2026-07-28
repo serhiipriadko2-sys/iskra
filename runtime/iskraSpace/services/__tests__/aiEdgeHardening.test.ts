@@ -51,6 +51,11 @@ describe('AI Edge hardening contract', () => {
     expect(gemini).toContain('CANONICAL_GEMINI_TEXT_MODEL');
     expect(gemini).toContain('MAX_AI_PROVIDER_TIMEOUT_MS');
     expect(gemini).toContain('MAX_AI_STREAM_DURATION_MS');
+    expect(gemini).toContain('controller.error');
+    expect(gemini).toContain('stream_limit_exceeded');
+    expect(gemini).toContain('if (!streamErrored) controller.close()');
+    const client = readOrEmpty(join(runtimeRoot, 'services/geminiService.ts'));
+    expect(client).toContain('if (streamEstablished) throw err');
     expect(contentPolicy).toContain('AbortController');
     expect(gemini).toContain('abortSignal');
     expect(gemini).not.toContain('AI_FALLBACK_PROVIDER');
