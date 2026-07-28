@@ -93,7 +93,7 @@ async function validateJwt(token: string, parentSignal: AbortSignal): Promise<Ve
   }
 }
 
-function requestId(): string {
+function newRequestId(): string {
   return crypto.randomUUID();
 }
 
@@ -143,7 +143,7 @@ function normalizeAgentResponse(raw: unknown, fallbackRequestId: string): IskraA
     artifact_receipt: source.artifact_receipt && typeof source.artifact_receipt === 'object'
       ? source.artifact_receipt as Record<string, unknown>
       : null,
-    request_id: typeof source.request_id === 'string' ? source.request_id : fallbackRequestId,
+    request_id: fallbackRequestId,
   };
 }
 
@@ -180,7 +180,7 @@ Deno.serve(async (req) => {
   if (!agentToken) return json({ error: 'agent_not_configured' }, { status: 500 }, origin);
   if (AI_EDGE_TEST_MODE) return json({ error: 'provider_upstream_disabled' }, { status: 503 }, origin);
 
-  const rid = requestId();
+  const rid = payload.value.requestId ?? newRequestId();
   const deadline = createDeadline(req.signal, MAX_AI_PROVIDER_TIMEOUT_MS);
   try {
     const response = await fetch(target, {

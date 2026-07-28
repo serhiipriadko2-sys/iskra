@@ -46,6 +46,21 @@ Deno.test('help-seeking crisis language remains available to the support route',
   assert(russian.ok, 'expected Russian crisis-support request to remain available');
 });
 
+Deno.test('agent request IDs are bounded and preserved for correlation', () => {
+  const accepted = validateAgentRequest({
+    message: 'safe request',
+    request_id: 'client.retry-01:abc',
+  });
+  assert(accepted.ok, 'expected bounded request ID');
+  assert(accepted.value.requestId === 'client.retry-01:abc', 'expected preserved request ID');
+
+  const rejected = validateAgentRequest({
+    message: 'safe request',
+    request_id: '../unsafe request id',
+  });
+  assert(!rejected.ok && rejected.code === 'invalid_agent_request_id', 'expected request ID denial');
+});
+
 Deno.test('unapproved model and unbounded output configuration are rejected', () => {
   const model = validateGeminiRequest({ ...baseGeminiRequest('safe'), model: 'expensive-model' });
   assert(!model.ok && model.code === 'unsupported_model', 'expected model denial');

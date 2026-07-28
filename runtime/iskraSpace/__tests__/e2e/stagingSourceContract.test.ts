@@ -109,4 +109,18 @@ describe('staging acceptance source contract', () => {
     expect(releaseStatus).toContain('rejqxblontqjycldniyz');
     expect(releaseStatus).toContain('all 36 migrations replayed');
   });
+
+  it('restores caller environment and scopes quota cleanup to disposable member subjects', () => {
+    const harness = readFileSync(
+      join(resolveRepositoryRoot(), 'tools', 'run_iskraspace_staging_acceptance.ps1'),
+      'utf8',
+    );
+
+    expect(harness).toContain('$acceptanceEnvSnapshot');
+    expect(harness).toContain('Set-Item -LiteralPath "Env:$name"');
+    expect(harness).toContain('Remove-Item -LiteralPath "Env:$name"');
+    expect(harness).toContain("scope in ('member_minute','member_day')");
+    expect(harness).toContain('subject in ($memberSubjectList)');
+    expect(harness).not.toContain('delete from private.ai_rate_limit_windows returning 1');
+  });
 });

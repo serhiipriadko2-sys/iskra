@@ -392,7 +392,16 @@ let metricsHistoryPrincipal: string | null = null;
 
 function ensureMetricsHistoryLoaded(): void {
   const principal = principalStorage.activePrincipal() ?? (import.meta.env.VITEST ? 'vitest-local' : null);
-  if (!principal || principal === metricsHistoryPrincipal) return;
+  if (!principal) return;
+  if (principal === metricsHistoryPrincipal) {
+    // releasePrincipal({ clear: true }) can be followed by rebinding the same
+    // account without a page reload. Revalidate the bound store before using
+    // the module cache so cleared history cannot be exposed or written back.
+    if (safeStorage.getItem(METRICS_HISTORY_KEY) === null) {
+      metricsHistory.splice(0, metricsHistory.length);
+    }
+    return;
+  }
   metricsHistory.splice(0, metricsHistory.length);
   const stored = safeStorage.getItem(METRICS_HISTORY_KEY);
   if (stored) {

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-28T19:05:43.308Z",
-  "total": 3661,
+  "generatedAt": "2026-07-28T19:13:04.503Z",
+  "total": 3665,
   "curated": 20,
   "layers": {
     "root": 343,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 19,
     "reference": 82,
-    "runtime": 373,
+    "runtime": 377,
     "skills": 269,
     "backend": 80,
     "system": 26,
@@ -35568,6 +35568,7 @@
       "related": [],
       "parent": "runtime/iskraSpace/__tests__",
       "children": [
+        "runtime/iskraSpace/__tests__/components/AuthGate.test.tsx",
         "runtime/iskraSpace/__tests__/components/ChatSecurityBoundary.test.tsx",
         "runtime/iskraSpace/__tests__/components/ChatViewRedirectMessage.test.ts",
         "runtime/iskraSpace/__tests__/components/CouncilView.test.tsx",
@@ -35576,6 +35577,17 @@
         "runtime/iskraSpace/__tests__/components/SettingsView.test.tsx",
         "runtime/iskraSpace/__tests__/components/ShadowView.test.tsx"
       ]
+    },
+    {
+      "path": "runtime/iskraSpace/__tests__/components/AuthGate.test.tsx",
+      "name": "AuthGate.test.tsx",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/__tests__/components/AuthGate.test.tsx",
+      "related": [],
+      "parent": "runtime/iskraSpace/__tests__/components"
     },
     {
       "path": "runtime/iskraSpace/__tests__/components/ChatSecurityBoundary.test.tsx",
@@ -37223,6 +37235,7 @@
       "parent": "runtime/iskraSpace",
       "children": [
         "runtime/iskraSpace/services/__tests__",
+        "runtime/iskraSpace/services/aiRequestBudget.ts",
         "runtime/iskraSpace/services/analytics.ts",
         "runtime/iskraSpace/services/auditService.ts",
         "runtime/iskraSpace/services/canonService.ts",
@@ -37280,6 +37293,7 @@
       "children": [
         "runtime/iskraSpace/services/__tests__/aiEdgeHardening.test.ts",
         "runtime/iskraSpace/services/__tests__/aiEdgeQuotaBoundary.test.ts",
+        "runtime/iskraSpace/services/__tests__/aiRequestBudget.test.ts",
         "runtime/iskraSpace/services/__tests__/analyticsConsent.test.ts",
         "runtime/iskraSpace/services/__tests__/auditLogAppendOnly.test.ts",
         "runtime/iskraSpace/services/__tests__/auditService.test.ts",
@@ -37313,6 +37327,7 @@
         "runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts",
         "runtime/iskraSpace/services/__tests__/releaseBoundary.test.ts",
         "runtime/iskraSpace/services/__tests__/releaseWorkflowContract.test.ts",
+        "runtime/iskraSpace/services/__tests__/ritualHistoryIsolation.test.ts",
         "runtime/iskraSpace/services/__tests__/ritualService.test.ts",
         "runtime/iskraSpace/services/__tests__/ritualServiceGateway.test.ts",
         "runtime/iskraSpace/services/__tests__/rule8Service.test.ts",
@@ -37358,6 +37373,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/aiEdgeQuotaBoundary.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/aiRequestBudget.test.ts",
+      "name": "aiRequestBudget.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/aiRequestBudget.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -37725,6 +37751,17 @@
       "parent": "runtime/iskraSpace/services/__tests__"
     },
     {
+      "path": "runtime/iskraSpace/services/__tests__/ritualHistoryIsolation.test.ts",
+      "name": "ritualHistoryIsolation.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/ritualHistoryIsolation.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
       "path": "runtime/iskraSpace/services/__tests__/ritualService.test.ts",
       "name": "ritualService.test.ts",
       "kind": "file",
@@ -37987,6 +38024,17 @@
       "sourceRef": "runtime/iskraSpace/services/__tests__/voiceThresholdCanon.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/aiRequestBudget.ts",
+      "name": "aiRequestBudget.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/aiRequestBudget.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
     },
     {
       "path": "runtime/iskraSpace/services/analytics.ts",

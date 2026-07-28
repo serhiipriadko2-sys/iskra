@@ -17,6 +17,33 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
+$acceptanceEnvNames = @(
+  'RUN_STAGING_ACCEPTANCE',
+  'ISKRA_STAGING_PROJECT_REF',
+  'ISKRA_STAGING_URL',
+  'ISKRA_STAGING_PUBLISHABLE_KEY',
+  'ISKRA_STAGING_SERVICE_ROLE_KEY',
+  'ISKRA_STAGING_USER_A_JWT',
+  'ISKRA_STAGING_USER_B_JWT',
+  'ISKRA_STAGING_NON_MEMBER_JWT',
+  'ISKRA_STAGING_SUSPENDED_MEMBER_JWT',
+  'ISKRA_STAGING_ANONYMOUS_DENY_RECEIPT_SHA256',
+  'ISKRA_STAGING_EXPIRED_JWT',
+  'ISKRA_STAGING_ALLOWED_ORIGIN',
+  'ISKRA_STAGING_IP_HMAC_SECRET',
+  'ISKRA_STAGING_PRINCIPAL_A_RECEIPT_SHA256',
+  'ISKRA_STAGING_PRINCIPAL_B_RECEIPT_SHA256',
+  'VITE_E2E_AUTH_BYPASS',
+  'ISKRA_ACCEPTANCE_BASE_SHA'
+)
+$acceptanceEnvSnapshot = @{}
+foreach ($name in $acceptanceEnvNames) {
+  $current = Get-Item -LiteralPath "Env:$name" -ErrorAction SilentlyContinue
+  $acceptanceEnvSnapshot[$name] = @{
+    exists = $null -ne $current
+    value = if ($null -ne $current) { $current.Value } else { $null }
+  }
+}
 
 function New-RandomPassword {
   return 'Aa1!' + [guid]::NewGuid().ToString('N') + 'z9!'
@@ -224,6 +251,7 @@ values
     )
     if ($safeIds.Count -gt 0) {
       $idList = ($safeIds | ForEach-Object { "'$_'::uuid" }) -join ','
+      $memberSubjectList = ($safeIds | ForEach-Object { "'$_'" }) -join ','
       $cleanupSql = @"
 with
   deleted_graph_edges as (delete from public.graph_edges where user_id in ($idList) returning 1),
@@ -237,7 +265,12 @@ with
   deleted_voice as (delete from public.voice_preferences where user_id in ($idList) returning 1),
   deleted_chat as (delete from public.chat_history where user_id in ($idList) returning 1),
   deleted_users as (delete from public.users where id in ($idList) returning 1),
-  deleted_rate_windows as (delete from private.ai_rate_limit_windows returning 1)
+  deleted_member_rate_windows as (
+    delete from private.ai_rate_limit_windows
+     where scope in ('member_minute','member_day')
+       and subject in ($memberSubjectList)
+    returning 1
+  )
 delete from private.beta_members where user_id in ($idList);
 "@
       $cleanupSql = $cleanupSql -replace '\s+', ' '
@@ -271,5 +304,16 @@ delete from private.beta_members where user_id in ($idList);
     throw 'Staging acceptance cleanup failed'
   }
 } finally {
-  Pop-Location
+  try {
+    foreach ($name in $acceptanceEnvNames) {
+      $previous = $acceptanceEnvSnapshot[$name]
+      if ($previous.exists) {
+        Set-Item -LiteralPath "Env:$name" -Value $previous.value
+      } else {
+        Remove-Item -LiteralPath "Env:$name" -ErrorAction SilentlyContinue
+      }
+    }
+  } finally {
+    Pop-Location
+  }
 }

@@ -55,6 +55,7 @@ export type ValidatedGeminiRequest = {
 export type ValidatedAgentRequest = {
   message: string;
   route: 'chat' | 'journal' | 'ritual' | 'reflection';
+  requestId?: string;
 };
 
 type TextBudget = {
@@ -464,12 +465,28 @@ export function validateAgentRequest(body: unknown): PolicyResult<ValidatedAgent
       return failure(400, 'invalid_agent_context');
     }
   }
+  if (
+    body.request_id !== undefined &&
+    (
+      typeof body.request_id !== 'string' ||
+      !/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(body.request_id)
+    )
+  ) {
+    return failure(400, 'invalid_agent_request_id');
+  }
 
   const safeRoute = parseSafeRoute(body.safetyRoute);
   if (!safeRoute.ok) return safeRoute;
   const policy = serverContentPolicy([parsedMessage.value], safeRoute.value);
   if (!policy.ok) return policy;
-  return { ok: true, value: { message: policy.value[0], route } };
+  return {
+    ok: true,
+    value: {
+      message: policy.value[0],
+      route,
+      ...(typeof body.request_id === 'string' ? { requestId: body.request_id } : {}),
+    },
+  };
 }
 
 export type Deadline = {

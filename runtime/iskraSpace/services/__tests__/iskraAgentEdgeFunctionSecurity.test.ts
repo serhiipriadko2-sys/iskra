@@ -48,4 +48,13 @@ describe('iskra-agent Edge Function security boundary', () => {
     expect(edgeFunctionSource).not.toContain('rlBuckets');
     expect(edgeFunctionSource).not.toContain('console.');
   });
+
+  it('preserves a validated caller request ID through the upstream and response receipt', () => {
+    expect(edgeFunctionSource).toContain('payload.value.requestId ?? newRequestId()');
+    expect(edgeFunctionSource).toContain('request_id: rid');
+    expect(edgeFunctionSource).toContain('request_id: fallbackRequestId');
+    expect(edgeFunctionSource).not.toContain(
+      "request_id: typeof source.request_id === 'string' ? source.request_id : fallbackRequestId",
+    );
+  });
 });
