@@ -34,18 +34,20 @@ runtime files.
 - accepted browser origin: `http://127.0.0.1:4173`;
 - canonical ingress identity header: `cf-connecting-ip`.
 
-The automatic preview function phase failed because repository config also
-references the absent `supabase/functions/kain/index.ts`. This did not affect
-database migration replay. The two functions in the approved scope were then
-deployed manually from `runtime/iskraSpace/supabase` with Supabase CLI
+The automatic preview function phase initially failed because repository-root
+config used default `supabase/functions/*` locations for runtime functions.
+This did not affect database migration replay. The follow-up maps `gemini`,
+`iskra-agent` and `kain` to explicit paths relative to `supabase/config.toml`.
+The two functions in the approved scope were deployed both through the original
+manual runtime path and the corrected repository-root config with Supabase CLI
 `2.109.0`.
 
 ## Edge read-back
 
 | Function | Version | Status | JWT | Bundle SHA-256 |
 | --- | ---: | --- | --- | --- |
-| `gemini` | 1 | ACTIVE | `verify_jwt=true` | `48c984f06a3d7be92600c93f20d79438a5afa157679d89b531eabcd7e781ef9d` |
-| `iskra-agent` | 1 | ACTIVE | `verify_jwt=true` | `c29e975e86cf4ac5907a90f9538ae785852b5df4eb36a3ff59521a1930b57ed7` |
+| `gemini` | 2 | ACTIVE | `verify_jwt=true` | `48c984f06a3d7be92600c93f20d79438a5afa157679d89b531eabcd7e781ef9d` |
+| `iskra-agent` | 2 | ACTIVE | `verify_jwt=true` | `c29e975e86cf4ac5907a90f9538ae785852b5df4eb36a3ff59521a1930b57ed7` |
 
 Downloaded source read-back matched the local source byte-for-byte:
 
@@ -57,6 +59,13 @@ Downloaded source read-back matched the local source byte-for-byte:
 | `iskra-agent/deno.json` | `0ffef2083b62eb573cdf5e311dc06dfb6aedcbb84b641a5531f2243420d374ee` |
 | `_shared/aiBoundary.ts` | `890759c41023a9558f634d728cd6aa7d1d8d9a1c4ef5289d920fc85ff506d052` |
 | `_shared/aiContentPolicy.ts` | `3a0bc91c4c4583552616db04e4108237e07141c04901ea2df7e89b23332ab327` |
+
+The second version of each function was deployed through the repository-root
+`supabase/config.toml` after adding explicit entrypoint/import-map paths. This
+proved that the branch automation and the manual operator path resolve the same
+runtime source. The automatic preview also deployed the unchanged
+`iskra-memory-gateway` source; that function is outside this acceptance matrix
+and remains protected by the source contract.
 
 ## Negative matrix and two-principal acceptance
 
@@ -132,9 +141,10 @@ Post-acceptance log review:
   cleanup; no unexplained authentication failure;
 - Postgres: four ERROR rows, all expected negative-test denials
   (`audit_log` permission denied ×2, foreign Graph node denied ×2);
-- branch-action: automatic function bundling recorded the known missing
-  `kain/index.ts`; manual read-back of the two approved functions supersedes
-  that automatic phase for this scoped receipt.
+- branch-action: pre-fix automatic bundling recorded missing default
+  entrypoints. Corrected explicit paths were then proven by repository-root
+  deployments; the GitHub preview check remains the independent automation
+  receipt.
 
 Advisor remediation references:
 

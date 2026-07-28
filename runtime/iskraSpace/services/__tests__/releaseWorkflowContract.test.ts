@@ -14,6 +14,7 @@ const rootPackage = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf
   pnpm?: unknown;
 };
 const pnpmWorkspace = readFileSync(join(repoRoot, 'pnpm-workspace.yaml'), 'utf8');
+const supabaseConfig = readFileSync(join(repoRoot, 'supabase/config.toml'), 'utf8');
 const pullRequestWorkflow = readFileSync(
   join(repoRoot, '.github/workflows/iskraspace_ci.yml'),
   'utf8'
@@ -80,6 +81,18 @@ describe('IskraSpace release workflow contract', () => {
     expect(pnpmWorkspace).toContain('overrides:');
     expect(pnpmWorkspace).toContain("postcss: '8.5.18'");
     expect(pnpmWorkspace).toContain("brace-expansion: '5.0.8'");
+  });
+
+  it('maps runtime Edge Functions to entrypoints relative to supabase/config.toml', () => {
+    for (const functionName of ['gemini', 'iskra-agent', 'kain']) {
+      expect(supabaseConfig).toContain(`[functions.${functionName}]`);
+      expect(supabaseConfig).toContain(
+        `entrypoint = "../runtime/iskraSpace/supabase/functions/${functionName}/index.ts"`,
+      );
+      expect(supabaseConfig).toContain(
+        `import_map = "../runtime/iskraSpace/supabase/functions/${functionName}/deno.json"`,
+      );
+    }
   });
 
   it('keeps Vercel out of the canonical production path', () => {

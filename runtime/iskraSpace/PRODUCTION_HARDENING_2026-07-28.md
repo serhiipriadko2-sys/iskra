@@ -202,15 +202,15 @@ Final local run on the refreshed source candidate:
 - Deno 2.8.3: 21/21 shared boundary/metrics tests PASS; both Edge
   entrypoints typecheck;
 - IskraSpace TypeScript and strict ESLint: PASS;
-- IskraSpace Vitest: 73 files PASS, 4 skipped; 830 tests PASS, 27 skipped;
+- IskraSpace Vitest: 73 files PASS, 4 skipped; 831 tests PASS, 27 skipped;
 - Chromium Playwright: 28/28 PASS;
 - IskraSpace production build and bundle budget: PASS; largest JS chunk
   492,244 raw / 162,526 gzip bytes; total JS gzip 500,712 bytes;
 - legacy runtime: build and strict lint PASS; 17 files / 265 tests PASS;
 - canonical Edge metrics parity: 5 files / 65 tests PASS;
 - GraphQL-client, Supabase graph and voice/metrics repository contracts: PASS;
-- canon index: current at 3,657 nodes / 20 curated;
-- ledger: PASS at 983 tracked files;
+- canon index: current at 3,661 nodes / 20 curated;
+- ledger: PASS at 985 tracked files;
 - added-line credential-shape scan and `git diff --check`: PASS.
 - root `pnpm verify`: PASS, including shard registry, sensitive-status scan,
   workspace typechecks/tests, release-manifest tests and final ledger read-back.

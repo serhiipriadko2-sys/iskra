@@ -51,9 +51,9 @@ App path: `runtime/iskraSpace`
   import. The current contract is documented in
   `PRODUCTION_HARDENING_2026-07-28.md` and ADR-20260728-001.
 - `[FACT] local-test-pass` Final local gates: root and runtime audits report
-  zero vulnerabilities; Deno 21/21; IskraSpace Vitest 830 passed / 27 skipped;
+  zero vulnerabilities; Deno 21/21; IskraSpace Vitest 831 passed / 27 skipped;
   Chromium E2E 28/28; legacy runtime 265/265; bundle budget, repository
-  Supabase contracts, 3,657-node canon index and 983-file ledger all pass.
+  Supabase contracts, 3,661-node canon index and 985-file ledger all pass.
 - `DRIFT: GitHub vs Local` These changes are not merged. The local branch is
   stronger evidence for its own source; GitHub `main` remains the authority for
   remote state. The exact Edge source is deployed only to the staging project
@@ -239,10 +239,11 @@ claim `delivery_evidence: verified_live_staging`.
   non-member and suspended-member deny, and two-active-principal table/RPC
   isolation. A user-facing magic-link delivery test and full browser
   principal-storage lifecycle remain separate UI/operations evidence.
-- The PR-head CI matrix must be green after the acceptance-harness and
-  dependency patch commit. The automatic preview function phase also needs a
-  repository decision for its stale `kain/index.ts` reference; manual scoped
-  deployment is evidence for `gemini` and `iskra-agent`, not for `kain`.
+- The PR-head CI matrix must be green after the acceptance-harness, dependency
+  patch, canon-index regeneration and explicit Supabase function-entrypoint
+  mapping. Manual scoped deployment is evidence for `gemini` and
+  `iskra-agent`; the automatic preview check remains independent evidence for
+  repository-root deployment configuration.
 - Advisor remediation remains incomplete: GraphQL table visibility must be
   resolved without breaking the REST Data API, and `pg_trgm`, policy, index and
   query-plan changes need dedicated staged migrations rather than being folded

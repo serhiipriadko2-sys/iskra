@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-07-28T17:28:08.451Z",
-  "total": 3657,
+  "generatedAt": "2026-07-28T18:46:59.192Z",
+  "total": 3661,
   "curated": 20,
   "layers": {
-    "root": 341,
+    "root": 343,
     "agents": 46,
     "devcontainer": 2,
     "ci": 14,
@@ -13,7 +13,7 @@
     "web": 13,
     "canon": 16,
     "builder": 1187,
-    "docs": 74,
+    "docs": 75,
     "governance": 387,
     "ingest": 10,
     "ledger": 7,
@@ -27,7 +27,7 @@
     "skills": 269,
     "backend": 80,
     "system": 26,
-    "tools": 61
+    "tools": 62
   },
   "nodes": [
     {
@@ -26218,6 +26218,7 @@
         "docs/operations/iskraspace_production_readiness_receipt_2026-07-01.md",
         "docs/operations/iskraspace_release_readiness_board.md",
         "docs/operations/iskraspace_release_readiness_snapshot_2026-06-07.md",
+        "docs/operations/iskraspace_staging_acceptance_2026-07-28.md",
         "docs/operations/iskraspace_supabase_cleanup_approval_packet_2026-06-09.md",
         "docs/operations/iskraspace_supabase_cleanup_hardening_runbook_2026-06-07.md",
         "docs/operations/iskraspace_supabase_live_boundary_decision_2026-06-07.md",
@@ -26317,6 +26318,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "docs/operations/iskraspace_release_readiness_snapshot_2026-06-07.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/iskraspace_staging_acceptance_2026-07-28.md",
+      "name": "iskraspace_staging_acceptance_2026-07-28.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/iskraspace_staging_acceptance_2026-07-28.md",
       "related": [],
       "parent": "docs/operations"
     },
@@ -33561,6 +33573,30 @@
       "sourceRef": "packages/math/vitest.config.ts",
       "related": [],
       "parent": "packages/math"
+    },
+    {
+      "path": "patches",
+      "name": "patches",
+      "kind": "directory",
+      "layer": "root",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "patches",
+      "related": [],
+      "children": [
+        "patches/minimatch@3.1.5.patch"
+      ]
+    },
+    {
+      "path": "patches/minimatch@3.1.5.patch",
+      "name": "minimatch@3.1.5.patch",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "patches/minimatch@3.1.5.patch",
+      "related": [],
+      "parent": "patches"
     },
     {
       "path": "plan.md",
@@ -44626,6 +44662,7 @@
         "tools/import_phase1_shard2.py",
         "tools/import_phase1_shard3.py",
         "tools/promote_sot40_to_canon.py",
+        "tools/run_iskraspace_staging_acceptance.ps1",
         "tools/run_python.mjs",
         "tools/simulate_cycle.test.ts",
         "tools/simulation.test.ts",
@@ -45095,6 +45132,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/promote_sot40_to_canon.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/run_iskraspace_staging_acceptance.ps1",
+      "name": "run_iskraspace_staging_acceptance.ps1",
+      "kind": "file",
+      "layer": "tools",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "tools/run_iskraspace_staging_acceptance.ps1",
       "related": [],
       "parent": "tools"
     },
