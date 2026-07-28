@@ -8,6 +8,7 @@
 import { ensureSupabaseSession, getLegacyDeviceId, isSupabaseAvailable } from './supabaseClient';
 import { supabaseService } from './supabaseService';
 import { graphServiceSupabase } from './graphServiceSupabase';
+import { legacyMigrationStorage, storageBoundary } from './storageBoundary';
 import {
   isMemoryLayer,
   isMemoryNodeType,
@@ -73,7 +74,7 @@ export class SyncService {
 
     for (const ownerKey of ownerKeys) {
       const cachedKey = `chat_history_${ownerKey}`;
-      const cachedData = localStorage.getItem(cachedKey);
+      const cachedData = legacyMigrationStorage.getItem(cachedKey);
       if (!cachedData) continue;
 
       try {
@@ -107,14 +108,14 @@ export class SyncService {
     for (const ownerKey of ownerKeys) {
       for (const layer of layers) {
         const cachedKey = `memory_${layer}_${ownerKey}`;
-        const cachedData = localStorage.getItem(cachedKey);
+        const cachedData = legacyMigrationStorage.getItem(cachedKey);
         if (!cachedData) continue;
 
         try {
           const nodes: Array<{ id?: string; layer: string; type: string; content: unknown }> =
             JSON.parse(cachedData);
           if (!Array.isArray(nodes)) {
-            localStorage.removeItem(cachedKey);
+            legacyMigrationStorage.removeItem(cachedKey);
             continue;
           }
 
@@ -140,7 +141,7 @@ export class SyncService {
           }
 
           if (allMigrated) {
-            localStorage.removeItem(cachedKey);
+            legacyMigrationStorage.removeItem(cachedKey);
           }
         } catch (e) {
           console.warn(`[SyncService] Failed to migrate legacy memory layer from ${cachedKey}:`, e);
@@ -156,7 +157,7 @@ export class SyncService {
 
     for (const layer of layers) {
       const cachedKey = storageKeys[layer];
-      const cachedData = localStorage.getItem(cachedKey);
+      const cachedData = storageBoundary.getItem(cachedKey);
       if (!cachedData) continue;
 
       try {
@@ -188,8 +189,8 @@ export class SyncService {
           }
         }
 
-        // Persist updated sync flags back to localStorage
-        localStorage.setItem(cachedKey, JSON.stringify(updatedNodes));
+        // Persist updated sync flags back to the active user namespace.
+        storageBoundary.setItem(cachedKey, JSON.stringify(updatedNodes));
       } catch (e) {
         console.warn(`[SyncService] Failed to sync memory layer from ${cachedKey}:`, e);
       }
