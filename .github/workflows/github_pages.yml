@@ -1,5 +1,6 @@
 name: Deploy to GitHub Pages
 
+# temporary connector-authored trigger; reverted in the next commit
 on:
   workflow_dispatch:
 
