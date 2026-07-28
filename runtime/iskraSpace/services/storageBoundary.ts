@@ -12,12 +12,14 @@ export interface StorageBoundaryAdapter {
   clear(): void;
 }
 
-class StorageBoundaryUnavailableError extends Error {
+export class StorageBoundaryUnavailableError extends Error {
   constructor() {
     super('User storage is unavailable before the authenticated storage scope is active');
     this.name = 'StorageBoundaryUnavailableError';
   }
 }
+
+let testFallbackEnabled = true;
 
 function getBrowserStorage(): StorageBoundaryAdapter | null {
   try {
@@ -38,6 +40,13 @@ function isTestRuntime(): boolean {
   return import.meta.env.MODE === 'test';
 }
 
+export function setStorageBoundaryTestFallbackEnabled(enabled: boolean): void {
+  if (!isTestRuntime()) {
+    throw new Error('Storage boundary test fallback can only be changed in test mode');
+  }
+  testFallbackEnabled = enabled;
+}
+
 function resolveStorage(mode: StorageBoundaryMode): StorageBoundaryAdapter {
   if (mode === 'legacy-migration') {
     return getBrowserStorage() ?? unavailableStorage;
@@ -47,7 +56,7 @@ function resolveStorage(mode: StorageBoundaryMode): StorageBoundaryAdapter {
     return userScopedStorage;
   }
 
-  if (isTestRuntime()) {
+  if (isTestRuntime() && testFallbackEnabled) {
     return getBrowserStorage() ?? unavailableStorage;
   }
 
