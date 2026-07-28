@@ -459,11 +459,32 @@ function evaluateSloGuard(input: GuardInput): GuardEval {
   };
 }
 
+function missingCriticalMetricInputs(input: GuardInput): string[] {
+  const metrics = input.metrics as Partial<IskraMetrics>;
+  return ['drift', 'chaos', 'silence_mass'].filter((key) => {
+    const value = metrics[key as keyof IskraMetrics];
+    return typeof value !== 'number' || !Number.isFinite(value);
+  });
+}
+
+function unavailableGuardOutcome(missing: string[]): GuardOutcome {
+  return {
+    decision: 'CLOSE_HONESTLY',
+    why: 'Numeric Guard unavailable because critical metric inputs are missing',
+    reasons: [`missing critical metrics: ${missing.join(', ')}`],
+    expected_effect: 'Stop silent fail-open and route through risk-aware orchestration',
+    next_check: 'after_metric_snapshot',
+    rule_refs: ['system/slo_guard.md#missing-input-routing'],
+  };
+}
+
 /**
  * Legacy (non-explainable) guard decision. Used to verify that XCode
  * variants keep stable behavior.
  */
 export function decideSloGuard(input: GuardInput): GuardOutcome {
+  const missing = missingCriticalMetricInputs(input);
+  if (missing.length > 0) return unavailableGuardOutcome(missing);
   return evaluateSloGuard(input).outcome;
 }
 
@@ -477,6 +498,23 @@ export function decideSloGuard(input: GuardInput): GuardOutcome {
 export function decideSloGuardExplainable(
   input: GuardInput
 ): Explainable<GuardOutcome> {
+  const missing = missingCriticalMetricInputs(input);
+  if (missing.length > 0) {
+    const value = unavailableGuardOutcome(missing);
+    return {
+      value,
+      how: [{
+        label: 'critical_metrics_missing',
+        formula: 'required Guard inputs must be finite',
+        inputs: { missing_count: missing.length },
+        output: `NOT_EVALUABLE_MISSING:${missing.join(',')}`,
+        refs: [canonRef('system/slo_guard.md#missing-input-routing')],
+      }],
+      contracts_checked: ['numeric Guard not silently simulated'],
+      assumptions: [],
+      evidence: [canonRef('system/slo_guard.md#missing-input-routing')],
+    };
+  }
   const ev = evaluateSloGuard(input);
   return {
     value: ev.outcome,

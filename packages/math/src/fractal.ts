@@ -302,3 +302,68 @@ export function calculateQuantumIndicators(
     NC: calculateNC(history),
   };
 }
+
+export type FractalMetricResult =
+  | {
+      status: 'computed';
+      value: number;
+      sample_count: number;
+      algorithm_version: string;
+      parameters: Record<string, number>;
+    }
+  | {
+      status: 'unavailable';
+      reason: 'insufficient_samples';
+      sample_count: number;
+      required_sample_count: number;
+      algorithm_version: string;
+    };
+
+export function calculateHFDMetric(
+  timeSeries: number[],
+  options: { kMax?: number } = {}
+): FractalMetricResult {
+  const required = 20;
+  if (timeSeries.length < required) {
+    return {
+      status: 'unavailable',
+      reason: 'insufficient_samples',
+      sample_count: timeSeries.length,
+      required_sample_count: required,
+      algorithm_version: 'hfd-v1-kmax5',
+    };
+  }
+  const kMax = options.kMax ?? 5;
+  return {
+    status: 'computed',
+    value: calculateHFD(timeSeries, kMax),
+    sample_count: timeSeries.length,
+    algorithm_version: 'hfd-v1-kmax5',
+    parameters: { kMax },
+  };
+}
+
+export function calculateDFAMetric(
+  timeSeries: number[],
+  options: { minBox?: number; maxBox?: number } = {}
+): FractalMetricResult {
+  const required = 50;
+  if (timeSeries.length < required) {
+    return {
+      status: 'unavailable',
+      reason: 'insufficient_samples',
+      sample_count: timeSeries.length,
+      required_sample_count: required,
+      algorithm_version: 'dfa-v1-min50',
+    };
+  }
+  const minBox = options.minBox ?? 4;
+  const maxBox = options.maxBox ?? Math.min(16, Math.floor(timeSeries.length / 2));
+  return {
+    status: 'computed',
+    value: calculateDFA(timeSeries, minBox, maxBox),
+    sample_count: timeSeries.length,
+    algorithm_version: 'dfa-v1-min50',
+    parameters: { minBox, maxBox },
+  };
+}

@@ -29,7 +29,9 @@ describe('IskraSpace release workflow contract', () => {
     expect(viteConfig).toContain("pool: 'threads'");
     expect(viteConfig).toContain('maxWorkers: 2');
     expect(
-      productionWorkflow.match(/pnpm --filter iskra-space test:run/g)?.length
+      productionWorkflow.match(
+        /pnpm --filter iskra-space --fail-if-no-match test:run/g
+      )?.length
     ).toBeGreaterThanOrEqual(2);
     expect(pullRequestWorkflow.match(/pnpm test:run/g)?.length).toBeGreaterThanOrEqual(2);
   });

@@ -33,6 +33,8 @@ import { metricsService } from './services/metricsService';
 import { canonService } from './services/canonService';
 import { storageService } from './services/storageService';
 import { checkRitualTriggers, executePhoenix, executeShatter, getPhaseAfterRitual } from './services/ritualService';
+import { executeGuardRequest, type GuardExecutionResult } from '../src/types/guardExecution.js';
+import { quickRiskCheck } from './services/policyEngine';
 
 export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
 
@@ -94,6 +96,7 @@ export function IskraSpaceApp() {
     const [phase, setPhase] = useState<IskraPhase>('CLARITY');
     const [ritualAlert, setRitualAlert] = useState<{ ritual: string; reason: string } | null>(null);
     const phaseRef = useRef<IskraPhase>('CLARITY');
+    const metricsRef = useRef<IskraMetrics>(INITIAL_METRICS);
     const emaRef = useRef({ chaos: INITIAL_METRICS.chaos, drift: INITIAL_METRICS.drift });
 
     const triggerSomaticFeedback = useCallback((newPhase: IskraPhase) => {
@@ -118,29 +121,30 @@ export function IskraSpaceApp() {
         phaseRef.current = phase;
     }, [phase]);
 
+    const computeNextMetrics = useCallback((prev: IskraMetrics, patch: Partial<IskraMetrics>): IskraMetrics => {
+        const merged = { ...prev, ...patch };
+        const beta = deltaConfig.ema.beta;
+        const chaosEma = beta * merged.chaos + (1 - beta) * emaRef.current.chaos;
+        const driftEma = beta * merged.drift + (1 - beta) * emaRef.current.drift;
+        emaRef.current = { chaos: chaosEma, drift: driftEma };
+        const newRhythm = calculateRhythmIndex(merged, prev.rhythm, emaRef.current);
+        const derived = calculateDerivedMetrics({ ...merged, rhythm: newRhythm });
+        const next: IskraMetrics = { ...merged, rhythm: newRhythm, mirror_sync: derived.mirror_sync };
+        metricsRef.current = next;
+        const newPhase = metricsService.getPhaseFromMetrics(next);
+        if (newPhase !== phaseRef.current) {
+            setPhase(newPhase);
+            triggerSomaticFeedback(newPhase);
+        }
+        return next;
+    }, [triggerSomaticFeedback]);
+
     const updateMetrics = useCallback((updates: MetricsUpdater) => {
         setMetrics((prev: IskraMetrics) => {
             const patch = typeof updates === 'function' ? updates(prev) : updates;
-            const merged = { ...prev, ...patch };
-
-            const beta = deltaConfig.ema.beta;
-            const chaosEma = beta * merged.chaos + (1 - beta) * emaRef.current.chaos;
-            const driftEma = beta * merged.drift + (1 - beta) * emaRef.current.drift;
-            emaRef.current = { chaos: chaosEma, drift: driftEma };
-
-            const newRhythm = calculateRhythmIndex(merged, prev.rhythm, emaRef.current);
-            const derived = calculateDerivedMetrics({ ...merged, rhythm: newRhythm });
-            const next: IskraMetrics = { ...merged, rhythm: newRhythm, mirror_sync: derived.mirror_sync };
-
-            const newPhase = metricsService.getPhaseFromMetrics(next);
-            if (newPhase !== phaseRef.current) {
-                setPhase(newPhase);
-                triggerSomaticFeedback(newPhase);
-            }
-
-            return next;
+            return computeNextMetrics(prev, patch);
         });
-    }, [triggerSomaticFeedback]);
+    }, [computeNextMetrics]);
 
     // Auto-trigger rituals based on metrics
     useEffect(() => {
@@ -249,9 +253,24 @@ export function IskraSpaceApp() {
         }
     };
 
-    const handleUserInput = (text: string) => {
-         const updates = metricsService.calculateMetricsUpdate(text);
-         updateMetrics(updates);
+    const handleUserInput = async (text: string): Promise<GuardExecutionResult> => {
+        const previousMetrics = metricsRef.current;
+        const updates = metricsService.calculateMetricsUpdate(text);
+        const currentTurnMetrics = computeNextMetrics(previousMetrics, updates);
+        setMetrics(currentTurnMetrics);
+        const risk = quickRiskCheck(text);
+        return executeGuardRequest({
+            turn_id: `chat-${Date.now()}`,
+            operation_id: 'iskra.chat.respond',
+            action_risk: risk.isCrisis ? 'critical' : risk.needsAttention ? 'high' : 'low',
+            reversible: !risk.isCrisis,
+            risk_source_ref: 'runtime/iskraSpace/services/policyEngine.ts#quickRiskCheck',
+            security_emergency: risk.isCrisis,
+            current_input: text,
+            previous_metrics: previousMetrics,
+            metrics: currentTurnMetrics,
+            source_ref: 'runtime/iskraSpace/App.tsx#handleUserInput',
+        });
     };
     
     const viewFallback = (
