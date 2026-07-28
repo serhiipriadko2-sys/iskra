@@ -63,17 +63,26 @@ describe('memoryService user scope isolation', () => {
 
     deactivateUserStorage();
 
-    expect(() => memoryService.getShadow()).toThrow();
+    expect(memoryService.getShadow()).toEqual([]);
+    expect(localStorageMock.getItem('iskra:v2:user:user-a:iskra-space-shadow')).not.toBeNull();
   });
 
-  it('blocks second user from legacy migration ownership', () => {
-    store['iskra-space-archive'] = JSON.stringify(['legacy']);
+  it('prevents replay duplication and blocks a second legacy owner', () => {
+    const legacyArchive = JSON.stringify(['legacy']);
+    store['iskra-space-archive'] = legacyArchive;
 
     const first = activateUserStorage('user-a');
+    const firstScopedValue = store['iskra:v2:user:user-a:iskra-space-archive'];
+    const replay = activateUserStorage('user-a');
+
     deactivateUserStorage();
+    store['iskra-space-archive'] = legacyArchive;
     const second = activateUserStorage('user-b');
 
     expect(first.migratedKeys).toContain('iskra-space-archive');
+    expect(replay.migratedKeys).toEqual([]);
+    expect(store['iskra:v2:user:user-a:iskra-space-archive']).toBe(firstScopedValue);
     expect(second.blockedKeys).toContain('iskra-space-archive');
+    expect(store['iskra:v2:user:user-b:iskra-space-archive']).toBeUndefined();
   });
 });
