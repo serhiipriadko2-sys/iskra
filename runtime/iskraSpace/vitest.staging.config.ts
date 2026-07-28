@@ -14,6 +14,8 @@ export default defineConfig({
     ],
     environment: 'node',
     pool: 'threads',
-    maxWorkers: 2,
+    // Live suites share the two disposable principals by contract. Serializing
+    // files prevents profile/fixture races from masquerading as RLS failures.
+    maxWorkers: 1,
   },
 });

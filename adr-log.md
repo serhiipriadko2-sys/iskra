@@ -185,7 +185,7 @@ pull request if its verification gates fail.
 
 ## ADR-20260728-001: IskraSpace Canonical AI Boundary and Principal-Scoped Local State
 
-Status: accepted in source; live deployment and staging acceptance remain separate.
+Status: accepted in source; verified-live-staging; production promotion pending.
 
 ### Context
 The dual-provider gateway allowed the browser payload and runtime configuration
@@ -233,9 +233,16 @@ part of a malformed file.
 ### Verification
 Source verification requires frozen install, dependency audits, strict
 typecheck/lint, full Vitest, Deno policy/boundary tests, Deno handler check,
-production build and release-workflow contract tests. None of these proves a
-live Edge deployment, configured secret, staging acceptance or production
-traffic.
+production build and release-workflow contract tests.
+
+The data-less preview receipt at
+`docs/operations/iskraspace_staging_acceptance_2026-07-28.md` additionally
+proves 36/36 migrations, exact downloaded Edge source, `verify_jwt=true`,
+7/7 files and 60/60 live acceptance tests, two-active-principal RLS/Graph
+isolation, quota spoof resistance under `cf-connecting-ip`, fixture cleanup and
+post-run advisor/log review. It uses `AI_EDGE_TEST_MODE=true`, so it does not
+prove real provider availability, billing behavior, production traffic or
+browser UI success.
 
 ### Rollback / Reversal Trigger
 Rollback only if staged parity demonstrates a product-blocking incompatibility
@@ -248,6 +255,8 @@ Delta: AI routing and local-data ownership move from caller/device ambiguity to
 server/principal authority.
 D: Edge source, client storage source, contract tests, Deno tests, official
 Google Gen AI and Supabase Edge documentation.
-Omega: 0.92 for source behavior; lower for live runtime until deploy/read-back.
-Lambda: stage on an exact commit with redacted environment and acceptance
-receipts before any production promotion.
+Omega: 0.96 for staging behavior; lower for production until exact deploy and
+read-back.
+Lambda: require green PR-head CI, production secret preflight, rollback
+capture, exact-source deployment/read-back and negative-only smoke before
+production promotion is declared complete.

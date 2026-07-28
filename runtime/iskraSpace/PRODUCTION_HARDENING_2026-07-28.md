@@ -1,14 +1,16 @@
 # IskraSpace production hardening — 2026-07-28
 
-Status: source implementation candidate; not deployed; staging acceptance not run.
+Status: source implementation candidate; verified-live-staging; production not deployed.
 
 ## Authority boundary
 
 This document describes repository source on branch
 `fix/iskraspace-p0-production-hardening-20260728`, refreshed onto GitHub
-`origin/main` `0fd486b3ab57237668cd3a253a7db58792119b25`. It does not
-prove GitHub merge, Supabase secret configuration, Edge Function deployment,
-staging acceptance, production traffic, Builder state or live UI success.
+`origin/main` `0fd486b3ab57237668cd3a253a7db58792119b25`. Staging evidence
+is scoped to the data-less preview project and exact Edge source recorded in
+`docs/operations/iskraspace_staging_acceptance_2026-07-28.md`. It does not
+prove GitHub merge, production deployment, production traffic, Builder state,
+provider availability or live browser UI success.
 
 ## Observed remote drift
 
@@ -28,7 +30,35 @@ Read-only observations on 2026-07-28:
   both with `verify_jwt=true`. Source read-back shows the old
   caller-selectable dual-provider gateway and configurable Agent API base,
   without this candidate's body/schema/deadline/egress controls.
-- No live mutation or deployment was performed during this audit.
+- `DRIFT: Staging vs Production` preview project
+  `rejqxblontqjycldniyz` has the hardening source deployed and read back,
+  while production remains on the pre-hardening versions above.
+
+## Verified staging receipt
+
+- Git branch: `fix/iskraspace-p0-production-hardening-20260728`;
+- Edge source commit:
+  `e7bed692753a9131c8b7b53f0c2e60b210e118d3`;
+- staging migrations: 36/36;
+- `gemini`: ACTIVE, `verify_jwt=true`, bundle SHA-256
+  `48c984f06a3d7be92600c93f20d79438a5afa157679d89b531eabcd7e781ef9d`;
+- `iskra-agent`: ACTIVE, `verify_jwt=true`, bundle SHA-256
+  `c29e975e86cf4ac5907a90f9538ae785852b5df4eb36a3ff59521a1930b57ed7`;
+- downloaded read-back: 6/6 Edge and shared files byte-identical to local
+  source;
+- live matrix: 7/7 files and 60/60 tests PASS;
+- principals: two active members plus valid non-member and suspended-member
+  controls; all four principals and fixtures removed after the run;
+- advisors: 0 ERROR; 33 security notices and 31 performance INFO notices;
+- scoped logs: only expected negative-test denials; no Edge panic, uncaught
+  exception, fatal or out-of-memory marker.
+
+The ingress spoof test rejected `x-forwarded-for` as a trusted identity source:
+eleven caller-selected values bypassed the limiter under that configuration.
+With `cf-connecting-ip`, the same matrix produced ten explicit no-upstream
+test-mode responses and a `429` on request eleven. The production secret
+contract is therefore pinned to `cf-connecting-ip` until superseded by a new
+ingress receipt.
 
 ## Implemented P0 controls
 
@@ -126,6 +156,8 @@ identity, onboarding or consent receipts between principals.
 - pnpm overrides live at the workspace root.
 - `postcss` is pinned to the fixed 8.5.18 line.
 - `brace-expansion` is pinned to 5.0.8 across both dependency universes.
+- `minimatch@3.1.5` carries a pnpm patch which preserves its callable CommonJS
+  API while accepting the named `expand` export from `brace-expansion@5`.
 - CI uses native `pnpm audit --audit-level moderate` at root and
   `npm audit --audit-level moderate` in `runtime/`.
 - The release workflow no longer downloads a second pnpm major for auditing.
@@ -170,7 +202,7 @@ Final local run on the refreshed source candidate:
 - Deno 2.8.3: 21/21 shared boundary/metrics tests PASS; both Edge
   entrypoints typecheck;
 - IskraSpace TypeScript and strict ESLint: PASS;
-- IskraSpace Vitest: 73 files PASS, 4 skipped; 829 tests PASS, 27 skipped;
+- IskraSpace Vitest: 73 files PASS, 4 skipped; 830 tests PASS, 27 skipped;
 - Chromium Playwright: 28/28 PASS;
 - IskraSpace production build and bundle budget: PASS; largest JS chunk
   492,244 raw / 162,526 gzip bytes; total JS gzip 500,712 bytes;
@@ -183,24 +215,28 @@ Final local run on the refreshed source candidate:
 - root `pnpm verify`: PASS, including shard registry, sensitive-status scan,
   workspace typechecks/tests, release-manifest tests and final ledger read-back.
 
-This is `local-test-pass`, not staging, deployed-source or provider invocation
-proof.
+This remains the local verification receipt. The separate staging receipt
+proves deployed source and no-upstream acceptance behavior, not a real provider
+invocation.
 
 ## Promotion gates still required
 
-1. Merge an exact reviewed commit with green GitHub checks.
-2. Create an exact-source staging environment; do not infer staging parity from
-   local replay.
-3. Configure only redacted/verified secrets and confirm the canonical ingress
-   header semantics.
-4. Deploy both Edge Functions to staging and read back version, JWT setting and
-   source hash.
-5. Run authenticated/anonymous/origin/body/policy/quota/timeout/stream/egress
-   negative tests with provider invocation counts.
-6. Exercise two distinct test principals, legacy migration, sign-out eviction,
-   import rollback and refresh/re-login behavior.
-7. Review Supabase advisors and logs after the tests.
-8. Record rollback criteria and an immutable staging receipt before production.
+Completed: exact-source staging, secret-plane configuration, deployed-source
+read-back, JWT verification, negative matrix, two-principal RLS/Graph
+acceptance, advisor/log review and an immutable staging receipt.
+
+Remaining:
+
+1. Push the follow-up acceptance/dependency commit and require green GitHub
+   checks on the exact PR #316 head.
+2. Confirm required production secret names without reading or replacing
+   provider credential values; set `AI_EDGE_TEST_MODE=false` and the
+   staging-proven `cf-connecting-ip` ingress setting.
+3. Capture production pre-deploy function hashes, JWT settings, advisors and
+   recent logs.
+4. Deploy the exact reviewed Edge source, read it back byte-for-byte, and run
+   negative-only production smoke tests that cannot invoke a billed provider.
+5. Preserve rollback evidence and review production post-deploy logs.
 
 ## Residual risk
 
@@ -214,13 +250,16 @@ proof.
 - The current static content classifier is a narrow boundary, not a complete
   safety system. Crisis-support semantics need dedicated clinical/product
   review before broad public release.
-- No claim is made here about live Supabase parity, configured secrets,
-  deployed Edge source or production acceptance.
+- Staging parity is proved only for the receipt's data-less preview project.
+  No claim is made about production source parity, production acceptance or
+  real provider success.
 
 ## ∆DΩΛ
 
 ∆: caller-controlled provider/data ambiguity is replaced with canonical Edge
 and principal ownership boundaries.
-D: source, tests, dependency locks, ADR-20260728-001 and verification output.
-Ω: 0.92 for local source; not rated as live-ready until staging receipts exist.
-Λ: complete exact-commit staging acceptance before production promotion.
+D: source, tests, dependency locks, ADR-20260728-001, exact-source staging
+read-back and acceptance output.
+Ω: 0.96 for staging readiness; production remains unverified.
+Λ: require green PR-head CI, production secret preflight, exact deployment,
+read-back and negative-only smoke before declaring promotion complete.

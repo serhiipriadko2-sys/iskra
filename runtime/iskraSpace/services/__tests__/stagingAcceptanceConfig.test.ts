@@ -11,12 +11,12 @@ const valid = {
   ISKRA_STAGING_USER_B_JWT: 'user-b-jwt',
   ISKRA_STAGING_NON_MEMBER_JWT: 'non-member-jwt',
   ISKRA_STAGING_SUSPENDED_MEMBER_JWT: 'suspended-member-jwt',
-  ISKRA_STAGING_ANONYMOUS_JWT: 'anonymous-jwt',
+  ISKRA_STAGING_ANONYMOUS_DENY_RECEIPT_SHA256: 'c'.repeat(64),
   ISKRA_STAGING_EXPIRED_JWT: 'expired-jwt',
   ISKRA_STAGING_ALLOWED_ORIGIN: 'http://127.0.0.1:4173',
   ISKRA_STAGING_IP_HMAC_SECRET: 'hmac-secret-with-at-least-32-characters',
-  ISKRA_STAGING_MAGIC_LINK_A_RECEIPT_SHA256: 'a'.repeat(64),
-  ISKRA_STAGING_MAGIC_LINK_B_RECEIPT_SHA256: 'b'.repeat(64),
+  ISKRA_STAGING_PRINCIPAL_A_RECEIPT_SHA256: 'a'.repeat(64),
+  ISKRA_STAGING_PRINCIPAL_B_RECEIPT_SHA256: 'b'.repeat(64),
 };
 
 describe('parseStagingAcceptanceConfig', () => {
@@ -38,11 +38,12 @@ describe('parseStagingAcceptanceConfig', () => {
     ['user tokens match', { ...valid, ISKRA_STAGING_USER_B_JWT: valid.ISKRA_STAGING_USER_A_JWT }],
     ['non-member token is absent', { ...valid, ISKRA_STAGING_NON_MEMBER_JWT: undefined }],
     ['expired token is reused', { ...valid, ISKRA_STAGING_EXPIRED_JWT: valid.ISKRA_STAGING_USER_A_JWT }],
+    ['anonymous deny receipt is absent', { ...valid, ISKRA_STAGING_ANONYMOUS_DENY_RECEIPT_SHA256: undefined }],
     ['origin differs from the acceptance harness', { ...valid, ISKRA_STAGING_ALLOWED_ORIGIN: 'http://localhost:4173' }],
     ['required credential is absent', { ...valid, ISKRA_STAGING_IP_HMAC_SECRET: undefined }],
     ['HMAC secret is too short', { ...valid, ISKRA_STAGING_IP_HMAC_SECRET: 'short' }],
-    ['magic-link receipt is absent', { ...valid, ISKRA_STAGING_MAGIC_LINK_A_RECEIPT_SHA256: undefined }],
-    ['magic-link receipts match', { ...valid, ISKRA_STAGING_MAGIC_LINK_B_RECEIPT_SHA256: 'a'.repeat(64) }],
+    ['principal bootstrap receipt is absent', { ...valid, ISKRA_STAGING_PRINCIPAL_A_RECEIPT_SHA256: undefined }],
+    ['principal bootstrap receipts match', { ...valid, ISKRA_STAGING_PRINCIPAL_B_RECEIPT_SHA256: 'a'.repeat(64) }],
   ])('fails closed when %s', (_caseName, environment) => {
     expect(() => parseStagingAcceptanceConfig(environment)).toThrow(/staging acceptance/i);
   });

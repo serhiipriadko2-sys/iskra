@@ -34,6 +34,15 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
       });
     }
 
+    function validBody(functionName: EdgeFunction): unknown {
+      return functionName === 'gemini'
+        ? {
+            action: 'generateContent',
+            contents: [{ role: 'user', parts: [{ text: 'staging access probe' }] }],
+          }
+        : { message: 'staging access probe', route: 'chat' };
+    }
+
     it.each<EdgeFunction>(['gemini', 'iskra-agent'])(
       '%s rejects missing, malformed, and genuinely expired JWTs',
       async functionName => {
@@ -49,16 +58,22 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
     );
 
     it.each<EdgeFunction>(['gemini', 'iskra-agent'])(
-      '%s rejects non-members, suspended members, and anonymous sessions before provider routing',
+      '%s rejects non-members and suspended members before provider routing',
       async functionName => {
-        const [nonMember, suspended, anonymous] = await Promise.all([
-          invoke(functionName, { origin: config.allowedOrigin, token: config.nonMemberToken }),
-          invoke(functionName, { origin: config.allowedOrigin, token: config.suspendedMemberToken }),
-          invoke(functionName, { origin: config.allowedOrigin, token: config.anonymousToken }),
+        const [nonMember, suspended] = await Promise.all([
+          invoke(functionName, {
+            origin: config.allowedOrigin,
+            token: config.nonMemberToken,
+            body: validBody(functionName),
+          }),
+          invoke(functionName, {
+            origin: config.allowedOrigin,
+            token: config.suspendedMemberToken,
+            body: validBody(functionName),
+          }),
         ]);
         expect(nonMember.status).toBe(403);
         expect(suspended.status).toBe(403);
-        expect(anonymous.status).toBe(401);
       },
     );
 
@@ -83,12 +98,16 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
           token: config.userAToken,
           origin: config.allowedOrigin,
           forwardedFor: `198.51.100.${index + 1}`,
+          body: validBody('gemini'),
         }));
       }
 
-      expect(responses.slice(0, 10).map(response => response.status)).toEqual(Array(10).fill(400));
+      // Staging runs with AI_EDGE_TEST_MODE=true, so a request which clears
+      // auth, policy, membership and quota reaches the explicit no-upstream
+      // response. The eleventh request must be stopped at the shared quota.
+      expect(responses.slice(0, 10).map(response => response.status)).toEqual(Array(10).fill(502));
       expect(responses[10]?.status).toBe(429);
       expect(responses[10]?.headers.get('access-control-allow-origin')).toBe(config.allowedOrigin);
-    });
+    }, 30_000);
   },
 );

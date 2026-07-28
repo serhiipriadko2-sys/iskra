@@ -35,7 +35,7 @@ cp .env.example .env.local  # Add VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (cl
 
 # Configure server-side AI secrets (Supabase Edge Function env)
 # - GEMINI_API_KEY=...
-# - AI_EDGE_INGRESS_IP_HEADER=<trusted platform-injected header>
+# - AI_EDGE_INGRESS_IP_HEADER=cf-connecting-ip  # Supabase staging-proven
 # - AI_RATE_LIMIT_IP_HMAC_SECRET=<random server-only secret>
 # - Do NOT put provider API keys into Vite env
 # - Deploy: supabase functions deploy gemini

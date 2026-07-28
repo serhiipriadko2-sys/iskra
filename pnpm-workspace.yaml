@@ -16,3 +16,5 @@ overrides:
   protobufjs: '7.6.5'
   vite: '6.4.3'
   ws: '8.21.0'
+patchedDependencies:
+  minimatch@3.1.5: patches/minimatch@3.1.5.patch

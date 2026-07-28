@@ -304,3 +304,12 @@
 - **Proof boundary:** local source/tests plus read-only GitHub/Supabase observations. GitHub merge, Supabase live configuration/deployment, staging acceptance and production activation are not asserted.
 - **Local verification:** root/runtime audits 0 vulnerabilities; Deno 21/21; IskraSpace Vitest 829 passed / 27 skipped; Chromium E2E 28/28; legacy runtime 265/265; bundle budget, Edge metrics parity, Supabase repository contracts, 3,657-node canon index, 983-file ledger and root `pnpm verify` PASS. Added-line secret scan and diff hygiene PASS.
 - **Status:** local source candidate verified; live mutation and staging acceptance not performed.
+
+### EVI-20260728-002: IskraSpace exact-source staging acceptance
+- **Assertion:** The P0 Edge boundary is deployed and verified on a clean data-less preview project, with exact source/JWT read-back, negative matrix, two-principal isolation, cleanup and post-run advisor/log review.
+- **Evidence:** PR [#316](https://github.com/serhiipriadko2-sys/iskra/pull/316); Edge source commit `e7bed692753a9131c8b7b53f0c2e60b210e118d3`; preview `rejqxblontqjycldniyz`; 36/36 migrations; `gemini` bundle SHA-256 `48c984f06a3d7be92600c93f20d79438a5afa157679d89b531eabcd7e781ef9d`; `iskra-agent` bundle SHA-256 `c29e975e86cf4ac5907a90f9538ae785852b5df4eb36a3ff59521a1930b57ed7`; both ACTIVE with `verify_jwt=true`; six downloaded files byte-identical; staging acceptance 7/7 files and 60/60 tests PASS; cleanup 4/4 principals and all fixtures; `docs/operations/iskraspace_staging_acceptance_2026-07-28.md`.
+- **Ingress finding:** caller-selected `x-forwarded-for` bypassed the IP limiter; staging-proven `cf-connecting-ip` produced ten explicit no-upstream responses followed by `429`. Production configuration is pinned to the latter until superseded by a new ingress receipt.
+- **Advisor/log boundary:** 0 advisor ERROR; 33 security notices and 31 performance INFO notices. Scoped Edge/Postgres errors were expected negative-test denials; no Edge panic, uncaught exception, fatal or out-of-memory marker.
+- **Containment:** an earlier disposable preview emitted branch credentials into local tool output; no value was committed, that preview was deleted, and the full sequence was repeated on the clean preview named above.
+- **Proof boundary:** `AI_EDGE_TEST_MODE=true`; no billed provider call, production deployment, browser UI acceptance or GitHub merge is asserted.
+- **Status:** verified-live-staging; production promotion pending exact-head CI and production preflight.
