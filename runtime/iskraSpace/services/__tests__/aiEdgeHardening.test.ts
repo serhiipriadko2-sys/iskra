@@ -13,9 +13,7 @@ const denoPolicyTestPath = join(runtimeRoot, 'supabase/functions/_shared/aiConte
 
 const readOrEmpty = (path: string) => existsSync(path) ? readFileSync(path, 'utf8') : '';
 
-// TODO: implement aiContentPolicy.ts, AI_EDGE_INGRESS_IP_HEADER, AI_EDGE_TEST_MODE,
-// CANONICAL_WORKSPACE_AGENT_ORIGIN and aiContentPolicy_test.ts, then re-enable.
-describe.skip('AI Edge hardening contract', () => {
+describe('AI Edge hardening contract', () => {
   it('has one server-only content policy that rejects direct PII, injection and danger before quota', () => {
     const contentPolicy = readOrEmpty(contentPolicyPath);
     const gemini = readOrEmpty(geminiPath);
@@ -53,7 +51,8 @@ describe.skip('AI Edge hardening contract', () => {
     expect(gemini).toContain('CANONICAL_GEMINI_TEXT_MODEL');
     expect(gemini).toContain('MAX_AI_PROVIDER_TIMEOUT_MS');
     expect(gemini).toContain('MAX_AI_STREAM_DURATION_MS');
-    expect(gemini).toContain('AbortController');
+    expect(contentPolicy).toContain('AbortController');
+    expect(gemini).toContain('abortSignal');
     expect(gemini).not.toContain('AI_FALLBACK_PROVIDER');
     expect(gemini).not.toContain('https://api.openai.com');
   });

@@ -18,6 +18,7 @@ import { IskraMetrics, IskraPhase, VoiceName, RitualName } from '../types';
 import { generateText } from './geminiService';
 import { DELTA_PROTOCOL_INSTRUCTION } from './deltaProtocol';
 import { safeStorage } from './storageCompat';
+import { principalStorage } from './principalStorage';
 
 // Re-export for backward compatibility — type is now canonical in ../types
 export type { RitualName } from '../types';
@@ -386,16 +387,30 @@ export function getPhaseAfterRitual(ritual: RitualName): IskraPhase {
 const METRICS_HISTORY_KEY = 'iskra-ritual-metrics-history';
 const MAX_HISTORY = 10;
 
-/** Load history from storage on module init */
-const _storedHistory = safeStorage.getItem(METRICS_HISTORY_KEY);
-const metricsHistory: MetricsSnapshot[] = _storedHistory
-  ? (() => { try { return JSON.parse(_storedHistory) as MetricsSnapshot[]; } catch { return []; } })()
-  : [];
+const metricsHistory: MetricsSnapshot[] = [];
+let metricsHistoryPrincipal: string | null = null;
+
+function ensureMetricsHistoryLoaded(): void {
+  const principal = principalStorage.activePrincipal() ?? (import.meta.env.VITEST ? 'vitest-local' : null);
+  if (!principal || principal === metricsHistoryPrincipal) return;
+  metricsHistory.splice(0, metricsHistory.length);
+  const stored = safeStorage.getItem(METRICS_HISTORY_KEY);
+  if (stored) {
+    try {
+      const parsed: unknown = JSON.parse(stored);
+      if (Array.isArray(parsed)) metricsHistory.push(...parsed.slice(-MAX_HISTORY) as MetricsSnapshot[]);
+    } catch {
+      // Corrupt history is ignored; the next successful write replaces it.
+    }
+  }
+  metricsHistoryPrincipal = principal;
+}
 
 /**
  * Saves current metrics to history (call before any change)
  */
 export function saveMetricsSnapshot(metrics: IskraMetrics, reason?: string): void {
+  ensureMetricsHistoryLoaded();
   metricsHistory.push({
     timestamp: new Date().toISOString(),
     metrics: { ...metrics },
@@ -456,6 +471,7 @@ export function executeRetune(currentMetrics: IskraMetrics): IskraMetrics {
  * Returns null if no history available.
  */
 export function executeReverse(stepsBack: number = 1): IskraMetrics | null {
+  ensureMetricsHistoryLoaded();
   const index = metricsHistory.length - stepsBack - 1;
 
   if (index < 0 || metricsHistory.length === 0) {
@@ -469,6 +485,7 @@ export function executeReverse(stepsBack: number = 1): IskraMetrics | null {
  * Get available reverse points
  */
 export function getReverseHistory(): MetricsSnapshot[] {
+  ensureMetricsHistoryLoaded();
   return [...metricsHistory];
 }
 

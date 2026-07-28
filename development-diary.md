@@ -181,6 +181,8 @@
 - **Status:** Local verified; remote workflow confirmation pending after PR.
 
 ### JRN-20260608-002: IskraSpace Dual AI Provider Gateway
+- **Superseded:** ADR-20260728-001 replaces this runtime decision; this entry is
+  historical provenance, not the current deployment contract.
 - **Context:** User accepted keeping both Gemini and OpenAI for `runtime/iskraSpace`, with provider keys kept out of the browser and no live Supabase mutation in this pass.
 - **Actions:** Added repo-side provider routing to the `gemini` Supabase Edge Function, kept Gemini as default, added OpenAI generation through Responses API and embeddings through the embeddings API, preserved native Gemini streaming, added client-safe `VITE_AI_PROVIDER`/`VITE_AI_EDGE_FUNCTION_SLUG` selectors, and documented the rollout boundary.
 - **Evidence:** Source changes in `runtime/iskraSpace/services/geminiService.ts` and `runtime/iskraSpace/supabase/functions/gemini/index.ts`; operation receipt `docs/operations/iskraspace_dual_ai_provider_gateway_2026-06-08.md`; ADR `ADR-20260608-002`.
@@ -258,3 +260,11 @@
 - **Actions:** synchronized runtime/schema contracts, added 3 regression tests and static token gates, rebuilt skill ZIP, study submanifest, full manifest, release ZIP and sidecar.
 - **Evidence:** static PASS; dynamic 25/25; manifest 121/121; archive 123 files; round-trip 123/123; ZIP sha256 `73d7ee6f7e77926234be7250fd3ab7b1b4957abb0361dbf51e4bbb90ae587e25`, bytes `1178388`.
 - **Next:** fresh-checkout verification, push, green CI, review-thread closure, merge decision.
+
+### JRN-20260728-001: IskraSpace P0 production-hardening source candidate
+- **Context:** Production review found high dependency advisories, a broken dual-pnpm audit gate, caller-controlled AI provider/model routing, quota-before-validation, generic ingress-IP trust, unbounded upstream lifetimes, shared browser user state and partial backup import.
+- **Actions:** Isolated work from current `origin/main`; remediated both dependency universes; made CI audit native; replaced dual-provider routing with canonical Gemini and canonical Workspace Agent egress; wired bounded body/schema/content policy before quota; added time/stream limits; introduced principal-scoped storage, one-owner legacy migration, sign-out eviction and transactional import rollback; synchronized environment and production documents.
+- **Evidence:** Candidate refreshed onto GitHub-observed `main` `0fd486b3ab57237668cd3a253a7db58792119b25`; Production Deployment run `30379847259` reproduces the dependency blocker; production Supabase read-back observes pre-hardening `gemini` v9 and `iskra-agent` v4. Local verification: audits 0 vulnerabilities; Deno 21/21; IskraSpace Vitest 829 passed / 27 skipped; Chromium E2E 28/28; legacy runtime 265/265; bundle/repository contracts/canon index/ledger PASS. Artifact: `runtime/iskraSpace/PRODUCTION_HARDENING_2026-07-28.md`.
+- **Risk:** Source verification is not live deployment proof. Staging secret/header semantics, Edge read-back, advisor/log review and two-principal browser acceptance remain open.
+- **Next:** finish the exact-branch verification bundle, obtain review/merge authority, then execute exact-commit staging acceptance before production.
+- **Status:** local source candidate verified; no live Supabase mutation or staging acceptance.

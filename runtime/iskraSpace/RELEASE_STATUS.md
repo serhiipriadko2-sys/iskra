@@ -1,12 +1,43 @@
 # Iskra Space Release Status
 
-Status: staging source integration drift blocks branch creation; production_deployed: false; canonical_activation: blocked
-Last updated: 2026-07-23
+Status: local P0 hardening candidate; production_deployed: false; canonical_activation: blocked
+Last updated: 2026-07-28
 App path: `runtime/iskraSpace`
 
-## Current verified baseline
+## 2026-07-28 local source candidate
 
-- GitHub `main` at this status refresh:
+- `[FACT] local-machine-observed` Worktree branch
+  `fix/iskraspace-p0-production-hardening-20260728` starts from GitHub-observed
+  `origin/main` `0fd486b3ab57237668cd3a253a7db58792119b25`.
+- `[FACT] local-machine-observed` The candidate implements dependency-audit
+  closure, canonical Gemini/Workspace Agent Edge boundaries,
+  principal-scoped browser data, sign-out eviction and transactional backup
+  import. The current contract is documented in
+  `PRODUCTION_HARDENING_2026-07-28.md` and ADR-20260728-001.
+- `[FACT] local-test-pass` Final local gates: root and runtime audits report
+  zero vulnerabilities; Deno 21/21; IskraSpace Vitest 829 passed / 27 skipped;
+  Chromium E2E 28/28; legacy runtime 265/265; bundle budget, repository
+  Supabase contracts, 3,657-node canon index and 983-file ledger all pass.
+- `DRIFT: GitHub vs Local` These changes are not merged or deployed. The local
+  branch is stronger evidence for its own source; GitHub `main` remains the
+  authority for remote state. At `0fd486b`, SoT, Runtime, iskraSpace and Guard
+  remediation workflows pass; Production Deployment run
+  [30379847259](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30379847259)
+  fails on the dependency-audit defects repaired by this candidate.
+- `HIGH-RISK DRIFT: Local vs Supabase` Read-only production inspection found
+  active `gemini` v9, SHA-256
+  `e0f0fef8a987370f0ac89f908c85f0cb41765a1f6b182c943841cf207a3c7a1b`,
+  and `iskra-agent` v4, SHA-256
+  `a89d55997f931d8efc32b0297f7777d83838dcf47effe1f05ce9899b9c56e4a4`;
+  both report `verify_jwt=true`. Source read-back remains the pre-hardening
+  dual-provider/configurable-egress implementation. No Edge Function, secret,
+  migration, advisor or log mutation is claimed.
+- Historical receipts below remain evidence for their exact dates/commits.
+  They do not certify this 2026-07-28 candidate.
+
+## Historical verified baseline
+
+- Historical GitHub `main` baseline recorded before the 2026-07-28 refresh:
   `d2ce040643a120916fc62f7fe09e10f49463dfb2` (PR
   [#303](https://github.com/serhiipriadko2-sys/iskra/pull/303) merge).
   PR #303 records and contract-tests the exact migration-34 source cause. It

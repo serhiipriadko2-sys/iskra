@@ -17,6 +17,7 @@ const config: AiBoundaryConfig = {
   environment: 'production',
   allowDevelopmentWildcard: false,
   ipHmacSecret: 'test-only-hmac-secret',
+  canonicalIngressHeader: 'cf-connecting-ip',
 };
 
 const member = { sub: 'member-1', isAnonymous: false };
@@ -24,7 +25,7 @@ const member = { sub: 'member-1', isAnonymous: false };
 function requestWithIp(): Request {
   return new Request('https://edge.example/functions/v1/gemini', {
     method: 'POST',
-    headers: { 'x-forwarded-for': '203.0.113.10' },
+    headers: { 'cf-connecting-ip': '203.0.113.10' },
   });
 }
 
@@ -98,6 +99,29 @@ Deno.test('anonymous and unidentified clients are denied before quota RPC', asyn
     config
   );
   assert(!missingIp.allowed && missingIp.status === 503, 'expected missing IP fail-closed');
+});
+
+Deno.test('only the configured ingress identity header is trusted', async () => {
+  const originalFetch = globalThis.fetch;
+  try {
+    globalThis.fetch = () => Promise.resolve(Response.json({ allowed: true }));
+
+    const configured = await enforceAiRequestBoundary(requestWithIp(), 'token', member, config);
+    assert(configured.allowed, 'expected configured canonical header');
+
+    const unconfigured = await enforceAiRequestBoundary(
+      new Request('https://edge.example/functions/v1/gemini', {
+        method: 'POST',
+        headers: { 'forwarded-client-ip': '203.0.113.10' },
+      }),
+      'token',
+      member,
+      config,
+    );
+    assert(!unconfigured.allowed && unconfigured.status === 503, 'expected unconfigured header denial');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 Deno.test('quota and membership responses map to stable public status codes', async () => {

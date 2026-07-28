@@ -6,7 +6,7 @@
  */
 
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js';
-import { safeStorage } from './storageCompat';
+import { deviceStorage } from './storageCompat';
 import type { Database } from '../types/supabase';
 import { getRuntimeConfig } from '../config/runtimeConfig';
 
@@ -248,7 +248,7 @@ export async function hasSupabaseSession(): Promise<boolean> {
 }
 
 export function getLegacyDeviceId(): string | null {
-  return safeStorage.getItem('iskra_device_id');
+  return deviceStorage.getItem('iskra_device_id');
 }
 
 export async function isSupabaseAvailable(): Promise<boolean> {

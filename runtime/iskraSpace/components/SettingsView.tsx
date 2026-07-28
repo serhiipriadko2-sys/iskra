@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { storageService } from '../services/storageService';
+import { MAX_BACKUP_BYTES, storageService } from '../services/storageService';
 import { memoryService } from '../services/memoryService';
 import { PowerIcon, DatabaseIcon, FilePlus2Icon, TrashIcon, LayersIcon, FileSearchIcon, TriangleIcon, SparkleIcon, ScaleIcon, MessageSquareIcon } from './icons';
 import { IntegrityReport, ResponseMode } from '../types';
@@ -63,8 +63,16 @@ const SettingsView: React.FC = () => {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        if (file.size > MAX_BACKUP_BYTES) {
+            setImportError('Backup exceeds the 1 MiB import limit.');
+            e.target.value = '';
+            return;
+        }
 
         const reader = new FileReader();
+        reader.onerror = () => {
+            setImportError('Unable to read the selected backup.');
+        };
         reader.onload = (event) => {
             try {
                 const json = event.target?.result as string;

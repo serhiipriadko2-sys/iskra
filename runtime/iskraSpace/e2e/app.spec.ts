@@ -101,7 +101,9 @@ test.describe('Data Persistence', () => {
     await seedCompletedOnboarding(page, { userName: 'PersistenceTest' });
     await page.reload();
 
-    const userName = await page.evaluate(() => localStorage.getItem('iskra-user-name'));
+    const userName = await page.evaluate(
+      () => localStorage.getItem('iskra.principal.v1:e2e-local:iskra-user-name')
+    );
     expect(userName).toBe('PersistenceTest');
   });
 });

@@ -9,6 +9,11 @@ const productionWorkflow = readFileSync(
   join(repoRoot, '.github/workflows/production_deploy.yml'),
   'utf8'
 );
+const rootPackage = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8')) as {
+  packageManager?: string;
+  pnpm?: unknown;
+};
+const pnpmWorkspace = readFileSync(join(repoRoot, 'pnpm-workspace.yaml'), 'utf8');
 const pullRequestWorkflow = readFileSync(
   join(repoRoot, '.github/workflows/iskraspace_ci.yml'),
   'utf8'
@@ -39,8 +44,7 @@ describe('IskraSpace release workflow contract', () => {
   it('makes security, integrity, browser and Docker smoke checks release gates', () => {
     for (const marker of [
       'lint:strict',
-      'pnpm@11.13.0',
-      '--pm-on-fail=ignore',
+      'pnpm audit --audit-level moderate',
       'npm audit --audit-level moderate',
       'check:supabase-graph-contract:repo',
       'check:supabase-voice-metrics-contract:repo',
@@ -66,7 +70,16 @@ describe('IskraSpace release workflow contract', () => {
       expect(productionWorkflow).toContain(marker);
     }
 
-    expect(productionWorkflow).not.toContain('pnpm audit --audit-level moderate');
+    expect(productionWorkflow).not.toContain('pnpm@11');
+    expect(productionWorkflow).not.toContain('--pm-on-fail=ignore');
+  });
+
+  it('uses one pinned pnpm authority and patched workspace overrides', () => {
+    expect(rootPackage.packageManager).toBe('pnpm@10.32.1');
+    expect(rootPackage.pnpm).toBeUndefined();
+    expect(pnpmWorkspace).toContain('overrides:');
+    expect(pnpmWorkspace).toContain("postcss: '8.5.18'");
+    expect(pnpmWorkspace).toContain("brace-expansion: '5.0.8'");
   });
 
   it('keeps Vercel out of the canonical production path', () => {

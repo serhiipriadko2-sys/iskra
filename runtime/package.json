@@ -54,7 +54,9 @@
     "vitest": "^4.1.9"
   },
   "overrides": {
+    "brace-expansion": "5.0.8",
     "js-yaml": "4.3.0",
+    "postcss": "8.5.18",
     "protobufjs": "7.6.5"
   }
 }

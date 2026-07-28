@@ -3,3 +3,16 @@ packages:
   - 'apps/*'
   - 'runtime/*'  # Legacy location
   - 'core/*'     # Legacy location
+
+overrides:
+  '@babel/core': '7.29.7'
+  '@protobufjs/utf8': '1.1.1'
+  brace-expansion: '5.0.8'
+  flatted: '3.4.2'
+  js-yaml@^4.1.0: '4.3.0'
+  picomatch@^2.0.0: '2.3.2'
+  picomatch@^4.0.0: '4.0.4'
+  postcss: '8.5.18'
+  protobufjs: '7.6.5'
+  vite: '6.4.3'
+  ws: '8.21.0'

@@ -32,6 +32,20 @@ Deno.test('injection and dangerous content stay blocked even when a caller reque
   assert(!danger.ok && danger.code === 'content_policy_danger_detected', 'expected danger denial');
 });
 
+Deno.test('help-seeking crisis language remains available to the support route', () => {
+  const english = validateAgentRequest({
+    message: 'I have thoughts of suicide and need help staying safe.',
+    route: 'reflection',
+  });
+  assert(english.ok, 'expected English crisis-support request to remain available');
+
+  const russian = validateAgentRequest({
+    message: '\u0423 \u043c\u0435\u043d\u044f \u043c\u044b\u0441\u043b\u0438 \u043e \u0441\u0443\u0438\u0446\u0438\u0434\u0435, \u043c\u043d\u0435 \u043d\u0443\u0436\u043d\u0430 \u043f\u043e\u043c\u043e\u0449\u044c.',
+    route: 'reflection',
+  });
+  assert(russian.ok, 'expected Russian crisis-support request to remain available');
+});
+
 Deno.test('unapproved model and unbounded output configuration are rejected', () => {
   const model = validateGeminiRequest({ ...baseGeminiRequest('safe'), model: 'expensive-model' });
   assert(!model.ok && model.code === 'unsupported_model', 'expected model denial');
@@ -41,4 +55,41 @@ Deno.test('unapproved model and unbounded output configuration are rejected', ()
     generationConfig: { maxOutputTokens: 99999 },
   });
   assert(!output.ok && output.code === 'max_output_tokens_exceeds_cap', 'expected output cap denial');
+});
+
+Deno.test('structured JSON output is preserved only through the bounded schema subset', () => {
+  const valid = validateGeminiRequest({
+    ...baseGeminiRequest('safe'),
+    systemInstruction: 'Return a concise object.',
+    generationConfig: {
+      responseMimeType: 'application/json',
+      responseSchema: {
+        type: 'OBJECT',
+        properties: {
+          answer: { type: 'STRING', description: 'Concise answer' },
+        },
+        required: ['answer'],
+      },
+    },
+  });
+  assert(valid.ok, 'expected bounded structured response configuration');
+  assert(valid.value.systemInstruction === 'Return a concise object.', 'expected validated instruction');
+  assert(valid.value.generationConfig.responseMimeType === 'application/json', 'expected JSON MIME');
+
+  const unsupported = validateGeminiRequest({
+    ...baseGeminiRequest('safe'),
+    generationConfig: {
+      responseMimeType: 'application/json',
+      responseSchema: { type: 'OBJECT', additionalProperties: true },
+    },
+  });
+  assert(!unsupported.ok && unsupported.code === 'unsupported_response_schema', 'expected schema key denial');
+});
+
+Deno.test('system instructions share the aggregate text and content-policy boundary', () => {
+  const pii = validateGeminiRequest({
+    ...baseGeminiRequest('safe'),
+    systemInstruction: 'Contact user@example.net',
+  });
+  assert(!pii.ok && pii.code === 'content_policy_pii_detected', 'expected instruction PII denial');
 });

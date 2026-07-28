@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-07-22T19:03:37.572Z",
-  "total": 3629,
+  "generatedAt": "2026-07-28T17:28:08.451Z",
+  "total": 3657,
   "curated": 20,
   "layers": {
     "root": 341,
     "agents": 46,
     "devcontainer": 2,
-    "ci": 13,
-    "research": 474,
+    "ci": 14,
+    "research": 475,
     "appendix": 26,
     "site": 69,
     "web": 13,
     "canon": 16,
     "builder": 1187,
     "docs": 74,
-    "governance": 371,
+    "governance": 387,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,11 +23,11 @@
     "engine": 41,
     "math": 19,
     "reference": 82,
-    "runtime": 366,
-    "skills": 267,
+    "runtime": 373,
+    "skills": 269,
     "backend": 80,
     "system": 26,
-    "tools": 60
+    "tools": 61
   },
   "nodes": [
     {
@@ -723,6 +723,7 @@
       "parent": ".github",
       "children": [
         ".github/workflows/github_pages.yml",
+        ".github/workflows/guard_remediation_regression.yml",
         ".github/workflows/iskra-site_ci.yml",
         ".github/workflows/iskra-site_deploy.yml",
         ".github/workflows/iskraspace_ci.yml",
@@ -741,6 +742,17 @@
       "role": "config",
       "coverage": "indexed",
       "sourceRef": ".github/workflows/github_pages.yml",
+      "related": [],
+      "parent": ".github/workflows"
+    },
+    {
+      "path": ".github/workflows/guard_remediation_regression.yml",
+      "name": "guard_remediation_regression.yml",
+      "kind": "file",
+      "layer": "ci",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".github/workflows/guard_remediation_regression.yml",
       "related": [],
       "parent": ".github/workflows"
     },
@@ -2139,6 +2151,7 @@
         "ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip",
         "ScienceAndTests/ISKRA_СБОРНИК_МЕТАМОРФОЗ_v0.1.md",
         "ScienceAndTests/new test.txt",
+        "ScienceAndTests/parallax-omega-agent-stack-rc2.zip",
         "ScienceAndTests/Кровь_плоть_кости.txt",
         "ScienceAndTests/диалогsemanticver.md",
         "ScienceAndTests/диалогдвухИскр.txt",
@@ -7013,6 +7026,17 @@
       "role": "text",
       "coverage": "indexed",
       "sourceRef": "ScienceAndTests/new test.txt",
+      "related": [],
+      "parent": "ScienceAndTests"
+    },
+    {
+      "path": "ScienceAndTests/parallax-omega-agent-stack-rc2.zip",
+      "name": "parallax-omega-agent-stack-rc2.zip",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/parallax-omega-agent-stack-rc2.zip",
       "related": [],
       "parent": "ScienceAndTests"
     },
@@ -26826,6 +26850,8 @@
         "governance/audits",
         "governance/changelog.d",
         "governance/errata",
+        "governance/evidence",
+        "governance/registries",
         "governance/releases",
         "governance/ADR-20260721-UNIFIED1000-V12-TEMPLATE-DIVERSIFICATION.md",
         "governance/adr.md",
@@ -26870,7 +26896,9 @@
         "governance/adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md",
         "governance/adr_20260721_sot30_v5_5_5_provenance.md",
         "governance/adr_20260721_sot30_v5_5_6_acceptance_repair.md",
+        "governance/adr_20260722_release_ledger_consolidation_v1.md",
         "governance/adr_20260722_skill_registry_consolidation.md",
+        "governance/adr_20260724_metrics_authority.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -27366,6 +27394,17 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260722_release_ledger_consolidation_v1.md",
+      "name": "adr_20260722_release_ledger_consolidation_v1.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260722_release_ledger_consolidation_v1.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_20260722_skill_registry_consolidation.md",
       "name": "adr_20260722_skill_registry_consolidation.md",
       "kind": "file",
@@ -27373,6 +27412,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/adr_20260722_skill_registry_consolidation.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260724_metrics_authority.md",
+      "name": "adr_20260724_metrics_authority.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260724_metrics_authority.md",
       "related": [],
       "parent": "governance"
     },
@@ -27963,6 +28013,81 @@
       "parent": "governance/errata"
     },
     {
+      "path": "governance/evidence",
+      "name": "evidence",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/evidence",
+      "related": [],
+      "parent": "governance",
+      "children": [
+        "governance/evidence/metrics"
+      ]
+    },
+    {
+      "path": "governance/evidence/metrics",
+      "name": "metrics",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/evidence/metrics",
+      "related": [],
+      "parent": "governance/evidence",
+      "children": [
+        "governance/evidence/metrics/GUARD_REMEDIATION_VERTICAL_SLICE_DESIGN.md",
+        "governance/evidence/metrics/guard-remediation-test-matrix.json",
+        "governance/evidence/metrics/implementation-authorization-2026-07-25.json",
+        "governance/evidence/metrics/pr-306-post-merge-audit.json"
+      ]
+    },
+    {
+      "path": "governance/evidence/metrics/GUARD_REMEDIATION_VERTICAL_SLICE_DESIGN.md",
+      "name": "GUARD_REMEDIATION_VERTICAL_SLICE_DESIGN.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/evidence/metrics/GUARD_REMEDIATION_VERTICAL_SLICE_DESIGN.md",
+      "related": [],
+      "parent": "governance/evidence/metrics"
+    },
+    {
+      "path": "governance/evidence/metrics/guard-remediation-test-matrix.json",
+      "name": "guard-remediation-test-matrix.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/evidence/metrics/guard-remediation-test-matrix.json",
+      "related": [],
+      "parent": "governance/evidence/metrics"
+    },
+    {
+      "path": "governance/evidence/metrics/implementation-authorization-2026-07-25.json",
+      "name": "implementation-authorization-2026-07-25.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/evidence/metrics/implementation-authorization-2026-07-25.json",
+      "related": [],
+      "parent": "governance/evidence/metrics"
+    },
+    {
+      "path": "governance/evidence/metrics/pr-306-post-merge-audit.json",
+      "name": "pr-306-post-merge-audit.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/evidence/metrics/pr-306-post-merge-audit.json",
+      "related": [],
+      "parent": "governance/evidence/metrics"
+    },
+    {
       "path": "governance/governance_pack.md",
       "name": "governance_pack.md",
       "kind": "file",
@@ -28029,6 +28154,67 @@
       "parent": "governance"
     },
     {
+      "path": "governance/registries",
+      "name": "registries",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/registries",
+      "related": [],
+      "parent": "governance",
+      "children": [
+        "governance/registries/metrics-adapter-deprecation-map.json",
+        "governance/registries/rubric-registry.json",
+        "governance/registries/semantic-profiles.json",
+        "governance/registries/threshold-registry.json"
+      ]
+    },
+    {
+      "path": "governance/registries/metrics-adapter-deprecation-map.json",
+      "name": "metrics-adapter-deprecation-map.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/registries/metrics-adapter-deprecation-map.json",
+      "related": [],
+      "parent": "governance/registries"
+    },
+    {
+      "path": "governance/registries/rubric-registry.json",
+      "name": "rubric-registry.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/registries/rubric-registry.json",
+      "related": [],
+      "parent": "governance/registries"
+    },
+    {
+      "path": "governance/registries/semantic-profiles.json",
+      "name": "semantic-profiles.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/registries/semantic-profiles.json",
+      "related": [],
+      "parent": "governance/registries"
+    },
+    {
+      "path": "governance/registries/threshold-registry.json",
+      "name": "threshold-registry.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/registries/threshold-registry.json",
+      "related": [],
+      "parent": "governance/registries"
+    },
+    {
       "path": "governance/releases",
       "name": "releases",
       "kind": "directory",
@@ -28047,6 +28233,7 @@
         "governance/releases/2026-07-20-sot30-v5-5-4-semantic-runtime-consistency",
         "governance/releases/2026-07-21-sot30-v5-5-5-provenance",
         "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair",
+        "governance/releases/2026-07-24-atom1-metrics-authority",
         "governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
         "governance/releases/2026-06-24-relational-vow-canon-receipt.md",
         "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md",
@@ -31324,6 +31511,43 @@
       "sourceRef": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/SHA256SUMS",
       "related": [],
       "parent": "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support"
+    },
+    {
+      "path": "governance/releases/2026-07-24-atom1-metrics-authority",
+      "name": "2026-07-24-atom1-metrics-authority",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-24-atom1-metrics-authority",
+      "related": [],
+      "parent": "governance/releases",
+      "children": [
+        "governance/releases/2026-07-24-atom1-metrics-authority/MANIFEST.json",
+        "governance/releases/2026-07-24-atom1-metrics-authority/PACKAGE_RECEIPT.json"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-24-atom1-metrics-authority/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-24-atom1-metrics-authority/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-24-atom1-metrics-authority"
+    },
+    {
+      "path": "governance/releases/2026-07-24-atom1-metrics-authority/PACKAGE_RECEIPT.json",
+      "name": "PACKAGE_RECEIPT.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-24-atom1-metrics-authority/PACKAGE_RECEIPT.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-24-atom1-metrics-authority"
     },
     {
       "path": "governance/update_protocol.md",
@@ -34922,6 +35146,7 @@
       "sourceRef": "runtime",
       "related": [],
       "children": [
+        "runtime/guard-regression",
         "runtime/iskraSpace",
         "runtime/kain",
         "runtime/src",
@@ -34932,7 +35157,8 @@
         "runtime/package.json",
         "runtime/tsconfig.json",
         "runtime/tsconfig.tsbuildinfo",
-        "runtime/vitest.config.ts"
+        "runtime/vitest.config.ts",
+        "runtime/vitest.guard-remediation.config.ts"
       ]
     },
     {
@@ -34967,6 +35193,31 @@
       "sourceRef": "runtime/eslint.config.js",
       "related": [],
       "parent": "runtime"
+    },
+    {
+      "path": "runtime/guard-regression",
+      "name": "guard-regression",
+      "kind": "directory",
+      "layer": "runtime",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "runtime/guard-regression",
+      "related": [],
+      "parent": "runtime",
+      "children": [
+        "runtime/guard-regression/guardRemediationBaseline.test.ts"
+      ]
+    },
+    {
+      "path": "runtime/guard-regression/guardRemediationBaseline.test.ts",
+      "name": "guardRemediationBaseline.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/guard-regression/guardRemediationBaseline.test.ts",
+      "related": [],
+      "parent": "runtime/guard-regression"
     },
     {
       "path": "runtime/iskraSpace",
@@ -35017,6 +35268,7 @@
         "runtime/iskraSpace/GRAPHRAG_SUPABASE_SETUP.md",
         "runtime/iskraSpace/ISKRA_SPACE_PRODUCTION_READINESS_AUDIT_2026-07-03.md",
         "runtime/iskraSpace/MANTRA.md",
+        "runtime/iskraSpace/PRODUCTION_HARDENING_2026-07-28.md",
         "runtime/iskraSpace/README.md",
         "runtime/iskraSpace/RELEASE_STATUS.md",
         "runtime/iskraSpace/SERVICES.md",
@@ -35194,6 +35446,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/MANTRA.md",
+      "related": [],
+      "parent": "runtime/iskraSpace"
+    },
+    {
+      "path": "runtime/iskraSpace/PRODUCTION_HARDENING_2026-07-28.md",
+      "name": "PRODUCTION_HARDENING_2026-07-28.md",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/PRODUCTION_HARDENING_2026-07-28.md",
       "related": [],
       "parent": "runtime/iskraSpace"
     },
@@ -36944,6 +37207,7 @@
         "runtime/iskraSpace/services/memoryService.ts",
         "runtime/iskraSpace/services/metricsService.ts",
         "runtime/iskraSpace/services/policyEngine.ts",
+        "runtime/iskraSpace/services/principalStorage.ts",
         "runtime/iskraSpace/services/ragService.ts",
         "runtime/iskraSpace/services/rateLimiter.ts",
         "runtime/iskraSpace/services/ritualService.ts",
@@ -37008,6 +37272,7 @@
         "runtime/iskraSpace/services/__tests__/metricsUtils.test.ts",
         "runtime/iskraSpace/services/__tests__/omegaConfidenceCap.test.ts",
         "runtime/iskraSpace/services/__tests__/policyEngine.test.ts",
+        "runtime/iskraSpace/services/__tests__/principalStorage.test.ts",
         "runtime/iskraSpace/services/__tests__/ragService.test.ts",
         "runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts",
         "runtime/iskraSpace/services/__tests__/releaseBoundary.test.ts",
@@ -37365,6 +37630,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/policyEngine.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/principalStorage.test.ts",
+      "name": "principalStorage.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/principalStorage.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
@@ -37893,6 +38169,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/policyEngine.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
+      "path": "runtime/iskraSpace/services/principalStorage.ts",
+      "name": "principalStorage.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/principalStorage.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services"
     },
@@ -39149,6 +39436,7 @@
         "runtime/src/types/fractal.ts",
         "runtime/src/types/guard.ts",
         "runtime/src/types/guardController.ts",
+        "runtime/src/types/guardExecution.ts",
         "runtime/src/types/metrics.ts",
         "runtime/src/types/protocols.ts",
         "runtime/src/types/sift.ts",
@@ -39268,6 +39556,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/src/types/guardController.ts",
+      "related": [],
+      "parent": "runtime/src/types"
+    },
+    {
+      "path": "runtime/src/types/guardExecution.ts",
+      "name": "guardExecution.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/src/types/guardExecution.ts",
       "related": [],
       "parent": "runtime/src/types"
     },
@@ -39415,6 +39714,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/vitest.config.ts",
+      "related": [],
+      "parent": "runtime"
+    },
+    {
+      "path": "runtime/vitest.guard-remediation.config.ts",
+      "name": "vitest.guard-remediation.config.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/vitest.guard-remediation.config.ts",
       "related": [],
       "parent": "runtime"
     },
@@ -41662,7 +41972,9 @@
         "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/connector-security.md",
         "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/iskra-anchors.md",
         "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/output-contract.md",
-        "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/release-ledger.md"
+        "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/release-contract.md",
+        "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/release-ledger.md",
+        "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/routing-contract.md"
       ]
     },
     {
@@ -41710,6 +42022,17 @@
       "parent": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references"
     },
     {
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/release-contract.md",
+      "name": "release-contract.md",
+      "kind": "file",
+      "layer": "skills",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/release-contract.md",
+      "related": [],
+      "parent": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references"
+    },
+    {
       "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/release-ledger.md",
       "name": "release-ledger.md",
       "kind": "file",
@@ -41717,6 +42040,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/release-ledger.md",
+      "related": [],
+      "parent": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references"
+    },
+    {
+      "path": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/routing-contract.md",
+      "name": "routing-contract.md",
+      "kind": "file",
+      "layer": "skills",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references/routing-contract.md",
       "related": [],
       "parent": "skills/iskra-skill-pack-builder-2026-06-25/skills/hermes/iskra-release-ledger/references"
     },
@@ -44299,6 +44633,7 @@
         "tools/sot40_scope_manifest.json",
         "tools/sync_chatgpt_exports.py",
         "tools/test_check_scientific_turn_xcode_impl.py",
+        "tools/test_release_manifest.py",
         "tools/test_validate_skill_integrity.py",
         "tools/update_ledger.ts",
         "tools/validate_delta.py",
@@ -44837,6 +45172,17 @@
       "role": "script",
       "coverage": "indexed",
       "sourceRef": "tools/test_check_scientific_turn_xcode_impl.py",
+      "related": [],
+      "parent": "tools"
+    },
+    {
+      "path": "tools/test_release_manifest.py",
+      "name": "test_release_manifest.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/test_release_manifest.py",
       "related": [],
       "parent": "tools"
     },

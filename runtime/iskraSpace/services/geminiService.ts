@@ -38,10 +38,6 @@ const SUPABASE_ANON_KEY = getRuntimeConfig(
   'VITE_SUPABASE_ANON_KEY',
   import.meta.env.VITE_SUPABASE_ANON_KEY,
 ) || '';
-type AiProvider = 'gemini' | 'openai' | 'auto';
-const AI_PROVIDER = normalizeAiProvider(
-  getRuntimeConfig('VITE_AI_PROVIDER', import.meta.env.VITE_AI_PROVIDER),
-);
 const AI_EDGE_FUNCTION_SLUG = normalizeEdgeFunctionSlug(
   getRuntimeConfig('VITE_AI_EDGE_FUNCTION_SLUG', import.meta.env.VITE_AI_EDGE_FUNCTION_SLUG) ||
     getRuntimeConfig('VITE_GEMINI_EDGE_FUNCTION_SLUG', import.meta.env.VITE_GEMINI_EDGE_FUNCTION_SLUG) ||
@@ -55,11 +51,6 @@ const AI_EDGE_FN_URL =
 
 function normalizeEdgeFunctionSlug(slug: string): string {
   return slug.trim().replace(/^\/+|\/+$/g, '');
-}
-
-function normalizeAiProvider(provider: string | undefined): AiProvider {
-  if (provider === 'openai' || provider === 'auto') return provider;
-  return 'gemini';
 }
 
 interface LegacyLiveSession {
@@ -226,7 +217,7 @@ async function callAiEdgeFunction(
       Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
-      provider: AI_PROVIDER,
+      provider: 'gemini',
       ...payload,
     }),
     signal,
@@ -357,7 +348,7 @@ async function* streamGenerateContentText(args: {
 async function embedContentValues(text: string): Promise<number[]> {
   const res = await callAiEdgeFunction({
     action: 'embedContent',
-    model: 'text-embedding-004',
+    model: 'gemini-embedding-001',
     content: { parts: [{ text }] },
   });
 

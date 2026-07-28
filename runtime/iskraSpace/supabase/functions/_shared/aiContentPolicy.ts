@@ -7,6 +7,8 @@ export const DEFAULT_AI_OUTPUT_TOKENS = 384;
 export const MAX_AI_PROVIDER_TIMEOUT_MS = 20_000;
 export const MAX_AI_STREAM_DURATION_MS = 25_000;
 export const MAX_AI_STREAM_BYTES = 256 * 1024;
+export const MAX_AI_SCHEMA_DEPTH = 10;
+export const MAX_AI_SCHEMA_NODES = 256;
 
 export const CANONICAL_GEMINI_TEXT_MODEL = 'gemini-2.5-flash';
 export const CANONICAL_GEMINI_EMBEDDING_MODEL = 'gemini-embedding-001';
@@ -35,12 +37,19 @@ export type ServerContent = {
   parts: ServerTextPart[];
 };
 
+export type ServerGenerationConfig = {
+  maxOutputTokens: number;
+  responseMimeType?: 'application/json';
+  responseSchema?: Record<string, unknown>;
+};
+
 export type ValidatedGeminiRequest = {
   action: 'generateContent' | 'streamGenerateContent' | 'embedContent';
   model: string;
   contents?: ServerContent[];
   content?: ServerContent;
-  generationConfig: { maxOutputTokens: number };
+  systemInstruction?: string;
+  generationConfig: ServerGenerationConfig;
 };
 
 export type ValidatedAgentRequest = {
@@ -87,9 +96,9 @@ const INJECTION_PATTERNS = [
 ];
 
 const DANGER_PATTERNS = [
-  /hack\s+into/iu,
-  /self-harm|suicide|how\s+to\s+make\s+(?:a\s+)?bomb|terrorism/iu,
-  /\u0432\u0437\u043b\u043e\u043c|\u0441\u0430\u043c\u043e\u043f\u043e\u0432\u0440\u0435\u0436\u0434\u0435\u043d\u0438\u0435|\u0441\u0443\u0438\u0446\u0438\u0434|\u043d\u0430\u0440\u043a\u043e\u0442\u0438\u043a\u0438|\u0442\u0435\u0440\u0440\u043e\u0440\u0438\u0437\u043c|\u0431\u043e\u043c\u0431\u0430/iu,
+  /\b(?:how\s+(?:do\s+i|can\s+i|to)|instructions?|steps?|guide)\b[\s\S]{0,80}\b(?:hack(?:\s+into)?|make\s+(?:a\s+)?bomb|commit\s+suicide|kill\s+myself|self-harm|obtain\s+(?:illegal\s+)?drugs|terrorist\s+attack)\b/iu,
+  /\b(?:give|write|provide|show|tell)\s+(?:me\s+)?(?:instructions?|steps?|a\s+guide)\b[\s\S]{0,80}\b(?:hack|bomb|suicide|self-harm|drugs|terrorist\s+attack)\b/iu,
+  /(?:\u043a\u0430\u043a|\u0438\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0438\u044f|\u0448\u0430\u0433\u0438|\u043f\u043e\u043c\u043e\u0433\u0438)[\s\S]{0,80}(?:\u0432\u0437\u043b\u043e\u043c\u0430\u0442\u044c|\u0441\u0434\u0435\u043b\u0430\u0442\u044c[\s\S]{0,20}\u0431\u043e\u043c\u0431|\u0441\u043e\u0432\u0435\u0440\u0448\u0438\u0442\u044c[\s\S]{0,20}\u0441\u0443\u0438\u0446\u0438\u0434|\u043f\u043e\u043a\u043e\u043d\u0447\u0438\u0442\u044c[\s\S]{0,20}\u0441\u043e\u0431\u043e\u0439|\u043d\u0430\u0432\u0440\u0435\u0434\u0438\u0442\u044c[\s\S]{0,20}\u0441\u0435\u0431\u0435|\u0434\u043e\u0441\u0442\u0430\u0442\u044c[\s\S]{0,20}\u043d\u0430\u0440\u043a\u043e\u0442\u0438\u043a|\u0441\u043e\u0432\u0435\u0440\u0448\u0438\u0442\u044c[\s\S]{0,20}\u0442\u0435\u0440\u0430\u043a\u0442)/iu,
 ];
 
 function failure(status: PolicyFailureStatus, code: string): PolicyFailure {
@@ -239,21 +248,118 @@ function replaceContentTexts(contents: ServerContent[], texts: string[]): Server
   }));
 }
 
-function parseGenerationConfig(value: unknown): PolicyResult<{ maxOutputTokens: number }> {
+type SchemaBudget = {
+  nodes: number;
+  texts: string[];
+};
+
+function parseSchemaString(value: unknown, maxLength: number): PolicyResult<string> {
+  if (typeof value !== 'string' || !value.trim() || value.length > maxLength) {
+    return failure(400, 'invalid_response_schema');
+  }
+  return { ok: true, value };
+}
+
+function parseResponseSchema(
+  value: unknown,
+  budget: SchemaBudget,
+  depth = 0,
+): PolicyResult<Record<string, unknown>> {
+  if (!isPlainObject(value) || depth > MAX_AI_SCHEMA_DEPTH) {
+    return failure(400, 'invalid_response_schema');
+  }
+  budget.nodes += 1;
+  if (budget.nodes > MAX_AI_SCHEMA_NODES) return failure(413, 'response_schema_too_large');
+
+  const allowedKeys = ['type', 'properties', 'required', 'items', 'description', 'enum'];
+  if (!hasOnlyKeys(value, allowedKeys)) return failure(400, 'unsupported_response_schema');
+
+  const result: Record<string, unknown> = {};
+  if (value.type !== undefined) {
+    const type = parseSchemaString(value.type, 16);
+    if (!type.ok) return type;
+    if (!['OBJECT', 'ARRAY', 'STRING', 'INTEGER', 'NUMBER', 'BOOLEAN'].includes(type.value.toUpperCase())) {
+      return failure(400, 'unsupported_response_schema');
+    }
+    result.type = type.value;
+  }
+
+  if (value.description !== undefined) {
+    const description = parseSchemaString(value.description, 1_000);
+    if (!description.ok) return description;
+    budget.texts.push(description.value);
+    result.description = description.value;
+  }
+
+  if (value.properties !== undefined) {
+    if (!isPlainObject(value.properties) || Object.keys(value.properties).length > 64) {
+      return failure(400, 'invalid_response_schema');
+    }
+    const properties: Record<string, unknown> = {};
+    for (const [key, child] of Object.entries(value.properties)) {
+      if (!/^[\p{L}_][\p{L}\p{N}_-]{0,63}$/u.test(key)) return failure(400, 'invalid_response_schema');
+      const parsed = parseResponseSchema(child, budget, depth + 1);
+      if (!parsed.ok) return parsed;
+      properties[key] = parsed.value;
+    }
+    result.properties = properties;
+  }
+
+  if (value.items !== undefined) {
+    const items = parseResponseSchema(value.items, budget, depth + 1);
+    if (!items.ok) return items;
+    result.items = items.value;
+  }
+
+  for (const key of ['required', 'enum'] as const) {
+    if (value[key] === undefined) continue;
+    if (!Array.isArray(value[key]) || value[key].length > 64) {
+      return failure(400, 'invalid_response_schema');
+    }
+    const values: string[] = [];
+    for (const raw of value[key]) {
+      const parsed = parseSchemaString(raw, 128);
+      if (!parsed.ok) return parsed;
+      if (key === 'enum') budget.texts.push(parsed.value);
+      values.push(parsed.value);
+    }
+    result[key] = values;
+  }
+
+  return { ok: true, value: result };
+}
+
+function parseGenerationConfig(value: unknown): PolicyResult<ServerGenerationConfig> {
   if (value === undefined) return { ok: true, value: { maxOutputTokens: DEFAULT_AI_OUTPUT_TOKENS } };
-  if (!isPlainObject(value) || !hasOnlyKeys(value, ['maxOutputTokens'])) {
+  if (!isPlainObject(value) || !hasOnlyKeys(value, ['maxOutputTokens', 'responseMimeType', 'responseSchema'])) {
     return failure(400, 'unsupported_generation_config');
   }
-  if (value.maxOutputTokens === undefined) {
-    return { ok: true, value: { maxOutputTokens: DEFAULT_AI_OUTPUT_TOKENS } };
-  }
-  if (!Number.isInteger(value.maxOutputTokens) || (value.maxOutputTokens as number) < 1) {
+  const maxOutputTokens = value.maxOutputTokens ?? DEFAULT_AI_OUTPUT_TOKENS;
+  if (!Number.isInteger(maxOutputTokens) || (maxOutputTokens as number) < 1) {
     return failure(400, 'invalid_max_output_tokens');
   }
-  if ((value.maxOutputTokens as number) > MAX_AI_OUTPUT_TOKENS) {
+  if ((maxOutputTokens as number) > MAX_AI_OUTPUT_TOKENS) {
     return failure(422, 'max_output_tokens_exceeds_cap');
   }
-  return { ok: true, value: { maxOutputTokens: value.maxOutputTokens as number } };
+
+  if (value.responseMimeType !== undefined && value.responseMimeType !== 'application/json') {
+    return failure(400, 'unsupported_response_mime_type');
+  }
+  if (value.responseSchema !== undefined && value.responseMimeType !== 'application/json') {
+    return failure(400, 'response_schema_requires_json_mime_type');
+  }
+
+  const result: ServerGenerationConfig = { maxOutputTokens: maxOutputTokens as number };
+  if (value.responseMimeType === 'application/json') result.responseMimeType = value.responseMimeType;
+  if (value.responseSchema !== undefined) {
+    const schemaBudget: SchemaBudget = { nodes: 0, texts: [] };
+    const schema = parseResponseSchema(value.responseSchema, schemaBudget);
+    if (!schema.ok) return schema;
+    const policy = serverContentPolicy(schemaBudget.texts, undefined);
+    if (!policy.ok) return policy;
+    result.responseSchema = schema.value;
+  }
+  return { ok: true, value: result };
 }
 
 export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGeminiRequest> {
@@ -273,28 +379,33 @@ export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGemi
     : CANONICAL_GEMINI_TEXT_MODEL;
   if (body.model !== undefined && body.model !== expectedModel) return failure(422, 'unsupported_model');
 
-  if (body.systemInstruction !== undefined && typeof body.systemInstruction !== 'string') {
-    return failure(400, 'invalid_system_instruction');
-  }
-
   const safeRoute = parseSafeRoute(body.safetyRoute);
   if (!safeRoute.ok) return safeRoute;
   const generationConfig = parseGenerationConfig(body.generationConfig);
   if (!generationConfig.ok) return generationConfig;
   const budget: TextBudget = { characters: 0, parts: 0 };
+  const systemInstruction = body.systemInstruction === undefined
+    ? { ok: true as const, value: undefined }
+    : parseText(body.systemInstruction, budget);
+  if (!systemInstruction.ok) return failure(systemInstruction.status, 'invalid_system_instruction');
 
   if (action === 'embedContent') {
     if (body.contents !== undefined || body.content === undefined) return failure(400, 'invalid_embedding_shape');
     const content = parseContent(body.content, budget);
     if (!content.ok) return content;
-    const policy = serverContentPolicy(contentTexts([content.value]), safeRoute.value);
+    const policy = serverContentPolicy([
+      ...(systemInstruction.value ? [systemInstruction.value] : []),
+      ...contentTexts([content.value]),
+    ], safeRoute.value);
     if (!policy.ok) return policy;
+    const offset = systemInstruction.value ? 1 : 0;
     return {
       ok: true,
       value: {
         action,
         model: expectedModel,
-        content: replaceContentTexts([content.value], policy.value)[0],
+        content: replaceContentTexts([content.value], policy.value.slice(offset))[0],
+        ...(systemInstruction.value ? { systemInstruction: policy.value[0] } : {}),
         generationConfig: generationConfig.value,
       },
     };
@@ -310,15 +421,20 @@ export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGemi
     if (!content.ok) return content;
     contents.push(content.value);
   }
-  const policy = serverContentPolicy(contentTexts(contents), safeRoute.value);
+  const policy = serverContentPolicy([
+    ...(systemInstruction.value ? [systemInstruction.value] : []),
+    ...contentTexts(contents),
+  ], safeRoute.value);
   if (!policy.ok) return policy;
+  const offset = systemInstruction.value ? 1 : 0;
 
   return {
     ok: true,
     value: {
       action,
       model: expectedModel,
-      contents: replaceContentTexts(contents, policy.value),
+      contents: replaceContentTexts(contents, policy.value.slice(offset)),
+      ...(systemInstruction.value ? { systemInstruction: policy.value[0] } : {}),
       generationConfig: generationConfig.value,
     },
   };

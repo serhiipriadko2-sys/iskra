@@ -8,6 +8,7 @@ import {
   supabase,
 } from '../services/supabaseClient';
 import { isE2eAuthBypassEnabled } from '../config/e2eAuth';
+import { storageService } from '../services/storageService';
 
 interface AuthGateProps {
   children: ReactNode;
@@ -43,6 +44,7 @@ function accessMessage(reason: BetaAccessDenyReason): string {
 
 export default function AuthGate(props: AuthGateProps) {
   if (isE2eAuthBypassEnabled()) {
+    storageService.bindPrincipal('e2e-local');
     return <>{props.children}</>;
   }
 
@@ -55,7 +57,9 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   const [requestState, setRequestState] = useState<{ kind: 'idle' | 'sending' | 'sent' | 'error'; message?: string }>({ kind: 'idle' });
 
   const refreshAccess = useCallback(async (): Promise<void> => {
-    setGate(toGateState(await getBetaSession()));
+    const access = await getBetaSession();
+    if (access.status === 'granted') storageService.bindPrincipal(access.session.userId);
+    setGate(toGateState(access));
   }, []);
 
   useEffect(() => {
@@ -63,13 +67,16 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
 
     void getBetaSession().then(access => {
       if (active) {
+        if (access.status === 'granted') storageService.bindPrincipal(access.session.userId);
         setGate(toGateState(access));
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') storageService.releasePrincipal({ clear: true });
       void getBetaSession().then(access => {
         if (active) {
+          if (access.status === 'granted') storageService.bindPrincipal(access.session.userId);
           setGate(toGateState(access));
         }
       });
@@ -97,6 +104,7 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   const signOut = async (): Promise<void> => {
     try {
       await signOutBetaSession();
+      storageService.releasePrincipal({ clear: true });
       await refreshAccess();
     } catch {
       setRequestState({ kind: 'error', message: 'Не удалось завершить сессию. Попробуйте ещё раз.' });

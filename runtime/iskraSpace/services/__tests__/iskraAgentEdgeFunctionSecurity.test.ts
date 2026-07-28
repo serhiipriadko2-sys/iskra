@@ -25,23 +25,26 @@ describe('iskra-agent Edge Function security boundary', () => {
     expect(edgeFunctionSource).not.toContain('function readUserId');
   });
 
-  it('requires origin, JWT and shared closed-beta quota before calling the billed upstream agent API', () => {
-    const originCheck = edgeFunctionSource.indexOf('if (!isOriginAllowed(origin))');
+  it('requires origin, JWT, bounded payload and shared quota before the billed upstream API', () => {
+    const originCheck = edgeFunctionSource.indexOf('if (!isAllowedOrigin(origin, config))');
     const tokenCheck = edgeFunctionSource.indexOf('const token = extractBearerToken(req);');
-    const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token);');
+    const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token, req.signal);');
+    const payloadRead = edgeFunctionSource.indexOf('const body = await readBoundedJsonBody(req);');
+    const payloadValidation = edgeFunctionSource.indexOf('const payload = validateAgentRequest(body.value.body);');
     const quotaCheck = edgeFunctionSource.indexOf('const boundary = await enforceAiRequestBoundary(');
-    const providerConfig = edgeFunctionSource.indexOf('const agentId = Deno.env.get("AGENT_ID")');
-    const payloadRead = edgeFunctionSource.indexOf('const payload = await req.json()');
-    const upstreamCall = edgeFunctionSource.indexOf('const agentResponse = await fetch(');
+    const providerConfig = edgeFunctionSource.indexOf("const agentId = Deno.env.get('AGENT_ID')");
+    const upstreamCall = edgeFunctionSource.indexOf('const response = await fetch(target,');
 
     expect(originCheck).toBeGreaterThan(-1);
     expect(tokenCheck).toBeGreaterThan(originCheck);
     expect(jwtCheck).toBeGreaterThan(tokenCheck);
-    expect(quotaCheck).toBeGreaterThan(jwtCheck);
+    expect(payloadRead).toBeGreaterThan(jwtCheck);
+    expect(payloadValidation).toBeGreaterThan(payloadRead);
+    expect(quotaCheck).toBeGreaterThan(payloadValidation);
     expect(providerConfig).toBeGreaterThan(quotaCheck);
-    expect(payloadRead).toBeGreaterThan(quotaCheck);
     expect(upstreamCall).toBeGreaterThan(quotaCheck);
     expect(edgeFunctionSource).toContain("from '../_shared/aiBoundary.ts'");
+    expect(edgeFunctionSource).toContain("from '../_shared/aiContentPolicy.ts'");
     expect(edgeFunctionSource).not.toContain('rlBuckets');
     expect(edgeFunctionSource).not.toContain('console.');
   });
