@@ -673,7 +673,7 @@
     "runtime/iskraSpace/services/__tests__/ragService.test.ts": "89fa74b1ccccb5c81bd077ede7a49610896590bd3eab58c12188bb222386c464",
     "runtime/iskraSpace/services/__tests__/ragServiceExtended.test.ts": "b91c30aa24be83997211f2e916548a3a936c11889d6cf196a25019f3e97ef123",
     "runtime/iskraSpace/services/__tests__/releaseBoundary.test.ts": "8a8db638b6059a41bbf813807426f0b57dfdbfdd9f3409feb1ff1375e38e9aec",
-    "runtime/iskraSpace/services/__tests__/releaseWorkflowContract.test.ts": "96f251058962a9baf1926c38525b9f9091b5bb6963e62dfdde418009c0364fb6",
+    "runtime/iskraSpace/services/__tests__/releaseWorkflowContract.test.ts": "fd0f03387785692f3d54b20d6276be41d1382099d416d2d23850947db0675757",
     "runtime/iskraSpace/services/__tests__/ritualService.test.ts": "51dd7c26afa685b7890ec7e72b6b5c835efeb8ccc9a57ad6cd31b1d86e408e35",
     "runtime/iskraSpace/services/__tests__/ritualServiceGateway.test.ts": "748d497167754d507fccfdd3dac650b95988bbe07b02fca757297ea1ea9897b7",
     "runtime/iskraSpace/services/__tests__/rule8Service.test.ts": "6e821415076702b2838ff15a845bcad39cda28d531c6c26d6154695d7de88ad9",
