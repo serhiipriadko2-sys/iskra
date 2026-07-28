@@ -1,0 +1,29 @@
+{
+  "method_id": "GATE-DOMINANCE-v1",
+  "registered_at": "2026-07-28T22:30:00+03:00",
+  "protocol_version": "Independent Judge v3.5-rc.3 adapted for deterministic code gates",
+  "claim_ceiling": "L3_BENCHMARK_LOCAL_DESCRIPTIVE",
+  "family_relation": "SAME_SYSTEM_FAMILY",
+  "candidate_a": "beb282df985c913e6fd94977ede5ec6ed4b45cd4",
+  "candidate_b": "09083e2a1b9237922305d7fde6b546e81b728c59",
+  "bank": {
+    "name": "ADR-20260724-01 G01-G18",
+    "test_blob_sha": "de56e809874c3e31dad36c48c90284734427f634",
+    "config_blob_sha": "bd81a65357fc316c814c47670ed0ad34c26e135c",
+    "pnpm_lock_blob_sha": "8b390df26dd44de8fbb30b29c2ea0ba3ea248dd1",
+    "runtime_lock_blob_sha": "a9e56fb5a14c859237c8397b9c4ff0d77478675c",
+    "n": 18
+  },
+  "estimand": "accepted Guard remediation gates satisfied by each exact commit",
+  "pointwise_statuses": ["PASS", "FAIL"],
+  "dominance_rule": "A candidate descriptively dominates only when its PASS set is a strict superset and it has zero FAIL gates.",
+  "crossing_rule": "Crossing PASS sets produce TRADEOFF_NO_WINNER.",
+  "order_swap_required": true,
+  "formal_winner": null,
+  "reason_formal_winner_null": "same-system-family deterministic benchmark; report descriptive dominance only",
+  "forbidden_claims": [
+    "general superiority outside G01-G18",
+    "deployment or verified-live behavior",
+    "formal model-family winner"
+  ]
+}
