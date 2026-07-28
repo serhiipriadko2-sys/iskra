@@ -2,12 +2,6 @@ name: Guard remediation regression baseline
 
 on:
   pull_request:
-    paths:
-      - "runtime/**"
-      - "packages/math/**"
-      - "governance/evidence/metrics/**"
-      - "governance/adr_20260724_metrics_authority.md"
-      - ".github/workflows/guard_remediation_regression.yml"
   push:
     branches:
       - main
