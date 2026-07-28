@@ -1,3 +1,4 @@
+# CI retrigger only; removed in the next exact-byte commit.
 name: Deploy to GitHub Pages
 
 on:
