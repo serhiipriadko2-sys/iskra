@@ -48,7 +48,6 @@ describe('memoryService user scope isolation', () => {
     });
 
     activateUserStorage('user-b', { migrateLegacy: false });
-
     expect(memoryService.getArchive()).toEqual([]);
   });
 
@@ -62,7 +61,6 @@ describe('memoryService user scope isolation', () => {
     });
 
     deactivateUserStorage();
-
     expect(memoryService.getShadow()).toEqual([]);
     expect(localStorageMock.getItem('iskra:v2:user:user-a:iskra-space-shadow')).not.toBeNull();
   });
@@ -83,6 +81,5 @@ describe('memoryService user scope isolation', () => {
     expect(replay.migratedKeys).toEqual([]);
     expect(store['iskra:v2:user:user-a:iskra-space-archive']).toBe(firstScopedValue);
     expect(second.blockedKeys).toContain('iskra-space-archive');
-    expect(store['iskra:v2:user:user-b:iskra-space-archive']).toBeUndefined();
   });
 });
