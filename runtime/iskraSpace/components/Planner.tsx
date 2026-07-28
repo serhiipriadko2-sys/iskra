@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { IskraAIService } from '../services/geminiService';
+import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
 import { storageService } from '../services/storageService';
 import { soundService } from '../services/soundService';
 import { Task, RitualTag } from '../types';
 import Loader from './Loader';
 import { FlameIcon, DropletsIcon, SunIcon, ScaleIcon, TriangleIcon, TrashIcon, ClockIcon, GripVerticalIcon } from './icons';
 
-const service = new IskraAIService();
+const service = aiInteractionCoordinator.service;
 
 const ritualIcons: Record<RitualTag, React.FC<React.SVGProps<SVGSVGElement>>> = {
     FIRE: FlameIcon,

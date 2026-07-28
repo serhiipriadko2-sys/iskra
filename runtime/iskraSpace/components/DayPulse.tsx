@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { IskraAIService } from '../services/geminiService';
+import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
 import { userMetricsService } from '../services/userMetricsService';
 import { DailyAdvice, Task, RitualTag, Habit, IskraMetrics, IskraPhase, UserDailyMetrics } from '../types';
 import { storageService } from '../services/storageService';
@@ -13,7 +13,7 @@ import {
     FlameIcon, DropletsIcon, SunIcon, ScaleIcon, TriangleIcon
 } from './icons';
 
-const service = new IskraAIService();
+const service = aiInteractionCoordinator.service;
 
 interface DayPulseProps {
     metrics?: IskraMetrics;

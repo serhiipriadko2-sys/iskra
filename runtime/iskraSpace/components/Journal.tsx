@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { IskraAIService } from '../services/geminiService';
+import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
 import { storageService } from '../services/storageService';
 import { securityService, type SecurityCheckResult } from '../services/securityService';
 import { JournalPrompt, JournalEntry } from '../types';
 import Loader from './Loader';
 import { SparkleIcon, XIcon, ChevronRightIcon, Undo2Icon } from './icons';
 
-const service = new IskraAIService();
+const service = aiInteractionCoordinator.service;
 
 type PendingJournalAction = Extract<
     SecurityCheckResult['action'],

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { IskraAIService } from '../services/geminiService';
+import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
 import { searchService } from '../services/searchService';
 import { memoryService } from '../services/memoryService';
 import { IskraMetrics, DeepResearchReport, MemoryNode } from '../types';
@@ -9,7 +9,7 @@ import { FileSearchIcon, TriangleIcon, SparkleIcon } from './icons';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import { getActiveVoice } from '../services/voiceEngine';
 
-const service = new IskraAIService();
+const service = aiInteractionCoordinator.service;
 
 type ResearchStatus = 'IDLE' | 'SEARCHING' | 'SYNTHESIZING' | 'GENERATING' | 'DONE' | 'ERROR';
 type ResearchMode = 'research' | 'audit';

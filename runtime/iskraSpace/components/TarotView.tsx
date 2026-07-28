@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { IskraAIService } from '../services/geminiService';
+import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
 import { createAudioContext, decode, decodeAudioData } from '../css/audioUtils';
 import RuneCasting from './TarotReader';
 import { IskraMetrics } from '../types';
@@ -8,7 +8,7 @@ import { getActiveVoice } from '../services/voiceEngine';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import { isBetaCapabilityEnabled } from '../config/betaCapabilities';
 
-const service = new IskraAIService();
+const service = aiInteractionCoordinator.service;
 const TTS_AVAILABLE = isBetaCapabilityEnabled('textToSpeech');
 
 interface RuneViewProps {

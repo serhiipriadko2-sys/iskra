@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { IskraAIService } from '../services/geminiService';
+import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
 import { memoryService } from '../services/memoryService';
 import { userMetricsService } from '../services/userMetricsService';
 import { XIcon, TriangleIcon, FlameIcon } from './icons';
 import { soundService } from '../services/soundService';
 
-const service = new IskraAIService();
+const service = aiInteractionCoordinator.service;
 
 interface FocusSessionProps {
     onClose: () => void;

@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { IskraAIService } from '../services/geminiService';
+import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
 import { drawRunes, Rune } from '../utils/tarot';
 import { getActiveVoice } from '../services/voiceEngine';
 import { IskraMetrics } from '../types';
@@ -22,7 +22,7 @@ interface CastRune extends Rune {
     offsetY: number;
 }
 
-const service = new IskraAIService();
+const service = aiInteractionCoordinator.service;
 
 const RuneCasting: React.FC<RuneCastingProps> = ({ metrics, isTtsEnabled, processSentenceForSpeech, stopAndClearAudio, resumeAudio }) => {
     const [question, setQuestion] = useState('');

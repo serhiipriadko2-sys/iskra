@@ -1,7 +1,8 @@
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import ChatWindow from './ChatWindow';
-import { IskraAIService, type PolicyStreamResult } from '../services/geminiService';
+import { type PolicyStreamResult } from '../services/geminiService';
+import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
 import { searchService } from '../services/searchService';
 import { Message, IskraMetrics, Voice, VoiceName, SearchResult, VoicePreferences, ResponseMode } from '../types';
 import { getActiveVoice, getVoiceSelectionExplanation } from '../services/voiceEngine';
@@ -24,7 +25,7 @@ const RESPONSE_MODE_DISPLAY: Record<ResponseMode, { label: string; icon: string;
 
 const TTS_AVAILABLE = isBetaCapabilityEnabled('textToSpeech');
 
-const service = new IskraAIService();
+const service = aiInteractionCoordinator.service;
 
 interface ChatViewProps {
   metrics: IskraMetrics;

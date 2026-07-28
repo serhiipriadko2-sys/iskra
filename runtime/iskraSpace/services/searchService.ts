@@ -1,7 +1,8 @@
 import { storageService } from './storageService';
 import { memoryService } from './memoryService';
 import { MemoryNode, MemoryNodeLayer, SearchFilters, SearchResult, Task, JournalEntry } from '../types';
-import { IskraAIService } from './geminiService';
+import type { IskraAIService } from './geminiService';
+import { aiInteractionCoordinator } from './aiInteractionCoordinator';
 import { graphServiceSupabase } from './graphServiceSupabase';
 import { isSupabaseAvailable } from './supabaseClient';
 import { getRuntimeConfig } from '../config/runtimeConfig';
@@ -24,9 +25,6 @@ class SearchService {
     vocab: Map<string, number>;
   } = { docs: [], vocab: new Map() };
 
-  // Removed immediate instantiation to prevent circular dependency error during module load
-  private aiService?: IskraAIService;
-
   // Simple in-memory vector store: docId -> vector
   private vectors: Map<string, number[]> = new Map();
 
@@ -45,10 +43,7 @@ class SearchService {
   }
 
   private getAi(): IskraAIService {
-    if (!this.aiService) {
-      this.aiService = new IskraAIService();
-    }
-    return this.aiService;
+    return aiInteractionCoordinator.service;
   }
 
   private isRemoteEmbeddingAllowed(doc: { type: SearchResult['type'] }): boolean {
