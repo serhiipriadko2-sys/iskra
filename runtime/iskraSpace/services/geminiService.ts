@@ -11,6 +11,7 @@ import { storageService } from "./storageService";
 import { getAccessToken } from './supabaseClient';
 import { isBetaCapabilityEnabled, normalizeResponseModeForBeta } from '../config/betaCapabilities';
 import { getRuntimeConfig } from '../config/runtimeConfig';
+import type { GuardExecutionResult } from '../../src/types/guardExecution.js';
 
 
 export interface PolicyStreamResult {
@@ -858,13 +859,20 @@ ${deltaInstruction}`;
   async *getChatResponseStreamWithPolicy(
     history: Message[],
     voice: Voice,
-    metrics: IskraMetrics
+    metricsOrGuardExecution: IskraMetrics | GuardExecutionResult
   ): AsyncGenerator<string, PolicyStreamResult> {
     // Get the last user message for classification
     const lastUserMessage = history.filter(m => m.role === 'user').pop()?.text || '';
+    const guardExecution: GuardExecutionResult | undefined =
+      'metric_snapshot_ref' in metricsOrGuardExecution
+        ? metricsOrGuardExecution as GuardExecutionResult
+        : undefined;
+    const metrics: IskraMetrics = guardExecution
+      ? guardExecution.snapshot.metrics as IskraMetrics
+      : metricsOrGuardExecution as IskraMetrics;
 
-    // Classify request and make policy decision
-    const policyDecision = policyEngine.decide(lastUserMessage, metrics, history);
+    // Classify request and consume the already-frozen current-turn Guard result.
+    const policyDecision = policyEngine.decide(lastUserMessage, metrics, history, guardExecution);
     const { classification, config, preActions } = policyDecision;
 
     // A terminal guard outcome is intentionally side-effect free. It must not

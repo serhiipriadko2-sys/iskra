@@ -93,6 +93,26 @@ export {
   decideSloGuardExplainable,
 } from './types/guard.js';
 
+export type {
+  ActionRisk,
+  DecisionCompleteness,
+  GuardStatus,
+  MetricSnapshot,
+  GuardExecutionEnvelope,
+  GuardExecutionResult,
+  GuardRuleDependency,
+  GuardCompletenessResult,
+  BuildMetricSnapshotInput,
+  ExecuteGuardRequestInput,
+} from './types/guardExecution.js';
+
+export {
+  CANONICAL_METRIC_KEYS,
+  buildCurrentTurnMetricSnapshot,
+  evaluateGuardCompleteness,
+  executeGuardRequest,
+} from './types/guardExecution.js';
+
 // =============================================================================
 // VOICES - The Council (9 Voices)
 // =============================================================================
