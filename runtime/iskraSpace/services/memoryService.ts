@@ -1,5 +1,5 @@
-
 import { MemoryNode, MantraNode, IntegrityReport } from '../types';
+import { storageBoundary } from './storageBoundary';
 
 const ARCHIVE_KEY = 'iskra-space-archive';
 const SHADOW_KEY = 'iskra-space-shadow';
@@ -83,7 +83,7 @@ export const memoryService = {
 
       // 1. Check Mantra
       try {
-          const mantraRaw = localStorage.getItem(MANTRA_KEY);
+          const mantraRaw = storageBoundary.getItem(MANTRA_KEY);
           if (!mantraRaw) {
               report.issues.push('Mantra Missing: Seeding Default');
               this.seedDefaultMantra();
@@ -118,7 +118,7 @@ export const memoryService = {
                report.status = 'DEGRADED';
                report.issues.push(`Archive Corruption: ${corruptedCount} invalid nodes found`);
                // Auto-repair by filtering
-               localStorage.setItem(ARCHIVE_KEY, JSON.stringify(validArchive));
+               storageBoundary.setItem(ARCHIVE_KEY, JSON.stringify(validArchive));
                report.repairs.push(`Pruned ${corruptedCount} invalid Archive nodes`);
           }
       } catch (e) {
@@ -137,7 +137,7 @@ export const memoryService = {
           if (corruptedCount > 0) {
                report.status = 'DEGRADED';
                report.issues.push(`Shadow Corruption: ${corruptedCount} invalid nodes found`);
-               localStorage.setItem(SHADOW_KEY, JSON.stringify(validShadow));
+               storageBoundary.setItem(SHADOW_KEY, JSON.stringify(validShadow));
                report.repairs.push(`Pruned ${corruptedCount} invalid Shadow nodes`);
           }
       } catch (e) {
@@ -157,12 +157,12 @@ export const memoryService = {
           isActive: true,
           timestamp: new Date().toISOString()
       };
-      localStorage.setItem(MANTRA_KEY, JSON.stringify(defaultMantra));
+      storageBoundary.setItem(MANTRA_KEY, JSON.stringify(defaultMantra));
   },
   
   getMantra(): MantraNode | null {
       try {
-          const raw = localStorage.getItem(MANTRA_KEY);
+          const raw = storageBoundary.getItem(MANTRA_KEY);
           if (!raw) return null;
           const data = JSON.parse(raw);
           return validateMantraNode(data) ? data : null;
@@ -180,7 +180,7 @@ export const memoryService = {
           
           const newNodes = data.archive.filter(n => validateMemoryNode(n, 'archive') && !currentIds.has(n.id));
           const merged = [...newNodes, ...currentArchive];
-          localStorage.setItem(ARCHIVE_KEY, JSON.stringify(merged));
+          storageBoundary.setItem(ARCHIVE_KEY, JSON.stringify(merged));
       }
 
       if (data.shadow && Array.isArray(data.shadow)) {
@@ -189,7 +189,7 @@ export const memoryService = {
           
           const newNodes = data.shadow.filter(n => validateMemoryNode(n, 'shadow') && !currentIds.has(n.id));
           const merged = [...newNodes, ...currentShadow];
-          localStorage.setItem(SHADOW_KEY, JSON.stringify(merged));
+          storageBoundary.setItem(SHADOW_KEY, JSON.stringify(merged));
       }
   },
 
@@ -197,7 +197,7 @@ export const memoryService = {
   
   getArchive(filterInvalid = true): MemoryNode[] {
     try {
-      const archiveJson = localStorage.getItem(ARCHIVE_KEY);
+      const archiveJson = storageBoundary.getItem(ARCHIVE_KEY);
       const nodes: MemoryNode[] = archiveJson ? JSON.parse(archiveJson) : [];
       
       if (filterInvalid) {
@@ -236,7 +236,7 @@ export const memoryService = {
     try {
       const archive = this.getArchive(false); // Get raw list
       const updatedArchive = [fullNode, ...archive];
-      localStorage.setItem(ARCHIVE_KEY, JSON.stringify(updatedArchive));
+      storageBoundary.setItem(ARCHIVE_KEY, JSON.stringify(updatedArchive));
     } catch (error) {
       console.error("Error adding to archive in localStorage", error);
     }
@@ -247,7 +247,7 @@ export const memoryService = {
 
   getShadow(filterInvalid = true): MemoryNode[] {
     try {
-      const shadowJson = localStorage.getItem(SHADOW_KEY);
+      const shadowJson = storageBoundary.getItem(SHADOW_KEY);
       const nodes: MemoryNode[] = shadowJson ? JSON.parse(shadowJson) : [];
       
       if (filterInvalid) {
@@ -285,7 +285,7 @@ export const memoryService = {
     try {
       const shadow = this.getShadow(false);
       const updatedShadow = [fullNode, ...shadow];
-      localStorage.setItem(SHADOW_KEY, JSON.stringify(updatedShadow));
+      storageBoundary.setItem(SHADOW_KEY, JSON.stringify(updatedShadow));
     } catch (error) {
       console.error("Error adding to shadow in localStorage", error);
     }
@@ -301,7 +301,7 @@ export const memoryService = {
         return false; // Node not found
       }
 
-      localStorage.setItem(SHADOW_KEY, JSON.stringify(updatedShadow));
+      storageBoundary.setItem(SHADOW_KEY, JSON.stringify(updatedShadow));
       return true;
     } catch (error) {
       console.error("Error deleting shadow node", error);
