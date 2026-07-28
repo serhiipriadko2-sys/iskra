@@ -94,6 +94,8 @@ function calculateSibylScore(metrics: IskraMetrics): number {
  * Voice activation result
  */
 export interface VoiceActivation {
+  kind: 'voice_suggestion';
+  authoritative: false;
   primary: VoiceName;
   secondary?: VoiceName;
   scores: Record<VoiceName, number>;
@@ -131,7 +133,7 @@ export function calculateVoiceScores(
  * Supertriggers run before normal resonance so repair/audit/container needs are
  * not preempted by general synthesis.
  */
-export function selectVoice(metrics: IskraMetrics): VoiceActivation {
+function selectVoiceCandidate(metrics: IskraMetrics): Omit<VoiceActivation, 'kind' | 'authoritative'> {
   const scores = calculateVoiceScores(metrics);
 
   // Source drift and integrity concerns must be audited before synthesis.
@@ -202,6 +204,16 @@ export function selectVoice(metrics: IskraMetrics): VoiceActivation {
 
   return { primary, scores, reason: 'max score fallback' };
 }
+
+
+export function selectVoice(metrics: IskraMetrics): VoiceActivation {
+  return {
+    ...selectVoiceCandidate(metrics),
+    kind: 'voice_suggestion',
+    authoritative: false,
+  };
+}
+
 
 /**
  * Detect False Harmony pattern
