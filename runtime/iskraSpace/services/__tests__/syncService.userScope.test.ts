@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { syncService } from '../syncService';
 import { activateUserStorage, deactivateUserStorage } from '../userScopedStorage';
+import { storageBoundary } from '../storageBoundary';
 
 const storage = new Map<string, string>();
 
@@ -36,7 +37,7 @@ describe('syncService user storage boundary', () => {
 
   it('syncs only the active user namespace memory state', async () => {
     activateUserStorage('user-a', { migrateLegacy: false });
-    localStorageMock.setItem('iskra-space-archive', JSON.stringify([
+    storageBoundary.setItem('iskra-space-archive', JSON.stringify([
       {
         id: 'a1',
         layer: 'archive',
