@@ -29,6 +29,7 @@ interface ConsentReference {
 export interface AiInteractionHookDependencies {
   isCapabilityEnabled(capability: BetaCapability): boolean;
   getCurrentConsent(scope: SymbiosisPermissionKey): ConsentReference | null;
+  hasUsedConsentReceipt(receiptId: string): boolean;
   trackReceipt(event: string, properties: Record<string, unknown>): void;
   captureFailure(message: string, level: 'warning' | 'error'): void;
 }
@@ -36,6 +37,7 @@ export interface AiInteractionHookDependencies {
 const defaultDependencies: AiInteractionHookDependencies = {
   isCapabilityEnabled: isBetaCapabilityEnabled,
   getCurrentConsent: (scope) => symbiosisService.getCurrentConsent(scope),
+  hasUsedConsentReceipt: (receiptId) => symbiosisService.hasUsedConsentReceipt(receiptId),
   trackReceipt: trackEvent,
   captureFailure: captureMessage,
 };
@@ -78,9 +80,13 @@ export function createDefaultAiInteractionBoundaryHooks(
       if (!scope) return { allowed: true };
 
       const consent = dependencies.getCurrentConsent(scope);
-      return consent
-        ? { allowed: true }
-        : { allowed: false, reason: `consent-required:${scope}` };
+      if (!consent) {
+        return { allowed: false, reason: `consent-required:${scope}` };
+      }
+      if (dependencies.hasUsedConsentReceipt(consent.id)) {
+        return { allowed: false, reason: `consent-consumed:${scope}` };
+      }
+      return { allowed: true };
     },
 
     receipt: (receipt) => {
