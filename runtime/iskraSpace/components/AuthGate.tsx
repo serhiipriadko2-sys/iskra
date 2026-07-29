@@ -1,4 +1,4 @@
-import { type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
+import { Fragment, type FormEvent, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import {
   type BetaAccess,
   type BetaAccessDenyReason,
@@ -8,6 +8,7 @@ import {
   supabase,
 } from '../services/supabaseClient';
 import { isE2eAuthBypassEnabled } from '../config/e2eAuth';
+import { storageService } from '../services/storageService';
 
 interface AuthGateProps {
   children: ReactNode;
@@ -15,12 +16,13 @@ interface AuthGateProps {
 
 type GateState =
   | { kind: 'loading' }
-  | { kind: 'granted' }
+  | { kind: 'granted'; principalId: string }
+  | { kind: 'storage-error' }
   | { kind: 'denied'; reason: BetaAccessDenyReason };
 
 function toGateState(access: BetaAccess): GateState {
   if (access.status === 'granted') {
-    return { kind: 'granted' };
+    return { kind: 'granted', principalId: access.session.userId };
   }
 
   return { kind: 'denied', reason: access.reason };
@@ -43,6 +45,7 @@ function accessMessage(reason: BetaAccessDenyReason): string {
 
 export default function AuthGate(props: AuthGateProps) {
   if (isE2eAuthBypassEnabled()) {
+    storageService.bindPrincipal('e2e-local');
     return <>{props.children}</>;
   }
 
@@ -53,33 +56,63 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   const [gate, setGate] = useState<GateState>({ kind: 'loading' });
   const [email, setEmail] = useState('');
   const [requestState, setRequestState] = useState<{ kind: 'idle' | 'sending' | 'sent' | 'error'; message?: string }>({ kind: 'idle' });
+  const accessGeneration = useRef(0);
+
+  const applyAccess = useCallback((access: BetaAccess): void => {
+    try {
+      if (access.status === 'granted') {
+        storageService.bindPrincipal(access.session.userId);
+      } else {
+        storageService.releasePrincipal();
+      }
+      setGate(toGateState(access));
+    } catch {
+      storageService.releasePrincipal();
+      setGate({ kind: 'storage-error' });
+    }
+  }, []);
 
   const refreshAccess = useCallback(async (): Promise<void> => {
-    setGate(toGateState(await getBetaSession()));
+    const generation = ++accessGeneration.current;
+    try {
+      const access = await getBetaSession();
+      if (generation === accessGeneration.current) {
+        applyAccess(access);
+      }
+    } catch {
+      if (generation === accessGeneration.current) {
+        applyAccess({ status: 'denied', reason: 'membership-unavailable' });
+      }
+    }
+  }, [applyAccess]);
+
+  const closeSignedOutBoundary = useCallback((): void => {
+    accessGeneration.current += 1;
+    try {
+      storageService.releasePrincipal({ clear: true });
+      setGate({ kind: 'denied', reason: 'no-session' });
+    } catch {
+      storageService.releasePrincipal();
+      setGate({ kind: 'storage-error' });
+    }
   }, []);
 
   useEffect(() => {
-    let active = true;
+    void refreshAccess();
 
-    void getBetaSession().then(access => {
-      if (active) {
-        setGate(toGateState(access));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        closeSignedOutBoundary();
+        return;
       }
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      void getBetaSession().then(access => {
-        if (active) {
-          setGate(toGateState(access));
-        }
-      });
+      void refreshAccess();
     });
 
     return () => {
-      active = false;
+      accessGeneration.current += 1;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [closeSignedOutBoundary, refreshAccess]);
 
   const submitMagicLink = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -97,20 +130,30 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   const signOut = async (): Promise<void> => {
     try {
       await signOutBetaSession();
-      await refreshAccess();
+      closeSignedOutBoundary();
     } catch {
       setRequestState({ kind: 'error', message: 'Не удалось завершить сессию. Попробуйте ещё раз.' });
     }
   };
 
   if (gate.kind === 'granted') {
-    return <>{children}</>;
+    return <Fragment key={gate.principalId}>{children}</Fragment>;
   }
 
   if (gate.kind === 'loading') {
     return (
       <main className="flex min-h-screen items-center justify-center bg-bg px-6 text-text" aria-busy="true">
         <p className="text-sm text-text-muted">Проверяем доступ к закрытой beta…</p>
+      </main>
+    );
+  }
+
+  if (gate.kind === 'storage-error') {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-bg px-6 text-text">
+        <p className="text-sm text-red-400" role="alert">
+          Не удалось безопасно открыть локальное хранилище. Разрешите доступ к данным сайта и обновите страницу.
+        </p>
       </main>
     );
   }

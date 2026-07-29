@@ -11,6 +11,12 @@ import { storageService } from "./storageService";
 import { getAccessToken } from './supabaseClient';
 import { isBetaCapabilityEnabled, normalizeResponseModeForBeta } from '../config/betaCapabilities';
 import { getRuntimeConfig } from '../config/runtimeConfig';
+import {
+  AI_EDGE_MAX_TEXT_CHARACTERS,
+  budgetAiEdgeContents,
+  selectRecentAiContents,
+  truncateAiText,
+} from './aiRequestBudget';
 import type { GuardExecutionResult } from '../../src/types/guardExecution.js';
 
 
@@ -22,7 +28,7 @@ export interface PolicyStreamResult {
 const model = "gemini-2.5-flash";
 
 type Content = {
-  role?: string;
+  role?: 'user' | 'model';
   parts?: Array<{ text?: string }>;
 };
 
@@ -38,10 +44,6 @@ const SUPABASE_ANON_KEY = getRuntimeConfig(
   'VITE_SUPABASE_ANON_KEY',
   import.meta.env.VITE_SUPABASE_ANON_KEY,
 ) || '';
-type AiProvider = 'gemini' | 'openai' | 'auto';
-const AI_PROVIDER = normalizeAiProvider(
-  getRuntimeConfig('VITE_AI_PROVIDER', import.meta.env.VITE_AI_PROVIDER),
-);
 const AI_EDGE_FUNCTION_SLUG = normalizeEdgeFunctionSlug(
   getRuntimeConfig('VITE_AI_EDGE_FUNCTION_SLUG', import.meta.env.VITE_AI_EDGE_FUNCTION_SLUG) ||
     getRuntimeConfig('VITE_GEMINI_EDGE_FUNCTION_SLUG', import.meta.env.VITE_GEMINI_EDGE_FUNCTION_SLUG) ||
@@ -55,11 +57,6 @@ const AI_EDGE_FN_URL =
 
 function normalizeEdgeFunctionSlug(slug: string): string {
   return slug.trim().replace(/^\/+|\/+$/g, '');
-}
-
-function normalizeAiProvider(provider: string | undefined): AiProvider {
-  if (provider === 'openai' || provider === 'auto') return provider;
-  return 'gemini';
 }
 
 interface LegacyLiveSession {
@@ -226,7 +223,7 @@ async function callAiEdgeFunction(
       Authorization: `Bearer ${accessToken}`,
     },
     body: JSON.stringify({
-      provider: AI_PROVIDER,
+      provider: 'gemini',
       ...payload,
     }),
     signal,
@@ -241,11 +238,15 @@ async function generateContentText(args: {
   signal?: AbortSignal;
 }): Promise<string> {
   const config = args.config ?? {};
+  const contents = budgetAiEdgeContents(
+    toGeminiContents(args.contents),
+    config.systemInstruction ?? '',
+  );
   const res = await callAiEdgeFunction(
     {
       action: 'generateContent',
       model: args.model,
-      contents: toGeminiContents(args.contents),
+      contents,
       systemInstruction: config.systemInstruction,
       generationConfig: {
         ...config,
@@ -273,6 +274,8 @@ async function* streamGenerateContentText(args: {
   signal?: AbortSignal;
 }): AsyncGenerator<string> {
   const config = args.config ?? {};
+  const contents = budgetAiEdgeContents(args.contents, config.systemInstruction ?? '');
+  let streamEstablished = false;
 
   // Best-effort streaming: if anything goes wrong, fall back to single-chunk generation.
   try {
@@ -280,7 +283,7 @@ async function* streamGenerateContentText(args: {
       {
         action: 'streamGenerateContent',
         model: args.model,
-        contents: args.contents,
+        contents,
         systemInstruction: config.systemInstruction,
         generationConfig: {
           ...config,
@@ -294,6 +297,7 @@ async function* streamGenerateContentText(args: {
       const txt = await res.text();
       throw new Error(`AI stream proxy error: ${res.status} ${txt}`);
     }
+    streamEstablished = true;
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -342,11 +346,14 @@ async function* streamGenerateContentText(args: {
       }
     }
   } catch (err) {
-    // Do not fall back on abort — surface the cancellation cleanly
-    if (err instanceof DOMException && err.name === 'AbortError') return;
+    // A caller cancellation is expected. Server deadline/cap failures arrive
+    // as stream read errors and must propagate once streaming was established,
+    // even if the provider failed before yielding the first content chunk.
+    if (args.signal?.aborted) return;
+    if (streamEstablished) throw err;
     const text = await generateContentText({
       model: args.model,
-      contents: args.contents,
+      contents,
       config,
       signal: args.signal,
     });
@@ -355,10 +362,11 @@ async function* streamGenerateContentText(args: {
 }
 
 async function embedContentValues(text: string): Promise<number[]> {
+  const budgetedText = truncateAiText(text, AI_EDGE_MAX_TEXT_CHARACTERS);
   const res = await callAiEdgeFunction({
     action: 'embedContent',
-    model: 'text-embedding-004',
-    content: { parts: [{ text }] },
+    model: 'gemini-embedding-001',
+    content: { parts: [{ text: budgetedText }] },
   });
 
   if (!res.ok) {
@@ -777,15 +785,12 @@ ${metricsContext}
 ${responseModeInstruction}
 ${deltaInstruction}`;
 
-      const contents: Content[] = history.map(msg => ({
-        role: msg.role,
-        parts: [{ text: msg.text }]
-      }));
-
       if (OFFLINE_MODE) {
           yield "⚑ Оффлайн-режим: я фиксирую тишину и вернусь к диалогу, когда связь появится.";
           return;
       }
+
+      const contents: Content[] = selectRecentAiContents(history, fullInstruction);
 
       try {
         // Abort any previous stream before starting a new one
@@ -920,17 +925,15 @@ SIFT Depth: ${config.siftDepth}
 
     // Stream response
     let fullResponse = '';
-    const contents: Content[] = history.map(msg => ({
-      role: msg.role,
-      parts: [{ text: msg.text }]
-    }));
-    const safeContents = contents.length > 0 ? contents : toGeminiContents('');
 
     if (OFFLINE_MODE) {
       // Offline mode still produces policy decision; response is a single deterministic chunk.
       yield "⚑ Оффлайн-режим: политика рассчитана локально, генерация недоступна.";
       return { eval: null, policy: policyDecision, integrity: null };
     }
+
+    const contents: Content[] = selectRecentAiContents(history, fullInstruction);
+    const safeContents = contents.length > 0 ? contents : toGeminiContents('');
 
     try {
       for await (const chunk of streamGenerateContentText({

@@ -1,4 +1,5 @@
 export const AI_RATE_LIMIT_IP_HMAC_SECRET_ENV = 'AI_RATE_LIMIT_IP_HMAC_SECRET';
+export const AI_EDGE_INGRESS_IP_HEADER_ENV = 'AI_EDGE_INGRESS_IP_HEADER';
 
 export type AiBoundaryConfig = {
   supabaseUrl: string;
@@ -7,6 +8,7 @@ export type AiBoundaryConfig = {
   environment: string;
   allowDevelopmentWildcard: boolean;
   ipHmacSecret: string;
+  canonicalIngressHeader: string;
 };
 
 export type VerifiedAiUser = {
@@ -41,6 +43,7 @@ type OriginPolicy = {
 };
 
 const IP_DIGEST_PATTERN = /^[0-9a-f]{64}$/;
+const AI_BOUNDARY_TIMEOUT_MS = 5_000;
 
 function isDevelopmentEnvironment(environment: string): boolean {
   return environment === 'development' || environment === 'test';
@@ -83,9 +86,10 @@ export function buildCorsHeaders(origin: string | null, config: AiBoundaryConfig
   return headers;
 }
 
-function trustedClientIp(req: Request): string | null {
-  const forwarded = req.headers.get('x-forwarded-for');
-  const candidate = forwarded?.split(',')[0]?.trim() ?? req.headers.get('x-real-ip')?.trim();
+function trustedClientIp(req: Request, canonicalIngressHeader: string): string | null {
+  const header = canonicalIngressHeader.trim().toLowerCase();
+  if (!/^[a-z0-9][a-z0-9-]{0,62}[a-z0-9]$/.test(header)) return null;
+  const candidate = req.headers.get(header)?.trim();
 
   // The value is held only long enough to derive the HMAC digest. The database
   // receives only that digest, never this network identifier.
@@ -153,11 +157,11 @@ export async function enforceAiRequestBoundary(
   if (!user.sub || user.isAnonymous) {
     return denied(401, 'anonymous_sessions_are_not_allowed');
   }
-  if (!config.supabaseUrl || !config.supabaseApiKey || !config.ipHmacSecret) {
+  if (!config.supabaseUrl || !config.supabaseApiKey || !config.ipHmacSecret || !config.canonicalIngressHeader) {
     return unavailable();
   }
 
-  const ip = trustedClientIp(req);
+  const ip = trustedClientIp(req, config.canonicalIngressHeader);
   if (!ip) return unavailable();
 
   let ipDigest: string;
@@ -170,6 +174,8 @@ export async function enforceAiRequestBoundary(
   if (!IP_DIGEST_PATTERN.test(ipDigest)) return unavailable();
 
   let response: Response;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), AI_BOUNDARY_TIMEOUT_MS);
   try {
     response = await fetch(`${config.supabaseUrl.replace(/\/$/, '')}/rest/v1/rpc/consume_ai_quota`, {
       method: 'POST',
@@ -179,9 +185,12 @@ export async function enforceAiRequestBoundary(
         'content-type': 'application/json',
       },
       body: JSON.stringify({ p_ip_digest: ipDigest }),
+      signal: controller.signal,
     });
   } catch {
     return unavailable();
+  } finally {
+    clearTimeout(timeout);
   }
 
   if (response.status === 401) return denied(401, 'invalid_or_expired_token');

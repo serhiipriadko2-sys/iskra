@@ -125,6 +125,8 @@ Lambda: revise when Vercel secrets are added or Cloud Run target changes.
 
 ## ADR-20260608-002: IskraSpace Uses a Dual-Provider AI Gateway
 
+Status: superseded by ADR-20260728-001.
+
 ### Context
 `runtime/iskraSpace` used the `gemini` Supabase Edge Function as the release AI bridge for generation, streaming, and embeddings. The product decision is to keep Gemini available while adding OpenAI as an optional second provider, without exposing provider keys in the browser and without live Supabase mutation in the repo PR.
 
@@ -180,3 +182,81 @@ separate post-merge deployment/read-back for exact source parity.
 Retain fail-closed behavior or disable the Action/function; do not routinely restore
 privileged v3. Before deploying the post-review normalization delta, revert or close this
 pull request if its verification gates fail.
+
+## ADR-20260728-001: IskraSpace Canonical AI Boundary and Principal-Scoped Local State
+
+Status: accepted in source; verified-live-staging; production promotion pending.
+
+### Context
+The dual-provider gateway allowed the browser payload and runtime configuration
+to influence provider and model routing. AI requests were charged against quota
+before bounded schema/content validation. User journals, memory, metrics and
+preferences also shared unscoped browser keys, while backup import could commit
+part of a malformed file.
+
+### Decision
+- Keep the app-facing `geminiService` API, but make the Edge Function the
+  authority for provider and models: Gemini only,
+  `gemini-2.5-flash` for text and `gemini-embedding-001` for embeddings.
+- Reject unbounded bodies, unsupported schemas/models, direct PII, prompt
+  injection and dangerous instructions before consuming quota.
+- Trust exactly one operator-configured ingress identity header, HMAC it, and
+  fail closed if the header or secret is absent.
+- Bound auth/quota/provider calls and streaming duration/bytes with abort
+  signals. Test mode cannot call a billed upstream.
+- Constrain Workspace Agent requests to the canonical
+  `https://api.chatgpt.com` origin and server-owned context.
+- Bind sensitive browser state to the authenticated Supabase principal, migrate
+  legacy keys only to the first owner, evict principal data on sign-out, and
+  preserve explicitly device-wide consent state.
+- Validate an entire versioned backup under a 1 MiB cap, then apply it through
+  one rollback-capable local transaction.
+
+### Alternatives
+- Keep provider fallback for availability. Rejected for this production slice:
+  it widens egress, secret and response-compatibility surfaces.
+- Clear all browser storage on sign-out. Rejected because it also destroys
+  device-wide analytics/error-tracking consent and unrelated origin state.
+- Encrypt localStorage with a browser-held key. Deferred: without a durable
+  user-held secret it does not mitigate same-origin script compromise.
+
+### Consequences / Price
+- `VITE_AI_PROVIDER`, `AI_PROVIDER`, `AI_FALLBACK_PROVIDER` and OpenAI gateway
+  secrets are no longer part of the IskraSpace runtime contract.
+- Operators must configure `AI_EDGE_INGRESS_IP_HEADER` to the single header
+  guaranteed by their trusted ingress; a missing/misconfigured value returns
+  fail-closed `503`.
+- Signing out intentionally removes the current principal's offline cache.
+- Existing dual-provider documents remain historical and are marked
+  superseded rather than rewritten as if the old decision never existed.
+
+### Verification
+Source verification requires frozen install, dependency audits, strict
+typecheck/lint, full Vitest, Deno policy/boundary tests, Deno handler check,
+production build and release-workflow contract tests.
+
+The data-less preview receipt at
+`docs/operations/iskraspace_staging_acceptance_2026-07-28.md` additionally
+proves 36/36 migrations, exact downloaded Edge source, `verify_jwt=true`,
+7/7 files and 61/61 live acceptance tests, two-active-principal RLS/Graph
+isolation, quota spoof resistance under `cf-connecting-ip`, fixture cleanup and
+post-run advisor/log review. It uses `AI_EDGE_TEST_MODE=true`, so it does not
+prove real provider availability, billing behavior, production traffic or
+browser UI success.
+
+### Rollback / Reversal Trigger
+Rollback only if staged parity demonstrates a product-blocking incompatibility
+that cannot be fixed inside the bounded schema. Do not restore browser provider
+selection or generic forwarding-header trust. Any provider expansion requires
+a new ADR, destination allowlist, secret boundary and staging receipts.
+
+### Delta
+Delta: AI routing and local-data ownership move from caller/device ambiguity to
+server/principal authority.
+D: Edge source, client storage source, contract tests, Deno tests, official
+Google Gen AI and Supabase Edge documentation.
+Omega: 0.96 for staging behavior; lower for production until exact deploy and
+read-back.
+Lambda: require green PR-head CI, production secret preflight, rollback
+capture, exact-source deployment/read-back and negative-only smoke before
+production promotion is declared complete.

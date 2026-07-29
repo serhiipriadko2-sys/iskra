@@ -189,7 +189,7 @@ Use whichever audit command matches the package manager and package scope being 
 
 Requirements:
 
-- Node.js `>=20.0.0`
+- Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`
 - pnpm `>=9.0.0`
 
 Setup:

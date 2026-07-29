@@ -81,6 +81,13 @@ describe('canonical runtime-config delivery boundary', () => {
     expect(posthog.status).not.toBe(0);
   });
 
+  it('does not expose a browser-controlled AI provider selector', () => {
+    const result = runEntrypoint({ VITE_AI_PROVIDER: 'openai' });
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.generated).not.toContain('VITE_AI_PROVIDER');
+    expect(result.generated).not.toContain('openai');
+  });
+
   it('never lets the service worker cache runtime-config.js', () => {
     expect(serviceWorker).toContain("const CACHE_NAME = 'iskra-pwa-v3'");
     expect(serviceWorker).toContain('RUNTIME_CONFIG_PATH_PATTERN.test(url.pathname)');

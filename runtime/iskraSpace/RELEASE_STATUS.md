@@ -1,12 +1,81 @@
 # Iskra Space Release Status
 
-Status: staging source integration drift blocks branch creation; production_deployed: false; canonical_activation: blocked
-Last updated: 2026-07-23
+Status: verified-live-staging P0 candidate; production_deployed: false; canonical_activation: blocked
+Last updated: 2026-07-28
 App path: `runtime/iskraSpace`
 
-## Current verified baseline
+## 2026-07-28 verified-live-staging acceptance
 
-- GitHub `main` at this status refresh:
+- `[FACT] github-verified` PR
+  [#316](https://github.com/serhiipriadko2-sys/iskra/pull/316) is open from
+  `fix/iskraspace-p0-production-hardening-20260728`; final deployed
+  Edge/shared source snapshot
+  `67c8a512253404a52f0084a801b6acc231233c85` is pushed but not merged.
+- `[FACT] supabase-verified` Data-less preview project
+  `rejqxblontqjycldniyz` replayed all 36 migrations. Manual scoped deployment
+  made `gemini` and `iskra-agent` ACTIVE with `verify_jwt=true`.
+- `[FACT] supabase-verified` Bundle SHA-256:
+  `gemini=2fae94308eae99ac4c12d9ac4a1159c94660991f2debd30df37ae9ca6d6caf3d`;
+  `iskra-agent=7087ffb78320af157f69d40055730fce5c947edf97cb220e103a3a728ceb6d98`.
+  Six downloaded Edge/shared files matched the local source byte-for-byte.
+- `[FACT] local-test-pass + supabase-verified` Live acceptance passed 7/7
+  files and 61/61 tests: missing/malformed/expired JWT, non-member and suspended
+  member, Origin/CORS, quota-spoof, two-active-principal RLS and Graph
+  isolation, append-only audit and cleanup.
+- `[FACT] supabase-verified` The staging-proven ingress header is
+  `cf-connecting-ip`. A diagnostic `x-forwarded-for` configuration was
+  client-spoofable; under `cf-connecting-ip`, ten valid no-upstream probes were
+  followed by the required `429`.
+- `[FACT] supabase-verified` Post-run advisors contained 0 ERROR:
+  33 security notices and 31 performance INFO notices. Scoped Edge/Postgres
+  errors were fully explained by the negative matrix; no Edge panic, uncaught
+  exception, fatal or out-of-memory marker was observed.
+- `[FACT] containment-complete` An earlier disposable preview emitted
+  branch-only credentials into local tool output. No value was committed; that
+  preview was deleted immediately and the entire deploy/read-back/acceptance
+  sequence was repeated on the clean project above.
+- Full receipt:
+  `docs/operations/iskraspace_staging_acceptance_2026-07-28.md`.
+- `DRIFT: Staging vs Production` Production remains on `gemini` v9 and
+  `iskra-agent` v4 pre-hardening bundles. Promotion is blocked until exact PR
+  head CI, production secret-name preflight, pre-deploy rollback capture,
+  exact-source read-back and negative-only production smoke are all green.
+
+## 2026-07-28 local source candidate
+
+- `[FACT] local-machine-observed` Worktree branch
+  `fix/iskraspace-p0-production-hardening-20260728` starts from GitHub-observed
+  `origin/main` `0fd486b3ab57237668cd3a253a7db58792119b25`.
+- `[FACT] local-machine-observed` The candidate implements dependency-audit
+  closure, canonical Gemini/Workspace Agent Edge boundaries,
+  principal-scoped browser data, sign-out eviction and transactional backup
+  import. The current contract is documented in
+  `PRODUCTION_HARDENING_2026-07-28.md` and ADR-20260728-001.
+- `[FACT] local-test-pass` Final local gates: root and runtime audits report
+  zero vulnerabilities; Deno 21/21; IskraSpace Vitest 831 passed / 27 skipped;
+  Chromium E2E 28/28; legacy runtime 265/265; bundle budget, repository
+  Supabase contracts, 3,661-node canon index and 985-file ledger all pass.
+- `DRIFT: GitHub vs Local` These changes are not merged. The local branch is
+  stronger evidence for its own source; GitHub `main` remains the authority for
+  remote state. The exact Edge source is deployed only to the staging project
+  named above. At `0fd486b`, SoT, Runtime, iskraSpace and Guard remediation
+  workflows pass; Production Deployment run
+  [30379847259](https://github.com/serhiipriadko2-sys/iskra/actions/runs/30379847259)
+  fails on the dependency-audit defects repaired by this candidate.
+- `HIGH-RISK DRIFT: Local vs Supabase` Read-only production inspection found
+  active `gemini` v9, SHA-256
+  `e0f0fef8a987370f0ac89f908c85f0cb41765a1f6b182c943841cf207a3c7a1b`,
+  and `iskra-agent` v4, SHA-256
+  `a89d55997f931d8efc32b0297f7777d83838dcf47effe1f05ce9899b9c56e4a4`;
+  both report `verify_jwt=true`. Source read-back remains the pre-hardening
+  dual-provider/configurable-egress implementation. Staging changes do not
+  alter this production observation.
+- Historical receipts below remain evidence for their exact dates/commits.
+  They do not certify this 2026-07-28 candidate.
+
+## Historical verified baseline
+
+- Historical GitHub `main` baseline recorded before the 2026-07-28 refresh:
   `d2ce040643a120916fc62f7fe09e10f49463dfb2` (PR
   [#303](https://github.com/serhiipriadko2-sys/iskra/pull/303) merge).
   PR #303 records and contract-tests the exact migration-34 source cause. It
@@ -163,29 +232,27 @@ claim `delivery_evidence: verified_live_staging`.
 
 ## Current release and activation blockers
 
-- The prerequisite to identify an exact platform log or source-reproducible
-  cause is satisfied by the migration-34 replay above. Do not blindly recreate
-  the same dashboard-style branch: its pull step can reuse the unguarded
-  production-stored body. The next branch must be tied to an exact Git source
-  or follow an accepted migration-history reconciliation path, and must prove
-  that the guarded migration body is the one replayed.
-- Rebinding the production project's GitHub integration from `Iskraspace` to
-  `iskra` is an Owner-approved live configuration change. Its blast radius
-  includes production deploy-on-push and automatic branch creation settings.
-  Until that decision is explicit and the resulting integration metadata is
-  verified, no further staging branch create is permitted.
-- Staging closed-beta acceptance is still required: magic-link invite allow;
-  anonymous and non-member deny; two active users cannot read, write, update or
-  delete one another's data/RPC rows.
-- The applied SQL ACL/search-path migration still requires staged acceptance
-  contracts. Graph RPC `SECURITY DEFINER` grants are intentionally not treated as
-  safe by source review alone.
+- The historical migration-34 and Git-integration blockers above are
+  superseded for the current candidate by the exact Git-associated,
+  data-less preview receipt: all 36 migrations replayed and the two approved
+  functions were deployed/read back manually.
+- Closed-beta acceptance is current for platform anonymous deny, valid
+  non-member and suspended-member deny, and two-active-principal table/RPC
+  isolation. A user-facing magic-link delivery test and full browser
+  principal-storage lifecycle remain separate UI/operations evidence.
+- The PR-head CI matrix must be green after the acceptance-harness, dependency
+  patch, canon-index regeneration and explicit Supabase function-entrypoint
+  mapping. Manual scoped deployment is evidence for `gemini` and
+  `iskra-agent`; the automatic preview check remains independent evidence for
+  repository-root deployment configuration.
 - Advisor remediation remains incomplete: GraphQL table visibility must be
   resolved without breaking the REST Data API, and `pg_trgm`, policy, index and
-  query-plan changes need a staged receipt.
-- Production dispatch remains required: release gates, Docker smoke, canonical
-  GHCR digest and a live acceptance receipt. An Owner activation decision must
-  name exact Constitution, conflict-register, runtime and package hashes.
+  query-plan changes need dedicated staged migrations rather than being folded
+  into this Edge promotion.
+- Production dispatch remains required: secret-name preflight, rollback
+  capture, exact-source Edge deployment/read-back, negative-only smoke,
+  post-deploy advisors/log review and a canonical release receipt. Docker/GHCR
+  and Constitution activation remain independent release decisions.
 
 ## Historical 2026-07-15 status [SUPERSEDED: see current sections above]
 

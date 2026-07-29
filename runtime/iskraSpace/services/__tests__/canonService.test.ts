@@ -34,6 +34,7 @@ vi.mock('../memoryService', () => ({
 
 import { canonService } from '../canonService';
 import { memoryService } from '../memoryService';
+import { principalStorageKey } from '../principalStorage';
 
 describe('canonService', () => {
   beforeEach(() => {
@@ -47,14 +48,14 @@ describe('canonService', () => {
 
       // Should mark as seeded
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        'iskra-canon-seeded-v2',
+        principalStorageKey('iskra-canon-seeded-v2'),
         expect.any(String)
       );
     });
 
     it('does not re-seed when already seeded', () => {
       // Mark as already seeded
-      localStorageMock.setItem('iskra-canon-seeded-v2', 'true');
+      localStorageMock.setItem(principalStorageKey('iskra-canon-seeded-v2'), 'true');
       vi.clearAllMocks();
 
       canonService.seedCanon();

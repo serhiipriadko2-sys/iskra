@@ -17,13 +17,14 @@ export async function seedCompletedOnboarding(
 
   await page.addInitScript(
     ({ extraStorage, profile, userName }) => {
-      localStorage.setItem('iskra-onboarding-complete', 'true');
-      localStorage.setItem('iskra-tutorial-seen', 'true');
-      localStorage.setItem('iskra-user-name', userName);
-      localStorage.setItem('iskra-symbiosis-profile-v1', JSON.stringify(profile));
-      localStorage.setItem('iskra-symbiosis-consent-receipts-v1', '[]');
+      const scoped = (key: string) => `iskra.principal.v1:e2e-local:${key}`;
+      localStorage.setItem(scoped('iskra-onboarding-complete'), 'true');
+      localStorage.setItem(scoped('iskra-tutorial-seen'), 'true');
+      localStorage.setItem(scoped('iskra-user-name'), userName);
+      localStorage.setItem(scoped('iskra-symbiosis-profile-v1'), JSON.stringify(profile));
+      localStorage.setItem(scoped('iskra-symbiosis-consent-receipts-v1'), '[]');
       for (const [key, value] of Object.entries(extraStorage)) {
-        localStorage.setItem(key, value);
+        localStorage.setItem(scoped(key), value);
       }
     },
     {

@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { SparkleIcon, ChevronRightIcon } from './icons';
+import { principalStorage } from '../services/principalStorage';
 
 interface MoodEntry {
   id: string;
@@ -38,7 +39,7 @@ const getEnergyLabel = (value: number): { label: string; emoji: string } => {
 // Storage helpers
 const getMoodEntries = (): MoodEntry[] => {
   try {
-    const raw = localStorage.getItem(MOOD_STORAGE_KEY);
+    const raw = principalStorage.getItem(MOOD_STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -50,7 +51,7 @@ const saveMoodEntry = (entry: MoodEntry): void => {
   entries.unshift(entry);
   // Keep last 100 entries
   const trimmed = entries.slice(0, 100);
-  localStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(trimmed));
+  principalStorage.setItem(MOOD_STORAGE_KEY, JSON.stringify(trimmed));
 };
 
 // Mini Slider Component

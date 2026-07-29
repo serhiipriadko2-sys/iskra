@@ -232,6 +232,16 @@ describe('GeminiService Streaming Methods', () => {
       expect(chunks[0]).toContain('Оффлайн');
     });
 
+    it('preserves the offline fallback for an oversized latest message', async () => {
+      const history = createHistory([{ role: 'user', text: 'x'.repeat(13_000) }]);
+      const { chunks } = await consumeStream(
+        service.getChatResponseStream(history, createVoice(), createMetrics()),
+      );
+
+      expect(chunks).toHaveLength(1);
+      expect(chunks[0]).toContain('Оффлайн');
+    });
+
     it('should handle different voice types', async () => {
       const voices: Array<'ISKRA' | 'KAIN' | 'ANHANTRA'> = ['ISKRA', 'KAIN', 'ANHANTRA'];
 
@@ -394,6 +404,17 @@ describe('GeminiService Streaming Methods', () => {
       expect(result.policy).toBeDefined();
       expect(errorSpy).not.toHaveBeenCalled();
       errorSpy.mockRestore();
+    });
+
+    it('preserves the policy offline fallback for an oversized latest message', async () => {
+      const history = createHistory([{ role: 'user', text: 'x'.repeat(13_000) }]);
+      const { chunks, result } = await consumeStream(
+        service.getChatResponseStreamWithPolicy(history, createVoice(), createMetrics()),
+      );
+
+      expect(chunks).toHaveLength(1);
+      expect(chunks[0]).toContain('Оффлайн');
+      expect(result.policy).toBeDefined();
     });
 
     it('should handle different message types', async () => {

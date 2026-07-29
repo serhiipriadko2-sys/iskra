@@ -1,5 +1,11 @@
 # IskraSpace Dual AI Provider Gateway - 2026-06-08
 
+> Historical decision — superseded on 2026-07-28 by
+> `ADR-20260728-001`. The production source no longer accepts a browser or
+> request-controlled provider, OpenAI fallback, or arbitrary model selection.
+> This file is retained as provenance and must not be used as the current
+> deployment runbook.
+
 ## Context
 
 `runtime/iskraSpace` previously used a single Supabase Edge Function named

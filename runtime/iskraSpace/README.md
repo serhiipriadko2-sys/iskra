@@ -33,14 +33,14 @@ pnpm install --frozen-lockfile
 # Configure environment
 cp .env.example .env.local  # Add VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (client-safe)
 
-# Configure server-side AI provider keys (Supabase Edge Function env)
-# - Default: AI_PROVIDER=gemini and GEMINI_API_KEY=...
-# - Optional: AI_PROVIDER=openai and OPENAI_API_KEY=...
-# - Optional fallback: AI_FALLBACK_PROVIDER=gemini or openai
+# Configure server-side AI secrets (Supabase Edge Function env)
+# - GEMINI_API_KEY=...
+# - AI_EDGE_INGRESS_IP_HEADER=cf-connecting-ip  # Supabase staging-proven
+# - AI_RATE_LIMIT_IP_HMAC_SECRET=<random server-only secret>
 # - Do NOT put provider API keys into Vite env
 # - Deploy: supabase functions deploy gemini
 #
-# The frontend must never embed Gemini or OpenAI keys.
+# The frontend cannot select a provider and must never embed provider keys.
 
 # Start development server
 pnpm --dir runtime/iskraSpace dev
@@ -54,18 +54,18 @@ pnpm --dir runtime/iskraSpace dev
 
 | Metric | Value |
 |--------|-------|
-| **Services** | 27 microservices |
-| **Components** | 42 React components |
+| **Services** | 42 tracked service modules in this candidate |
+| **Components** | 50 tracked React component modules |
 | **Types** | 46+ TypeScript interfaces |
-| **Tests** | 636 passed / 3 skipped via `pnpm --dir runtime/iskraSpace test:run` |
-| **Bundle** | Build passed; largest chunks: `vendor-react` 193.83 KB, `vendor-supabase` 174.16 KB, `index` 131.68 KB |
+| **Tests** | Vitest + Deno suites; see current CI/local receipt |
+| **Bundle** | Rebuild for the exact commit; do not reuse historical chunk sizes |
 
 ### Tech Stack
 
 | Layer | Technology |
 |-------|------------|
 | Frontend | React 19.2, TypeScript 6.0.3, Vite 6.4.3 |
-| AI | Supabase Edge AI gateway (Gemini default, OpenAI optional) |
+| AI | Supabase Edge AI gateway (server-owned canonical Gemini models) |
 | Database | Supabase (PostgreSQL + GraphRAG) |
 | Testing | Vitest, Playwright |
 
@@ -75,7 +75,7 @@ pnpm --dir runtime/iskraSpace dev
 ┌─────────────────────────────────────────────────────────────┐
 │                      ISKRA SPACE                             │
 ├─────────────────────────────────────────────────────────────┤
-│  User Interface (44 React Components)                        │
+│  User Interface (50 tracked React component modules)         │
 │  └── ChatView, EvalDashboard, MemoryView, Journal, etc.     │
 ├─────────────────────────────────────────────────────────────┤
 │  Policy Engine (ROUTINE/SIFT/SHADOW/COUNCIL/CRISIS)          │
@@ -86,7 +86,7 @@ pnpm --dir runtime/iskraSpace dev
 ├─────────────────────────────────────────────────────────────┤
 │  Eval Service (accuracy, usefulness, omega honesty)          │
 ├─────────────────────────────────────────────────────────────┤
-│  Gemini API + Supabase                                       │
+│  Canonical Gemini through authenticated Supabase Edge        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -132,27 +132,27 @@ Every ISKRA response includes:
 
 ### Tier 1: Core AI Pipeline
 - `geminiService` — Supabase Edge AI gateway client for generation, streaming, and embeddings
-- `policyEngine` (556 LoC) — Playbook routing
-- `ragService` (757 LoC) — RAG + SIFT protocol
-- `evalService` (755 LoC) — 5-metric quality assessment
+- `policyEngine` — Playbook routing
+- `ragService` — RAG + SIFT protocol
+- `evalService` — 5-metric quality assessment
 
 ### Tier 2: Voice & Personality
-- `voiceEngine` (246 LoC) — 7-voice selection
-- `voiceSynapseService` (441 LoC) — Voice coordination
-- `ritualService` (661 LoC) — Phoenix, Shatter, Council
-- `makiService` (442 LoC) — Emotional support
+- `voiceEngine` — 9-voice selection
+- `voiceSynapseService` — Voice coordination
+- `ritualService` — Phoenix, Shatter, Council
+- `makiService` — Emotional support
 
 ### Tier 3: Memory & Knowledge
-- `graphService` (348 LoC) — In-memory hypergraph
-- `graphServiceSupabase` (484 LoC) — Persistent GraphRAG
-- `memoryService` (351 LoC) — Mantra/Archive/Shadow
-- `glossaryService` (686 LoC) — Canon terminology
+- `graphService` — In-memory hypergraph
+- `graphServiceSupabase` — Persistent GraphRAG
+- `memoryService` — principal-scoped Mantra/Archive/Shadow
+- `glossaryService` — Canon terminology
 
 ### Tier 4: Validation & Security
-- `validatorsService` (469 LoC) — ISO/Voice/Lambda/∆DΩΛ
-- `securityService` (270 LoC) — PII/Injection (File 20)
-- `evidenceService` (369 LoC) — Trace discipline
-- `auditService` (532 LoC) — Audit trail + drift
+- `validatorsService` — ISO/Voice/Lambda/∆DΩΛ
+- `securityService` — PII/Injection (File 20)
+- `evidenceService` — Trace discipline
+- `auditService` — Audit trail + drift
 
 ---
 
@@ -161,6 +161,8 @@ Every ISKRA response includes:
 | Document | Description |
 |----------|-------------|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Technical architecture, data flow |
+| [PRODUCTION_HARDENING_2026-07-28.md](PRODUCTION_HARDENING_2026-07-28.md) | Current P0 controls, environment contract and promotion gates |
+| [RELEASE_STATUS.md](RELEASE_STATUS.md) | Evidence-bounded release and live-state status |
 | [SERVICES.md](SERVICES.md) | Detailed services API reference |
 | [MANTRA.md](MANTRA.md) | Canon core principles and laws |
 | [GRAPHRAG_SUPABASE_SETUP.md](GRAPHRAG_SUPABASE_SETUP.md) | Database setup guide |
@@ -193,7 +195,7 @@ pnpm --dir runtime/iskraSpace test:e2e  # Playwright E2E; run `pnpm exec playwri
 
 # Quality
 pnpm --dir runtime/iskraSpace typecheck # Type check (0 errors expected)
-pnpm --dir runtime/iskraSpace lint      # Lint check (0 errors expected; warnings currently tracked)
+pnpm --dir runtime/iskraSpace lint:strict # Lint check (warnings fail the gate)
 pnpm --dir runtime/iskraSpace audit     # Dependency audit
 ```
 
@@ -201,8 +203,8 @@ pnpm --dir runtime/iskraSpace audit     # Dependency audit
 
 ```
 iskraspaceappMain/
-├── services/         # 27 business logic services
-├── components/       # 44 React components
+├── services/         # 42 tracked service modules in this candidate
+├── components/       # 50 tracked React component modules
 ├── __tests__/        # Unit tests
 ├── e2e/              # Playwright E2E tests
 ├── config/           # Configuration objects
