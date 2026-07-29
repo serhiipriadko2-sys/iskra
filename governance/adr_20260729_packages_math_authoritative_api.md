@@ -33,6 +33,7 @@ The conflict is wider than two scalar exports:
 
 - `calculateFractalIndicators()` is public and internally calls raw HFD/DFA functions;
 - `packages/engine/src/services/metricsService.ts` imports raw `calculateHFD()` and manufactures the `1.5` fallback in a state-mutating path;
+- `runtime/src/types/fractal.ts` contains a second raw HFD/DFA/aggregate implementation with `1.5` and `0.5` stand-ins, re-exported from `runtime/src/index.ts`;
 - typed wrappers expose parameter overrides that may be silently normalized or may trigger legacy stand-ins;
 - malformed signals may be classified differently depending on sample count;
 - finite inputs can still overflow and produce non-finite computed outputs;
@@ -61,12 +62,13 @@ The following are compatibility-only and are not authoritative metric APIs:
 - `calculateHFD()`;
 - `calculateDFA()`;
 - the current `calculateFractalIndicators()` implementation;
+- the duplicate raw implementations and exports in `runtime/src/types/fractal.ts` and `runtime/src/index.ts`;
 - any state, UI, Edge or Skill path that calls raw primitives or manufactures numeric stand-ins.
 
 These surfaces:
 
 - must not be used by new consumers;
-- must not remain in Guard, EWS, Skill, Edge or state-adapter authority paths at activation;
+- must not remain in Guard, EWS, Skill, Edge, runtime or state-adapter authority paths at activation;
 - may remain temporarily callable only for explicitly allowlisted, non-authority compatibility consumers;
 - must be visibly deprecated or moved behind a compatibility namespace in the implementation PR.
 
@@ -74,19 +76,19 @@ A future authoritative aggregate API must compose typed scalar entrypoints and p
 
 ### D3 — Enforceable migration horizon
 
-The activation receipt must record `compatibility_sunset_at`.
+The scoped activation receipt must record:
 
-The compatibility horizon ends at the earlier of:
+- `activated_at` as an immutable UTC timestamp;
+- `compatibility_sunset_at = activated_at + 30 calendar days`.
 
-1. 30 calendar days after HFD/DFA scoped activation; or
-2. the first repository release cut after that activation.
+There is no release-cut shortcut. The fixed 30-day rule is the sole v1 sunset trigger and is machine-detectable from the activation receipt.
 
 Before scoped activation:
 
 - every existing authority-path raw consumer must be migrated;
-- any remaining raw consumer must appear in a committed allowlist with owner, non-authority justification and sunset date.
+- any remaining raw consumer must appear in a committed allowlist with owner, non-authority justification and the same fixed sunset date.
 
-At sunset, CI must fail if raw scalar or legacy aggregate APIs remain first-class package-root exports or if any non-expired consumer still imports them outside the compatibility namespace.
+At or after `compatibility_sunset_at`, CI must fail if raw scalar or legacy aggregate APIs remain first-class package-root or runtime-root exports, or if any consumer still imports them outside the compatibility namespace.
 
 This ADR does not delete or alter runtime code by itself.
 
@@ -137,12 +139,12 @@ The v1 authoritative methods are fixed methods, not freely configurable calculat
 For v1:
 
 - omitted options use fixed effective defaults after sufficiency passes;
-- an explicitly supplied value equal to the effective default may be accepted;
+- an explicitly supplied value exactly equal to the effective default **must be accepted** and must produce the same typed result and numeric value as omission;
 - a non-default `kMax`, `minBox` or `maxBox` returns typed `invalid_parameter`;
 - implementations must not silently clamp or normalize a non-default request;
 - alternative parameters require a separately named/versioned method contract, deterministic vectors and explicit acceptance.
 
-Thus `calculateHFDMetric(series, { kMax: 20 })` and `calculateDFAMetric(series, { maxBox: 64 })` cannot return `computed` under v1.
+Thus `calculateHFDMetric(series, { kMax: 5 })` is equivalent to omission, while `calculateHFDMetric(series, { kMax: 20 })` is invalid. Likewise, a supplied DFA default pair is equivalent to omission, while `calculateDFAMetric(series, { maxBox: 64 })` cannot return `computed` under v1.
 
 ### D7 — Effective parameter and generation provenance
 
@@ -175,7 +177,7 @@ The implementation PR must replace ambiguous wildcard authority with an explicit
 1. authoritative named exports plus a clearly marked compatibility namespace; or
 2. authoritative named exports with deprecated raw exports retained only until the recorded sunset.
 
-The package root must make accidental import of raw or legacy aggregate functions difficult and must cease exporting them at sunset.
+The package and runtime roots must make accidental import of raw or legacy aggregate functions difficult and must cease exporting them at sunset.
 
 ### D9 — Consumer and Skill rule
 
@@ -190,14 +192,19 @@ Independent hand-maintained formula implementations are not accepted as mirrors.
 
 Inventory alone is insufficient.
 
-Scoped activation fails while any authority-path consumer still:
+Scoped activation fails while any authority-path consumer or public runtime surface still:
 
-- imports `calculateHFD()` or `calculateDFA()`;
-- calls the current raw `calculateFractalIndicators()`;
+- imports or exports `calculateHFD()` or `calculateDFA()` as an authority path;
+- calls or exports the current raw `calculateFractalIndicators()`;
 - manufactures `1.5` or `0.5` as missing-data stand-ins;
-- converts `unavailable`, `invalid` or `numerical_failure` into a numeric Guard/EWS/state input.
+- converts `unavailable`, `invalid` or `numerical_failure` into a numeric Guard/EWS/state input;
+- exposes a duplicate HFD/DFA implementation outside the bounded compatibility namespace.
 
-`packages/engine/src/services/metricsService.ts` is explicitly included in this migration gate.
+The migration gate explicitly includes:
+
+- `packages/engine/src/services/metricsService.ts`;
+- `runtime/src/types/fractal.ts`;
+- the corresponding exports in `runtime/src/index.ts`.
 
 ### D11 — Scoped activation versus package formula authority
 
@@ -225,8 +232,8 @@ HFD/DFA scoped activation requires all of:
 2. separate implementation authorization;
 3. all tests below passing on the implementation head;
 4. review and merge of the implementation PR;
-5. migration of every authority-path raw consumer;
-6. a scoped activation receipt recording merge SHA, algorithm versions, canonical source hashes, generator/artifact hashes, corpus hash, parity results and compatibility sunset.
+5. migration of every authority-path raw consumer and duplicate public runtime surface;
+6. a scoped activation receipt recording merge SHA, `activated_at`, fixed 30-day `compatibility_sunset_at`, algorithm versions, canonical source hashes, generator/artifact hashes, corpus hash and parity results.
 
 Passing tests or merging code cannot by itself confer governance authority.
 
@@ -256,6 +263,10 @@ Rejected. A free override surface makes method identity, sufficiency and provena
 
 Rejected. Entropy parity remains a separate unsatisfied parent gate.
 
+### G — End compatibility at an undefined “release cut”
+
+Rejected. The repository has multiple release-like surfaces and no unique machine-detectable event; v1 uses one fixed 30-day deadline.
+
 ## Consequences / price
 
 Benefits:
@@ -263,17 +274,18 @@ Benefits:
 - one unambiguous HFD/DFA authority path;
 - typed insufficiency, invalidity and numerical failure;
 - receipts describe effective execution;
-- existing authority-path consumers must migrate, not merely be inventoried;
+- existing authority-path consumers and duplicate runtime exports must migrate, not merely be inventoried;
 - Edge generation provenance becomes reproducible;
+- compatibility sunset is machine-detectable;
 - package-wide entropy authority cannot be accidentally inferred.
 
 Costs:
 
 - import migration and compatibility warnings;
 - explicit export/result-type changes;
-- migration of aggregate and state-adapter paths;
+- migration of aggregate, runtime and state-adapter paths;
 - deterministic generator and receipt work;
-- bounded removal deadline for raw APIs;
+- fixed removal deadline for raw APIs;
 - possible behavior changes where callers currently receive stand-ins or use overrides.
 
 Risks:
@@ -291,32 +303,36 @@ T2. DFA sufficiency: valid `N=0/1/49 -> unavailable`; `N=50 -> computed`; effect
 
 T3. Invalid-signal precedence: `NaN`, `Infinity`, malformed values and invalid containers return typed `invalid` at both short and sufficient lengths.
 
-T4. Explicit-override fence: non-default HFD/DFA parameters return typed `invalid_parameter`; no silent clamp, normalization or legacy stand-in.
+T4. Parameter determinism:
+
+- omitted defaults and explicitly supplied exact defaults produce identical typed outcomes and computed values;
+- non-default HFD/DFA parameters return typed `invalid_parameter`;
+- no silent clamp, normalization or legacy stand-in is allowed.
 
 T5. Effective provenance: receipts report requested/effective parameters accurately and algorithm version matches the effective method.
 
 T6. Post-computation finiteness: every `computed.value` is finite. Overflow vectors, including alternating `Number.MAX_VALUE` and `-Number.MAX_VALUE`, return typed `numerical_failure` when computation is unusable.
 
-T7. Reference corpus: fixed deterministic vectors cover constant, linear, periodic, alternating, seeded-noise, malformed, overflow and boundary-length series.
+T7. Reference corpus: fixed deterministic vectors cover constant, linear, periodic, alternating, seeded-noise, malformed, overflow, boundary-length, omitted-default and explicitly supplied-default calls.
 
 T8. Numeric parity:
 
-- status, reason, effective parameters, algorithm version and sample counts match exactly;
+- status, reason, requested/effective parameters, algorithm version and sample counts match exactly;
 - Node and reproducibly generated Edge JavaScript outputs match exactly for the registered corpus;
 - a cross-language generated mirror satisfies `abs(candidate-reference) <= 1e-12 * max(1, abs(reference))` for each computed scalar;
 - any relaxation requires a separate Owner-accepted calibration ADR.
 
-T9. Consumer inventory identifies direct and transitive uses of raw scalar and aggregate APIs.
+T9. Consumer inventory identifies direct and transitive uses of raw scalar and aggregate APIs across `packages`, `runtime`, Edge and Skills.
 
-T10. Authority-consumer migration: no Guard, EWS, Skill, Edge or state-adapter authority path uses raw APIs or numeric stand-ins; `packages/engine/src/services/metricsService.ts` is included.
+T10. Authority-consumer migration: no Guard, EWS, Skill, Edge, runtime or state-adapter authority path uses or publicly re-exports raw APIs or numeric stand-ins. The gate includes `packages/engine/src/services/metricsService.ts`, `runtime/src/types/fractal.ts` and `runtime/src/index.ts`.
 
 T11. Aggregate fence: the current `calculateFractalIndicators()` is compatibility-only; any replacement preserves typed component outcomes and calls authoritative scalar APIs.
 
-T12. New-import fence: CI rejects new raw imports outside a committed compatibility allowlist.
+T12. New-import/export fence: CI rejects new raw imports or public re-exports outside a committed compatibility allowlist/namespace.
 
-T13. Sunset fence: activation receipt records the deadline; CI enforces removal from package-root exports and expiry of allowlisted imports at the earlier of 30 days or the first subsequent release.
+T13. Sunset fence: the activation receipt records immutable `activated_at` and `compatibility_sunset_at = activated_at + 30 calendar days`; CI fails at or after that timestamp if raw package/runtime exports or allowlisted imports remain.
 
-T14. Export test: package root presents typed APIs as primary and raw/legacy aggregate APIs only through the bounded compatibility surface.
+T14. Export test: package and runtime roots present typed APIs as primary and raw/legacy aggregate APIs only through the bounded compatibility surface.
 
 T15. Generation provenance: deterministic regeneration produces a clean diff and hashes matching the activation receipt.
 
@@ -341,6 +357,12 @@ Positive:
 
 Expected: after scoped activation, `calculateDFAMetric()` with a typed receipt; raw DFA and the current aggregate are compatibility-only.
 
+Explicit-default boundary:
+
+> May Node accept `{ kMax: 5 }` while Edge rejects it?
+
+Expected: no; an explicitly supplied exact v1 default must be accepted everywhere and match omission.
+
 Very-short boundary:
 
 > Is a valid one-sample DFA series invalid because its derived maxBox would be zero?
@@ -361,9 +383,15 @@ Expected: no; package-wide activation remains blocked by the parent entropy gate
 
 Migration boundary:
 
-> Can HFD/DFA activate while `packages/engine` still calls raw `calculateHFD()`?
+> Can HFD/DFA activate while `packages/engine` or `runtime/src/types/fractal.ts` still expose raw HFD/DFA behavior?
 
-Expected: no; every authority-path raw consumer must migrate before activation.
+Expected: no; every authority-path consumer and duplicate public runtime surface must migrate before activation.
+
+Sunset boundary:
+
+> Can compatibility remain until an undefined future release?
+
+Expected: no; v1 expires exactly 30 calendar days after the immutable scoped activation timestamp.
 
 Governance boundary:
 
@@ -390,7 +418,9 @@ Follow-up implementation scope may include:
 - package and consumer tests;
 - typed aggregate API;
 - `packages/engine/src/services/metricsService.ts`;
-- consumer inventory/allowlist and sunset enforcement;
+- `runtime/src/types/fractal.ts`;
+- `runtime/src/index.ts`;
+- consumer inventory/allowlist and fixed sunset enforcement;
 - Edge generator, generated mirror and receipts;
 - `iskra-metrics` package only after HFD/DFA scoped activation.
 
@@ -402,7 +432,7 @@ Before acceptance: close the ADR PR with no runtime effect.
 
 After acceptance but before implementation: supersede this ADR through another Owner decision.
 
-After implementation: retain a versioned compatibility namespace until the recorded sunset if rollback is required, but do not restore stand-ins, false provenance, unbounded overrides or raw authority-path consumers.
+After implementation: retain a versioned compatibility namespace until the fixed recorded sunset if rollback is required, but do not restore stand-ins, false provenance, unbounded overrides or raw authority-path consumers.
 
 ## Builder/package mirror
 
@@ -429,7 +459,7 @@ priority approved
 
 ## ΔDΩΛ
 
-- **Δ:** selects a fixed, typed, provenance-bearing HFD/DFA authority boundary; adds consumer migration, generated-mirror, numerical-failure, sunset and entropy non-claim gates.
-- **D:** exact-main raw/typed split -> two Codex review passes -> repository evidence for engine raw use, Edge hand-port and transition registry -> bounded scoped decision.
+- **Δ:** selects a fixed, typed, provenance-bearing HFD/DFA authority boundary; adds consumer/runtime migration, generated-mirror, numerical-failure, fixed-sunset and entropy non-claim gates.
+- **D:** exact-main raw/typed split -> three Codex review passes -> repository evidence for engine and runtime raw use, Edge hand-port and transition registry -> bounded scoped decision.
 - **Ω:** 0.95 for repository-static conflict and decision shape; implementation and activation remain unverified.
 - **Λ:** revise if consumer inventory proves a required alternative API, strict parity is technically impossible with documented evidence, parent entropy gates change, or Owner rejects this proposal.
