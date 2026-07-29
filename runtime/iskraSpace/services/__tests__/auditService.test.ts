@@ -29,6 +29,7 @@ Object.defineProperty(global, 'localStorage', {
 
 import { auditService } from '../auditService';
 import { IskraMetrics } from '../../types';
+import { principalStorage } from '../principalStorage';
 
 const createMetrics = (overrides: Partial<IskraMetrics> = {}): IskraMetrics => ({
   rhythm: 75,
@@ -48,6 +49,7 @@ const createMetrics = (overrides: Partial<IskraMetrics> = {}): IskraMetrics => (
 describe('auditService', () => {
   beforeEach(() => {
     localStorageMock.clear();
+    principalStorage.bind('audit-default');
     auditService.clear();
     vi.clearAllMocks();
   });
@@ -68,6 +70,21 @@ describe('auditService', () => {
       (global as any).localStorage = original;
       errorSpy.mockRestore();
     }
+  });
+
+  it('reloads the audit cache when the authenticated principal changes', () => {
+    principalStorage.bind('audit-a');
+    auditService.clear();
+    auditService.log('system_event', { principal: 'a' });
+
+    principalStorage.bind('audit-b');
+    expect(auditService.getRecentEntries()).toEqual([]);
+    auditService.log('system_event', { principal: 'b' });
+
+    principalStorage.bind('audit-a');
+    const principalAEntries = auditService.getRecentEntries();
+    expect(principalAEntries).toHaveLength(1);
+    expect(principalAEntries[0]?.details.principal).toBe('a');
   });
 
   describe('log', () => {

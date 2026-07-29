@@ -5,6 +5,7 @@ import { IskraAIService } from './geminiService';
 import { graphServiceSupabase } from './graphServiceSupabase';
 import { isSupabaseAvailable } from './supabaseClient';
 import { getRuntimeConfig } from '../config/runtimeConfig';
+import { principalStorage } from './principalStorage';
 
 /**
  * Hybrid search: lexical (tf-idf-like) + semantic (embeddings).
@@ -19,6 +20,7 @@ class SearchService {
     import.meta.env.VITE_ALLOW_SENSITIVE_REMOTE_EMBEDDING,
   ) === 'true';
   private ready = false;
+  private indexedPrincipal: string | null | undefined;
   private lexIndex: {
     docs: { id: string; type: SearchResult['type']; layer?: MemoryNodeLayer; text: string; title?: string; tags?: string[]; ts?: number }[];
     vocab: Map<string, number>;
@@ -62,7 +64,17 @@ class SearchService {
     this.vectors.clear();
   }
 
+  private alignPrincipal(): string | null {
+    const activePrincipal = principalStorage.activePrincipal();
+    if (this.indexedPrincipal !== activePrincipal) {
+      this.invalidate();
+      this.indexedPrincipal = activePrincipal;
+    }
+    return activePrincipal;
+  }
+
   async build(force = false) {
+    this.alignPrincipal();
     if (force) {
       this.invalidate();
     }
@@ -135,9 +147,11 @@ class SearchService {
   }
 
   async searchHybrid(query: string, filters: SearchFilters = {}): Promise<SearchResult[]> {
+    const searchPrincipal = this.alignPrincipal();
     if (!this.ready) {
       await this.build();
     }
+    if (principalStorage.activePrincipal() !== searchPrincipal) return [];
     const { docs } = this.lexIndex;
 
     const pool = docs.filter((d) => {
@@ -201,6 +215,7 @@ class SearchService {
       })
     );
 
+    if (principalStorage.activePrincipal() !== searchPrincipal) return [];
     const isOnline = await isSupabaseAvailable().catch(() => false);
     let cloudResults: SearchResult[] = [];
     if (isOnline) {
@@ -224,6 +239,7 @@ class SearchService {
       }
     }
 
+    if (principalStorage.activePrincipal() !== searchPrincipal) return [];
     const combined = [...finalResults, ...cloudResults];
     const seen = new Set<string>();
     const uniqueResults = combined.filter(r => {

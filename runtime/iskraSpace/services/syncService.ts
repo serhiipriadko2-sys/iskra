@@ -9,6 +9,7 @@ import { ensureSupabaseSession, getLegacyDeviceId, isSupabaseAvailable } from '.
 import { supabaseService } from './supabaseService';
 import { graphServiceSupabase } from './graphServiceSupabase';
 import { principalStorage, principalStorageKeyFor } from './principalStorage';
+import { chatPendingQueueKey, parseChatMessages } from './chatOfflineQueue';
 import {
   isMemoryLayer,
   isMemoryNodeType,
@@ -76,6 +77,27 @@ export class SyncService {
    * Synchronize chat history queue
    */
   private async syncChatHistory(syncPrincipal: string): Promise<void> {
+    const pendingKey = principalStorageKeyFor(
+      syncPrincipal,
+      chatPendingQueueKey(syncPrincipal),
+    );
+    const pendingMessages = parseChatMessages(localStorage.getItem(pendingKey));
+    const remainingMessages: typeof pendingMessages = [];
+    for (const message of pendingMessages) {
+      if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
+      const synced = await supabaseService
+        .addChatMessage(message, { queueOnFailure: false })
+        .catch(() => false);
+      if (!synced) remainingMessages.push(message);
+    }
+    if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
+    if (remainingMessages.length > 0) {
+      localStorage.setItem(pendingKey, JSON.stringify(remainingMessages));
+    } else {
+      localStorage.removeItem(pendingKey);
+    }
+
+    // Raw chat_history_* keys are migration-only queues from older app versions.
     const ownerKeys = this.getOfflineQueueOwnerKeys(syncPrincipal);
 
     for (const ownerKey of ownerKeys) {
@@ -84,14 +106,22 @@ export class SyncService {
       if (!cachedData) continue;
 
       try {
-        const messages = JSON.parse(cachedData);
-        if (!Array.isArray(messages)) continue;
+        const messages = parseChatMessages(cachedData);
+        if (messages.length === 0) {
+          localStorage.removeItem(cachedKey);
+          continue;
+        }
 
+        let allSynced = true;
         for (const msg of messages) {
           if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
           // Supabase service writes to the current auth.uid(); ownerKey is queue provenance only.
-          await supabaseService.addChatMessage(msg).catch(() => {});
+          const synced = await supabaseService
+            .addChatMessage(msg, { queueOnFailure: false })
+            .catch(() => false);
+          if (!synced) allSynced = false;
         }
+        if (allSynced) localStorage.removeItem(cachedKey);
       } catch (e) {
         console.warn(`[SyncService] Failed to sync chat history from ${cachedKey}:`, e);
       }

@@ -54,6 +54,7 @@ function legacyPrincipalQueueKeys(principalId: string): string[] {
   return [
     `metrics_latest_${principalId}`,
     `chat_history_${principalId}`,
+    `chat_pending_${principalId}`,
     `memory_archive_${principalId}`,
     `memory_shadow_${principalId}`,
     `memory_all_${principalId}`,

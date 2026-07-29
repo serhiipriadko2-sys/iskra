@@ -75,11 +75,19 @@ vi.mock('../geminiService', () => {
 });
 
 import { searchService } from '../searchService';
+import { storageService } from '../storageService';
+import { principalStorage } from '../principalStorage';
 
 describe('searchService', () => {
   beforeEach(() => {
     localStorageMock.clear();
     vi.clearAllMocks();
+    principalStorage.bind('search-default');
+    searchService.invalidate();
+    vi.mocked(storageService.getTasks).mockReturnValue([
+      { id: '1', title: 'Test task one', ritualTag: 'FIRE', done: false },
+      { id: '2', title: 'Another task', ritualTag: 'WATER', done: false },
+    ]);
   });
 
   describe('searchHybrid', () => {
@@ -150,6 +158,22 @@ describe('searchService', () => {
     it('builds index without error', async () => {
       // First search triggers build
       await expect(searchService.searchHybrid('test')).resolves.not.toThrow();
+    });
+
+    it('rebuilds the singleton index when the authenticated principal changes', async () => {
+      principalStorage.bind('search-a');
+      vi.mocked(storageService.getTasks).mockReturnValue([
+        { id: 'a', title: 'Private alpha phrase', ritualTag: 'FIRE', done: false },
+      ]);
+      expect(await searchService.searchHybrid('alpha')).toHaveLength(1);
+
+      principalStorage.bind('search-b');
+      vi.mocked(storageService.getTasks).mockReturnValue([
+        { id: 'b', title: 'Private beta phrase', ritualTag: 'WATER', done: false },
+      ]);
+
+      expect(await searchService.searchHybrid('alpha')).toHaveLength(0);
+      expect(await searchService.searchHybrid('beta')).toHaveLength(1);
     });
   });
 });

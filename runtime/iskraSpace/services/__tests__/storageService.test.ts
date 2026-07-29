@@ -115,6 +115,7 @@ describe('storageService symbiosis onboarding', () => {
       done: false,
     }]);
     localStorageMock.setItem('chat_history_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('chat_pending_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('memory_archive_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('memory_shadow_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('memory_all_test-principal', '[{"secret":true}]');
@@ -124,6 +125,7 @@ describe('storageService symbiosis onboarding', () => {
     storageService.releasePrincipal({ clear: true });
 
     expect(localStorageMock.getItem('chat_history_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('chat_pending_test-principal')).toBeNull();
     expect(localStorageMock.getItem('memory_archive_test-principal')).toBeNull();
     expect(localStorageMock.getItem('memory_shadow_test-principal')).toBeNull();
     expect(localStorageMock.getItem('memory_all_test-principal')).toBeNull();
@@ -163,6 +165,7 @@ describe('storageService symbiosis onboarding', () => {
   it('clears all local state', () => {
     storageService.completeOnboarding('TestUser', 'CONSENTED');
     localStorageMock.setItem('chat_history_test-principal', '[{"secret":true}]');
+    localStorageMock.setItem('chat_pending_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('memory_archive_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('memory_shadow_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('memory_all_test-principal', '[{"secret":true}]');
@@ -175,6 +178,7 @@ describe('storageService symbiosis onboarding', () => {
     storageService.clearAllData();
     expect(localStorageMock.getItem(principalStorageKey('iskra-onboarding-complete'))).toBeNull();
     expect(localStorageMock.getItem('chat_history_test-principal')).toBeNull();
+    expect(localStorageMock.getItem('chat_pending_test-principal')).toBeNull();
     expect(localStorageMock.getItem('memory_archive_test-principal')).toBeNull();
     expect(localStorageMock.getItem('memory_shadow_test-principal')).toBeNull();
     expect(localStorageMock.getItem('memory_all_test-principal')).toBeNull();

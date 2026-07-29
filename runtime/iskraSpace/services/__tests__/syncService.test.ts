@@ -71,6 +71,7 @@ vi.mock('../graphServiceSupabase', () => ({
 
 import { SyncService } from '../syncService';
 import { principalStorage } from '../principalStorage';
+import { chatPendingQueueKey } from '../chatOfflineQueue';
 
 describe('SyncService identity migration boundary', () => {
   beforeEach(() => {
@@ -79,7 +80,7 @@ describe('SyncService identity migration boundary', () => {
     isSupabaseAvailableMock.mockReset().mockResolvedValue(true);
     ensureSupabaseSessionMock.mockReset().mockResolvedValue('auth-user-id');
     getLegacyDeviceIdMock.mockReset().mockReturnValue('legacy-device-id');
-    addChatMessageMock.mockReset().mockResolvedValue(undefined);
+    addChatMessageMock.mockReset().mockResolvedValue(true);
     addNodeMock.mockReset().mockResolvedValue({ id: 'node-1' });
     buildConnectionsMock.mockReset().mockResolvedValue(undefined);
     principalStorage.bind('auth-user-id');
@@ -96,8 +97,35 @@ describe('SyncService identity migration boundary', () => {
     expect(ensureSupabaseSessionMock).toHaveBeenCalled();
     expect(getLegacyDeviceIdMock).toHaveBeenCalled();
     expect(addChatMessageMock).toHaveBeenCalledTimes(2);
-    expect(addChatMessageMock).toHaveBeenNthCalledWith(1, authMessage);
-    expect(addChatMessageMock).toHaveBeenNthCalledWith(2, legacyMessage);
+    expect(addChatMessageMock).toHaveBeenNthCalledWith(1, authMessage, { queueOnFailure: false });
+    expect(addChatMessageMock).toHaveBeenNthCalledWith(2, legacyMessage, { queueOnFailure: false });
+  });
+
+  it('uploads and clears the principal-scoped primary chat queue', async () => {
+    const pendingMessage = { role: 'user' as const, text: 'principal pending message' };
+    principalStorage.setItem(
+      chatPendingQueueKey('auth-user-id'),
+      JSON.stringify([pendingMessage]),
+    );
+
+    await new SyncService().syncAllPending();
+
+    expect(addChatMessageMock).toHaveBeenCalledWith(
+      pendingMessage,
+      { queueOnFailure: false },
+    );
+    expect(principalStorage.getItem(chatPendingQueueKey('auth-user-id'))).toBeNull();
+  });
+
+  it('retains failed messages in the principal-scoped primary chat queue', async () => {
+    const pendingMessage = { role: 'user' as const, text: 'retry this message' };
+    const queueKey = chatPendingQueueKey('auth-user-id');
+    principalStorage.setItem(queueKey, JSON.stringify([pendingMessage]));
+    addChatMessageMock.mockResolvedValueOnce(false);
+
+    await new SyncService().syncAllPending();
+
+    expect(principalStorage.getItem(queueKey)).toBe(JSON.stringify([pendingMessage]));
   });
 
   it('uses legacy memory queues only as migration provenance', async () => {

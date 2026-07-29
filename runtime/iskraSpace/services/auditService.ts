@@ -9,6 +9,7 @@
  */
 
 import { IskraMetrics, VoiceName, IskraPhase, RitualName } from '../types';
+import { principalStorage } from './principalStorage';
 import { safeStorage } from './storageCompat';
 
 // ============================================
@@ -149,9 +150,16 @@ class AuditService {
   private entries: AuditEntry[] = [];
   private driftHistory: DriftReport[] = [];
   private listeners: ((entry: AuditEntry) => void)[] = [];
+  private loadedPrincipal: string | null | undefined;
 
-  constructor() {
-    this.loadFromStorage();
+  private ensurePrincipalCache(): void {
+    const activePrincipal = principalStorage.activePrincipal();
+    if (this.loadedPrincipal === activePrincipal) return;
+
+    this.loadedPrincipal = activePrincipal;
+    this.entries = [];
+    this.driftHistory = [];
+    if (activePrincipal) this.loadFromStorage();
   }
 
   // ============================================
@@ -172,6 +180,7 @@ class AuditService {
       delta?: { before: unknown; after: unknown };
     } = {}
   ): AuditEntry {
+    this.ensurePrincipalCache();
     const entry: AuditEntry = {
       id: `audit_${Date.now()}_${Math.random().toString(36).substring(7)}`,
       timestamp: new Date().toISOString(),
@@ -480,6 +489,7 @@ class AuditService {
    * Get audit statistics
    */
   getStats(): AuditStats {
+    this.ensurePrincipalCache();
     const byType: Record<AuditEventType, number> = {
       metric_change: 0,
       voice_selected: 0,
@@ -526,6 +536,7 @@ class AuditService {
    * Get entries by type
    */
   getEntriesByType(type: AuditEventType, limit?: number): AuditEntry[] {
+    this.ensurePrincipalCache();
     const filtered = this.entries.filter(e => e.type === type);
     return limit ? filtered.slice(-limit) : filtered;
   }
@@ -534,6 +545,7 @@ class AuditService {
    * Get entries by severity
    */
   getEntriesBySeverity(severity: AuditSeverity, limit?: number): AuditEntry[] {
+    this.ensurePrincipalCache();
     const filtered = this.entries.filter(e => e.severity === severity);
     return limit ? filtered.slice(-limit) : filtered;
   }
@@ -542,6 +554,7 @@ class AuditService {
    * Get recent entries
    */
   getRecentEntries(limit: number = 50): AuditEntry[] {
+    this.ensurePrincipalCache();
     return this.entries.slice(-limit);
   }
 
@@ -549,6 +562,7 @@ class AuditService {
    * Get drift history
    */
   getDriftHistory(): DriftReport[] {
+    this.ensurePrincipalCache();
     return [...this.driftHistory];
   }
 
@@ -623,6 +637,7 @@ class AuditService {
    * Clear all audit data
    */
   clear(): void {
+    this.ensurePrincipalCache();
     this.entries = [];
     this.driftHistory = [];
     safeStorage.removeItem(STORAGE_KEY);
