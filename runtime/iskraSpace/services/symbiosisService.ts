@@ -1,6 +1,5 @@
 import {
   createStatelessSymbiosisProfile,
-  type ConsentDecision,
   type ConsentReceipt,
   type MemoryMode,
   type SymbiosisActionReceipt,
@@ -106,7 +105,7 @@ const persistState = (state: SymbiosisState): void => {
 const appendConsentReceipt = (
   state: SymbiosisState,
   scope: SymbiosisPermissionKey,
-  decision: ConsentDecision,
+  decision: ConsentReceipt['decision'],
   summary: string,
   expiresAt: string | null,
 ): ConsentReceipt => {
