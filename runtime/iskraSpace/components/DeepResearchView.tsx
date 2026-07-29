@@ -1,6 +1,10 @@
-
 import React, { useState, useEffect, useRef } from 'react';
+import type { ConsentReceipt } from '@iskra/runtime';
 import { aiInteractionCoordinator } from '../services/aiInteractionCoordinator';
+import {
+  depthConsentService,
+  type DepthConsentTtlMinutes,
+} from '../services/depthConsentService';
 import { searchService } from '../services/searchService';
 import { memoryService } from '../services/memoryService';
 import { IskraMetrics, DeepResearchReport, MemoryNode } from '../types';
@@ -8,6 +12,7 @@ import Loader from './Loader';
 import { FileSearchIcon, TriangleIcon, SparkleIcon } from './icons';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import { getActiveVoice } from '../services/voiceEngine';
+import DepthConsentDialog from './DepthConsentDialog';
 
 const service = aiInteractionCoordinator;
 
@@ -177,33 +182,52 @@ const DeepResearchView: React.FC<DeepResearchViewProps> = ({ metrics }) => {
   const [error, setError] = useState<string | null>(null);
   const [processLog, setProcessLog] = useState<string[]>([]);
   const [contextNodes, setContextNodes] = useState<MemoryNode[]>([]);
+  const [consentOpen, setConsentOpen] = useState(false);
+  const [consentBusy, setConsentBusy] = useState(false);
+  const [consentError, setConsentError] = useState<string | null>(null);
 
   const activeVoice = getActiveVoice(metrics);
 
   const addLog = (msg: string) => setProcessLog(prev => [...prev, msg]);
 
-  const handleStartResearch = async () => {
-    if (!topic.trim()) return;
+  const recordResearchAction = (
+    consent: ConsentReceipt,
+    result: 'DONE' | 'BLOCKED' | 'FAILED',
+    nodeCount: number,
+  ) => {
+    const actionReceipt = depthConsentService.recordAction(
+      'ai.research.deep',
+      consent.id,
+      result,
+      [
+        'route:research.deep',
+        `mode:${mode}`,
+        `context_nodes:${nodeCount}`,
+      ],
+    );
+    if (!actionReceipt.verified) {
+      console.warn('[DeepResearch] action receipt read-back failed');
+    }
+  };
 
+  const executeResearch = async (consent: ConsentReceipt) => {
     setStatus('SEARCHING');
     setError(null);
     setReport(null);
     setProcessLog([]);
     setContextNodes([]);
     addLog(`Initiating ${mode === 'audit' ? 'AUDIT' : 'RESEARCH'} protocol...`);
-    addLog(`Target topic: "${topic}"`);
+    addLog('Consent receipt verified. Preparing semantic context...');
 
+    let preparedNodeCount = 0;
     try {
-      // Simulated delay for effect and log population
       await new Promise(r => setTimeout(r, 600));
-      
       const searchResults = await searchService.searchHybrid(topic, { type: ['memory', 'journal', 'task'] });
-      
       addLog(`Scanned index. Found ${searchResults.length} potential nodes.`);
-      
+
       if (searchResults.length === 0) {
-          addLog("WARNING: No relevant data found.");
-          throw new Error("Не найдено данных для анализа.");
+          addLog('WARNING: No relevant data found.');
+          throw new Error('Не найдено данных для анализа.');
       }
 
       const archive = memoryService.getArchive();
@@ -215,7 +239,6 @@ const DeepResearchView: React.FC<DeepResearchViewProps> = ({ metrics }) => {
              const originalId = result.id.split('_').slice(2).join('_');
              return allMemoryNodes.find(node => node.id === originalId);
         }
-        // Map pseudo-nodes for other types to visualize them
         return {
             id: result.id,
             title: result.title || 'Snippet',
@@ -227,35 +250,88 @@ const DeepResearchView: React.FC<DeepResearchViewProps> = ({ metrics }) => {
         } as unknown as MemoryNode;
       }).filter((node): node is MemoryNode => node !== undefined && node !== null);
 
+      preparedNodeCount = nodes.length;
       setContextNodes(nodes);
 
-      // Visualize "Reading" nodes
       for (let i = 0; i < Math.min(nodes.length, 5); i++) {
-          await new Promise(r => setTimeout(r, 300)); // Fake reading delay
+          await new Promise(r => setTimeout(r, 300));
           addLog(`Reading node: ${nodes[i].title || 'Untitled'}`);
       }
-      
+
       addLog(`Context loaded. ${nodes.length} nodes prepared.`);
       setStatus('SYNTHESIZING');
-      addLog(mode === 'audit' ? "Running ISKRIV (🪞) heuristics..." : "Synthesizing ISKRA (⟡) patterns...");
-      
+      addLog(mode === 'audit' ? 'Running ISKRIV (🪞) heuristics...' : 'Synthesizing ISKRA (⟡) patterns...');
+
       const researchReport = await service.performDeepResearch(topic, nodes, mode);
-      
-      setStatus('GENERATING'); 
-      addLog("Report structure generated. Finalizing...");
-      
+      recordResearchAction(consent, 'DONE', nodes.length);
+
+      setStatus('GENERATING');
+      addLog('Report structure generated. Finalizing...');
+
       setTimeout(() => {
         setReport(researchReport);
         setStatus('DONE');
-        addLog("Done.");
+        addLog('Done.');
       }, 800);
-
     } catch (e) {
+      const errorCode = e instanceof Error && 'code' in e
+        ? String((e as Error & { code?: string }).code ?? '')
+        : '';
+      const result = errorCode === 'AI_CONSENT_BLOCKED' || errorCode === 'AI_POLICY_BLOCKED'
+        ? 'BLOCKED'
+        : 'FAILED';
+      recordResearchAction(consent, result, preparedNodeCount);
       const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
       setError(errorMessage);
       addLog(`ERROR: ${errorMessage}`);
       setStatus('ERROR');
     }
+  };
+
+  const handleStartResearch = () => {
+    if (!topic.trim()) return;
+    setError(null);
+    setConsentError(null);
+    setConsentOpen(true);
+  };
+
+  const handleGrantConsent = async (ttlMinutes: DepthConsentTtlMinutes) => {
+    setConsentBusy(true);
+    setConsentError(null);
+    const consent = depthConsentService.grant(
+      `Разрешить одно ${mode === 'audit' ? 'AI-аудит' : 'глубокое AI-исследование'} по введённой теме и найденному контексту.`,
+      ttlMinutes,
+    );
+    if (!consent) {
+      setConsentError('Разрешение недоступно. Завершите onboarding в режиме CONSENTED.');
+      setConsentBusy(false);
+      return;
+    }
+
+    setConsentOpen(false);
+    try {
+      await executeResearch(consent);
+    } finally {
+      setConsentBusy(false);
+    }
+  };
+
+  const handleDenyConsent = () => {
+    const denial = depthConsentService.deny(
+      `Пользователь отклонил ${mode === 'audit' ? 'AI-аудит' : 'глубокое AI-исследование'}.`,
+    );
+    if (denial) {
+      depthConsentService.recordAction(
+        'ai.research.deep',
+        denial.id,
+        'BLOCKED',
+        ['route:research.deep', `mode:${mode}`, 'decision:denied'],
+      );
+    }
+    setConsentOpen(false);
+    setConsentError(null);
+    setError('Запуск отменён: контекст не был отправлен в AI.');
+    setStatus('IDLE');
   };
 
   const handleSaveToMemory = () => {
@@ -273,89 +349,102 @@ const DeepResearchView: React.FC<DeepResearchViewProps> = ({ metrics }) => {
         trace: 'DeepResearchView -> performDeepResearch()'
       }]
     });
-    alert("Отчет сохранен в Архив Памяти.");
+    alert('Отчет сохранен в Архив Памяти.');
   };
 
   return (
-    <div className="flex flex-col h-full p-4 sm:p-6 items-center overflow-y-auto pb-24 lg:pb-6">
-        <header className="shrink-0 text-center relative w-full mb-8">
-            <h2 className="font-serif text-2xl md:text-3xl text-text">Глубокое Исследование</h2>
-            <p className="text-text-muted mt-2 max-w-2xl mx-auto">
-                Погружение в память для поиска паттернов или аудит дрейфа.
-            </p>
-            <div className="absolute top-0 right-0 hidden md:block">
-                <MiniMetricsDisplay metrics={metrics} activeVoice={activeVoice} />
-            </div>
-        </header>
+    <>
+      <div className="flex flex-col h-full p-4 sm:p-6 items-center overflow-y-auto pb-24 lg:pb-6">
+          <header className="shrink-0 text-center relative w-full mb-8">
+              <h2 className="font-serif text-2xl md:text-3xl text-text">Глубокое Исследование</h2>
+              <p className="text-text-muted mt-2 max-w-2xl mx-auto">
+                  Погружение в память для поиска паттернов или аудит дрейфа.
+              </p>
+              <div className="absolute top-0 right-0 hidden md:block">
+                  <MiniMetricsDisplay metrics={metrics} activeVoice={activeVoice} />
+              </div>
+          </header>
 
-        {/* Input Phase */}
-        {(status === 'IDLE' || status === 'DONE' || status === 'ERROR') && (
-            <div className="w-full max-w-3xl mb-8 animate-fade-in">
-                
-                {/* Mode Toggle */}
-                <div className="flex justify-center mb-8">
-                    <div className="bg-surface border border-border p-1 rounded-full flex relative">
-                         <div 
-                            className={`absolute top-1 bottom-1 w-[50%] bg-white/10 rounded-full transition-all duration-300 ${mode === 'audit' ? 'left-[49%]' : 'left-1'}`}
-                         />
-                         <button 
-                            onClick={() => setMode('research')}
-                            className={`relative z-10 px-6 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${mode === 'research' ? 'text-text' : 'text-text-muted'}`}
-                         >
-                             <SparkleIcon className="w-4 h-4" /> Исследование
-                         </button>
-                         <button 
-                            onClick={() => setMode('audit')}
-                            className={`relative z-10 px-6 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${mode === 'audit' ? 'text-danger' : 'text-text-muted'}`}
-                         >
-                             <TriangleIcon className="w-4 h-4" /> Аудит (Искрив)
-                         </button>
-                    </div>
-                </div>
+          {(status === 'IDLE' || status === 'DONE' || status === 'ERROR') && (
+              <div className="w-full max-w-3xl mb-8 animate-fade-in">
+                  <div className="flex justify-center mb-8">
+                      <div className="bg-surface border border-border p-1 rounded-full flex relative">
+                           <div 
+                              className={`absolute top-1 bottom-1 w-[50%] bg-white/10 rounded-full transition-all duration-300 ${mode === 'audit' ? 'left-[49%]' : 'left-1'}`}
+                           />
+                           <button 
+                              onClick={() => setMode('research')}
+                              className={`relative z-10 px-6 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${mode === 'research' ? 'text-text' : 'text-text-muted'}`}
+                           >
+                               <SparkleIcon className="w-4 h-4" /> Исследование
+                           </button>
+                           <button 
+                              onClick={() => setMode('audit')}
+                              className={`relative z-10 px-6 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${mode === 'audit' ? 'text-danger' : 'text-text-muted'}`}
+                           >
+                               <TriangleIcon className="w-4 h-4" /> Аудит (Искрив)
+                           </button>
+                      </div>
+                  </div>
 
-                <div className={`relative group rounded-2xl p-1 transition-all duration-500 ${mode === 'audit' ? 'bg-gradient-to-br from-danger/20 to-transparent' : 'bg-gradient-to-br from-primary/20 to-transparent'}`}>
-                    <textarea
-                        value={topic}
-                        onChange={(e) => setTopic(e.target.value)}
-                        placeholder={mode === 'audit' ? "Что проверить на честность? (напр. 'мои цели на год')" : "Что исследовать? (напр. 'паттерны моей энергии')"}
-                        disabled={status !== 'IDLE' && status !== 'DONE' && status !== 'ERROR'}
-                        rows={3}
-                        className="w-full resize-none rounded-xl border border-border bg-bg p-5 pr-32 text-lg font-serif text-text focus:border-white/20 focus:outline-none focus:ring-0 transition-colors shadow-deep"
-                    />
-                    <button
-                        onClick={handleStartResearch}
-                        disabled={!topic.trim()}
-                        className={`absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-full shadow-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
-                            mode === 'audit' 
-                            ? 'bg-danger text-white shadow-glow-ember' 
-                            : 'bg-primary text-black shadow-glow-primary'
-                        }`}
-                    >
-                        {mode === 'audit' ? <TriangleIcon className="w-6 h-6" /> : <FileSearchIcon className="w-6 h-6" />}
-                    </button>
-                </div>
-                
-                {mode === 'audit' && (
-                    <p className="text-center text-xs text-danger mt-3 font-mono opacity-70">
-                        ⚑ Внимание: режим Аудита использует голос Искрива. Ожидайте жесткой правды.
-                    </p>
-                )}
-                 {error && (
-                    <p className="mt-4 text-center text-sm text-danger bg-danger/10 p-2 rounded-lg border border-danger/20">{error}</p>
-                 )}
-            </div>
-        )}
+                  <div className={`relative group rounded-2xl p-1 transition-all duration-500 ${mode === 'audit' ? 'bg-gradient-to-br from-danger/20 to-transparent' : 'bg-gradient-to-br from-primary/20 to-transparent'}`}>
+                      <textarea
+                          value={topic}
+                          onChange={(e) => setTopic(e.target.value)}
+                          placeholder={mode === 'audit' ? "Что проверить на честность? (напр. 'мои цели на год')" : "Что исследовать? (напр. 'паттерны моей энергии')"}
+                          disabled={status !== 'IDLE' && status !== 'DONE' && status !== 'ERROR'}
+                          rows={3}
+                          className="w-full resize-none rounded-xl border border-border bg-bg p-5 pr-32 text-lg font-serif text-text focus:border-white/20 focus:outline-none focus:ring-0 transition-colors shadow-deep"
+                      />
+                      <button
+                          onClick={handleStartResearch}
+                          disabled={!topic.trim()}
+                          className={`absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-full shadow-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                              mode === 'audit' 
+                              ? 'bg-danger text-white shadow-glow-ember' 
+                              : 'bg-primary text-black shadow-glow-primary'
+                          }`}
+                      >
+                          {mode === 'audit' ? <TriangleIcon className="w-6 h-6" /> : <FileSearchIcon className="w-6 h-6" />}
+                      </button>
+                  </div>
+                  
+                  {mode === 'audit' && (
+                      <p className="text-center text-xs text-danger mt-3 font-mono opacity-70">
+                          ⚑ Внимание: режим Аудита использует голос Искрива. Ожидайте жесткой правды.
+                      </p>
+                  )}
+                   {error && (
+                      <p className="mt-4 text-center text-sm text-danger bg-danger/10 p-2 rounded-lg border border-danger/20">{error}</p>
+                   )}
+              </div>
+          )}
 
-        {/* Processing Phase */}
-        {(status === 'SEARCHING' || status === 'SYNTHESIZING' || status === 'GENERATING') && (
-            <ProcessingView status={status} log={processLog} mode={mode} contextNodes={contextNodes} />
-        )}
+          {(status === 'SEARCHING' || status === 'SYNTHESIZING' || status === 'GENERATING') && (
+              <ProcessingView status={status} log={processLog} mode={mode} contextNodes={contextNodes} />
+          )}
 
-        {/* Result Phase */}
-        {report && status === 'DONE' && (
-            <ReportDisplay report={report} onSave={handleSaveToMemory} mode={mode} />
-        )}
-    </div>
+          {report && status === 'DONE' && (
+              <ReportDisplay report={report} onSave={handleSaveToMemory} mode={mode} />
+          )}
+      </div>
+
+      <DepthConsentDialog
+        open={consentOpen}
+        title={mode === 'audit' ? 'Разрешить глубокий AI-аудит?' : 'Разрешить глубокое AI-исследование?'}
+        actionLabel={mode === 'audit' ? 'Разрешить аудит' : 'Разрешить исследование'}
+        busy={consentBusy}
+        error={consentError}
+        contextItems={[
+          `Введённая тема: «${topic.trim()}».`,
+          'Семантический поиск по локальным слоям Память, Журнал и Задачи.',
+          'В AI будут переданы тема, выбранный режим и найденные фрагменты/узлы; их число определяется после поиска.',
+          'Пароли, ключи и файлы вне найденного контекста не запрашиваются.',
+        ]}
+        onGrant={handleGrantConsent}
+        onDeny={handleDenyConsent}
+      />
+    </>
   );
 };
 
