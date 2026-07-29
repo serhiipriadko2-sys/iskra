@@ -22,7 +22,7 @@ interface CastRune extends Rune {
     offsetY: number;
 }
 
-const service = aiInteractionCoordinator.service;
+const service = aiInteractionCoordinator;
 
 const RuneCasting: React.FC<RuneCastingProps> = ({ metrics, isTtsEnabled, processSentenceForSpeech, stopAndClearAudio, resumeAudio }) => {
     const [question, setQuestion] = useState('');
