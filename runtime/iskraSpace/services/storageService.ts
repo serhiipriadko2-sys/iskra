@@ -454,12 +454,11 @@ export const storageService = {
   },
 
   clearAllData(): void {
-    const principalId = principalStorage.activePrincipal();
     try {
-      principalStorage.clearBoundPrincipal();
-      if (principalId) clearLegacyPrincipalQueues(principalId);
+      localStorage.clear();
     } finally {
-      safeStorage.clearBoundPrincipalFallback();
+      safeStorage.clearAllFallbacks();
+      principalStorage.unbind();
     }
     window.location.reload();
   }

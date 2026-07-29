@@ -156,7 +156,11 @@ describe('storageService symbiosis onboarding', () => {
     localStorageMock.setItem('memory_shadow_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('memory_all_test-principal', '[{"secret":true}]');
     localStorageMock.setItem('metrics_latest_test-principal', '{"secret":true}');
-    localStorageMock.setItem('unrelated-device-setting', 'preserve');
+    localStorageMock.setItem('iskra_analytics_opted_in', 'true');
+    localStorageMock.setItem('iskra_analytics_client_id', 'device-identifier');
+    localStorageMock.setItem('iskra_error_tracking_opted_in', 'true');
+    localStorageMock.setItem('iskra.principal.legacy-owner.v1', 'test-principal');
+    localStorageMock.setItem('sb-project-auth-token', '{"access_token":"redacted"}');
     storageService.clearAllData();
     expect(localStorageMock.getItem(principalStorageKey('iskra-onboarding-complete'))).toBeNull();
     expect(localStorageMock.getItem('chat_history_test-principal')).toBeNull();
@@ -164,8 +168,13 @@ describe('storageService symbiosis onboarding', () => {
     expect(localStorageMock.getItem('memory_shadow_test-principal')).toBeNull();
     expect(localStorageMock.getItem('memory_all_test-principal')).toBeNull();
     expect(localStorageMock.getItem('metrics_latest_test-principal')).toBeNull();
-    expect(localStorageMock.getItem('unrelated-device-setting')).toBe('preserve');
-    expect(localStorageMock.clear).not.toHaveBeenCalled();
+    expect(localStorageMock.getItem('iskra_analytics_opted_in')).toBeNull();
+    expect(localStorageMock.getItem('iskra_analytics_client_id')).toBeNull();
+    expect(localStorageMock.getItem('iskra_error_tracking_opted_in')).toBeNull();
+    expect(localStorageMock.getItem('iskra.principal.legacy-owner.v1')).toBeNull();
+    expect(localStorageMock.getItem('sb-project-auth-token')).toBeNull();
+    expect(principalStorage.activePrincipal()).toBeNull();
+    expect(localStorageMock.clear).toHaveBeenCalled();
     expect(window.location.reload).toHaveBeenCalled();
   });
 });

@@ -13,6 +13,21 @@ const rootPackage = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf
   packageManager?: string;
   pnpm?: unknown;
 };
+const runtimePackage = JSON.parse(
+  readFileSync(join(repoRoot, 'runtime/package.json'), 'utf8')
+) as {
+  devDependencies?: Record<string, string>;
+  overrides?: Record<string, unknown>;
+};
+const braceExpansionCompatPackage = JSON.parse(
+  readFileSync(
+    join(repoRoot, 'vendor/brace-expansion-compat/package.json'),
+    'utf8',
+  )
+) as {
+  dependencies?: Record<string, string>;
+  exports?: Record<string, { import?: string; require?: string }>;
+};
 const pnpmWorkspace = readFileSync(join(repoRoot, 'pnpm-workspace.yaml'), 'utf8');
 const supabaseConfig = readFileSync(join(repoRoot, 'supabase/config.toml'), 'utf8');
 const pullRequestWorkflow = readFileSync(
@@ -75,14 +90,27 @@ describe('IskraSpace release workflow contract', () => {
 
   });
 
-  it('uses one pinned install authority, a separate audit-only client and patched workspace overrides', () => {
+  it('uses one pinned install authority, a separate audit-only client and API-compatible overrides', () => {
     expect(rootPackage.packageManager).toBe('pnpm@10.32.1');
     expect(rootPackage.pnpm).toBeUndefined();
     expect(productionWorkflow).toContain('npx --yes pnpm@11.13.0');
     expect(productionWorkflow).toContain('packageManager remains authoritative for install/build');
     expect(pnpmWorkspace).toContain('overrides:');
     expect(pnpmWorkspace).toContain("postcss: '8.5.18'");
-    expect(pnpmWorkspace).toContain("brace-expansion: '5.0.8'");
+    expect(pnpmWorkspace).toContain(
+      "brace-expansion: 'file:vendor/brace-expansion-compat'",
+    );
+    expect(pnpmWorkspace).not.toContain('patchedDependencies:');
+    expect(runtimePackage.devDependencies?.['eslint']).toBe('10.0.2');
+    expect(runtimePackage.overrides?.['brace-expansion']).toBeUndefined();
+    expect(runtimePackage.overrides?.['minimatch@3.1.5']).toBeUndefined();
+    expect(braceExpansionCompatPackage.dependencies?.['brace-expansion-modern']).toBe(
+      'npm:brace-expansion@5.0.8',
+    );
+    expect(braceExpansionCompatPackage.exports?.['.']).toEqual({
+      import: './index.mjs',
+      require: './index.cjs',
+    });
   });
 
   it('maps runtime Edge Functions to entrypoints relative to supabase/config.toml', () => {

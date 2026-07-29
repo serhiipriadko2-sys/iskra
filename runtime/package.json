@@ -44,17 +44,16 @@
     "ora": "^8.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
+    "@eslint/js": "10.0.1",
     "@types/node": "^22.19.3",
     "@vitest/coverage-v8": "^4.1.9",
-    "eslint": "^9.0.0",
+    "eslint": "10.0.2",
     "prettier": "^3.4.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.0",
     "vitest": "^4.1.9"
   },
   "overrides": {
-    "brace-expansion": "5.0.8",
     "js-yaml": "4.3.0",
     "postcss": "8.5.18",
     "protobufjs": "7.6.5"

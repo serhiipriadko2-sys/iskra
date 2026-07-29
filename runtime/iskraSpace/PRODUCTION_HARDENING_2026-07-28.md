@@ -157,9 +157,11 @@ identity, onboarding or consent receipts between principals.
 
 - pnpm overrides live at the workspace root.
 - `postcss` is pinned to the fixed 8.5.18 line.
-- `brace-expansion` is pinned to 5.0.8 across both dependency universes.
-- `minimatch@3.1.5` carries a pnpm patch which preserves its callable CommonJS
-  API while accepting the named `expand` export from `brace-expansion@5`.
+- The root pnpm tree routes `brace-expansion` through a local facade over the
+  audited 5.0.8 implementation. It exposes both the legacy callable CommonJS
+  API and the modern named ESM/CJS `expand` export, keeping `minimatch@3`, `@9`
+  and `@10` compatible. The separate legacy npm tree uses ESLint 10 and native
+  `minimatch@10` / `brace-expansion@5.0.8`, so it needs no compatibility patch.
 - CI uses native `pnpm audit --audit-level moderate` at root and
   `npm audit --audit-level moderate` in `runtime/`.
 - The release workflow no longer downloads a second pnpm major for auditing.

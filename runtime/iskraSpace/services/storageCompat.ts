@@ -72,6 +72,11 @@ export const safeStorage = {
     return keys.length;
   },
 
+  clearAllFallbacks(): void {
+    memory.clear();
+    deviceMemory.clear();
+  },
+
   /** For tests only */
   _clearMemoryFallback(): void {
     memory.clear();

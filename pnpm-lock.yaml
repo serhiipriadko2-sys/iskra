@@ -7,7 +7,7 @@ settings:
 overrides:
   '@babel/core': 7.29.7
   '@protobufjs/utf8': 1.1.1
-  brace-expansion: 5.0.8
+  brace-expansion: file:vendor/brace-expansion-compat
   flatted: 3.4.2
   js-yaml@^4.1.0: 4.3.0
   picomatch@^2.0.0: 2.3.2
@@ -16,11 +16,6 @@ overrides:
   protobufjs: 7.6.5
   vite: 6.4.3
   ws: 8.21.0
-
-patchedDependencies:
-  minimatch@3.1.5:
-    hash: 2b7bb7b8ec4124ed750064ff226f6a1719c62d7d5a2e2f88c7ec77842e6ca573
-    path: patches/minimatch@3.1.5.patch
 
 importers:
 
@@ -1606,6 +1601,9 @@ packages:
   brace-expansion@5.0.8:
     resolution: {integrity: sha512-JZyDyq3D4AUifKTPOB7DELf6XsB3WdPuNxCtob1vFXPsSXhdAiHBWJ/tJ8HAc9aH84BK+5JFZLNkJKx3G9kzQg==}
     engines: {node: 20 || >=22}
+
+  brace-expansion@file:vendor/brace-expansion-compat:
+    resolution: {directory: vendor/brace-expansion-compat, type: directory}
 
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
@@ -3735,7 +3733,7 @@ snapshots:
     dependencies:
       '@eslint/object-schema': 2.1.7
       debug: 4.4.3
-      minimatch: 3.1.5(patch_hash=2b7bb7b8ec4124ed750064ff226f6a1719c62d7d5a2e2f88c7ec77842e6ca573)
+      minimatch: 3.1.5
     transitivePeerDependencies:
       - supports-color
 
@@ -3756,7 +3754,7 @@ snapshots:
       ignore: 5.3.2
       import-fresh: 3.3.1
       js-yaml: 4.3.0
-      minimatch: 3.1.5(patch_hash=2b7bb7b8ec4124ed750064ff226f6a1719c62d7d5a2e2f88c7ec77842e6ca573)
+      minimatch: 3.1.5
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
@@ -4625,6 +4623,10 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
+  brace-expansion@file:vendor/brace-expansion-compat:
+    dependencies:
+      brace-expansion-modern: brace-expansion@5.0.8
+
   braces@3.0.3:
     dependencies:
       fill-range: 7.1.1
@@ -5025,7 +5027,7 @@ snapshots:
       estraverse: 5.3.0
       hasown: 2.0.4
       jsx-ast-utils: 3.3.5
-      minimatch: 3.1.5(patch_hash=2b7bb7b8ec4124ed750064ff226f6a1719c62d7d5a2e2f88c7ec77842e6ca573)
+      minimatch: 3.1.5
       object.entries: 1.1.9
       object.fromentries: 2.0.8
       object.values: 1.2.1
@@ -5079,7 +5081,7 @@ snapshots:
       is-glob: 4.0.3
       json-stable-stringify-without-jsonify: 1.0.1
       lodash.merge: 4.6.2
-      minimatch: 3.1.5(patch_hash=2b7bb7b8ec4124ed750064ff226f6a1719c62d7d5a2e2f88c7ec77842e6ca573)
+      minimatch: 3.1.5
       natural-compare: 1.4.0
       optionator: 0.9.4
     optionalDependencies:
@@ -5685,15 +5687,15 @@ snapshots:
 
   minimatch@10.2.4:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: file:vendor/brace-expansion-compat
 
-  minimatch@3.1.5(patch_hash=2b7bb7b8ec4124ed750064ff226f6a1719c62d7d5a2e2f88c7ec77842e6ca573):
+  minimatch@3.1.5:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: file:vendor/brace-expansion-compat
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: file:vendor/brace-expansion-compat
 
   minipass@7.1.3: {}
 
