@@ -6,7 +6,7 @@ updated: 2026-07-29
 authority: owner-priority-approved
 ---
 
-# ADR-20260729-02 — Authoritative public API for `packages/math` fractal metrics
+# ADR-20260729-02 — Authoritative HFD/DFA public API boundary in `packages/math`
 
 **Status:** `proposed`
 **Layer:** `system + governance`
@@ -18,31 +18,36 @@ authority: owner-priority-approved
 
 ## Context
 
-ADR-20260724-01 selected `packages/math` as the target formula owner for entropy, HFD and DFA, but only after typed-unavailable, deterministic reference-vector and parity activation gates pass.
+ADR-20260724-01 selected `packages/math` as the target formula owner for entropy, HFD and DFA, but only after all activation gates pass.
 
-Current `main` exposes two public DFA call paths with incompatible semantics:
+This ADR is deliberately narrower. It selects the target **HFD/DFA API boundary only**. It does not activate package-wide formula authority and does not waive the parent entropy gates.
+
+Current `main` exposes incompatible DFA semantics:
 
 | Public call | Default sufficiency behavior at `N=60` | Result on `s[i]=(i mod 7)/7` |
 |---|---|---:|
 | `calculateDFA(series)` | raw legacy path; default `maxBox=64`; returns stand-in when `N < maxBox` | `0.5` |
 | `calculateDFAMetric(series)` | typed path; `N >= 50`; default `maxBox=min(16,floor(N/2))` | `0.6664677293867074` |
 
-Both functions are exported from the package surface. A consumer can therefore select incompatible sufficiency and fallback semantics without an explicit authority boundary.
-
 The conflict is wider than two scalar exports:
 
-- `calculateFractalIndicators()` is also public and internally calls raw HFD/DFA functions;
-- typed wrappers currently expose parameter overrides that may be silently normalized or may trigger legacy stand-ins;
-- the typed result has no `invalid` outcome, so malformed signals may be classified differently depending on sample count;
-- receipts may report requested parameters rather than the parameters actually used.
+- `calculateFractalIndicators()` is public and internally calls raw HFD/DFA functions;
+- `packages/engine/src/services/metricsService.ts` imports raw `calculateHFD()` and manufactures the `1.5` fallback in a state-mutating path;
+- typed wrappers expose parameter overrides that may be silently normalized or may trigger legacy stand-ins;
+- malformed signals may be classified differently depending on sample count;
+- finite inputs can still overflow and produce non-finite computed outputs;
+- receipts may report requested parameters rather than parameters actually used;
+- the Edge fractal implementation is currently a hand-maintained port, not a reproducibly generated mirror.
 
-The draft `iskra-metrics` Skill exposed the same unresolved ownership problem by adding an independent Python implementation. That Skill is not the cause of the split, but it cannot be accepted while the package owner itself exposes competing public interpretations.
+The parent entropy gate remains independently open: package-wide formula authority cannot activate until Unicode-safe entropy and Node/Edge entropy parity are verified under ADR-20260724-01.
+
+The draft `iskra-metrics` Skill exposed the unresolved ownership problem by adding an independent Python implementation. That Skill is not the cause of the split, but it cannot be accepted while the target owner exposes competing interpretations.
 
 ## Decision
 
 ### D1 — Authoritative scalar entrypoints
 
-After implementation and activation, the only authoritative public scalar HFD/DFA entrypoints are:
+After HFD/DFA implementation and scoped activation, the only authoritative public scalar entrypoints are:
 
 - `calculateHFDMetric()`;
 - `calculateDFAMetric()`.
@@ -51,24 +56,41 @@ Their typed result envelope, algorithm version, effective parameters, sample cou
 
 ### D2 — Compatibility-only surfaces
 
-The following remain temporary compatibility surfaces and are not authoritative metric APIs:
+The following are compatibility-only and are not authoritative metric APIs:
 
 - `calculateHFD()`;
 - `calculateDFA()`;
-- the current `calculateFractalIndicators()` implementation, because it calls raw primitives and returns untyped scalar fields.
+- the current `calculateFractalIndicators()` implementation;
+- any state, UI, Edge or Skill path that calls raw primitives or manufactures numeric stand-ins.
 
 These surfaces:
 
 - must not be used by new consumers;
-- must not be used by Guard, EWS, Skill, Edge or adapter authority paths;
-- may remain callable only during a bounded migration horizon;
+- must not remain in Guard, EWS, Skill, Edge or state-adapter authority paths at activation;
+- may remain temporarily callable only for explicitly allowlisted, non-authority compatibility consumers;
 - must be visibly deprecated or moved behind a compatibility namespace in the implementation PR.
 
-A future authoritative aggregate API must compose the typed scalar entrypoints and preserve each component status and provenance. The current aggregate must not be relabeled authoritative without that migration.
+A future authoritative aggregate API must compose typed scalar entrypoints and preserve each component status and provenance.
 
-This ADR does not delete or alter code by itself.
+### D3 — Enforceable migration horizon
 
-### D3 — Typed result and validation precedence
+The activation receipt must record `compatibility_sunset_at`.
+
+The compatibility horizon ends at the earlier of:
+
+1. 30 calendar days after HFD/DFA scoped activation; or
+2. the first repository release cut after that activation.
+
+Before scoped activation:
+
+- every existing authority-path raw consumer must be migrated;
+- any remaining raw consumer must appear in a committed allowlist with owner, non-authority justification and sunset date.
+
+At sunset, CI must fail if raw scalar or legacy aggregate APIs remain first-class package-root exports or if any non-expired consumer still imports them outside the compatibility namespace.
+
+This ADR does not delete or alter runtime code by itself.
+
+### D4 — Typed result contract
 
 The authoritative result union must distinguish at least:
 
@@ -76,79 +98,135 @@ The authoritative result union must distinguish at least:
 computed
 unavailable
 invalid
+numerical_failure
 ```
 
 Required semantics:
 
+- `computed` contains a finite numeric value;
 - `unavailable` means valid input with insufficient samples;
-- `invalid` means malformed/non-finite signal or invalid parameters;
-- validation of signal values and parameters occurs before sample sufficiency;
-- `NaN`, `Infinity`, non-numeric values and invalid parameter combinations never become ordinary insufficiency;
-- user-data validation failures return a typed result rather than a legacy numeric stand-in;
-- authoritative paths never emit `1.5` or `0.5` because data is missing or invalid.
+- `invalid` means malformed signal or explicitly supplied invalid parameters;
+- `numerical_failure` means valid finite inputs passed validation but computation produced a non-finite or otherwise unusable result;
+- authoritative paths never emit `1.5` or `0.5` because data is missing, invalid or numerically unstable.
 
-Typed statuses, reasons and evidence fields must match exactly across Node, Edge and any generated mirror.
+Typed statuses, reasons and evidence fields must match exactly across Node, generated Edge and any generated mirror.
 
-### D4 — Version-1 parameter contract
+### D5 — Validation and sufficiency order
 
-The version-1 authoritative methods are fixed methods, not freely configurable calculators:
+The v1 evaluation order is:
+
+1. validate signal container, numeric type and finiteness;
+2. validate only parameters explicitly supplied by the caller;
+3. if valid sample count is below the method minimum, return `unavailable`;
+4. derive fixed effective defaults only after sufficiency is established;
+5. compute;
+6. validate output finiteness and method invariants;
+7. return `computed` or typed `numerical_failure`.
+
+Derived defaults are not treated as caller errors on very short inputs. Therefore valid `N=0`, `N=1`, `N=19` HFD inputs and valid `N=0`, `N=1`, `N=49` DFA inputs return `unavailable`, not `invalid_parameter`.
+
+Malformed values such as `NaN` or `Infinity` return `invalid` even when the series is short.
+
+### D6 — Version-1 parameter contract
+
+The v1 authoritative methods are fixed methods, not freely configurable calculators:
 
 - HFD: `N >= 20`, effective `kMax=5`;
 - DFA: `N >= 50`, effective `minBox=4`, effective `maxBox=min(16,floor(N/2))`.
 
-For version 1:
+For v1:
 
-- omitted options use those effective defaults;
+- omitted options use fixed effective defaults after sufficiency passes;
 - an explicitly supplied value equal to the effective default may be accepted;
-- a non-default `kMax`, `minBox` or `maxBox` must return typed `invalid_parameter`;
+- a non-default `kMax`, `minBox` or `maxBox` returns typed `invalid_parameter`;
 - implementations must not silently clamp or normalize a non-default request;
-- alternative parameters require a separately named and versioned method contract, deterministic vectors and explicit acceptance before use in an authority path.
+- alternative parameters require a separately named/versioned method contract, deterministic vectors and explicit acceptance.
 
-Therefore, examples such as `calculateHFDMetric(series, { kMax: 20 })` and `calculateDFAMetric(series, { maxBox: 64 })` cannot return `computed` under the v1 authoritative contract.
+Thus `calculateHFDMetric(series, { kMax: 20 })` and `calculateDFAMetric(series, { maxBox: 64 })` cannot return `computed` under v1.
 
-### D5 — Effective parameter provenance
+### D7 — Effective parameter and generation provenance
 
-Every computed receipt must report parameters actually used by the algorithm.
-
-The authoritative envelope must include:
+Every computed receipt must include:
 
 - `algorithm_version` bound to the exact method;
-- `effective_parameters`;
-- `requested_parameters` when options were explicitly supplied;
+- `requested_parameters` when explicitly supplied;
+- `effective_parameters` actually used;
 - `sample_count`;
-- source/provenance hash or immutable formula reference.
+- canonical source hash;
+- generator identity/version when a mirror is generated;
+- generated artifact hash;
+- parity corpus hash.
 
-A receipt must never report `kMax=20` when the algorithm actually used `kMax=10`, and a fixed-version label such as `hfd-v1-kmax5` must never accompany a different effective parameter set.
+A receipt must never report a requested value as effective when the algorithm used another value.
 
-### D6 — Export boundary
+The Edge mirror is accepted only when:
 
-The follow-up implementation PR must replace ambiguous wildcard authority with an explicit export boundary. Acceptable implementations include:
+1. a committed deterministic generation command exists;
+2. regeneration from the recorded canonical source hash produces the recorded artifact hash;
+3. regeneration followed by repository diff is clean;
+4. source hash, generator version, artifact hash and parity receipt are bound together.
+
+A hand-maintained port that merely passes a finite corpus is not a generated mirror.
+
+### D8 — Export boundary
+
+The implementation PR must replace ambiguous wildcard authority with an explicit export boundary. Acceptable implementations include:
 
 1. authoritative named exports plus a clearly marked compatibility namespace; or
-2. authoritative named exports with deprecated raw exports retained temporarily.
+2. authoritative named exports with deprecated raw exports retained only until the recorded sunset.
 
-The package root must make it difficult for a new consumer to import a raw or legacy aggregate function accidentally.
+The package root must make accidental import of raw or legacy aggregate functions difficult and must cease exporting them at sunset.
 
-### D7 — Consumer and Skill rule
+### D9 — Consumer and Skill rule
 
 All formula consumers, including `iskra-metrics`, must either:
 
 - call the authoritative typed API; or
-- use a generated mirror bound to source hash, algorithm version, effective parameters and parity receipt.
+- use a reproducibly generated mirror bound to source hash, generator version, generated artifact hash, effective parameters and parity receipt.
 
 Independent hand-maintained formula implementations are not accepted as mirrors.
 
-### D8 — Activation boundary
+### D10 — Existing-consumer migration gate
 
-This ADR selects a proposed target API boundary. It does not claim that the boundary is accepted, implemented, merged, deployed, invoked or verified-live.
+Inventory alone is insufficient.
 
-`packages/math` remains `PROPOSED_TARGET` until all of the following hold:
+Scoped activation fails while any authority-path consumer still:
 
-1. the Owner explicitly accepts this ADR;
-2. implementation is separately authorized;
-3. the tests below pass on the implementation head;
-4. the implementation PR is reviewed and merged;
-5. an activation receipt records the exact merge commit, algorithm versions, source hashes and parity results.
+- imports `calculateHFD()` or `calculateDFA()`;
+- calls the current raw `calculateFractalIndicators()`;
+- manufactures `1.5` or `0.5` as missing-data stand-ins;
+- converts `unavailable`, `invalid` or `numerical_failure` into a numeric Guard/EWS/state input.
+
+`packages/engine/src/services/metricsService.ts` is explicitly included in this migration gate.
+
+### D11 — Scoped activation versus package formula authority
+
+This ADR can authorize only **HFD/DFA scoped activation**.
+
+It cannot activate `packages/math` as the package-wide formula owner for entropy/HFD/DFA.
+
+Package-wide formula authority remains `PROPOSED_TARGET` until every outstanding parent ADR gate passes, including:
+
+- Unicode-safe versioned entropy tokenization;
+- Shannon sufficiency based on normalized token count;
+- Node/Edge entropy parity;
+- entropy provenance hashes;
+- HFD/DFA gates in this ADR.
+
+No HFD/DFA receipt may claim entropy parity or package-wide formula-owner activation.
+
+### D12 — Governance activation boundary
+
+This ADR remains proposed until explicit Owner acceptance.
+
+HFD/DFA scoped activation requires all of:
+
+1. Owner acceptance of this ADR;
+2. separate implementation authorization;
+3. all tests below passing on the implementation head;
+4. review and merge of the implementation PR;
+5. migration of every authority-path raw consumer;
+6. a scoped activation receipt recording merge SHA, algorithm versions, canonical source hashes, generator/artifact hashes, corpus hash, parity results and compatibility sunset.
 
 Passing tests or merging code cannot by itself confer governance authority.
 
@@ -156,11 +234,11 @@ Passing tests or merging code cannot by itself confer governance authority.
 
 ### A — Keep both APIs equally public and document the difference
 
-Rejected. Documentation does not prevent accidental imports or split-brain sufficiency semantics.
+Rejected. Documentation does not prevent accidental imports or split-brain semantics.
 
-### B — Make the raw functions authoritative
+### B — Make raw functions authoritative
 
-Rejected. Raw stand-ins conflict with ADR-20260724-01 and the rule `no input or method -> no number`.
+Rejected. Numeric stand-ins conflict with ADR-20260724-01 and `no input or method -> no number`.
 
 ### C — Remove raw functions immediately in this ADR PR
 
@@ -170,69 +248,90 @@ Rejected. Governance selection and code migration remain separate; hidden consum
 
 Rejected. The Skill owns orchestration, contracts, provenance and explanation, not formula authority.
 
-### E — Permit arbitrary parameter overrides in the v1 wrapper
+### E — Permit arbitrary parameter overrides in v1
 
-Rejected. A free override surface makes method identity, sufficiency and provenance ambiguous. Alternative configurations require separately versioned contracts.
+Rejected. A free override surface makes method identity, sufficiency and provenance ambiguous.
+
+### F — Activate all `packages/math` formula authority through this ADR
+
+Rejected. Entropy parity remains a separate unsatisfied parent gate.
 
 ## Consequences / price
 
 Benefits:
 
-- one unambiguous public authority path;
-- typed sufficiency and invalidity are preserved across consumers;
-- receipts describe effective execution rather than caller intent;
-- raw legacy and aggregate behavior become detectable migration debt;
-- parity testing gains a single reference API.
+- one unambiguous HFD/DFA authority path;
+- typed insufficiency, invalidity and numerical failure;
+- receipts describe effective execution;
+- existing authority-path consumers must migrate, not merely be inventoried;
+- Edge generation provenance becomes reproducible;
+- package-wide entropy authority cannot be accidentally inferred.
 
 Costs:
 
 - import migration and compatibility warnings;
-- explicit export and result-type changes;
-- migration of the aggregate API;
-- reference-vector and consumer-inventory work before activation;
+- explicit export/result-type changes;
+- migration of aggregate and state-adapter paths;
+- deterministic generator and receipt work;
+- bounded removal deadline for raw APIs;
 - possible behavior changes where callers currently receive stand-ins or use overrides.
 
 Risks:
 
-- hidden callers may depend on raw fallback values;
-- hidden callers may depend on parameter overrides;
-- a premature export removal could break consumers;
-- algorithm versions may drift unless receipts bind exact source and effective parameters.
+- hidden callers may depend on raw fallbacks or overrides;
+- overflow cases may expose previously hidden numerical failures;
+- premature export removal could break non-authority consumers;
+- package-wide authority may remain blocked after HFD/DFA scoped activation because entropy gates are independent.
 
-## Tests / QA required before activation
+## Tests / QA required before HFD/DFA scoped activation
 
-T1. HFD boundary: `N=19 -> unavailable`, `N=20 -> computed`, effective `kMax=5`.
+T1. HFD sufficiency: valid `N=0/1/19 -> unavailable`; `N=20 -> computed`; effective `kMax=5`.
 
-T2. DFA boundary: `N=49 -> unavailable`, `N=50 -> computed`, effective `minBox=4`, `maxBox=min(16,floor(N/2))`.
+T2. DFA sufficiency: valid `N=0/1/49 -> unavailable`; `N=50 -> computed`; effective `minBox=4`, `maxBox=min(16,floor(N/2))`.
 
-T3. Invalid-signal precedence: non-finite or malformed values return typed `invalid` at both insufficient and sufficient lengths.
+T3. Invalid-signal precedence: `NaN`, `Infinity`, malformed values and invalid containers return typed `invalid` at both short and sufficient lengths.
 
-T4. Override fence: non-default HFD/DFA parameters return typed `invalid_parameter`; no silent clamp, normalization or legacy stand-in is allowed.
+T4. Explicit-override fence: non-default HFD/DFA parameters return typed `invalid_parameter`; no silent clamp, normalization or legacy stand-in.
 
-T5. Effective provenance: receipts report requested and effective parameters accurately, and the algorithm version matches the effective method.
+T5. Effective provenance: receipts report requested/effective parameters accurately and algorithm version matches the effective method.
 
-T6. Reference corpus: fixed deterministic vectors cover constant, linear, periodic, alternating, seeded-noise, malformed and boundary-length series.
+T6. Post-computation finiteness: every `computed.value` is finite. Overflow vectors, including alternating `Number.MAX_VALUE` and `-Number.MAX_VALUE`, return typed `numerical_failure` when computation is unusable.
 
-T7. Numeric parity:
+T7. Reference corpus: fixed deterministic vectors cover constant, linear, periodic, alternating, seeded-noise, malformed, overflow and boundary-length series.
 
-- typed status, reason, effective parameters, algorithm version and sample counts match exactly;
-- Node and generated Edge JavaScript outputs match exactly for the registered reference corpus;
-- a cross-language generated mirror must satisfy `abs(candidate-reference) <= 1e-12 * max(1, abs(reference))` for every computed scalar;
-- any relaxation of this bound requires a separate Owner-accepted calibration ADR and cannot be introduced only through a registry edit.
+T8. Numeric parity:
 
-T8. Import inventory: repository search identifies direct and transitive uses of `calculateHFD`, `calculateDFA` and `calculateFractalIndicators`.
+- status, reason, effective parameters, algorithm version and sample counts match exactly;
+- Node and reproducibly generated Edge JavaScript outputs match exactly for the registered corpus;
+- a cross-language generated mirror satisfies `abs(candidate-reference) <= 1e-12 * max(1, abs(reference))` for each computed scalar;
+- any relaxation requires a separate Owner-accepted calibration ADR.
 
-T9. Aggregate fence: the current `calculateFractalIndicators()` is compatibility-only; any replacement preserves typed component outcomes and calls authoritative scalar APIs.
+T9. Consumer inventory identifies direct and transitive uses of raw scalar and aggregate APIs.
 
-T10. New-import fence: CI rejects new raw-authority imports outside an allowlisted compatibility module.
+T10. Authority-consumer migration: no Guard, EWS, Skill, Edge or state-adapter authority path uses raw APIs or numeric stand-ins; `packages/engine/src/services/metricsService.ts` is included.
 
-T11. Export test: the package root exposes typed APIs as the primary documented surface and marks raw and legacy aggregate exports as compatibility-only.
+T11. Aggregate fence: the current `calculateFractalIndicators()` is compatibility-only; any replacement preserves typed component outcomes and calls authoritative scalar APIs.
 
-T12. Skill gate: `iskra-metrics` remains unaccepted until it delegates to the typed API or a verified generated mirror and passes the same reference corpus.
+T12. New-import fence: CI rejects new raw imports outside a committed compatibility allowlist.
 
-T13. Transition gate: `metric-runner` and `iskra-metrics-evaluator` remain active until separate deprecation acceptance.
+T13. Sunset fence: activation receipt records the deadline; CI enforces removal from package-root exports and expiry of allowlisted imports at the earlier of 30 days or the first subsequent release.
 
-T14. Governance gate: activation fails unless ADR acceptance, implementation authorization, merge SHA and activation receipt are present.
+T14. Export test: package root presents typed APIs as primary and raw/legacy aggregate APIs only through the bounded compatibility surface.
+
+T15. Generation provenance: deterministic regeneration produces a clean diff and hashes matching the activation receipt.
+
+T16. Skill gate: `iskra-metrics` remains unaccepted until it delegates to the typed API or a verified generated mirror and passes the same corpus.
+
+T17. Transition registry gate preserves the exact current registry states until a separate accepted deprecation decision:
+
+- `metric-runner`: `status=ACTIVE`, `readiness=TRANSITIONAL`;
+- `iskra-metrics-evaluator`: `status=ABSORB`, `readiness=TRANSITION_ALIAS`.
+
+Registry state does not by itself prove activation on every Builder surface.
+
+T18. Entropy non-claim: HFD/DFA scoped activation leaves package-wide formula authority `PROPOSED_TARGET` until parent entropy gates pass.
+
+T19. Governance gate: scoped activation fails unless ADR acceptance, implementation authorization, merge SHA and complete activation receipt are present.
 
 ## Acceptance prompts
 
@@ -240,19 +339,31 @@ Positive:
 
 > For `N=60`, which public API defines authoritative DFA sufficiency and provenance?
 
-Expected: after activation, `calculateDFAMetric()` with a typed receipt; raw `calculateDFA()` and the current aggregate are compatibility-only.
+Expected: after scoped activation, `calculateDFAMetric()` with a typed receipt; raw DFA and the current aggregate are compatibility-only.
 
-Override boundary:
+Very-short boundary:
 
-> May `calculateDFAMetric(series, { maxBox: 64 })` return computed under v1?
+> Is a valid one-sample DFA series invalid because its derived maxBox would be zero?
 
-Expected: no; non-default parameters return typed `invalid_parameter` unless a separately accepted method version exists.
+Expected: no; caller-supplied values are validated first, then valid insufficient data returns `unavailable`; defaults are derived only for computation.
 
-Invalid-input boundary:
+Overflow boundary:
 
-> Is `[NaN]` unavailable because it is short?
+> May a computed receipt contain `NaN` or `Infinity`?
 
-Expected: no; signal validation precedes sufficiency and returns typed `invalid`.
+Expected: no; non-finite output returns typed `numerical_failure`.
+
+Entropy boundary:
+
+> Does HFD/DFA scoped activation make `packages/math` the active authority for entropy too?
+
+Expected: no; package-wide activation remains blocked by the parent entropy gates.
+
+Migration boundary:
+
+> Can HFD/DFA activate while `packages/engine` still calls raw `calculateHFD()`?
+
+Expected: no; every authority-path raw consumer must migrate before activation.
 
 Governance boundary:
 
@@ -278,9 +389,12 @@ Follow-up implementation scope may include:
 - `packages/math/src/index.ts`;
 - package and consumer tests;
 - typed aggregate API;
-- consumer inventory/allowlist;
-- Edge generated mirror and receipts;
-- `iskra-metrics` package only after formula-owner activation.
+- `packages/engine/src/services/metricsService.ts`;
+- consumer inventory/allowlist and sunset enforcement;
+- Edge generator, generated mirror and receipts;
+- `iskra-metrics` package only after HFD/DFA scoped activation.
+
+Entropy implementation remains governed by the parent ADR and is not silently included in this implementation scope.
 
 ## Rollback
 
@@ -288,7 +402,7 @@ Before acceptance: close the ADR PR with no runtime effect.
 
 After acceptance but before implementation: supersede this ADR through another Owner decision.
 
-After implementation: retain a versioned compatibility namespace if rollback is required, but do not restore stand-ins, false provenance or unbounded overrides to the authoritative typed path.
+After implementation: retain a versioned compatibility namespace until the recorded sunset if rollback is required, but do not restore stand-ins, false provenance, unbounded overrides or raw authority-path consumers.
 
 ## Builder/package mirror
 
@@ -301,12 +415,21 @@ After implementation: retain a versioned compatibility namespace if rollback is 
 ## Status ladder
 
 ```text
-priority approved != ADR accepted != implementation authorized != implemented != merged != activated != deployed != invoked != verified-live
+priority approved
+!= ADR accepted
+!= implementation authorized
+!= implemented
+!= merged
+!= HFD/DFA scoped activation
+!= package-wide formula-owner activation
+!= deployed
+!= invoked
+!= verified-live
 ```
 
 ## ΔDΩΛ
 
-- **Δ:** selects fixed, typed, provenance-bearing metric wrappers as the sole target scalar authority; demotes raw and legacy aggregate paths to compatibility-only.
-- **D:** observed raw/typed split on exact `main` -> review of override, invalid-input, aggregate and provenance paths -> bounded governance decision.
-- **Ω:** 0.95 for repository-static API conflict and decision shape; implementation remains unverified.
-- **Λ:** revise if consumer inventory proves a required alternative API, strict reference parity is technically impossible with documented evidence, or Owner rejects this proposal.
+- **Δ:** selects a fixed, typed, provenance-bearing HFD/DFA authority boundary; adds consumer migration, generated-mirror, numerical-failure, sunset and entropy non-claim gates.
+- **D:** exact-main raw/typed split -> two Codex review passes -> repository evidence for engine raw use, Edge hand-port and transition registry -> bounded scoped decision.
+- **Ω:** 0.95 for repository-static conflict and decision shape; implementation and activation remain unverified.
+- **Λ:** revise if consumer inventory proves a required alternative API, strict parity is technically impossible with documented evidence, parent entropy gates change, or Owner rejects this proposal.
