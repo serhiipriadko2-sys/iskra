@@ -1,5 +1,6 @@
 import {
   createStatelessSymbiosisProfile,
+  type ConsentDecision,
   type ConsentReceipt,
   type MemoryMode,
   type SymbiosisActionReceipt,
@@ -85,6 +86,7 @@ const createConsentedProfile = (): SymbiosisProfile => ({
     'memory.write.personal': 'ASK_EACH',
     'memory.write.sensitive': 'ASK_EACH',
     'memory.promote.shadow': 'ASK_EACH',
+    'depth.surgery': 'ASK_EACH',
   },
 });
 
@@ -99,6 +101,26 @@ const persistState = (state: SymbiosisState): void => {
   storageBoundary.setItem(PROFILE_KEY, JSON.stringify(state.profile));
   storageBoundary.setItem(RECEIPTS_KEY, JSON.stringify(state.receipts));
   storageBoundary.setItem(ACTION_RECEIPTS_KEY, JSON.stringify(state.actionReceipts));
+};
+
+const appendConsentReceipt = (
+  state: SymbiosisState,
+  scope: SymbiosisPermissionKey,
+  decision: ConsentDecision,
+  summary: string,
+  expiresAt: string | null,
+): ConsentReceipt => {
+  const receipt: ConsentReceipt = {
+    id: createReceiptId(),
+    scope,
+    decision,
+    plain_language_summary: summary,
+    granted_at: new Date().toISOString(),
+    expires_at: expiresAt,
+    profile_version: state.profile.version,
+  };
+  persistState({ ...state, receipts: [...state.receipts, receipt] });
+  return receipt;
 };
 
 export const symbiosisService = {
@@ -149,19 +171,26 @@ export const symbiosisService = {
     if (!state || state.profile.memory_mode !== 'CONSENTED') return null;
     if ((state.profile.memory_permissions[scope] ?? 'NONE') === 'NONE') return null;
 
-    const now = new Date();
-    const receipt: ConsentReceipt = {
-      id: createReceiptId(),
-      scope,
-      decision: 'GRANTED',
-      plain_language_summary: summary,
-      granted_at: now.toISOString(),
-      expires_at: new Date(now.getTime() + ttlMinutes * 60_000).toISOString(),
-      profile_version: state.profile.version,
-    };
-    const receipts = [...state.receipts, receipt];
-    persistState({ ...state, receipts });
-    return receipt;
+    const expiresAt = new Date(Date.now() + Math.max(1, ttlMinutes) * 60_000).toISOString();
+    return appendConsentReceipt(state, scope, 'GRANTED', summary, expiresAt);
+  },
+
+  denyConsent(
+    scope: SymbiosisPermissionKey,
+    summary: string,
+  ): ConsentReceipt | null {
+    const state = this.getState();
+    if (!state) return null;
+    return appendConsentReceipt(state, scope, 'DENIED', summary, null);
+  },
+
+  revokeConsent(
+    scope: SymbiosisPermissionKey,
+    summary: string,
+  ): ConsentReceipt | null {
+    const state = this.getState();
+    if (!state || !this.getCurrentConsent(scope)) return null;
+    return appendConsentReceipt(state, scope, 'REVOKED', summary, null);
   },
 
   recordActionReceipt(receipt: SymbiosisActionReceipt): boolean {
@@ -185,12 +214,15 @@ export const symbiosisService = {
   ): ConsentReceipt | null {
     const profile = this.getProfile();
     if (!profile) return null;
-    return [...this.getReceipts()].reverse().find(receipt =>
-      receipt.scope === scope &&
-      receipt.decision === 'GRANTED' &&
-      receipt.profile_version === profile.version &&
-      (receipt.expires_at === null || Date.parse(receipt.expires_at) > Date.parse(now)),
-    ) ?? null;
+
+    const latestDecision = [...this.getReceipts()].reverse().find(receipt =>
+      receipt.scope === scope && receipt.profile_version === profile.version,
+    );
+    if (!latestDecision || latestDecision.decision !== 'GRANTED') return null;
+    if (latestDecision.expires_at && Date.parse(latestDecision.expires_at) <= Date.parse(now)) {
+      return null;
+    }
+    return latestDecision;
   },
 
   exportState(): SymbiosisState | null {
