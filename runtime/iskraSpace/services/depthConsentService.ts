@@ -20,13 +20,12 @@ export interface DepthActionReceiptResult {
   verified: boolean;
 }
 
-const verifyActionReceipt = (
-  receipt: SymbiosisActionReceipt,
-): boolean => symbiosisService.getActionReceipts().some(item =>
-  item.action === receipt.action &&
-  item.permission_ref === receipt.permission_ref &&
-  item.result === receipt.result,
-);
+const findActionReceipt = (
+  permissionRef: string,
+): SymbiosisActionReceipt | null =>
+  symbiosisService.getActionReceipts().find(item =>
+    item.permission_ref === permissionRef,
+  ) ?? null;
 
 export const depthConsentService = {
   grant(summary: string, ttlMinutes: DepthConsentTtlMinutes): ConsentReceipt | null {
@@ -55,7 +54,7 @@ export const depthConsentService = {
     result: DepthActionResult,
     evidenceRefs: string[],
   ): DepthActionReceiptResult {
-    const receipt: SymbiosisActionReceipt = {
+    const candidate: SymbiosisActionReceipt = {
       action,
       requested_by: 'USER',
       permission_ref: permissionRef,
@@ -63,11 +62,12 @@ export const depthConsentService = {
       read_back: 'NOT_APPLICABLE',
       evidence_refs: evidenceRefs,
     };
-    const stored = symbiosisService.recordActionReceipt(receipt);
+    const stored = symbiosisService.recordActionReceipt(candidate);
+    const receipt = stored ? findActionReceipt(permissionRef) ?? candidate : candidate;
     return {
       receipt,
       stored,
-      verified: stored && verifyActionReceipt(receipt),
+      verified: stored && receipt.read_back === 'VERIFIED',
     };
   },
 };
