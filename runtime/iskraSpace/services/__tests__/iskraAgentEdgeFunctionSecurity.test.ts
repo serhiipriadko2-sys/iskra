@@ -30,18 +30,20 @@ describe('iskra-agent Edge Function security boundary', () => {
     const tokenCheck = edgeFunctionSource.indexOf('const token = extractBearerToken(req);');
     const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token);');
     const quotaCheck = edgeFunctionSource.indexOf('const boundary = await enforceAiRequestBoundary(');
+    const payloadRead = edgeFunctionSource.indexOf('const parsedBody = await readBoundedJsonBody(req);');
     const providerConfig = edgeFunctionSource.indexOf('const agentId = Deno.env.get("AGENT_ID")');
-    const payloadRead = edgeFunctionSource.indexOf('const payload = await req.json()');
     const upstreamCall = edgeFunctionSource.indexOf('const agentResponse = await fetch(');
 
     expect(originCheck).toBeGreaterThan(-1);
     expect(tokenCheck).toBeGreaterThan(originCheck);
     expect(jwtCheck).toBeGreaterThan(tokenCheck);
     expect(quotaCheck).toBeGreaterThan(jwtCheck);
-    expect(providerConfig).toBeGreaterThan(quotaCheck);
     expect(payloadRead).toBeGreaterThan(quotaCheck);
-    expect(upstreamCall).toBeGreaterThan(quotaCheck);
+    expect(providerConfig).toBeGreaterThan(payloadRead);
+    expect(upstreamCall).toBeGreaterThan(payloadRead);
     expect(edgeFunctionSource).toContain("from '../_shared/aiBoundary.ts'");
+    expect(edgeFunctionSource).toContain("from '../_shared/aiContentPolicy.ts'");
+    expect(edgeFunctionSource).not.toContain('req.json()');
     expect(edgeFunctionSource).not.toContain('rlBuckets');
     expect(edgeFunctionSource).not.toContain('console.');
   });
