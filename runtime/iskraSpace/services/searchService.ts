@@ -1,7 +1,6 @@
 import { storageService } from './storageService';
 import { memoryService } from './memoryService';
 import { MemoryNode, MemoryNodeLayer, SearchFilters, SearchResult, Task, JournalEntry } from '../types';
-import type { IskraAIService } from './geminiService';
 import { aiInteractionCoordinator } from './aiInteractionCoordinator';
 import { graphServiceSupabase } from './graphServiceSupabase';
 import { isSupabaseAvailable } from './supabaseClient';
@@ -40,10 +39,6 @@ class SearchService {
       mag2 += v2[i] * v2[i];
     }
     return dot / (Math.sqrt(mag1) * Math.sqrt(mag2));
-  }
-
-  private getAi(): IskraAIService {
-    return aiInteractionCoordinator.service;
   }
 
   private isRemoteEmbeddingAllowed(doc: { type: SearchResult['type'] }): boolean {
@@ -151,7 +146,7 @@ class SearchService {
     );
 
     const queryVector = this.remoteSemanticEnabled
-      ? await this.getAi().getEmbedding(query)
+      ? await aiInteractionCoordinator.getEmbedding(query)
       : [];
     const useSemantic = queryVector.length > 0;
 
@@ -172,7 +167,7 @@ class SearchService {
 
         if (canUseSemantic) {
           if (!this.vectors.has(candidate.doc.id)) {
-            const vec = await this.getAi().getEmbedding(candidate.doc.text.substring(0, 1000));
+            const vec = await aiInteractionCoordinator.getEmbedding(candidate.doc.text.substring(0, 1000));
             this.vectors.set(candidate.doc.id, vec);
           }
 
