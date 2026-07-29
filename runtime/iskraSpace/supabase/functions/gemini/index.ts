@@ -8,6 +8,7 @@ import {
   type AiBoundaryConfig,
   type VerifiedAiUser,
 } from '../_shared/aiBoundary.ts';
+import { readBoundedJsonBody } from '../_shared/aiContentPolicy.ts';
 
 type AiProvider = 'gemini' | 'openai';
 type RequestedProvider = AiProvider | 'auto';
@@ -429,13 +430,12 @@ Deno.serve(async (req) => {
     return json({ error: boundary.error }, { status: boundary.status }, origin);
   }
 
-  let payload: AiProxyPayload;
-  try {
-    payload = await req.json();
-  } catch {
-    return json({ error: 'Invalid JSON body' }, { status: 400 }, origin);
+  const parsedBody = await readBoundedJsonBody(req);
+  if (!parsedBody.ok) {
+    return json({ error: parsedBody.code }, { status: parsedBody.status }, origin);
   }
 
+  const payload = parsedBody.value.body as AiProxyPayload;
   const action = payload.action;
   if (!action) {
     return json({ error: 'Missing action' }, { status: 400 }, origin);
