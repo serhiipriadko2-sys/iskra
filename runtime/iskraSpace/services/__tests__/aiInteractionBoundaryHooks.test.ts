@@ -11,6 +11,7 @@ import type {
 const createDependencies = (): AiInteractionHookDependencies => ({
   isCapabilityEnabled: vi.fn(() => true),
   getCurrentConsent: vi.fn(() => null),
+  hasUsedConsentReceipt: vi.fn(() => false),
   trackReceipt: vi.fn(),
   captureFailure: vi.fn(),
 });
@@ -43,7 +44,7 @@ describe('default AI interaction boundary hooks', () => {
     expect(dependencies.isCapabilityEnabled).toHaveBeenCalledWith('textToSpeech');
   });
 
-  it('requires a current depth.surgery receipt for deep-processing routes', async () => {
+  it('requires a current unused depth.surgery receipt for deep-processing routes', async () => {
     const dependencies = createDependencies();
     const hooks = createDefaultAiInteractionBoundaryHooks(dependencies);
     const research = context('research.deep', 'performDeepResearch');
@@ -55,6 +56,13 @@ describe('default AI interaction boundary hooks', () => {
 
     vi.mocked(dependencies.getCurrentConsent).mockReturnValue({ id: 'consent-1' });
     expect(await hooks.consent?.(research)).toEqual({ allowed: true });
+
+    vi.mocked(dependencies.hasUsedConsentReceipt).mockReturnValue(true);
+    expect(await hooks.consent?.(research)).toEqual({
+      allowed: false,
+      reason: 'consent-consumed:depth.surgery',
+    });
+    expect(dependencies.hasUsedConsentReceipt).toHaveBeenCalledWith('consent-1');
   });
 
   it('emits content-free receipt telemetry and reports non-success outcomes', async () => {
