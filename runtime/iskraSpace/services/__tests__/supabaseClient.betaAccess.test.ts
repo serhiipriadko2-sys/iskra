@@ -139,4 +139,14 @@ describe('closed-beta Supabase client boundary', () => {
     await expect(client.getAccessToken()).resolves.toBe('member-access-token');
     expect(mocks.client.from).toHaveBeenCalledWith('users');
   });
+
+  it('creates a stateless client pinned to the captured access token', async () => {
+    const client = await import('../supabaseClient');
+    const supabaseJs = await import('@supabase/supabase-js');
+
+    expect(client.createPinnedSupabaseClient('captured-token')).toBe(mocks.client);
+    const options = vi.mocked(supabaseJs.createClient).mock.calls.at(-1)?.[2];
+    expect(options?.accessToken).toBeTypeOf('function');
+    await expect(options?.accessToken?.()).resolves.toBe('captured-token');
+  });
 });

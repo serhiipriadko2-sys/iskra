@@ -57,12 +57,15 @@ test.describe('Onboarding Flow', () => {
     await completeStatelessOnboarding(page);
 
     await expect
-      .poll(async () => page.evaluate(() => localStorage.getItem('iskra-onboarding-complete')))
+      .poll(async () => page.evaluate(
+        () => localStorage.getItem('iskra.principal.v1:e2e-local:iskra-onboarding-complete')
+      ))
       .toBe('true');
+    expect(await page.evaluate(() => localStorage.getItem('iskra-onboarding-complete'))).toBeNull();
 
     const storedState = await page.evaluate(
       () =>
-        Object.entries(localStorage).find(([, value]) => value.includes('STATELESS'))?.[1] ?? null
+        localStorage.getItem('iskra.principal.v1:e2e-local:iskra-symbiosis-profile-v1')
     );
     expect(storedState).toContain('STATELESS');
   });

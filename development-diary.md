@@ -181,6 +181,8 @@
 - **Status:** Local verified; remote workflow confirmation pending after PR.
 
 ### JRN-20260608-002: IskraSpace Dual AI Provider Gateway
+- **Superseded:** ADR-20260728-001 replaces this runtime decision; this entry is
+  historical provenance, not the current deployment contract.
 - **Context:** User accepted keeping both Gemini and OpenAI for `runtime/iskraSpace`, with provider keys kept out of the browser and no live Supabase mutation in this pass.
 - **Actions:** Added repo-side provider routing to the `gemini` Supabase Edge Function, kept Gemini as default, added OpenAI generation through Responses API and embeddings through the embeddings API, preserved native Gemini streaming, added client-safe `VITE_AI_PROVIDER`/`VITE_AI_EDGE_FUNCTION_SLUG` selectors, and documented the rollout boundary.
 - **Evidence:** Source changes in `runtime/iskraSpace/services/geminiService.ts` and `runtime/iskraSpace/supabase/functions/gemini/index.ts`; operation receipt `docs/operations/iskraspace_dual_ai_provider_gateway_2026-06-08.md`; ADR `ADR-20260608-002`.
@@ -258,3 +260,20 @@
 - **Actions:** synchronized runtime/schema contracts, added 3 regression tests and static token gates, rebuilt skill ZIP, study submanifest, full manifest, release ZIP and sidecar.
 - **Evidence:** static PASS; dynamic 25/25; manifest 121/121; archive 123 files; round-trip 123/123; ZIP sha256 `73d7ee6f7e77926234be7250fd3ab7b1b4957abb0361dbf51e4bbb90ae587e25`, bytes `1178388`.
 - **Next:** fresh-checkout verification, push, green CI, review-thread closure, merge decision.
+
+### JRN-20260728-001: IskraSpace P0 production-hardening source candidate
+- **Context:** Production review found high dependency advisories, a broken dual-pnpm audit gate, caller-controlled AI provider/model routing, quota-before-validation, generic ingress-IP trust, unbounded upstream lifetimes, shared browser user state and partial backup import.
+- **Actions:** Isolated work from current `origin/main`; remediated both dependency universes; made CI audit native; replaced dual-provider routing with canonical Gemini and canonical Workspace Agent egress; wired bounded body/schema/content policy before quota; added time/stream limits; introduced principal-scoped storage, one-owner legacy migration, sign-out eviction and transactional import rollback; synchronized environment and production documents.
+- **Evidence:** Candidate refreshed onto GitHub-observed `main` `0fd486b3ab57237668cd3a253a7db58792119b25`; Production Deployment run `30379847259` reproduces the dependency blocker; production Supabase read-back observes pre-hardening `gemini` v9 and `iskra-agent` v4. Local verification: audits 0 vulnerabilities; Deno 21/21; IskraSpace Vitest 829 passed / 27 skipped; Chromium E2E 28/28; legacy runtime 265/265; bundle/repository contracts/canon index/ledger PASS. Artifact: `runtime/iskraSpace/PRODUCTION_HARDENING_2026-07-28.md`.
+- **Risk:** Source verification is not live deployment proof. Staging secret/header semantics, Edge read-back, advisor/log review and two-principal browser acceptance remain open.
+- **Next:** finish the exact-branch verification bundle, obtain review/merge authority, then execute exact-commit staging acceptance before production.
+- **Status:** local source candidate verified; no live Supabase mutation or staging acceptance.
+
+### JRN-20260728-002: IskraSpace clean staging deployment and acceptance
+- **Context:** PR #316 required exact staging deployment of `gemini` and `iskra-agent`, read-back, negative/two-principal acceptance, advisor/log review and a production gate. Initial CI also exposed a `minimatch@3` versus `brace-expansion@5` CommonJS export incompatibility.
+- **Actions:** Replaced the incompatible raw root `brace-expansion@5` override with a local facade over the audited 5.0.8 implementation that preserves legacy callable CommonJS and modern named exports; upgraded the separate legacy npm lint tree to ESLint 10 so it uses native `minimatch@10` / `brace-expansion@5.0.8`. Deleted a disposable preview after its branch-only credentials appeared in local command output. Created clean data-less preview `rejqxblontqjycldniyz`; confirmed 36 migrations; configured staging-only secret names with `AI_EDGE_TEST_MODE=true`; deployed both approved functions from exact source snapshot `67c8a512253404a52f0084a801b6acc231233c85`; downloaded and compared all six files; ran the durable four-principal acceptance harness; reviewed advisors and Edge/Auth/Postgres/branch-action logs.
+- **Evidence:** Both functions ACTIVE with `verify_jwt=true`; bundle hashes `2fae94308eae99ac4c12d9ac4a1159c94660991f2debd30df37ae9ca6d6caf3d` and `7087ffb78320af157f69d40055730fce5c947edf97cb220e103a3a728ceb6d98`; source read-back 6/6 exact; acceptance 7/7 files and 61/61 tests; four principals and fixture-owned windows cleaned while unrelated shared-IP windows were preserved; advisors 0 ERROR; `pnpm audit --audit-level moderate` 0 vulnerabilities; root `pnpm verify` PASS.
+- **Finding:** `x-forwarded-for` was empirically client-spoofable for IP quota. `cf-connecting-ip` resisted the same eleven-value spoof matrix and enforced request eleven as `429`.
+- **Risk:** Pre-fix automatic preview bundling used wrong default paths; explicit config-relative entrypoints and repository-root deploys now cover that source cause, but the new GitHub preview check must still pass independently. Manual scope proves only `gemini` and `iskra-agent`. Test mode proves no-upstream boundary behavior, not real provider success. Production remains unchanged.
+- **Next:** push the follow-up commit, require green exact-head CI, then perform production secret-name/pre-deploy rollback capture, exact-source deploy/read-back, negative-only smoke and post-deploy log review.
+- **Status:** verified-live-staging; production promotion pending.

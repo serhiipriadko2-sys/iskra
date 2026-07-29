@@ -39,10 +39,9 @@ export const chatCommand = new Command("chat")
     console.log(chalk.gray("Type 'exit' or 'quit' to end the session\n"));
 
     // Interactive chat loop
-    let continueChat = true;
     const history: ChatMessage[] = [];
 
-    while (continueChat) {
+    while (true) {
       const { message } = await inquirer.prompt([
         {
           type: "input",
@@ -56,7 +55,6 @@ export const chatCommand = new Command("chat")
       
       if (trimmedMessage === "exit" || trimmedMessage === "quit") {
         console.log(chalk.cyan("\n⟡ До встречи. Храни различие.\n"));
-        continueChat = false;
         break;
       }
 

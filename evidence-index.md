@@ -203,6 +203,9 @@
 - **Status:** Plan recorded; execution pending explicit approval.
 
 ### EVI-20260608-004: IskraSpace Dual AI Provider Gateway
+- **Superseded:** ADR-20260728-001 and EVI-20260728-001 remove this routing
+  from the current production source. The facts below are retained only for
+  commit lineage.
 - **Assertion:** `runtime/iskraSpace` now has repo-side support for Gemini default plus optional OpenAI routing without browser-side provider keys.
 - **Evidence:**
   - `runtime/iskraSpace/services/geminiService.ts` adds client-safe `VITE_AI_PROVIDER` and `VITE_AI_EDGE_FUNCTION_SLUG` support while preserving the existing app-facing service API.
@@ -294,3 +297,19 @@
 - **Assertion:** six additional P2 contract/aggregation findings are closed on the exact release artifact.
 - **Evidence:** ZIP `ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.zip`, 1,178,388 bytes, sha256 `73d7ee6f7e77926234be7250fd3ab7b1b4957abb0361dbf51e4bbb90ae587e25`; static PASS; dynamic 25/25; manifest 121/121; archive 123 files; round-trip 123/123.
 - **Supersedes:** prior rc.3 post-review ZIP hash `c882136db4882582fe5dfdb709bf8d1bf9d033d9f7bf1933afd79300357ddbc9`.
+
+### EVI-20260728-001: IskraSpace P0 source-hardening candidate
+- **Assertion:** The isolated local branch implements the source-side dependency, AI-boundary and principal-data controls in ADR-20260728-001.
+- **Evidence:** Candidate refreshed onto GitHub-observed `main` `0fd486b3ab57237668cd3a253a7db58792119b25`; Production Deployment run `30379847259` failed on the exact dependency findings repaired here; production read-back observed `gemini` v9 SHA-256 `e0f0fef8a987370f0ac89f908c85f0cb41765a1f6b182c943841cf207a3c7a1b` and `iskra-agent` v4 SHA-256 `a89d55997f931d8efc32b0297f7777d83838dcf47effe1f05ce9899b9c56e4a4`. Source evidence: `runtime/iskraSpace/PRODUCTION_HARDENING_2026-07-28.md`; `runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy.ts`; `runtime/iskraSpace/supabase/functions/_shared/aiBoundary.ts`; `runtime/iskraSpace/services/principalStorage.ts`; updated lockfiles/workflow and executable contract tests.
+- **Proof boundary:** local source/tests plus read-only GitHub/Supabase observations. GitHub merge, Supabase live configuration/deployment, staging acceptance and production activation are not asserted.
+- **Local verification:** root/runtime audits 0 vulnerabilities; Deno 21/21; IskraSpace Vitest 829 passed / 27 skipped; Chromium E2E 28/28; legacy runtime 265/265; bundle budget, Edge metrics parity, Supabase repository contracts, 3,657-node canon index, 983-file ledger and root `pnpm verify` PASS. Added-line secret scan and diff hygiene PASS.
+- **Status:** local source candidate verified; live mutation and staging acceptance not performed.
+
+### EVI-20260728-002: IskraSpace exact-source staging acceptance
+- **Assertion:** The P0 Edge boundary is deployed and verified on a clean data-less preview project, with exact source/JWT read-back, negative matrix, two-principal isolation, cleanup and post-run advisor/log review.
+- **Evidence:** PR [#316](https://github.com/serhiipriadko2-sys/iskra/pull/316); final deployed Edge/shared source snapshot `67c8a512253404a52f0084a801b6acc231233c85`; preview `rejqxblontqjycldniyz`; 36/36 migrations; `gemini` bundle SHA-256 `2fae94308eae99ac4c12d9ac4a1159c94660991f2debd30df37ae9ca6d6caf3d`; `iskra-agent` bundle SHA-256 `7087ffb78320af157f69d40055730fce5c947edf97cb220e103a3a728ceb6d98`; both ACTIVE with `verify_jwt=true`; six downloaded files byte-identical; staging acceptance 7/7 files and 61/61 tests PASS; cleanup 4/4 principals and all fixtures; `docs/operations/iskraspace_staging_acceptance_2026-07-28.md`.
+- **Ingress finding:** caller-selected `x-forwarded-for` bypassed the IP limiter; staging-proven `cf-connecting-ip` produced ten explicit no-upstream responses followed by `429`. Production configuration is pinned to the latter until superseded by a new ingress receipt.
+- **Advisor/log boundary:** 0 advisor ERROR; 33 security notices and 31 performance INFO notices. Edge statuses were `401×3`, `403×3`, `502×5`; Postgres recorded only expected `audit_log` permission and Graph-ownership denials; no Edge panic, uncaught exception, fatal or out-of-memory marker.
+- **Containment:** an earlier disposable preview emitted branch credentials into local tool output; no value was committed, that preview was deleted, and the full sequence was repeated on the clean preview named above.
+- **Proof boundary:** `AI_EDGE_TEST_MODE=true`; no billed provider call, production deployment, browser UI acceptance or GitHub merge is asserted.
+- **Status:** verified-live-staging; production promotion pending exact-head CI and production preflight.

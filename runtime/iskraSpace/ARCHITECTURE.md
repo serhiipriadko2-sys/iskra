@@ -1,6 +1,6 @@
 # ISKRA SPACE — Technical Architecture
 
-**Version:** 0.3.3 • **Updated:** 2026-07-01 • **Tests:** 636 passing / 3 skipped
+**Version:** 0.3.3 • **Updated:** 2026-07-28
 
 ---
 
@@ -12,9 +12,9 @@ Iskra Space — фронтенд-приложение React/Vite с многоу
 
 - **Runtime:** React 19.2 + TypeScript 6.0.3
 - **Build:** Vite 6.4.3
-- **AI:** Supabase Edge AI gateway (`gemini` function, Gemini default, OpenAI optional)
-- **Tests:** Vitest (636 passed / 3 skipped on 2026-07-01)
-- **Storage:** Supabase Auth/RLS + localStorage offline cache
+- **AI:** Supabase Edge AI gateway with a server-owned Gemini model allowlist
+- **Tests:** Vitest + Deno policy/boundary suites; use current CI receipts, not a hard-coded count
+- **Storage:** Supabase Auth/RLS + principal-scoped localStorage offline cache
 
 ---
 
@@ -76,7 +76,8 @@ Iskra Space — фронтенд-приложение React/Vite с многоу
 | Service | Purpose | Key Methods |
 |---------|---------|-------------|
 | `searchService` | Web search integration | `search` |
-| `storageService` | localStorage wrapper | `get`, `set`, `remove`, `exportAllData` |
+| `principalStorage` | Per-user namespace, legacy migration, transactional rollback | `bind`, `migrateLegacy`, `applyTransaction`, `clearBoundPrincipal` |
+| `storageService` | Typed principal data and backup lifecycle | `bindPrincipal`, `exportAllData`, `importAllData`, `releasePrincipal` |
 | `soundService` | Audio feedback | `play`, `setVolume` |
 | `makiService` | Maki (🌸) support system | `getMakiResponse` |
 | `evidenceService` | SIFT evidence tracking | `addEvidence`, `getEvidence` |
@@ -273,7 +274,7 @@ iskraSpace/
 │   ├── EvalDashboard.tsx
 │   ├── GlossaryView.tsx
 │   └── ...
-├── services/             # Business logic (27 services)
+├── services/             # Business logic and runtime boundaries
 │   ├── geminiService.ts
 │   ├── policyEngine.ts
 │   ├── evalService.ts

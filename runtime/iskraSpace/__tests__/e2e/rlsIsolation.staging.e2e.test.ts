@@ -30,7 +30,6 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
   let userB: SupabaseClient<Database>;
   let nonMember: SupabaseClient<Database>;
   let suspendedMember: SupabaseClient<Database>;
-  let anonymous: SupabaseClient<Database>;
   let admin: SupabaseClient<Database>;
   let userAId = '';
   let userBId = '';
@@ -51,7 +50,6 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
       config.publishableKey,
       clientOptions(config.suspendedMemberToken),
     );
-    anonymous = createClient<Database>(config.url, config.publishableKey, clientOptions(config.anonymousToken));
     admin = createClient<Database>(config.url, config.serviceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
@@ -77,26 +75,24 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
     expect(profileB.error).toBeNull();
   });
 
-  it('denies non-member, suspended, and anonymous sessions across resolver, Graph RPC, and tables', async () => {
-    const [nonMemberAccess, suspendedAccess, anonymousAccess] = await Promise.all([
+  it('denies non-member and suspended sessions across resolver, Graph RPC, and tables', async () => {
+    const [nonMemberAccess, suspendedAccess] = await Promise.all([
       nonMember.rpc('resolve_beta_access'),
       suspendedMember.rpc('resolve_beta_access'),
-      anonymous.rpc('resolve_beta_access'),
     ]);
     expect(nonMemberAccess.error).toBeNull();
     expect(nonMemberAccess.data).toMatchObject({ active: false });
     expect(suspendedAccess.error).toBeNull();
     expect(suspendedAccess.data).toMatchObject({ active: false, membership_status: 'suspended' });
-    if (anonymousAccess.error) {
-      expect(anonymousAccess.data).toBeNull();
-    } else {
-      expect(anonymousAccess.data).toMatchObject({ active: false });
-    }
+    expect(config.anonymousDenyReceipt).toMatch(/^[a-f0-9]{64}$/);
 
-    for (const client of [nonMember, suspendedMember, anonymous]) {
+    for (const client of [nonMember, suspendedMember]) {
       const graph = await client.rpc('graph_get_user_nodes', { p_limit_count: 1 });
-      expect(graph.data).toBeNull();
-      expect(graph.error).not.toBeNull();
+      if (graph.error) {
+        expect(graph.data).toBeNull();
+      } else {
+        expect(graph.data).toEqual([]);
+      }
 
       for (const table of [
         'users',

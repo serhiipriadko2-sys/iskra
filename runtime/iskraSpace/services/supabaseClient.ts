@@ -6,7 +6,7 @@
  */
 
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js';
-import { safeStorage } from './storageCompat';
+import { deviceStorage } from './storageCompat';
 import type { Database } from '../types/supabase';
 import { getRuntimeConfig } from '../config/runtimeConfig';
 
@@ -34,6 +34,19 @@ export const supabase: SupabaseClient<Database> = createClient<Database>(effecti
     autoRefreshToken: true,
   },
 });
+
+/**
+ * Creates a stateless data client pinned to one already-verified beta session.
+ *
+ * The accessToken callback disables this client's auth namespace and prevents a
+ * later browser account transition from retargeting in-flight PostgREST/RPC
+ * writes. Expired tokens fail closed; the next sync cycle captures a new token.
+ */
+export function createPinnedSupabaseClient(accessToken: string): SupabaseClient<Database> {
+  return createClient<Database>(effectiveSupabaseUrl, effectiveSupabaseAnonKey, {
+    accessToken: async () => accessToken,
+  });
+}
 
 export type BetaAccessDenyReason =
   | 'not-configured'
@@ -248,7 +261,7 @@ export async function hasSupabaseSession(): Promise<boolean> {
 }
 
 export function getLegacyDeviceId(): string | null {
-  return safeStorage.getItem('iskra_device_id');
+  return deviceStorage.getItem('iskra_device_id');
 }
 
 export async function isSupabaseAvailable(): Promise<boolean> {

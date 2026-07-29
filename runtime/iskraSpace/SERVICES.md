@@ -378,21 +378,40 @@ search(query: string, options?: SearchOptions): Promise<SearchResult[]>
 
 ### storageService
 
-localStorage wrapper with type safety.
+Principal-scoped typed data and backup lifecycle. `AuthGate` must bind the
+verified Supabase user before application views mount.
 
 ```typescript
-// Get value
-get<T>(key: string, defaultValue?: T): T | null
+bindPrincipal(userId: string): void
 
-// Set value
-set<T>(key: string, value: T): void
+releasePrincipal(options?: { clear?: boolean }): void
 
-// Remove value
-remove(key: string): void
+exportAllData(): string
 
-// Clear all
-clear(): void
+// Validates the complete v1 backup (max 16 MiB), then commits atomically.
+importAllData(json: string): void
+
+// Destructive Phoenix reset: clears all localStorage for this app origin,
+// including the Supabase session and device-wide consent, then reloads.
+clearAllData(): void
 ```
+
+---
+
+### principalStorage
+
+Low-level namespace and transaction boundary used by user-owned services.
+
+```typescript
+bind(principalId: string): void
+migrateLegacy(keys: readonly string[]): boolean
+applyTransaction(mutations: readonly StorageMutation[]): void
+clearBoundPrincipal(): number
+```
+
+Raw keys use
+`iskra.principal.v1:<supabase-user-id>:<logical-key>`. Do not use this service
+for device-wide analytics/error-tracking consent.
 
 ---
 

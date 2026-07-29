@@ -52,13 +52,13 @@ describe('AI Edge closed-beta quota contract', () => {
     const iskraAgent = readOrEmpty(iskraAgentPath);
 
     for (const edgeSource of [gemini, iskraAgent]) {
-      expect(edgeSource).toContain('parseVerifiedAiUser(await res.json())');
+      expect(edgeSource).toContain('parseVerifiedAiUser(await response.json())');
       expect(edgeSource).not.toContain('JWT validation error');
     }
     expect(sharedBoundary).toContain('record.is_anonymous === true || anonymousProvider');
     expect(sharedBoundary).toContain("provider === 'anonymous'");
 
-    expect(iskraAgent).toMatch(/try\s*\{\s*const agentResponse = await fetch\(/);
+    expect(iskraAgent).toMatch(/try\s*\{\s*const response = await fetch\(target,/);
     expect(iskraAgent).toContain('agent_upstream_unavailable');
     expect(iskraAgent).not.toContain('risks: [raw]');
   });
