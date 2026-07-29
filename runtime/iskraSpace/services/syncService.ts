@@ -8,7 +8,7 @@
 import { ensureSupabaseSession, getLegacyDeviceId, isSupabaseAvailable } from './supabaseClient';
 import { supabaseService } from './supabaseService';
 import { graphServiceSupabase } from './graphServiceSupabase';
-import { principalStorage } from './principalStorage';
+import { principalStorage, principalStorageKeyFor } from './principalStorage';
 import {
   isMemoryLayer,
   isMemoryNodeType,
@@ -28,14 +28,10 @@ export class SyncService {
     }
   }
 
-  private async getOfflineQueueOwnerKeys(): Promise<string[]> {
+  private getOfflineQueueOwnerKeys(authenticatedUserId: string): string[] {
     if (typeof window === 'undefined') return [];
 
-    const ownerKeys = new Set<string>();
-    const authenticatedUserId = await ensureSupabaseSession().catch(() => null);
-    if (authenticatedUserId) {
-      ownerKeys.add(authenticatedUserId);
-    }
+    const ownerKeys = new Set<string>([authenticatedUserId]);
 
     // Legacy device id is read only as a migration source for old offline queues.
     const legacyDeviceId = getLegacyDeviceId();
@@ -46,19 +42,29 @@ export class SyncService {
     return Array.from(ownerKeys);
   }
 
+  private async isPinnedPrincipalCurrent(principalId: string): Promise<boolean> {
+    if (principalStorage.activePrincipal() !== principalId) return false;
+    const authenticatedUserId = await ensureSupabaseSession().catch(() => null);
+    return authenticatedUserId === principalId;
+  }
+
   /**
    * Synchronize all offline-cached data back to Supabase
    */
   public async syncAllPending(): Promise<void> {
     if (this.isSyncing) return;
-    
-    const isOnline = await isSupabaseAvailable().catch(() => false);
-    if (!isOnline) return;
-
     this.isSyncing = true;
     try {
-      await this.syncChatHistory();
-      await this.syncMemoryNodes();
+      const isOnline = await isSupabaseAvailable().catch(() => false);
+      if (!isOnline) return;
+
+      const syncPrincipal = await ensureSupabaseSession().catch(() => null);
+      if (!syncPrincipal || principalStorage.activePrincipal() !== syncPrincipal) return;
+
+      await this.syncChatHistory(syncPrincipal);
+      if (await this.isPinnedPrincipalCurrent(syncPrincipal)) {
+        await this.syncMemoryNodes(syncPrincipal);
+      }
     } catch (error) {
       console.error('[SyncService] Synchronization error:', error);
     } finally {
@@ -69,8 +75,8 @@ export class SyncService {
   /**
    * Synchronize chat history queue
    */
-  private async syncChatHistory(): Promise<void> {
-    const ownerKeys = await this.getOfflineQueueOwnerKeys();
+  private async syncChatHistory(syncPrincipal: string): Promise<void> {
+    const ownerKeys = this.getOfflineQueueOwnerKeys(syncPrincipal);
 
     for (const ownerKey of ownerKeys) {
       const cachedKey = `chat_history_${ownerKey}`;
@@ -82,6 +88,7 @@ export class SyncService {
         if (!Array.isArray(messages)) continue;
 
         for (const msg of messages) {
+          if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
           // Supabase service writes to the current auth.uid(); ownerKey is queue provenance only.
           await supabaseService.addChatMessage(msg).catch(() => {});
         }
@@ -99,8 +106,8 @@ export class SyncService {
    * `memoryService` no longer performs eager background uploads; it only persists nodes
    * locally and marks them as `synced_to_cloud: false`.
    */
-  private async syncMemoryNodes(): Promise<void> {
-    const ownerKeys = await this.getOfflineQueueOwnerKeys();
+  private async syncMemoryNodes(syncPrincipal: string): Promise<void> {
+    const ownerKeys = this.getOfflineQueueOwnerKeys(syncPrincipal);
     const layers = ['archive', 'shadow'] as const;
 
     // 1. Migration path: legacy per-owner queues written by older app versions.
@@ -124,6 +131,7 @@ export class SyncService {
           let allMigrated = true;
           for (const node of nodes) {
             try {
+              if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
               if (!isMemoryLayer(node.layer) || !isMemoryNodeType(node.type)) {
                 allMigrated = false;
                 continue;
@@ -133,6 +141,7 @@ export class SyncService {
                 node.type,
                 typeof node.content === 'string' ? node.content : JSON.stringify(node.content)
               );
+              if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
               await graphServiceSupabase.buildConnections(syncedNode.id).catch(() => {});
             } catch {
               // Mark failure but keep processing other nodes in the queue.
@@ -152,8 +161,10 @@ export class SyncService {
     // 2. Primary path: current principal-scoped app-local memory stores.
     //    Never bind here: AuthGate owns the identity transition. A mismatch
     //    fails closed instead of reading another principal's cache.
-    const activePrincipal = principalStorage.activePrincipal();
-    if (!activePrincipal || !ownerKeys.includes(activePrincipal)) return;
+    if (
+      principalStorage.activePrincipal() !== syncPrincipal ||
+      !ownerKeys.includes(syncPrincipal)
+    ) return;
 
     const storageKeys: Record<typeof layers[number], string> = {
       archive: 'iskra-space-archive',
@@ -162,7 +173,8 @@ export class SyncService {
 
     for (const layer of layers) {
       const cachedKey = storageKeys[layer];
-      const cachedData = principalStorage.getItem(cachedKey);
+      const principalKey = principalStorageKeyFor(syncPrincipal, cachedKey);
+      const cachedData = localStorage.getItem(principalKey);
       if (!cachedData) continue;
 
       try {
@@ -178,12 +190,14 @@ export class SyncService {
 
         for (const node of unsynced) {
           try {
+            if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
             const syncedNode = await graphServiceSupabase.addNode(
               node.layer,
               node.type,
               typeof node.content === 'string' ? node.content : JSON.stringify(node.content)
             );
             // Automatically build connections in cloud GraphRAG
+            if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
             await graphServiceSupabase.buildConnections(syncedNode.id).catch(() => {});
 
             // Mark node as synced in our local copy
@@ -195,7 +209,8 @@ export class SyncService {
         }
 
         // Persist updated sync flags back to the same principal namespace.
-        principalStorage.setItem(cachedKey, JSON.stringify(updatedNodes));
+        if (!(await this.isPinnedPrincipalCurrent(syncPrincipal))) return;
+        localStorage.setItem(principalKey, JSON.stringify(updatedNodes));
       } catch (e) {
         console.warn(`[SyncService] Failed to sync memory layer from ${cachedKey}:`, e);
       }

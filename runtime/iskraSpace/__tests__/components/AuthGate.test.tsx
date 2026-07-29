@@ -87,7 +87,10 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.authCallback = null;
   mounts = 0;
-  mocks.getBetaSession.mockResolvedValue(granted('principal-a'));
+  mocks.bindPrincipal.mockReset();
+  mocks.getBetaSession.mockReset().mockResolvedValue(granted('principal-a'));
+  mocks.releasePrincipal.mockReset();
+  mocks.unsubscribe.mockReset();
 });
 
 afterEach(async () => {
@@ -127,9 +130,9 @@ describe('AuthGate principal boundary', () => {
     expect(mocks.releasePrincipal).toHaveBeenCalled();
   });
 
-  it('ignores an older access result after a newer sign-out check has completed', async () => {
+  it('ignores an older access result after a newer auth check has completed', async () => {
     const older = deferred<ReturnType<typeof granted>>();
-    const newer = deferred<{ status: 'denied'; reason: 'no-session' }>();
+    const newer = deferred<ReturnType<typeof granted>>();
     mocks.getBetaSession
       .mockImplementationOnce(() => older.promise)
       .mockImplementationOnce(() => newer.promise);
@@ -137,14 +140,14 @@ describe('AuthGate principal boundary', () => {
     await renderGate();
 
     await act(async () => {
-      mocks.authCallback?.('SIGNED_OUT');
-      newer.resolve({ status: 'denied', reason: 'no-session' });
+      mocks.authCallback?.('SIGNED_IN');
+      newer.resolve(granted('principal-b'));
       await Promise.resolve();
       await Promise.resolve();
     });
 
-    expect(mocks.releasePrincipal).toHaveBeenCalledWith({ clear: true });
-    expect(container?.querySelector('[data-testid="mount-id"]')).toBeNull();
+    expect(mocks.bindPrincipal).toHaveBeenLastCalledWith('principal-b');
+    expect(container?.querySelector('[data-testid="mount-id"]')).not.toBeNull();
 
     await act(async () => {
       older.resolve(granted('principal-a'));
@@ -153,6 +156,26 @@ describe('AuthGate principal boundary', () => {
     });
 
     expect(mocks.bindPrincipal).not.toHaveBeenCalledWith('principal-a');
+    expect(mocks.bindPrincipal).toHaveBeenLastCalledWith('principal-b');
+  });
+
+  it('closes the granted subtree even when signed-out storage eviction fails', async () => {
+    await renderGate();
+    expect(container?.querySelector('[data-testid="mount-id"]')).not.toBeNull();
+
+    mocks.getBetaSession.mockResolvedValue({ status: 'denied', reason: 'no-session' });
+    mocks.releasePrincipal.mockImplementation((options?: { clear?: boolean }) => {
+      if (options?.clear) throw new DOMException('blocked', 'SecurityError');
+    });
+
+    await act(async () => {
+      mocks.authCallback?.('SIGNED_OUT');
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
     expect(container?.querySelector('[data-testid="mount-id"]')).toBeNull();
+    expect(mocks.getBetaSession).toHaveBeenCalledTimes(1);
+    expect(mocks.releasePrincipal).toHaveBeenCalledWith({ clear: true });
   });
 });

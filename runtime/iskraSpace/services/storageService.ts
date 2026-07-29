@@ -126,6 +126,10 @@ function serializeImport(value: unknown): string {
   return serialized;
 }
 
+function backupByteLength(value: string): number {
+  return new TextEncoder().encode(value).byteLength;
+}
+
 export const storageService = {
   bindPrincipal(principalId: string): void {
     principalStorage.bind(principalId);
@@ -379,12 +383,16 @@ export const storageService = {
         responseMode: this.getResponseMode(),
         symbiosis: symbiosisService.exportState()
     };
-    return JSON.stringify(data, null, 2);
+    const exported = JSON.stringify(data, null, 2);
+    if (backupByteLength(exported) > MAX_BACKUP_BYTES) {
+      throw new Error('backup_export_too_large');
+    }
+    return exported;
   },
 
   importAllData(jsonString: string): void {
       try {
-          if (new TextEncoder().encode(jsonString).byteLength > MAX_BACKUP_BYTES) {
+          if (backupByteLength(jsonString) > MAX_BACKUP_BYTES) {
             throw new Error('backup_too_large');
           }
           const data: unknown = JSON.parse(jsonString);

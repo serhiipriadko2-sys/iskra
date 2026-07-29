@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   AI_EDGE_MAX_CONTENTS,
   AI_EDGE_MAX_TEXT_CHARACTERS,
+  budgetAiEdgeContents,
   selectRecentAiContents,
+  truncateAiText,
 } from '../aiRequestBudget';
 import type { Message } from '../../types';
 
@@ -50,5 +52,37 @@ describe('AI request budget', () => {
       [{ role: 'user', text: 'x'.repeat(AI_EDGE_MAX_TEXT_CHARACTERS) }],
       'system',
     )).toThrow('ai_latest_message_too_large');
+  });
+
+  it('applies one final deterministic budget to non-chat request paths', () => {
+    const oversized = `prompt-start:${'x'.repeat(AI_EDGE_MAX_TEXT_CHARACTERS)}:prompt-end`;
+    const selected = budgetAiEdgeContents(
+      [{ role: 'user', parts: [{ text: oversized }] }],
+      'system',
+    );
+    const text = selected[0]?.parts[0]?.text ?? '';
+
+    expect(text.startsWith('prompt-start:')).toBe(true);
+    expect(text.endsWith(':prompt-end')).toBe(true);
+    expect(text).toContain('truncated to AI Edge budget');
+    expect(text.length + 'system'.length).toBeLessThanOrEqual(AI_EDGE_MAX_TEXT_CHARACTERS);
+  });
+
+  it('caps every content collection and retains the newest request context', () => {
+    const selected = budgetAiEdgeContents(
+      Array.from({ length: AI_EDGE_MAX_CONTENTS + 3 }, (_, index) => ({
+        role: 'user' as const,
+        parts: [{ text: `request-${index}` }],
+      })),
+    );
+
+    expect(selected).toHaveLength(AI_EDGE_MAX_CONTENTS);
+    expect(selected[0]?.parts[0]?.text).toBe('request-3');
+    expect(selected.at(-1)?.parts[0]?.text).toBe(`request-${AI_EDGE_MAX_CONTENTS + 2}`);
+  });
+
+  it('uses the same text cap for embedding inputs', () => {
+    const result = truncateAiText('a'.repeat(AI_EDGE_MAX_TEXT_CHARACTERS + 100), AI_EDGE_MAX_TEXT_CHARACTERS);
+    expect(result).toHaveLength(AI_EDGE_MAX_TEXT_CHARACTERS);
   });
 });

@@ -10,8 +10,20 @@ function currentPrincipal(): string {
   throw new Error('principal_storage_unbound');
 }
 
+function normalizedPrincipal(principalId: string): string {
+  const normalized = principalId.trim();
+  if (!PRINCIPAL_ID_PATTERN.test(normalized)) {
+    throw new Error('invalid_storage_principal');
+  }
+  return normalized;
+}
+
+export function principalStorageKeyFor(principalId: string, key: string): string {
+  return `${PRINCIPAL_NAMESPACE}:${normalizedPrincipal(principalId)}:${key}`;
+}
+
 export function principalStorageKey(key: string): string {
-  return `${PRINCIPAL_NAMESPACE}:${currentPrincipal()}:${key}`;
+  return principalStorageKeyFor(currentPrincipal(), key);
 }
 
 export type StorageMutation = {
@@ -21,11 +33,7 @@ export type StorageMutation = {
 
 export const principalStorage = {
   bind(principalId: string): void {
-    const normalized = principalId.trim();
-    if (!PRINCIPAL_ID_PATTERN.test(normalized)) {
-      throw new Error('invalid_storage_principal');
-    }
-    activePrincipal = normalized;
+    activePrincipal = normalizedPrincipal(principalId);
   },
 
   activePrincipal(): string | null {

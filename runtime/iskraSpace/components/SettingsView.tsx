@@ -44,16 +44,25 @@ const SettingsView: React.FC = () => {
         .filter(({ mode }) => getAvailableResponseModes().includes(mode));
 
     const handleExport = () => {
-        const json = storageService.exportAllData();
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `iskra_backup_${new Date().toISOString().slice(0, 10)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        try {
+            const json = storageService.exportAllData();
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `iskra_backup_${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            setImportError(null);
+        } catch (err) {
+            setImportError(
+                err instanceof Error && err.message === 'backup_export_too_large'
+                    ? 'Backup exceeds the 1 MiB portable backup limit.'
+                    : 'Unable to export local data.',
+            );
+        }
     };
 
     const handleImportClick = () => {

@@ -42,6 +42,14 @@ function ensureLocalStorage(): void {
   }
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+  return { promise, resolve };
+}
+
 vi.mock('../supabaseClient', () => ({
   isSupabaseAvailable: isSupabaseAvailableMock,
   ensureSupabaseSession: ensureSupabaseSessionMock,
@@ -175,5 +183,42 @@ describe('SyncService identity migration boundary', () => {
 
     expect(addNodeMock).not.toHaveBeenCalled();
     expect(principalStorage.getItem('iskra-space-archive')).not.toBeNull();
+  });
+
+  it('does not write principal A memory into principal B when auth changes during upload', async () => {
+    const pendingUpload = deferred<{ id: string }>();
+    addNodeMock.mockImplementationOnce(() => pendingUpload.promise);
+    principalStorage.setItem('iskra-space-archive', JSON.stringify([{
+      id: 'arc-a',
+      layer: 'archive',
+      type: 'insight',
+      content: 'private A',
+      title: 'Private A',
+      timestamp: new Date().toISOString(),
+      evidence: [],
+      synced_to_cloud: false,
+    }]));
+
+    const sync = new SyncService().syncAllPending();
+    await vi.waitFor(() => expect(addNodeMock).toHaveBeenCalledTimes(1));
+
+    principalStorage.bind('principal-b');
+    const principalBArchive = JSON.stringify([{
+      id: 'arc-b',
+      layer: 'archive',
+      type: 'insight',
+      content: 'private B',
+      title: 'Private B',
+      timestamp: new Date().toISOString(),
+      evidence: [],
+      synced_to_cloud: false,
+    }]);
+    principalStorage.setItem('iskra-space-archive', principalBArchive);
+    ensureSupabaseSessionMock.mockResolvedValue('principal-b');
+    pendingUpload.resolve({ id: 'node-a' });
+    await sync;
+
+    expect(buildConnectionsMock).not.toHaveBeenCalledWith('node-a');
+    expect(principalStorage.getItem('iskra-space-archive')).toBe(principalBArchive);
   });
 });

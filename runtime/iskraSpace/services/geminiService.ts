@@ -11,7 +11,12 @@ import { storageService } from "./storageService";
 import { getAccessToken } from './supabaseClient';
 import { isBetaCapabilityEnabled, normalizeResponseModeForBeta } from '../config/betaCapabilities';
 import { getRuntimeConfig } from '../config/runtimeConfig';
-import { selectRecentAiContents } from './aiRequestBudget';
+import {
+  AI_EDGE_MAX_TEXT_CHARACTERS,
+  budgetAiEdgeContents,
+  selectRecentAiContents,
+  truncateAiText,
+} from './aiRequestBudget';
 import type { GuardExecutionResult } from '../../src/types/guardExecution.js';
 
 
@@ -23,7 +28,7 @@ export interface PolicyStreamResult {
 const model = "gemini-2.5-flash";
 
 type Content = {
-  role?: string;
+  role?: 'user' | 'model';
   parts?: Array<{ text?: string }>;
 };
 
@@ -233,11 +238,15 @@ async function generateContentText(args: {
   signal?: AbortSignal;
 }): Promise<string> {
   const config = args.config ?? {};
+  const contents = budgetAiEdgeContents(
+    toGeminiContents(args.contents),
+    config.systemInstruction ?? '',
+  );
   const res = await callAiEdgeFunction(
     {
       action: 'generateContent',
       model: args.model,
-      contents: toGeminiContents(args.contents),
+      contents,
       systemInstruction: config.systemInstruction,
       generationConfig: {
         ...config,
@@ -265,6 +274,7 @@ async function* streamGenerateContentText(args: {
   signal?: AbortSignal;
 }): AsyncGenerator<string> {
   const config = args.config ?? {};
+  const contents = budgetAiEdgeContents(args.contents, config.systemInstruction ?? '');
   let streamEstablished = false;
 
   // Best-effort streaming: if anything goes wrong, fall back to single-chunk generation.
@@ -273,7 +283,7 @@ async function* streamGenerateContentText(args: {
       {
         action: 'streamGenerateContent',
         model: args.model,
-        contents: args.contents,
+        contents,
         systemInstruction: config.systemInstruction,
         generationConfig: {
           ...config,
@@ -343,7 +353,7 @@ async function* streamGenerateContentText(args: {
     if (streamEstablished) throw err;
     const text = await generateContentText({
       model: args.model,
-      contents: args.contents,
+      contents,
       config,
       signal: args.signal,
     });
@@ -352,10 +362,11 @@ async function* streamGenerateContentText(args: {
 }
 
 async function embedContentValues(text: string): Promise<number[]> {
+  const budgetedText = truncateAiText(text, AI_EDGE_MAX_TEXT_CHARACTERS);
   const res = await callAiEdgeFunction({
     action: 'embedContent',
     model: 'gemini-embedding-001',
-    content: { parts: [{ text }] },
+    content: { parts: [{ text: budgetedText }] },
   });
 
   if (!res.ok) {

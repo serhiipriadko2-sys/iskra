@@ -86,11 +86,25 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
     }
   }, [applyAccess]);
 
+  const closeSignedOutBoundary = useCallback((): void => {
+    accessGeneration.current += 1;
+    try {
+      storageService.releasePrincipal({ clear: true });
+      setGate({ kind: 'denied', reason: 'no-session' });
+    } catch {
+      storageService.releasePrincipal();
+      setGate({ kind: 'storage-error' });
+    }
+  }, []);
+
   useEffect(() => {
     void refreshAccess();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') storageService.releasePrincipal({ clear: true });
+      if (event === 'SIGNED_OUT') {
+        closeSignedOutBoundary();
+        return;
+      }
       void refreshAccess();
     });
 
@@ -98,7 +112,7 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
       accessGeneration.current += 1;
       subscription.unsubscribe();
     };
-  }, [refreshAccess]);
+  }, [closeSignedOutBoundary, refreshAccess]);
 
   const submitMagicLink = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -116,8 +130,7 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   const signOut = async (): Promise<void> => {
     try {
       await signOutBetaSession();
-      storageService.releasePrincipal({ clear: true });
-      await refreshAccess();
+      closeSignedOutBoundary();
     } catch {
       setRequestState({ kind: 'error', message: 'Не удалось завершить сессию. Попробуйте ещё раз.' });
     }

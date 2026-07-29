@@ -98,6 +98,14 @@ const INJECTION_PATTERNS = [
   /developer\s+mode|maintenance\s+mode|debug\s+mode/iu,
 ];
 
+const CRISIS_SUPPORT_PATTERNS = [
+  /\b(?:please\s+)?(?:give|provide|show|tell)\s+(?:me\s+)?(?:safe\s+)?(?:steps?|guidance|help)\s+(?:to|for)\s+(?:prevent|avoid)\s+(?:suicide|self-harm)\b/giu,
+  /\bhow\s+can\s+i\s+(?:safely\s+)?(?:prevent|avoid|stop)\s+(?:myself\s+from\s+)?(?:suicide|self-harm)\b/giu,
+  /\bhelp\s+me\s+(?:stay\s+safe|avoid|prevent|stop\s+myself)\s+(?:from\s+)?(?:suicide|self-harm)\b/giu,
+  /(?:\u043a\u0430\u043a|\u0447\u0442\u043e)\s+(?:\u043c\u043d\u0435\s+)?(?:\u043f\u0440\u0435\u0434\u043e\u0442\u0432\u0440\u0430\u0442\u0438\u0442\u044c|\u0438\u0437\u0431\u0435\u0436\u0430\u0442\u044c)\s+(?:\u0441\u0443\u0438\u0446\u0438\u0434|\u0441\u0430\u043c\u043e\u043f\u043e\u0432\u0440\u0435\u0436\u0434\u0435\u043d\u0438\u0435)/giu,
+  /(?:\u043a\u0430\u043a|\u043f\u043e\u043c\u043e\u0433\u0438)\s+(?:\u043c\u043d\u0435\s+)?\u043d\u0435\s+(?:\u0441\u043e\u0432\u0435\u0440\u0448\u0438\u0442\u044c\s+\u0441\u0443\u0438\u0446\u0438\u0434|\u043f\u043e\u043a\u043e\u043d\u0447\u0438\u0442\u044c\s+\u0441\u043e\u0431\u043e\u0439|\u043d\u0430\u0432\u0440\u0435\u0434\u0438\u0442\u044c\s+\u0441\u0435\u0431\u0435)/giu,
+];
+
 const DANGER_PATTERNS = [
   /\b(?:how\s+(?:do\s+i|can\s+i|to)|instructions?|steps?|guide)\b[\s\S]{0,80}\b(?:hack(?:\s+into)?|make\s+(?:a\s+)?bomb|commit\s+suicide|kill\s+myself|self-harm|obtain\s+(?:illegal\s+)?drugs|terrorist\s+attack)\b/iu,
   /\b(?:give|write|provide|show|tell)\s+(?:me\s+)?(?:instructions?|steps?|a\s+guide)\b[\s\S]{0,80}\b(?:hack|bomb|suicide|self-harm|drugs|terrorist\s+attack)\b/iu,
@@ -164,6 +172,13 @@ function redactPhones(text: string): string {
   ));
 }
 
+function withoutCrisisSupportRequests(text: string): string {
+  return CRISIS_SUPPORT_PATTERNS.reduce(
+    (remaining, pattern) => remaining.replace(pattern, '[CRISIS_SUPPORT_REQUEST]'),
+    text,
+  );
+}
+
 /** Reads JSON without accepting an unbounded request body into memory. */
 export async function readBoundedJsonBody(req: Request): Promise<PolicyResult<{ body: unknown; bytes: number }>> {
   const contentType = req.headers.get('content-type')?.toLowerCase() ?? '';
@@ -208,7 +223,8 @@ export async function readBoundedJsonBody(req: Request): Promise<PolicyResult<{ 
 
 function classify(text: string): 'pii' | 'injection' | 'danger' | null {
   if (INJECTION_PATTERNS.some((pattern) => pattern.test(text))) return 'injection';
-  if (DANGER_PATTERNS.some((pattern) => pattern.test(text))) return 'danger';
+  const nonSupportText = withoutCrisisSupportRequests(text);
+  if (DANGER_PATTERNS.some((pattern) => pattern.test(nonSupportText))) return 'danger';
   if (NON_PHONE_PII_PATTERNS.some((pattern) => pattern.test(text)) || containsPhone(text)) return 'pii';
   return null;
 }
