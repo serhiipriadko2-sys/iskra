@@ -8,7 +8,7 @@ import { getActiveVoice } from '../services/voiceEngine';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import { isBetaCapabilityEnabled } from '../config/betaCapabilities';
 
-const service = aiInteractionCoordinator.service;
+const service = aiInteractionCoordinator;
 const TTS_AVAILABLE = isBetaCapabilityEnabled('textToSpeech');
 
 interface RuneViewProps {
