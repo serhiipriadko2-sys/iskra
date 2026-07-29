@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-29T17:11:36.557Z",
-  "total": 3665,
+  "generatedAt": "2026-07-29T17:16:39.679Z",
+  "total": 3680,
   "curated": 20,
   "layers": {
-    "root": 343,
+    "root": 346,
     "agents": 46,
     "devcontainer": 2,
     "ci": 14,
-    "research": 475,
+    "research": 487,
     "appendix": 26,
     "site": 69,
     "web": 13,
@@ -2140,6 +2140,7 @@
       "sourceRef": "ScienceAndTests",
       "related": [],
       "children": [
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28",
         "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.2",
         "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3",
         "ScienceAndTests/iskra_evaluation_release_2026-07-08",
@@ -2228,6 +2229,153 @@
       "sourceRef": "ScienceAndTests/ISKRA_СБОРНИК_МЕТАМОРФОЗ_v0.1.md",
       "related": [],
       "parent": "ScienceAndTests"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28",
+      "name": "atom25_guard_comparison_2026-07-28",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28",
+      "related": [],
+      "parent": "ScienceAndTests",
+      "children": [
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/METHOD.json",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/REPORT.md",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/SHA256SUMS",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/TOOLCHAIN.json",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/build_receipt.mjs",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/comparison_receipt.json"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/METHOD.json",
+      "name": "METHOD.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/METHOD.json",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/REPORT.md",
+      "name": "REPORT.md",
+      "kind": "file",
+      "layer": "research",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/REPORT.md",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "research",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/SHA256SUMS",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/TOOLCHAIN.json",
+      "name": "TOOLCHAIN.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/TOOLCHAIN.json",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/build_receipt.mjs",
+      "name": "build_receipt.mjs",
+      "kind": "file",
+      "layer": "research",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/build_receipt.mjs",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/comparison_receipt.json",
+      "name": "comparison_receipt.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/comparison_receipt.json",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw",
+      "name": "raw",
+      "kind": "directory",
+      "layer": "research",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28",
+      "children": [
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/AB_A.json",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/AB_B.json",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/BA_A.json",
+        "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/BA_B.json"
+      ]
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/AB_A.json",
+      "name": "AB_A.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/AB_A.json",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/AB_B.json",
+      "name": "AB_B.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/AB_B.json",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/BA_A.json",
+      "name": "BA_A.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/BA_A.json",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw"
+    },
+    {
+      "path": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/BA_B.json",
+      "name": "BA_B.json",
+      "kind": "file",
+      "layer": "research",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw/BA_B.json",
+      "related": [],
+      "parent": "ScienceAndTests/atom25_guard_comparison_2026-07-28/raw"
     },
     {
       "path": "ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.2",
@@ -33575,30 +33723,6 @@
       "parent": "packages/math"
     },
     {
-      "path": "patches",
-      "name": "patches",
-      "kind": "directory",
-      "layer": "root",
-      "role": "container",
-      "coverage": "indexed",
-      "sourceRef": "patches",
-      "related": [],
-      "children": [
-        "patches/minimatch@3.1.5.patch"
-      ]
-    },
-    {
-      "path": "patches/minimatch@3.1.5.patch",
-      "name": "minimatch@3.1.5.patch",
-      "kind": "file",
-      "layer": "root",
-      "role": "data",
-      "coverage": "indexed",
-      "sourceRef": "patches/minimatch@3.1.5.patch",
-      "related": [],
-      "parent": "patches"
-    },
-    {
       "path": "plan.md",
       "name": "plan.md",
       "kind": "file",
@@ -45434,6 +45558,68 @@
       "coverage": "indexed",
       "sourceRef": "tsconfig.json",
       "related": []
+    },
+    {
+      "path": "vendor",
+      "name": "vendor",
+      "kind": "directory",
+      "layer": "root",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "vendor",
+      "related": [],
+      "children": [
+        "vendor/brace-expansion-compat"
+      ]
+    },
+    {
+      "path": "vendor/brace-expansion-compat",
+      "name": "brace-expansion-compat",
+      "kind": "directory",
+      "layer": "root",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "vendor/brace-expansion-compat",
+      "related": [],
+      "parent": "vendor",
+      "children": [
+        "vendor/brace-expansion-compat/index.cjs",
+        "vendor/brace-expansion-compat/index.mjs",
+        "vendor/brace-expansion-compat/package.json"
+      ]
+    },
+    {
+      "path": "vendor/brace-expansion-compat/index.cjs",
+      "name": "index.cjs",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "vendor/brace-expansion-compat/index.cjs",
+      "related": [],
+      "parent": "vendor/brace-expansion-compat"
+    },
+    {
+      "path": "vendor/brace-expansion-compat/index.mjs",
+      "name": "index.mjs",
+      "kind": "file",
+      "layer": "root",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "vendor/brace-expansion-compat/index.mjs",
+      "related": [],
+      "parent": "vendor/brace-expansion-compat"
+    },
+    {
+      "path": "vendor/brace-expansion-compat/package.json",
+      "name": "package.json",
+      "kind": "file",
+      "layer": "root",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "vendor/brace-expansion-compat/package.json",
+      "related": [],
+      "parent": "vendor/brace-expansion-compat"
     },
     {
       "path": "vercel.json",
