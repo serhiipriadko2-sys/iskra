@@ -6,7 +6,7 @@ import { userMetricsService } from '../services/userMetricsService';
 import { XIcon, TriangleIcon, FlameIcon } from './icons';
 import { soundService } from '../services/soundService';
 
-const service = aiInteractionCoordinator.service;
+const service = aiInteractionCoordinator;
 
 interface FocusSessionProps {
     onClose: () => void;
