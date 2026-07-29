@@ -388,7 +388,7 @@ releasePrincipal(options?: { clear?: boolean }): void
 
 exportAllData(): string
 
-// Validates the complete v1 backup (max 1 MiB), then commits atomically.
+// Validates the complete v1 backup (max 16 MiB), then commits atomically.
 importAllData(json: string): void
 
 // Destructive Phoenix reset: clears all localStorage for this app origin,

@@ -12,10 +12,12 @@ vi.mock('../supabaseClient', () => ({
 }));
 
 import { addChatMessage } from '../supabaseService';
+import { principalStorageKeyFor } from '../principalStorage';
 
 describe('supabaseService pinned chat writes', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   it('writes through the pinned client and explicit principal only', async () => {
@@ -50,5 +52,21 @@ describe('supabaseService pinned chat writes', () => {
 
     expect(mocks.getUserId).not.toHaveBeenCalled();
     expect(mocks.defaultFrom).not.toHaveBeenCalled();
+  });
+
+  it('queues a failed default write under the same principal key read by sync', async () => {
+    const message = { role: 'user' as const, text: 'retry after reconnect' };
+    mocks.getUserId.mockResolvedValue('principal-a');
+    mocks.defaultFrom.mockReturnValue({
+      insert: vi.fn().mockResolvedValue({ error: { message: 'offline' } }),
+    });
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    await expect(addChatMessage(message)).resolves.toBe(false);
+
+    const rawKey = principalStorageKeyFor('principal-a', 'chat_pending_principal-a');
+    expect(localStorage.getItem(rawKey)).toBe(JSON.stringify([message]));
+    expect(localStorage.getItem('chat_pending_principal-a')).toBeNull();
+    consoleSpy.mockRestore();
   });
 });

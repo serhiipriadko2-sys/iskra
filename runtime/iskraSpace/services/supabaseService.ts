@@ -9,6 +9,7 @@ import {
   chatPendingQueueKey,
   parseChatMessages,
 } from './chatOfflineQueue';
+import { principalStorageKeyFor } from './principalStorage';
 
 // We use the generated types for DB interactions
 type VoicePreferences = Record<string, number>;
@@ -447,8 +448,8 @@ export async function saveVoicePreferences(prefs: VoicePreferences): Promise<voi
 
 export async function getChatHistory(limit = 50): Promise<Message[]> {
   const userId = await getUserId();
-  const cacheKey = chatHistoryCacheKey(userId);
-  const pendingKey = chatPendingQueueKey(userId);
+  const cacheKey = principalStorageKeyFor(userId, chatHistoryCacheKey(userId));
+  const pendingKey = principalStorageKeyFor(userId, chatPendingQueueKey(userId));
   const pendingMessages = parseChatMessages<Message>(safeStorage.getItem(pendingKey));
   const { data, error } = await supabase
     .from('chat_history')
@@ -499,7 +500,7 @@ export async function addChatMessage(
   if (error) {
     console.error('Failed to add chat message:', error);
     if (options.queueOnFailure !== false) {
-      const pendingKey = chatPendingQueueKey(userId);
+      const pendingKey = principalStorageKeyFor(userId, chatPendingQueueKey(userId));
       const messages = parseChatMessages<Message>(safeStorage.getItem(pendingKey));
       messages.push(message);
       safeStorage.setItem(pendingKey, JSON.stringify(messages));
@@ -513,8 +514,8 @@ export async function clearChatHistory(): Promise<void> {
   const userId = await getUserId();
   const { error } = await supabase.from('chat_history').delete().eq('user_id', userId);
   if (error) console.error('Failed to clear chat history:', error);
-  safeStorage.removeItem(chatHistoryCacheKey(userId));
-  safeStorage.removeItem(chatPendingQueueKey(userId));
+  safeStorage.removeItem(principalStorageKeyFor(userId, chatHistoryCacheKey(userId)));
+  safeStorage.removeItem(principalStorageKeyFor(userId, chatPendingQueueKey(userId)));
 }
 
 // =============================================================================

@@ -66,7 +66,7 @@ function clearLegacyPrincipalQueues(principalId: string): void {
     localStorage.removeItem(key);
   }
 }
-export const MAX_BACKUP_BYTES = 1024 * 1024;
+export const MAX_BACKUP_BYTES = 16 * 1024 * 1024;
 const MAX_IMPORTED_ITEMS = 10_000;
 const RITUAL_TAGS = new Set(['FIRE', 'WATER', 'SUN', 'BALANCE', 'DELTA']);
 const SHARE_LEVELS = new Set(['hidden', 'daily_score', 'weekly_mean']);
@@ -384,11 +384,7 @@ export const storageService = {
         responseMode: this.getResponseMode(),
         symbiosis: symbiosisService.exportState()
     };
-    const exported = JSON.stringify(data, null, 2);
-    if (backupByteLength(exported) > MAX_BACKUP_BYTES) {
-      throw new Error('backup_export_too_large');
-    }
-    return exported;
+    return JSON.stringify(data, null, 2);
   },
 
   importAllData(jsonString: string): void {

@@ -57,11 +57,7 @@ const SettingsView: React.FC = () => {
             URL.revokeObjectURL(url);
             setImportError(null);
         } catch (err) {
-            setImportError(
-                err instanceof Error && err.message === 'backup_export_too_large'
-                    ? 'Backup exceeds the 1 MiB portable backup limit.'
-                    : 'Unable to export local data.',
-            );
+            setImportError(err instanceof Error ? err.message : 'Unable to export local data.');
         }
     };
 
@@ -73,7 +69,7 @@ const SettingsView: React.FC = () => {
         const file = e.target.files?.[0];
         if (!file) return;
         if (file.size > MAX_BACKUP_BYTES) {
-            setImportError('Backup exceeds the 1 MiB import limit.');
+            setImportError('Backup exceeds the 16 MiB safe import limit.');
             e.target.value = '';
             return;
         }

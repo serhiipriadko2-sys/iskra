@@ -67,7 +67,7 @@ describe('storageService symbiosis onboarding', () => {
     expect(exported.symbiosis.receipts).toEqual([]);
   });
 
-  it('never exports a backup that the matching import contract rejects by size', () => {
+  it('exports and reimports a portable backup above the former one MiB limit', () => {
     storageService.saveTasks(Array.from({ length: 100 }, (_, index) => ({
       id: `task-${index}`,
       title: 'x'.repeat(12_000),
@@ -75,7 +75,11 @@ describe('storageService symbiosis onboarding', () => {
       done: false,
     })));
 
-    expect(() => storageService.exportAllData()).toThrow('backup_export_too_large');
+    const exported = storageService.exportAllData();
+    expect(new TextEncoder().encode(exported).byteLength).toBeGreaterThan(1024 * 1024);
+
+    expect(() => storageService.importAllData(exported)).not.toThrow();
+    expect(storageService.getTasks()).toHaveLength(100);
   });
 
   it('keeps tutorial and voice state behavior intact', () => {
