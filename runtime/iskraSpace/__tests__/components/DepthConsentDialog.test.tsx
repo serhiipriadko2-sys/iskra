@@ -58,6 +58,8 @@ describe('DepthConsentDialog', () => {
 
     await act(async () => {
       buttonByText('1 час')?.click();
+    });
+    await act(async () => {
       buttonByText('Разрешить исследование')?.click();
     });
 
