@@ -1,5 +1,7 @@
 import {
   CANONICAL_GEMINI_TEXT_MODEL,
+  MAX_AI_REQUEST_BYTES,
+  readBoundedJsonBody,
   validateAgentRequest,
   validateGeminiRequest,
 } from './aiContentPolicy.ts';
@@ -13,6 +15,50 @@ const baseGeminiRequest = (text: string, safetyRoute?: 'server_redact') => ({
   model: CANONICAL_GEMINI_TEXT_MODEL,
   contents: [{ role: 'user', parts: [{ text }] }],
   ...(safetyRoute ? { safetyRoute } : {}),
+});
+
+Deno.test('bounded JSON body rejects invalid content type and declared oversize', async () => {
+  const invalidType = await readBoundedJsonBody(new Request('https://example.test', {
+    method: 'POST',
+    headers: { 'content-type': 'text/plain' },
+    body: '{}',
+  }));
+  assert(!invalidType.ok && invalidType.code === 'invalid_content_type', 'expected content type denial');
+
+  const declaredOversize = await readBoundedJsonBody(new Request('https://example.test', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'content-length': String(MAX_AI_REQUEST_BYTES + 1),
+    },
+    body: '{}',
+  }));
+  assert(!declaredOversize.ok && declaredOversize.code === 'request_too_large', 'expected declared size denial');
+});
+
+Deno.test('bounded JSON body rejects chunked oversize without content-length', async () => {
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(new Uint8Array(MAX_AI_REQUEST_BYTES + 1));
+      controller.close();
+    },
+  });
+  const result = await readBoundedJsonBody(new Request('https://example.test', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body,
+  }));
+  assert(!result.ok && result.code === 'request_too_large', 'expected chunked size denial');
+});
+
+Deno.test('bounded JSON body accepts valid JSON within the cap', async () => {
+  const result = await readBoundedJsonBody(new Request('https://example.test', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ action: 'generateContent' }),
+  }));
+  assert(result.ok, 'expected valid JSON body');
+  assert((result.value.body as { action?: unknown }).action === 'generateContent', 'expected parsed body');
 });
 
 Deno.test('direct PII is blocked unless the server performs redaction and rechecks it', () => {
