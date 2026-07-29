@@ -1,4 +1,4 @@
-import { Fragment, type FormEvent, type ReactNode, useCallback, useEffect, useState } from 'react';
+import { Fragment, type FormEvent, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import {
   type BetaAccess,
   type BetaAccessDenyReason,
@@ -56,6 +56,7 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   const [gate, setGate] = useState<GateState>({ kind: 'loading' });
   const [email, setEmail] = useState('');
   const [requestState, setRequestState] = useState<{ kind: 'idle' | 'sending' | 'sent' | 'error'; message?: string }>({ kind: 'idle' });
+  const accessGeneration = useRef(0);
 
   const applyAccess = useCallback((access: BetaAccess): void => {
     try {
@@ -72,37 +73,32 @@ function ClosedBetaAuthGate({ children }: AuthGateProps) {
   }, []);
 
   const refreshAccess = useCallback(async (): Promise<void> => {
-    const access = await getBetaSession();
-    applyAccess(access);
+    const generation = ++accessGeneration.current;
+    try {
+      const access = await getBetaSession();
+      if (generation === accessGeneration.current) {
+        applyAccess(access);
+      }
+    } catch {
+      if (generation === accessGeneration.current) {
+        applyAccess({ status: 'denied', reason: 'membership-unavailable' });
+      }
+    }
   }, [applyAccess]);
 
   useEffect(() => {
-    let active = true;
-
-    void getBetaSession().then(access => {
-      if (active) {
-        applyAccess(access);
-      }
-    }).catch(() => {
-      if (active) applyAccess({ status: 'denied', reason: 'membership-unavailable' });
-    });
+    void refreshAccess();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') storageService.releasePrincipal({ clear: true });
-      void getBetaSession().then(access => {
-        if (active) {
-          applyAccess(access);
-        }
-      }).catch(() => {
-        if (active) applyAccess({ status: 'denied', reason: 'membership-unavailable' });
-      });
+      void refreshAccess();
     });
 
     return () => {
-      active = false;
+      accessGeneration.current += 1;
       subscription.unsubscribe();
     };
-  }, [applyAccess]);
+  }, [refreshAccess]);
 
   const submitMagicLink = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();

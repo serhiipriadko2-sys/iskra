@@ -56,6 +56,14 @@ function granted(userId: string) {
   };
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+  return { promise, resolve };
+}
+
 function StatefulChild() {
   const [mountId] = useState(() => {
     mounts += 1;
@@ -117,5 +125,34 @@ describe('AuthGate principal boundary', () => {
     expect(container?.querySelector('[role="alert"]')).not.toBeNull();
     expect(container?.textContent).not.toContain('Проверяем доступ');
     expect(mocks.releasePrincipal).toHaveBeenCalled();
+  });
+
+  it('ignores an older access result after a newer sign-out check has completed', async () => {
+    const older = deferred<ReturnType<typeof granted>>();
+    const newer = deferred<{ status: 'denied'; reason: 'no-session' }>();
+    mocks.getBetaSession
+      .mockImplementationOnce(() => older.promise)
+      .mockImplementationOnce(() => newer.promise);
+
+    await renderGate();
+
+    await act(async () => {
+      mocks.authCallback?.('SIGNED_OUT');
+      newer.resolve({ status: 'denied', reason: 'no-session' });
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(mocks.releasePrincipal).toHaveBeenCalledWith({ clear: true });
+    expect(container?.querySelector('[data-testid="mount-id"]')).toBeNull();
+
+    await act(async () => {
+      older.resolve(granted('principal-a'));
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(mocks.bindPrincipal).not.toHaveBeenCalledWith('principal-a');
+    expect(container?.querySelector('[data-testid="mount-id"]')).toBeNull();
   });
 });

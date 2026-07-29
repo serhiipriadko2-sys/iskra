@@ -63,9 +63,8 @@ type TextBudget = {
   parts: number;
 };
 
-const PII_PATTERNS = [
+const NON_PHONE_PII_PATTERNS = [
   /[\p{L}0-9._%+-]+@[\p{L}0-9.-]+\.[A-Za-z]{2,}/iu,
-  /(?:\+?\d[\d\s().-]{7,}\d)/u,
   /\b(?:\d[ -]?){13,16}\b/u,
   /\bsk-[A-Za-z0-9-]{10,}\b/iu,
   /\bAIza[A-Za-z0-9_-]{35}\b/u,
@@ -74,9 +73,8 @@ const PII_PATTERNS = [
   /(?:password|passwd)\s*[:=]\s*[^\s]{6,}/iu,
 ];
 
-const REDACTION_PATTERNS = [
+const NON_PHONE_REDACTION_PATTERNS = [
   /[\p{L}0-9._%+-]+@[\p{L}0-9.-]+\.[A-Za-z]{2,}/giu,
-  /(?:\+?\d[\d\s().-]{7,}\d)/gu,
   /\b(?:\d[ -]?){13,16}\b/gu,
   /\bsk-[A-Za-z0-9-]{10,}\b/giu,
   /\bAIza[A-Za-z0-9_-]{35}\b/gu,
@@ -84,6 +82,10 @@ const REDACTION_PATTERNS = [
   /-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----/giu,
   /(?:password|passwd)\s*[:=]\s*[^\s]{6,}/giu,
 ];
+
+const PHONE_CANDIDATE_PATTERN = /(?:\+?\d[\d\s().-]{7,}\d)/gu;
+const ISO_DATE_OR_TIMESTAMP_PATTERN =
+  /\b\d{4}-\d{2}-\d{2}(?:(?:T|\s)[0-2]\d:[0-5]\d(?::[0-5]\d(?:\.\d{1,9})?)?(?:Z|[+-][0-2]\d:[0-5]\d)?)?\b/gu;
 
 const INJECTION_PATTERNS = [
   /ignore\s+(?:all\s+)?previous\s+instructions/iu,
@@ -133,6 +135,35 @@ function concatChunks(chunks: Uint8Array[], total: number): Uint8Array {
   return result;
 }
 
+type TextRange = { start: number; end: number };
+
+function isoDateOrTimestampRanges(text: string): TextRange[] {
+  return Array.from(text.matchAll(ISO_DATE_OR_TIMESTAMP_PATTERN), (match) => {
+    const start = match.index ?? 0;
+    return { start, end: start + match[0].length };
+  });
+}
+
+function isPhoneCandidate(candidate: string, offset: number, isoRanges: TextRange[]): boolean {
+  const end = offset + candidate.length;
+  if (isoRanges.some((range) => range.start <= offset && range.end >= end)) return false;
+  const digits = candidate.replace(/\D/gu, '').length;
+  return digits >= 10 && digits <= 15;
+}
+
+function containsPhone(text: string): boolean {
+  const isoRanges = isoDateOrTimestampRanges(text);
+  return Array.from(text.matchAll(PHONE_CANDIDATE_PATTERN))
+    .some((match) => isPhoneCandidate(match[0], match.index ?? 0, isoRanges));
+}
+
+function redactPhones(text: string): string {
+  const isoRanges = isoDateOrTimestampRanges(text);
+  return text.replace(PHONE_CANDIDATE_PATTERN, (candidate, offset: number) => (
+    isPhoneCandidate(candidate, offset, isoRanges) ? '[REDACTED]' : candidate
+  ));
+}
+
 /** Reads JSON without accepting an unbounded request body into memory. */
 export async function readBoundedJsonBody(req: Request): Promise<PolicyResult<{ body: unknown; bytes: number }>> {
   const contentType = req.headers.get('content-type')?.toLowerCase() ?? '';
@@ -178,12 +209,15 @@ export async function readBoundedJsonBody(req: Request): Promise<PolicyResult<{ 
 function classify(text: string): 'pii' | 'injection' | 'danger' | null {
   if (INJECTION_PATTERNS.some((pattern) => pattern.test(text))) return 'injection';
   if (DANGER_PATTERNS.some((pattern) => pattern.test(text))) return 'danger';
-  if (PII_PATTERNS.some((pattern) => pattern.test(text))) return 'pii';
+  if (NON_PHONE_PII_PATTERNS.some((pattern) => pattern.test(text)) || containsPhone(text)) return 'pii';
   return null;
 }
 
 function redactPii(text: string): string {
-  return REDACTION_PATTERNS.reduce((redacted, pattern) => redacted.replace(pattern, '[REDACTED]'), text);
+  return NON_PHONE_REDACTION_PATTERNS.reduce(
+    (redacted, pattern) => redacted.replace(pattern, '[REDACTED]'),
+    redactPhones(text),
+  );
 }
 
 function serverContentPolicy(texts: string[], safeRoute: SafeRoute): PolicyResult<string[]> {
