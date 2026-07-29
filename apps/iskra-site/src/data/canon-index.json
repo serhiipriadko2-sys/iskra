@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-29T18:03:56.470Z",
-  "total": 3682,
+  "generatedAt": "2026-07-29T18:18:57.318Z",
+  "total": 3683,
   "curated": 20,
   "layers": {
     "root": 346,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 19,
     "reference": 82,
-    "runtime": 378,
+    "runtime": 379,
     "skills": 269,
     "backend": 80,
     "system": 26,
@@ -37482,6 +37482,7 @@
         "runtime/iskraSpace/services/__tests__/supabaseAclHardeningMigration.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseClient.betaAccess.test.ts",
         "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts",
+        "runtime/iskraSpace/services/__tests__/supabaseServicePinnedWrite.test.ts",
         "runtime/iskraSpace/services/__tests__/symbiosisService.test.ts",
         "runtime/iskraSpace/services/__tests__/syncService.test.ts",
         "runtime/iskraSpace/services/__tests__/userMetricsService.test.ts",
@@ -38082,6 +38083,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/__tests__/supabaseServiceLayerNormalization.test.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services/__tests__"
+    },
+    {
+      "path": "runtime/iskraSpace/services/__tests__/supabaseServicePinnedWrite.test.ts",
+      "name": "supabaseServicePinnedWrite.test.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/__tests__/supabaseServicePinnedWrite.test.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services/__tests__"
     },
