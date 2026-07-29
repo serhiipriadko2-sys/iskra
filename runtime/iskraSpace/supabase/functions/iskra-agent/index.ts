@@ -7,6 +7,7 @@ import {
   type AiBoundaryConfig,
   type VerifiedAiUser,
 } from '../_shared/aiBoundary.ts';
+import { readBoundedJsonBody } from '../_shared/aiContentPolicy.ts';
 
 type IskraAgentRequest = {
   message?: string;
@@ -175,6 +176,11 @@ Deno.serve(async (req) => {
     return json({ error: boundary.error }, { status: boundary.status }, origin);
   }
 
+  const parsedBody = await readBoundedJsonBody(req);
+  if (!parsedBody.ok) {
+    return json({ error: parsedBody.code }, { status: parsedBody.status }, origin);
+  }
+
   const agentId = Deno.env.get("AGENT_ID");
   const agentToken = Deno.env.get("AGENT_ACCESS_TOKEN");
 
@@ -182,11 +188,7 @@ Deno.serve(async (req) => {
     return json({ error: "agent_not_configured" }, { status: 500 }, origin);
   }
 
-  const payload = await req.json().catch(() => null) as IskraAgentRequest | null;
-  if (!payload || typeof payload !== "object") {
-    return json({ error: "invalid_json" }, { status: 400 }, origin);
-  }
-
+  const payload = parsedBody.value.body as IskraAgentRequest;
   const input = normalizePayload(payload, jwt.sub);
   const rid = typeof input.request_id === "string" ? input.request_id : requestId();
 
