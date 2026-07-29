@@ -83,10 +83,11 @@ describe('symbiosisService onboarding state', () => {
       'User declined the deep AI action',
     );
 
+    const receipts = symbiosisService.getReceipts();
     expect(grant?.decision).toBe('GRANTED');
     expect(denial?.decision).toBe('DENIED');
     expect(symbiosisService.getCurrentConsent('depth.surgery')).toBeNull();
-    expect(symbiosisService.getReceipts().at(-1)?.id).toBe(denial?.id);
+    expect(receipts[receipts.length - 1]?.id).toBe(denial?.id);
   });
 
   it('revokes a current depth.surgery grant and preserves the audit chain', () => {
