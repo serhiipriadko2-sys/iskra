@@ -109,7 +109,10 @@ const CRISIS_SUPPORT_PATTERNS = [
 const DANGER_PATTERNS = [
   /\b(?:how\s+(?:do\s+i|can\s+i|to)|instructions?|steps?|guide)\b[\s\S]{0,80}\b(?:hack(?:\s+into)?|make\s+(?:a\s+)?bomb|commit\s+suicide|kill\s+myself|self-harm|obtain\s+(?:illegal\s+)?drugs|terrorist\s+attack)\b/iu,
   /\b(?:give|write|provide|show|tell)\s+(?:me\s+)?(?:instructions?|steps?|a\s+guide)\b[\s\S]{0,80}\b(?:hack|bomb|suicide|self-harm|drugs|terrorist\s+attack)\b/iu,
+  /\b(?:give|list|provide|show|tell|describe|suggest)\s+(?:me\s+)?(?:suicide|self-harm)\s+(?:methods?|ways?|techniques?|options?)\b/iu,
+  /\b(?:give|list|provide|show|tell|describe|suggest)\s+(?:me\s+)?(?:methods?|ways?|techniques?|options?)\s+(?:to|for|of)\s+(?:commit\s+)?(?:suicide|self-harm)\b/iu,
   /(?:\u043a\u0430\u043a|\u0438\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0438\u044f|\u0448\u0430\u0433\u0438|\u043f\u043e\u043c\u043e\u0433\u0438)[\s\S]{0,80}(?:\u0432\u0437\u043b\u043e\u043c\u0430\u0442\u044c|\u0441\u0434\u0435\u043b\u0430\u0442\u044c[\s\S]{0,20}\u0431\u043e\u043c\u0431|\u0441\u043e\u0432\u0435\u0440\u0448\u0438\u0442\u044c[\s\S]{0,20}\u0441\u0443\u0438\u0446\u0438\u0434|\u043f\u043e\u043a\u043e\u043d\u0447\u0438\u0442\u044c[\s\S]{0,20}\u0441\u043e\u0431\u043e\u0439|\u043d\u0430\u0432\u0440\u0435\u0434\u0438\u0442\u044c[\s\S]{0,20}\u0441\u0435\u0431\u0435|\u0434\u043e\u0441\u0442\u0430\u0442\u044c[\s\S]{0,20}\u043d\u0430\u0440\u043a\u043e\u0442\u0438\u043a|\u0441\u043e\u0432\u0435\u0440\u0448\u0438\u0442\u044c[\s\S]{0,20}\u0442\u0435\u0440\u0430\u043a\u0442)/iu,
+  /(?:\u0434\u0430\u0439|\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0438|\u043f\u043e\u043a\u0430\u0436\u0438|\u043e\u043f\u0438\u0448\u0438)[\s\S]{0,40}(?:\u043c\u0435\u0442\u043e\u0434\u044b|\u0441\u043f\u043e\u0441\u043e\u0431\u044b|\u0432\u0430\u0440\u0438\u0430\u043d\u0442\u044b)[\s\S]{0,40}(?:\u0441\u0443\u0438\u0446\u0438\u0434\u0430|\u043f\u043e\u043a\u043e\u043d\u0447\u0438\u0442\u044c\s+\u0441\u043e\u0431\u043e\u0439|\u043d\u0430\u0432\u0440\u0435\u0434\u0438\u0442\u044c\s+\u0441\u0435\u0431\u0435)/iu,
 ];
 
 function failure(status: PolicyFailureStatus, code: string): PolicyFailure {
@@ -145,11 +148,43 @@ function concatChunks(chunks: Uint8Array[], total: number): Uint8Array {
 
 type TextRange = { start: number; end: number };
 
+function isValidIsoDateOrTimestamp(value: string): boolean {
+  const year = Number(value.slice(0, 4));
+  const month = Number(value.slice(5, 7));
+  const day = Number(value.slice(8, 10));
+  if (month < 1 || month > 12) return false;
+
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (day < 1 || day > daysInMonth[month - 1]) return false;
+  if (value.length === 10) return true;
+
+  const time = value.slice(10).match(
+    /^(?:T|\s)(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,9})?)?(?:Z|([+-])(\d{2}):(\d{2}))?$/u,
+  );
+  if (!time) return false;
+
+  const hour = Number(time[1]);
+  const minute = Number(time[2]);
+  const second = time[3] === undefined ? 0 : Number(time[3]);
+  if (hour > 23 || minute > 59 || second > 59) return false;
+
+  if (time[4]) {
+    const offsetHour = Number(time[5]);
+    const offsetMinute = Number(time[6]);
+    if (offsetHour > 14 || offsetMinute > 59) return false;
+    if (offsetHour === 14 && offsetMinute !== 0) return false;
+  }
+  return true;
+}
+
 function isoDateOrTimestampRanges(text: string): TextRange[] {
-  return Array.from(text.matchAll(ISO_DATE_OR_TIMESTAMP_PATTERN), (match) => {
-    const start = match.index ?? 0;
-    return { start, end: start + match[0].length };
-  });
+  return Array.from(text.matchAll(ISO_DATE_OR_TIMESTAMP_PATTERN))
+    .filter((match) => isValidIsoDateOrTimestamp(match[0]))
+    .map((match) => {
+      const start = match.index ?? 0;
+      return { start, end: start + match[0].length };
+    });
 }
 
 function isPhoneCandidate(candidate: string, offset: number, isoRanges: TextRange[]): boolean {

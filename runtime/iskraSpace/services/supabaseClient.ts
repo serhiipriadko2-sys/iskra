@@ -35,6 +35,19 @@ export const supabase: SupabaseClient<Database> = createClient<Database>(effecti
   },
 });
 
+/**
+ * Creates a stateless data client pinned to one already-verified beta session.
+ *
+ * The accessToken callback disables this client's auth namespace and prevents a
+ * later browser account transition from retargeting in-flight PostgREST/RPC
+ * writes. Expired tokens fail closed; the next sync cycle captures a new token.
+ */
+export function createPinnedSupabaseClient(accessToken: string): SupabaseClient<Database> {
+  return createClient<Database>(effectiveSupabaseUrl, effectiveSupabaseAnonKey, {
+    accessToken: async () => accessToken,
+  });
+}
+
 export type BetaAccessDenyReason =
   | 'not-configured'
   | 'no-session'

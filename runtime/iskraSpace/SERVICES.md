@@ -391,7 +391,8 @@ exportAllData(): string
 // Validates the complete v1 backup (max 1 MiB), then commits atomically.
 importAllData(json: string): void
 
-// Clears only the currently bound principal, not device-wide consent.
+// Destructive Phoenix reset: clears all localStorage for this app origin,
+// including the Supabase session and device-wide consent, then reloads.
 clearAllData(): void
 ```
 

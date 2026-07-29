@@ -1,11 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const isSupabaseAvailableMock = vi.hoisted(() => vi.fn());
-const ensureSupabaseSessionMock = vi.hoisted(() => vi.fn());
+const getBetaSessionMock = vi.hoisted(() => vi.fn());
+const createPinnedSupabaseClientMock = vi.hoisted(() => vi.fn());
 const getLegacyDeviceIdMock = vi.hoisted(() => vi.fn());
 const addChatMessageMock = vi.hoisted(() => vi.fn());
 const addNodeMock = vi.hoisted(() => vi.fn());
 const buildConnectionsMock = vi.hoisted(() => vi.fn());
+const graphServiceConstructorMock = vi.hoisted(() => vi.fn());
+const pinnedClient = { kind: 'pinned-client' };
 
 const storage = new Map<string, string>();
 const nodeLocalStorage: Storage = {
@@ -52,7 +55,8 @@ function deferred<T>() {
 
 vi.mock('../supabaseClient', () => ({
   isSupabaseAvailable: isSupabaseAvailableMock,
-  ensureSupabaseSession: ensureSupabaseSessionMock,
+  getBetaSession: getBetaSessionMock,
+  createPinnedSupabaseClient: createPinnedSupabaseClientMock,
   getLegacyDeviceId: getLegacyDeviceIdMock,
 }));
 
@@ -63,14 +67,18 @@ vi.mock('../supabaseService', () => ({
 }));
 
 vi.mock('../graphServiceSupabase', () => ({
-  graphServiceSupabase: {
-    addNode: addNodeMock,
-    buildConnections: buildConnectionsMock,
+  GraphServiceSupabase: class {
+    constructor(client: unknown) {
+      graphServiceConstructorMock(client);
+    }
+
+    addNode = addNodeMock;
+    buildConnections = buildConnectionsMock;
   },
 }));
 
 import { SyncService } from '../syncService';
-import { principalStorage } from '../principalStorage';
+import { principalStorage, principalStorageKeyFor } from '../principalStorage';
 import { chatPendingQueueKey } from '../chatOfflineQueue';
 
 describe('SyncService identity migration boundary', () => {
@@ -78,11 +86,20 @@ describe('SyncService identity migration boundary', () => {
     ensureLocalStorage();
     localStorage.clear();
     isSupabaseAvailableMock.mockReset().mockResolvedValue(true);
-    ensureSupabaseSessionMock.mockReset().mockResolvedValue('auth-user-id');
+    getBetaSessionMock.mockReset().mockResolvedValue({
+      status: 'granted',
+      session: {
+        userId: 'auth-user-id',
+        email: 'redacted@example.test',
+        accessToken: 'test-access-token',
+      },
+    });
+    createPinnedSupabaseClientMock.mockReset().mockReturnValue(pinnedClient);
     getLegacyDeviceIdMock.mockReset().mockReturnValue('legacy-device-id');
     addChatMessageMock.mockReset().mockResolvedValue(true);
     addNodeMock.mockReset().mockResolvedValue({ id: 'node-1' });
     buildConnectionsMock.mockReset().mockResolvedValue(undefined);
+    graphServiceConstructorMock.mockReset();
     principalStorage.bind('auth-user-id');
   });
 
@@ -94,11 +111,21 @@ describe('SyncService identity migration boundary', () => {
 
     await new SyncService().syncAllPending();
 
-    expect(ensureSupabaseSessionMock).toHaveBeenCalled();
+    expect(getBetaSessionMock).toHaveBeenCalled();
+    expect(createPinnedSupabaseClientMock).toHaveBeenCalledWith('test-access-token');
+    expect(graphServiceConstructorMock).toHaveBeenCalledWith(pinnedClient);
     expect(getLegacyDeviceIdMock).toHaveBeenCalled();
     expect(addChatMessageMock).toHaveBeenCalledTimes(2);
-    expect(addChatMessageMock).toHaveBeenNthCalledWith(1, authMessage, { queueOnFailure: false });
-    expect(addChatMessageMock).toHaveBeenNthCalledWith(2, legacyMessage, { queueOnFailure: false });
+    expect(addChatMessageMock).toHaveBeenNthCalledWith(1, authMessage, {
+      queueOnFailure: false,
+      client: pinnedClient,
+      expectedUserId: 'auth-user-id',
+    });
+    expect(addChatMessageMock).toHaveBeenNthCalledWith(2, legacyMessage, {
+      queueOnFailure: false,
+      client: pinnedClient,
+      expectedUserId: 'auth-user-id',
+    });
   });
 
   it('uploads and clears the principal-scoped primary chat queue', async () => {
@@ -112,7 +139,11 @@ describe('SyncService identity migration boundary', () => {
 
     expect(addChatMessageMock).toHaveBeenCalledWith(
       pendingMessage,
-      { queueOnFailure: false },
+      {
+        queueOnFailure: false,
+        client: pinnedClient,
+        expectedUserId: 'auth-user-id',
+      },
     );
     expect(principalStorage.getItem(chatPendingQueueKey('auth-user-id'))).toBeNull();
   });
@@ -126,6 +157,53 @@ describe('SyncService identity migration boundary', () => {
     await new SyncService().syncAllPending();
 
     expect(principalStorage.getItem(queueKey)).toBe(JSON.stringify([pendingMessage]));
+  });
+
+  it('aborts after session capture when the bound principal has changed', async () => {
+    const pendingAccess = deferred<{
+      status: 'granted';
+      session: { userId: string; email: string; accessToken: string };
+    }>();
+    getBetaSessionMock.mockReturnValueOnce(pendingAccess.promise);
+
+    const sync = new SyncService().syncAllPending();
+    await vi.waitFor(() => expect(getBetaSessionMock).toHaveBeenCalledTimes(1));
+    principalStorage.bind('principal-b');
+    pendingAccess.resolve({
+      status: 'granted',
+      session: {
+        userId: 'auth-user-id',
+        email: 'redacted@example.test',
+        accessToken: 'principal-a-token',
+      },
+    });
+    await sync;
+
+    expect(createPinnedSupabaseClientMock).not.toHaveBeenCalled();
+    expect(addChatMessageMock).not.toHaveBeenCalled();
+    expect(addNodeMock).not.toHaveBeenCalled();
+  });
+
+  it('keeps an in-flight chat write pinned to principal A during an account switch', async () => {
+    const pendingMessage = { role: 'user' as const, text: 'principal A message' };
+    const queueKey = chatPendingQueueKey('auth-user-id');
+    const rawPrincipalAKey = principalStorageKeyFor('auth-user-id', queueKey);
+    principalStorage.setItem(queueKey, JSON.stringify([pendingMessage]));
+    const pendingWrite = deferred<boolean>();
+    addChatMessageMock.mockReturnValueOnce(pendingWrite.promise);
+
+    const sync = new SyncService().syncAllPending();
+    await vi.waitFor(() => expect(addChatMessageMock).toHaveBeenCalledTimes(1));
+    principalStorage.bind('principal-b');
+    pendingWrite.resolve(true);
+    await sync;
+
+    expect(addChatMessageMock).toHaveBeenCalledWith(pendingMessage, {
+      queueOnFailure: false,
+      client: pinnedClient,
+      expectedUserId: 'auth-user-id',
+    });
+    expect(localStorage.getItem(rawPrincipalAKey)).toBe(JSON.stringify([pendingMessage]));
   });
 
   it('uses legacy memory queues only as migration provenance', async () => {
@@ -242,7 +320,6 @@ describe('SyncService identity migration boundary', () => {
       synced_to_cloud: false,
     }]);
     principalStorage.setItem('iskra-space-archive', principalBArchive);
-    ensureSupabaseSessionMock.mockResolvedValue('principal-b');
     pendingUpload.resolve({ id: 'node-a' });
     await sync;
 

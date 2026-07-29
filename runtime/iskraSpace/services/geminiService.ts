@@ -785,12 +785,12 @@ ${metricsContext}
 ${responseModeInstruction}
 ${deltaInstruction}`;
 
-      const contents: Content[] = selectRecentAiContents(history, fullInstruction);
-
       if (OFFLINE_MODE) {
           yield "⚑ Оффлайн-режим: я фиксирую тишину и вернусь к диалогу, когда связь появится.";
           return;
       }
+
+      const contents: Content[] = selectRecentAiContents(history, fullInstruction);
 
       try {
         // Abort any previous stream before starting a new one
@@ -925,14 +925,15 @@ SIFT Depth: ${config.siftDepth}
 
     // Stream response
     let fullResponse = '';
-    const contents: Content[] = selectRecentAiContents(history, fullInstruction);
-    const safeContents = contents.length > 0 ? contents : toGeminiContents('');
 
     if (OFFLINE_MODE) {
       // Offline mode still produces policy decision; response is a single deterministic chunk.
       yield "⚑ Оффлайн-режим: политика рассчитана локально, генерация недоступна.";
       return { eval: null, policy: policyDecision, integrity: null };
     }
+
+    const contents: Content[] = selectRecentAiContents(history, fullInstruction);
+    const safeContents = contents.length > 0 ? contents : toGeminiContents('');
 
     try {
       for await (const chunk of streamGenerateContentText({

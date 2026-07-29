@@ -1,4 +1,5 @@
 import { supabase, getUserId, isSupabaseAvailable } from './supabaseClient';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database, Json } from '../types/supabase';
 import { isMemoryLayer, isMemoryNodeType, VOICE_SYMBOLS } from '../types';
 import type { DocType, IskraMetrics, IskraPhase, MemoryLayer, MemoryNode, SIFTBlock, VoiceName } from '../types';
@@ -475,11 +476,19 @@ export async function getChatHistory(limit = 50): Promise<Message[]> {
 
 export async function addChatMessage(
   message: Message,
-  options: { queueOnFailure?: boolean } = {},
+  options: {
+    queueOnFailure?: boolean;
+    client?: SupabaseClient<Database>;
+    expectedUserId?: string;
+  } = {},
 ): Promise<boolean> {
-  const userId = await getUserId();
+  if (Boolean(options.client) !== Boolean(options.expectedUserId)) {
+    throw new Error('Pinned chat writes require both client and expectedUserId');
+  }
+  const userId = options.expectedUserId ?? await getUserId();
+  const client = options.client ?? supabase;
 
-  const { error } = await supabase.from('chat_history').insert({
+  const { error } = await client.from('chat_history').insert({
     user_id: userId,
     role: message.role,
     text: message.text,
