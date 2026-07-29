@@ -1,0 +1,340 @@
+{
+  "schema_version": "iskra.atom25.guard-comparison.v1",
+  "status": "COMPLETE_BENCHMARK_LOCAL",
+  "method_id": "GATE-DOMINANCE-v1",
+  "method_sha256": "6f107c1468e08243b46c5698e573e5e147fe72f3905dce36136c7052eda3f3d6",
+  "bank_ref": {
+    "name": "ADR-20260724-01 G01-G18",
+    "test_blob_sha": "de56e809874c3e31dad36c48c90284734427f634",
+    "config_blob_sha": "bd81a65357fc316c814c47670ed0ad34c26e135c",
+    "pnpm_lock_blob_sha": "8b390df26dd44de8fbb30b29c2ea0ba3ea248dd1",
+    "runtime_lock_blob_sha": "a9e56fb5a14c859237c8397b9c4ff0d77478675c",
+    "n": 18
+  },
+  "candidates": {
+    "A": "beb282df985c913e6fd94977ede5ec6ed4b45cd4",
+    "B": "09083e2a1b9237922305d7fde6b546e81b728c59"
+  },
+  "toolchain": {
+    "node": "22.19.0",
+    "npm": "10.9.3",
+    "pnpm": "10.32.1",
+    "os": "Windows 10.0.19045.6093",
+    "execution_surface": "Remote Desktop Commander",
+    "device": "DESKTOP-ITUAMNF",
+    "container_network_fallback": "github.com DNS unavailable in container"
+  },
+  "run_window": {
+    "start_time_ms": 1785267153325,
+    "end_time_ms": 1785267256210.4639
+  },
+  "comparability": {
+    "status": "PASS",
+    "same_test_blob": true,
+    "same_config_blob": true,
+    "same_workspace_lock_blob": true,
+    "same_runtime_lock_blob": true,
+    "missingness_rate": 0
+  },
+  "pointwise": [
+    {
+      "run_id": "AB_A",
+      "candidate": "A",
+      "order": "A→B",
+      "source": "raw/AB_A.json",
+      "success": false,
+      "total": 18,
+      "passed": 4,
+      "failed": 14,
+      "skipped": 0,
+      "pass_ids": [
+        "G10",
+        "G11",
+        "G12",
+        "G18"
+      ],
+      "fail_ids": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09",
+        "G13",
+        "G14",
+        "G15",
+        "G16",
+        "G17"
+      ],
+      "start_time_ms": 1785267153325,
+      "end_time_ms": 1785267153810.541,
+      "raw_receipt": {
+        "path": "raw/AB_A.json",
+        "bytes": 23576,
+        "sha256": "183ea49a50fc5ad0d028ba00459e947432c736632eff9cac111abdfa16654ce8"
+      }
+    },
+    {
+      "run_id": "AB_B",
+      "candidate": "B",
+      "order": "A→B",
+      "source": "raw/AB_B.json",
+      "success": true,
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "pass_ids": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09",
+        "G10",
+        "G11",
+        "G12",
+        "G13",
+        "G14",
+        "G15",
+        "G16",
+        "G17",
+        "G18"
+      ],
+      "fail_ids": [],
+      "start_time_ms": 1785267168827,
+      "end_time_ms": 1785267169343.1477,
+      "raw_receipt": {
+        "path": "raw/AB_B.json",
+        "bytes": 7546,
+        "sha256": "615b2f44035b20bb2363041a236680ec13546b03055da51923e6e6f03dcf5e37"
+      }
+    },
+    {
+      "run_id": "BA_B",
+      "candidate": "B",
+      "order": "B→A",
+      "source": "raw/BA_B.json",
+      "success": true,
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "pass_ids": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09",
+        "G10",
+        "G11",
+        "G12",
+        "G13",
+        "G14",
+        "G15",
+        "G16",
+        "G17",
+        "G18"
+      ],
+      "fail_ids": [],
+      "start_time_ms": 1785267233114,
+      "end_time_ms": 1785267233629.1206,
+      "raw_receipt": {
+        "path": "raw/BA_B.json",
+        "bytes": 7546,
+        "sha256": "88ec8e1f66f5c8811de3ae6a4da6fa3a069d0c2564566289ca0bdd7b87e8cc2b"
+      }
+    },
+    {
+      "run_id": "BA_A",
+      "candidate": "A",
+      "order": "B→A",
+      "source": "raw/BA_A.json",
+      "success": false,
+      "total": 18,
+      "passed": 4,
+      "failed": 14,
+      "skipped": 0,
+      "pass_ids": [
+        "G10",
+        "G11",
+        "G12",
+        "G18"
+      ],
+      "fail_ids": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09",
+        "G13",
+        "G14",
+        "G15",
+        "G16",
+        "G17"
+      ],
+      "start_time_ms": 1785267255702,
+      "end_time_ms": 1785267256210.4639,
+      "raw_receipt": {
+        "path": "raw/BA_A.json",
+        "bytes": 23579,
+        "sha256": "295ce1d9f775a07c6bc48bc92f072e220729f41430b961f3c7789b4223d9f14d"
+      }
+    }
+  ],
+  "aggregates": {
+    "candidate_a": {
+      "passed": 4,
+      "failed": 14,
+      "pass_rate_percent": 22.222222,
+      "pass_ids": [
+        "G10",
+        "G11",
+        "G12",
+        "G18"
+      ],
+      "fail_ids": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09",
+        "G13",
+        "G14",
+        "G15",
+        "G16",
+        "G17"
+      ]
+    },
+    "candidate_b": {
+      "passed": 18,
+      "failed": 0,
+      "pass_rate_percent": 100,
+      "pass_ids": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08",
+        "G09",
+        "G10",
+        "G11",
+        "G12",
+        "G13",
+        "G14",
+        "G15",
+        "G16",
+        "G17",
+        "G18"
+      ],
+      "fail_ids": []
+    },
+    "delta_pass_count_b_minus_a": 14,
+    "delta_pass_rate_percentage_points": 77.777778,
+    "strata": [
+      {
+        "stratum": "guard_routing_and_side_effects",
+        "n": 6,
+        "candidate_a_passed": 0,
+        "candidate_b_passed": 6
+      },
+      {
+        "stratum": "current_turn_snapshot_path",
+        "n": 4,
+        "candidate_a_passed": 0,
+        "candidate_b_passed": 4
+      },
+      {
+        "stratum": "bounded_controller",
+        "n": 3,
+        "candidate_a_passed": 3,
+        "candidate_b_passed": 3
+      },
+      {
+        "stratum": "voice_and_formula_boundaries",
+        "n": 4,
+        "candidate_a_passed": 0,
+        "candidate_b_passed": 4
+      },
+      {
+        "stratum": "packaging_boundary",
+        "n": 1,
+        "candidate_a_passed": 1,
+        "candidate_b_passed": 1
+      }
+    ]
+  },
+  "order_swap": {
+    "order_ab_local_winner": "B",
+    "order_ba_local_winner": "B",
+    "robustness": "PASS",
+    "order_robust_rate": 1,
+    "inconsistent_rate": 0
+  },
+  "comparative_outcome": {
+    "descriptive_dominance": "B",
+    "protocol_formal_winner": null,
+    "comparison_status": "BENCHMARK_LOCAL_DESCRIPTIVE",
+    "claim_ceiling": "L3_BENCHMARK_LOCAL_DESCRIPTIVE",
+    "claim": "Candidate B satisfies all accepted G01-G18 gates at the exact tested commit; candidate A does not."
+  },
+  "boundaries": {
+    "deployment_claim": false,
+    "verified_live_claim": false,
+    "general_superiority_claim": false,
+    "skill_packaging_claim": false
+  },
+  "source_receipts": [
+    {
+      "path": "METHOD.json",
+      "bytes": 1377,
+      "sha256": "6f107c1468e08243b46c5698e573e5e147fe72f3905dce36136c7052eda3f3d6"
+    },
+    {
+      "path": "TOOLCHAIN.json",
+      "bytes": 256,
+      "sha256": "12506ac3f8a7f0178a7c2b3eab2f0812e7104a5b33de96052502c51861354dd9"
+    },
+    {
+      "path": "raw/AB_A.json",
+      "bytes": 23576,
+      "sha256": "183ea49a50fc5ad0d028ba00459e947432c736632eff9cac111abdfa16654ce8"
+    },
+    {
+      "path": "raw/AB_B.json",
+      "bytes": 7546,
+      "sha256": "615b2f44035b20bb2363041a236680ec13546b03055da51923e6e6f03dcf5e37"
+    },
+    {
+      "path": "raw/BA_B.json",
+      "bytes": 7546,
+      "sha256": "88ec8e1f66f5c8811de3ae6a4da6fa3a069d0c2564566289ca0bdd7b87e8cc2b"
+    },
+    {
+      "path": "raw/BA_A.json",
+      "bytes": 23579,
+      "sha256": "295ce1d9f775a07c6bc48bc92f072e220729f41430b961f3c7789b4223d9f14d"
+    }
+  ]
+}

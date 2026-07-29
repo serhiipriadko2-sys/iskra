@@ -1,0 +1,9 @@
+{
+  "node": "22.19.0",
+  "npm": "10.9.3",
+  "pnpm": "10.32.1",
+  "os": "Windows 10.0.19045.6093",
+  "execution_surface": "Remote Desktop Commander",
+  "device": "DESKTOP-ITUAMNF",
+  "container_network_fallback": "github.com DNS unavailable in container"
+}
