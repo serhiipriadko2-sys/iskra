@@ -198,8 +198,39 @@ export const symbiosisService = {
     if (!state || state.actionReceipts.some(item => item.permission_ref === receipt.permission_ref)) {
       return false;
     }
-    persistState({ ...state, actionReceipts: [...state.actionReceipts, receipt] });
-    return true;
+
+    const pendingReceipt: SymbiosisActionReceipt = {
+      ...receipt,
+      read_back: 'NOT_APPLICABLE',
+    };
+    persistState({ ...state, actionReceipts: [...state.actionReceipts, pendingReceipt] });
+
+    const persisted = this.getActionReceipts().some(item =>
+      item.permission_ref === pendingReceipt.permission_ref &&
+      item.action === pendingReceipt.action &&
+      item.result === pendingReceipt.result,
+    );
+    if (!persisted) return false;
+
+    const refreshed = this.getState();
+    if (!refreshed) return false;
+    const verifiedReceipt: SymbiosisActionReceipt = {
+      ...pendingReceipt,
+      read_back: 'VERIFIED',
+    };
+    persistState({
+      ...refreshed,
+      actionReceipts: refreshed.actionReceipts.map(item =>
+        item.permission_ref === verifiedReceipt.permission_ref
+          ? verifiedReceipt
+          : item,
+      ),
+    });
+
+    return this.getActionReceipts().some(item =>
+      item.permission_ref === verifiedReceipt.permission_ref &&
+      item.read_back === 'VERIFIED',
+    );
   },
 
   hasUsedConsentReceipt(receiptId: string): boolean {
