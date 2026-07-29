@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-29T18:01:25.875Z",
-  "total": 3680,
+  "generatedAt": "2026-07-29T18:03:56.470Z",
+  "total": 3682,
   "curated": 20,
   "layers": {
     "root": 346,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 75,
-    "governance": 387,
+    "governance": 388,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -23,7 +23,7 @@
     "engine": 41,
     "math": 19,
     "reference": 82,
-    "runtime": 377,
+    "runtime": 378,
     "skills": 269,
     "backend": 80,
     "system": 26,
@@ -27059,6 +27059,7 @@
         "governance/adr_20260722_release_ledger_consolidation_v1.md",
         "governance/adr_20260722_skill_registry_consolidation.md",
         "governance/adr_20260724_metrics_authority.md",
+        "governance/adr_20260729_packages_math_authoritative_api.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -27583,6 +27584,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/adr_20260724_metrics_authority.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260729_packages_math_authoritative_api.md",
+      "name": "adr_20260729_packages_math_authoritative_api.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260729_packages_math_authoritative_api.md",
       "related": [],
       "parent": "governance"
     },
@@ -37363,6 +37375,7 @@
         "runtime/iskraSpace/services/analytics.ts",
         "runtime/iskraSpace/services/auditService.ts",
         "runtime/iskraSpace/services/canonService.ts",
+        "runtime/iskraSpace/services/chatOfflineQueue.ts",
         "runtime/iskraSpace/services/deltaEnforcer.ts",
         "runtime/iskraSpace/services/deltaProtocol.ts",
         "runtime/iskraSpace/services/errorTracking.ts",
@@ -38190,6 +38203,17 @@
       "role": "code",
       "coverage": "indexed",
       "sourceRef": "runtime/iskraSpace/services/canonService.ts",
+      "related": [],
+      "parent": "runtime/iskraSpace/services"
+    },
+    {
+      "path": "runtime/iskraSpace/services/chatOfflineQueue.ts",
+      "name": "chatOfflineQueue.ts",
+      "kind": "file",
+      "layer": "runtime",
+      "role": "code",
+      "coverage": "indexed",
+      "sourceRef": "runtime/iskraSpace/services/chatOfflineQueue.ts",
       "related": [],
       "parent": "runtime/iskraSpace/services"
     },
