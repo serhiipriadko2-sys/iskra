@@ -1,3 +1,4 @@
+import { createDefaultAiInteractionBoundaryHooks } from './aiInteractionBoundaryHooks';
 import { IskraAIService } from './geminiService';
 
 export const AI_INTERACTION_ROUTE_POLICIES = {
@@ -357,6 +358,8 @@ export function createAiInteractionCoordinator(
   });
 }
 
-export const aiInteractionCoordinator = createAiInteractionCoordinator();
+export const aiInteractionCoordinator = createAiInteractionCoordinator({
+  hooks: createDefaultAiInteractionBoundaryHooks(),
+});
 
 export default aiInteractionCoordinator;
