@@ -32,10 +32,12 @@ describe('depthConsentService action boundary', () => {
     expect(result.stored).toBe(true);
     expect(result.verified).toBe(true);
     expect(result.receipt.permission_ref).toBe(consent?.id);
+    expect(result.receipt.read_back).toBe('VERIFIED');
     expect(symbiosisService.getActionReceipts()[0]).toMatchObject({
       action: 'ai.research.deep',
       permission_ref: consent?.id,
       result: 'DONE',
+      read_back: 'VERIFIED',
     });
   });
 
@@ -57,6 +59,7 @@ describe('depthConsentService action boundary', () => {
     );
 
     expect(first.verified).toBe(true);
+    expect(first.receipt.read_back).toBe('VERIFIED');
     expect(replay.stored).toBe(false);
     expect(replay.verified).toBe(false);
   });
