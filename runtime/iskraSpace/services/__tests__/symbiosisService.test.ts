@@ -28,10 +28,11 @@ describe('symbiosisService onboarding state', () => {
     expect(symbiosisService.isStateless()).toBe(true);
   });
 
-  it('persists a consented profile with ASK_EACH personal memory', () => {
+  it('persists a consented profile with ASK_EACH personal and depth permissions', () => {
     const state = symbiosisService.completeOnboarding('CONSENTED');
     expect(state.profile.memory_mode).toBe('CONSENTED');
     expect(state.profile.memory_permissions['memory.write.personal']).toBe('ASK_EACH');
+    expect(state.profile.memory_permissions['depth.surgery']).toBe('ASK_EACH');
     expect(symbiosisService.isStateless()).toBe(false);
   });
 
@@ -49,6 +50,69 @@ describe('symbiosisService onboarding state', () => {
     expect(receipt?.scope).toBe('memory.write.personal');
     expect(receipt?.decision).toBe('GRANTED');
     expect(symbiosisService.getCurrentConsent('memory.write.personal')?.id).toBe(receipt?.id);
+  });
+
+  it('expires depth.surgery consent at its declared boundary', () => {
+    symbiosisService.completeOnboarding('CONSENTED');
+    const receipt = symbiosisService.grantConsent(
+      'depth.surgery',
+      'Run one deep AI action',
+      5,
+    );
+    expect(receipt?.expires_at).toBeTruthy();
+
+    const expiresAt = Date.parse(receipt?.expires_at ?? '');
+    expect(symbiosisService.getCurrentConsent(
+      'depth.surgery',
+      new Date(expiresAt - 1).toISOString(),
+    )?.id).toBe(receipt?.id);
+    expect(symbiosisService.getCurrentConsent(
+      'depth.surgery',
+      new Date(expiresAt).toISOString(),
+    )).toBeNull();
+  });
+
+  it('records denial as the latest decision and invalidates an earlier grant', () => {
+    symbiosisService.completeOnboarding('CONSENTED');
+    const grant = symbiosisService.grantConsent(
+      'depth.surgery',
+      'Run one deep AI action',
+    );
+    const denial = symbiosisService.denyConsent(
+      'depth.surgery',
+      'User declined the deep AI action',
+    );
+
+    expect(grant?.decision).toBe('GRANTED');
+    expect(denial?.decision).toBe('DENIED');
+    expect(symbiosisService.getCurrentConsent('depth.surgery')).toBeNull();
+    expect(symbiosisService.getReceipts().at(-1)?.id).toBe(denial?.id);
+  });
+
+  it('revokes a current depth.surgery grant and preserves the audit chain', () => {
+    symbiosisService.completeOnboarding('CONSENTED');
+    const grant = symbiosisService.grantConsent(
+      'depth.surgery',
+      'Run one deep AI action',
+    );
+    const revoked = symbiosisService.revokeConsent(
+      'depth.surgery',
+      'User revoked the deep AI action',
+    );
+
+    expect(grant?.decision).toBe('GRANTED');
+    expect(revoked?.decision).toBe('REVOKED');
+    expect(symbiosisService.getCurrentConsent('depth.surgery')).toBeNull();
+    expect(symbiosisService.getReceipts().map(receipt => receipt.decision))
+      .toEqual(['GRANTED', 'REVOKED']);
+  });
+
+  it('does not create a revoke receipt without a current grant', () => {
+    symbiosisService.completeOnboarding('CONSENTED');
+    expect(symbiosisService.revokeConsent(
+      'depth.surgery',
+      'Nothing to revoke',
+    )).toBeNull();
   });
 
   it('retains superseded consent receipts so action permission refs stay auditable', () => {
