@@ -1,14 +1,17 @@
 ---
 sigil: governance__adr_20260729_packages_math_authoritative_api
 layer: governance
-status: proposed
+status: accepted
 updated: 2026-07-29
-authority: owner-priority-approved
+authority: owner-accepted
+accepted_at: 2026-07-29T21:19:00+03:00
+acceptance_phrase: "Принимаю ADR-20260729-02"
 ---
 
 # ADR-20260729-02 — Authoritative HFD/DFA public API boundary in `packages/math`
 
-**Status:** `proposed`
+**Status:** `accepted`
+**Accepted:** `2026-07-29T21:19:00+03:00` by Owner Семён
 **Layer:** `system + governance`
 **Owner:** Семён
 **Builder:** Искра / SAM+ISKRIV
@@ -224,12 +227,14 @@ No HFD/DFA receipt may claim entropy parity or package-wide formula-owner activa
 
 ### D12 — Governance activation boundary
 
-This ADR remains proposed until explicit Owner acceptance.
+This ADR was explicitly accepted by the Owner on `2026-07-29T21:19:00+03:00` with the exact phrase `Принимаю ADR-20260729-02`.
+
+Acceptance establishes the decision boundary only. It does **not** authorize implementation, merge runtime changes, activate HFD/DFA authority, activate package-wide formula authority, install a Skill, or deprecate transition Skills.
 
 HFD/DFA scoped activation requires all of:
 
-1. Owner acceptance of this ADR;
-2. separate implementation authorization;
+1. Owner acceptance of this ADR — **satisfied**;
+2. separate implementation authorization — **not satisfied**;
 3. all tests below passing on the implementation head;
 4. review and merge of the implementation PR;
 5. migration of every authority-path raw consumer and duplicate public runtime surface;
@@ -385,7 +390,7 @@ Migration boundary:
 
 > Can HFD/DFA activate while `packages/engine` or `runtime/src/types/fractal.ts` still expose raw HFD/DFA behavior?
 
-Expected: no; every authority-path consumer and duplicate public runtime surface must migrate before activation.
+Expected: no; every authority-path raw consumer and duplicate public runtime surface must migrate before activation.
 
 Sunset boundary:
 
@@ -407,9 +412,9 @@ Expected: no; Skill parity and deprecation remain separate blocked gates.
 
 ## Diff scope
 
-This ADR PR changes only:
+This ADR acceptance PR changes only:
 
-- `governance/adr_20260729_packages_math_authoritative_api.md`.
+- `governance/adr_20260729_packages_math_authoritative_api.md` lifecycle metadata and acceptance boundary.
 
 Follow-up implementation scope may include:
 
@@ -428,19 +433,17 @@ Entropy implementation remains governed by the parent ADR and is not silently in
 
 ## Rollback
 
-Before acceptance: close the ADR PR with no runtime effect.
-
-After acceptance but before implementation: supersede this ADR through another Owner decision.
+After acceptance but before implementation: supersede this ADR through another explicit Owner decision.
 
 After implementation: retain a versioned compatibility namespace until the fixed recorded sunset if rollback is required, but do not restore stand-ins, false provenance, unbounded overrides or raw authority-path consumers.
 
 ## Builder/package mirror
 
-`pending` — no Builder or Skill package change in this ADR PR.
+`pending` — no Builder or Skill package change in this acceptance PR.
 
 ## Live verification
 
-`not_applicable` — governance selection only.
+`not_applicable` — governance acceptance only.
 
 ## Status ladder
 
@@ -459,7 +462,7 @@ priority approved
 
 ## ΔDΩΛ
 
-- **Δ:** selects a fixed, typed, provenance-bearing HFD/DFA authority boundary; adds consumer/runtime migration, generated-mirror, numerical-failure, fixed-sunset and entropy non-claim gates.
-- **D:** exact-main raw/typed split -> three Codex review passes -> repository evidence for engine and runtime raw use, Edge hand-port and transition registry -> bounded scoped decision.
-- **Ω:** 0.95 for repository-static conflict and decision shape; implementation and activation remain unverified.
-- **Λ:** revise if consumer inventory proves a required alternative API, strict parity is technically impossible with documented evidence, parent entropy gates change, or Owner rejects this proposal.
+- **Δ:** Owner acceptance recorded; the fixed, typed, provenance-bearing HFD/DFA authority boundary is accepted, while implementation and activation remain gated.
+- **D:** exact Owner phrase `Принимаю ADR-20260729-02` -> lifecycle transition `proposed -> accepted` -> separate implementation authorization remains required.
+- **Ω:** 0.95 for governance acceptance and repository-static decision shape; implementation and activation remain unverified.
+- **Λ:** revise only through a later explicit Owner decision, or if implementation evidence proves a load-bearing contract technically impossible.
