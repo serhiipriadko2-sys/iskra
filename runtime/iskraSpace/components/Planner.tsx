@@ -7,7 +7,7 @@ import { Task, RitualTag } from '../types';
 import Loader from './Loader';
 import { FlameIcon, DropletsIcon, SunIcon, ScaleIcon, TriangleIcon, TrashIcon, ClockIcon, GripVerticalIcon } from './icons';
 
-const service = aiInteractionCoordinator.service;
+const service = aiInteractionCoordinator;
 
 const ritualIcons: Record<RitualTag, React.FC<React.SVGProps<SVGSVGElement>>> = {
     FIRE: FlameIcon,

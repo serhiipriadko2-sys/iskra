@@ -7,7 +7,7 @@ import { JournalPrompt, JournalEntry } from '../types';
 import Loader from './Loader';
 import { SparkleIcon, XIcon, ChevronRightIcon, Undo2Icon } from './icons';
 
-const service = aiInteractionCoordinator.service;
+const service = aiInteractionCoordinator;
 
 type PendingJournalAction = Extract<
     SecurityCheckResult['action'],

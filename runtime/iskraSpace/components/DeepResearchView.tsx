@@ -9,7 +9,7 @@ import { FileSearchIcon, TriangleIcon, SparkleIcon } from './icons';
 import MiniMetricsDisplay from './MiniMetricsDisplay';
 import { getActiveVoice } from '../services/voiceEngine';
 
-const service = aiInteractionCoordinator.service;
+const service = aiInteractionCoordinator;
 
 type ResearchStatus = 'IDLE' | 'SEARCHING' | 'SYNTHESIZING' | 'GENERATING' | 'DONE' | 'ERROR';
 type ResearchMode = 'research' | 'audit';

@@ -25,7 +25,7 @@ const RESPONSE_MODE_DISPLAY: Record<ResponseMode, { label: string; icon: string;
 
 const TTS_AVAILABLE = isBetaCapabilityEnabled('textToSpeech');
 
-const service = aiInteractionCoordinator.service;
+const service = aiInteractionCoordinator;
 
 interface ChatViewProps {
   metrics: IskraMetrics;

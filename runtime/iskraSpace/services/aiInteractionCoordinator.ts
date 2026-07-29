@@ -105,8 +105,6 @@ export class AiInteractionDeadlineError extends Error {
 }
 
 export type AiInteractionCoordinator = AiInteractionGateway & {
-  /** Typed compatibility facade. This is not the raw IskraAIService instance. */
-  readonly service: AiInteractionGateway;
   abort(): void;
   getReceipts(): readonly AiInteractionReceipt[];
   getAllowedRoutes(): readonly AiInteractionRoute[];
@@ -351,7 +349,6 @@ export function createAiInteractionCoordinator(
 
   return Object.freeze({
     ...gateway,
-    service: gateway,
     abort: () => port.abort(),
     getReceipts: () => Object.freeze([...receipts]),
     getAllowedRoutes: () => Object.freeze(

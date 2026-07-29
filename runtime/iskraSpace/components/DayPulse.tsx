@@ -13,7 +13,7 @@ import {
     FlameIcon, DropletsIcon, SunIcon, ScaleIcon, TriangleIcon
 } from './icons';
 
-const service = aiInteractionCoordinator.service;
+const service = aiInteractionCoordinator;
 
 interface DayPulseProps {
     metrics?: IskraMetrics;
