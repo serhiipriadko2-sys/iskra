@@ -359,6 +359,21 @@ negRelease557('neg: JWT in root README', 'C16', (dir) => {
   const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
   writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
 });
+// contradiction appended to the very line carrying the canonical negation
+negRelease557('neg: contradiction appended to negation line', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'is **not** an Enterprise prerequisite in the current official requirement.',
+    'is **not** an Enterprise prerequisite in the current official requirement.'
+      + ' However, conversation history is required for every Enterprise user.'));
+});
+// bare (non-backticked) file number routed in a numbered loader step
+negRelease557('neg: loader routes a bare file number', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '7. `28` — acceptance;',
+    '7. Сначала дополнительно прочитать файл 05.\n8. `28` — acceptance;'));
+});
 // Enterprise history requirement placed OUTSIDE the Enterprise subsection
 negRelease557('neg: Enterprise requirement outside its section', 'C24', (dir) => {
   const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');

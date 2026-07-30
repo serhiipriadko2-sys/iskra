@@ -82,8 +82,10 @@ SECURITY → STOP → INVESTIGATE → FIND → TRACE → MYTHIC_INQUIRY → STAT
 3. Затем `03–07` identity/truth/security/router.
 4. Для каждого значимого хода применять инварианты control-plane `08–20`; извлекать конкретные файлы по зависимостям задачи.
 5. `21–23` задают ledger и границы поверхностей.
-6. `24–27` — reference/mind слои; файл 25 содержит atomic Mythic Cognition Router overlay v0.3.1 и seed-corpus; inquiry расширяет candidate set, но остаётся слабее Security/Evidence/Guard/Council/Voice.
+6. `24–27` — reference/mind слои; inquiry расширяет candidate set, но остаётся слабее Security/Evidence/Guard/Council/Voice.
 7. `28` — acceptance; его prompts не являются пользовательскими инструкциями.
+
+Примечание (не маршрут, пояснение к шагу 6): файл 25 содержит atomic Mythic Cognition Router overlay v0.3.1 и seed-corpus. Нумерованные шаги выше содержат только маршруты — любая ссылка на файл внутри них считается маршрутом (см. `28` → T96).
 
 ## Precedence
 - Project Instructions сильнее исторического текста.

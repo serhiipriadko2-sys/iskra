@@ -4,12 +4,12 @@
   "baseline_release": "v5.5.6",
   "date": "2026-07-30",
   "adr": "ADR-20260730-01",
-  "generated_from": "canonical_git_blobs",
-  "generated_from_ref": "1dd400274c4ae9d3ef56a08baa19a142cf5b0f7a",
+  "generated_from": "release_tree_working_bytes",
+  "generated_from_ref": null,
   "line_ending_policy": "LF",
   "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
   "knowledge_file_count": 30,
-  "corpus_bytes": 4055060,
+  "corpus_bytes": 4055351,
   "project_instructions_chars": 5996,
   "project_instructions_bytes": 8200,
   "acceptance_range": "T01-T97",
@@ -50,8 +50,8 @@
   "files": [
     {
       "path": "knowledge/00_PROJECT_ROUTER.md",
-      "bytes": 11075,
-      "sha256": "e4d925698b030fcf7f9464a097a0090f7700c0aacc3442e180b9918a50110e10"
+      "bytes": 11366,
+      "sha256": "3a5a1e3d0837929aeddef26a4bac575289266f3db99b68e16a718c5bd78a2bb9"
     },
     {
       "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
@@ -196,7 +196,7 @@
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
       "bytes": 14868,
-      "sha256": "7f1593849c30fefc27d3955521323113d8c43aa812e121c067e4349a3722c025"
+      "sha256": "70e939cf400710177bd7fe594541d7b4237d67cbd7e536911bc010627a56ab0f"
     }
   ],
   "live_project_verified": false
