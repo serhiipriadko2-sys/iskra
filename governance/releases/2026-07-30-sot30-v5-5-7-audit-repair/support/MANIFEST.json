@@ -4,12 +4,12 @@
   "baseline_release": "v5.5.6",
   "date": "2026-07-30",
   "adr": "ADR-20260730-01",
-  "generated_from": "canonical_git_blobs",
-  "generated_from_ref": "8c0bb140c98314454448f51a002cadd3dd18fc2c",
+  "generated_from": "release_tree_working_bytes",
+  "generated_from_ref": null,
   "line_ending_policy": "LF",
   "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
   "knowledge_file_count": 30,
-  "corpus_bytes": 4054058,
+  "corpus_bytes": 4055060,
   "project_instructions_chars": 5996,
   "project_instructions_bytes": 8200,
   "acceptance_range": "T01-T97",
@@ -50,8 +50,8 @@
   "files": [
     {
       "path": "knowledge/00_PROJECT_ROUTER.md",
-      "bytes": 10373,
-      "sha256": "6161479fce36fee1aade95828aa5bbe5bcf96163a9a84c1c36a14db3588c631b"
+      "bytes": 11075,
+      "sha256": "e4d925698b030fcf7f9464a097a0090f7700c0aacc3442e180b9918a50110e10"
     },
     {
       "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
@@ -190,13 +190,13 @@
     },
     {
       "path": "knowledge/28_EVALS_ACCEPTANCE.md",
-      "bytes": 17557,
-      "sha256": "abda135a9ebabca77cc44a9e1ad454c4f399b3e41dc03be24c2adb8a531199ba"
+      "bytes": 17857,
+      "sha256": "d6baa57dd6bf894d1e8bb17bd931477102560457d183f1080d905366b78268ba"
     },
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
       "bytes": 14868,
-      "sha256": "d27d73924abc8857e41ce545c20d9a52c53633a6ba23d837d4638387af6f4083"
+      "sha256": "7f1593849c30fefc27d3955521323113d8c43aa812e121c067e4349a3722c025"
     }
   ],
   "live_project_verified": false

@@ -633,11 +633,18 @@ const appliesFrom = (floor: string): boolean =>
     // not a general semantic proof — extend the lexicon when new phrasings are
     // observed (static regex cannot prove absence in arbitrary phrasing).
     const ent = between(f02, '### Enterprise users', '### All other subscriptions (including Business)');
-    const entWithoutNegation = ent.replace(
-      /`Reference chat history` is \*\*not\*\* an Enterprise prerequisite[^\n]*/i, '',
-    );
     const historyLexicon = /(chat|conversation)[ -]?history|previous conversations|prior (chats|conversations)|истори[юия][^\n]{0,20}(чат|разговор)/i;
-    const entSemanticOk = ent.length > 0 && !historyLexicon.test(entWithoutNegation);
+    const canonicalNegation = /`Reference chat history` is \*\*not\*\* an Enterprise prerequisite/i;
+    // Scan the ENTIRE normative memory-boundary contract, not just the Enterprise
+    // subsection: a requirement sentence placed anywhere in the contract still binds.
+    // Rule: no line that mentions Enterprise may carry a history-requirement term,
+    // except the one canonical negation. Lines that do NOT mention Enterprise are
+    // untouched, so the non-Enterprise section keeps its required `Reference chat
+    // history` bullet. (Machine token after `<!-- T85-CONTRACT` is out of scope.)
+    const memContract = between(f02, '## Memory boundary', '<!-- T85-CONTRACT');
+    const entSemanticOk = ent.length > 0 && memContract.length > 0
+      && !memContract.split('\n').some((l) =>
+        /enterprise/i.test(l) && !canonicalNegation.test(l) && historyLexicon.test(l));
     const t94Ok = /^\| T94-SHARED-PROJECT-MEMORY \|.*project-only.*cannot revert/m.test(f28);
     const t95Ok = /^\| T95-MEMORY-BOUNDARY-DIMENSIONS \|.*outside-chat reference denied, saved-memory reference allowed/m.test(f28);
     check(sharedOk && matrixOk && tokenOk && entSemanticOk && t94Ok && t95Ok, 'C24',
@@ -775,10 +782,12 @@ const appliesFrom = (floor: string): boolean =>
       '01_PARITY_ADVANCEMENT_MANIFEST.md', '02_PROJECTS_SURFACE_MAP.md',
       '03–07', '08–20', '21–23', '24–27', '28'];
     const stepLines = loader.split('\n').filter((l) => /^\d+\.\s/.test(l)).join('\n');
-    const tokenRe = new RegExp(
-      seq.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g',
-    );
-    const routed = [...stepLines.matchAll(tokenRe)].map((m) => m[0]);
+    // Parse EVERY route reference the steps contain — file names, group ranges and
+    // backticked file numbers — rather than searching for the expected literals only.
+    // Otherwise an unrecognized extra step (e.g. routing `05_TRUTH_SIFT_RAG.md`) is
+    // invisible to the check while it claims the order is exact.
+    const routed = [...stepLines.matchAll(/\d\d_[A-Z0-9_]+\.md|\d\d–\d\d|`\d\d`/g)]
+      .map((m) => m[0].replace(/`/g, ''));
     const orderOk = loader.length > 0 && routed.length === seq.length
       && routed.every((t, i) => t === seq[i]);
     // file 29 must carry the COMPLETE reading order too, not a prefix: otherwise its

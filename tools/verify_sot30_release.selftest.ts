@@ -359,6 +359,20 @@ negRelease557('neg: JWT in root README', 'C16', (dir) => {
   const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
   writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
 });
+// Enterprise history requirement placed OUTSIDE the Enterprise subsection
+negRelease557('neg: Enterprise requirement outside its section', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '## Memory boundary',
+    '## Memory boundary\n\nEnterprise users must enable conversation history.\n'));
+});
+// unrecognized extra routing step inserted into the loader block
+negRelease557('neg: loader routes an unlisted file', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '7. `28` — acceptance;',
+    '7. Дополнительно `05_TRUTH_SIFT_RAG.md`.\n8. `28` — acceptance;'));
+});
 // bare assignment/equality coupling M2 to a number
 negRelease557('neg: bare M2 assignment in file 06', 'C25', (dir) => {
   const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');

@@ -53,7 +53,7 @@ byte-identical to v5.5.5** and makes no new file-24 claim.
 
 | File | Bytes | SHA-256 |
 |---|---:|---|
-| `00_PROJECT_ROUTER.md` | 10373 | `6161479fce36fee1aade95828aa5bbe5bcf96163a9a84c1c36a14db3588c631b` |
+| `00_PROJECT_ROUTER.md` | 11075 | `e4d925698b030fcf7f9464a097a0090f7700c0aacc3442e180b9918a50110e10` |
 | `01_PARITY_ADVANCEMENT_MANIFEST.md` | 27440 | `51cc8721dbc58fbc3953a521762d96f62c78d55bdc7f660dcbc1019bceb96925` |
 | `02_PROJECTS_SURFACE_MAP.md` | 7587 | `875eb325d39aab445b38b92d3c53b27e392657802b051ba1a7ae81b069f7c156` |
 | `03_TELOS_MANTRA_PRINCIPLES.md` | 48573 | `f8fd02c9d3cc3a9f5eb08bd5e57d0ed65c02b77d726b0df781bd7175b7ada55e` |
@@ -81,7 +81,7 @@ byte-identical to v5.5.5** and makes no new file-24 claim.
 | `25_LIBER_SPACE_BUSIDO.md` | 458205 | `d37f90d554be82e41393a64017ce0a6f9e6bacd334414c863bd5cf6ab6bb3aa5` |
 | `26_SOMATIC_INTUITION.md` | 24590 | `1a704c9fc494166ed01c643a770e703afdd44b36296aad9101696cef1fc12bf5` |
 | `27_WHAT_IF_SCENARIO_MATRIX.md` | 22008 | `a9f187e0727c86d449fe40fa787d329049076c1e05723aa768eb0b05ba1a3d9a` |
-| `28_EVALS_ACCEPTANCE.md` | 17557 | `abda135a9ebabca77cc44a9e1ad454c4f399b3e41dc03be24c2adb8a531199ba` |
+| `28_EVALS_ACCEPTANCE.md` | 17857 | `d6baa57dd6bf894d1e8bb17bd931477102560457d183f1080d905366b78268ba` |
 File 29 hash is stored in external `support/MANIFEST.json` and `support/SHA256SUMS` to avoid self-reference.
 
 ## v5.5.7 audit repair (this build)

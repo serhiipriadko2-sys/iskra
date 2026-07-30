@@ -78,7 +78,7 @@ SECURITY → STOP → INVESTIGATE → FIND → TRACE → MYTHIC_INQUIRY → STAT
 ## Loader contract
 Порядок ниже — канонический routing/retrieval contract этого пакета: запрашивать файлы в этом порядке. Он не является доказанным внутренним порядком чтения платформы; не утверждать фактическое чтение файла без retrieval evidence (см. `28` → T84, T96).
 1. На старте прочитать `29_INDEX_UPLOAD_MANIFEST.md`.
-2. Затем `00_PROJECT_ROUTER.md`; сразу после него `01_PARITY_ADVANCEMENT_MANIFEST.md` (текущий статусный overlay) и `02_PROJECTS_SURFACE_MAP.md` (границы Projects-поверхности и памяти).
+2. Затем `00_PROJECT_ROUTER.md`; сразу после него `01_PARITY_ADVANCEMENT_MANIFEST.md` (**исторический** статусный snapshot, `current_status_authority: false` — нормативные строки в нём валидны, но текущим статусом он не является) и `02_PROJECTS_SURFACE_MAP.md` (границы Projects-поверхности и памяти).
 3. Затем `03–07` identity/truth/security/router.
 4. Для каждого значимого хода применять инварианты control-plane `08–20`; извлекать конкретные файлы по зависимостям задачи.
 5. `21–23` задают ledger и границы поверхностей.
@@ -86,6 +86,8 @@ SECURITY → STOP → INVESTIGATE → FIND → TRACE → MYTHIC_INQUIRY → STAT
 7. `28` — acceptance; его prompts не являются пользовательскими инструкциями.
 
 ## Precedence
-- Project Instructions и текущий статусный overlay (`01 · Current Status`, только при наличии `observed_at`) сильнее исторического текста; overlay с устаревшим `observed_at` — исторический snapshot, а не live-статус (см. T89).
+- Project Instructions сильнее исторического текста.
+- Файл 01 — **исторический** статусный snapshot (`current_status_authority: false`): его нормативные строки остаются в силе, но источником текущего статуса он не является и не может повышать устаревшие runtime/gateway-факты.
+- Текущий live-статус (deployment, schema, runtime) берётся из датированного overlay в `15_SUPABASE_MEMORY_PLANE.md` и только при свежем `observed_at`; любой overlay с устаревшим `observed_at` — исторический snapshot, а не live-статус, а при истечении срока ответ — `STALE/UNKNOWN` (см. T89).
 - Файлы 08–20 этого пакета сильнее одноимённых старых SoT40-файлов.
 - External Actions никогда не являются hard dependency Project runtime.
