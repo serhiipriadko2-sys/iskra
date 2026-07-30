@@ -359,6 +359,44 @@ negRelease557('neg: JWT in root README', 'C16', (dir) => {
   const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
   writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
 });
+// receipt claims a canonical git-blob build the manifest does not record
+negRelease557('neg: receipt claims git provenance without it', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.generated_from = 'release_tree_working_bytes';
+  m.generated_from_ref = null;
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// baseline_release truncated relative to the supplied baseline manifest
+negRelease557('neg: baseline_release truncated', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.baseline_release = 'v5.5';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// aggregate summary fields falsified while per-file entries stay correct
+negRelease557('neg: manifest summary fields falsified', 'C4', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.knowledge_file_count = 0;
+  m.corpus_bytes = 0;
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// duplicate context-boundary row carrying the opposite values
+negRelease557('neg: duplicate context-boundary row', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    "| Shared project | denied (auto project-only) | denied; members' external context excluded |",
+    "| Shared project | denied (auto project-only) | denied; members' external context excluded |\n"
+      + '| Shared project | allowed | allowed |'));
+});
+// requirement inside the Enterprise subsection that does not repeat the word
+negRelease557('neg: Enterprise-scoped line without the word', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '### All other subscriptions (including Business)',
+    'Conversation history is required.\n\n### All other subscriptions (including Business)'));
+});
 // contradiction appended to the very line carrying the canonical negation
 negRelease557('neg: contradiction appended to negation line', 'C24', (dir) => {
   const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');

@@ -136,6 +136,25 @@ check(
 
 // ---- MANIFEST.files = exact 30 knowledge set, with EXACT full paths ----
 const manifest = JSON.parse(readFileSync(join(sdir, 'MANIFEST.json'), 'utf8'));
+
+// ---- version helpers (floor-gated contracts; defined here so C19 onward can use them) ----
+const verTuple = (v: string): number[] => {
+  const m = String(v ?? '').match(/^v?(\d+)\.(\d+)\.(\d+)$/);
+  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [0, 0, 0];
+};
+const versionWellFormed = /^v?\d+\.\d+\.\d+$/.test(String(manifest.package_version ?? ''));
+const atLeast = (v: string, floor: string): boolean => {
+  const a = verTuple(v); const b = verTuple(floor);
+  for (let i = 0; i < 3; i += 1) {
+    if (a[i] !== b[i]) return a[i] > b[i];
+  }
+  return true;
+};
+// A malformed package_version must NEVER downgrade to "contract not applicable":
+// that would let a corrupted manifest bypass every floor-gated semantic check.
+const appliesFrom = (floor: string): boolean =>
+  versionWellFormed && atLeast(manifest.package_version ?? '', floor);
+
 const manFullPaths = (manifest.files ?? []).map((f: { path: string }) => f.path);
 const manFullSet = new Set<string>(manFullPaths);
 const expectedManPaths = new Set<string>(knames.map((n) => `knowledge/${n}`));
@@ -147,10 +166,18 @@ for (const f of manifest.files ?? []) {
     manHashOk = false;
   }
 }
+// Aggregate summary fields must be recomputed, not trusted: a manifest whose
+// per-file entries are correct can still advertise a false file count or corpus size,
+// and the hash chain would authenticate that lie.
+const corpusActual = knames.reduce((a, n) => a + kbytes[n].length, 0);
+const summaryOk = manifest.knowledge_file_count === 30
+  && manifest.corpus_bytes === corpusActual;
 check(
   manHashOk && manifest.files?.length === 30
-    && manFullPaths.length === 30 && manFullSet.size === 30 && setEq(manFullSet, expectedManPaths),
-  'C4', 'MANIFEST.files = exact 30 knowledge paths (full-path set), bytes+sha256 correct',
+    && manFullPaths.length === 30 && manFullSet.size === 30 && setEq(manFullSet, expectedManPaths)
+    && summaryOk,
+  'C4', 'MANIFEST.files = exact 30 knowledge paths (full-path set), bytes+sha256 correct; '
+  + `summary fields recomputed (count=${manifest.knowledge_file_count}, corpus_bytes=${manifest.corpus_bytes} vs actual ${corpusActual})`,
 );
 
 // ---- file-29 embedded table = exact {00..28} set ----
@@ -195,8 +222,10 @@ check(t80Ok, 'C7', 'T80: file-00 mirror region is BYTE-EQUAL to standalone instr
 // characters"): an honestly-counted but oversized payload still violates the contract.
 const INSTRUCTIONS_CHAR_CEILING = 6000;
 check(manifest.project_instructions_chars === instr.length
+  && manifest.project_instructions_bytes === instrBuf.length
   && instr.length <= INSTRUCTIONS_CHAR_CEILING, 'C8',
 `project_instructions_chars recorded (${manifest.project_instructions_chars}) == actual (${instr.length}) `
++ `and bytes recorded (${manifest.project_instructions_bytes}) == actual (${instrBuf.length}) `
 + `and within the ${INSTRUCTIONS_CHAR_CEILING}-character ceiling`);
 
 // ---- changed / unchanged sets ----
@@ -393,6 +422,12 @@ const compToken = (t: string): [number, number] | null => {
   const m = t.match(/composition:\s*changed=(\d+)\s+unchanged=(\d+)/i);
   return m ? [Number(m[1]), Number(m[2])] : null;
 };
+// baseline named in the same token; compared to the manifest from v5.5.7 onward so a
+// truncated/wrong `--baseline-version` cannot leave root docs and manifest disagreeing.
+const compBaseline = (t: string): string | null => {
+  const m = t.match(/composition:[^>]*baseline=(v\d+(?:\.\d+)*)/i);
+  return m ? m[1] : null;
+};
 const manComp: [number, number] = [changed.length, unchanged.length];
 const rootTokens: Record<string, [number, number] | null> = {};
 for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
@@ -408,7 +443,13 @@ const tokensAgree = tokensPresent && allTokens.every(
 // contradicting "N files unchanged" count.
 const f29DefersToManifest = /manifest'?s?\b|support\/MANIFEST\.json/i.test(f29)
   && !/\b(\d+) files? (are )?(byte-)?identical\b/i.test(f29);
-check(tokensAgree && f29DefersToManifest, 'C19',
+// from v5.5.7: every root token must also name the manifest's baseline_release
+const baselineTokensOk = !appliesFrom('v5.5.7')
+  || ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md'].every((doc) => {
+    const dp = join(releaseDir, doc);
+    return existsSync(dp) && compBaseline(readFileSync(dp, 'utf8')) === manifest.baseline_release;
+  });
+check(tokensAgree && f29DefersToManifest && baselineTokensOk, 'C19',
   `T88 composition agreement (manifest changed=${manComp[0]}/unchanged=${manComp[1]}; root tokens ${
     tokensPresent ? 'present' : 'MISSING'}; file29 defers=${f29DefersToManifest})`);
 
@@ -486,24 +527,6 @@ check(contradictions.length === 0, 'C21',
     + `pkg=${pkgVer}; supersedes⊇${baseVer}:${c22b}; comp⊇${baseVer}:${c22c}; no-internal-contradiction:${c22d})`);
 }
 
-
-// ---- version helpers shared by C23–C26 (floor-gated contracts) ----
-const verTuple = (v: string): number[] => {
-  const m = String(v ?? '').match(/^v?(\d+)\.(\d+)\.(\d+)$/);
-  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [0, 0, 0];
-};
-const versionWellFormed = /^v?\d+\.\d+\.\d+$/.test(String(manifest.package_version ?? ''));
-const atLeast = (v: string, floor: string): boolean => {
-  const a = verTuple(v); const b = verTuple(floor);
-  for (let i = 0; i < 3; i += 1) {
-    if (a[i] !== b[i]) return a[i] > b[i];
-  }
-  return true;
-};
-// A malformed package_version must NEVER downgrade to "contract not applicable":
-// that would let a corrupted manifest bypass every floor-gated semantic check.
-const appliesFrom = (floor: string): boolean =>
-  versionWellFormed && atLeast(manifest.package_version ?? '', floor);
 
 // ---- C23: T85/T86 acceptance-contract consistency ----
 // Introduced after the v5.5.5 clean-Project diagnostic run. Older immutable
@@ -598,10 +621,12 @@ const appliesFrom = (floor: string): boolean =>
     // exact cell-value contract: parse each boundary row and assert the semantic
     // value of BOTH cells, so reversing e.g. Project-only to allowed/allowed fails
     // even though every keyword is still present somewhere in the section.
+    // exactly ONE row per label: a duplicate row carrying the opposite values would
+    // otherwise ship alongside the correct one while `.find()` validated only the first.
     const matrixCell = (rowLabel: string): [string, string] | null => {
-      const row = matrix.split('\n').find((l) => l.trim().startsWith(`| ${rowLabel}`));
-      if (!row) return null;
-      const cells = row.split('|').map((c) => c.trim());
+      const rows = matrix.split('\n').filter((l) => l.trim().startsWith(`| ${rowLabel}`));
+      if (rows.length !== 1) return null;
+      const cells = rows[0].split('|').map((c) => c.trim());
       return cells.length >= 4 ? [cells[2], cells[3]] : null;
     };
     // a cell must OPEN with the expected value AND must not smuggle the opposite
@@ -646,11 +671,18 @@ const appliesFrom = (floor: string): boolean =>
     // untouched, so the non-Enterprise section keeps its required `Reference chat
     // history` bullet. (Machine token after `<!-- T85-CONTRACT` is out of scope.)
     const memContract = between(f02, '## Memory boundary', '<!-- T85-CONTRACT');
-    const entSemanticOk = ent.length > 0 && memContract.length > 0
-      && !memContract.split('\n').some((l) => {
-        const rest = l.replace(canonicalNegationClause, '');
-        return /enterprise/i.test(rest) && historyLexicon.test(rest);
-      });
+    // INSIDE the Enterprise subsection every line inherits Enterprise scope, so the
+    // lexicon applies regardless of whether the line repeats the word ("Conversation
+    // history is required." under that heading is still an Enterprise requirement).
+    const entBad = ent.split('\n')
+      .some((l) => historyLexicon.test(l.replace(canonicalNegationClause, '')));
+    // OUTSIDE it, only lines that name Enterprise bind — so the non-Enterprise section
+    // keeps its required `Reference chat history` bullet.
+    const outsideBad = memContract.replace(ent, '').split('\n').some((l) => {
+      const rest = l.replace(canonicalNegationClause, '');
+      return /enterprise/i.test(rest) && historyLexicon.test(rest);
+    });
+    const entSemanticOk = ent.length > 0 && memContract.length > 0 && !entBad && !outsideBad;
     const t94Ok = /^\| T94-SHARED-PROJECT-MEMORY \|.*project-only.*cannot revert/m.test(f28);
     const t95Ok = /^\| T95-MEMORY-BOUNDARY-DIMENSIONS \|.*outside-chat reference denied, saved-memory reference allowed/m.test(f28);
     check(sharedOk && matrixOk && tokenOk && entSemanticOk && t94Ok && t95Ok, 'C24',
@@ -760,11 +792,24 @@ const appliesFrom = (floor: string): boolean =>
     // would ship a package governed by one ADR while its docs cite another.
     const adrThisBuild = f29.match(/`(ADR-\d{8}-\d{2})`[^\n]*\(this build\)/);
     const c27e = !!adrThisBuild && manifest.adr === adrThisBuild[1];
-    check(c27a && c27b && c27c && c27d && c27e, 'C27',
+    // baseline identity: `--baseline-version` is free text, so it can declare a
+    // different (or truncated) baseline than the manifest actually diffed against.
+    // Bind it to the SUPPLIED baseline manifest's own package_version.
+    const c27f = manifest.baseline_release === base.package_version;
+    // provenance identity: if the receipt claims a canonical git-blob build, the
+    // manifest must actually record that mode AND a resolvable commit — otherwise the
+    // receipt asserts reproducibility the artifact cannot support.
+    const claimsGitBlobs = /canonical_git_blobs/.test(receipt);
+    const c27g = !claimsGitBlobs
+      || (manifest.generated_from === 'canonical_git_blobs'
+        && /^[0-9a-f]{40}$/.test(String(manifest.generated_from_ref ?? '')));
+    check(c27a && c27b && c27c && c27d && c27e && c27f && c27g, 'C27',
       `active identity stamps equal manifest ${pkgVer} (25.current_package=${cpM?.[1] ?? 'MISSING'}; `
       + `instructions-heading=${ihM?.[1] ?? 'MISSING'}; mirror-heading=${mhM?.[1] ?? 'MISSING'}; `
       + `acceptance_range=${JSON.stringify(manifest.acceptance_range)}; `
-      + `adr=${JSON.stringify(manifest.adr)} vs file29-this-build=${JSON.stringify(adrThisBuild?.[1])})`);
+      + `adr=${JSON.stringify(manifest.adr)} vs file29-this-build=${JSON.stringify(adrThisBuild?.[1])}; `
+      + `baseline_release=${JSON.stringify(manifest.baseline_release)} vs baseline-manifest ${JSON.stringify(base.package_version)}; `
+      + `provenance=${JSON.stringify(manifest.generated_from)}@${JSON.stringify(manifest.generated_from_ref)} receipt-claims-git=${claimsGitBlobs})`);
   }
 }
 
