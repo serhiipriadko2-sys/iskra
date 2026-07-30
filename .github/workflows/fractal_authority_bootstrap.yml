@@ -6,6 +6,7 @@ on:
       - feat/math-fractal-authority-v1
     paths:
       - '.github/fractal-authority-stage.part*.b64'
+      - '.github/fractal-authority-stage.README'
       - '.github/workflows/fractal_authority_bootstrap.yml'
   pull_request:
     branches:
@@ -16,6 +17,7 @@ on:
       - synchronize
     paths:
       - '.github/fractal-authority-stage.part*.b64'
+      - '.github/fractal-authority-stage.README'
       - '.github/workflows/fractal_authority_bootstrap.yml'
 
 permissions:
@@ -48,6 +50,7 @@ jobs:
           echo 'fb7e7ed7dedb362e4c2a54ab0bc69b691f14ca28e55e74d07487e93649c24fbd  /tmp/fractal-authority-stage.zip' | sha256sum -c -
           unzip -o /tmp/fractal-authority-stage.zip -d .
           rm -f .github/fractal-authority-stage.part*.b64
+          rm -f .github/fractal-authority-stage.README
           rm -f .github/workflows/fractal_authority_bootstrap.yml
 
       - name: Install dependencies
