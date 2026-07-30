@@ -7,6 +7,16 @@ on:
     paths:
       - '.github/fractal-authority-stage.part*.b64'
       - '.github/workflows/fractal_authority_bootstrap.yml'
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - '.github/fractal-authority-stage.part*.b64'
+      - '.github/workflows/fractal_authority_bootstrap.yml'
 
 permissions:
   contents: write
