@@ -5,11 +5,11 @@
   "date": "2026-07-30",
   "adr": "ADR-20260730-01",
   "generated_from": "canonical_git_blobs",
-  "generated_from_ref": "7b038d56c4d712e5a027c6fc364d3c0b4580fb3e",
+  "generated_from_ref": "27e800e44c9915f7fa17b8bf626df75da2eafe71",
   "line_ending_policy": "LF",
   "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
   "knowledge_file_count": 30,
-  "corpus_bytes": 4053183,
+  "corpus_bytes": 4054058,
   "project_instructions_chars": 5996,
   "project_instructions_bytes": 8200,
   "acceptance_range": "T01-T97",
@@ -125,8 +125,8 @@
     },
     {
       "path": "knowledge/15_SUPABASE_MEMORY_PLANE.md",
-      "bytes": 14450,
-      "sha256": "8bc44de8ef97b2489aa2dde511a126ad64b889d932e5fc86d091a73e9eaae994"
+      "bytes": 15325,
+      "sha256": "b5a47d2803e672beed5d87760719c02766c91835055832cd6012fd556e59b27e"
     },
     {
       "path": "knowledge/16_SHADOW_LAYER.md",
@@ -196,7 +196,7 @@
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
       "bytes": 14868,
-      "sha256": "b7be058ae12d0342d5f02d5677ee3cc78a8d314c60da09b5d57d597295d39f0d"
+      "sha256": "d27d73924abc8857e41ce545c20d9a52c53633a6ba23d837d4638387af6f4083"
     }
   ],
   "live_project_verified": false

@@ -17,10 +17,10 @@ Scope: audit repair over v5.5.6 (ADR-20260730-01, `proposed`).
 
 ## Package facts
 
-- corpus bytes: 4,053,183
-- ZIP: `dist/SoT30_v5.5.7.zip`, 1135448 bytes, sha256 `ef1047f6aad75cb38accf49cd6d99ad4a8fb774eb4c0c155c5f329596fd98d56`
-- file 29: 14868 bytes, sha256 `b7be058ae12d0342d5f02d5677ee3cc78a8d314c60da09b5d57d597295d39f0d`
-- support/MANIFEST.json sha256 `7a07216ced6bcfa57bb7bf9b12e6ba887449556b6c9264415ec5778040446c42`
+- corpus bytes: 4,054,058
+- ZIP: `dist/SoT30_v5.5.7.zip`, 1135774 bytes, sha256 `443920a70b8c9326bc7604433184f6e36da1eeacbe253b1993bf0b8f66a43345`
+- file 29: 14868 bytes, sha256 `d27d73924abc8857e41ce545c20d9a52c53633a6ba23d837d4638387af6f4083`
+- support/MANIFEST.json sha256 `6721d225e0d18c739b630aa15c831aa0eeafe3d861ed8227ff3db05c0ea8e0fc`
 - generated_from_ref: recorded in `support/MANIFEST.json` (`generated_from_ref`)
 
 ## Additional verification
