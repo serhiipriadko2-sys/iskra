@@ -15,7 +15,7 @@ Assembled under ADR-20260730-01 (`proposed`) from a source-freeze commit via gen
 | Knowledge files | 30 |
 | Corpus bytes | 4,055,351 |
 | file 29 sha256 | `70e939cf400710177bd7fe594541d7b4237d67cbd7e536911bc010627a56ab0f` |
-| support/MANIFEST.json sha256 | `bacb4f5f39c941f0f7f1a77ad200f908a8717df6b3ad8e20537326319c7e86f1` |
+| support/MANIFEST.json sha256 | `e7989985bb54e857937fdeb522fafa3da5353aecc92e756f0d4c0d4ddb89aadc` |
 | Acceptance range | T01–T97 |
 | Baseline | v5.5.6 (immutable) |
 | generated_from | `canonical_git_blobs` |
