@@ -202,6 +202,9 @@ part of a malformed file.
   injection and dangerous instructions before consuming quota.
 - Trust exactly one operator-configured ingress identity header, HMAC it, and
   fail closed if the header or secret is absent.
+- Treat each server-owned Edge CORS allowlist entry as an HTTP(S) URL origin.
+  A copied route URL is reduced to its browser `Origin`; malformed and
+  credential-bearing entries are ignored fail-closed.
 - Bound auth/quota/provider calls and streaming duration/bytes with abort
   signals. Test mode cannot call a billed upstream.
 - Constrain Workspace Agent requests to the canonical
@@ -226,6 +229,9 @@ part of a malformed file.
 - Operators must configure `AI_EDGE_INGRESS_IP_HEADER` to the single header
   guaranteed by their trusted ingress; a missing/misconfigured value returns
   fail-closed `503`.
+- Operators should configure bare origins, but path-bearing application URLs
+  are normalized to their origin so browser CORS does not fail solely because
+  a deployment route was copied into the allowlist.
 - Signing out intentionally removes the current principal's offline cache.
 - Existing dual-provider documents remain historical and are marked
   superseded rather than rewritten as if the old decision never existed.

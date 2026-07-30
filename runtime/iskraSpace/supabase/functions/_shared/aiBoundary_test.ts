@@ -59,6 +59,27 @@ Deno.test('auth payload parser rejects malformed payloads', () => {
 
 Deno.test('CORS is exact-origin and production wildcard fails closed', () => {
   assert(isAllowedOrigin('https://beta.example.com', config), 'expected configured origin');
+  assert(
+    isAllowedOrigin('https://beta.example.com', {
+      ...config,
+      allowedOrigins: 'https://beta.example.com/iskra/',
+    }),
+    'expected a configured route URL to normalize to its browser Origin',
+  );
+  assert(
+    !isAllowedOrigin('https://beta.example.com/iskra/', {
+      ...config,
+      allowedOrigins: 'https://beta.example.com/iskra/',
+    }),
+    'expected non-Origin request values to remain denied',
+  );
+  assert(
+    !isAllowedOrigin('https://beta.example.com', {
+      ...config,
+      allowedOrigins: 'https://user:pass@beta.example.com',
+    }),
+    'expected credential-bearing configured URL denial',
+  );
   assert(!isAllowedOrigin('https://evil.example.com', config), 'expected foreign origin denial');
   assert(!isAllowedOrigin(null, config), 'expected missing origin denial');
   assert(

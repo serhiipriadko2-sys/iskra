@@ -122,6 +122,12 @@ AGENT_ACCESS_TOKEN
 by the trusted ingress. The application intentionally does not guess generic
 proxy headers. Absence or invalid configuration fails closed.
 
+`AI_PROXY_ALLOWED_ORIGINS` and `ISKRA_AGENT_ALLOWED_ORIGINS` should contain
+comma-separated bare origins. For operator resilience, each valid HTTP(S) URL
+is normalized to its browser origin, so a copied deployment route such as
+`https://example.github.io/app/` is accepted as `https://example.github.io`.
+Malformed or credential-bearing entries are ignored; they never widen CORS.
+
 ### Principal-scoped browser state
 
 Sensitive local state is stored under:
