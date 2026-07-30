@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { storageService } from '../services/storageService';
+import { MAX_BACKUP_BYTES, storageService } from '../services/storageService';
 import { memoryService } from '../services/memoryService';
 import { PowerIcon, DatabaseIcon, FilePlus2Icon, TrashIcon, LayersIcon, FileSearchIcon, TriangleIcon, SparkleIcon, ScaleIcon, MessageSquareIcon } from './icons';
 import { IntegrityReport, ResponseMode } from '../types';
@@ -44,16 +44,21 @@ const SettingsView: React.FC = () => {
         .filter(({ mode }) => getAvailableResponseModes().includes(mode));
 
     const handleExport = () => {
-        const json = storageService.exportAllData();
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `iskra_backup_${new Date().toISOString().slice(0, 10)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        try {
+            const json = storageService.exportAllData();
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `iskra_backup_${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            setImportError(null);
+        } catch (err) {
+            setImportError(err instanceof Error ? err.message : 'Unable to export local data.');
+        }
     };
 
     const handleImportClick = () => {
@@ -63,8 +68,16 @@ const SettingsView: React.FC = () => {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        if (file.size > MAX_BACKUP_BYTES) {
+            setImportError('Backup exceeds the 16 MiB safe import limit.');
+            e.target.value = '';
+            return;
+        }
 
         const reader = new FileReader();
+        reader.onerror = () => {
+            setImportError('Unable to read the selected backup.');
+        };
         reader.onload = (event) => {
             try {
                 const json = event.target?.result as string;

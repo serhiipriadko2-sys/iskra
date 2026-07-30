@@ -13,12 +13,18 @@ verify_jwt = true
 
 [functions.gemini]
 verify_jwt = true
+entrypoint = "../runtime/iskraSpace/supabase/functions/gemini/index.ts"
+import_map = "../runtime/iskraSpace/supabase/functions/gemini/deno.json"
 
 [functions.iskra-agent]
 verify_jwt = true
+entrypoint = "../runtime/iskraSpace/supabase/functions/iskra-agent/index.ts"
+import_map = "../runtime/iskraSpace/supabase/functions/iskra-agent/deno.json"
 
 [functions.kain]
 verify_jwt = true
+entrypoint = "../runtime/iskraSpace/supabase/functions/kain/index.ts"
+import_map = "../runtime/iskraSpace/supabase/functions/kain/deno.json"
 
 [functions.iskra-memory-gateway]
 verify_jwt = true

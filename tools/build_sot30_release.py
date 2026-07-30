@@ -192,6 +192,11 @@ def main() -> int:
         "adr": args.adr,
         "generated_from": generated_from,
         "generated_from_ref": from_git,
+        # repo-relative release dir the --from-git blobs were resolved against;
+        # lets a verifier byte-bind the 31 source files to <ref>:<path>. Null in
+        # working-bytes mode where no git binding exists to claim.
+        "source_tree_path": (git_source_dir.replace(os.sep, "/").rstrip("/")
+                             if from_git else None),
         "line_ending_policy": "LF",
         "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
         "knowledge_file_count": 30,

@@ -1,8 +1,15 @@
 import { supabase, getUserId, isSupabaseAvailable } from './supabaseClient';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database, Json } from '../types/supabase';
 import { isMemoryLayer, isMemoryNodeType, VOICE_SYMBOLS } from '../types';
 import type { DocType, IskraMetrics, IskraPhase, MemoryLayer, MemoryNode, SIFTBlock, VoiceName } from '../types';
 import type { SymbiosisState } from './symbiosisService';
+import {
+  chatHistoryCacheKey,
+  chatPendingQueueKey,
+  parseChatMessages,
+} from './chatOfflineQueue';
+import { principalStorageKeyFor } from './principalStorage';
 
 // We use the generated types for DB interactions
 type VoicePreferences = Record<string, number>;
@@ -69,6 +76,9 @@ const safeStorage = {
   },
   setItem: (key: string, value: string) => {
     if (typeof window !== 'undefined') localStorage.setItem(key, value);
+  },
+  removeItem: (key: string) => {
+    if (typeof window !== 'undefined') localStorage.removeItem(key);
   },
 };
 
@@ -438,6 +448,9 @@ export async function saveVoicePreferences(prefs: VoicePreferences): Promise<voi
 
 export async function getChatHistory(limit = 50): Promise<Message[]> {
   const userId = await getUserId();
+  const cacheKey = principalStorageKeyFor(userId, chatHistoryCacheKey(userId));
+  const pendingKey = principalStorageKeyFor(userId, chatPendingQueueKey(userId));
+  const pendingMessages = parseChatMessages<Message>(safeStorage.getItem(pendingKey));
   const { data, error } = await supabase
     .from('chat_history')
     .select('*')
@@ -448,15 +461,7 @@ export async function getChatHistory(limit = 50): Promise<Message[]> {
   if (error) {
     console.error('Failed to get chat history:', error);
     // Fallback to localStorage
-    const cached = safeStorage.getItem(`chat_history_${userId}`);
-    if (cached) {
-      try {
-        return JSON.parse(cached) as Message[];
-      } catch {
-        return [];
-      }
-    }
-    return [];
+    return [...parseChatMessages<Message>(safeStorage.getItem(cacheKey)), ...pendingMessages];
   }
 
   const messages: Message[] = (data || []).map(row => ({
@@ -466,14 +471,25 @@ export async function getChatHistory(limit = 50): Promise<Message[]> {
   }));
 
   // Cache for offline use
-  safeStorage.setItem(`chat_history_${userId}`, JSON.stringify(messages));
-  return messages;
+  safeStorage.setItem(cacheKey, JSON.stringify(messages));
+  return [...messages, ...pendingMessages];
 }
 
-export async function addChatMessage(message: Message): Promise<void> {
-  const userId = await getUserId();
+export async function addChatMessage(
+  message: Message,
+  options: {
+    queueOnFailure?: boolean;
+    client?: SupabaseClient<Database>;
+    expectedUserId?: string;
+  } = {},
+): Promise<boolean> {
+  if (Boolean(options.client) !== Boolean(options.expectedUserId)) {
+    throw new Error('Pinned chat writes require both client and expectedUserId');
+  }
+  const userId = options.expectedUserId ?? await getUserId();
+  const client = options.client ?? supabase;
 
-  const { error } = await supabase.from('chat_history').insert({
+  const { error } = await client.from('chat_history').insert({
     user_id: userId,
     role: message.role,
     text: message.text,
@@ -483,25 +499,23 @@ export async function addChatMessage(message: Message): Promise<void> {
 
   if (error) {
     console.error('Failed to add chat message:', error);
-    // On error, append to cache as fallback
-    const cached = safeStorage.getItem(`chat_history_${userId}`);
-    let messages: Message[] = [];
-    if (cached) {
-      try {
-        messages = JSON.parse(cached) as Message[];
-      } catch {
-        messages = [];
-      }
+    if (options.queueOnFailure !== false) {
+      const pendingKey = principalStorageKeyFor(userId, chatPendingQueueKey(userId));
+      const messages = parseChatMessages<Message>(safeStorage.getItem(pendingKey));
+      messages.push(message);
+      safeStorage.setItem(pendingKey, JSON.stringify(messages));
     }
-    messages.push(message);
-    safeStorage.setItem(`chat_history_${userId}`, JSON.stringify(messages));
+    return false;
   }
+  return true;
 }
 
 export async function clearChatHistory(): Promise<void> {
   const userId = await getUserId();
   const { error } = await supabase.from('chat_history').delete().eq('user_id', userId);
   if (error) console.error('Failed to clear chat history:', error);
+  safeStorage.removeItem(principalStorageKeyFor(userId, chatHistoryCacheKey(userId)));
+  safeStorage.removeItem(principalStorageKeyFor(userId, chatPendingQueueKey(userId)));
 }
 
 // =============================================================================

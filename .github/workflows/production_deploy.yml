@@ -110,9 +110,9 @@ jobs:
       - name: Dependency audits
         shell: bash
         run: |
-          # pnpm 10 uses npm's retired quick-audit endpoint. Run the pinned
-          # bulk-advisory client from outside the workspace so it cannot
-          # delegate back to packageManager: pnpm@10.32.1.
+          # pnpm 10 still targets npm's retired quick-audit endpoint on some
+          # registries. Use a pinned audit-only pnpm client from outside the
+          # workspace so packageManager remains authoritative for install/build.
           (
             cd "$RUNNER_TEMP"
             npx --yes pnpm@11.13.0 \

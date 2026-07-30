@@ -2,6 +2,8 @@
 import type { MemoryMode } from '@iskra/runtime';
 import { Task, JournalEntry, DuoSharePrefs, DuoCanvasNote, Habit, VoicePreferences, VoiceName, ResponseMode } from '../types';
 import { memoryService } from './memoryService';
+import { principalStorage, type StorageMutation } from './principalStorage';
+import { safeStorage } from './storageCompat';
 import { symbiosisService, type SymbiosisState } from './symbiosisService';
 
 const TASKS_KEY = 'iskra-space-tasks';
@@ -16,12 +18,150 @@ const USER_NAME_KEY = 'iskra-user-name';
 const VOICE_PREFS_KEY = 'iskra-voice-preferences';
 const LAST_VOICE_STATE_KEY = 'iskra-last-voice-state';
 const RESPONSE_MODE_KEY = 'iskra-response-mode';
+const PRINCIPAL_LEGACY_KEYS = [
+  TASKS_KEY,
+  JOURNAL_ENTRIES_KEY,
+  DUO_PREFS_KEY,
+  DUO_CANVAS_NOTES_KEY,
+  HABITS_KEY,
+  JOURNAL_PIN_KEY,
+  ONBOARDING_KEY,
+  TUTORIAL_KEY,
+  USER_NAME_KEY,
+  VOICE_PREFS_KEY,
+  LAST_VOICE_STATE_KEY,
+  RESPONSE_MODE_KEY,
+  'iskra-space-archive',
+  'iskra-space-shadow',
+  'iskra-space-mantra',
+  'iskra-symbiosis-profile-v1',
+  'iskra-symbiosis-consent-receipts-v1',
+  'iskra-symbiosis-action-receipts-v1',
+  'iskra-mood-entries',
+  'iskra_focus_minutes_today',
+  'iskra_focus_date',
+  'iskra_sleep_score',
+  'iskra_sleep_date',
+  'iskra_audit_log',
+  'iskra_last_playbook',
+  'iskra_integrity_state',
+  'iskra_guard_counters',
+  'iskra-ritual-metrics-history',
+  'iskra-canon-seeded-v2',
+] as const;
+
+function legacyPrincipalQueueKeys(principalId: string): string[] {
+  return [
+    `metrics_latest_${principalId}`,
+    `chat_history_${principalId}`,
+    `chat_pending_${principalId}`,
+    `memory_archive_${principalId}`,
+    `memory_shadow_${principalId}`,
+    `memory_all_${principalId}`,
+  ];
+}
+
+function clearLegacyPrincipalQueues(principalId: string): void {
+  for (const key of legacyPrincipalQueueKeys(principalId)) {
+    localStorage.removeItem(key);
+  }
+}
+export const MAX_BACKUP_BYTES = 16 * 1024 * 1024;
+const MAX_IMPORTED_ITEMS = 10_000;
+const RITUAL_TAGS = new Set(['FIRE', 'WATER', 'SUN', 'BALANCE', 'DELTA']);
+const SHARE_LEVELS = new Set(['hidden', 'daily_score', 'weekly_mean']);
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  Boolean(value && typeof value === 'object' && !Array.isArray(value));
+
+const isBoundedString = (value: unknown, max = 12_000): value is string =>
+  typeof value === 'string' && value.length <= max;
+
+const validArray = <T>(
+  value: unknown,
+  predicate: (item: unknown) => item is T,
+): value is T[] =>
+  Array.isArray(value) && value.length <= MAX_IMPORTED_ITEMS && value.every(predicate);
+
+const isTask = (value: unknown): value is Task =>
+  isRecord(value) &&
+  isBoundedString(value.id, 256) &&
+  isBoundedString(value.title) &&
+  RITUAL_TAGS.has(String(value.ritualTag)) &&
+  typeof value.done === 'boolean';
+
+const isHabit = (value: unknown): value is Habit =>
+  isRecord(value) &&
+  isBoundedString(value.id, 256) &&
+  isBoundedString(value.title) &&
+  Number.isInteger(value.streak) &&
+  (value.streak as number) >= 0 &&
+  typeof value.completedToday === 'boolean' &&
+  RITUAL_TAGS.has(String(value.ritualTag));
+
+const isJournalEntry = (value: unknown): value is JournalEntry =>
+  isRecord(value) &&
+  isBoundedString(value.id, 256) &&
+  isBoundedString(value.timestamp, 64) &&
+  Number.isFinite(Date.parse(value.timestamp)) &&
+  isBoundedString(value.text) &&
+  isRecord(value.prompt) &&
+  isBoundedString(value.prompt.question) &&
+  isBoundedString(value.prompt.why);
+
+const isDuoPrefs = (value: unknown): value is DuoSharePrefs =>
+  isRecord(value) &&
+  SHARE_LEVELS.has(String(value.sleep)) &&
+  SHARE_LEVELS.has(String(value.focus)) &&
+  SHARE_LEVELS.has(String(value.habits));
+
+const isDuoCanvasNote = (value: unknown): value is DuoCanvasNote =>
+  isRecord(value) &&
+  isBoundedString(value.id, 256) &&
+  isBoundedString(value.text) &&
+  isBoundedString(value.color, 256);
+
+function serializeImport(value: unknown): string {
+  const serialized = JSON.stringify(value);
+  if (serialized === undefined) throw new Error('invalid_backup_value');
+  return serialized;
+}
+
+function backupByteLength(value: string): number {
+  return new TextEncoder().encode(value).byteLength;
+}
 
 export const storageService = {
+  bindPrincipal(principalId: string): void {
+    principalStorage.bind(principalId);
+    try {
+      principalStorage.migrateLegacy(PRINCIPAL_LEGACY_KEYS);
+    } catch (error) {
+      principalStorage.unbind();
+      throw error;
+    }
+  },
+
+  releasePrincipal(options: { clear?: boolean } = {}): void {
+    const principalId = principalStorage.activePrincipal();
+    try {
+      if (options.clear && principalId) {
+        try {
+          principalStorage.clearBoundPrincipal();
+          clearLegacyPrincipalQueues(principalId);
+        } finally {
+          safeStorage.clearBoundPrincipalFallback();
+        }
+      }
+    } finally {
+      principalStorage.unbind();
+    }
+  },
+
   // Tasks
   getTasks(): Task[] {
     try {
-      const tasksJson = localStorage.getItem(TASKS_KEY);
+      const tasksJson = principalStorage.getItem(TASKS_KEY);
       return tasksJson ? JSON.parse(tasksJson) : [];
     } catch (error) {
       console.error("Error reading tasks from localStorage", error);
@@ -31,7 +171,7 @@ export const storageService = {
 
   saveTasks(tasks: Task[]): void {
     try {
-      localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+      principalStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
     } catch (error) {
       console.error("Error saving tasks to localStorage", error);
     }
@@ -40,7 +180,7 @@ export const storageService = {
   // Habits
   getHabits(): Habit[] {
     try {
-      const habitsJson = localStorage.getItem(HABITS_KEY);
+      const habitsJson = principalStorage.getItem(HABITS_KEY);
       if (habitsJson) {
           return JSON.parse(habitsJson);
       }
@@ -59,7 +199,7 @@ export const storageService = {
 
   saveHabits(habits: Habit[]): void {
       try {
-          localStorage.setItem(HABITS_KEY, JSON.stringify(habits));
+          principalStorage.setItem(HABITS_KEY, JSON.stringify(habits));
       } catch (error) {
           console.error("Error saving habits", error);
       }
@@ -68,7 +208,7 @@ export const storageService = {
   // Journal Entries
   getJournalEntries(): JournalEntry[] {
     try {
-      const entriesJson = localStorage.getItem(JOURNAL_ENTRIES_KEY);
+      const entriesJson = principalStorage.getItem(JOURNAL_ENTRIES_KEY);
       const entries: JournalEntry[] = entriesJson ? JSON.parse(entriesJson) : [];
       // Sort by timestamp descending to show newest first
       return entries.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
@@ -83,7 +223,7 @@ export const storageService = {
       const entries = this.getJournalEntries();
       // Prepend the new entry to maintain sort order
       const updatedEntries = [entry, ...entries];
-      localStorage.setItem(JOURNAL_ENTRIES_KEY, JSON.stringify(updatedEntries));
+      principalStorage.setItem(JOURNAL_ENTRIES_KEY, JSON.stringify(updatedEntries));
     } catch (error)      {
       console.error("Error adding journal entry to localStorage", error);
     }
@@ -91,17 +231,17 @@ export const storageService = {
 
   // Journal Security
   getJournalPin(): string | null {
-    return localStorage.getItem(JOURNAL_PIN_KEY);
+    return principalStorage.getItem(JOURNAL_PIN_KEY);
   },
 
   saveJournalPin(pin: string): void {
-    localStorage.setItem(JOURNAL_PIN_KEY, pin);
+    principalStorage.setItem(JOURNAL_PIN_KEY, pin);
   },
 
   // Duo Preferences
   getDuoPrefs(): DuoSharePrefs {
     try {
-      const prefsJson = localStorage.getItem(DUO_PREFS_KEY);
+      const prefsJson = principalStorage.getItem(DUO_PREFS_KEY);
       if (prefsJson) {
         return JSON.parse(prefsJson);
       }
@@ -118,7 +258,7 @@ export const storageService = {
 
   saveDuoPrefs(prefs: DuoSharePrefs): void {
     try {
-      localStorage.setItem(DUO_PREFS_KEY, JSON.stringify(prefs));
+      principalStorage.setItem(DUO_PREFS_KEY, JSON.stringify(prefs));
     } catch (error) {
       console.error("Error saving duo prefs to localStorage", error);
     }
@@ -127,7 +267,7 @@ export const storageService = {
   // Duo Canvas Notes
   getDuoCanvasNotes(): DuoCanvasNote[] {
     try {
-      const notesJson = localStorage.getItem(DUO_CANVAS_NOTES_KEY);
+      const notesJson = principalStorage.getItem(DUO_CANVAS_NOTES_KEY);
       return notesJson ? JSON.parse(notesJson) : [];
     } catch (error) {
       console.error("Error reading duo canvas notes from localStorage", error);
@@ -137,7 +277,7 @@ export const storageService = {
 
   saveDuoCanvasNotes(notes: DuoCanvasNote[]): void {
     try {
-      localStorage.setItem(DUO_CANVAS_NOTES_KEY, JSON.stringify(notes));
+      principalStorage.setItem(DUO_CANVAS_NOTES_KEY, JSON.stringify(notes));
     } catch (error) {
       console.error("Error saving duo canvas notes to localStorage", error);
     }
@@ -145,13 +285,13 @@ export const storageService = {
 
   // User Identity & Onboarding
   isOnboardingComplete(): boolean {
-    return localStorage.getItem(ONBOARDING_KEY) === 'true' && symbiosisService.getProfile() !== null;
+    return principalStorage.getItem(ONBOARDING_KEY) === 'true' && symbiosisService.getProfile() !== null;
   },
 
   completeOnboarding(userName: string, memoryMode: MemoryMode): SymbiosisState {
     const state = symbiosisService.completeOnboarding(memoryMode);
-    localStorage.setItem(ONBOARDING_KEY, 'true');
-    localStorage.setItem(USER_NAME_KEY, userName);
+    principalStorage.setItem(ONBOARDING_KEY, 'true');
+    principalStorage.setItem(USER_NAME_KEY, userName);
     return state;
   },
 
@@ -162,28 +302,28 @@ export const storageService = {
   restoreSymbiosisState(state: unknown): boolean {
     const restored = symbiosisService.importState(state);
     if (restored) {
-      localStorage.setItem(ONBOARDING_KEY, 'true');
+      principalStorage.setItem(ONBOARDING_KEY, 'true');
     }
     return restored;
   },
 
   getUserName(): string {
-    return localStorage.getItem(USER_NAME_KEY) || 'Спутник';
+    return principalStorage.getItem(USER_NAME_KEY) || 'Спутник';
   },
 
   // Tutorial / Onboarding Tour
   hasSeenTutorial(): boolean {
-    return localStorage.getItem(TUTORIAL_KEY) === 'true';
+    return principalStorage.getItem(TUTORIAL_KEY) === 'true';
   },
 
   completeTutorial(): void {
-    localStorage.setItem(TUTORIAL_KEY, 'true');
+    principalStorage.setItem(TUTORIAL_KEY, 'true');
   },
 
   // Voice Preferences & State
   getVoicePreferences(): VoicePreferences {
       try {
-          const raw = localStorage.getItem(VOICE_PREFS_KEY);
+          const raw = principalStorage.getItem(VOICE_PREFS_KEY);
           return raw ? JSON.parse(raw) : {};
       } catch (_e) {
           return {};
@@ -191,25 +331,25 @@ export const storageService = {
   },
 
   saveVoicePreferences(prefs: VoicePreferences): void {
-      localStorage.setItem(VOICE_PREFS_KEY, JSON.stringify(prefs));
+      principalStorage.setItem(VOICE_PREFS_KEY, JSON.stringify(prefs));
   },
 
   // Returns { mode: 'AUTO' | VoiceName, lastVoice: VoiceName }
   getLastVoiceState(): { mode: string, lastVoice: VoiceName } {
       try {
-          const raw = localStorage.getItem(LAST_VOICE_STATE_KEY);
+          const raw = principalStorage.getItem(LAST_VOICE_STATE_KEY);
           if (raw) return JSON.parse(raw);
       } catch (_e) { /* intentionally empty */ }
       return { mode: 'AUTO', lastVoice: 'ISKRA' };
   },
 
   saveLastVoiceState(mode: string, lastVoice: VoiceName): void {
-      localStorage.setItem(LAST_VOICE_STATE_KEY, JSON.stringify({ mode, lastVoice }));
+      principalStorage.setItem(LAST_VOICE_STATE_KEY, JSON.stringify({ mode, lastVoice }));
   },
 
   // Response Mode (Simple / Deep / Debate)
   getResponseMode(): ResponseMode {
-      const raw = localStorage.getItem(RESPONSE_MODE_KEY);
+      const raw = principalStorage.getItem(RESPONSE_MODE_KEY);
       if (raw === 'simple' || raw === 'deep' || raw === 'debate') {
           return raw;
       }
@@ -217,7 +357,7 @@ export const storageService = {
   },
 
   saveResponseMode(mode: ResponseMode): void {
-      localStorage.setItem(RESPONSE_MODE_KEY, mode);
+      principalStorage.setItem(RESPONSE_MODE_KEY, mode);
   },
 
   // Data Management (Privacy & Sovereignty)
@@ -249,30 +389,68 @@ export const storageService = {
 
   importAllData(jsonString: string): void {
       try {
-          const data = JSON.parse(jsonString);
-          
-          if (data.tasks) this.saveTasks(data.tasks);
-          if (data.habits) this.saveHabits(data.habits);
-          if (data.journal) localStorage.setItem(JOURNAL_ENTRIES_KEY, JSON.stringify(data.journal));
-          if (data.duo) {
-              if (data.duo.prefs) this.saveDuoPrefs(data.duo.prefs);
-              if (data.duo.notes) this.saveDuoCanvasNotes(data.duo.notes);
+          if (backupByteLength(jsonString) > MAX_BACKUP_BYTES) {
+            throw new Error('backup_too_large');
           }
-          if (data.voice) {
-              if (data.voice.prefs) this.saveVoicePreferences(data.voice.prefs);
-              if (data.voice.state) {
-                  const s = data.voice.state;
-                  this.saveLastVoiceState(s.mode, s.lastVoice);
+          const data: unknown = JSON.parse(jsonString);
+          if (!isRecord(data) || data.version !== '1.0.0') throw new Error('unsupported_backup_version');
+
+          const mutations: StorageMutation[] = [];
+          if (data.tasks !== undefined) {
+            if (!validArray(data.tasks, isTask)) throw new Error('invalid_tasks');
+            mutations.push({ key: TASKS_KEY, value: serializeImport(data.tasks) });
+          }
+          if (data.habits !== undefined) {
+            if (!validArray(data.habits, isHabit)) throw new Error('invalid_habits');
+            mutations.push({ key: HABITS_KEY, value: serializeImport(data.habits) });
+          }
+          if (data.journal !== undefined) {
+            if (!validArray(data.journal, isJournalEntry)) throw new Error('invalid_journal');
+            mutations.push({ key: JOURNAL_ENTRIES_KEY, value: serializeImport(data.journal) });
+          }
+          if (data.duo !== undefined) {
+            if (!isRecord(data.duo)) throw new Error('invalid_duo');
+            if (data.duo.prefs !== undefined) {
+              if (!isDuoPrefs(data.duo.prefs)) throw new Error('invalid_duo_prefs');
+              mutations.push({ key: DUO_PREFS_KEY, value: serializeImport(data.duo.prefs) });
+            }
+            if (data.duo.notes !== undefined) {
+              if (!validArray(data.duo.notes, isDuoCanvasNote)) throw new Error('invalid_duo_notes');
+              mutations.push({ key: DUO_CANVAS_NOTES_KEY, value: serializeImport(data.duo.notes) });
+            }
+          }
+          if (data.voice !== undefined) {
+            if (!isRecord(data.voice)) throw new Error('invalid_voice');
+            if (data.voice.prefs !== undefined) {
+              if (!isRecord(data.voice.prefs)) throw new Error('invalid_voice_prefs');
+              mutations.push({ key: VOICE_PREFS_KEY, value: serializeImport(data.voice.prefs) });
+            }
+            if (data.voice.state !== undefined) {
+              if (
+                !isRecord(data.voice.state) ||
+                !isBoundedString(data.voice.state.mode, 64) ||
+                !isBoundedString(data.voice.state.lastVoice, 64)
+              ) {
+                throw new Error('invalid_voice_state');
               }
+              mutations.push({ key: LAST_VOICE_STATE_KEY, value: serializeImport(data.voice.state) });
+            }
           }
-          if (data.memory) {
-              memoryService.importMemory(data.memory);
+          if (data.memory !== undefined) {
+            const prepared = memoryService.prepareImport(data.memory);
+            mutations.push(
+              { key: 'iskra-space-archive', value: serializeImport(prepared.archive) },
+              { key: 'iskra-space-shadow', value: serializeImport(prepared.shadow) },
+            );
           }
-          if (data.responseMode) {
-              this.saveResponseMode(data.responseMode);
+          if (data.responseMode !== undefined) {
+            if (data.responseMode !== 'simple' && data.responseMode !== 'deep' && data.responseMode !== 'debate') {
+              throw new Error('invalid_response_mode');
+            }
+            mutations.push({ key: RESPONSE_MODE_KEY, value: data.responseMode });
           }
 
-          // Force refresh to reload state
+          principalStorage.applyTransaction(mutations);
           window.location.reload();
       } catch (error) {
           console.error("Import failed:", error);
@@ -281,7 +459,12 @@ export const storageService = {
   },
 
   clearAllData(): void {
-    localStorage.clear();
+    try {
+      localStorage.clear();
+    } finally {
+      safeStorage.clearAllFallbacks();
+      principalStorage.unbind();
+    }
     window.location.reload();
   }
 };

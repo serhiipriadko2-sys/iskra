@@ -1,5 +1,11 @@
 # iskraSpace Release Readiness Snapshot
 
+> Historical snapshot — superseded for current production decisions by
+> `runtime/iskraSpace/PRODUCTION_HARDENING_2026-07-28.md`,
+> `runtime/iskraSpace/RELEASE_STATUS.md` and ADR-20260728-001. Provider,
+> dependency and live-state claims below remain provenance for their captured
+> date and must not be used as the current deployment runbook.
+
 Status: PARTIAL / CLOUD RUN GREEN / VERCEL OPTIONAL / NO LIVE MUTATION
 Captured: 2026-06-07T11:06:25+03:00
 Scope: public release gate for `runtime/iskraSpace`

@@ -12,12 +12,12 @@ export interface StagingAcceptanceConfig {
   userBToken: string;
   nonMemberToken: string;
   suspendedMemberToken: string;
-  anonymousToken: string;
+  anonymousDenyReceipt: string;
   expiredToken: string;
   allowedOrigin: string;
   ipHmacSecret: string;
-  magicLinkReceiptA: string;
-  magicLinkReceiptB: string;
+  principalReceiptA: string;
+  principalReceiptB: string;
 }
 
 function fail(reason: string): never {
@@ -75,9 +75,8 @@ export function parseStagingAcceptanceConfig(environment: Environment = process.
   const userBToken = required(environment, 'ISKRA_STAGING_USER_B_JWT');
   const nonMemberToken = required(environment, 'ISKRA_STAGING_NON_MEMBER_JWT');
   const suspendedMemberToken = required(environment, 'ISKRA_STAGING_SUSPENDED_MEMBER_JWT');
-  const anonymousToken = required(environment, 'ISKRA_STAGING_ANONYMOUS_JWT');
   const expiredToken = required(environment, 'ISKRA_STAGING_EXPIRED_JWT');
-  const tokens = [userAToken, userBToken, nonMemberToken, suspendedMemberToken, anonymousToken, expiredToken];
+  const tokens = [userAToken, userBToken, nonMemberToken, suspendedMemberToken, expiredToken];
   if (new Set(tokens).size !== tokens.length) {
     fail('all staging acceptance tokens must be distinct');
   }
@@ -91,12 +90,17 @@ export function parseStagingAcceptanceConfig(environment: Environment = process.
   if (ipHmacSecret.length < 32) fail('ISKRA_STAGING_IP_HMAC_SECRET must contain at least 32 characters');
 
   const receiptPattern = /^[a-f0-9]{64}$/;
-  const magicLinkReceiptA = required(environment, 'ISKRA_STAGING_MAGIC_LINK_A_RECEIPT_SHA256');
-  const magicLinkReceiptB = required(environment, 'ISKRA_STAGING_MAGIC_LINK_B_RECEIPT_SHA256');
-  if (!receiptPattern.test(magicLinkReceiptA) || !receiptPattern.test(magicLinkReceiptB)) {
-    fail('magic-link receipt SHA-256 values must be 64 lowercase hexadecimal characters');
+  const anonymousDenyReceipt = required(environment, 'ISKRA_STAGING_ANONYMOUS_DENY_RECEIPT_SHA256');
+  const principalReceiptA = required(environment, 'ISKRA_STAGING_PRINCIPAL_A_RECEIPT_SHA256');
+  const principalReceiptB = required(environment, 'ISKRA_STAGING_PRINCIPAL_B_RECEIPT_SHA256');
+  if (
+    !receiptPattern.test(anonymousDenyReceipt)
+    || !receiptPattern.test(principalReceiptA)
+    || !receiptPattern.test(principalReceiptB)
+  ) {
+    fail('acceptance receipt SHA-256 values must be 64 lowercase hexadecimal characters');
   }
-  if (magicLinkReceiptA === magicLinkReceiptB) fail('magic-link receipts must be distinct');
+  if (principalReceiptA === principalReceiptB) fail('principal bootstrap receipts must be distinct');
 
   return {
     projectRef,
@@ -107,11 +111,11 @@ export function parseStagingAcceptanceConfig(environment: Environment = process.
     userBToken,
     nonMemberToken,
     suspendedMemberToken,
-    anonymousToken,
+    anonymousDenyReceipt,
     expiredToken,
     allowedOrigin,
     ipHmacSecret,
-    magicLinkReceiptA,
-    magicLinkReceiptB,
+    principalReceiptA,
+    principalReceiptB,
   };
 }

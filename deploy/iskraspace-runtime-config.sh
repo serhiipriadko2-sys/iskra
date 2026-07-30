@@ -22,7 +22,6 @@ sentry_dsn=${VITE_SENTRY_DSN:-}
 posthog_key=${VITE_POSTHOG_KEY:-}
 posthog_host=${VITE_POSTHOG_HOST:-https://app.posthog.com}
 app_version=${VITE_APP_VERSION:-unknown}
-ai_provider=${VITE_AI_PROVIDER:-gemini}
 ai_edge_slug=${VITE_AI_EDGE_FUNCTION_SLUG:-gemini}
 remote_search=${VITE_ENABLE_REMOTE_SEMANTIC_SEARCH:-false}
 sensitive_embedding=${VITE_ALLOW_SENSITIVE_REMOTE_EMBEDDING:-false}
@@ -36,7 +35,7 @@ fi
 
 for value in \
   "$supabase_url" "$supabase_anon_key" "$sentry_dsn" "$posthog_key" \
-  "$posthog_host" "$app_version" "$ai_provider" "$ai_edge_slug"; do
+  "$posthog_host" "$app_version" "$ai_edge_slug"; do
   if contains_control_characters "$value"; then
     fail 'runtime configuration contains control characters'
   fi
@@ -110,11 +109,6 @@ case "$posthog_key" in
   *) fail 'VITE_POSTHOG_KEY must be empty or a public phc_ project key' ;;
 esac
 
-case "$ai_provider" in
-  gemini|openai|auto) ;;
-  *) fail 'VITE_AI_PROVIDER must be gemini, openai, or auto' ;;
-esac
-
 case "$ai_edge_slug" in
   ''|*[!A-Za-z0-9_-]*) fail 'VITE_AI_EDGE_FUNCTION_SLUG is invalid' ;;
 esac
@@ -130,7 +124,6 @@ sentry_dsn=$(escape_js_string "$sentry_dsn")
 posthog_key=$(escape_js_string "$posthog_key")
 posthog_host=$(escape_js_string "$posthog_host")
 app_version=$(escape_js_string "$app_version")
-ai_provider=$(escape_js_string "$ai_provider")
 ai_edge_slug=$(escape_js_string "$ai_edge_slug")
 
 cat > "$output" <<EOF
@@ -142,7 +135,6 @@ window.__ISKRA_RUNTIME_CONFIG__ = Object.freeze({
   VITE_POSTHOG_KEY: "$posthog_key",
   VITE_POSTHOG_HOST: "$posthog_host",
   VITE_APP_VERSION: "$app_version",
-  VITE_AI_PROVIDER: "$ai_provider",
   VITE_AI_EDGE_FUNCTION_SLUG: "$ai_edge_slug",
   VITE_ENABLE_REMOTE_SEMANTIC_SEARCH: "$remote_search",
   VITE_ALLOW_SENSITIVE_REMOTE_EMBEDDING: "$sensitive_embedding"

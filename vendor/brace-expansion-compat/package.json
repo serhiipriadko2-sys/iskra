@@ -1,0 +1,17 @@
+{
+  "name": "brace-expansion",
+  "version": "5.0.8-iskra.1",
+  "private": true,
+  "description": "API compatibility facade over the audited brace-expansion 5.0.8 implementation",
+  "type": "module",
+  "main": "./index.cjs",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.cjs"
+    }
+  },
+  "dependencies": {
+    "brace-expansion-modern": "npm:brace-expansion@5.0.8"
+  }
+}

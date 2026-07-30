@@ -14,11 +14,20 @@
 //                     validation, not silent placeholder substitution
 // =============================================================================
 
-import { assertEquals, assert } from 'jsr:@std/assert@1';
 import { computeMetrics } from './calculator.ts';
 import { ALGORITHM_VERSION } from './contracts.ts';
 import { calculateShannonEntropy, interpretEntropy } from './entropy.ts';
 import { calculateHFD, calculateDFA } from './fractal.ts';
+
+function assert(condition: unknown, message = 'assertion failed'): asserts condition {
+  if (!condition) throw new Error(message);
+}
+
+function assertEquals<T>(actual: T, expected: T): void {
+  if (Object.is(actual, expected)) return;
+  if (JSON.stringify(actual) === JSON.stringify(expected)) return;
+  throw new Error(`expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`);
+}
 
 // --- Fixed canonical parity vectors (from @iskra/math on these exact inputs) --
 // If these ever fail, either the port drifted or @iskra/math changed and the

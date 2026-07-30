@@ -6,6 +6,7 @@ import {
   type SymbiosisPermissionKey,
   type SymbiosisProfile,
 } from '@iskra/runtime';
+import { principalStorage } from './principalStorage';
 
 const PROFILE_KEY = 'iskra-symbiosis-profile-v1';
 const RECEIPTS_KEY = 'iskra-symbiosis-consent-receipts-v1';
@@ -60,7 +61,7 @@ const isActionReceipt = (value: unknown): value is SymbiosisActionReceipt => {
 
 const parseJson = <T>(key: string): T | null => {
   try {
-    const raw = localStorage.getItem(key);
+    const raw = principalStorage.getItem(key);
     return raw ? JSON.parse(raw) as T : null;
   } catch {
     return null;
@@ -95,9 +96,9 @@ const createReceiptId = (): string => {
 };
 
 const persistState = (state: SymbiosisState): void => {
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(state.profile));
-  localStorage.setItem(RECEIPTS_KEY, JSON.stringify(state.receipts));
-  localStorage.setItem(ACTION_RECEIPTS_KEY, JSON.stringify(state.actionReceipts));
+  principalStorage.setItem(PROFILE_KEY, JSON.stringify(state.profile));
+  principalStorage.setItem(RECEIPTS_KEY, JSON.stringify(state.receipts));
+  principalStorage.setItem(ACTION_RECEIPTS_KEY, JSON.stringify(state.actionReceipts));
 };
 
 export const symbiosisService = {
@@ -212,8 +213,8 @@ export const symbiosisService = {
   },
 
   clear(): void {
-    localStorage.removeItem(PROFILE_KEY);
-    localStorage.removeItem(RECEIPTS_KEY);
-    localStorage.removeItem(ACTION_RECEIPTS_KEY);
+    principalStorage.removeItem(PROFILE_KEY);
+    principalStorage.removeItem(RECEIPTS_KEY);
+    principalStorage.removeItem(ACTION_RECEIPTS_KEY);
   },
 };

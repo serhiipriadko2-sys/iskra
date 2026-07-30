@@ -12,6 +12,9 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
   let config: StagingAcceptanceConfig;
   let userA: SupabaseClient<Database>;
   let userB: SupabaseClient<Database>;
+  let admin: SupabaseClient<Database>;
+  let userAId = '';
+  let userBId = '';
   const suffix = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
   const nodeA = `staging-isolation-a-${suffix}`;
   const nodeA2 = `staging-isolation-a2-${suffix}`;
@@ -27,6 +30,27 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
     });
     userA = createClient<Database>(config.url, config.publishableKey, options(config.userAToken));
     userB = createClient<Database>(config.url, config.publishableKey, options(config.userBToken));
+    admin = createClient<Database>(config.url, config.serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+
+    const [identityA, identityB] = await Promise.all([
+      userA.auth.getUser(config.userAToken),
+      userB.auth.getUser(config.userBToken),
+    ]);
+    expect(identityA.error).toBeNull();
+    expect(identityB.error).toBeNull();
+    userAId = identityA.data.user?.id ?? '';
+    userBId = identityB.data.user?.id ?? '';
+    expect(userAId).toMatch(/^[0-9a-f-]{36}$/i);
+    expect(userBId).toMatch(/^[0-9a-f-]{36}$/i);
+
+    const [profileA, profileB] = await Promise.all([
+      userA.from('users').insert({ id: userAId, name: `graph-acceptance-a-${suffix}` }),
+      userB.from('users').insert({ id: userBId, name: `graph-acceptance-b-${suffix}` }),
+    ]);
+    expect(profileA.error).toBeNull();
+    expect(profileB.error).toBeNull();
 
     const [createdA, createdA2, createdB] = await Promise.all([
       userA.rpc('graph_create_node', {
@@ -56,7 +80,7 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
       p_id: edgeA,
       p_source: nodeA,
       p_target: nodeA2,
-      p_type: 'relates_to',
+      p_type: 'RELATED_TO',
     });
     expect(createdEdge.error).toBeNull();
   });
@@ -69,13 +93,16 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
       userB.rpc('graph_delete_node', { p_node_id: nodeB }),
     ]);
     expect(cleanup.map(result => result.error), 'Graph cleanup must complete').toEqual([null, null, null]);
+    const profiles = await admin.from('users').delete().in('id', [userAId, userBId]);
+    expect(profiles.error, 'Profile cleanup must complete').toBeNull();
   });
 
-  it('requires two distinct Owner-controlled magic-link receipts', () => {
+  it('requires two distinct disposable-principal bootstrap receipts', () => {
     expect(config.allowedOrigin).toBe('http://127.0.0.1:4173');
-    expect(config.magicLinkReceiptA).toMatch(/^[a-f0-9]{64}$/);
-    expect(config.magicLinkReceiptB).toMatch(/^[a-f0-9]{64}$/);
-    expect(config.magicLinkReceiptA).not.toBe(config.magicLinkReceiptB);
+    expect(config.anonymousDenyReceipt).toMatch(/^[a-f0-9]{64}$/);
+    expect(config.principalReceiptA).toMatch(/^[a-f0-9]{64}$/);
+    expect(config.principalReceiptB).toMatch(/^[a-f0-9]{64}$/);
+    expect(config.principalReceiptA).not.toBe(config.principalReceiptB);
   });
 
   it('resolves both authenticated users as active beta members', async () => {

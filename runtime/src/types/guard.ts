@@ -355,7 +355,7 @@ function evaluateSloGuard(input: GuardInput): GuardEval {
 
   // --- Decision precedence (matches SLO‑GUARD spirit) ---
   // CRISIS → CLOSE → (drift escalation) → ISKRIV → SHADOW → PROCEED
-  let decision: GuardDecision = 'PROCEED';
+  let decision: GuardDecision;
   if (alertLevel === 'critical' || alertLevel === 'lockdown') {
     decision = 'FORCE_CRISIS';
   } else if ((integrity && !integrity.ok) || (ttl_exhausted && metrics.silence_mass >= 0.7)) {

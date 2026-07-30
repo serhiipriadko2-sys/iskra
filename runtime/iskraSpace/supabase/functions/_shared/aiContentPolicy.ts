@@ -7,6 +7,8 @@ export const DEFAULT_AI_OUTPUT_TOKENS = 384;
 export const MAX_AI_PROVIDER_TIMEOUT_MS = 20_000;
 export const MAX_AI_STREAM_DURATION_MS = 25_000;
 export const MAX_AI_STREAM_BYTES = 256 * 1024;
+export const MAX_AI_SCHEMA_DEPTH = 10;
+export const MAX_AI_SCHEMA_NODES = 256;
 
 export const CANONICAL_GEMINI_TEXT_MODEL = 'gemini-2.5-flash';
 export const CANONICAL_GEMINI_EMBEDDING_MODEL = 'gemini-embedding-001';
@@ -35,17 +37,25 @@ export type ServerContent = {
   parts: ServerTextPart[];
 };
 
+export type ServerGenerationConfig = {
+  maxOutputTokens: number;
+  responseMimeType?: 'application/json';
+  responseSchema?: Record<string, unknown>;
+};
+
 export type ValidatedGeminiRequest = {
   action: 'generateContent' | 'streamGenerateContent' | 'embedContent';
   model: string;
   contents?: ServerContent[];
   content?: ServerContent;
-  generationConfig: { maxOutputTokens: number };
+  systemInstruction?: string;
+  generationConfig: ServerGenerationConfig;
 };
 
 export type ValidatedAgentRequest = {
   message: string;
   route: 'chat' | 'journal' | 'ritual' | 'reflection';
+  requestId?: string;
 };
 
 type TextBudget = {
@@ -53,9 +63,8 @@ type TextBudget = {
   parts: number;
 };
 
-const PII_PATTERNS = [
+const NON_PHONE_PII_PATTERNS = [
   /[\p{L}0-9._%+-]+@[\p{L}0-9.-]+\.[A-Za-z]{2,}/iu,
-  /(?:\+?\d[\d\s().-]{7,}\d)/u,
   /\b(?:\d[ -]?){13,16}\b/u,
   /\bsk-[A-Za-z0-9-]{10,}\b/iu,
   /\bAIza[A-Za-z0-9_-]{35}\b/u,
@@ -64,9 +73,8 @@ const PII_PATTERNS = [
   /(?:password|passwd)\s*[:=]\s*[^\s]{6,}/iu,
 ];
 
-const REDACTION_PATTERNS = [
+const NON_PHONE_REDACTION_PATTERNS = [
   /[\p{L}0-9._%+-]+@[\p{L}0-9.-]+\.[A-Za-z]{2,}/giu,
-  /(?:\+?\d[\d\s().-]{7,}\d)/gu,
   /\b(?:\d[ -]?){13,16}\b/gu,
   /\bsk-[A-Za-z0-9-]{10,}\b/giu,
   /\bAIza[A-Za-z0-9_-]{35}\b/gu,
@@ -74,6 +82,10 @@ const REDACTION_PATTERNS = [
   /-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----/giu,
   /(?:password|passwd)\s*[:=]\s*[^\s]{6,}/giu,
 ];
+
+const PHONE_CANDIDATE_PATTERN = /(?:\+?\d[\d\s().-]{7,}\d)/gu;
+const ISO_DATE_OR_TIMESTAMP_PATTERN =
+  /\b\d{4}-\d{2}-\d{2}(?:(?:T|\s)[0-2]\d:[0-5]\d(?::[0-5]\d(?:\.\d{1,9})?)?(?:Z|[+-][0-2]\d:[0-5]\d)?)?\b/gu;
 
 const INJECTION_PATTERNS = [
   /ignore\s+(?:all\s+)?previous\s+instructions/iu,
@@ -86,10 +98,21 @@ const INJECTION_PATTERNS = [
   /developer\s+mode|maintenance\s+mode|debug\s+mode/iu,
 ];
 
+const CRISIS_SUPPORT_PATTERNS = [
+  /\b(?:please\s+)?(?:give|provide|show|tell)\s+(?:me\s+)?(?:safe\s+)?(?:steps?|guidance|help)\s+(?:to|for)\s+(?:prevent|avoid)\s+(?:suicide|self-harm)\b/giu,
+  /\bhow\s+can\s+i\s+(?:safely\s+)?(?:prevent|avoid|stop)\s+(?:myself\s+from\s+)?(?:suicide|self-harm)\b/giu,
+  /\bhelp\s+me\s+(?:stay\s+safe|avoid|prevent|stop\s+myself)\s+(?:from\s+)?(?:suicide|self-harm)\b/giu,
+  /(?:\u043a\u0430\u043a|\u0447\u0442\u043e)\s+(?:\u043c\u043d\u0435\s+)?(?:\u043f\u0440\u0435\u0434\u043e\u0442\u0432\u0440\u0430\u0442\u0438\u0442\u044c|\u0438\u0437\u0431\u0435\u0436\u0430\u0442\u044c)\s+(?:\u0441\u0443\u0438\u0446\u0438\u0434|\u0441\u0430\u043c\u043e\u043f\u043e\u0432\u0440\u0435\u0436\u0434\u0435\u043d\u0438\u0435)/giu,
+  /(?:\u043a\u0430\u043a|\u043f\u043e\u043c\u043e\u0433\u0438)\s+(?:\u043c\u043d\u0435\s+)?\u043d\u0435\s+(?:\u0441\u043e\u0432\u0435\u0440\u0448\u0438\u0442\u044c\s+\u0441\u0443\u0438\u0446\u0438\u0434|\u043f\u043e\u043a\u043e\u043d\u0447\u0438\u0442\u044c\s+\u0441\u043e\u0431\u043e\u0439|\u043d\u0430\u0432\u0440\u0435\u0434\u0438\u0442\u044c\s+\u0441\u0435\u0431\u0435)/giu,
+];
+
 const DANGER_PATTERNS = [
-  /hack\s+into/iu,
-  /self-harm|suicide|how\s+to\s+make\s+(?:a\s+)?bomb|terrorism/iu,
-  /\u0432\u0437\u043b\u043e\u043c|\u0441\u0430\u043c\u043e\u043f\u043e\u0432\u0440\u0435\u0436\u0434\u0435\u043d\u0438\u0435|\u0441\u0443\u0438\u0446\u0438\u0434|\u043d\u0430\u0440\u043a\u043e\u0442\u0438\u043a\u0438|\u0442\u0435\u0440\u0440\u043e\u0440\u0438\u0437\u043c|\u0431\u043e\u043c\u0431\u0430/iu,
+  /\b(?:how\s+(?:do\s+i|can\s+i|to)|instructions?|steps?|guide)\b[\s\S]{0,80}\b(?:hack(?:\s+into)?|make\s+(?:a\s+)?bomb|commit\s+suicide|kill\s+myself|self-harm|obtain\s+(?:illegal\s+)?drugs|terrorist\s+attack)\b/iu,
+  /\b(?:give|write|provide|show|tell)\s+(?:me\s+)?(?:instructions?|steps?|a\s+guide)\b[\s\S]{0,80}\b(?:hack|bomb|suicide|self-harm|drugs|terrorist\s+attack)\b/iu,
+  /\b(?:give|list|provide|show|tell|describe|suggest)\s+(?:me\s+)?(?:suicide|self-harm)\s+(?:methods?|ways?|techniques?|options?)\b/iu,
+  /\b(?:give|list|provide|show|tell|describe|suggest)\s+(?:me\s+)?(?:methods?|ways?|techniques?|options?)\s+(?:to|for|of)\s+(?:commit\s+)?(?:suicide|self-harm)\b/iu,
+  /(?:\u043a\u0430\u043a|\u0438\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0438\u044f|\u0448\u0430\u0433\u0438|\u043f\u043e\u043c\u043e\u0433\u0438)[\s\S]{0,80}(?:\u0432\u0437\u043b\u043e\u043c\u0430\u0442\u044c|\u0441\u0434\u0435\u043b\u0430\u0442\u044c[\s\S]{0,20}\u0431\u043e\u043c\u0431|\u0441\u043e\u0432\u0435\u0440\u0448\u0438\u0442\u044c[\s\S]{0,20}\u0441\u0443\u0438\u0446\u0438\u0434|\u043f\u043e\u043a\u043e\u043d\u0447\u0438\u0442\u044c[\s\S]{0,20}\u0441\u043e\u0431\u043e\u0439|\u043d\u0430\u0432\u0440\u0435\u0434\u0438\u0442\u044c[\s\S]{0,20}\u0441\u0435\u0431\u0435|\u0434\u043e\u0441\u0442\u0430\u0442\u044c[\s\S]{0,20}\u043d\u0430\u0440\u043a\u043e\u0442\u0438\u043a|\u0441\u043e\u0432\u0435\u0440\u0448\u0438\u0442\u044c[\s\S]{0,20}\u0442\u0435\u0440\u0430\u043a\u0442)/iu,
+  /(?:\u0434\u0430\u0439|\u043f\u0435\u0440\u0435\u0447\u0438\u0441\u043b\u0438|\u043f\u043e\u043a\u0430\u0436\u0438|\u043e\u043f\u0438\u0448\u0438)[\s\S]{0,40}(?:\u043c\u0435\u0442\u043e\u0434\u044b|\u0441\u043f\u043e\u0441\u043e\u0431\u044b|\u0432\u0430\u0440\u0438\u0430\u043d\u0442\u044b)[\s\S]{0,40}(?:\u0441\u0443\u0438\u0446\u0438\u0434\u0430|\u043f\u043e\u043a\u043e\u043d\u0447\u0438\u0442\u044c\s+\u0441\u043e\u0431\u043e\u0439|\u043d\u0430\u0432\u0440\u0435\u0434\u0438\u0442\u044c\s+\u0441\u0435\u0431\u0435)/iu,
 ];
 
 function failure(status: PolicyFailureStatus, code: string): PolicyFailure {
@@ -121,6 +144,74 @@ function concatChunks(chunks: Uint8Array[], total: number): Uint8Array {
     offset += chunk.byteLength;
   }
   return result;
+}
+
+type TextRange = { start: number; end: number };
+
+function isValidIsoDateOrTimestamp(value: string): boolean {
+  const year = Number(value.slice(0, 4));
+  const month = Number(value.slice(5, 7));
+  const day = Number(value.slice(8, 10));
+  if (month < 1 || month > 12) return false;
+
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (day < 1 || day > daysInMonth[month - 1]) return false;
+  if (value.length === 10) return true;
+
+  const time = value.slice(10).match(
+    /^(?:T|\s)(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,9})?)?(?:Z|([+-])(\d{2}):(\d{2}))?$/u,
+  );
+  if (!time) return false;
+
+  const hour = Number(time[1]);
+  const minute = Number(time[2]);
+  const second = time[3] === undefined ? 0 : Number(time[3]);
+  if (hour > 23 || minute > 59 || second > 59) return false;
+
+  if (time[4]) {
+    const offsetHour = Number(time[5]);
+    const offsetMinute = Number(time[6]);
+    if (offsetHour > 14 || offsetMinute > 59) return false;
+    if (offsetHour === 14 && offsetMinute !== 0) return false;
+  }
+  return true;
+}
+
+function isoDateOrTimestampRanges(text: string): TextRange[] {
+  return Array.from(text.matchAll(ISO_DATE_OR_TIMESTAMP_PATTERN))
+    .filter((match) => isValidIsoDateOrTimestamp(match[0]))
+    .map((match) => {
+      const start = match.index ?? 0;
+      return { start, end: start + match[0].length };
+    });
+}
+
+function isPhoneCandidate(candidate: string, offset: number, isoRanges: TextRange[]): boolean {
+  const end = offset + candidate.length;
+  if (isoRanges.some((range) => range.start <= offset && range.end >= end)) return false;
+  const digits = candidate.replace(/\D/gu, '').length;
+  return digits >= 10 && digits <= 15;
+}
+
+function containsPhone(text: string): boolean {
+  const isoRanges = isoDateOrTimestampRanges(text);
+  return Array.from(text.matchAll(PHONE_CANDIDATE_PATTERN))
+    .some((match) => isPhoneCandidate(match[0], match.index ?? 0, isoRanges));
+}
+
+function redactPhones(text: string): string {
+  const isoRanges = isoDateOrTimestampRanges(text);
+  return text.replace(PHONE_CANDIDATE_PATTERN, (candidate, offset: number) => (
+    isPhoneCandidate(candidate, offset, isoRanges) ? '[REDACTED]' : candidate
+  ));
+}
+
+function withoutCrisisSupportRequests(text: string): string {
+  return CRISIS_SUPPORT_PATTERNS.reduce(
+    (remaining, pattern) => remaining.replace(pattern, '[CRISIS_SUPPORT_REQUEST]'),
+    text,
+  );
 }
 
 /** Reads JSON without accepting an unbounded request body into memory. */
@@ -167,13 +258,17 @@ export async function readBoundedJsonBody(req: Request): Promise<PolicyResult<{ 
 
 function classify(text: string): 'pii' | 'injection' | 'danger' | null {
   if (INJECTION_PATTERNS.some((pattern) => pattern.test(text))) return 'injection';
-  if (DANGER_PATTERNS.some((pattern) => pattern.test(text))) return 'danger';
-  if (PII_PATTERNS.some((pattern) => pattern.test(text))) return 'pii';
+  const nonSupportText = withoutCrisisSupportRequests(text);
+  if (DANGER_PATTERNS.some((pattern) => pattern.test(nonSupportText))) return 'danger';
+  if (NON_PHONE_PII_PATTERNS.some((pattern) => pattern.test(text)) || containsPhone(text)) return 'pii';
   return null;
 }
 
 function redactPii(text: string): string {
-  return REDACTION_PATTERNS.reduce((redacted, pattern) => redacted.replace(pattern, '[REDACTED]'), text);
+  return NON_PHONE_REDACTION_PATTERNS.reduce(
+    (redacted, pattern) => redacted.replace(pattern, '[REDACTED]'),
+    redactPhones(text),
+  );
 }
 
 function serverContentPolicy(texts: string[], safeRoute: SafeRoute): PolicyResult<string[]> {
@@ -239,21 +334,118 @@ function replaceContentTexts(contents: ServerContent[], texts: string[]): Server
   }));
 }
 
-function parseGenerationConfig(value: unknown): PolicyResult<{ maxOutputTokens: number }> {
+type SchemaBudget = {
+  nodes: number;
+  texts: string[];
+};
+
+function parseSchemaString(value: unknown, maxLength: number): PolicyResult<string> {
+  if (typeof value !== 'string' || !value.trim() || value.length > maxLength) {
+    return failure(400, 'invalid_response_schema');
+  }
+  return { ok: true, value };
+}
+
+function parseResponseSchema(
+  value: unknown,
+  budget: SchemaBudget,
+  depth = 0,
+): PolicyResult<Record<string, unknown>> {
+  if (!isPlainObject(value) || depth > MAX_AI_SCHEMA_DEPTH) {
+    return failure(400, 'invalid_response_schema');
+  }
+  budget.nodes += 1;
+  if (budget.nodes > MAX_AI_SCHEMA_NODES) return failure(413, 'response_schema_too_large');
+
+  const allowedKeys = ['type', 'properties', 'required', 'items', 'description', 'enum'];
+  if (!hasOnlyKeys(value, allowedKeys)) return failure(400, 'unsupported_response_schema');
+
+  const result: Record<string, unknown> = {};
+  if (value.type !== undefined) {
+    const type = parseSchemaString(value.type, 16);
+    if (!type.ok) return type;
+    if (!['OBJECT', 'ARRAY', 'STRING', 'INTEGER', 'NUMBER', 'BOOLEAN'].includes(type.value.toUpperCase())) {
+      return failure(400, 'unsupported_response_schema');
+    }
+    result.type = type.value;
+  }
+
+  if (value.description !== undefined) {
+    const description = parseSchemaString(value.description, 1_000);
+    if (!description.ok) return description;
+    budget.texts.push(description.value);
+    result.description = description.value;
+  }
+
+  if (value.properties !== undefined) {
+    if (!isPlainObject(value.properties) || Object.keys(value.properties).length > 64) {
+      return failure(400, 'invalid_response_schema');
+    }
+    const properties: Record<string, unknown> = {};
+    for (const [key, child] of Object.entries(value.properties)) {
+      if (!/^[\p{L}_][\p{L}\p{N}_-]{0,63}$/u.test(key)) return failure(400, 'invalid_response_schema');
+      const parsed = parseResponseSchema(child, budget, depth + 1);
+      if (!parsed.ok) return parsed;
+      properties[key] = parsed.value;
+    }
+    result.properties = properties;
+  }
+
+  if (value.items !== undefined) {
+    const items = parseResponseSchema(value.items, budget, depth + 1);
+    if (!items.ok) return items;
+    result.items = items.value;
+  }
+
+  for (const key of ['required', 'enum'] as const) {
+    if (value[key] === undefined) continue;
+    if (!Array.isArray(value[key]) || value[key].length > 64) {
+      return failure(400, 'invalid_response_schema');
+    }
+    const values: string[] = [];
+    for (const raw of value[key]) {
+      const parsed = parseSchemaString(raw, 128);
+      if (!parsed.ok) return parsed;
+      if (key === 'enum') budget.texts.push(parsed.value);
+      values.push(parsed.value);
+    }
+    result[key] = values;
+  }
+
+  return { ok: true, value: result };
+}
+
+function parseGenerationConfig(value: unknown): PolicyResult<ServerGenerationConfig> {
   if (value === undefined) return { ok: true, value: { maxOutputTokens: DEFAULT_AI_OUTPUT_TOKENS } };
-  if (!isPlainObject(value) || !hasOnlyKeys(value, ['maxOutputTokens'])) {
+  if (!isPlainObject(value) || !hasOnlyKeys(value, ['maxOutputTokens', 'responseMimeType', 'responseSchema'])) {
     return failure(400, 'unsupported_generation_config');
   }
-  if (value.maxOutputTokens === undefined) {
-    return { ok: true, value: { maxOutputTokens: DEFAULT_AI_OUTPUT_TOKENS } };
-  }
-  if (!Number.isInteger(value.maxOutputTokens) || (value.maxOutputTokens as number) < 1) {
+  const maxOutputTokens = value.maxOutputTokens ?? DEFAULT_AI_OUTPUT_TOKENS;
+  if (!Number.isInteger(maxOutputTokens) || (maxOutputTokens as number) < 1) {
     return failure(400, 'invalid_max_output_tokens');
   }
-  if ((value.maxOutputTokens as number) > MAX_AI_OUTPUT_TOKENS) {
+  if ((maxOutputTokens as number) > MAX_AI_OUTPUT_TOKENS) {
     return failure(422, 'max_output_tokens_exceeds_cap');
   }
-  return { ok: true, value: { maxOutputTokens: value.maxOutputTokens as number } };
+
+  if (value.responseMimeType !== undefined && value.responseMimeType !== 'application/json') {
+    return failure(400, 'unsupported_response_mime_type');
+  }
+  if (value.responseSchema !== undefined && value.responseMimeType !== 'application/json') {
+    return failure(400, 'response_schema_requires_json_mime_type');
+  }
+
+  const result: ServerGenerationConfig = { maxOutputTokens: maxOutputTokens as number };
+  if (value.responseMimeType === 'application/json') result.responseMimeType = value.responseMimeType;
+  if (value.responseSchema !== undefined) {
+    const schemaBudget: SchemaBudget = { nodes: 0, texts: [] };
+    const schema = parseResponseSchema(value.responseSchema, schemaBudget);
+    if (!schema.ok) return schema;
+    const policy = serverContentPolicy(schemaBudget.texts, undefined);
+    if (!policy.ok) return policy;
+    result.responseSchema = schema.value;
+  }
+  return { ok: true, value: result };
 }
 
 export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGeminiRequest> {
@@ -273,28 +465,33 @@ export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGemi
     : CANONICAL_GEMINI_TEXT_MODEL;
   if (body.model !== undefined && body.model !== expectedModel) return failure(422, 'unsupported_model');
 
-  if (body.systemInstruction !== undefined && typeof body.systemInstruction !== 'string') {
-    return failure(400, 'invalid_system_instruction');
-  }
-
   const safeRoute = parseSafeRoute(body.safetyRoute);
   if (!safeRoute.ok) return safeRoute;
   const generationConfig = parseGenerationConfig(body.generationConfig);
   if (!generationConfig.ok) return generationConfig;
   const budget: TextBudget = { characters: 0, parts: 0 };
+  const systemInstruction = body.systemInstruction === undefined
+    ? { ok: true as const, value: undefined }
+    : parseText(body.systemInstruction, budget);
+  if (!systemInstruction.ok) return failure(systemInstruction.status, 'invalid_system_instruction');
 
   if (action === 'embedContent') {
     if (body.contents !== undefined || body.content === undefined) return failure(400, 'invalid_embedding_shape');
     const content = parseContent(body.content, budget);
     if (!content.ok) return content;
-    const policy = serverContentPolicy(contentTexts([content.value]), safeRoute.value);
+    const policy = serverContentPolicy([
+      ...(systemInstruction.value ? [systemInstruction.value] : []),
+      ...contentTexts([content.value]),
+    ], safeRoute.value);
     if (!policy.ok) return policy;
+    const offset = systemInstruction.value ? 1 : 0;
     return {
       ok: true,
       value: {
         action,
         model: expectedModel,
-        content: replaceContentTexts([content.value], policy.value)[0],
+        content: replaceContentTexts([content.value], policy.value.slice(offset))[0],
+        ...(systemInstruction.value ? { systemInstruction: policy.value[0] } : {}),
         generationConfig: generationConfig.value,
       },
     };
@@ -310,15 +507,20 @@ export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGemi
     if (!content.ok) return content;
     contents.push(content.value);
   }
-  const policy = serverContentPolicy(contentTexts(contents), safeRoute.value);
+  const policy = serverContentPolicy([
+    ...(systemInstruction.value ? [systemInstruction.value] : []),
+    ...contentTexts(contents),
+  ], safeRoute.value);
   if (!policy.ok) return policy;
+  const offset = systemInstruction.value ? 1 : 0;
 
   return {
     ok: true,
     value: {
       action,
       model: expectedModel,
-      contents: replaceContentTexts(contents, policy.value),
+      contents: replaceContentTexts(contents, policy.value.slice(offset)),
+      ...(systemInstruction.value ? { systemInstruction: policy.value[0] } : {}),
       generationConfig: generationConfig.value,
     },
   };
@@ -348,12 +550,28 @@ export function validateAgentRequest(body: unknown): PolicyResult<ValidatedAgent
       return failure(400, 'invalid_agent_context');
     }
   }
+  if (
+    body.request_id !== undefined &&
+    (
+      typeof body.request_id !== 'string' ||
+      !/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(body.request_id)
+    )
+  ) {
+    return failure(400, 'invalid_agent_request_id');
+  }
 
   const safeRoute = parseSafeRoute(body.safetyRoute);
   if (!safeRoute.ok) return safeRoute;
   const policy = serverContentPolicy([parsedMessage.value], safeRoute.value);
   if (!policy.ok) return policy;
-  return { ok: true, value: { message: policy.value[0], route } };
+  return {
+    ok: true,
+    value: {
+      message: policy.value[0],
+      route,
+      ...(typeof body.request_id === 'string' ? { requestId: body.request_id } : {}),
+    },
+  };
 }
 
 export type Deadline = {
