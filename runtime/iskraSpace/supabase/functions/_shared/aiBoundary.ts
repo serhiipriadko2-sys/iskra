@@ -49,6 +49,28 @@ function isDevelopmentEnvironment(environment: string): boolean {
   return environment === 'development' || environment === 'test';
 }
 
+function normalizeConfiguredOrigin(value: string): string | null {
+  const candidate = value.trim();
+  if (!candidate || candidate === '*') return candidate;
+
+  try {
+    const parsed = new URL(candidate);
+    if (
+      (parsed.protocol !== 'https:' && parsed.protocol !== 'http:')
+      || parsed.username
+      || parsed.password
+      || parsed.origin === 'null'
+    ) {
+      return null;
+    }
+    return parsed.origin.toLowerCase();
+  } catch {
+    // Configuration is server-owned. Invalid entries must not become a
+    // permissive fallback, especially when copied from a route URL.
+    return null;
+  }
+}
+
 function originPolicy(config: AiBoundaryConfig): OriginPolicy {
   const normalized = config.allowedOrigins.trim();
   const wildcard = normalized === '*'
@@ -60,8 +82,8 @@ function originPolicy(config: AiBoundaryConfig): OriginPolicy {
     origins: new Set(
       normalized
         .split(',')
-        .map((origin) => origin.trim().toLowerCase())
-        .filter((origin) => origin && origin !== '*'),
+        .map(normalizeConfiguredOrigin)
+        .filter((origin): origin is string => Boolean(origin && origin !== '*')),
     ),
   };
 }
