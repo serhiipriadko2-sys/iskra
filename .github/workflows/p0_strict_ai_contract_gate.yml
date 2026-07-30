@@ -12,6 +12,17 @@ on:
       - "runtime/iskraSpace/services/__tests__/geminiEdgeFunctionSecurity.test.ts"
       - "runtime/iskraSpace/services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts"
       - ".github/workflows/p0_strict_ai_contract_gate.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "runtime/iskraSpace/supabase/functions/_shared/aiContentPolicy*.ts"
+      - "runtime/iskraSpace/supabase/functions/gemini/index.ts"
+      - "runtime/iskraSpace/supabase/functions/iskra-agent/index.ts"
+      - "runtime/iskraSpace/services/__tests__/aiContentPolicyRuntime.test.ts"
+      - "runtime/iskraSpace/services/__tests__/geminiEdgeFunctionSecurity.test.ts"
+      - "runtime/iskraSpace/services/__tests__/iskraAgentEdgeFunctionSecurity.test.ts"
+      - ".github/workflows/p0_strict_ai_contract_gate.yml"
   workflow_dispatch:
 
 permissions:
