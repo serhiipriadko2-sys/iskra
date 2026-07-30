@@ -42,9 +42,13 @@
  *  C27 (from v5.5.7) active identity: manifest.package_version == file-25 current_package
  *      == standalone instructions heading == file-00 mirror heading; acceptance_range pinned
  *      to T01-T97; manifest.adr == the ADR file 29 marks "(this build)" (closes the T97 gap
- *      and the silent default-rebuild drift in both acceptance range and governance ADR)
+ *      and the silent default-rebuild drift in both acceptance range and governance ADR);
+ *      a receipt claiming canonical_git_blobs is RESOLVED: the recorded commit must exist
+ *      and all 31 source files must be blob-equal at <ref>:<source_tree_path> (fail-closed
+ *      on any git failure — an unverifiable provenance claim is treated as false)
  *  C28 (from v5.5.7) loader sequence statically gated: file-00 loader block routes the COMPLETE
- *      29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28 order; file-29 reading order agrees
+ *      29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28 order; file 29 carries exactly ONE
+ *      reading-order declaration, inside "## Reading order", token-exact (no prefix/suffix/decoy)
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -797,19 +801,65 @@ check(contradictions.length === 0, 'C21',
     // Bind it to the SUPPLIED baseline manifest's own package_version.
     const c27f = manifest.baseline_release === base.package_version;
     // provenance identity: if the receipt claims a canonical git-blob build, the
-    // manifest must actually record that mode AND a resolvable commit — otherwise the
-    // receipt asserts reproducibility the artifact cannot support.
+    // manifest must record that mode AND the claim must be RESOLVED, not just
+    // well-shaped: a syntactically valid 40-hex ref proves nothing (forty `f`s
+    // pass a regex). Resolve the commit via git and byte-bind all 31 source
+    // files (30 knowledge + standalone instructions) to the blobs at
+    // <ref>:<source_tree_path>/... . Any git failure — unresolvable ref, missing
+    // path, repo-less environment — fails closed: an unverifiable provenance
+    // claim is treated as a false one.
     const claimsGitBlobs = /canonical_git_blobs/.test(receipt);
-    const c27g = !claimsGitBlobs
-      || (manifest.generated_from === 'canonical_git_blobs'
-        && /^[0-9a-f]{40}$/.test(String(manifest.generated_from_ref ?? '')));
+    let c27g = !claimsGitBlobs;
+    let c27gDetail = 'no git-provenance claim in receipt';
+    if (claimsGitBlobs) {
+      const ref = String(manifest.generated_from_ref ?? '');
+      const srcPath = String(manifest.source_tree_path ?? '');
+      const shapeOk = manifest.generated_from === 'canonical_git_blobs'
+        && /^[0-9a-f]{40}$/.test(ref)
+        && srcPath.length > 0 && !srcPath.startsWith('-') && !srcPath.startsWith('/')
+        && !srcPath.split('/').includes('..');
+      if (!shapeOk) {
+        c27gDetail = `provenance claim malformed (mode=${JSON.stringify(manifest.generated_from)} `
+          + `ref=${JSON.stringify(manifest.generated_from_ref)} src=${JSON.stringify(manifest.source_tree_path)})`;
+      } else {
+        try {
+          // one call resolves the commit AND yields every blob id under the
+          // release path; a nonexistent ref throws, an alien path yields no rows.
+          const ls = execFileSync('git',
+            ['ls-tree', '-r', '-z', `${ref}^{commit}`, '--', `${srcPath}/`],
+            { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
+          const blobAt = new Map<string, string>();
+          for (const rec of ls.split('\0')) {
+            const m = rec.match(/^\d{6} blob ([0-9a-f]{40})\t(.+)$/);
+            if (m) blobAt.set(m[2], m[1]);
+          }
+          // git's own object identity for the local bytes: sha1("blob <len>\0"+bytes)
+          const gitBlobId = (b: Buffer): string => createHash('sha1')
+            .update(`blob ${b.length}\0`).update(b).digest('hex');
+          const mism: string[] = [];
+          for (const n of knames) {
+            if (blobAt.get(`${srcPath}/knowledge/${n}`) !== gitBlobId(kbytes[n])) mism.push(n);
+          }
+          if (blobAt.get(`${srcPath}/support/PROJECT_INSTRUCTIONS_SOT30.md`)
+              !== gitBlobId(instrBuf)) mism.push('PROJECT_INSTRUCTIONS_SOT30.md');
+          c27g = mism.length === 0;
+          c27gDetail = c27g
+            ? `31/31 source files blob-bound to ${ref.slice(0, 7)}:${srcPath}`
+            : `source files diverge from ${ref.slice(0, 7)}:${srcPath}: ${mism.slice(0, 4).join(',')}`
+              + (mism.length > 4 ? `… (${mism.length} total)` : '');
+        } catch {
+          c27gDetail = `generated_from_ref ${ref.slice(0, 12)}… does not resolve to a commit here — `
+            + 'unverifiable provenance claim treated as false';
+        }
+      }
+    }
     check(c27a && c27b && c27c && c27d && c27e && c27f && c27g, 'C27',
       `active identity stamps equal manifest ${pkgVer} (25.current_package=${cpM?.[1] ?? 'MISSING'}; `
       + `instructions-heading=${ihM?.[1] ?? 'MISSING'}; mirror-heading=${mhM?.[1] ?? 'MISSING'}; `
       + `acceptance_range=${JSON.stringify(manifest.acceptance_range)}; `
       + `adr=${JSON.stringify(manifest.adr)} vs file29-this-build=${JSON.stringify(adrThisBuild?.[1])}; `
       + `baseline_release=${JSON.stringify(manifest.baseline_release)} vs baseline-manifest ${JSON.stringify(base.package_version)}; `
-      + `provenance=${JSON.stringify(manifest.generated_from)}@${JSON.stringify(manifest.generated_from_ref)} receipt-claims-git=${claimsGitBlobs})`);
+      + `provenance: ${c27gDetail})`);
   }
 }
 
@@ -843,11 +893,32 @@ check(contradictions.length === 0, 'C21',
       .map((m) => m[0]);
     const orderOk = loader.length > 0 && routed.length === seq.length
       && routed.every((t, i) => t === seq[i]);
-    // file 29 must carry the COMPLETE reading order too, not a prefix: otherwise its
-    // tail could contradict file 00 and T96 while the package stays green.
-    const f29ro = f29.includes('29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28');
+    // file 29 must carry the COMPLETE reading order as its ONLY route declaration,
+    // compared exactly — `includes` was a substring test, so `05 → <route>`,
+    // `<route> → 05` and a duplicate contradictory declaration all passed while
+    // T96 shipped an ambiguous loader identity. Rules: exactly one
+    // "## Reading order" heading; across the WHOLE file exactly one backticked
+    // span containing both a two-digit token and an arrow (decoy routes outside
+    // the section are declarations too); it must live inside that section; its
+    // full token list must equal the expected route with no prefix/suffix.
+    const f29seq = ['29', '00', '01', '02', '03–07', '08–20', '21–23', '24–27', '28'];
+    const roHeads = [...f29.matchAll(/^## Reading order$/gm)];
+    const roIdx = roHeads.length === 1 ? roHeads[0].index! : -1;
+    const roNext = roIdx >= 0 ? f29.indexOf('\n## ', roIdx + 1) : -1;
+    const roSec = roIdx >= 0 ? f29.slice(roIdx, roNext < 0 ? f29.length : roNext) : '';
+    const routeSpans = [...f29.matchAll(/`[^`\n]*→[^`\n]*`/g)]
+      .filter((m) => /\d\d/.test(m[0]));
+    const spanTokens = routeSpans.length === 1
+      ? [...routeSpans[0][0].matchAll(/\d\d–\d\d|\b\d\d\b/g)].map((m) => m[0])
+      : [];
+    const f29ro = roHeads.length === 1 && routeSpans.length === 1
+      && routeSpans[0].index! > roIdx && routeSpans[0].index! < roIdx + roSec.length
+      && spanTokens.length === f29seq.length
+      && spanTokens.every((t, i) => t === f29seq[i]);
     check(orderOk && f29ro, 'C28',
-      `loader sequence statically gated (00 loader block order=${orderOk}; file-29 complete reading order=${f29ro})`);
+      `loader sequence statically gated (00 loader block order=${orderOk}; `
+      + `file-29 single exact reading-order declaration=${f29ro} `
+      + `[headings=${roHeads.length} route-spans=${routeSpans.length} tokens=${spanTokens.join('→') || 'n/a'}])`);
   }
 }
 

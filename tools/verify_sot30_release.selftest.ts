@@ -367,6 +367,29 @@ negRelease557('neg: receipt claims git provenance without it', 'C27', (dir) => {
   m.generated_from_ref = null;
   writeFileSync(p, JSON.stringify(m, null, 2));
 });
+// a syntactically valid but NONEXISTENT 40-hex ref must fail closed: shape alone
+// (forty `f`s) previously authenticated a provenance claim with no reproducible source
+negRelease557('neg: provenance ref nonexistent commit', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.generated_from_ref = 'f'.repeat(40);
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// an EXISTING commit that does not contain the release path: resolution succeeds
+// but the 31 source blobs cannot be found there — must fail, not pass on shape
+negRelease557('neg: provenance ref wrong commit', 'C27', (dir) => {
+  const rootCommit = execFileSync('git', ['rev-list', '--max-parents=0', 'HEAD'],
+    { encoding: 'utf8' }).split('\n')[0].trim();
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.generated_from_ref = rootCommit;
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// a genuine ref with ONE tampered source blob: the byte-binding itself must catch it
+negRelease557('neg: provenance source blob tampered', 'C27', (dir) => {
+  const p = join(dir, 'knowledge/04_IDENTITY_NON_MIRROR.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\ntampered after freeze\n`);
+});
 // baseline_release truncated relative to the supplied baseline manifest
 negRelease557('neg: baseline_release truncated', 'C27', (dir) => {
   const p = join(dir, 'support/MANIFEST.json');
@@ -472,6 +495,24 @@ negRelease557('neg: file29 reading-order tail drifts', 'C28', (dir) => {
   writeFileSync(p, readFileSync(p, 'utf8').replace(
     '29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28',
     '29 → 00 → 01 → 02 → 03–07 → 28 → 21–23'));
+});
+// route PREFIXED with an extra step — a substring test accepted `05 → <route>`
+negRelease557('neg: file29 route prefixed', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/29_INDEX_UPLOAD_MANIFEST.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '`29 → 00 → 01 → 02', '`05 → 29 → 00 → 01 → 02'));
+});
+// route SUFFIXED with an extra step — a substring test accepted `<route> → 05`
+negRelease557('neg: file29 route suffixed', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/29_INDEX_UPLOAD_MANIFEST.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '→ 24–27 → 28`', '→ 24–27 → 28 → 05`'));
+});
+// SECOND route declaration elsewhere in file 29 — contradictory loader copies
+// must not ship even when the canonical declaration itself is intact
+negRelease557('neg: file29 duplicate route declaration', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/29_INDEX_UPLOAD_MANIFEST.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nNOTE: \`28 → 00 → 29\` alternative order.\n`);
 });
 // M3 divergence resolution REVERSED while the heading survives
 negRelease557('neg: M3 divergence resolution reversed', 'C25', (dir) => {

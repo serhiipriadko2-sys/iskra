@@ -27,6 +27,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # C27 provenance binding resolves the recorded source-freeze commit and
+          # byte-binds the 31 source blobs at that ref — a shallow clone cannot
+          # reach it and would fail closed on an honest package.
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
