@@ -359,6 +359,47 @@ negRelease557('neg: JWT in root README', 'C16', (dir) => {
   const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
   writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
 });
+// Supabase secret-key form in a root doc must fail the secret scan
+negRelease557('neg: sb_secret key in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nkey: sb_${'secret'}_${'A1b2C3d4'.repeat(4)}\n`);
+});
+// oversized Project Instructions (both copies byte-equal, manifest count honest)
+negRelease557('neg: instructions exceed 6000-char ceiling', 'C8', (dir) => {
+  const pad = `\n<!-- ${'x'.repeat(200)} -->`;
+  const sp = join(dir, 'support/PROJECT_INSTRUCTIONS_SOT30.md');
+  const grown = readFileSync(sp, 'utf8') + pad;
+  writeFileSync(sp, grown);
+  const kp = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  const f00 = readFileSync(kp, 'utf8');
+  writeFileSync(kp, f00.replace(readFileSync(sp, 'utf8').slice(0, -pad.length), grown));
+  const mp = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(mp, 'utf8'));
+  m.project_instructions_chars = grown.length;   // honest count, still over the ceiling
+  writeFileSync(mp, JSON.stringify(m, null, 2));
+});
+// numeric M2 coupling injected into file 03 (T86 covers 03/04 as well as 06/07)
+negRelease557('neg: integer M2 threshold in file 03', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/03_TELOS_MANTRA_PRINCIPLES.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 activation threshold: 1\n`);
+});
+// numeric M2 coupling injected into file 04
+negRelease557('neg: percentage M2 threshold in file 04', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/04_IDENTITY_NON_MIRROR.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 activates at 20%.\n`);
+});
+// loader tail group dropped (C28 must validate the complete sequence, not a prefix)
+negRelease557('neg: loader tail group drifts', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace('control-plane `08–20`', 'control-plane `28`'));
+});
+// shared-project transition negated while every keyword remains present
+negRelease557('neg: shared-project transition negated', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'Sharing a Project automatically switches it to **project-only memory**',
+    'Sharing a Project does not switch it to **project-only memory**'));
+});
 // hyphenated OpenAI project-key form in a root doc must fail the secret scan
 negRelease557('neg: sk-proj key in root README', 'C16', (dir) => {
   const p = join(dir, 'README.md');

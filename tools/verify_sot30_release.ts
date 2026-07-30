@@ -15,7 +15,7 @@
  *  C5  file-29 table = exactly {00..28} (unique set), each bytes+sha256 correct
  *  C6  file 29 does not list its own hash
  *  C7  T80: the mirror region in file 00 (anchored at "## Project Instructions") is BYTE-EQUAL to the standalone instructions
- *  C8  project_instructions_chars == actual character count
+ *  C8  project_instructions_chars == actual character count AND ≤ the 6000-char upload ceiling
  *  C9  changed ∩ unchanged = ∅
  *  C10 changed ∪ unchanged = the actual set of knowledge filenames (set equality, not just size)
  *  C11 changed set = files whose content differs from the baseline manifest
@@ -34,15 +34,15 @@
  *      grandfathered; a malformed package_version is a hard FAIL, never grandfathered)
  *  C24 (from v5.5.7) shared-project memory branch + context-boundary matrix present in file 02;
  *      Enterprise section carries no chat-history requirement in ANY phrasing (semantic, not exact-bullet)
- *  C25 (from v5.5.7) T86 declared cross-file coverage is real: files 06/07 carry no numeric M2 coupling;
+ *  C25 (from v5.5.7) T86 declared cross-file coverage is real: files 03/04/06/07 carry no numeric M2 coupling;
  *      the 07 §2.2 M3 veto-attribution divergence is mapped in 12 §4.2; normative M2 phrases live INSIDE
  *      the 12 §4.2 normative section (a decoy copy elsewhere does not satisfy the contract)
  *  C26 (from v5.5.7) release root = exact allowlist {README, QC_REPORT, PACKAGE_RECEIPT, knowledge/, support/};
  *      root docs carry no encoding artifact (isolated " ? ", U+FFFD, double-encoded UTF-8 pairs)
  *  C27 (from v5.5.7) active identity: manifest.package_version == file-25 current_package
  *      == standalone instructions heading == file-00 mirror heading (closes the T97 gap)
- *  C28 (from v5.5.7) loader sequence statically gated: file-00 loader block routes
- *      29 → 00 → 01 → 02 → 03–07 in order; file-29 reading order agrees (closes the T96 gap)
+ *  C28 (from v5.5.7) loader sequence statically gated: file-00 loader block routes the COMPLETE
+ *      29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28 order; file-29 reading order agrees
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -183,8 +183,14 @@ if (anchorIdx !== -1) {
   t80Ok = region.length === instrBuf.length && region.equals(instrBuf) && first !== -1 && first === last;
 }
 check(t80Ok, 'C7', 'T80: file-00 mirror region is BYTE-EQUAL to standalone instructions and unique');
-check(manifest.project_instructions_chars === instr.length, 'C8',
-  `project_instructions_chars recorded (${manifest.project_instructions_chars}) == actual (${instr.length})`);
+// The recorded count must match reality AND stay within the upload ceiling that
+// `28_EVALS_ACCEPTANCE.md` declares as a static gate ("Project Instructions ≤6000
+// characters"): an honestly-counted but oversized payload still violates the contract.
+const INSTRUCTIONS_CHAR_CEILING = 6000;
+check(manifest.project_instructions_chars === instr.length
+  && instr.length <= INSTRUCTIONS_CHAR_CEILING, 'C8',
+`project_instructions_chars recorded (${manifest.project_instructions_chars}) == actual (${instr.length}) `
++ `and within the ${INSTRUCTIONS_CHAR_CEILING}-character ceiling`);
 
 // ---- changed / unchanged sets ----
 const changed: string[] = manifest.changed_files ?? [];
@@ -312,6 +318,7 @@ for (const rel of actualPackaged) {
 // `import.meta.env.VITE_SUPABASE_ANON_KEY`), not real secrets.
 const secretPat = new RegExp(
   '(sk-[A-Za-z0-9_-]{20,}'
+  + '|sb_secret_[A-Za-z0-9_-]{16,}'
   + '|eyJ[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}'
   + '|-----BEGIN [A-Z ]*PRIVATE KEY-----[\\s\\S]{0,40}?[A-Za-z0-9+/]{60,})',
 );
@@ -560,8 +567,15 @@ const appliesFrom = (floor: string): boolean =>
       const j = s.indexOf(b, i + a.length); return j < 0 ? '' : s.slice(i, j);
     };
     const shared = between(f02, '### Shared projects', '### Context-boundary matrix');
-    const sharedOk = shared.includes('project-only')
-      && shared.includes('cannot revert')
+    // EXACT normative contract, not unordered keyword presence: a negated rewrite
+    // ("Sharing a Project does not switch it to project-only memory") keeps every
+    // keyword, so the affirmative clauses themselves are the gate. Rewording the
+    // normative sentence is intentionally a verifier-updating change.
+    const normText = (s: string): string =>
+      s.toLowerCase().replace(/\*\*/g, '').replace(/\s+/g, ' ');
+    const sharedNorm = normText(shared);
+    const sharedOk = sharedNorm.includes('sharing a project automatically switches it to project-only memory')
+      && sharedNorm.includes('this transition cannot revert the project to default memory')
       && /observed_at/.test(shared);
     const matrix = between(f02, '### Context-boundary matrix', '<!-- T85-CONTRACT');
     // exact cell-value contract: parse each boundary row and assert the semantic
@@ -623,15 +637,21 @@ const appliesFrom = (floor: string): boolean =>
     const f06 = readFileSync(join(kdir, '06_SECURITY_INTEGRITY.md'), 'utf8');
     const f07 = readFileSync(join(kdir, '07_UNIVERSAL_ROUTER.md'), 'utf8');
     const f12 = readFileSync(join(kdir, '12_COUNCIL_VOICES.md'), 'utf8');
-    // no line may couple the M2 mechanism with a numeric threshold in 06/07:
-    // decimals, comparison forms, integers/percentages tied to threshold or
-    // activation vocabulary. Section references (e.g. "12 §4.2") are exempt.
+    // no line may couple the M2 mechanism with a numeric threshold in ANY of the four
+    // files T86's acceptance row covers (03/04/06/07): decimals, comparison forms,
+    // integers/percentages tied to threshold or activation vocabulary.
+    // Exempt by construction: section references ("`12 §4.2`", "file 12") and the
+    // mechanism identifiers M1/M2/M3 themselves — those digits name mechanisms, not values.
     const m2NumericLine = (t: string): boolean => t.split('\n').some((l) => {
       if (!/\bM2\b/.test(l)) return false;
-      const rest = l.replace(/\bM2\b/g, '').replace(/§\s*[\d.]+|файл[ае]?\s*\d+|file\s*\d+/gi, '');
+      const rest = l
+        .replace(/`?\d+\s*§\s*[\d.]+`?|§\s*[\d.]+|файл[ае]?\s*\d+|file\s*\d+/gi, '')
+        .replace(/\bM[123]\b/g, '');
       return /[<>≥≤]\s*\d|\d\.\d|\d+\s*%|(threshold|activat|порог|активаци)[^\n]{0,30}\d/i.test(rest);
     });
-    const c25a = !m2NumericLine(f06) && !m2NumericLine(f07);
+    const f03 = readFileSync(join(kdir, '03_TELOS_MANTRA_PRINCIPLES.md'), 'utf8');
+    const f04 = readFileSync(join(kdir, '04_IDENTITY_NON_MIRROR.md'), 'utf8');
+    const c25a = ![f03, f04, f06, f07].some(m2NumericLine);
     // the normative M2 phrases must sit INSIDE §4.2, not merely anywhere in the file
     const s42i = f12.indexOf('### 4.2');
     const s42j = f12.indexOf('## 5', s42i < 0 ? 0 : s42i);
@@ -641,7 +661,7 @@ const appliesFrom = (floor: string): boolean =>
     // the known 07 §2.2 KAIN drift-veto attribution divergence must be mapped in §4.2
     const c25c = s42.includes('Mapped M3 divergence');
     check(c25a && c25b && c25c, 'C25',
-      `T86 cross-file coverage real (06/07 no numeric M2: ${c25a}; normative phrases in §4.2: ${c25b}; M3 divergence mapped: ${c25c})`);
+      `T86 cross-file coverage real (03/04/06/07 no numeric M2: ${c25a}; normative phrases in §4.2: ${c25b}; M3 divergence mapped: ${c25c})`);
   }
 }
 
@@ -707,8 +727,10 @@ const appliesFrom = (floor: string): boolean =>
     const loader = li >= 0 && lj > li ? f00txt.slice(li, lj) : '';
     // the normative loader block (not decoy text elsewhere) must route the exact
     // sequence 29 → 00 → 01 → 02 → 03–07 in this order.
+    // the COMPLETE T96 sequence, not just its prefix: the tail groups must not drift
     const seq = ['29_INDEX_UPLOAD_MANIFEST.md', '00_PROJECT_ROUTER.md',
-      '01_PARITY_ADVANCEMENT_MANIFEST.md', '02_PROJECTS_SURFACE_MAP.md', '03–07'];
+      '01_PARITY_ADVANCEMENT_MANIFEST.md', '02_PROJECTS_SURFACE_MAP.md',
+      '03–07', '08–20', '21–23', '24–27', '28'];
     let pos = 0; let orderOk = loader.length > 0;
     for (const tok of seq) {
       const at = loader.indexOf(tok, pos);
