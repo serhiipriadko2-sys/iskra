@@ -311,7 +311,7 @@ for (const rel of actualPackaged) {
 // those values are documentation placeholders (`your_supabase_anon_key`,
 // `import.meta.env.VITE_SUPABASE_ANON_KEY`), not real secrets.
 const secretPat = new RegExp(
-  '(sk-[A-Za-z0-9]{32,}'
+  '(sk-[A-Za-z0-9_-]{20,}'
   + '|eyJ[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}'
   + '|-----BEGIN [A-Z ]*PRIVATE KEY-----[\\s\\S]{0,40}?[A-Za-z0-9+/]{60,})',
 );
@@ -573,8 +573,14 @@ const appliesFrom = (floor: string): boolean =>
       const cells = row.split('|').map((c) => c.trim());
       return cells.length >= 4 ? [cells[2], cells[3]] : null;
     };
-    const cellIs = (cell: string | undefined, want: 'allowed' | 'denied'): boolean =>
-      !!cell && cell.toLowerCase().startsWith(want);
+    // a cell must OPEN with the expected value AND must not smuggle the opposite
+    // value anywhere in its explanation ("denied — actually allowed" fails).
+    const cellIs = (cell: string | undefined, want: 'allowed' | 'denied'): boolean => {
+      if (!cell) return false;
+      const norm = cell.toLowerCase();
+      const opposite = want === 'allowed' ? 'denied' : 'allowed';
+      return norm.startsWith(want) && !norm.includes(opposite);
+    };
     const rowsSpec: Array<[string, 'allowed' | 'denied', 'allowed' | 'denied']> = [
       ['Project-only memory', 'denied', 'denied'],
       ['Enterprise/Edu default memory', 'denied', 'allowed'],

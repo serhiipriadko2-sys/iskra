@@ -75,7 +75,7 @@ Owner acceptance, artifact promotion and live T01–T97 remain separate pending 
 
 ## Consequences
 
-- Changed knowledge set vs v5.5.6: `{00, 02, 12, 22, 25, 28, 29}` (22 is a version-stamp-only bump required by C12).
+- Changed knowledge set vs v5.5.6 (final, post-Amendment A.1): `{00, 01, 02, 12, 15, 22, 25, 28, 29}` — 9 changed / 21 unchanged. 01 reclassifies its status snapshot as historical; 15 adds the dated 2026-07-30 live overlay; 22 carries both the C12 version-stamp bump and the substantive four-mode App-permission content added by A.1.
 - New artifacts: `governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/`, `dist/SoT30_v5.5.7.zip`, CI verify step, ledger entries.
 - v5.5.6 CI verification continues unchanged (grandfathered floors).
 - Merge of this candidate into the repository is a `source_merge` only; artifact promotion and live verification remain separate owner decisions.

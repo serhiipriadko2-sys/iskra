@@ -359,6 +359,18 @@ negRelease557('neg: JWT in root README', 'C16', (dir) => {
   const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
   writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
 });
+// hyphenated OpenAI project-key form in a root doc must fail the secret scan
+negRelease557('neg: sk-proj key in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nkey: sk-${'proj'}-${'A1b2'.repeat(10)}\n`);
+});
+// matrix cell smuggling the opposite value after a valid prefix
+negRelease557('neg: matrix cell prefix-smuggled opposite', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '| Project-only memory | denied | denied |',
+    '| Project-only memory | denied — actually allowed | denied |'));
+});
 // context-boundary matrix cell reversed (keywords intact, value wrong)
 negRelease557('neg: matrix cell reversed', 'C24', (dir) => {
   const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
