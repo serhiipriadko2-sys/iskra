@@ -15,13 +15,13 @@
  *  C5  file-29 table = exactly {00..28} (unique set), each bytes+sha256 correct
  *  C6  file 29 does not list its own hash
  *  C7  T80: the mirror region in file 00 (anchored at "## Project Instructions") is BYTE-EQUAL to the standalone instructions
- *  C8  project_instructions_chars == actual character count
+ *  C8  project_instructions_chars == actual character count AND ≤ the 6000-char upload ceiling
  *  C9  changed ∩ unchanged = ∅
  *  C10 changed ∪ unchanged = the actual set of knowledge filenames (set equality, not just size)
  *  C11 changed set = files whose content differs from the baseline manifest
  *  C12 package-version stamps consistent with package_version
  *  C13 live_project_verified === false
- *  C14 ZIP: single top-level root; every entry under root/knowledge|root/support; file set = exactly {30 knowledge + 3 support}; sha256sum -c 32/32
+ *  C14 ZIP: single top-level root; every entry under root/knowledge|root/support; file set = exactly {30 knowledge + 3 support}; regular files only (no symlink/device entries); sha256sum -c 32/32
  *  C15 LF line-ending policy (no CRLF in knowledge/support)
  *  C16 package composition safety: no packaged file / zip entry is .env|node_modules|build-cache|absolute-path; no live secrets in knowledge/support/audit/scripts (illustrative bare PEM markers allowed)
  *  C17 PACKAGE_RECEIPT carries the actual zip sha256 + bytes
@@ -30,7 +30,25 @@
  *  C20 release-tree ↔ extracted-ZIP byte parity for all 33 files (catches a split-brain tree/zip)
  *  C21 no ADR-lifecycle self-contradiction (a doc claiming `accepted` while also stating `proposed`/`not accepted`)
  *  C22 file-29 active-identity consistency: exactly one "(this build)" version-section == MANIFEST.package_version; supersedes ⊇ baseline_release; active composition heading ⊇ baseline_release; no "proposed, not accepted" ADR claim
- *  C23 T85/T86 acceptance-contract consistency (applicable from v5.5.6; older immutable releases are grandfathered)
+ *  C23 T85/T86 acceptance-contract consistency (applicable from v5.5.6; older immutable releases are
+ *      grandfathered; a malformed package_version is a hard FAIL, never grandfathered)
+ *  C24 (from v5.5.7) shared-project memory branch + context-boundary matrix present in file 02;
+ *      Enterprise section carries no chat-history requirement in ANY phrasing (semantic, not exact-bullet)
+ *  C25 (from v5.5.7) T86 declared cross-file coverage is real: files 03/04/06/07 carry no numeric M2 coupling;
+ *      the 07 §2.2 M3 veto-attribution divergence is mapped in 12 §4.2; normative M2 phrases live INSIDE
+ *      the 12 §4.2 normative section (a decoy copy elsewhere does not satisfy the contract)
+ *  C26 (from v5.5.7) release root = exact allowlist {README, QC_REPORT, PACKAGE_RECEIPT, knowledge/, support/};
+ *      root docs carry no encoding artifact (isolated " ? ", U+FFFD, double-encoded UTF-8 pairs)
+ *  C27 (from v5.5.7) active identity: manifest.package_version == file-25 current_package
+ *      == standalone instructions heading == file-00 mirror heading; acceptance_range pinned
+ *      to T01-T97; manifest.adr == the ADR file 29 marks "(this build)" (closes the T97 gap
+ *      and the silent default-rebuild drift in both acceptance range and governance ADR);
+ *      a receipt claiming canonical_git_blobs is RESOLVED: the recorded commit must exist
+ *      and all 31 source files must be blob-equal at <ref>:<source_tree_path> (fail-closed
+ *      on any git failure — an unverifiable provenance claim is treated as false)
+ *  C28 (from v5.5.7) loader sequence statically gated: file-00 loader block routes the COMPLETE
+ *      29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28 order; file 29 carries exactly ONE
+ *      reading-order declaration, inside "## Reading order", token-exact (no prefix/suffix/decoy)
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -48,6 +66,11 @@ const check = (cond: boolean, id: string, msg: string) => {
 const sha256 = (b: Buffer) => createHash('sha256').update(b).digest('hex');
 const setEq = (a: Set<string>, b: Set<string>) =>
   a.size === b.size && [...a].every((x) => b.has(x));
+// shared normalizer for exact prose contracts (C24/C25): case-fold, drop markdown
+// emphasis, collapse whitespace — so wrapping/emphasis edits do not break a contract
+// while a semantic rewrite still does.
+const normText = (s: string): string =>
+  s.toLowerCase().replace(/\*\*/g, '').replace(/\s+/g, ' ');
 
 const releaseDir = process.argv[2];
 if (!releaseDir) {
@@ -117,6 +140,25 @@ check(
 
 // ---- MANIFEST.files = exact 30 knowledge set, with EXACT full paths ----
 const manifest = JSON.parse(readFileSync(join(sdir, 'MANIFEST.json'), 'utf8'));
+
+// ---- version helpers (floor-gated contracts; defined here so C19 onward can use them) ----
+const verTuple = (v: string): number[] => {
+  const m = String(v ?? '').match(/^v?(\d+)\.(\d+)\.(\d+)$/);
+  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [0, 0, 0];
+};
+const versionWellFormed = /^v?\d+\.\d+\.\d+$/.test(String(manifest.package_version ?? ''));
+const atLeast = (v: string, floor: string): boolean => {
+  const a = verTuple(v); const b = verTuple(floor);
+  for (let i = 0; i < 3; i += 1) {
+    if (a[i] !== b[i]) return a[i] > b[i];
+  }
+  return true;
+};
+// A malformed package_version must NEVER downgrade to "contract not applicable":
+// that would let a corrupted manifest bypass every floor-gated semantic check.
+const appliesFrom = (floor: string): boolean =>
+  versionWellFormed && atLeast(manifest.package_version ?? '', floor);
+
 const manFullPaths = (manifest.files ?? []).map((f: { path: string }) => f.path);
 const manFullSet = new Set<string>(manFullPaths);
 const expectedManPaths = new Set<string>(knames.map((n) => `knowledge/${n}`));
@@ -128,10 +170,18 @@ for (const f of manifest.files ?? []) {
     manHashOk = false;
   }
 }
+// Aggregate summary fields must be recomputed, not trusted: a manifest whose
+// per-file entries are correct can still advertise a false file count or corpus size,
+// and the hash chain would authenticate that lie.
+const corpusActual = knames.reduce((a, n) => a + kbytes[n].length, 0);
+const summaryOk = manifest.knowledge_file_count === 30
+  && manifest.corpus_bytes === corpusActual;
 check(
   manHashOk && manifest.files?.length === 30
-    && manFullPaths.length === 30 && manFullSet.size === 30 && setEq(manFullSet, expectedManPaths),
-  'C4', 'MANIFEST.files = exact 30 knowledge paths (full-path set), bytes+sha256 correct',
+    && manFullPaths.length === 30 && manFullSet.size === 30 && setEq(manFullSet, expectedManPaths)
+    && summaryOk,
+  'C4', 'MANIFEST.files = exact 30 knowledge paths (full-path set), bytes+sha256 correct; '
+  + `summary fields recomputed (count=${manifest.knowledge_file_count}, corpus_bytes=${manifest.corpus_bytes} vs actual ${corpusActual})`,
 );
 
 // ---- file-29 embedded table = exact {00..28} set ----
@@ -171,8 +221,16 @@ if (anchorIdx !== -1) {
   t80Ok = region.length === instrBuf.length && region.equals(instrBuf) && first !== -1 && first === last;
 }
 check(t80Ok, 'C7', 'T80: file-00 mirror region is BYTE-EQUAL to standalone instructions and unique');
-check(manifest.project_instructions_chars === instr.length, 'C8',
-  `project_instructions_chars recorded (${manifest.project_instructions_chars}) == actual (${instr.length})`);
+// The recorded count must match reality AND stay within the upload ceiling that
+// `28_EVALS_ACCEPTANCE.md` declares as a static gate ("Project Instructions ≤6000
+// characters"): an honestly-counted but oversized payload still violates the contract.
+const INSTRUCTIONS_CHAR_CEILING = 6000;
+check(manifest.project_instructions_chars === instr.length
+  && manifest.project_instructions_bytes === instrBuf.length
+  && instr.length <= INSTRUCTIONS_CHAR_CEILING, 'C8',
+`project_instructions_chars recorded (${manifest.project_instructions_chars}) == actual (${instr.length}) `
++ `and bytes recorded (${manifest.project_instructions_bytes}) == actual (${instrBuf.length}) `
++ `and within the ${INSTRUCTIONS_CHAR_CEILING}-character ceiling`);
 
 // ---- changed / unchanged sets ----
 const changed: string[] = manifest.changed_files ?? [];
@@ -233,14 +291,31 @@ if (existsSync(zipPath)) {
     const dirsOk = dirEntries.every((d) => expectedDirs.has(d));          // no stray directories
     const noAbsOrDotDot = fileEntries.every((e) => !e.startsWith('/') && !e.includes('..'));
     const allowlistOk = setEq(relFiles, expectedZip);
+    // Entry-TYPE allowlist, checked BEFORE extraction: a symlink entry would let
+    // `sha256sum -c` and the C20 parity read follow the link to a file outside the
+    // archive, so a tampered ZIP could "verify" against the checked-out tree instead
+    // of its own payload. zipinfo's first column is the Unix file type; only regular
+    // files (`-`, or `?` when the creating system is unknown) and directories (`d`)
+    // are allowed — `l`/`b`/`c`/`p`/`s` are rejected.
+    const zinfo = execFileSync('unzip', ['-Z', zipPath], { encoding: 'utf8' })
+      .split('\n').filter((l) => /^[-?dlbcps][rwxsStT-]{9}\s/.test(l));
+    const regularOnly = zinfo.length > 0 && zinfo.every((l) => '-?d'.includes(l[0]));
     execFileSync('unzip', ['-qq', zipPath, '-d', tmp]);
     const out = execFileSync('sha256sum', ['-c', 'support/SHA256SUMS'],
       { cwd: join(tmp, root), encoding: 'utf8' });
     const okLines = out.split('\n').filter((l) => l.endsWith(': OK')).length;
     const badLines = out.split('\n').filter((l) => /: FAILED/.test(l)).length;
+    // The root name is package identity, not packaging detail: an archive repacked
+    // under an arbitrary root (WRONG_ROOT/) with identical payload otherwise passes
+    // every content check while distributing under a different identity. From v5.5.7
+    // the root must be exactly SoT30_<package_version> (older releases shipped
+    // historical root spellings and stay grandfathered).
+    const rootNameOk = !appliesFrom('v5.5.7')
+      || root === `SoT30_${manifest.package_version}`;
     zipOk = singleRoot && allowlistOk && noDupEntries && dirsOk && noAbsOrDotDot
-      && okLines === 32 && badLines === 0;
-    zipMsg = `root=${root} entries=${relFileArr.length} dup=${!noDupEntries} dirs=${dirsOk} sha256sum -c ${okLines}/32`;
+      && regularOnly && rootNameOk && okLines === 32 && badLines === 0;
+    zipMsg = `root=${root} (versioned-root ok=${rootNameOk}) entries=${relFileArr.length} `
+      + `dup=${!noDupEntries} dirs=${dirsOk} regular-only=${regularOnly} sha256sum -c ${okLines}/32`;
 
     // C20: extracted ZIP bytes must equal the release-tree bytes for all 33 files
     let par = true;
@@ -299,7 +374,11 @@ for (const rel of actualPackaged) {
 // those values are documentation placeholders (`your_supabase_anon_key`,
 // `import.meta.env.VITE_SUPABASE_ANON_KEY`), not real secrets.
 const secretPat = new RegExp(
-  '(sk-[A-Za-z0-9]{32,}'
+  '(sk-[A-Za-z0-9_-]{20,}'
+  + '|AKIA[0-9A-Z]{16}'
+  + '|sb_secret_[A-Za-z0-9_-]{16,}'
+  + '|github_pat_[A-Za-z0-9_]{20,}'
+  + '|gh[pousr]_[A-Za-z0-9]{30,}'
   + '|eyJ[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}'
   + '|-----BEGIN [A-Z ]*PRIVATE KEY-----[\\s\\S]{0,40}?[A-Za-z0-9+/]{60,})',
 );
@@ -307,6 +386,11 @@ const secretScanTargets: string[] = [
   ...knames.map((n) => join(kdir, n)),
   ...SUPPORT_FILES.map((s) => join(sdir, s)),
 ];
+// release-root docs: committed release artifacts whose bytes the ledger will
+// authenticate — a secret here would be hashed-and-blessed, so scan them too.
+for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
+  secretScanTargets.push(join(releaseDir, doc));
+}
 // audit artifacts + build/verify scripts, when present (advertised coverage).
 const auditDir = 'governance/audits/2026-07-20-sot30-v554';
 if (existsSync(auditDir)) {
@@ -328,8 +412,17 @@ check(structuralOk && secretsOk, 'C16',
 const receipt = existsSync(join(releaseDir, 'PACKAGE_RECEIPT.md'))
   ? readFileSync(join(releaseDir, 'PACKAGE_RECEIPT.md'), 'utf8') : '';
 const zb = existsSync(zipPath) ? readFileSync(zipPath) : Buffer.alloc(0);
-check(zb.length > 0 && receipt.includes(sha256(zb)) && receipt.includes(String(zb.length)), 'C17',
-  'PACKAGE_RECEIPT carries actual zip sha256 + bytes');
+// Parse the CANONICAL receipt fields and compare their values — a whole-document
+// `includes` accepted a falsified `| ZIP bytes |` row as long as the real number
+// appeared anywhere else in the receipt (e.g. as an unrelated audit id).
+// Exactly one row each, exact value equality.
+const rcBytes = [...receipt.matchAll(/^\| ZIP bytes \| (\d+) \|/gm)];
+const rcSha = [...receipt.matchAll(/^\| ZIP sha256 \| `([0-9a-f]{64})` \|/gm)];
+check(zb.length > 0
+  && rcBytes.length === 1 && Number(rcBytes[0][1]) === zb.length
+  && rcSha.length === 1 && rcSha[0][1] === sha256(zb), 'C17',
+  `PACKAGE_RECEIPT canonical ZIP fields match the artifact (bytes-rows=${rcBytes.length} `
+  + `bytes=${rcBytes[0]?.[1] ?? 'MISSING'} vs ${zb.length}; sha-rows=${rcSha.length})`);
 
 // ---- retired "28 identical" claim absent ----
 let retired = false;
@@ -350,6 +443,12 @@ const compToken = (t: string): [number, number] | null => {
   const m = t.match(/composition:\s*changed=(\d+)\s+unchanged=(\d+)/i);
   return m ? [Number(m[1]), Number(m[2])] : null;
 };
+// baseline named in the same token; compared to the manifest from v5.5.7 onward so a
+// truncated/wrong `--baseline-version` cannot leave root docs and manifest disagreeing.
+const compBaseline = (t: string): string | null => {
+  const m = t.match(/composition:[^>]*baseline=(v\d+(?:\.\d+)*)/i);
+  return m ? m[1] : null;
+};
 const manComp: [number, number] = [changed.length, unchanged.length];
 const rootTokens: Record<string, [number, number] | null> = {};
 for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
@@ -365,7 +464,13 @@ const tokensAgree = tokensPresent && allTokens.every(
 // contradicting "N files unchanged" count.
 const f29DefersToManifest = /manifest'?s?\b|support\/MANIFEST\.json/i.test(f29)
   && !/\b(\d+) files? (are )?(byte-)?identical\b/i.test(f29);
-check(tokensAgree && f29DefersToManifest, 'C19',
+// from v5.5.7: every root token must also name the manifest's baseline_release
+const baselineTokensOk = !appliesFrom('v5.5.7')
+  || ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md'].every((doc) => {
+    const dp = join(releaseDir, doc);
+    return existsSync(dp) && compBaseline(readFileSync(dp, 'utf8')) === manifest.baseline_release;
+  });
+check(tokensAgree && f29DefersToManifest && baselineTokensOk, 'C19',
   `T88 composition agreement (manifest changed=${manComp[0]}/unchanged=${manComp[1]}; root tokens ${
     tokensPresent ? 'present' : 'MISSING'}; file29 defers=${f29DefersToManifest})`);
 
@@ -448,19 +553,11 @@ check(contradictions.length === 0, 'C21',
 // Introduced after the v5.5.5 clean-Project diagnostic run. Older immutable
 // releases are grandfathered so their historical packages remain verifiable.
 {
-  const verTuple = (v: string): number[] => {
-    const m = String(v ?? '').match(/^v?(\d+)\.(\d+)\.(\d+)$/);
-    return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [0, 0, 0];
-  };
-  const atLeast = (v: string, floor: string): boolean => {
-    const a = verTuple(v); const b = verTuple(floor);
-    for (let i = 0; i < 3; i += 1) {
-      if (a[i] !== b[i]) return a[i] > b[i];
-    }
-    return true;
-  };
-  const applies = atLeast(manifest.package_version ?? '', 'v5.5.6');
-  if (!applies) {
+  const applies = appliesFrom('v5.5.6');
+  if (!versionWellFormed) {
+    check(false, 'C23',
+      `package_version malformed (${JSON.stringify(manifest.package_version)}) — fail-closed, floor-gated contracts cannot be waived`);
+  } else if (!applies) {
     check(true, 'C23', `T85/T86 contract not applicable before v5.5.6 (package=${manifest.package_version})`);
   } else {
     const f02 = readFileSync(join(kdir, '02_PROJECTS_SURFACE_MAP.md'), 'utf8');
@@ -518,6 +615,334 @@ check(contradictions.length === 0, 'C21',
 
     check(t85ok && t86ok, 'C23',
       `T85/T86 contract consistent (T85=${t85ok}; T86=${t86ok}; M2=${JSON.stringify(m2cell)})`);
+  }
+}
+
+// ---- C24 (from v5.5.7): shared-project memory branch + semantic Enterprise regression ----
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C24', `shared-project contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const f02 = readFileSync(join(kdir, '02_PROJECTS_SURFACE_MAP.md'), 'utf8');
+    const f28 = readFileSync(join(kdir, '28_EVALS_ACCEPTANCE.md'), 'utf8');
+    const between = (s: string, a: string, b: string): string => {
+      const i = s.indexOf(a); if (i < 0) return '';
+      const j = s.indexOf(b, i + a.length); return j < 0 ? '' : s.slice(i, j);
+    };
+    const shared = between(f02, '### Shared projects', '### Context-boundary matrix');
+    // EXACT normative contract, not unordered keyword presence: a negated rewrite
+    // ("Sharing a Project does not switch it to project-only memory") keeps every
+    // keyword, so the affirmative clauses themselves are the gate. Rewording the
+    // normative sentence is intentionally a verifier-updating change.
+    const sharedNorm = normText(shared);
+    const sharedOk = sharedNorm.includes('sharing a project automatically switches it to project-only memory')
+      && sharedNorm.includes('this transition cannot revert the project to default memory')
+      && /observed_at/.test(shared);
+    const matrix = between(f02, '### Context-boundary matrix', '<!-- T85-CONTRACT');
+    // exact cell-value contract: parse each boundary row and assert the semantic
+    // value of BOTH cells, so reversing e.g. Project-only to allowed/allowed fails
+    // even though every keyword is still present somewhere in the section.
+    // exactly ONE row per label: a duplicate row carrying the opposite values would
+    // otherwise ship alongside the correct one while `.find()` validated only the first.
+    const matrixCell = (rowLabel: string): [string, string] | null => {
+      const rows = matrix.split('\n').filter((l) => l.trim().startsWith(`| ${rowLabel}`));
+      if (rows.length !== 1) return null;
+      const cells = rows[0].split('|').map((c) => c.trim());
+      return cells.length >= 4 ? [cells[2], cells[3]] : null;
+    };
+    // a cell must OPEN with the expected value AND must not smuggle the opposite
+    // value anywhere in its explanation ("denied — actually allowed" fails).
+    const cellIs = (cell: string | undefined, want: 'allowed' | 'denied'): boolean => {
+      if (!cell) return false;
+      const norm = cell.toLowerCase();
+      const opposite = want === 'allowed' ? 'denied' : 'allowed';
+      return norm.startsWith(want) && !norm.includes(opposite);
+    };
+    const rowsSpec: Array<[string, 'allowed' | 'denied', 'allowed' | 'denied']> = [
+      ['Project-only memory', 'denied', 'denied'],
+      ['Enterprise/Edu default memory', 'denied', 'allowed'],
+      ['Non-Enterprise default memory (incl. Business)', 'allowed', 'allowed'],
+      ['Shared project', 'denied', 'denied'],
+    ];
+    const cellsOk = rowsSpec.every(([label, a, b]) => {
+      const c = matrixCell(label);
+      return !!c && cellIs(c[0], a) && cellIs(c[1], b);
+    });
+    const matrixOk = matrix.includes('Outside-chat reference')
+      && matrix.includes('Saved-memory reference')
+      && matrix.includes('not a security')
+      && cellsOk;
+    const tokenOk = f02.includes('shared=auto_project_only_irreversible');
+    // Enterprise regression guard: after removing the single allowed NEGATION
+    // sentence, no term from the allowlisted history-requirement LEXICON may
+    // remain in the Enterprise section. This is an explicit lexicon contract,
+    // not a general semantic proof — extend the lexicon when new phrasings are
+    // observed (static regex cannot prove absence in arbitrary phrasing).
+    const ent = between(f02, '### Enterprise users', '### All other subscriptions (including Business)');
+    const historyLexicon = /(chat|conversation)[ -]?history|previous conversations|prior (chats|conversations)|истори[юия][^\n]{0,20}(чат|разговор)/i;
+    // Only the exact canonical clause is exempt — not the whole line that carries it.
+    // Otherwise appending "However, conversation history is required for every
+    // Enterprise user" to that same line would inherit the exemption.
+    const canonicalNegationClause =
+      /`Reference chat history` is \*\*not\*\* an Enterprise prerequisite[^.]*\./i;
+    // Scan the ENTIRE normative memory-boundary contract, not just the Enterprise
+    // subsection: a requirement sentence placed anywhere in the contract still binds.
+    // Rule: no line that mentions Enterprise may carry a history-requirement term,
+    // except the one canonical negation. Lines that do NOT mention Enterprise are
+    // untouched, so the non-Enterprise section keeps its required `Reference chat
+    // history` bullet. (Machine token after `<!-- T85-CONTRACT` is out of scope.)
+    const memContract = between(f02, '## Memory boundary', '<!-- T85-CONTRACT');
+    // INSIDE the Enterprise subsection every line inherits Enterprise scope, so the
+    // lexicon applies regardless of whether the line repeats the word ("Conversation
+    // history is required." under that heading is still an Enterprise requirement).
+    const entBad = ent.split('\n')
+      .some((l) => historyLexicon.test(l.replace(canonicalNegationClause, '')));
+    // OUTSIDE it, only lines that name Enterprise bind — so the non-Enterprise section
+    // keeps its required `Reference chat history` bullet.
+    const outsideBad = memContract.replace(ent, '').split('\n').some((l) => {
+      const rest = l.replace(canonicalNegationClause, '');
+      return /enterprise/i.test(rest) && historyLexicon.test(rest);
+    });
+    const entSemanticOk = ent.length > 0 && memContract.length > 0 && !entBad && !outsideBad;
+    const t94Ok = /^\| T94-SHARED-PROJECT-MEMORY \|.*project-only.*cannot revert/m.test(f28);
+    const t95Ok = /^\| T95-MEMORY-BOUNDARY-DIMENSIONS \|.*outside-chat reference denied, saved-memory reference allowed/m.test(f28);
+    check(sharedOk && matrixOk && tokenOk && entSemanticOk && t94Ok && t95Ok, 'C24',
+      `shared-project branch + boundary matrix + semantic Enterprise guard (shared=${sharedOk} matrix=${matrixOk} `
+      + `token=${tokenOk} entSemantic=${entSemanticOk} T94=${t94Ok} T95=${t95Ok})`);
+  }
+}
+
+// ---- C25 (from v5.5.7): T86 declared cross-file coverage is real (06/07 + normative-section location) ----
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C25', `T86 cross-file contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const f06 = readFileSync(join(kdir, '06_SECURITY_INTEGRITY.md'), 'utf8');
+    const f07 = readFileSync(join(kdir, '07_UNIVERSAL_ROUTER.md'), 'utf8');
+    const f12 = readFileSync(join(kdir, '12_COUNCIL_VOICES.md'), 'utf8');
+    // no line may couple the M2 mechanism with a numeric threshold in ANY of the four
+    // files T86's acceptance row covers (03/04/06/07): decimals, comparison forms,
+    // integers/percentages tied to threshold or activation vocabulary.
+    // Exempt by construction: section references ("`12 §4.2`", "file 12") and the
+    // mechanism identifiers M1/M2/M3 themselves — those digits name mechanisms, not values.
+    const m2NumericLine = (t: string): boolean => t.split('\n').some((l) => {
+      if (!/\bM2\b/.test(l)) return false;
+      const rest = l
+        .replace(/`?\d+\s*§\s*[\d.]+`?|§\s*[\d.]+|файл[ае]?\s*\d+|file\s*\d+/gi, '')
+        .replace(/\bM[123]\b/g, '');
+      // ANY remaining digit couples M2 with a numeric value: enumerating coupling
+      // grammars (comparison, punctuation assignment, thresholds) kept missing
+      // forms — "M2 equals 1." passed every previous pattern. After the documented
+      // reference exemptions above, an M2 line has no legitimate digits left.
+      return /\d/.test(rest);
+    });
+    const f03 = readFileSync(join(kdir, '03_TELOS_MANTRA_PRINCIPLES.md'), 'utf8');
+    const f04 = readFileSync(join(kdir, '04_IDENTITY_NON_MIRROR.md'), 'utf8');
+    const c25a = ![f03, f04, f06, f07].some(m2NumericLine);
+    // the normative M2 phrases must sit INSIDE §4.2, not merely anywhere in the file
+    const s42i = f12.indexOf('### 4.2');
+    const s42j = f12.indexOf('## 5', s42i < 0 ? 0 : s42i);
+    const s42 = s42i >= 0 && s42j > s42i ? f12.slice(s42i, s42j) : '';
+    const c25b = s42.includes('means that this mechanism has no numeric threshold')
+      && s42.includes('M1 and M3 thresholds must not be transferred into M2');
+    // the known 07 §2.2 KAIN drift-veto attribution divergence must be mapped in §4.2 —
+    // and the RESOLUTION must survive, not just the heading: ADR-20260730-01 decided the
+    // §4.2 table stays normative, so a reversal that keeps the heading while declaring
+    // this table non-normative must fail.
+    const s42n = normText(s42);
+    const c25c = s42n.includes('mapped m3 divergence')
+      && s42n.includes('this table remains normative')
+      && !s42n.includes('non-normative');
+    check(c25a && c25b && c25c, 'C25',
+      `T86 cross-file coverage real (03/04/06/07 no numeric M2: ${c25a}; normative phrases in §4.2: ${c25b}; M3 divergence mapped: ${c25c})`);
+  }
+}
+
+// ---- C26 (from v5.5.7): release-root allowlist + mojibake guard ----
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C26', `release-root contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const ROOT_ALLOW = new Set(['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md', 'knowledge', 'support']);
+    const rootEntries = readdirSync(releaseDir);
+    const rootOk = rootEntries.length === ROOT_ALLOW.size
+      && rootEntries.every((e) => ROOT_ALLOW.has(e));
+    // encoding-artifact scan: an isolated " ? " is the signature of a
+    // non-UTF-8-safe pipeline replacing typographic dashes (seen shipped in the
+    // v5.5.6 QC report); U+FFFD marks a failed decode; "â€…"/"Ã©"-class pairs
+    // mark double-encoded UTF-8. Legitimate question marks terminate a word and
+    // never float between spaces; legitimate Cyrillic never decodes to these pairs.
+    // Latin-oriented pairs cover mojibake from Western text; `Ð`/`Ñ` followed by a
+    // CP1252 high char is the signature of Cyrillic UTF-8 decoded as Windows-1252
+    // ("Ð˜ÑÐºÑ€Ð°" for "Искра") — the likeliest corruption class in this repo.
+    const encodingArtifact = /( \? )|�|â€|Ã[ -¿]|[ÐÑ][ -¿ŒœŠšŸŽžƒˆ˜–—‘-„†-•…‰‹›€™]/;
+    let mojibake = false;
+    for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
+      const dp = join(releaseDir, doc);
+      if (existsSync(dp) && encodingArtifact.test(readFileSync(dp, 'utf8'))) mojibake = true;
+    }
+    check(rootOk && !mojibake, 'C26',
+      `release root exact allowlist (${rootEntries.sort().join(', ')}) + no mojibake artifact (mojibake=${mojibake})`);
+  }
+}
+
+// ---- C27 (from v5.5.7): active package identity — every active stamp equals the manifest ----
+// Closes the T97 gap: C12 sees only `version:` frontmatter keys, so `current_package`
+// and the Project Instructions heading could silently regress to an older version.
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C27', `active-identity contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const pkgVer: string = manifest.package_version ?? '';
+    // exactly ONE current_package declaration in the WHOLE file: `match()` read only
+    // the first, so a second contradictory declaration (current_package: v5.5.4)
+    // shipped as a structured identity while the check stayed green.
+    const f25full = readFileSync(join(kdir, '25_LIBER_SPACE_BUSIDO.md'), 'utf8');
+    const cpAll = [...f25full.matchAll(/^current_package:\s*(v\d+\.\d+\.\d+)\s*$/gm)];
+    const cpM = cpAll.length === 1 ? cpAll[0] : null;
+    const c27a = !!cpM && cpM[1] === pkgVer;
+    const instrHead = readFileSync(join(sdir, 'PROJECT_INSTRUCTIONS_SOT30.md'), 'utf8')
+      .split('\n')[0] ?? '';
+    const ihM = instrHead.match(/SoT30\s+(v\d+\.\d+\.\d+)/);
+    const c27b = !!ihM && ihM[1] === pkgVer;
+    // the file-00 mirror heading is covered transitively by C7 byte equality,
+    // but assert it directly so a broken mirror cannot mask an identity regression.
+    const f00txt = readFileSync(join(kdir, '00_PROJECT_ROUTER.md'), 'utf8');
+    const mhM = f00txt.match(/# Project Instructions[^\n]*SoT30\s+(v\d+\.\d+\.\d+)/);
+    const c27c = !!mhM && mhM[1] === pkgVer;
+    // acceptance_range is an identity field too: rebuilding without an explicit
+    // --acceptance-range silently restores the tool default (T01-T93) while the
+    // receipts keep claiming T01–T97, leaving two acceptance identities in one package.
+    const c27d = manifest.acceptance_range === 'T01-T97';
+    // governance identity: the manifest ADR must be the one file 29's trace marks as
+    // "(this build)". Rebuilding without --adr restores the builder default, which
+    // would ship a package governed by one ADR while its docs cite another.
+    const adrThisBuild = f29.match(/`(ADR-\d{8}-\d{2})`[^\n]*\(this build\)/);
+    const c27e = !!adrThisBuild && manifest.adr === adrThisBuild[1];
+    // baseline identity: `--baseline-version` is free text, so it can declare a
+    // different (or truncated) baseline than the manifest actually diffed against.
+    // Bind it to the SUPPLIED baseline manifest's own package_version.
+    const c27f = manifest.baseline_release === base.package_version;
+    // provenance identity, derived from STRUCTURED release state, not receipt
+    // wording: gating this on the literal `canonical_git_blobs` substring let a
+    // reworded receipt ("canonical Git blobs") disable source-blob verification
+    // entirely. From v5.5.7 the manifest MUST record a canonical git-blob build,
+    // and the claim must be RESOLVED, not just well-shaped: a syntactically valid
+    // 40-hex ref proves nothing (forty `f`s pass a regex). Resolve the commit via
+    // git and byte-bind all 31 source files (30 knowledge + standalone
+    // instructions) to the blobs at <ref>:<source_tree_path>/... . Any git
+    // failure — unresolvable ref, missing path, repo-less environment — fails
+    // closed: an unverifiable provenance claim is treated as a false one.
+    let c27g = false;
+    let c27gDetail: string;
+    {
+      const ref = String(manifest.generated_from_ref ?? '');
+      const srcPath = String(manifest.source_tree_path ?? '');
+      const shapeOk = manifest.generated_from === 'canonical_git_blobs'
+        && /^[0-9a-f]{40}$/.test(ref)
+        && srcPath.length > 0 && !srcPath.startsWith('-') && !srcPath.startsWith('/')
+        && !srcPath.split('/').includes('..');
+      if (!shapeOk) {
+        c27gDetail = `provenance not a structured canonical build (mode=${JSON.stringify(manifest.generated_from)} `
+          + `ref=${JSON.stringify(manifest.generated_from_ref)} src=${JSON.stringify(manifest.source_tree_path)})`;
+      } else {
+        try {
+          // one call resolves the commit AND yields every blob id under the
+          // release path; a nonexistent ref throws, an alien path yields no rows.
+          const ls = execFileSync('git',
+            ['ls-tree', '-r', '-z', `${ref}^{commit}`, '--', `${srcPath}/`],
+            { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
+          const blobAt = new Map<string, string>();
+          for (const rec of ls.split('\0')) {
+            const m = rec.match(/^\d{6} blob ([0-9a-f]{40})\t(.+)$/);
+            if (m) blobAt.set(m[2], m[1]);
+          }
+          // git's own object identity for the local bytes: sha1("blob <len>\0"+bytes)
+          const gitBlobId = (b: Buffer): string => createHash('sha1')
+            .update(`blob ${b.length}\0`).update(b).digest('hex');
+          const mism: string[] = [];
+          for (const n of knames) {
+            if (blobAt.get(`${srcPath}/knowledge/${n}`) !== gitBlobId(kbytes[n])) mism.push(n);
+          }
+          if (blobAt.get(`${srcPath}/support/PROJECT_INSTRUCTIONS_SOT30.md`)
+              !== gitBlobId(instrBuf)) mism.push('PROJECT_INSTRUCTIONS_SOT30.md');
+          c27g = mism.length === 0;
+          c27gDetail = c27g
+            ? `31/31 source files blob-bound to ${ref.slice(0, 7)}:${srcPath}`
+            : `source files diverge from ${ref.slice(0, 7)}:${srcPath}: ${mism.slice(0, 4).join(',')}`
+              + (mism.length > 4 ? `… (${mism.length} total)` : '');
+        } catch {
+          c27gDetail = `generated_from_ref ${ref.slice(0, 12)}… does not resolve to a commit here — `
+            + 'unverifiable provenance claim treated as false';
+        }
+      }
+    }
+    check(c27a && c27b && c27c && c27d && c27e && c27f && c27g, 'C27',
+      `active identity stamps equal manifest ${pkgVer} (25.current_package=${cpM?.[1] ?? 'MISSING'}; `
+      + `instructions-heading=${ihM?.[1] ?? 'MISSING'}; mirror-heading=${mhM?.[1] ?? 'MISSING'}; `
+      + `acceptance_range=${JSON.stringify(manifest.acceptance_range)}; `
+      + `adr=${JSON.stringify(manifest.adr)} vs file29-this-build=${JSON.stringify(adrThisBuild?.[1])}; `
+      + `baseline_release=${JSON.stringify(manifest.baseline_release)} vs baseline-manifest ${JSON.stringify(base.package_version)}; `
+      + `provenance: ${c27gDetail})`);
+  }
+}
+
+// ---- C28 (from v5.5.7): loader-sequence gate — T96 is statically enforced, not just a prompt ----
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C28', `loader-sequence contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const f00txt = readFileSync(join(kdir, '00_PROJECT_ROUTER.md'), 'utf8');
+    const li = f00txt.indexOf('## Loader contract');
+    const lj = f00txt.indexOf('## Precedence', li < 0 ? 0 : li);
+    const loader = li >= 0 && lj > li ? f00txt.slice(li, lj) : '';
+    // the normative loader block (not decoy text elsewhere) must route the exact
+    // sequence 29 → 00 → 01 → 02 → 03–07 in this order.
+    // the COMPLETE T96 route, compared as an EXACT ordered list rather than a
+    // subsequence: a subsequence match would accept extra or duplicated routing
+    // groups inserted between the expected ones (e.g. routing `28` before `03–07`).
+    // Only the numbered step lines are normative — the prose preamble may cite a
+    // file (e.g. "см. `28` → T84") without routing it.
+    const seq = ['29_INDEX_UPLOAD_MANIFEST.md', '00_PROJECT_ROUTER.md',
+      '01_PARITY_ADVANCEMENT_MANIFEST.md', '02_PROJECTS_SURFACE_MAP.md',
+      '03–07', '08–20', '21–23', '24–27', '28'];
+    const stepLines = loader.split('\n').filter((l) => /^\d+\.\s/.test(l)).join('\n');
+    // Parse EVERY file reference the steps contain — file names, group ranges and
+    // two-digit file numbers whether backticked or bare ("файл 05") — rather than
+    // searching for the expected literals only. The numbered steps are routes ONLY:
+    // any file reference inside them counts, so commentary must live outside them.
+    // Alternation order matters: the range form is tried before the bare number so
+    // `03–07` is one token, not two.
+    const routed = [...stepLines.matchAll(/\d\d_[A-Z0-9_]+\.md|\d\d–\d\d|\b\d\d\b/g)]
+      .map((m) => m[0]);
+    const orderOk = loader.length > 0 && routed.length === seq.length
+      && routed.every((t, i) => t === seq[i]);
+    // file 29 must carry the COMPLETE reading order as its ONLY route declaration,
+    // compared exactly — `includes` was a substring test, so `05 → <route>`,
+    // `<route> → 05` and a duplicate contradictory declaration all passed while
+    // T96 shipped an ambiguous loader identity. Rules: exactly one
+    // "## Reading order" heading; across the WHOLE file exactly one backticked
+    // span containing both a two-digit token and an arrow (decoy routes outside
+    // the section are declarations too); it must live inside that section; its
+    // full token list must equal the expected route with no prefix/suffix.
+    const f29seq = ['29', '00', '01', '02', '03–07', '08–20', '21–23', '24–27', '28'];
+    const roHeads = [...f29.matchAll(/^## Reading order$/gm)];
+    const roIdx = roHeads.length === 1 ? roHeads[0].index! : -1;
+    const roNext = roIdx >= 0 ? f29.indexOf('\n## ', roIdx + 1) : -1;
+    const roSec = roIdx >= 0 ? f29.slice(roIdx, roNext < 0 ? f29.length : roNext) : '';
+    const routeSpans = [...f29.matchAll(/`[^`\n]*→[^`\n]*`/g)]
+      .filter((m) => /\d\d/.test(m[0]));
+    const spanTokens = routeSpans.length === 1
+      ? [...routeSpans[0][0].matchAll(/\d\d–\d\d|\b\d\d\b/g)].map((m) => m[0])
+      : [];
+    const f29ro = roHeads.length === 1 && routeSpans.length === 1
+      && routeSpans[0].index! > roIdx && routeSpans[0].index! < roIdx + roSec.length
+      && spanTokens.length === f29seq.length
+      && spanTokens.every((t, i) => t === f29seq[i]);
+    check(orderOk && f29ro, 'C28',
+      `loader sequence statically gated (00 loader block order=${orderOk}; `
+      + `file-29 single exact reading-order declaration=${f29ro} `
+      + `[headings=${roHeads.length} route-spans=${routeSpans.length} tokens=${spanTokens.join('→') || 'n/a'}])`);
   }
 }
 
