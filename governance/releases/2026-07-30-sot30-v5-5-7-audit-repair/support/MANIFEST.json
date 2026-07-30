@@ -5,7 +5,7 @@
   "date": "2026-07-30",
   "adr": "ADR-20260730-01",
   "generated_from": "canonical_git_blobs",
-  "generated_from_ref": "27e800e44c9915f7fa17b8bf626df75da2eafe71",
+  "generated_from_ref": "8c0bb140c98314454448f51a002cadd3dd18fc2c",
   "line_ending_policy": "LF",
   "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
   "knowledge_file_count": 30,
