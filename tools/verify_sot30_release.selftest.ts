@@ -359,6 +359,40 @@ negRelease557('neg: JWT in root README', 'C16', (dir) => {
   const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
   writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
 });
+// GitHub PAT forms in a root doc must fail the secret scan
+negRelease557('neg: github_pat in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: github_${'pat'}_${'A1b2C3d4E5'.repeat(3)}\n`);
+});
+negRelease557('neg: ghp_ token in root receipt', 'C16', (dir) => {
+  const p = join(dir, 'PACKAGE_RECEIPT.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: gh${'p'}_${'A1b2C3d4E5f6'.repeat(3)}\n`);
+});
+// Cyrillic mojibake (UTF-8 read as Windows-1252) in a root doc
+negRelease557('neg: cyrillic mojibake in QC report', 'C26', (dir) => {
+  const p = join(dir, 'QC_REPORT.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nÐ˜ÑÐºÑ€Ð°\n`);
+});
+// manifest acceptance_range silently reverted to the build-tool default
+negRelease557('neg: acceptance_range default drift', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.acceptance_range = 'T01-T93';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// file 29's reading order truncated/reordered in its tail
+negRelease557('neg: file29 reading-order tail drifts', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/29_INDEX_UPLOAD_MANIFEST.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28',
+    '29 → 00 → 01 → 02 → 03–07 → 28 → 21–23'));
+});
+// M3 divergence resolution REVERSED while the heading survives
+negRelease557('neg: M3 divergence resolution reversed', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/12_COUNCIL_VOICES.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'this table remains normative', '`07 §2.2` is normative and this table is non-normative'));
+});
 // Supabase secret-key form in a root doc must fail the secret scan
 negRelease557('neg: sb_secret key in root README', 'C16', (dir) => {
   const p = join(dir, 'README.md');
@@ -494,6 +528,33 @@ negZip('neg: duplicate ZIP entry', 'C14', (zc) => addZipEntry(zc, `${zipRoot}/kn
 
 // 17. extra ZIP directory entry
 negZip('neg: extra ZIP directory', 'C14', (zc) => addZipEntry(zc, `${zipRoot}/EXTRA/`));
+
+// symlink entry replacing an allowlisted payload: without the entry-type gate,
+// unzip materializes the link and both `sha256sum -c` and the C20 parity read
+// follow it to the checked-out tree, so a non-self-contained ZIP would "verify".
+function symlinkZip(zc: string, root: string, arcname: string, target: string) {
+  const py = [
+    'import zipfile,sys,shutil',
+    'z,root,arc,target=sys.argv[1:5]; tmp=z+".t"',
+    'zi=zipfile.ZipFile(z); zo=zipfile.ZipFile(tmp,"w",zipfile.ZIP_DEFLATED)',
+    '[zo.writestr(i,zi.read(i.filename)) for i in zi.infolist() if i.filename!=arc]',
+    'li=zipfile.ZipInfo(arc); li.create_system=3; li.external_attr=(0o120777 << 16)',
+    'zo.writestr(li,target); zo.close(); zi.close(); shutil.move(tmp,z)',
+  ].join('\n');
+  execFileSync(PYTHON, ['-c', py, zc, root, arcname, target]);
+}
+{
+  const d = mkdtempSync(join(tmpdir(), 'sot30sym_'));
+  const zc = join(d, 'symlink.zip');
+  try {
+    copyFileSync(ZIP_557, zc);
+    symlinkZip(zc, 'SoT30_v5.5.7', 'SoT30_v5.5.7/support/MANIFEST.json',
+      join(process.cwd(), RELEASE_557, 'support/MANIFEST.json'));
+    const r = runVerifier(RELEASE_557, zc, BASELINE_557, 'v5.5.7');
+    expect('neg: ZIP symlink entry', r.code !== 0 && /FAIL C14:/.test(r.out),
+      `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
+  } finally { rmSync(d, { recursive: true, force: true }); }
+}
 
 // ---- report ----
 for (const r of results) (r.startsWith('OK') ? console.log : console.error)(r);

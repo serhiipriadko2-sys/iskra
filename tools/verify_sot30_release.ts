@@ -21,7 +21,7 @@
  *  C11 changed set = files whose content differs from the baseline manifest
  *  C12 package-version stamps consistent with package_version
  *  C13 live_project_verified === false
- *  C14 ZIP: single top-level root; every entry under root/knowledge|root/support; file set = exactly {30 knowledge + 3 support}; sha256sum -c 32/32
+ *  C14 ZIP: single top-level root; every entry under root/knowledge|root/support; file set = exactly {30 knowledge + 3 support}; regular files only (no symlink/device entries); sha256sum -c 32/32
  *  C15 LF line-ending policy (no CRLF in knowledge/support)
  *  C16 package composition safety: no packaged file / zip entry is .env|node_modules|build-cache|absolute-path; no live secrets in knowledge/support/audit/scripts (illustrative bare PEM markers allowed)
  *  C17 PACKAGE_RECEIPT carries the actual zip sha256 + bytes
@@ -40,7 +40,8 @@
  *  C26 (from v5.5.7) release root = exact allowlist {README, QC_REPORT, PACKAGE_RECEIPT, knowledge/, support/};
  *      root docs carry no encoding artifact (isolated " ? ", U+FFFD, double-encoded UTF-8 pairs)
  *  C27 (from v5.5.7) active identity: manifest.package_version == file-25 current_package
- *      == standalone instructions heading == file-00 mirror heading (closes the T97 gap)
+ *      == standalone instructions heading == file-00 mirror heading; acceptance_range pinned
+ *      to T01-T97 (closes the T97 gap and the silent default-rebuild drift)
  *  C28 (from v5.5.7) loader sequence statically gated: file-00 loader block routes the COMPLETE
  *      29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28 order; file-29 reading order agrees
  */
@@ -60,6 +61,11 @@ const check = (cond: boolean, id: string, msg: string) => {
 const sha256 = (b: Buffer) => createHash('sha256').update(b).digest('hex');
 const setEq = (a: Set<string>, b: Set<string>) =>
   a.size === b.size && [...a].every((x) => b.has(x));
+// shared normalizer for exact prose contracts (C24/C25): case-fold, drop markdown
+// emphasis, collapse whitespace — so wrapping/emphasis edits do not break a contract
+// while a semantic rewrite still does.
+const normText = (s: string): string =>
+  s.toLowerCase().replace(/\*\*/g, '').replace(/\s+/g, ' ');
 
 const releaseDir = process.argv[2];
 if (!releaseDir) {
@@ -251,14 +257,24 @@ if (existsSync(zipPath)) {
     const dirsOk = dirEntries.every((d) => expectedDirs.has(d));          // no stray directories
     const noAbsOrDotDot = fileEntries.every((e) => !e.startsWith('/') && !e.includes('..'));
     const allowlistOk = setEq(relFiles, expectedZip);
+    // Entry-TYPE allowlist, checked BEFORE extraction: a symlink entry would let
+    // `sha256sum -c` and the C20 parity read follow the link to a file outside the
+    // archive, so a tampered ZIP could "verify" against the checked-out tree instead
+    // of its own payload. zipinfo's first column is the Unix file type; only regular
+    // files (`-`, or `?` when the creating system is unknown) and directories (`d`)
+    // are allowed — `l`/`b`/`c`/`p`/`s` are rejected.
+    const zinfo = execFileSync('unzip', ['-Z', zipPath], { encoding: 'utf8' })
+      .split('\n').filter((l) => /^[-?dlbcps][rwxsStT-]{9}\s/.test(l));
+    const regularOnly = zinfo.length > 0 && zinfo.every((l) => '-?d'.includes(l[0]));
     execFileSync('unzip', ['-qq', zipPath, '-d', tmp]);
     const out = execFileSync('sha256sum', ['-c', 'support/SHA256SUMS'],
       { cwd: join(tmp, root), encoding: 'utf8' });
     const okLines = out.split('\n').filter((l) => l.endsWith(': OK')).length;
     const badLines = out.split('\n').filter((l) => /: FAILED/.test(l)).length;
     zipOk = singleRoot && allowlistOk && noDupEntries && dirsOk && noAbsOrDotDot
-      && okLines === 32 && badLines === 0;
-    zipMsg = `root=${root} entries=${relFileArr.length} dup=${!noDupEntries} dirs=${dirsOk} sha256sum -c ${okLines}/32`;
+      && regularOnly && okLines === 32 && badLines === 0;
+    zipMsg = `root=${root} entries=${relFileArr.length} dup=${!noDupEntries} dirs=${dirsOk} `
+      + `regular-only=${regularOnly} sha256sum -c ${okLines}/32`;
 
     // C20: extracted ZIP bytes must equal the release-tree bytes for all 33 files
     let par = true;
@@ -319,6 +335,8 @@ for (const rel of actualPackaged) {
 const secretPat = new RegExp(
   '(sk-[A-Za-z0-9_-]{20,}'
   + '|sb_secret_[A-Za-z0-9_-]{16,}'
+  + '|github_pat_[A-Za-z0-9_]{20,}'
+  + '|gh[pousr]_[A-Za-z0-9]{30,}'
   + '|eyJ[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]{20,}'
   + '|-----BEGIN [A-Z ]*PRIVATE KEY-----[\\s\\S]{0,40}?[A-Za-z0-9+/]{60,})',
 );
@@ -571,8 +589,6 @@ const appliesFrom = (floor: string): boolean =>
     // ("Sharing a Project does not switch it to project-only memory") keeps every
     // keyword, so the affirmative clauses themselves are the gate. Rewording the
     // normative sentence is intentionally a verifier-updating change.
-    const normText = (s: string): string =>
-      s.toLowerCase().replace(/\*\*/g, '').replace(/\s+/g, ' ');
     const sharedNorm = normText(shared);
     const sharedOk = sharedNorm.includes('sharing a project automatically switches it to project-only memory')
       && sharedNorm.includes('this transition cannot revert the project to default memory')
@@ -658,8 +674,14 @@ const appliesFrom = (floor: string): boolean =>
     const s42 = s42i >= 0 && s42j > s42i ? f12.slice(s42i, s42j) : '';
     const c25b = s42.includes('means that this mechanism has no numeric threshold')
       && s42.includes('M1 and M3 thresholds must not be transferred into M2');
-    // the known 07 §2.2 KAIN drift-veto attribution divergence must be mapped in §4.2
-    const c25c = s42.includes('Mapped M3 divergence');
+    // the known 07 §2.2 KAIN drift-veto attribution divergence must be mapped in §4.2 —
+    // and the RESOLUTION must survive, not just the heading: ADR-20260730-01 decided the
+    // §4.2 table stays normative, so a reversal that keeps the heading while declaring
+    // this table non-normative must fail.
+    const s42n = normText(s42);
+    const c25c = s42n.includes('mapped m3 divergence')
+      && s42n.includes('this table remains normative')
+      && !s42n.includes('non-normative');
     check(c25a && c25b && c25c, 'C25',
       `T86 cross-file coverage real (03/04/06/07 no numeric M2: ${c25a}; normative phrases in §4.2: ${c25b}; M3 divergence mapped: ${c25c})`);
   }
@@ -679,7 +701,10 @@ const appliesFrom = (floor: string): boolean =>
     // v5.5.6 QC report); U+FFFD marks a failed decode; "â€…"/"Ã©"-class pairs
     // mark double-encoded UTF-8. Legitimate question marks terminate a word and
     // never float between spaces; legitimate Cyrillic never decodes to these pairs.
-    const encodingArtifact = /( \? )|�|â€|Ã[ -¿]/;
+    // Latin-oriented pairs cover mojibake from Western text; `Ð`/`Ñ` followed by a
+    // CP1252 high char is the signature of Cyrillic UTF-8 decoded as Windows-1252
+    // ("Ð˜ÑÐºÑ€Ð°" for "Искра") — the likeliest corruption class in this repo.
+    const encodingArtifact = /( \? )|�|â€|Ã[ -¿]|[ÐÑ][ -¿ŒœŠšŸŽžƒˆ˜–—‘-„†-•…‰‹›€™]/;
     let mojibake = false;
     for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
       const dp = join(releaseDir, doc);
@@ -710,9 +735,14 @@ const appliesFrom = (floor: string): boolean =>
     const f00txt = readFileSync(join(kdir, '00_PROJECT_ROUTER.md'), 'utf8');
     const mhM = f00txt.match(/# Project Instructions[^\n]*SoT30\s+(v\d+\.\d+\.\d+)/);
     const c27c = !!mhM && mhM[1] === pkgVer;
-    check(c27a && c27b && c27c, 'C27',
+    // acceptance_range is an identity field too: rebuilding without an explicit
+    // --acceptance-range silently restores the tool default (T01-T93) while the
+    // receipts keep claiming T01–T97, leaving two acceptance identities in one package.
+    const c27d = manifest.acceptance_range === 'T01-T97';
+    check(c27a && c27b && c27c && c27d, 'C27',
       `active identity stamps equal manifest ${pkgVer} (25.current_package=${cpM?.[1] ?? 'MISSING'}; `
-      + `instructions-heading=${ihM?.[1] ?? 'MISSING'}; mirror-heading=${mhM?.[1] ?? 'MISSING'})`);
+      + `instructions-heading=${ihM?.[1] ?? 'MISSING'}; mirror-heading=${mhM?.[1] ?? 'MISSING'}; `
+      + `acceptance_range=${JSON.stringify(manifest.acceptance_range)})`);
   }
 }
 
@@ -737,9 +767,11 @@ const appliesFrom = (floor: string): boolean =>
       if (at < 0) { orderOk = false; break; }
       pos = at + tok.length;
     }
-    const f29ro = f29.includes('29 → 00 → 01 → 02 → 03–07');
+    // file 29 must carry the COMPLETE reading order too, not a prefix: otherwise its
+    // tail could contradict file 00 and T96 while the package stays green.
+    const f29ro = f29.includes('29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28');
     check(orderOk && f29ro, 'C28',
-      `loader sequence statically gated (00 loader block order=${orderOk}; file-29 reading order=${f29ro})`);
+      `loader sequence statically gated (00 loader block order=${orderOk}; file-29 complete reading order=${f29ro})`);
   }
 }
 
