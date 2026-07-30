@@ -414,7 +414,8 @@ Expected: no; Skill parity and deprecation remain separate blocked gates.
 
 This ADR acceptance PR changes only:
 
-- `governance/adr_20260729_packages_math_authoritative_api.md` lifecycle metadata and acceptance boundary.
+- `governance/adr_20260729_packages_math_authoritative_api.md` lifecycle metadata and acceptance boundary;
+- `ledger/sot.json` and `ledger/checksum.asc` as derived integrity receipts for the accepted ADR bytes.
 
 Follow-up implementation scope may include:
 
