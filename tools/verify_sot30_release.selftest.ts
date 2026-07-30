@@ -346,7 +346,63 @@ negRelease557('neg: extra release-root file', 'C26', (dir) => {
 // mojibake artifact in a root doc (the v5.5.6 QC-report defect class)
 negRelease557('neg: mojibake in QC report', 'C26', (dir) => {
   const p = join(dir, 'QC_REPORT.md');
-  writeFileSync(p, readFileSync(p, 'utf8').replace('PASS — 27/27', 'PASS ? 27/27'));
+  writeFileSync(p, readFileSync(p, 'utf8').replace(/PASS —/, 'PASS ?'));
+});
+// U+FFFD replacement character in a root doc (failed-decode class)
+negRelease557('neg: U+FFFD in root README', 'C26', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nbroken decode: �\n`);
+});
+// JWT-like triple in a root doc must fail the (now extended) secret scan
+negRelease557('neg: JWT in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
+});
+// context-boundary matrix cell reversed (keywords intact, value wrong)
+negRelease557('neg: matrix cell reversed', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '| Project-only memory | denied | denied |',
+    '| Project-only memory | allowed | allowed |'));
+});
+// Enterprise history requirement in lexicon paraphrase ("conversation history")
+negRelease557('neg: Enterprise conversation-history paraphrase', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '### All other subscriptions (including Business)',
+    'Enterprise workspaces must reference conversation history.\n\n### All other subscriptions (including Business)'));
+});
+// percentage-form M2 threshold in file 06
+negRelease557('neg: percentage M2 threshold in file 06', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 activates at 20%.\n`);
+});
+// integer-form M2 threshold in file 07
+negRelease557('neg: integer M2 threshold in file 07', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/07_UNIVERSAL_ROUTER.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 activation threshold: 1\n`);
+});
+// stale current_package in file 25 (T97 / C27 active-identity gate)
+negRelease557('neg: file25 current_package stale', 'C27', (dir) => {
+  const p = join(dir, 'knowledge/25_LIBER_SPACE_BUSIDO.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace('current_package: v5.5.7', 'current_package: v5.5.4'));
+});
+// instructions heading regressed to the old version (both copies, so C7 stays green)
+negRelease557('neg: instructions heading old version', 'C27', (dir) => {
+  for (const p of ['support/PROJECT_INSTRUCTIONS_SOT30.md', 'knowledge/00_PROJECT_ROUTER.md']) {
+    const fp = join(dir, p);
+    writeFileSync(fp, readFileSync(fp, 'utf8').replace(
+      'Project Instructions — Искра vΩ.7 / SoT30 v5.5.7',
+      'Project Instructions — Искра vΩ.7 / SoT30 v5.5.6'));
+  }
+});
+// loader contract loses 01/02 (T96 / C28 loader-sequence gate)
+negRelease557('neg: loader drops 01/02', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    /^2\. Затем `00_PROJECT_ROUTER\.md`; сразу после него[^\n]*\n/m,
+    '2. Затем `00_PROJECT_ROUTER.md`.\n'));
 });
 
 // helper: negative fixture that tampers the ZIP (release dir reused)

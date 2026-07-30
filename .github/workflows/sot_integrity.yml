@@ -6,6 +6,7 @@ on:
       - "core/**"
       - "system/**"
       - "governance/**"
+      - "dist/SoT30_v*.zip"
       - "metrics/**"
       - "mind/**"
       - "appendix/**"

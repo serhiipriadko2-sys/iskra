@@ -2,7 +2,7 @@
 
 Status: **candidate** — ADR-20260730-01 is `proposed`, awaiting owner decision. Built as a new package over immutable v5.5.6; no artifact promotion, no live ChatGPT Project verification, and no merge-into-active-role authorization are claimed.
 
-<!-- composition: changed=7 unchanged=23 baseline=v5.5.6 -->
+<!-- composition: changed=9 unchanged=21 baseline=v5.5.6 -->
 
 ## What it fixes
 
@@ -16,7 +16,7 @@ The 2026-07-29/30 static audit of v5.5.6 confirmed package-hash integrity but fo
 - the v5.5.6 QC report shipped mojibake (`?` in place of typographic dashes);
 - verifier C23 treated a malformed `package_version` as "contract not applicable" (fail-open).
 
-v5.5.7 repairs the content (changed set `00, 02, 12, 22, 25, 28, 29`), adds acceptance cases T94–T97, and hardens the verifier (C23 malformed-version fail-closed; new C24 shared-project/semantic-Enterprise, C25 real 06/07 T86 coverage, C26 release-root allowlist + mojibake guard). No runtime, Supabase schema, gateway, or memory-database change.
+v5.5.7 repairs the content (changed set `00, 01, 02, 12, 15, 22, 25, 28, 29`), adds acceptance cases T94–T97, and hardens the verifier (C23 malformed-version fail-closed; C24 shared-project + boundary-matrix cell values + allowlisted Enterprise lexicon; C25 real 06/07 T86 coverage incl. integer/percent forms; C26 release-root allowlist + encoding guard; C27 active-identity stamps; C28 loader-sequence gate; root docs included in the secret scan). The 2026-07-30 P0 correction loop (external PR-audit findings, all eight review threads) additionally fixed the Project Instructions identity (both copies now v5.5.7), reclassified the 01 status snapshot as historical, added a fresh dated Supabase overlay to 15 (37 migrations, 11 tables, gateway `DEPLOYED-PROBE-ONLY`), recorded the four App permission modes in 22, and made source-freeze provenance genuine (file 29 committed before the freeze). No runtime, Supabase schema, gateway, or memory-database change.
 
 ## ZIP contents
 

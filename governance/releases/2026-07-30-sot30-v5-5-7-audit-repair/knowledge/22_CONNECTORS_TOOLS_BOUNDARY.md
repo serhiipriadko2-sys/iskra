@@ -56,7 +56,7 @@ A Python/YAML/SQL/Skill file present in Project Sources is retrieval knowledge, 
 
 ## App/Plugin capability chain (v5.5 addition)
 
-`[FACT]` (verified this session; App permission modes per OpenAI Help Center): the default permission mode is `Important actions` — read happens automatically, significant actions (send, delete, purchase, credential/access changes) require confirmation; some actions may be blocked outright regardless of mode. `Always ask` and `Never ask` are the other two modes.
+`[FACT]` (App permission modes per OpenAI Help Center; `observed_at: 2026-07-30`, re-check before relying): there are **four** permission modes — `Always ask`, `Any changes`, `Important actions` (default), `Never ask`. Under `Important actions` reads happen automatically and significant actions (send, delete, purchase, credential/access changes) require confirmation; under `Any changes` **every** write/change requires approval, not only significant ones; some especially risky actions may be blocked outright regardless of mode. Do not collapse `Any changes` into `Important actions`: they authorize different write sets.
 
 ```text
 connected

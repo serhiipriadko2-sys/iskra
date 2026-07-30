@@ -21,7 +21,7 @@ The v5.5.6 release and ZIP remain byte-immutable. Baseline: v5.5.6. v5.5.7 live-
 - **live_project_baseline** — no v5.5.7 upload exists yet. No clean-Project run has attested this corrected package.
 
 ### Composition vs the v5.5.6 release tree
-The build recomputes disjoint `changed_files` / `unchanged_files` sets whose union is all 30 Knowledge files. The expected v5.5.7 changed set is `{00, 02, 12, 22, 25, 28, 29}` — **7 changed / 23 unchanged** (22 changes only its version stamp). `support/MANIFEST.json`, not this prose count, is authoritative.
+The build recomputes disjoint `changed_files` / `unchanged_files` sets whose union is all 30 Knowledge files. The expected v5.5.7 changed set is `{00, 01, 02, 12, 15, 22, 25, 28, 29}` — **9 changed / 21 unchanged** (01 reclassifies its status snapshot as historical; 15 carries a fresh dated live overlay). `support/MANIFEST.json`, not this prose count, is authoritative.
 
 ### On the earlier chain (historical, do not over-generalize)
 The v5.5.2→v5.5.3 receipts established that external commit `82191ce` overwrote
@@ -53,9 +53,9 @@ byte-identical to v5.5.5** and makes no new file-24 claim.
 
 | File | Bytes | SHA-256 |
 |---|---:|---|
-| `00_PROJECT_ROUTER.md` | 10373 | `428ca6d09d643126f09cf72a14f829f472c7382cae4a7f7ce8c906b504c35f17` |
-| `01_PARITY_ADVANCEMENT_MANIFEST.md` | 26831 | `c19efc5810ecd9cf4ac0e642ba203e9d9b398acc7be22c90a9d28736a159fbf0` |
-| `02_PROJECTS_SURFACE_MAP.md` | 7481 | `fa1b0af7fd05fe5983590f1168c602dee46bafbed7e5e4e2c8ab2a4476a2cfd4` |
+| `00_PROJECT_ROUTER.md` | 10373 | `6161479fce36fee1aade95828aa5bbe5bcf96163a9a84c1c36a14db3588c631b` |
+| `01_PARITY_ADVANCEMENT_MANIFEST.md` | 27440 | `51cc8721dbc58fbc3953a521762d96f62c78d55bdc7f660dcbc1019bceb96925` |
+| `02_PROJECTS_SURFACE_MAP.md` | 7587 | `875eb325d39aab445b38b92d3c53b27e392657802b051ba1a7ae81b069f7c156` |
 | `03_TELOS_MANTRA_PRINCIPLES.md` | 48573 | `f8fd02c9d3cc3a9f5eb08bd5e57d0ed65c02b77d726b0df781bd7175b7ada55e` |
 | `04_IDENTITY_NON_MIRROR.md` | 92708 | `587991f3f354f8642fbcdbb0fba212306e879abbb5833c8d5909c1e38c6659c1` |
 | `05_TRUTH_SIFT_RAG.md` | 41451 | `396fffda61a611729a7fb8d82f434b344fb79cf8cb24596b816f05824d54b3c9` |
@@ -68,24 +68,24 @@ byte-identical to v5.5.5** and makes no new file-24 claim.
 | `12_COUNCIL_VOICES.md` | 20020 | `c16dcb0fd8e778d8470c3e979afe856fb18383191fed1fcec97f014c35490387` |
 | `13_OUTPUT_RECEIPTS_ANTI_EMPTY.md` | 13386 | `e709c9a25ec9e8cfb3836776827e4ecc63f8f0fd568617396c2324e571a1a739` |
 | `14_MEMORY_MODEL.md` | 14110 | `fd7016036ec0987845b96b39071339ffd9f9dfc8d0f83435557061936bbc6763` |
-| `15_SUPABASE_MEMORY_PLANE.md` | 12574 | `c67f62e9cb33bec161c347eff9894ba47724e324b4ac0b7d1a007bad469732af` |
+| `15_SUPABASE_MEMORY_PLANE.md` | 14450 | `8bc44de8ef97b2489aa2dde511a126ad64b889d932e5fc86d091a73e9eaae994` |
 | `16_SHADOW_LAYER.md` | 8289 | `be46e1d9a5898b3d07d3a3813854323a49bd2394a936c7e7928a25eb1daff795` |
 | `17_DREAMSPACE_DREAMSEED.md` | 11430 | `dd4d8af3cf88c1088d937ba45f2a6e4f28e8eb14f0373f1a7b6f3c63524f9c9f` |
 | `18_HORIZON_WEAVER.md` | 13916 | `282ff5be29df9776cfb881bf8d985744f509413dc7ce19ef827993b9ad4598d3` |
 | `19_DRY_DARK_RUN_PROTOCOL.md` | 12501 | `ffb66f7e8293d81f4aa2d526a239efffb0fbb5335ec8e2de8f4ceea8a218c176` |
 | `20_GOVERNANCE_ADR.md` | 32537 | `fa80f1f4e06650c1269e65bae4ba412a5351d4d2142330fb74728979cb6151fd` |
 | `21_WORKFLOW_OPS_LEDGER.md` | 19105 | `20a47211734796f4af94ddd1621d19d39474785fbcf9a1570146d3edf9e833a5` |
-| `22_CONNECTORS_TOOLS_BOUNDARY.md` | 3784 | `b5a87ec9ebf0392afb434a57bbcba6b2b14888466aff71db6e4347315817a3b3` |
+| `22_CONNECTORS_TOOLS_BOUNDARY.md` | 4045 | `c1d1de95b836c277f354cbaf16b8c8a142ac53d2d824fc5d537b2be0218feebb` |
 | `23_BUILDER_PROJECTS_COMPAT.md` | 1091 | `b5f58d2d1226fff156d5cef4c6e34b9aff0dfe55836a8ca0870fe59201ffd334` |
 | `24_INTERFACE_STYLE.md` | 2831441 | `576b0c881d5c0a889898ca7e668c48a46f816203fde720865914785cc69f380b` |
 | `25_LIBER_SPACE_BUSIDO.md` | 458205 | `d37f90d554be82e41393a64017ce0a6f9e6bacd334414c863bd5cf6ab6bb3aa5` |
 | `26_SOMATIC_INTUITION.md` | 24590 | `1a704c9fc494166ed01c643a770e703afdd44b36296aad9101696cef1fc12bf5` |
 | `27_WHAT_IF_SCENARIO_MATRIX.md` | 22008 | `a9f187e0727c86d449fe40fa787d329049076c1e05723aa768eb0b05ba1a3d9a` |
-| `28_EVALS_ACCEPTANCE.md` | 17426 | `d2895c4165ca06389f4a0130054ca24ca22d7ecb2c08fd47a85011adc5baafd4` |
+| `28_EVALS_ACCEPTANCE.md` | 17557 | `abda135a9ebabca77cc44a9e1ad454c4f399b3e41dc03be24c2adb8a531199ba` |
 File 29 hash is stored in external `support/MANIFEST.json` and `support/SHA256SUMS` to avoid self-reference.
 
 ## v5.5.7 audit repair (this build)
-Adds the shared-project memory branch and context-boundary matrix to 02; retracts stale Guard/gateway/schema claims in 02; closes the 00 loader gap (01/02 now in the load path); fixes the stale package-identity stamp in 25; maps the 07 §2.2 M3 veto-attribution divergence in 12 §4.2; adds acceptance cases T94–T97; hardens the release verifier (malformed-version fail-closed, 06/07 coverage, shared-project and semantic-regression checks, release-root allowlist). Under ADR-20260730-01.
+Adds the shared-project memory branch and context-boundary matrix to 02; retracts stale Guard/gateway/schema claims in 02; closes the 00 loader gap (01/02 now in the load path); fixes the stale package-identity stamp in 25; maps the 07 §2.2 M3 veto-attribution divergence in 12 §4.2; adds acceptance cases T94–T97; hardens the release verifier (malformed-version fail-closed, 06/07 coverage, shared-project and semantic-regression checks, release-root allowlist). The P0 correction loop (external PR-audit, 2026-07-30) additionally: stamps the Project Instructions identity as v5.5.7 in both copies; reclassifies the 01 status snapshot as historical; adds a fresh dated Supabase overlay to 15 (37 migrations, 11 tables, gateway `DEPLOYED-PROBE-ONLY`); records the four App permission modes in 22; makes source-freeze provenance genuine (file 29 committed before the freeze); and extends the verifier with active-identity (C27) and loader-sequence (C28) gates, matrix cell-value parsing, an allowlisted Enterprise lexicon, integer/percent M2 detection, root-doc secret scan and a wider encoding scan. Under ADR-20260730-01.
 
 ## v5.5.6 T85/T86 acceptance repair
 Corrects plan-specific Project-memory prerequisites and removes the non-normative numeric M2 drift activation from files 03/04. Adds C23 fail-closed regression coverage under ADR-20260721-02.

@@ -1,9 +1,13 @@
-# CURRENT STATUS OVERLAY · 2026-07-21 (v5.5.6)
+# STATUS SNAPSHOT · 2026-07-21 (recorded for v5.5.6; reclassified as historical in v5.5.7)
 
 ```yaml
+snapshot_package: v5.5.6
 observed_at: 2026-07-21
-source: repo_read (origin/main) + supabase_mcp_read_only
-freshness: current
+source: repo_read (origin/main — mutable ref, not independently reproducible) + supabase_mcp_read_only
+freshness: historical_snapshot   # v5.5.7: no longer presented as "current"
+current_status_authority: false  # normative contracts below remain valid; live counts, versions and
+                                 # deployment statuses must come from a fresh dated read-back
+                                 # (see 15 · CURRENT STATUS OVERLAY and T89), never from this snapshot
 ```
 
 SoT30 v5.5.6 acceptance repair (ADR-20260721-02; no runtime capability added):
@@ -19,7 +23,7 @@ Prior lifecycle corrections inherited from v5.5.5 (no capability removed):
 - **Horizon** (row 10): `propose→validate→commit` is a **contract**; a live commit path is not asserted beyond the validator — no commit is claimed as executed.
 - **Dry run** (row 11a): audited dry-run writes **0** rows to the target container and **1** audit receipt — target-writes and audit-writes are distinct.
 
-Row-level statuses below predate this overlay where not corrected here; this overlay wins on conflict.
+Row-level statuses below predate this snapshot where not corrected here; on conflict this snapshot wins over the rows. Neither the rows nor this snapshot are current live status: any "current" claim requires a fresh dated read-back (T89).
 
 ---
 

@@ -88,7 +88,7 @@ Connector availability is session-scoped: a surface is `ONLY-WHEN-CONNECTED`, ne
 |---|---|---|
 | GitHub connector | `main` at `559cf275…` (`observed_at: 2026-07-16`) | repo facts/read-write only when tool present in the current session |
 | Supabase MCP | `iskra_memory` readable (`observed_at: 2026-07-29`) | privileged connector path, not end-user identity |
-| `iskra-memory-gateway` | ACTIVE v4, `verify_jwt=true` (`observed_at: 2026-07-29`; the earlier "ACTIVE v2" row was a stale 2026-07-16 observation) | deployed ≠ invoked; no verified Projects Action 2xx |
+| `iskra-memory-gateway` | ACTIVE v4, `verify_jwt=true`, `mode: probe_only` — privileged routes return 503 `gateway_security_hold` (`observed_at: 2026-07-30`; the earlier "ACTIVE v2" row was a stale 2026-07-16 observation) | maturity `DEPLOYED-PROBE-ONLY` ≠ enabled ≠ invoked; no verified privileged 2xx |
 | Remote Desktop Commander | connected during 2026-07 audit sessions | local machine only when explicitly connected |
 | Browser/Web | session-dependent | never assume UI access; cannot rewrite canon |
 

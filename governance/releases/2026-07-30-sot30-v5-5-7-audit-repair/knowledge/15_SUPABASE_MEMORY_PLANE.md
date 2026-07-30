@@ -1,9 +1,30 @@
-# CURRENT STATUS OVERLAY · 2026-07-20
+# CURRENT STATUS OVERLAY · 2026-07-30
+
+```yaml
+observed_at: 2026-07-30
+observation_surface: supabase_connector_read_only (independent PR#321 audit read-back)
+freshness: dated_observation      # becomes STALE/UNKNOWN without a fresh re-read; never quote as live
+maturity: read_only_inspection    # not an end-to-end HTTP/Projects-Action test
+project: typcvaszcfdpkzbjzuur
+supersedes: 2026-07-20 overlay below (kept as history)
+```
+
+Facts below are **independent** (none inferred from another); each must be re-read before any live claim:
+
+- **MIGRATION_PARITY** — live `list_migrations` = **37** (was 35 on 2026-07-20); repo↔live parity must be re-checked against the current repo state, not assumed. `[FACT @2026-07-30]`
+- **LIVE_SCHEMA** — `iskra_memory` has **11 tables**, including `memory_consent_registry` (absent from the 2026-07-20 overlay). RLS enabled 11/11; client roles now carry **explicit deny-all policies** — the earlier "zero policies" state is superseded. `anon`/`authenticated` have no schema USAGE and no table grants. `[FACT @2026-07-30]`
+- **EDGE_FUNCTION_DEPLOYMENT** — `iskra-memory-gateway`: ACTIVE **version 4**, `verify_jwt=true`, handler runs in **`mode: probe_only`**: `auth/whoami` may answer after JWT validation, while every privileged route (`observe`, `commit`, `memory/write`, `memory/search`, `shadow/promote`, `dream/crystallize`, …) returns **HTTP 503 `gateway_security_hold`**. Correct maturity label: `DEPLOYED-PROBE-ONLY ≠ ENABLED ≠ INVOKED ≠ VERIFIED-2XX-PRIVILEGED`. `[FACT @2026-07-30]`
+- **PROJECTS_ACTION_INVOCATION** — not tested; end-to-end HTTP enforcement from a Project surface remains unverified. `[HYP]`
+- **LIVE_DATA_COUNTS** — not re-read on 2026-07-30; the 2026-07-20 counts below are historical. `UNKNOWN until re-read.`
+
+---
+
+# HISTORICAL OVERLAY · 2026-07-20 (superseded by the 2026-07-30 overlay above)
 
 ```yaml
 observed_at: 2026-07-20T12:00Z
 observation_surface: supabase_mcp_read_only
-freshness: live_observation
+freshness: historical_snapshot   # superseded 2026-07-30
 maturity: read_only_inspection   # not an end-to-end HTTP/Projects-Action test
 project: typcvaszcfdpkzbjzuur
 ```

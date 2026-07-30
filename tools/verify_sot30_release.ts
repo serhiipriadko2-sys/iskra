@@ -38,7 +38,11 @@
  *      the 07 §2.2 M3 veto-attribution divergence is mapped in 12 §4.2; normative M2 phrases live INSIDE
  *      the 12 §4.2 normative section (a decoy copy elsewhere does not satisfy the contract)
  *  C26 (from v5.5.7) release root = exact allowlist {README, QC_REPORT, PACKAGE_RECEIPT, knowledge/, support/};
- *      root docs carry no mojibake artifact (an isolated " ? " from a broken encoding pipeline)
+ *      root docs carry no encoding artifact (isolated " ? ", U+FFFD, double-encoded UTF-8 pairs)
+ *  C27 (from v5.5.7) active identity: manifest.package_version == file-25 current_package
+ *      == standalone instructions heading == file-00 mirror heading (closes the T97 gap)
+ *  C28 (from v5.5.7) loader sequence statically gated: file-00 loader block routes
+ *      29 → 00 → 01 → 02 → 03–07 in order; file-29 reading order agrees (closes the T96 gap)
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -315,6 +319,11 @@ const secretScanTargets: string[] = [
   ...knames.map((n) => join(kdir, n)),
   ...SUPPORT_FILES.map((s) => join(sdir, s)),
 ];
+// release-root docs: committed release artifacts whose bytes the ledger will
+// authenticate — a secret here would be hashed-and-blessed, so scan them too.
+for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
+  secretScanTargets.push(join(releaseDir, doc));
+}
 // audit artifacts + build/verify scripts, when present (advertised coverage).
 const auditDir = 'governance/audits/2026-07-20-sot30-v554';
 if (existsSync(auditDir)) {
@@ -555,20 +564,43 @@ const appliesFrom = (floor: string): boolean =>
       && shared.includes('cannot revert')
       && /observed_at/.test(shared);
     const matrix = between(f02, '### Context-boundary matrix', '<!-- T85-CONTRACT');
+    // exact cell-value contract: parse each boundary row and assert the semantic
+    // value of BOTH cells, so reversing e.g. Project-only to allowed/allowed fails
+    // even though every keyword is still present somewhere in the section.
+    const matrixCell = (rowLabel: string): [string, string] | null => {
+      const row = matrix.split('\n').find((l) => l.trim().startsWith(`| ${rowLabel}`));
+      if (!row) return null;
+      const cells = row.split('|').map((c) => c.trim());
+      return cells.length >= 4 ? [cells[2], cells[3]] : null;
+    };
+    const cellIs = (cell: string | undefined, want: 'allowed' | 'denied'): boolean =>
+      !!cell && cell.toLowerCase().startsWith(want);
+    const rowsSpec: Array<[string, 'allowed' | 'denied', 'allowed' | 'denied']> = [
+      ['Project-only memory', 'denied', 'denied'],
+      ['Enterprise/Edu default memory', 'denied', 'allowed'],
+      ['Non-Enterprise default memory (incl. Business)', 'allowed', 'allowed'],
+      ['Shared project', 'denied', 'denied'],
+    ];
+    const cellsOk = rowsSpec.every(([label, a, b]) => {
+      const c = matrixCell(label);
+      return !!c && cellIs(c[0], a) && cellIs(c[1], b);
+    });
     const matrixOk = matrix.includes('Outside-chat reference')
       && matrix.includes('Saved-memory reference')
-      && matrix.includes('Enterprise/Edu default memory')
-      && matrix.includes('Shared project')
-      && matrix.includes('not a security');
+      && matrix.includes('not a security')
+      && cellsOk;
     const tokenOk = f02.includes('shared=auto_project_only_irreversible');
-    // semantic Enterprise regression: after removing the single allowed NEGATION
-    // sentence, no phrasing of a chat-history requirement may remain in the
-    // Enterprise section (catches paraphrases the exact-bullet check misses).
+    // Enterprise regression guard: after removing the single allowed NEGATION
+    // sentence, no term from the allowlisted history-requirement LEXICON may
+    // remain in the Enterprise section. This is an explicit lexicon contract,
+    // not a general semantic proof — extend the lexicon when new phrasings are
+    // observed (static regex cannot prove absence in arbitrary phrasing).
     const ent = between(f02, '### Enterprise users', '### All other subscriptions (including Business)');
     const entWithoutNegation = ent.replace(
       /`Reference chat history` is \*\*not\*\* an Enterprise prerequisite[^\n]*/i, '',
     );
-    const entSemanticOk = ent.length > 0 && !/chat[ -]?history/i.test(entWithoutNegation);
+    const historyLexicon = /(chat|conversation)[ -]?history|previous conversations|prior (chats|conversations)|истори[юия][^\n]{0,20}(чат|разговор)/i;
+    const entSemanticOk = ent.length > 0 && !historyLexicon.test(entWithoutNegation);
     const t94Ok = /^\| T94-SHARED-PROJECT-MEMORY \|.*project-only.*cannot revert/m.test(f28);
     const t95Ok = /^\| T95-MEMORY-BOUNDARY-DIMENSIONS \|.*outside-chat reference denied, saved-memory reference allowed/m.test(f28);
     check(sharedOk && matrixOk && tokenOk && entSemanticOk && t94Ok && t95Ok, 'C24',
@@ -585,11 +617,13 @@ const appliesFrom = (floor: string): boolean =>
     const f06 = readFileSync(join(kdir, '06_SECURITY_INTEGRITY.md'), 'utf8');
     const f07 = readFileSync(join(kdir, '07_UNIVERSAL_ROUTER.md'), 'utf8');
     const f12 = readFileSync(join(kdir, '12_COUNCIL_VOICES.md'), 'utf8');
-    // no line may couple the M2 mechanism with a numeric threshold in 06/07
+    // no line may couple the M2 mechanism with a numeric threshold in 06/07:
+    // decimals, comparison forms, integers/percentages tied to threshold or
+    // activation vocabulary. Section references (e.g. "12 §4.2") are exempt.
     const m2NumericLine = (t: string): boolean => t.split('\n').some((l) => {
       if (!/\bM2\b/.test(l)) return false;
-      const rest = l.replace(/\bM2\b/g, '');
-      return /[<>≥≤]\s*\d|\d\.\d/.test(rest);
+      const rest = l.replace(/\bM2\b/g, '').replace(/§\s*[\d.]+|файл[ае]?\s*\d+|file\s*\d+/gi, '');
+      return /[<>≥≤]\s*\d|\d\.\d|\d+\s*%|(threshold|activat|порог|активаци)[^\n]{0,30}\d/i.test(rest);
     });
     const c25a = !m2NumericLine(f06) && !m2NumericLine(f07);
     // the normative M2 phrases must sit INSIDE §4.2, not merely anywhere in the file
@@ -614,16 +648,70 @@ const appliesFrom = (floor: string): boolean =>
     const rootEntries = readdirSync(releaseDir);
     const rootOk = rootEntries.length === ROOT_ALLOW.size
       && rootEntries.every((e) => ROOT_ALLOW.has(e));
-    // an isolated " ? " is the signature of a non-UTF-8-safe pipeline replacing
-    // typographic dashes (seen shipped in the v5.5.6 QC report); legitimate
-    // question marks terminate a word and never float between spaces.
+    // encoding-artifact scan: an isolated " ? " is the signature of a
+    // non-UTF-8-safe pipeline replacing typographic dashes (seen shipped in the
+    // v5.5.6 QC report); U+FFFD marks a failed decode; "â€…"/"Ã©"-class pairs
+    // mark double-encoded UTF-8. Legitimate question marks terminate a word and
+    // never float between spaces; legitimate Cyrillic never decodes to these pairs.
+    const encodingArtifact = /( \? )|�|â€|Ã[ -¿]/;
     let mojibake = false;
     for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
       const dp = join(releaseDir, doc);
-      if (existsSync(dp) && / \? /.test(readFileSync(dp, 'utf8'))) mojibake = true;
+      if (existsSync(dp) && encodingArtifact.test(readFileSync(dp, 'utf8'))) mojibake = true;
     }
     check(rootOk && !mojibake, 'C26',
       `release root exact allowlist (${rootEntries.sort().join(', ')}) + no mojibake artifact (mojibake=${mojibake})`);
+  }
+}
+
+// ---- C27 (from v5.5.7): active package identity — every active stamp equals the manifest ----
+// Closes the T97 gap: C12 sees only `version:` frontmatter keys, so `current_package`
+// and the Project Instructions heading could silently regress to an older version.
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C27', `active-identity contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const pkgVer: string = manifest.package_version ?? '';
+    const f25head = readFileSync(join(kdir, '25_LIBER_SPACE_BUSIDO.md'), 'utf8').slice(0, 600);
+    const cpM = f25head.match(/^current_package:\s*(v\d+\.\d+\.\d+)\s*$/m);
+    const c27a = !!cpM && cpM[1] === pkgVer;
+    const instrHead = readFileSync(join(sdir, 'PROJECT_INSTRUCTIONS_SOT30.md'), 'utf8')
+      .split('\n')[0] ?? '';
+    const ihM = instrHead.match(/SoT30\s+(v\d+\.\d+\.\d+)/);
+    const c27b = !!ihM && ihM[1] === pkgVer;
+    // the file-00 mirror heading is covered transitively by C7 byte equality,
+    // but assert it directly so a broken mirror cannot mask an identity regression.
+    const f00txt = readFileSync(join(kdir, '00_PROJECT_ROUTER.md'), 'utf8');
+    const mhM = f00txt.match(/# Project Instructions[^\n]*SoT30\s+(v\d+\.\d+\.\d+)/);
+    const c27c = !!mhM && mhM[1] === pkgVer;
+    check(c27a && c27b && c27c, 'C27',
+      `active identity stamps equal manifest ${pkgVer} (25.current_package=${cpM?.[1] ?? 'MISSING'}; `
+      + `instructions-heading=${ihM?.[1] ?? 'MISSING'}; mirror-heading=${mhM?.[1] ?? 'MISSING'})`);
+  }
+}
+
+// ---- C28 (from v5.5.7): loader-sequence gate — T96 is statically enforced, not just a prompt ----
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C28', `loader-sequence contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const f00txt = readFileSync(join(kdir, '00_PROJECT_ROUTER.md'), 'utf8');
+    const li = f00txt.indexOf('## Loader contract');
+    const lj = f00txt.indexOf('## Precedence', li < 0 ? 0 : li);
+    const loader = li >= 0 && lj > li ? f00txt.slice(li, lj) : '';
+    // the normative loader block (not decoy text elsewhere) must route the exact
+    // sequence 29 → 00 → 01 → 02 → 03–07 in this order.
+    const seq = ['29_INDEX_UPLOAD_MANIFEST.md', '00_PROJECT_ROUTER.md',
+      '01_PARITY_ADVANCEMENT_MANIFEST.md', '02_PROJECTS_SURFACE_MAP.md', '03–07'];
+    let pos = 0; let orderOk = loader.length > 0;
+    for (const tok of seq) {
+      const at = loader.indexOf(tok, pos);
+      if (at < 0) { orderOk = false; break; }
+      pos = at + tok.length;
+    }
+    const f29ro = f29.includes('29 → 00 → 01 → 02 → 03–07');
+    check(orderOk && f29ro, 'C28',
+      `loader sequence statically gated (00 loader block order=${orderOk}; file-29 reading order=${f29ro})`);
   }
 }
 

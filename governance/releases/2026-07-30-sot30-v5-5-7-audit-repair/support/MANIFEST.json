@@ -4,26 +4,27 @@
   "baseline_release": "v5.5.6",
   "date": "2026-07-30",
   "adr": "ADR-20260730-01",
-  "generated_from": "canonical_git_blobs",
-  "generated_from_ref": "b6100382a1cba1bd4e51711ebf69b243bcbee46d",
+  "generated_from": "release_tree_working_bytes",
+  "generated_from_ref": null,
   "line_ending_policy": "LF",
   "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
   "knowledge_file_count": 30,
-  "corpus_bytes": 4049501,
+  "corpus_bytes": 4053183,
   "project_instructions_chars": 5996,
   "project_instructions_bytes": 8200,
   "acceptance_range": "T01-T97",
   "changed_files": [
     "00_PROJECT_ROUTER.md",
+    "01_PARITY_ADVANCEMENT_MANIFEST.md",
     "02_PROJECTS_SURFACE_MAP.md",
     "12_COUNCIL_VOICES.md",
+    "15_SUPABASE_MEMORY_PLANE.md",
     "22_CONNECTORS_TOOLS_BOUNDARY.md",
     "25_LIBER_SPACE_BUSIDO.md",
     "28_EVALS_ACCEPTANCE.md",
     "29_INDEX_UPLOAD_MANIFEST.md"
   ],
   "unchanged_files": [
-    "01_PARITY_ADVANCEMENT_MANIFEST.md",
     "03_TELOS_MANTRA_PRINCIPLES.md",
     "04_IDENTITY_NON_MIRROR.md",
     "05_TRUTH_SIFT_RAG.md",
@@ -35,7 +36,6 @@
     "11_SLO_PLAYBOOK_CONTROL.md",
     "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
     "14_MEMORY_MODEL.md",
-    "15_SUPABASE_MEMORY_PLANE.md",
     "16_SHADOW_LAYER.md",
     "17_DREAMSPACE_DREAMSEED.md",
     "18_HORIZON_WEAVER.md",
@@ -51,17 +51,17 @@
     {
       "path": "knowledge/00_PROJECT_ROUTER.md",
       "bytes": 10373,
-      "sha256": "428ca6d09d643126f09cf72a14f829f472c7382cae4a7f7ce8c906b504c35f17"
+      "sha256": "6161479fce36fee1aade95828aa5bbe5bcf96163a9a84c1c36a14db3588c631b"
     },
     {
       "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
-      "bytes": 26831,
-      "sha256": "c19efc5810ecd9cf4ac0e642ba203e9d9b398acc7be22c90a9d28736a159fbf0"
+      "bytes": 27440,
+      "sha256": "51cc8721dbc58fbc3953a521762d96f62c78d55bdc7f660dcbc1019bceb96925"
     },
     {
       "path": "knowledge/02_PROJECTS_SURFACE_MAP.md",
-      "bytes": 7481,
-      "sha256": "fa1b0af7fd05fe5983590f1168c602dee46bafbed7e5e4e2c8ab2a4476a2cfd4"
+      "bytes": 7587,
+      "sha256": "875eb325d39aab445b38b92d3c53b27e392657802b051ba1a7ae81b069f7c156"
     },
     {
       "path": "knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
@@ -125,8 +125,8 @@
     },
     {
       "path": "knowledge/15_SUPABASE_MEMORY_PLANE.md",
-      "bytes": 12574,
-      "sha256": "c67f62e9cb33bec161c347eff9894ba47724e324b4ac0b7d1a007bad469732af"
+      "bytes": 14450,
+      "sha256": "8bc44de8ef97b2489aa2dde511a126ad64b889d932e5fc86d091a73e9eaae994"
     },
     {
       "path": "knowledge/16_SHADOW_LAYER.md",
@@ -160,8 +160,8 @@
     },
     {
       "path": "knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
-      "bytes": 3784,
-      "sha256": "b5a87ec9ebf0392afb434a57bbcba6b2b14888466aff71db6e4347315817a3b3"
+      "bytes": 4045,
+      "sha256": "c1d1de95b836c277f354cbaf16b8c8a142ac53d2d824fc5d537b2be0218feebb"
     },
     {
       "path": "knowledge/23_BUILDER_PROJECTS_COMPAT.md",
@@ -190,13 +190,13 @@
     },
     {
       "path": "knowledge/28_EVALS_ACCEPTANCE.md",
-      "bytes": 17426,
-      "sha256": "d2895c4165ca06389f4a0130054ca24ca22d7ecb2c08fd47a85011adc5baafd4"
+      "bytes": 17557,
+      "sha256": "abda135a9ebabca77cc44a9e1ad454c4f399b3e41dc03be24c2adb8a531199ba"
     },
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
-      "bytes": 14169,
-      "sha256": "a2f70d7183eeb560974e8be16fcf3e920a2518898c5aa37b023c250445d0253c"
+      "bytes": 14868,
+      "sha256": "b7be058ae12d0342d5f02d5677ee3cc78a8d314c60da09b5d57d597295d39f0d"
     }
   ],
   "live_project_verified": false

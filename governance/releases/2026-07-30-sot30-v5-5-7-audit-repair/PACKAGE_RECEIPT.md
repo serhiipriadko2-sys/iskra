@@ -2,32 +2,41 @@
 
 Assembled under ADR-20260730-01 (`proposed`) from a source-freeze commit via genuine `--from-git`. v5.5.6 remains immutable.
 
-<!-- composition: changed=7 unchanged=23 baseline=v5.5.6 -->
+<!-- composition: changed=9 unchanged=21 baseline=v5.5.6 -->
 
 ## Artifact
 
 | Item | Value |
 |---|---|
 | ZIP | `dist/SoT30_v5.5.7.zip` |
-| ZIP bytes | 1134112 |
-| ZIP sha256 | `efdbed0335ca70cf2b25dbc82c43ca078dd70e456cf3d30168d9fd37a23582cd` |
+| ZIP bytes | 1135428 |
+| ZIP sha256 | `94384865bd730d3d856fc4b9aa02bacf23e8e2009cd87c429944adbb216cb28a` |
 | ZIP root | `SoT30_v5.5.7/` |
 | Knowledge files | 30 |
-| Corpus bytes | 4,049,501 |
-| file 29 sha256 | `a2f70d7183eeb560974e8be16fcf3e920a2518898c5aa37b023c250445d0253c` |
+| Corpus bytes | 4,053,183 |
+| file 29 sha256 | `b7be058ae12d0342d5f02d5677ee3cc78a8d314c60da09b5d57d597295d39f0d` |
 | support/MANIFEST.json sha256 | `01296550e4bd688523a9e4f022efc75263aefe5b9eb68d9bab81030a2a4a9df1` |
 | Acceptance range | T01–T97 |
 | Baseline | v5.5.6 (immutable) |
 | generated_from | `canonical_git_blobs` |
 | generated_from_ref | see `support/MANIFEST.json` |
-| Changed vs v5.5.6 | `00,02,12,22,25,28,29` |
+| Changed vs v5.5.6 | `00,01,02,12,15,22,25,28,29` |
+
+## Provenance model
+
+The 30 Knowledge files (including the regenerated file 29) and the standalone Project
+Instructions are committed **before** the source freeze; the package is then built via
+genuine `--from-git` from that freeze commit, so all 31 source files are byte-equal to
+the freeze blobs. `support/MANIFEST.json` and `support/SHA256SUMS` are **generated
+artifacts** (the manifest necessarily records the freeze SHA and cannot be a blob of
+that same commit); they are authenticated by hash here and in `ledger/sot.json`.
 
 ## Verification performed
 
 - canonical build from the source-freeze commit recorded in `support/MANIFEST.json`: PASS;
-- v5.5.7 verifier (C1–C26): 27/27 PASS; v5.5.4/v5.5.5/v5.5.6 regression: 27/27 PASS each;
+- 30/30 Knowledge plus Project Instructions byte-equal to source-freeze blobs (explicitly re-hashed against the freeze commit): PASS;
+- v5.5.7 verifier (C1–C28): 29/29 PASS; v5.5.4/v5.5.5/v5.5.6 regression: 29/29 PASS each;
 - verifier selftest matrix: PASS (fixture counts in CI log);
-- 30/30 Knowledge plus Project Instructions byte-equal to source-freeze blobs;
 - v5.5.6 byte immutability: PASS;
 - GitHub CI: pending push/read-back.
 

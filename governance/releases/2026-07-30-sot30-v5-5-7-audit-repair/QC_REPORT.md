@@ -2,24 +2,25 @@
 
 Scope: audit repair over v5.5.6 (ADR-20260730-01, `proposed`).
 
-<!-- composition: changed=7 unchanged=23 baseline=v5.5.6 -->
+<!-- composition: changed=9 unchanged=21 baseline=v5.5.6 -->
 
 | Gate | Result |
 |---|---|
 | exactly 30 Knowledge + 3 support files | PASS |
 | T80 mirror byte-equal + unique | PASS |
-| changed set exactly 7 / unchanged 23 | PASS |
-| C1–C26 verifier | PASS — 27/27 |
-| v5.5.4/v5.5.5/v5.5.6 regression under hardened verifier | PASS — 27/27 each |
-| verifier selftest matrix (incl. new C23–C26 fixtures) | PASS |
+| changed set exactly 9 / unchanged 21 | PASS |
+| C1–C28 verifier | PASS — 29/29 |
+| v5.5.4/v5.5.5/v5.5.6 regression under hardened verifier | PASS — 29/29 each |
+| verifier selftest matrix (incl. C23–C28 fixtures) | PASS |
+| source-freeze byte parity (30 Knowledge + Instructions vs freeze commit) | PASS |
 | v5.5.6 immutability | PASS — v5.5.6 release tree and ZIP untouched |
 
 ## Package facts
 
-- corpus bytes: 4,049,501
-- ZIP: `dist/SoT30_v5.5.7.zip`, 1134112 bytes, sha256 `efdbed0335ca70cf2b25dbc82c43ca078dd70e456cf3d30168d9fd37a23582cd`
-- file 29: 14169 bytes, sha256 `a2f70d7183eeb560974e8be16fcf3e920a2518898c5aa37b023c250445d0253c`
-- support/MANIFEST.json sha256 `01296550e4bd688523a9e4f022efc75263aefe5b9eb68d9bab81030a2a4a9df1`
+- corpus bytes: 4,053,183
+- ZIP: `dist/SoT30_v5.5.7.zip`, 1135428 bytes, sha256 `94384865bd730d3d856fc4b9aa02bacf23e8e2009cd87c429944adbb216cb28a`
+- file 29: 14868 bytes, sha256 `b7be058ae12d0342d5f02d5677ee3cc78a8d314c60da09b5d57d597295d39f0d`
+- support/MANIFEST.json sha256 `a91f66e22458c4074ce2dd5b5606c6a763d5ac7f173c89f95d60b33dfa9bb993`
 - generated_from_ref: recorded in `support/MANIFEST.json` (`generated_from_ref`)
 
 ## Additional verification

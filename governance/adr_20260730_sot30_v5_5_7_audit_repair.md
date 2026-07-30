@@ -41,6 +41,38 @@ A full static audit of the v5.5.6 release (2026-07-29/30, fixed observation ref 
 - Project Instructions redesign (Ω ≤ 0.95 ceiling, capability ≠ permission gate, dual authority/freshness ladders) — blocked by the 6000-character budget (5996 used), requires editorial compression.
 - Machine-readable memory contract + acceptance-run receipt schema (executable study contract for file 28).
 
+## Amendment A.1 — P0 correction loop (2026-07-30, same day; status remains proposed)
+
+An independent deep audit of PR #321 (external, read-only; plus eight Codex review threads)
+confirmed defects in the first candidate build. All were verified against the working tree
+and repaired in a correction commit pair:
+
+1. **Instructions identity** — both Project Instructions copies said `SoT30 v5.5.6` inside the
+   v5.5.7 package; C7/C12 could not see it. Fixed; new C27 gates every active identity stamp
+   (manifest ↔ file-25 `current_package` ↔ standalone heading ↔ mirror heading).
+2. **Source-freeze provenance** — file 29 was regenerated after the freeze, so the receipt's
+   "30/30 byte-equal to source-freeze blobs" was false (freeze blob `477c5ad4…` vs shipped
+   `a2f70d71…`). Fixed by the re-freeze protocol: file 29 is committed before the freeze and
+   the receipt now documents MANIFEST/SHA256SUMS as generated artifacts.
+3. **Loader gate** — T96 existed only as a prompt; removing 01/02 from the loader kept CI green.
+   New C28 statically gates the exact sequence with a negative fixture.
+4. **Root-doc secret scan** — README/QC/receipt were outside `secretScanTargets`; a leaked
+   secret would have been hashed into the ledger instead of rejected. Fixed with fixtures.
+5. **C24/C25 fail-open forms** — matrix cells are now parsed and value-asserted; the Enterprise
+   guard is an explicit allowlisted lexicon (documented as such, not "any phrasing"); C25
+   catches integer/percent M2 forms; C26 catches U+FFFD and double-encoded UTF-8.
+6. **Stale mandatory context** — the 01 overlay is reclassified as a historical snapshot
+   (`current_status_authority: false`); 15 carries a fresh dated 2026-07-30 overlay
+   (37 migrations, 11 tables incl. `memory_consent_registry`, explicit deny-all client
+   policies, gateway `DEPLOYED-PROBE-ONLY`: privileged routes 503 `gateway_security_hold`);
+   22 records the four App permission modes (`Always ask / Any changes / Important actions /
+   Never ask`); 02 labels the gateway maturity `DEPLOYED-PROBE-ONLY`.
+7. **CI trigger** — `dist/SoT30_v*.zip` added to `push.paths` so a ZIP-only push cannot bypass
+   the integrity workflow.
+
+Changed knowledge set becomes `{00, 01, 02, 12, 15, 22, 25, 28, 29}` (9 changed / 21 unchanged).
+Owner acceptance, artifact promotion and live T01–T97 remain separate pending decisions.
+
 ## Consequences
 
 - Changed knowledge set vs v5.5.6: `{00, 02, 12, 22, 25, 28, 29}` (22 is a version-stamp-only bump required by C12).
