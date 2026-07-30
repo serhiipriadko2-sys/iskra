@@ -26,6 +26,9 @@ const VERIFIER = 'tools/verify_sot30_release.ts';
 const RELEASE_556 = 'governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair';
 const ZIP_556 = 'dist/SoT30_v5.5.6.zip';
 const BASELINE_556 = 'governance/releases/2026-07-21-sot30-v5-5-5-provenance/support/MANIFEST.json';
+const RELEASE_557 = 'governance/releases/2026-07-30-sot30-v5-5-7-audit-repair';
+const ZIP_557 = 'dist/SoT30_v5.5.7.zip';
+const BASELINE_557 = 'governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json';
 
 type Run = { code: number; out: string };
 function runVerifier(
@@ -67,6 +70,11 @@ const zipRoot = execFileSync('unzip', ['-Z1', ZIP], { encoding: 'utf8' })
 {
   const r = runVerifier(RELEASE_556, ZIP_556, BASELINE_556, 'v5.5.6');
   expect('positive: real v5.5.6 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
+    `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
+}
+{
+  const r = runVerifier(RELEASE_557, ZIP_557, BASELINE_557, 'v5.5.7');
+  expect('positive: real v5.5.7 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
     `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
 }
 
@@ -274,6 +282,71 @@ negRelease556('neg: M1 threshold copied into M2 table cell', (dir) => {
   cells[3] = ' `0.2` ';
   lines[i] = cells.join('|');
   writeFileSync(p, lines.join('\n'));
+});
+
+// --- C23-hardening + C24/C25/C26 fixtures (tamper v5.5.7 candidate) ---
+function negRelease557(name: string, expectCheck: string, mutate: (dir: string) => void) {
+  const dir = tmpCopyFrom(RELEASE_557);
+  try {
+    mutate(dir);
+    const r = runVerifier(dir, ZIP_557, BASELINE_557, 'v5.5.7');
+    expect(name, r.code !== 0 && new RegExp(`FAIL ${expectCheck}:`).test(r.out),
+      `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
+  } finally { rmSync(join(dir, '..'), { recursive: true, force: true }); }
+}
+
+// malformed package_version must be a hard FAIL, never "not applicable"
+negRelease557('neg: malformed package_version fail-closed', 'C23', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.package_version = 'v5.5.x';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// shared-project branch removed
+negRelease557('neg: shared-project section removed', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  const t = readFileSync(p, 'utf8');
+  const a = t.indexOf('### Shared projects');
+  const b = t.indexOf('### Context-boundary matrix');
+  writeFileSync(p, t.slice(0, a) + t.slice(b));
+});
+// Enterprise chat-history requirement expressed WITHOUT the exact bullet (semantic paraphrase)
+negRelease557('neg: Enterprise chat-history paraphrase', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '### All other subscriptions (including Business)',
+    'Enterprise admins must additionally turn on chat-history referencing.\n\n### All other subscriptions (including Business)'));
+});
+// numeric M2 coupling injected into file 06
+negRelease557('neg: numeric M2 drift inserted into file 06', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 drift review activates at drift > 0.2.\n`);
+});
+// numeric M2 coupling injected into file 07
+negRelease557('neg: numeric M2 drift inserted into file 07', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/07_UNIVERSAL_ROUTER.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 Λ-feedback threshold: 0.2.\n`);
+});
+// mapped M3 divergence note removed from 12 §4.2
+negRelease557('neg: M3 divergence mapping removed', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/12_COUNCIL_VOICES.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(/\*\*Mapped M3 divergence \(v5\.5\.7\):\*\*[^\n]*\n/, ''));
+});
+// decoy: normative phrase moved OUT of §4.2 (old global-includes check would still pass)
+negRelease557('neg: normative M2 phrase decoy outside 4.2', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/12_COUNCIL_VOICES.md');
+  const phrase = 'M1 and M3 thresholds must not be transferred into M2.';
+  const t = readFileSync(p, 'utf8');
+  writeFileSync(p, `${t.replace(phrase, '')}\n\n<!-- decoy -->\n${phrase}\n`);
+});
+// extra release-root file breaks the exact allowlist
+negRelease557('neg: extra release-root file', 'C26', (dir) => {
+  writeFileSync(join(dir, 'NOTES.md'), 'x\n');
+});
+// mojibake artifact in a root doc (the v5.5.6 QC-report defect class)
+negRelease557('neg: mojibake in QC report', 'C26', (dir) => {
+  const p = join(dir, 'QC_REPORT.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace('PASS — 27/27', 'PASS ? 27/27'));
 });
 
 // helper: negative fixture that tampers the ZIP (release dir reused)

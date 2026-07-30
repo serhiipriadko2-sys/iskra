@@ -30,7 +30,15 @@
  *  C20 release-tree ↔ extracted-ZIP byte parity for all 33 files (catches a split-brain tree/zip)
  *  C21 no ADR-lifecycle self-contradiction (a doc claiming `accepted` while also stating `proposed`/`not accepted`)
  *  C22 file-29 active-identity consistency: exactly one "(this build)" version-section == MANIFEST.package_version; supersedes ⊇ baseline_release; active composition heading ⊇ baseline_release; no "proposed, not accepted" ADR claim
- *  C23 T85/T86 acceptance-contract consistency (applicable from v5.5.6; older immutable releases are grandfathered)
+ *  C23 T85/T86 acceptance-contract consistency (applicable from v5.5.6; older immutable releases are
+ *      grandfathered; a malformed package_version is a hard FAIL, never grandfathered)
+ *  C24 (from v5.5.7) shared-project memory branch + context-boundary matrix present in file 02;
+ *      Enterprise section carries no chat-history requirement in ANY phrasing (semantic, not exact-bullet)
+ *  C25 (from v5.5.7) T86 declared cross-file coverage is real: files 06/07 carry no numeric M2 coupling;
+ *      the 07 §2.2 M3 veto-attribution divergence is mapped in 12 §4.2; normative M2 phrases live INSIDE
+ *      the 12 §4.2 normative section (a decoy copy elsewhere does not satisfy the contract)
+ *  C26 (from v5.5.7) release root = exact allowlist {README, QC_REPORT, PACKAGE_RECEIPT, knowledge/, support/};
+ *      root docs carry no mojibake artifact (an isolated " ? " from a broken encoding pipeline)
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -444,23 +452,33 @@ check(contradictions.length === 0, 'C21',
 }
 
 
+// ---- version helpers shared by C23–C26 (floor-gated contracts) ----
+const verTuple = (v: string): number[] => {
+  const m = String(v ?? '').match(/^v?(\d+)\.(\d+)\.(\d+)$/);
+  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [0, 0, 0];
+};
+const versionWellFormed = /^v?\d+\.\d+\.\d+$/.test(String(manifest.package_version ?? ''));
+const atLeast = (v: string, floor: string): boolean => {
+  const a = verTuple(v); const b = verTuple(floor);
+  for (let i = 0; i < 3; i += 1) {
+    if (a[i] !== b[i]) return a[i] > b[i];
+  }
+  return true;
+};
+// A malformed package_version must NEVER downgrade to "contract not applicable":
+// that would let a corrupted manifest bypass every floor-gated semantic check.
+const appliesFrom = (floor: string): boolean =>
+  versionWellFormed && atLeast(manifest.package_version ?? '', floor);
+
 // ---- C23: T85/T86 acceptance-contract consistency ----
 // Introduced after the v5.5.5 clean-Project diagnostic run. Older immutable
 // releases are grandfathered so their historical packages remain verifiable.
 {
-  const verTuple = (v: string): number[] => {
-    const m = String(v ?? '').match(/^v?(\d+)\.(\d+)\.(\d+)$/);
-    return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [0, 0, 0];
-  };
-  const atLeast = (v: string, floor: string): boolean => {
-    const a = verTuple(v); const b = verTuple(floor);
-    for (let i = 0; i < 3; i += 1) {
-      if (a[i] !== b[i]) return a[i] > b[i];
-    }
-    return true;
-  };
-  const applies = atLeast(manifest.package_version ?? '', 'v5.5.6');
-  if (!applies) {
+  const applies = appliesFrom('v5.5.6');
+  if (!versionWellFormed) {
+    check(false, 'C23',
+      `package_version malformed (${JSON.stringify(manifest.package_version)}) — fail-closed, floor-gated contracts cannot be waived`);
+  } else if (!applies) {
     check(true, 'C23', `T85/T86 contract not applicable before v5.5.6 (package=${manifest.package_version})`);
   } else {
     const f02 = readFileSync(join(kdir, '02_PROJECTS_SURFACE_MAP.md'), 'utf8');
@@ -518,6 +536,94 @@ check(contradictions.length === 0, 'C21',
 
     check(t85ok && t86ok, 'C23',
       `T85/T86 contract consistent (T85=${t85ok}; T86=${t86ok}; M2=${JSON.stringify(m2cell)})`);
+  }
+}
+
+// ---- C24 (from v5.5.7): shared-project memory branch + semantic Enterprise regression ----
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C24', `shared-project contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const f02 = readFileSync(join(kdir, '02_PROJECTS_SURFACE_MAP.md'), 'utf8');
+    const f28 = readFileSync(join(kdir, '28_EVALS_ACCEPTANCE.md'), 'utf8');
+    const between = (s: string, a: string, b: string): string => {
+      const i = s.indexOf(a); if (i < 0) return '';
+      const j = s.indexOf(b, i + a.length); return j < 0 ? '' : s.slice(i, j);
+    };
+    const shared = between(f02, '### Shared projects', '### Context-boundary matrix');
+    const sharedOk = shared.includes('project-only')
+      && shared.includes('cannot revert')
+      && /observed_at/.test(shared);
+    const matrix = between(f02, '### Context-boundary matrix', '<!-- T85-CONTRACT');
+    const matrixOk = matrix.includes('Outside-chat reference')
+      && matrix.includes('Saved-memory reference')
+      && matrix.includes('Enterprise/Edu default memory')
+      && matrix.includes('Shared project')
+      && matrix.includes('not a security');
+    const tokenOk = f02.includes('shared=auto_project_only_irreversible');
+    // semantic Enterprise regression: after removing the single allowed NEGATION
+    // sentence, no phrasing of a chat-history requirement may remain in the
+    // Enterprise section (catches paraphrases the exact-bullet check misses).
+    const ent = between(f02, '### Enterprise users', '### All other subscriptions (including Business)');
+    const entWithoutNegation = ent.replace(
+      /`Reference chat history` is \*\*not\*\* an Enterprise prerequisite[^\n]*/i, '',
+    );
+    const entSemanticOk = ent.length > 0 && !/chat[ -]?history/i.test(entWithoutNegation);
+    const t94Ok = /^\| T94-SHARED-PROJECT-MEMORY \|.*project-only.*cannot revert/m.test(f28);
+    const t95Ok = /^\| T95-MEMORY-BOUNDARY-DIMENSIONS \|.*outside-chat reference denied, saved-memory reference allowed/m.test(f28);
+    check(sharedOk && matrixOk && tokenOk && entSemanticOk && t94Ok && t95Ok, 'C24',
+      `shared-project branch + boundary matrix + semantic Enterprise guard (shared=${sharedOk} matrix=${matrixOk} `
+      + `token=${tokenOk} entSemantic=${entSemanticOk} T94=${t94Ok} T95=${t95Ok})`);
+  }
+}
+
+// ---- C25 (from v5.5.7): T86 declared cross-file coverage is real (06/07 + normative-section location) ----
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C25', `T86 cross-file contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const f06 = readFileSync(join(kdir, '06_SECURITY_INTEGRITY.md'), 'utf8');
+    const f07 = readFileSync(join(kdir, '07_UNIVERSAL_ROUTER.md'), 'utf8');
+    const f12 = readFileSync(join(kdir, '12_COUNCIL_VOICES.md'), 'utf8');
+    // no line may couple the M2 mechanism with a numeric threshold in 06/07
+    const m2NumericLine = (t: string): boolean => t.split('\n').some((l) => {
+      if (!/\bM2\b/.test(l)) return false;
+      const rest = l.replace(/\bM2\b/g, '');
+      return /[<>≥≤]\s*\d|\d\.\d/.test(rest);
+    });
+    const c25a = !m2NumericLine(f06) && !m2NumericLine(f07);
+    // the normative M2 phrases must sit INSIDE §4.2, not merely anywhere in the file
+    const s42i = f12.indexOf('### 4.2');
+    const s42j = f12.indexOf('## 5', s42i < 0 ? 0 : s42i);
+    const s42 = s42i >= 0 && s42j > s42i ? f12.slice(s42i, s42j) : '';
+    const c25b = s42.includes('means that this mechanism has no numeric threshold')
+      && s42.includes('M1 and M3 thresholds must not be transferred into M2');
+    // the known 07 §2.2 KAIN drift-veto attribution divergence must be mapped in §4.2
+    const c25c = s42.includes('Mapped M3 divergence');
+    check(c25a && c25b && c25c, 'C25',
+      `T86 cross-file coverage real (06/07 no numeric M2: ${c25a}; normative phrases in §4.2: ${c25b}; M3 divergence mapped: ${c25c})`);
+  }
+}
+
+// ---- C26 (from v5.5.7): release-root allowlist + mojibake guard ----
+{
+  if (!appliesFrom('v5.5.7')) {
+    check(versionWellFormed, 'C26', `release-root contract not applicable before v5.5.7 (package=${manifest.package_version})`);
+  } else {
+    const ROOT_ALLOW = new Set(['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md', 'knowledge', 'support']);
+    const rootEntries = readdirSync(releaseDir);
+    const rootOk = rootEntries.length === ROOT_ALLOW.size
+      && rootEntries.every((e) => ROOT_ALLOW.has(e));
+    // an isolated " ? " is the signature of a non-UTF-8-safe pipeline replacing
+    // typographic dashes (seen shipped in the v5.5.6 QC report); legitimate
+    // question marks terminate a word and never float between spaces.
+    let mojibake = false;
+    for (const doc of ['README.md', 'QC_REPORT.md', 'PACKAGE_RECEIPT.md']) {
+      const dp = join(releaseDir, doc);
+      if (existsSync(dp) && / \? /.test(readFileSync(dp, 'utf8'))) mojibake = true;
+    }
+    check(rootOk && !mojibake, 'C26',
+      `release root exact allowlist (${rootEntries.sort().join(', ')}) + no mojibake artifact (mojibake=${mojibake})`);
   }
 }
 
