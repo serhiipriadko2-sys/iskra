@@ -44,6 +44,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          for part in .github/fractal-authority-stage.part*.b64; do
+            normalized="$(tr -d '\r\n' < "$part")"
+            printf '%s  %s\n' "$(printf '%s' "$normalized" | sha256sum | cut -d' ' -f1)" "$part"
+            printf 'normalized-bytes=%s\n' "$(printf '%s' "$normalized" | wc -c)"
+          done
           cat .github/fractal-authority-stage.part*.b64 | tr -d '\r\n' | base64 -d > /tmp/fractal-authority-stage.zip
           echo 'fb7e7ed7dedb362e4c2a54ab0bc69b691f14ca28e55e74d07487e93649c24fbd  /tmp/fractal-authority-stage.zip' | sha256sum -c -
           unzip -o /tmp/fractal-authority-stage.zip -d .
