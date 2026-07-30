@@ -11,7 +11,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import {
-  cpSync, readFileSync, writeFileSync, rmSync, mkdtempSync, copyFileSync,
+  cpSync, readFileSync, writeFileSync, rmSync, mkdtempSync, copyFileSync, statSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -26,6 +26,9 @@ const VERIFIER = 'tools/verify_sot30_release.ts';
 const RELEASE_556 = 'governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair';
 const ZIP_556 = 'dist/SoT30_v5.5.6.zip';
 const BASELINE_556 = 'governance/releases/2026-07-21-sot30-v5-5-5-provenance/support/MANIFEST.json';
+const RELEASE_557 = 'governance/releases/2026-07-30-sot30-v5-5-7-audit-repair';
+const ZIP_557 = 'dist/SoT30_v5.5.7.zip';
+const BASELINE_557 = 'governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json';
 
 type Run = { code: number; out: string };
 function runVerifier(
@@ -67,6 +70,11 @@ const zipRoot = execFileSync('unzip', ['-Z1', ZIP], { encoding: 'utf8' })
 {
   const r = runVerifier(RELEASE_556, ZIP_556, BASELINE_556, 'v5.5.6');
   expect('positive: real v5.5.6 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
+    `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
+}
+{
+  const r = runVerifier(RELEASE_557, ZIP_557, BASELINE_557, 'v5.5.7');
+  expect('positive: real v5.5.7 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
     `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
 }
 
@@ -276,6 +284,378 @@ negRelease556('neg: M1 threshold copied into M2 table cell', (dir) => {
   writeFileSync(p, lines.join('\n'));
 });
 
+// --- C23-hardening + C24/C25/C26 fixtures (tamper v5.5.7 candidate) ---
+function negRelease557(name: string, expectCheck: string, mutate: (dir: string) => void) {
+  const dir = tmpCopyFrom(RELEASE_557);
+  try {
+    mutate(dir);
+    const r = runVerifier(dir, ZIP_557, BASELINE_557, 'v5.5.7');
+    expect(name, r.code !== 0 && new RegExp(`FAIL ${expectCheck}:`).test(r.out),
+      `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
+  } finally { rmSync(join(dir, '..'), { recursive: true, force: true }); }
+}
+
+// malformed package_version must be a hard FAIL, never "not applicable"
+negRelease557('neg: malformed package_version fail-closed', 'C23', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.package_version = 'v5.5.x';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// shared-project branch removed
+negRelease557('neg: shared-project section removed', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  const t = readFileSync(p, 'utf8');
+  const a = t.indexOf('### Shared projects');
+  const b = t.indexOf('### Context-boundary matrix');
+  writeFileSync(p, t.slice(0, a) + t.slice(b));
+});
+// Enterprise chat-history requirement expressed WITHOUT the exact bullet (semantic paraphrase)
+negRelease557('neg: Enterprise chat-history paraphrase', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '### All other subscriptions (including Business)',
+    'Enterprise admins must additionally turn on chat-history referencing.\n\n### All other subscriptions (including Business)'));
+});
+// numeric M2 coupling injected into file 06
+negRelease557('neg: numeric M2 drift inserted into file 06', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 drift review activates at drift > 0.2.\n`);
+});
+// numeric M2 coupling injected into file 07
+negRelease557('neg: numeric M2 drift inserted into file 07', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/07_UNIVERSAL_ROUTER.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 Λ-feedback threshold: 0.2.\n`);
+});
+// mapped M3 divergence note removed from 12 §4.2
+negRelease557('neg: M3 divergence mapping removed', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/12_COUNCIL_VOICES.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(/\*\*Mapped M3 divergence \(v5\.5\.7\):\*\*[^\n]*\n/, ''));
+});
+// decoy: normative phrase moved OUT of §4.2 (old global-includes check would still pass)
+negRelease557('neg: normative M2 phrase decoy outside 4.2', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/12_COUNCIL_VOICES.md');
+  const phrase = 'M1 and M3 thresholds must not be transferred into M2.';
+  const t = readFileSync(p, 'utf8');
+  writeFileSync(p, `${t.replace(phrase, '')}\n\n<!-- decoy -->\n${phrase}\n`);
+});
+// extra release-root file breaks the exact allowlist
+negRelease557('neg: extra release-root file', 'C26', (dir) => {
+  writeFileSync(join(dir, 'NOTES.md'), 'x\n');
+});
+// mojibake artifact in a root doc (the v5.5.6 QC-report defect class)
+negRelease557('neg: mojibake in QC report', 'C26', (dir) => {
+  const p = join(dir, 'QC_REPORT.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(/PASS —/, 'PASS ?'));
+});
+// U+FFFD replacement character in a root doc (failed-decode class)
+negRelease557('neg: U+FFFD in root README', 'C26', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nbroken decode: �\n`);
+});
+// JWT-like triple in a root doc must fail the (now extended) secret scan
+negRelease557('neg: JWT in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
+});
+// receipt claims a canonical git-blob build the manifest does not record
+negRelease557('neg: receipt claims git provenance without it', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.generated_from = 'release_tree_working_bytes';
+  m.generated_from_ref = null;
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// canonical ZIP-bytes field falsified while the real count hides elsewhere in the
+// receipt — a whole-document `includes` accepted this
+negRelease557('neg: receipt ZIP bytes field falsified', 'C17', (dir) => {
+  const p = join(dir, 'PACKAGE_RECEIPT.md');
+  const realBytes = statSync(ZIP_557).size;
+  let t = readFileSync(p, 'utf8').replace(/^\| ZIP bytes \| \d+ \|$/m, '| ZIP bytes | 0 |');
+  t += `\naudit trail id: ${realBytes}\n`;
+  writeFileSync(p, t);
+});
+// prose equality coupling — "M2 equals 1." matched no enumerated coupling grammar
+negRelease557('neg: M2 equality prose', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 equals 1.\n`);
+});
+// AWS access-key format in a root doc must fail the secret scan
+negRelease557('neg: AWS key in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nkey: AKIA${'A'.repeat(16)}\n`);
+});
+// receipt label reworded ("canonical Git blobs") while the manifest records a
+// working-bytes build — provenance enforcement must come from structured manifest
+// state, so the reworded receipt cannot disable source-blob verification
+negRelease557('neg: provenance mode not canonical (reworded receipt)', 'C27', (dir) => {
+  const mp = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(mp, 'utf8'));
+  m.generated_from = 'release_tree_working_bytes';
+  m.generated_from_ref = null;
+  writeFileSync(mp, JSON.stringify(m, null, 2));
+  const rp = join(dir, 'PACKAGE_RECEIPT.md');
+  writeFileSync(rp, readFileSync(rp, 'utf8').replace(/canonical_git_blobs/g, 'canonical Git blobs'));
+});
+// second contradictory structured identity declaration in file 25
+negRelease557('neg: duplicate current_package declaration', 'C27', (dir) => {
+  const p = join(dir, 'knowledge/25_LIBER_SPACE_BUSIDO.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    /^(current_package: v5\.5\.7)$/m, '$1\ncurrent_package: v5.5.4'));
+});
+// a syntactically valid but NONEXISTENT 40-hex ref must fail closed: shape alone
+// (forty `f`s) previously authenticated a provenance claim with no reproducible source
+negRelease557('neg: provenance ref nonexistent commit', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.generated_from_ref = 'f'.repeat(40);
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// an EXISTING commit that does not contain the release path: resolution succeeds
+// but the 31 source blobs cannot be found there — must fail, not pass on shape
+negRelease557('neg: provenance ref wrong commit', 'C27', (dir) => {
+  const rootCommit = execFileSync('git', ['rev-list', '--max-parents=0', 'HEAD'],
+    { encoding: 'utf8' }).split('\n')[0].trim();
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.generated_from_ref = rootCommit;
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// a genuine ref with ONE tampered source blob: the byte-binding itself must catch it
+negRelease557('neg: provenance source blob tampered', 'C27', (dir) => {
+  const p = join(dir, 'knowledge/04_IDENTITY_NON_MIRROR.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\ntampered after freeze\n`);
+});
+// baseline_release truncated relative to the supplied baseline manifest
+negRelease557('neg: baseline_release truncated', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.baseline_release = 'v5.5';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// aggregate summary fields falsified while per-file entries stay correct
+negRelease557('neg: manifest summary fields falsified', 'C4', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.knowledge_file_count = 0;
+  m.corpus_bytes = 0;
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// duplicate context-boundary row carrying the opposite values
+negRelease557('neg: duplicate context-boundary row', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    "| Shared project | denied (auto project-only) | denied; members' external context excluded |",
+    "| Shared project | denied (auto project-only) | denied; members' external context excluded |\n"
+      + '| Shared project | allowed | allowed |'));
+});
+// requirement inside the Enterprise subsection that does not repeat the word
+negRelease557('neg: Enterprise-scoped line without the word', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '### All other subscriptions (including Business)',
+    'Conversation history is required.\n\n### All other subscriptions (including Business)'));
+});
+// contradiction appended to the very line carrying the canonical negation
+negRelease557('neg: contradiction appended to negation line', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'is **not** an Enterprise prerequisite in the current official requirement.',
+    'is **not** an Enterprise prerequisite in the current official requirement.'
+      + ' However, conversation history is required for every Enterprise user.'));
+});
+// bare (non-backticked) file number routed in a numbered loader step
+negRelease557('neg: loader routes a bare file number', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '7. `28` — acceptance;',
+    '7. Сначала дополнительно прочитать файл 05.\n8. `28` — acceptance;'));
+});
+// Enterprise history requirement placed OUTSIDE the Enterprise subsection
+negRelease557('neg: Enterprise requirement outside its section', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '## Memory boundary',
+    '## Memory boundary\n\nEnterprise users must enable conversation history.\n'));
+});
+// unrecognized extra routing step inserted into the loader block
+negRelease557('neg: loader routes an unlisted file', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '7. `28` — acceptance;',
+    '7. Дополнительно `05_TRUTH_SIFT_RAG.md`.\n8. `28` — acceptance;'));
+});
+// bare assignment/equality coupling M2 to a number
+negRelease557('neg: bare M2 assignment in file 06', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 = 1\n`);
+});
+// extra routing group inserted early: subsequence matching would still pass
+negRelease557('neg: loader routes extra group early', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '3. Затем `03–07` identity/truth/security/router.',
+    '3. Затем `28`, потом `03–07` identity/truth/security/router.'));
+});
+// manifest ADR reverted to the builder default while docs cite ADR-20260730-01
+negRelease557('neg: manifest ADR default drift', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.adr = 'ADR-20260720-02';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// GitHub PAT forms in a root doc must fail the secret scan
+negRelease557('neg: github_pat in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: github_${'pat'}_${'A1b2C3d4E5'.repeat(3)}\n`);
+});
+negRelease557('neg: ghp_ token in root receipt', 'C16', (dir) => {
+  const p = join(dir, 'PACKAGE_RECEIPT.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: gh${'p'}_${'A1b2C3d4E5f6'.repeat(3)}\n`);
+});
+// Cyrillic mojibake (UTF-8 read as Windows-1252) in a root doc
+negRelease557('neg: cyrillic mojibake in QC report', 'C26', (dir) => {
+  const p = join(dir, 'QC_REPORT.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nÐ˜ÑÐºÑ€Ð°\n`);
+});
+// manifest acceptance_range silently reverted to the build-tool default
+negRelease557('neg: acceptance_range default drift', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.acceptance_range = 'T01-T93';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// file 29's reading order truncated/reordered in its tail
+negRelease557('neg: file29 reading-order tail drifts', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/29_INDEX_UPLOAD_MANIFEST.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28',
+    '29 → 00 → 01 → 02 → 03–07 → 28 → 21–23'));
+});
+// route PREFIXED with an extra step — a substring test accepted `05 → <route>`
+negRelease557('neg: file29 route prefixed', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/29_INDEX_UPLOAD_MANIFEST.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '`29 → 00 → 01 → 02', '`05 → 29 → 00 → 01 → 02'));
+});
+// route SUFFIXED with an extra step — a substring test accepted `<route> → 05`
+negRelease557('neg: file29 route suffixed', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/29_INDEX_UPLOAD_MANIFEST.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '→ 24–27 → 28`', '→ 24–27 → 28 → 05`'));
+});
+// SECOND route declaration elsewhere in file 29 — contradictory loader copies
+// must not ship even when the canonical declaration itself is intact
+negRelease557('neg: file29 duplicate route declaration', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/29_INDEX_UPLOAD_MANIFEST.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nNOTE: \`28 → 00 → 29\` alternative order.\n`);
+});
+// M3 divergence resolution REVERSED while the heading survives
+negRelease557('neg: M3 divergence resolution reversed', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/12_COUNCIL_VOICES.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'this table remains normative', '`07 §2.2` is normative and this table is non-normative'));
+});
+// Supabase secret-key form in a root doc must fail the secret scan
+negRelease557('neg: sb_secret key in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nkey: sb_${'secret'}_${'A1b2C3d4'.repeat(4)}\n`);
+});
+// oversized Project Instructions (both copies byte-equal, manifest count honest)
+negRelease557('neg: instructions exceed 6000-char ceiling', 'C8', (dir) => {
+  const pad = `\n<!-- ${'x'.repeat(200)} -->`;
+  const sp = join(dir, 'support/PROJECT_INSTRUCTIONS_SOT30.md');
+  const grown = readFileSync(sp, 'utf8') + pad;
+  writeFileSync(sp, grown);
+  const kp = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  const f00 = readFileSync(kp, 'utf8');
+  writeFileSync(kp, f00.replace(readFileSync(sp, 'utf8').slice(0, -pad.length), grown));
+  const mp = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(mp, 'utf8'));
+  m.project_instructions_chars = grown.length;   // honest count, still over the ceiling
+  writeFileSync(mp, JSON.stringify(m, null, 2));
+});
+// numeric M2 coupling injected into file 03 (T86 covers 03/04 as well as 06/07)
+negRelease557('neg: integer M2 threshold in file 03', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/03_TELOS_MANTRA_PRINCIPLES.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 activation threshold: 1\n`);
+});
+// numeric M2 coupling injected into file 04
+negRelease557('neg: percentage M2 threshold in file 04', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/04_IDENTITY_NON_MIRROR.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 activates at 20%.\n`);
+});
+// loader tail group dropped (C28 must validate the complete sequence, not a prefix)
+negRelease557('neg: loader tail group drifts', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace('control-plane `08–20`', 'control-plane `28`'));
+});
+// shared-project transition negated while every keyword remains present
+negRelease557('neg: shared-project transition negated', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    'Sharing a Project automatically switches it to **project-only memory**',
+    'Sharing a Project does not switch it to **project-only memory**'));
+});
+// hyphenated OpenAI project-key form in a root doc must fail the secret scan
+negRelease557('neg: sk-proj key in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nkey: sk-${'proj'}-${'A1b2'.repeat(10)}\n`);
+});
+// matrix cell smuggling the opposite value after a valid prefix
+negRelease557('neg: matrix cell prefix-smuggled opposite', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '| Project-only memory | denied | denied |',
+    '| Project-only memory | denied — actually allowed | denied |'));
+});
+// context-boundary matrix cell reversed (keywords intact, value wrong)
+negRelease557('neg: matrix cell reversed', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '| Project-only memory | denied | denied |',
+    '| Project-only memory | allowed | allowed |'));
+});
+// Enterprise history requirement in lexicon paraphrase ("conversation history")
+negRelease557('neg: Enterprise conversation-history paraphrase', 'C24', (dir) => {
+  const p = join(dir, 'knowledge/02_PROJECTS_SURFACE_MAP.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '### All other subscriptions (including Business)',
+    'Enterprise workspaces must reference conversation history.\n\n### All other subscriptions (including Business)'));
+});
+// percentage-form M2 threshold in file 06
+negRelease557('neg: percentage M2 threshold in file 06', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 activates at 20%.\n`);
+});
+// integer-form M2 threshold in file 07
+negRelease557('neg: integer M2 threshold in file 07', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/07_UNIVERSAL_ROUTER.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 activation threshold: 1\n`);
+});
+// stale current_package in file 25 (T97 / C27 active-identity gate)
+negRelease557('neg: file25 current_package stale', 'C27', (dir) => {
+  const p = join(dir, 'knowledge/25_LIBER_SPACE_BUSIDO.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace('current_package: v5.5.7', 'current_package: v5.5.4'));
+});
+// instructions heading regressed to the old version (both copies, so C7 stays green)
+negRelease557('neg: instructions heading old version', 'C27', (dir) => {
+  for (const p of ['support/PROJECT_INSTRUCTIONS_SOT30.md', 'knowledge/00_PROJECT_ROUTER.md']) {
+    const fp = join(dir, p);
+    writeFileSync(fp, readFileSync(fp, 'utf8').replace(
+      'Project Instructions — Искра vΩ.7 / SoT30 v5.5.7',
+      'Project Instructions — Искра vΩ.7 / SoT30 v5.5.6'));
+  }
+});
+// loader contract loses 01/02 (T96 / C28 loader-sequence gate)
+negRelease557('neg: loader drops 01/02', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    /^2\. Затем `00_PROJECT_ROUTER\.md`; сразу после него[^\n]*\n/m,
+    '2. Затем `00_PROJECT_ROUTER.md`.\n'));
+});
+
 // helper: negative fixture that tampers the ZIP (release dir reused)
 function negZip(name: string, expectCheck: string, tamper: (zipCopy: string) => void) {
   const d = mkdtempSync(join(tmpdir(), 'sot30fz_'));
@@ -312,6 +692,58 @@ negZip('neg: duplicate ZIP entry', 'C14', (zc) => addZipEntry(zc, `${zipRoot}/kn
 
 // 17. extra ZIP directory entry
 negZip('neg: extra ZIP directory', 'C14', (zc) => addZipEntry(zc, `${zipRoot}/EXTRA/`));
+
+// symlink entry replacing an allowlisted payload: without the entry-type gate,
+// unzip materializes the link and both `sha256sum -c` and the C20 parity read
+// follow it to the checked-out tree, so a non-self-contained ZIP would "verify".
+function symlinkZip(zc: string, root: string, arcname: string, target: string) {
+  const py = [
+    'import zipfile,sys,shutil',
+    'z,root,arc,target=sys.argv[1:5]; tmp=z+".t"',
+    'zi=zipfile.ZipFile(z); zo=zipfile.ZipFile(tmp,"w",zipfile.ZIP_DEFLATED)',
+    '[zo.writestr(i,zi.read(i.filename)) for i in zi.infolist() if i.filename!=arc]',
+    'li=zipfile.ZipInfo(arc); li.create_system=3; li.external_attr=(0o120777 << 16)',
+    'zo.writestr(li,target); zo.close(); zi.close(); shutil.move(tmp,z)',
+  ].join('\n');
+  execFileSync(PYTHON, ['-c', py, zc, root, arcname, target]);
+}
+{
+  const d = mkdtempSync(join(tmpdir(), 'sot30sym_'));
+  const zc = join(d, 'symlink.zip');
+  try {
+    copyFileSync(ZIP_557, zc);
+    symlinkZip(zc, 'SoT30_v5.5.7', 'SoT30_v5.5.7/support/MANIFEST.json',
+      join(process.cwd(), RELEASE_557, 'support/MANIFEST.json'));
+    const r = runVerifier(RELEASE_557, zc, BASELINE_557, 'v5.5.7');
+    expect('neg: ZIP symlink entry', r.code !== 0 && /FAIL C14:/.test(r.out),
+      `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
+  } finally { rmSync(d, { recursive: true, force: true }); }
+}
+
+// archive repacked under an arbitrary single root with identical payload: content
+// checks all pass, so without the versioned-root gate the package distributes
+// under a different identity than its manifest and filename
+{
+  const d = mkdtempSync(join(tmpdir(), 'sot30root_'));
+  const zc = join(d, 'wrongroot.zip');
+  try {
+    copyFileSync(ZIP_557, zc);
+    const py = [
+      'import zipfile,sys,shutil',
+      'z=sys.argv[1]; tmp=z+".t"',
+      'zi=zipfile.ZipFile(z); zo=zipfile.ZipFile(tmp,"w",zipfile.ZIP_DEFLATED)',
+      'for i in zi.infolist():',
+      '    data=zi.read(i.filename)',
+      '    i.filename=i.filename.replace("SoT30_v5.5.7/","WRONG_ROOT/",1)',
+      '    zo.writestr(i,data)',
+      'zo.close(); zi.close(); shutil.move(tmp,z)',
+    ].join('\n');
+    execFileSync(PYTHON, ['-c', py, zc]);
+    const r = runVerifier(RELEASE_557, zc, BASELINE_557, 'v5.5.7');
+    expect('neg: ZIP repacked under wrong root', r.code !== 0 && /FAIL C14:/.test(r.out),
+      `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
+  } finally { rmSync(d, { recursive: true, force: true }); }
+}
 
 // ---- report ----
 for (const r of results) (r.startsWith('OK') ? console.log : console.error)(r);
