@@ -1,24 +1,21 @@
 {
-  "package": "SoT30 v5.5.6 release",
-  "package_version": "v5.5.6",
-  "baseline_release": "v5.5.5",
-  "date": "2026-07-21",
-  "adr": "ADR-20260721-02",
+  "package": "SoT30 v5.5.7 release",
+  "package_version": "v5.5.7",
+  "baseline_release": "v5.5.6",
+  "date": "2026-07-30",
+  "adr": "ADR-20260730-01",
   "generated_from": "canonical_git_blobs",
-  "generated_from_ref": "b31e861c4752aa26c003a2c0135e1c7ef2827dd9",
+  "generated_from_ref": "b6100382a1cba1bd4e51711ebf69b243bcbee46d",
   "line_ending_policy": "LF",
   "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
   "knowledge_file_count": 30,
-  "corpus_bytes": 4042527,
+  "corpus_bytes": 4049501,
   "project_instructions_chars": 5996,
   "project_instructions_bytes": 8200,
-  "acceptance_range": "T01-T93",
+  "acceptance_range": "T01-T97",
   "changed_files": [
     "00_PROJECT_ROUTER.md",
-    "01_PARITY_ADVANCEMENT_MANIFEST.md",
     "02_PROJECTS_SURFACE_MAP.md",
-    "03_TELOS_MANTRA_PRINCIPLES.md",
-    "04_IDENTITY_NON_MIRROR.md",
     "12_COUNCIL_VOICES.md",
     "22_CONNECTORS_TOOLS_BOUNDARY.md",
     "25_LIBER_SPACE_BUSIDO.md",
@@ -26,6 +23,9 @@
     "29_INDEX_UPLOAD_MANIFEST.md"
   ],
   "unchanged_files": [
+    "01_PARITY_ADVANCEMENT_MANIFEST.md",
+    "03_TELOS_MANTRA_PRINCIPLES.md",
+    "04_IDENTITY_NON_MIRROR.md",
     "05_TRUTH_SIFT_RAG.md",
     "06_SECURITY_INTEGRITY.md",
     "07_UNIVERSAL_ROUTER.md",
@@ -50,8 +50,8 @@
   "files": [
     {
       "path": "knowledge/00_PROJECT_ROUTER.md",
-      "bytes": 9407,
-      "sha256": "583f83d4d4d84fbf67fc34f03743711e9164519203c735cd8de3efb48e448a60"
+      "bytes": 10373,
+      "sha256": "428ca6d09d643126f09cf72a14f829f472c7382cae4a7f7ce8c906b504c35f17"
     },
     {
       "path": "knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
@@ -60,8 +60,8 @@
     },
     {
       "path": "knowledge/02_PROJECTS_SURFACE_MAP.md",
-      "bytes": 5284,
-      "sha256": "286113c523f887d6c858bd95ece847e0237724a7a5ce18dcdf66eb94821efd8b"
+      "bytes": 7481,
+      "sha256": "fa1b0af7fd05fe5983590f1168c602dee46bafbed7e5e4e2c8ab2a4476a2cfd4"
     },
     {
       "path": "knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
@@ -110,8 +110,8 @@
     },
     {
       "path": "knowledge/12_COUNCIL_VOICES.md",
-      "bytes": 19618,
-      "sha256": "36c3f7d9871728b8cf71766b553f3a80590714866a3cbf09522a1f1008da37b9"
+      "bytes": 20020,
+      "sha256": "c16dcb0fd8e778d8470c3e979afe856fb18383191fed1fcec97f014c35490387"
     },
     {
       "path": "knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
@@ -160,8 +160,8 @@
     },
     {
       "path": "knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
-      "bytes": 3763,
-      "sha256": "4de756a79d1e8a648b23fcf2358fe52f8aeb0144b6d297c67b012c85338883c0"
+      "bytes": 3784,
+      "sha256": "b5a87ec9ebf0392afb434a57bbcba6b2b14888466aff71db6e4347315817a3b3"
     },
     {
       "path": "knowledge/23_BUILDER_PROJECTS_COMPAT.md",
@@ -175,8 +175,8 @@
     },
     {
       "path": "knowledge/25_LIBER_SPACE_BUSIDO.md",
-      "bytes": 458073,
-      "sha256": "8781697248e0f5d9d727c41451115375211e9120df9ffa8aa3331022e1a346bb"
+      "bytes": 458205,
+      "sha256": "d37f90d554be82e41393a64017ce0a6f9e6bacd334414c863bd5cf6ab6bb3aa5"
     },
     {
       "path": "knowledge/26_SOMATIC_INTUITION.md",
@@ -190,13 +190,13 @@
     },
     {
       "path": "knowledge/28_EVALS_ACCEPTANCE.md",
-      "bytes": 15718,
-      "sha256": "de7e4e6c6be9d4dac8f59d244aaacfa37806a982bb2706be3b6beee7c1c1ee0c"
+      "bytes": 17426,
+      "sha256": "d2895c4165ca06389f4a0130054ca24ca22d7ecb2c08fd47a85011adc5baafd4"
     },
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
-      "bytes": 12621,
-      "sha256": "d49823713ced1605bf399d922edb067514493b416e388422aca5780b940f01c0"
+      "bytes": 14169,
+      "sha256": "a2f70d7183eeb560974e8be16fcf3e920a2518898c5aa37b023c250445d0253c"
     }
   ],
   "live_project_verified": false

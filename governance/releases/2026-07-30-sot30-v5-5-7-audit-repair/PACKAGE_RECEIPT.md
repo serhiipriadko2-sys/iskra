@@ -9,13 +9,13 @@ Assembled under ADR-20260730-01 (`proposed`) from a source-freeze commit via gen
 | Item | Value |
 |---|---|
 | ZIP | `dist/SoT30_v5.5.7.zip` |
-| ZIP bytes | __ZIP_BYTES__ |
-| ZIP sha256 | `__ZIP_SHA256__` |
+| ZIP bytes | 1134112 |
+| ZIP sha256 | `efdbed0335ca70cf2b25dbc82c43ca078dd70e456cf3d30168d9fd37a23582cd` |
 | ZIP root | `SoT30_v5.5.7/` |
 | Knowledge files | 30 |
-| Corpus bytes | __CORPUS_BYTES__ |
-| file 29 sha256 | `__F29_SHA256__` |
-| support/MANIFEST.json sha256 | `__MANIFEST_SHA256__` |
+| Corpus bytes | 4,049,501 |
+| file 29 sha256 | `a2f70d7183eeb560974e8be16fcf3e920a2518898c5aa37b023c250445d0253c` |
+| support/MANIFEST.json sha256 | `01296550e4bd688523a9e4f022efc75263aefe5b9eb68d9bab81030a2a4a9df1` |
 | Acceptance range | T01–T97 |
 | Baseline | v5.5.6 (immutable) |
 | generated_from | `canonical_git_blobs` |
