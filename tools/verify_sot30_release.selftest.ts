@@ -11,7 +11,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import {
-  cpSync, readFileSync, writeFileSync, rmSync, mkdtempSync, copyFileSync,
+  cpSync, readFileSync, writeFileSync, rmSync, mkdtempSync, copyFileSync, statSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -367,6 +367,43 @@ negRelease557('neg: receipt claims git provenance without it', 'C27', (dir) => {
   m.generated_from_ref = null;
   writeFileSync(p, JSON.stringify(m, null, 2));
 });
+// canonical ZIP-bytes field falsified while the real count hides elsewhere in the
+// receipt — a whole-document `includes` accepted this
+negRelease557('neg: receipt ZIP bytes field falsified', 'C17', (dir) => {
+  const p = join(dir, 'PACKAGE_RECEIPT.md');
+  const realBytes = statSync(ZIP_557).size;
+  let t = readFileSync(p, 'utf8').replace(/^\| ZIP bytes \| \d+ \|$/m, '| ZIP bytes | 0 |');
+  t += `\naudit trail id: ${realBytes}\n`;
+  writeFileSync(p, t);
+});
+// prose equality coupling — "M2 equals 1." matched no enumerated coupling grammar
+negRelease557('neg: M2 equality prose', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 equals 1.\n`);
+});
+// AWS access-key format in a root doc must fail the secret scan
+negRelease557('neg: AWS key in root README', 'C16', (dir) => {
+  const p = join(dir, 'README.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nkey: AKIA${'A'.repeat(16)}\n`);
+});
+// receipt label reworded ("canonical Git blobs") while the manifest records a
+// working-bytes build — provenance enforcement must come from structured manifest
+// state, so the reworded receipt cannot disable source-blob verification
+negRelease557('neg: provenance mode not canonical (reworded receipt)', 'C27', (dir) => {
+  const mp = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(mp, 'utf8'));
+  m.generated_from = 'release_tree_working_bytes';
+  m.generated_from_ref = null;
+  writeFileSync(mp, JSON.stringify(m, null, 2));
+  const rp = join(dir, 'PACKAGE_RECEIPT.md');
+  writeFileSync(rp, readFileSync(rp, 'utf8').replace(/canonical_git_blobs/g, 'canonical Git blobs'));
+});
+// second contradictory structured identity declaration in file 25
+negRelease557('neg: duplicate current_package declaration', 'C27', (dir) => {
+  const p = join(dir, 'knowledge/25_LIBER_SPACE_BUSIDO.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    /^(current_package: v5\.5\.7)$/m, '$1\ncurrent_package: v5.5.4'));
+});
 // a syntactically valid but NONEXISTENT 40-hex ref must fail closed: shape alone
 // (forty `f`s) previously authenticated a provenance claim with no reproducible source
 negRelease557('neg: provenance ref nonexistent commit', 'C27', (dir) => {
@@ -679,6 +716,31 @@ function symlinkZip(zc: string, root: string, arcname: string, target: string) {
       join(process.cwd(), RELEASE_557, 'support/MANIFEST.json'));
     const r = runVerifier(RELEASE_557, zc, BASELINE_557, 'v5.5.7');
     expect('neg: ZIP symlink entry', r.code !== 0 && /FAIL C14:/.test(r.out),
+      `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
+  } finally { rmSync(d, { recursive: true, force: true }); }
+}
+
+// archive repacked under an arbitrary single root with identical payload: content
+// checks all pass, so without the versioned-root gate the package distributes
+// under a different identity than its manifest and filename
+{
+  const d = mkdtempSync(join(tmpdir(), 'sot30root_'));
+  const zc = join(d, 'wrongroot.zip');
+  try {
+    copyFileSync(ZIP_557, zc);
+    const py = [
+      'import zipfile,sys,shutil',
+      'z=sys.argv[1]; tmp=z+".t"',
+      'zi=zipfile.ZipFile(z); zo=zipfile.ZipFile(tmp,"w",zipfile.ZIP_DEFLATED)',
+      'for i in zi.infolist():',
+      '    data=zi.read(i.filename)',
+      '    i.filename=i.filename.replace("SoT30_v5.5.7/","WRONG_ROOT/",1)',
+      '    zo.writestr(i,data)',
+      'zo.close(); zi.close(); shutil.move(tmp,z)',
+    ].join('\n');
+    execFileSync(PYTHON, ['-c', py, zc]);
+    const r = runVerifier(RELEASE_557, zc, BASELINE_557, 'v5.5.7');
+    expect('neg: ZIP repacked under wrong root', r.code !== 0 && /FAIL C14:/.test(r.out),
       `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
   } finally { rmSync(d, { recursive: true, force: true }); }
 }

@@ -305,10 +305,17 @@ if (existsSync(zipPath)) {
       { cwd: join(tmp, root), encoding: 'utf8' });
     const okLines = out.split('\n').filter((l) => l.endsWith(': OK')).length;
     const badLines = out.split('\n').filter((l) => /: FAILED/.test(l)).length;
+    // The root name is package identity, not packaging detail: an archive repacked
+    // under an arbitrary root (WRONG_ROOT/) with identical payload otherwise passes
+    // every content check while distributing under a different identity. From v5.5.7
+    // the root must be exactly SoT30_<package_version> (older releases shipped
+    // historical root spellings and stay grandfathered).
+    const rootNameOk = !appliesFrom('v5.5.7')
+      || root === `SoT30_${manifest.package_version}`;
     zipOk = singleRoot && allowlistOk && noDupEntries && dirsOk && noAbsOrDotDot
-      && regularOnly && okLines === 32 && badLines === 0;
-    zipMsg = `root=${root} entries=${relFileArr.length} dup=${!noDupEntries} dirs=${dirsOk} `
-      + `regular-only=${regularOnly} sha256sum -c ${okLines}/32`;
+      && regularOnly && rootNameOk && okLines === 32 && badLines === 0;
+    zipMsg = `root=${root} (versioned-root ok=${rootNameOk}) entries=${relFileArr.length} `
+      + `dup=${!noDupEntries} dirs=${dirsOk} regular-only=${regularOnly} sha256sum -c ${okLines}/32`;
 
     // C20: extracted ZIP bytes must equal the release-tree bytes for all 33 files
     let par = true;
@@ -368,6 +375,7 @@ for (const rel of actualPackaged) {
 // `import.meta.env.VITE_SUPABASE_ANON_KEY`), not real secrets.
 const secretPat = new RegExp(
   '(sk-[A-Za-z0-9_-]{20,}'
+  + '|AKIA[0-9A-Z]{16}'
   + '|sb_secret_[A-Za-z0-9_-]{16,}'
   + '|github_pat_[A-Za-z0-9_]{20,}'
   + '|gh[pousr]_[A-Za-z0-9]{30,}'
@@ -404,8 +412,17 @@ check(structuralOk && secretsOk, 'C16',
 const receipt = existsSync(join(releaseDir, 'PACKAGE_RECEIPT.md'))
   ? readFileSync(join(releaseDir, 'PACKAGE_RECEIPT.md'), 'utf8') : '';
 const zb = existsSync(zipPath) ? readFileSync(zipPath) : Buffer.alloc(0);
-check(zb.length > 0 && receipt.includes(sha256(zb)) && receipt.includes(String(zb.length)), 'C17',
-  'PACKAGE_RECEIPT carries actual zip sha256 + bytes');
+// Parse the CANONICAL receipt fields and compare their values — a whole-document
+// `includes` accepted a falsified `| ZIP bytes |` row as long as the real number
+// appeared anywhere else in the receipt (e.g. as an unrelated audit id).
+// Exactly one row each, exact value equality.
+const rcBytes = [...receipt.matchAll(/^\| ZIP bytes \| (\d+) \|/gm)];
+const rcSha = [...receipt.matchAll(/^\| ZIP sha256 \| `([0-9a-f]{64})` \|/gm)];
+check(zb.length > 0
+  && rcBytes.length === 1 && Number(rcBytes[0][1]) === zb.length
+  && rcSha.length === 1 && rcSha[0][1] === sha256(zb), 'C17',
+  `PACKAGE_RECEIPT canonical ZIP fields match the artifact (bytes-rows=${rcBytes.length} `
+  + `bytes=${rcBytes[0]?.[1] ?? 'MISSING'} vs ${zb.length}; sha-rows=${rcSha.length})`);
 
 // ---- retired "28 identical" claim absent ----
 let retired = false;
@@ -713,9 +730,11 @@ check(contradictions.length === 0, 'C21',
       const rest = l
         .replace(/`?\d+\s*§\s*[\d.]+`?|§\s*[\d.]+|файл[ае]?\s*\d+|file\s*\d+/gi, '')
         .replace(/\bM[123]\b/g, '');
-      // comparison AND assignment/equality forms (`M2 = 1`, `M2: 1`), decimals,
-      // percentages, and integers tied to threshold/activation vocabulary.
-      return /[<>≥≤=:]\s*\d|\d\.\d|\d+\s*%|(threshold|activat|порог|активаци)[^\n]{0,30}\d/i.test(rest);
+      // ANY remaining digit couples M2 with a numeric value: enumerating coupling
+      // grammars (comparison, punctuation assignment, thresholds) kept missing
+      // forms — "M2 equals 1." passed every previous pattern. After the documented
+      // reference exemptions above, an M2 line has no legitimate digits left.
+      return /\d/.test(rest);
     });
     const f03 = readFileSync(join(kdir, '03_TELOS_MANTRA_PRINCIPLES.md'), 'utf8');
     const f04 = readFileSync(join(kdir, '04_IDENTITY_NON_MIRROR.md'), 'utf8');
@@ -775,8 +794,12 @@ check(contradictions.length === 0, 'C21',
     check(versionWellFormed, 'C27', `active-identity contract not applicable before v5.5.7 (package=${manifest.package_version})`);
   } else {
     const pkgVer: string = manifest.package_version ?? '';
-    const f25head = readFileSync(join(kdir, '25_LIBER_SPACE_BUSIDO.md'), 'utf8').slice(0, 600);
-    const cpM = f25head.match(/^current_package:\s*(v\d+\.\d+\.\d+)\s*$/m);
+    // exactly ONE current_package declaration in the WHOLE file: `match()` read only
+    // the first, so a second contradictory declaration (current_package: v5.5.4)
+    // shipped as a structured identity while the check stayed green.
+    const f25full = readFileSync(join(kdir, '25_LIBER_SPACE_BUSIDO.md'), 'utf8');
+    const cpAll = [...f25full.matchAll(/^current_package:\s*(v\d+\.\d+\.\d+)\s*$/gm)];
+    const cpM = cpAll.length === 1 ? cpAll[0] : null;
     const c27a = !!cpM && cpM[1] === pkgVer;
     const instrHead = readFileSync(join(sdir, 'PROJECT_INSTRUCTIONS_SOT30.md'), 'utf8')
       .split('\n')[0] ?? '';
@@ -800,18 +823,19 @@ check(contradictions.length === 0, 'C21',
     // different (or truncated) baseline than the manifest actually diffed against.
     // Bind it to the SUPPLIED baseline manifest's own package_version.
     const c27f = manifest.baseline_release === base.package_version;
-    // provenance identity: if the receipt claims a canonical git-blob build, the
-    // manifest must record that mode AND the claim must be RESOLVED, not just
-    // well-shaped: a syntactically valid 40-hex ref proves nothing (forty `f`s
-    // pass a regex). Resolve the commit via git and byte-bind all 31 source
-    // files (30 knowledge + standalone instructions) to the blobs at
-    // <ref>:<source_tree_path>/... . Any git failure — unresolvable ref, missing
-    // path, repo-less environment — fails closed: an unverifiable provenance
-    // claim is treated as a false one.
-    const claimsGitBlobs = /canonical_git_blobs/.test(receipt);
-    let c27g = !claimsGitBlobs;
-    let c27gDetail = 'no git-provenance claim in receipt';
-    if (claimsGitBlobs) {
+    // provenance identity, derived from STRUCTURED release state, not receipt
+    // wording: gating this on the literal `canonical_git_blobs` substring let a
+    // reworded receipt ("canonical Git blobs") disable source-blob verification
+    // entirely. From v5.5.7 the manifest MUST record a canonical git-blob build,
+    // and the claim must be RESOLVED, not just well-shaped: a syntactically valid
+    // 40-hex ref proves nothing (forty `f`s pass a regex). Resolve the commit via
+    // git and byte-bind all 31 source files (30 knowledge + standalone
+    // instructions) to the blobs at <ref>:<source_tree_path>/... . Any git
+    // failure — unresolvable ref, missing path, repo-less environment — fails
+    // closed: an unverifiable provenance claim is treated as a false one.
+    let c27g = false;
+    let c27gDetail: string;
+    {
       const ref = String(manifest.generated_from_ref ?? '');
       const srcPath = String(manifest.source_tree_path ?? '');
       const shapeOk = manifest.generated_from === 'canonical_git_blobs'
@@ -819,7 +843,7 @@ check(contradictions.length === 0, 'C21',
         && srcPath.length > 0 && !srcPath.startsWith('-') && !srcPath.startsWith('/')
         && !srcPath.split('/').includes('..');
       if (!shapeOk) {
-        c27gDetail = `provenance claim malformed (mode=${JSON.stringify(manifest.generated_from)} `
+        c27gDetail = `provenance not a structured canonical build (mode=${JSON.stringify(manifest.generated_from)} `
           + `ref=${JSON.stringify(manifest.generated_from_ref)} src=${JSON.stringify(manifest.source_tree_path)})`;
       } else {
         try {
