@@ -218,7 +218,6 @@ ${DELTA_PROTOCOL_INSTRUCTION}`;
     try {
       const response = await awaitWithAbort(
         generateText(prompt, {
-          model: 'gemini-2.5-flash',
           maxOutputTokens: 300,
           signal: controller.signal,
         }),

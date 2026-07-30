@@ -38,10 +38,6 @@ const SUPABASE_ANON_KEY = getRuntimeConfig(
   'VITE_SUPABASE_ANON_KEY',
   import.meta.env.VITE_SUPABASE_ANON_KEY,
 ) || '';
-type AiProvider = 'gemini' | 'openai' | 'auto';
-const AI_PROVIDER = normalizeAiProvider(
-  getRuntimeConfig('VITE_AI_PROVIDER', import.meta.env.VITE_AI_PROVIDER),
-);
 const AI_EDGE_FUNCTION_SLUG = normalizeEdgeFunctionSlug(
   getRuntimeConfig('VITE_AI_EDGE_FUNCTION_SLUG', import.meta.env.VITE_AI_EDGE_FUNCTION_SLUG) ||
     getRuntimeConfig('VITE_GEMINI_EDGE_FUNCTION_SLUG', import.meta.env.VITE_GEMINI_EDGE_FUNCTION_SLUG) ||
@@ -55,11 +51,6 @@ const AI_EDGE_FN_URL =
 
 function normalizeEdgeFunctionSlug(slug: string): string {
   return slug.trim().replace(/^\/+|\/+$/g, '');
-}
-
-function normalizeAiProvider(provider: string | undefined): AiProvider {
-  if (provider === 'openai' || provider === 'auto') return provider;
-  return 'gemini';
 }
 
 interface LegacyLiveSession {
@@ -147,8 +138,6 @@ export function isOnlineAIAvailable(): boolean {
 export async function generateText(
   prompt: string,
   opts?: {
-    model?: string;
-    systemInstruction?: string;
     maxOutputTokens?: number;
     signal?: AbortSignal;
   }
@@ -157,10 +146,9 @@ export async function generateText(
     throw new Error('AI generation is unavailable (offline/test or Supabase not configured).');
   }
   return generateContentText({
-    model: opts?.model ?? model,
+    model,
     contents: prompt,
     config: {
-      systemInstruction: opts?.systemInstruction,
       maxOutputTokens: opts?.maxOutputTokens,
     },
     signal: opts?.signal,
@@ -181,6 +169,27 @@ function toGeminiContents(input: string | Content[]): Content[] {
       parts: [{ text: input }],
     },
   ];
+}
+
+function withClientContext(input: string | Content[], clientContext?: string): Content[] {
+  const contents = toGeminiContents(input).map((content) => ({
+    ...content,
+    parts: content.parts?.map((part) => ({ ...part })) ?? [],
+  }));
+  const context = clientContext?.trim();
+  if (!context || contents.length === 0) return contents;
+
+  const targetIndex = contents.findIndex((content) => content.role === 'user');
+  const index = targetIndex >= 0 ? targetIndex : 0;
+  const target = contents[index];
+  const firstPart = target.parts?.[0];
+  if (!firstPart) return contents;
+  firstPart.text = `[NON-AUTHORITATIVE CLIENT CONTEXT]
+${context}
+[END CLIENT CONTEXT]
+
+${firstPart.text ?? ''}`;
+  return contents;
 }
 
 interface GeminiCandidatePart {
@@ -225,10 +234,7 @@ async function callAiEdgeFunction(
       apikey: SUPABASE_ANON_KEY,
       Authorization: `Bearer ${accessToken}`,
     },
-    body: JSON.stringify({
-      provider: AI_PROVIDER,
-      ...payload,
-    }),
+    body: JSON.stringify(payload),
     signal,
   });
   return res;
@@ -243,11 +249,9 @@ async function generateContentText(args: {
   const config = args.config ?? {};
   const res = await callAiEdgeFunction(
     {
-      action: 'generateContent',
-      model: args.model,
-      contents: toGeminiContents(args.contents),
-      systemInstruction: config.systemInstruction,
-      generationConfig: {
+      intent: 'text.generate',
+      contents: withClientContext(args.contents, config.systemInstruction),
+      config: {
         ...config,
         systemInstruction: undefined,
       },
@@ -278,11 +282,9 @@ async function* streamGenerateContentText(args: {
   try {
     const res = await callAiEdgeFunction(
       {
-        action: 'streamGenerateContent',
-        model: args.model,
-        contents: args.contents,
-        systemInstruction: config.systemInstruction,
-        generationConfig: {
+        intent: 'text.stream',
+        contents: withClientContext(args.contents, config.systemInstruction),
+        config: {
           ...config,
           systemInstruction: undefined,
         },
@@ -356,8 +358,7 @@ async function* streamGenerateContentText(args: {
 
 async function embedContentValues(text: string): Promise<number[]> {
   const res = await callAiEdgeFunction({
-    action: 'embedContent',
-    model: 'text-embedding-004',
+    intent: 'embedding.generate',
     content: { parts: [{ text }] },
   });
 

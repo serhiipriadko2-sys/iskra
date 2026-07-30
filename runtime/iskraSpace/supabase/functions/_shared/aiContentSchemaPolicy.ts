@@ -1,8 +1,5 @@
 import {
-  CANONICAL_GEMINI_EMBEDDING_MODEL,
-  CANONICAL_GEMINI_TEXT_MODEL,
   DEFAULT_AI_OUTPUT_TOKENS,
-  LEGACY_CLIENT_EMBEDDING_MODEL,
   MAX_AI_CONTENTS,
   MAX_AI_GENERATION_TEXT_CHARACTERS,
   MAX_AI_OUTPUT_TOKENS,
@@ -10,21 +7,25 @@ import {
   MAX_AI_SCHEMA_ENUM_VALUES,
   MAX_AI_SCHEMA_NODES,
   MAX_AI_SCHEMA_PROPERTIES,
-  MAX_AI_SYSTEM_INSTRUCTION_CHARACTERS,
   MAX_AI_TEXT_CHARACTERS,
   contentTexts,
   failure,
   hasOnlyKeys,
   isPlainObject,
   parseContent,
-  parseSafeRoute,
   replaceContentTexts,
   serverContentPolicy,
   type PolicyResult,
-  type RequestedProvider,
   type ServerContent,
   type TextBudget,
 } from './aiContentPolicyCore.ts';
+import {
+  actionForIntent,
+  parseAiTransportIntent,
+  systemInstructionForIntent,
+  type AiTransportIntent,
+  type ServerOwnedAiAction,
+} from './aiServerPromptPolicy.ts';
 
 export type ValidatedGenerationConfig = {
   maxOutputTokens: number;
@@ -33,9 +34,8 @@ export type ValidatedGenerationConfig = {
 };
 
 export type ValidatedGeminiRequest = {
-  action: 'generateContent' | 'streamGenerateContent' | 'embedContent';
-  provider?: RequestedProvider;
-  model: string;
+  intent: AiTransportIntent;
+  action: ServerOwnedAiAction;
   contents?: ServerContent[];
   content?: ServerContent;
   systemInstruction?: string;
@@ -49,40 +49,6 @@ const SCHEMA_TYPES = new Set([
   'object', 'array', 'string', 'integer', 'number', 'boolean',
 ]);
 const FORBIDDEN_SCHEMA_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
-
-function parseProvider(value: unknown): PolicyResult<RequestedProvider | undefined> {
-  if (value === undefined) return { ok: true, value: undefined };
-  if (value === 'gemini' || value === 'openai' || value === 'auto') {
-    return { ok: true, value };
-  }
-  return failure(400, 'unsupported_provider');
-}
-
-function parseModel(action: unknown, value: unknown): PolicyResult<string> {
-  if (action === 'embedContent') {
-    if (
-      value === undefined ||
-      value === CANONICAL_GEMINI_EMBEDDING_MODEL ||
-      value === LEGACY_CLIENT_EMBEDDING_MODEL
-    ) {
-      return { ok: true, value: CANONICAL_GEMINI_EMBEDDING_MODEL };
-    }
-    return failure(422, 'unsupported_model');
-  }
-  if (value === undefined || value === CANONICAL_GEMINI_TEXT_MODEL) {
-    return { ok: true, value: CANONICAL_GEMINI_TEXT_MODEL };
-  }
-  return failure(422, 'unsupported_model');
-}
-
-function parseSystemInstruction(value: unknown): PolicyResult<string | undefined> {
-  if (value === undefined) return { ok: true, value: undefined };
-  if (typeof value !== 'string') return failure(400, 'invalid_system_instruction');
-  if (value.length > MAX_AI_SYSTEM_INSTRUCTION_CHARACTERS) {
-    return failure(413, 'system_instruction_too_large');
-  }
-  return { ok: true, value: value.trim() ? value : undefined };
-}
 
 function parseSchemaNode(
   value: unknown,
@@ -225,38 +191,17 @@ function parseGenerationConfig(
 
 export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGeminiRequest> {
   if (!isPlainObject(body)) return failure(400, 'invalid_request_shape');
-  if (!hasOnlyKeys(body, [
-    'action', 'provider', 'model', 'contents', 'content',
-    'generationConfig', 'safetyRoute', 'systemInstruction',
-  ])) {
+  if (!hasOnlyKeys(body, ['intent', 'contents', 'content', 'config'])) {
     return failure(400, 'unknown_request_field');
   }
-  const action = body.action;
-  if (action !== 'generateContent' && action !== 'streamGenerateContent' && action !== 'embedContent') {
-    return failure(400, 'unsupported_action');
-  }
-
-  const provider = parseProvider(body.provider);
-  if (!provider.ok) return provider;
-  const model = parseModel(action, body.model);
-  if (!model.ok) return model;
-  const safeRoute = parseSafeRoute(body.safetyRoute);
-  if (!safeRoute.ok) return safeRoute;
-  const generationConfig = parseGenerationConfig(body.generationConfig);
+  const intent = parseAiTransportIntent(body.intent);
+  if (!intent) return failure(400, 'unsupported_intent');
+  const action = actionForIntent(intent);
+  const generationConfig = parseGenerationConfig(body.config);
   if (!generationConfig.ok) return generationConfig;
-  const systemInstruction = parseSystemInstruction(body.systemInstruction);
-  if (!systemInstruction.ok) return systemInstruction;
 
   const schemaPolicy = serverContentPolicy(generationConfig.value.policyTexts, undefined);
   if (!schemaPolicy.ok) return schemaPolicy;
-  const instructionPolicy = serverContentPolicy(
-    systemInstruction.value ? [systemInstruction.value] : [],
-    safeRoute.value,
-  );
-  if (!instructionPolicy.ok) return instructionPolicy;
-  const redactedSystemInstruction = systemInstruction.value
-    ? instructionPolicy.value[0]
-    : undefined;
   const normalizedGenerationConfig: ValidatedGenerationConfig = {
     maxOutputTokens: generationConfig.value.maxOutputTokens,
     ...(generationConfig.value.responseMimeType
@@ -266,6 +211,7 @@ export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGemi
       ? { responseSchema: generationConfig.value.responseSchema }
       : {}),
   };
+  const systemInstruction = systemInstructionForIntent(intent);
 
   if (action === 'embedContent') {
     if (body.contents !== undefined || body.content === undefined) {
@@ -277,16 +223,14 @@ export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGemi
     const budget: TextBudget = { characters: 0, parts: 0, maxCharacters: MAX_AI_TEXT_CHARACTERS };
     const content = parseContent(body.content, budget);
     if (!content.ok) return content;
-    const policy = serverContentPolicy(contentTexts([content.value]), safeRoute.value);
+    const policy = serverContentPolicy(contentTexts([content.value]), undefined);
     if (!policy.ok) return policy;
     return {
       ok: true,
       value: {
+        intent,
         action,
-        ...(provider.value ? { provider: provider.value } : {}),
-        model: model.value,
         content: replaceContentTexts([content.value], policy.value)[0],
-        ...(redactedSystemInstruction ? { systemInstruction: redactedSystemInstruction } : {}),
         generationConfig: normalizedGenerationConfig,
       },
     };
@@ -309,16 +253,15 @@ export function validateGeminiRequest(body: unknown): PolicyResult<ValidatedGemi
     if (!content.ok) return content;
     contents.push(content.value);
   }
-  const policy = serverContentPolicy(contentTexts(contents), safeRoute.value);
+  const policy = serverContentPolicy(contentTexts(contents), undefined);
   if (!policy.ok) return policy;
   return {
     ok: true,
     value: {
+      intent,
       action,
-      ...(provider.value ? { provider: provider.value } : {}),
-      model: model.value,
       contents: replaceContentTexts(contents, policy.value),
-      ...(redactedSystemInstruction ? { systemInstruction: redactedSystemInstruction } : {}),
+      ...(systemInstruction ? { systemInstruction } : {}),
       generationConfig: normalizedGenerationConfig,
     },
   };

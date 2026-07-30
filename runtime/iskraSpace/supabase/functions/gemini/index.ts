@@ -15,9 +15,8 @@ type RequestedProvider = AiProvider | 'auto';
 type AiAction = 'generateContent' | 'streamGenerateContent' | 'embedContent';
 
 type AiProxyPayload = {
-  action?: AiAction;
-  provider?: RequestedProvider;
-  model?: string;
+  intent: 'text.generate' | 'text.stream' | 'embedding.generate';
+  action: AiAction;
   contents?: unknown;
   content?: unknown;
   systemInstruction?: string;
@@ -106,24 +105,22 @@ function normalizeProvider(value: unknown, fallback: RequestedProvider): Request
   return fallback;
 }
 
-function providerSequence(payload: AiProxyPayload): AiProvider[] {
-  const envProvider = normalizeProvider(Deno.env.get('AI_PROVIDER'), 'gemini');
-  const requested = normalizeProvider(payload.provider, envProvider);
+function providerSequence(): AiProvider[] {
+  const configured = normalizeProvider(Deno.env.get('AI_PROVIDER'), 'gemini');
   const fallback = normalizeProvider(Deno.env.get('AI_FALLBACK_PROVIDER'), 'auto');
-  const primary: AiProvider = requested === 'auto'
-    ? (envProvider === 'auto' ? 'gemini' : envProvider)
-    : requested;
+  const primary: AiProvider = configured === 'auto' ? 'gemini' : configured;
 
   const providers: AiProvider[] = [primary];
   if (fallback !== 'auto' && fallback !== primary) providers.push(fallback);
   return providers;
 }
 
-function modelFor(provider: AiProvider, action: AiAction, requestedModel: unknown): string {
+function modelFor(provider: AiProvider, action: AiAction): string {
   if (provider === 'gemini') {
-    if (action === 'embedContent') return DEFAULT_GEMINI_EMBEDDING_MODEL;
-    if (typeof requestedModel === 'string' && requestedModel.trim()) return requestedModel;
-    return DEFAULT_GEMINI_TEXT_MODEL;
+    if (action === 'embedContent') {
+      return Deno.env.get('GEMINI_EMBEDDING_MODEL') || DEFAULT_GEMINI_EMBEDDING_MODEL;
+    }
+    return Deno.env.get('GEMINI_TEXT_MODEL') || DEFAULT_GEMINI_TEXT_MODEL;
   }
 
   if (action === 'embedContent') {
@@ -269,7 +266,7 @@ async function openAiFetch(path: string, body: Record<string, unknown>): Promise
 async function generateWithGemini(payload: AiProxyPayload) {
   const ai = getGeminiClient();
   const response = await ai.models.generateContent({
-    model: modelFor('gemini', 'generateContent', payload.model),
+    model: modelFor('gemini', 'generateContent'),
     contents: payload.contents as never,
     config: getConfig(payload),
   });
@@ -285,7 +282,7 @@ async function generateWithOpenAi(payload: AiProxyPayload) {
   if (!input) throw new Error('Missing or invalid contents');
 
   const response = await openAiFetch('responses', {
-    model: modelFor('openai', 'generateContent', payload.model),
+    model: modelFor('openai', 'generateContent'),
     input,
     instructions: payload.systemInstruction || undefined,
     text: openAiTextConfig(payload),
@@ -296,7 +293,7 @@ async function generateWithOpenAi(payload: AiProxyPayload) {
 async function embedWithGemini(payload: AiProxyPayload) {
   const ai = getGeminiClient();
   const response = await ai.models.embedContent({
-    model: modelFor('gemini', 'embedContent', payload.model),
+    model: modelFor('gemini', 'embedContent'),
     contents: payload.content as never,
     config: { outputDimensionality: EMBEDDING_DIMENSIONS },
   });
@@ -318,7 +315,7 @@ async function embedWithOpenAi(payload: AiProxyPayload) {
   if (!input) throw new Error('Missing or invalid content');
 
   const response = await openAiFetch('embeddings', {
-    model: modelFor('openai', 'embedContent', payload.model),
+    model: modelFor('openai', 'embedContent'),
     input,
   });
   const embedding = (response as { data?: Array<{ embedding?: unknown }> }).data?.[0]?.embedding;
@@ -340,7 +337,7 @@ async function runProvider(provider: AiProvider, action: AiAction, payload: AiPr
 }
 
 async function runWithFallback(action: AiAction, payload: AiProxyPayload) {
-  for (const provider of providerSequence(payload)) {
+  for (const provider of providerSequence()) {
     try {
       const response = await runProvider(provider, action, payload);
       return { provider, response };
@@ -352,12 +349,12 @@ async function runWithFallback(action: AiAction, payload: AiProxyPayload) {
 async function streamWithFallback(payload: AiProxyPayload, controller: ReadableStreamDefaultController<Uint8Array>) {
   const encoder = new TextEncoder();
 
-  for (const provider of providerSequence(payload)) {
+  for (const provider of providerSequence()) {
     try {
       if (provider === 'gemini') {
         const ai = getGeminiClient();
         const response = await ai.models.generateContentStream({
-          model: modelFor('gemini', 'generateContent', payload.model),
+          model: modelFor('gemini', 'generateContent'),
           contents: payload.contents as never,
           config: getConfig(payload),
         });

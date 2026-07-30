@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-  CANONICAL_GEMINI_EMBEDDING_MODEL,
-  CANONICAL_GEMINI_TEXT_MODEL,
-  LEGACY_CLIENT_EMBEDDING_MODEL,
   readBoundedJsonBody,
   validateGeminiRequest,
 } from '../../supabase/functions/_shared/aiContentPolicy.ts';
@@ -15,13 +12,10 @@ const responseSchema = {
   required: ['answer'],
 };
 
-const geminiPayload = (text: string) => ({
-  action: 'generateContent',
-  provider: 'auto',
-  model: CANONICAL_GEMINI_TEXT_MODEL,
+const geminiPayload = (text: string, intent: 'text.generate' | 'text.stream' = 'text.generate') => ({
+  intent,
   contents: [{ role: 'user', parts: [{ text }] }],
-  systemInstruction: 'Answer in Russian.',
-  generationConfig: {
+  config: {
     maxOutputTokens: 300,
     responseMimeType: 'application/json',
     responseSchema,
@@ -38,27 +32,38 @@ const request = (route: 'gemini' | 'iskra-agent', body: unknown): Request => new
 );
 
 describe('strict AI ingress contracts', () => {
-  it('accepts the current Gemini JSON-schema payload', async () => {
+  it('normalizes intent into a server-owned action and prompt', async () => {
     const result = await readBoundedJsonBody(request('gemini', geminiPayload('safe')));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.value.body).toEqual(expect.objectContaining({
+      intent: 'text.generate',
       action: 'generateContent',
-      provider: 'auto',
-      model: CANONICAL_GEMINI_TEXT_MODEL,
+      systemInstruction: expect.any(String),
       generationConfig: expect.objectContaining({ maxOutputTokens: 300 }),
     }));
   });
 
-  it('normalizes the current legacy embedding model', () => {
+  it('maps embedding without accepting a client model', () => {
     const result = validateGeminiRequest({
-      action: 'embedContent',
-      provider: 'openai',
-      model: LEGACY_CLIENT_EMBEDDING_MODEL,
+      intent: 'embedding.generate',
       content: { parts: [{ text: 'safe' }] },
     });
     expect(result.ok).toBe(true);
-    if (result.ok) expect(result.value.model).toBe(CANONICAL_GEMINI_EMBEDDING_MODEL);
+    if (result.ok) {
+      expect(result.value.action).toBe('embedContent');
+      expect(result.value).not.toHaveProperty('model');
+      expect(result.value).not.toHaveProperty('provider');
+    }
+  });
+
+  it('rejects provider model systemInstruction and action authority fields', () => {
+    for (const field of ['provider', 'model', 'systemInstruction', 'action']) {
+      expect(validateGeminiRequest({
+        ...geminiPayload('safe'),
+        [field]: 'client-owned',
+      })).toEqual(expect.objectContaining({ ok: false, code: 'unknown_request_field' }));
+    }
   });
 
   it('rejects Gemini PII and injection at the handler ingress', async () => {
@@ -105,7 +110,7 @@ describe('strict AI ingress contracts', () => {
     );
     expect(validateGeminiRequest({
       ...geminiPayload('safe'),
-      generationConfig: {
+      config: {
         responseMimeType: 'application/json',
         responseSchema: { type: 'STRING', pattern: '.*' },
       },

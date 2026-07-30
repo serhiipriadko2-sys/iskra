@@ -1,7 +1,4 @@
 import {
-  CANONICAL_GEMINI_EMBEDDING_MODEL,
-  CANONICAL_GEMINI_TEXT_MODEL,
-  LEGACY_CLIENT_EMBEDDING_MODEL,
   MAX_AI_REQUEST_BYTES,
   readBoundedJsonBody,
   validateAgentRequest,
@@ -21,18 +18,14 @@ const responseSchema = {
   required: ['answer'],
 };
 
-const baseGeminiRequest = (text: string, safetyRoute?: 'server_redact') => ({
-  action: 'generateContent',
-  provider: 'auto',
-  model: CANONICAL_GEMINI_TEXT_MODEL,
+const baseGeminiRequest = (text: string, intent: 'text.generate' | 'text.stream' = 'text.generate') => ({
+  intent,
   contents: [{ role: 'user', parts: [{ text }] }],
-  systemInstruction: 'Answer in Russian.',
-  generationConfig: {
+  config: {
     maxOutputTokens: 300,
     responseMimeType: 'application/json',
     responseSchema,
   },
-  ...(safetyRoute ? { safetyRoute } : {}),
 });
 
 const request = (route: 'gemini' | 'iskra-agent', body: unknown) => new Request(
@@ -63,23 +56,35 @@ Deno.test('bounded strict reader rejects invalid content type and declared overs
   assert(!declaredOversize.ok && declaredOversize.code === 'request_too_large', 'expected declared size denial');
 });
 
-Deno.test('strict Gemini contract accepts the current client payload shape', async () => {
-  const result = await readBoundedJsonBody(request('gemini', baseGeminiRequest('safe')));
-  assert(result.ok, 'expected current Gemini payload to pass');
-  const body = result.value.body;
-  assert('action' in body && body.action === 'generateContent', 'expected generation action');
-  assert('generationConfig' in body && body.generationConfig.maxOutputTokens === 300, 'expected output cap');
+Deno.test('text intents select action and system instruction server-side', async () => {
+  const generate = await readBoundedJsonBody(request('gemini', baseGeminiRequest('safe')));
+  assert(generate.ok, 'expected text.generate payload to pass');
+  const generateBody = generate.value.body;
+  assert('intent' in generateBody && generateBody.intent === 'text.generate', 'expected generate intent');
+  assert('action' in generateBody && generateBody.action === 'generateContent', 'expected generated action');
+  assert('systemInstruction' in generateBody && !!generateBody.systemInstruction, 'expected server instruction');
+  assert('generationConfig' in generateBody && generateBody.generationConfig.maxOutputTokens === 300, 'expected cap');
+
+  const stream = validateGeminiRequest(baseGeminiRequest('safe', 'text.stream'));
+  assert(stream.ok && stream.value.action === 'streamGenerateContent', 'expected stream action');
+  assert(stream.ok && stream.value.systemInstruction !== generateBody.systemInstruction, 'expected route prompt');
 });
 
-Deno.test('legacy embedding model is accepted and normalized server-side', () => {
+Deno.test('embedding intent selects server action without client model', () => {
   const result = validateGeminiRequest({
-    action: 'embedContent',
-    provider: 'openai',
-    model: LEGACY_CLIENT_EMBEDDING_MODEL,
+    intent: 'embedding.generate',
     content: { parts: [{ text: 'safe' }] },
   });
-  assert(result.ok, 'expected legacy client embedding model to pass');
-  assert(result.value.model === CANONICAL_GEMINI_EMBEDDING_MODEL, 'expected canonical embedding model');
+  assert(result.ok, 'expected embedding intent to pass');
+  assert(result.value.action === 'embedContent', 'expected embedding action');
+  assert(result.value.systemInstruction === undefined, 'embedding must not receive a system prompt');
+});
+
+Deno.test('legacy provider model and system instruction fields are rejected', () => {
+  for (const field of ['provider', 'model', 'systemInstruction', 'action']) {
+    const result = validateGeminiRequest({ ...baseGeminiRequest('safe'), [field]: 'client-owned' });
+    assert(!result.ok && result.code === 'unknown_request_field', `expected ${field} denial`);
+  }
 });
 
 Deno.test('Gemini ingress rejects PII and prompt injection before provider routing', async () => {
@@ -107,31 +112,16 @@ Deno.test('Agent ingress preserves the current route shape and rejects unsafe co
   assert(!injection.ok && injection.code === 'content_policy_injection_detected', 'expected Agent injection denial');
 });
 
-Deno.test('server redaction is explicit and rechecked', async () => {
-  const result = await readBoundedJsonBody(request('gemini', baseGeminiRequest(
-    'email user@example.net',
-    'server_redact',
-  )));
-  assert(result.ok, 'expected explicit redaction route');
-  const body = result.value.body;
-  assert(
-    'action' in body &&
-      body.action === 'generateContent' &&
-      body.contents?.[0]?.parts[0]?.text.includes('[REDACTED]'),
-    'expected redacted text',
-  );
-});
-
-Deno.test('unknown fields, unapproved models and unbounded output are rejected', () => {
+Deno.test('unknown fields unsupported intents and unbounded output are rejected', () => {
   const unknown = validateGeminiRequest({ ...baseGeminiRequest('safe'), extra: true });
   assert(!unknown.ok && unknown.code === 'unknown_request_field', 'expected unknown field denial');
 
-  const model = validateGeminiRequest({ ...baseGeminiRequest('safe'), model: 'expensive-model' });
-  assert(!model.ok && model.code === 'unsupported_model', 'expected model denial');
+  const intent = validateGeminiRequest({ ...baseGeminiRequest('safe'), intent: 'admin.override' });
+  assert(!intent.ok && intent.code === 'unsupported_intent', 'expected intent denial');
 
   const output = validateGeminiRequest({
     ...baseGeminiRequest('safe'),
-    generationConfig: { maxOutputTokens: 99999 },
+    config: { maxOutputTokens: 99999 },
   });
   assert(!output.ok && output.code === 'max_output_tokens_exceeds_cap', 'expected output cap denial');
 });
@@ -139,7 +129,7 @@ Deno.test('unknown fields, unapproved models and unbounded output are rejected',
 Deno.test('response schema rejects dangerous property names and unsupported keywords', () => {
   const dangerous = validateGeminiRequest({
     ...baseGeminiRequest('safe'),
-    generationConfig: {
+    config: {
       responseMimeType: 'application/json',
       responseSchema: {
         type: 'OBJECT',
@@ -151,7 +141,7 @@ Deno.test('response schema rejects dangerous property names and unsupported keyw
 
   const unsupported = validateGeminiRequest({
     ...baseGeminiRequest('safe'),
-    generationConfig: {
+    config: {
       responseMimeType: 'application/json',
       responseSchema: { type: 'STRING', pattern: '.*' },
     },

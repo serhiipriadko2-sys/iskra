@@ -17,6 +17,7 @@ import {
 
 export * from './aiContentPolicyCore.ts';
 export * from './aiContentSchemaPolicy.ts';
+export * from './aiServerPromptPolicy.ts';
 
 export type ValidatedAgentRequest = {
   message: string;
@@ -101,7 +102,7 @@ function inferRequestKind(req: Request, body: unknown): AiRequestKind | null {
   const pathname = new URL(req.url).pathname.replace(/\/+$/, '');
   if (pathname.endsWith('/gemini')) return 'gemini';
   if (pathname.endsWith('/iskra-agent')) return 'agent';
-  if (isPlainObject(body) && 'action' in body) return 'gemini';
+  if (isPlainObject(body) && 'intent' in body) return 'gemini';
   if (isPlainObject(body) && ('message' in body || 'input' in body)) return 'agent';
   return null;
 }
