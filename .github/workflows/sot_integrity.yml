@@ -6,6 +6,7 @@ on:
       - "core/**"
       - "system/**"
       - "governance/**"
+      - "dist/SoT30_v*.zip"
       - "metrics/**"
       - "mind/**"
       - "appendix/**"
@@ -26,6 +27,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # C27 provenance binding resolves the recorded source-freeze commit and
+          # byte-binds the 31 source blobs at that ref — a shallow clone cannot
+          # reach it and would fail closed on an honest package.
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -62,6 +68,14 @@ jobs:
           dist/SoT30_v5.5.6.zip
           governance/releases/2026-07-21-sot30-v5-5-5-provenance/support/MANIFEST.json
           v5.5.6
+
+      - name: Verify SoT30 v5.5.7 release semantics (fail-closed)
+        run: >-
+          npx tsx tools/verify_sot30_release.ts
+          governance/releases/2026-07-30-sot30-v5-5-7-audit-repair
+          dist/SoT30_v5.5.7.zip
+          governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json
+          v5.5.7
 
       - name: Verify SoT30 verifier is fail-closed (negative-fixture matrix)
         run: npx tsx tools/verify_sot30_release.selftest.ts
