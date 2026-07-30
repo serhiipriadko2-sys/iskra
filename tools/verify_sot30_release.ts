@@ -41,7 +41,8 @@
  *      root docs carry no encoding artifact (isolated " ? ", U+FFFD, double-encoded UTF-8 pairs)
  *  C27 (from v5.5.7) active identity: manifest.package_version == file-25 current_package
  *      == standalone instructions heading == file-00 mirror heading; acceptance_range pinned
- *      to T01-T97 (closes the T97 gap and the silent default-rebuild drift)
+ *      to T01-T97; manifest.adr == the ADR file 29 marks "(this build)" (closes the T97 gap
+ *      and the silent default-rebuild drift in both acceptance range and governance ADR)
  *  C28 (from v5.5.7) loader sequence statically gated: file-00 loader block routes the COMPLETE
  *      29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28 order; file-29 reading order agrees
  */
@@ -663,7 +664,9 @@ const appliesFrom = (floor: string): boolean =>
       const rest = l
         .replace(/`?\d+\s*§\s*[\d.]+`?|§\s*[\d.]+|файл[ае]?\s*\d+|file\s*\d+/gi, '')
         .replace(/\bM[123]\b/g, '');
-      return /[<>≥≤]\s*\d|\d\.\d|\d+\s*%|(threshold|activat|порог|активаци)[^\n]{0,30}\d/i.test(rest);
+      // comparison AND assignment/equality forms (`M2 = 1`, `M2: 1`), decimals,
+      // percentages, and integers tied to threshold/activation vocabulary.
+      return /[<>≥≤=:]\s*\d|\d\.\d|\d+\s*%|(threshold|activat|порог|активаци)[^\n]{0,30}\d/i.test(rest);
     });
     const f03 = readFileSync(join(kdir, '03_TELOS_MANTRA_PRINCIPLES.md'), 'utf8');
     const f04 = readFileSync(join(kdir, '04_IDENTITY_NON_MIRROR.md'), 'utf8');
@@ -739,10 +742,16 @@ const appliesFrom = (floor: string): boolean =>
     // --acceptance-range silently restores the tool default (T01-T93) while the
     // receipts keep claiming T01–T97, leaving two acceptance identities in one package.
     const c27d = manifest.acceptance_range === 'T01-T97';
-    check(c27a && c27b && c27c && c27d, 'C27',
+    // governance identity: the manifest ADR must be the one file 29's trace marks as
+    // "(this build)". Rebuilding without --adr restores the builder default, which
+    // would ship a package governed by one ADR while its docs cite another.
+    const adrThisBuild = f29.match(/`(ADR-\d{8}-\d{2})`[^\n]*\(this build\)/);
+    const c27e = !!adrThisBuild && manifest.adr === adrThisBuild[1];
+    check(c27a && c27b && c27c && c27d && c27e, 'C27',
       `active identity stamps equal manifest ${pkgVer} (25.current_package=${cpM?.[1] ?? 'MISSING'}; `
       + `instructions-heading=${ihM?.[1] ?? 'MISSING'}; mirror-heading=${mhM?.[1] ?? 'MISSING'}; `
-      + `acceptance_range=${JSON.stringify(manifest.acceptance_range)})`);
+      + `acceptance_range=${JSON.stringify(manifest.acceptance_range)}; `
+      + `adr=${JSON.stringify(manifest.adr)} vs file29-this-build=${JSON.stringify(adrThisBuild?.[1])})`);
   }
 }
 
@@ -757,16 +766,21 @@ const appliesFrom = (floor: string): boolean =>
     const loader = li >= 0 && lj > li ? f00txt.slice(li, lj) : '';
     // the normative loader block (not decoy text elsewhere) must route the exact
     // sequence 29 → 00 → 01 → 02 → 03–07 in this order.
-    // the COMPLETE T96 sequence, not just its prefix: the tail groups must not drift
+    // the COMPLETE T96 route, compared as an EXACT ordered list rather than a
+    // subsequence: a subsequence match would accept extra or duplicated routing
+    // groups inserted between the expected ones (e.g. routing `28` before `03–07`).
+    // Only the numbered step lines are normative — the prose preamble may cite a
+    // file (e.g. "см. `28` → T84") without routing it.
     const seq = ['29_INDEX_UPLOAD_MANIFEST.md', '00_PROJECT_ROUTER.md',
       '01_PARITY_ADVANCEMENT_MANIFEST.md', '02_PROJECTS_SURFACE_MAP.md',
       '03–07', '08–20', '21–23', '24–27', '28'];
-    let pos = 0; let orderOk = loader.length > 0;
-    for (const tok of seq) {
-      const at = loader.indexOf(tok, pos);
-      if (at < 0) { orderOk = false; break; }
-      pos = at + tok.length;
-    }
+    const stepLines = loader.split('\n').filter((l) => /^\d+\.\s/.test(l)).join('\n');
+    const tokenRe = new RegExp(
+      seq.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g',
+    );
+    const routed = [...stepLines.matchAll(tokenRe)].map((m) => m[0]);
+    const orderOk = loader.length > 0 && routed.length === seq.length
+      && routed.every((t, i) => t === seq[i]);
     // file 29 must carry the COMPLETE reading order too, not a prefix: otherwise its
     // tail could contradict file 00 and T96 while the package stays green.
     const f29ro = f29.includes('29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28');

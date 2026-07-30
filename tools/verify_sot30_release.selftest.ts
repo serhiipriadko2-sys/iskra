@@ -359,6 +359,25 @@ negRelease557('neg: JWT in root README', 'C16', (dir) => {
   const jwt = `eyJ${'a'.repeat(24)}.eyJ${'b'.repeat(24)}.${'c'.repeat(24)}`;
   writeFileSync(p, `${readFileSync(p, 'utf8')}\ntoken: ${jwt}\n`);
 });
+// bare assignment/equality coupling M2 to a number
+negRelease557('neg: bare M2 assignment in file 06', 'C25', (dir) => {
+  const p = join(dir, 'knowledge/06_SECURITY_INTEGRITY.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\nM2 = 1\n`);
+});
+// extra routing group inserted early: subsequence matching would still pass
+negRelease557('neg: loader routes extra group early', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/00_PROJECT_ROUTER.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '3. Затем `03–07` identity/truth/security/router.',
+    '3. Затем `28`, потом `03–07` identity/truth/security/router.'));
+});
+// manifest ADR reverted to the builder default while docs cite ADR-20260730-01
+negRelease557('neg: manifest ADR default drift', 'C27', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  m.adr = 'ADR-20260720-02';
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
 // GitHub PAT forms in a root doc must fail the secret scan
 negRelease557('neg: github_pat in root README', 'C16', (dir) => {
   const p = join(dir, 'README.md');
