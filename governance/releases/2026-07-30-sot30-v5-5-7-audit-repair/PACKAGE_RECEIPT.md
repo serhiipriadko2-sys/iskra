@@ -1,54 +1,20 @@
-# SoT30 v5.5.7 — Receipt
+# SoT30 v5.5.7 — Package Receipt
 
-Assembled under ADR-20260730-01 (`proposed`) from a source-freeze commit via genuine `--from-git`. v5.5.6 remains immutable.
-
-<!-- composition: changed=9 unchanged=21 baseline=v5.5.6 -->
-
-## Artifact
+<!-- composition: changed=10 unchanged=20 baseline=v5.5.6 -->
 
 | Item | Value |
 |---|---|
 | ZIP | `dist/SoT30_v5.5.7.zip` |
-| ZIP bytes | 1136277 |
-| ZIP sha256 | `5d5e05f29c8fbd14f4e657269ae9620beff94527348de2d911c46d18106a0bd4` |
+| ZIP bytes | 1135594 |
+| ZIP sha256 | `193879cadf3b61f61dbbb8b4ca9c360a98c09c5006cc8d08e7f4ecd98508779d` |
 | ZIP root | `SoT30_v5.5.7/` |
 | Knowledge files | 30 |
-| Corpus bytes | 4,055,351 |
-| file 29 sha256 | `70e939cf400710177bd7fe594541d7b4237d67cbd7e536911bc010627a56ab0f` |
-| support/MANIFEST.json sha256 | `e88f829104acb716e0f9a7735daceb7fe76ee1e2d01be9c88f8b19dc9880eb92` |
+| Corpus bytes | 4,054,425 |
+| file 29 sha256 | `3fda8fe5b1af2253b0a67567e1425d4b06c2d63055173c4d0526ef183d8723bf` |
+| support/MANIFEST.json sha256 | `0decd118a6300324b757d2587ec315a569aaf5800299d2b33bf046feaf56aeff` |
 | Acceptance range | T01–T97 |
-| Baseline | v5.5.6 (immutable) |
-| generated_from | `canonical_git_blobs` |
-| generated_from_ref | see `support/MANIFEST.json` |
-| Changed vs v5.5.6 | `00,01,02,12,15,22,25,28,29` |
+| Supplemental range | T98–T103 |
+| generated_from_ref | `5c07f57e3a7793b1c09caa83bf40a8e7ff893e09` |
+| Changed vs v5.5.6 | `00,01,02,12,15,20,22,25,28,29` |
 
-## Provenance model
-
-The 30 Knowledge files (including the regenerated file 29) and the standalone Project
-Instructions are committed **before** the source freeze; the package is then built via
-genuine `--from-git` from that freeze commit, so all 31 source files are byte-equal to
-the freeze blobs. `support/MANIFEST.json` and `support/SHA256SUMS` are **generated
-artifacts** (the manifest necessarily records the freeze SHA and cannot be a blob of
-that same commit); they are authenticated by hash here and in `ledger/sot.json`.
-
-## Verification performed
-
-- canonical build from the source-freeze commit recorded in `support/MANIFEST.json`: PASS;
-- 30/30 Knowledge plus Project Instructions byte-equal to source-freeze blobs (explicitly re-hashed against the freeze commit): PASS;
-- v5.5.7 verifier (C1–C28): 29/29 PASS; v5.5.4/v5.5.5/v5.5.6 regression: 29/29 PASS each;
-- verifier selftest matrix: PASS (fixture counts in CI log);
-- v5.5.6 byte immutability: PASS;
-- GitHub CI: pending push/read-back.
-
-## Boundary
-
-`live_project_verified=false`. Lifecycle stages, each requiring its own recorded authorization, none granted at build time:
-
-| Stage | State |
-|---|---|
-| static package build + verifier | done (this receipt) |
-| source_merge (candidate stored in repo) | pending owner/PR decision |
-| artifact_promotion (declared active package) | **not authorized** |
-| live_project_verified (clean-Project T01–T97 with receipts) | **not run** |
-
-A future promotion receipt must bind: exact ZIP sha256, the 30 manifest hashes, the live Project identity, the T01–T97 outcomes, and the owner authorization — see `28_EVALS_ACCEPTANCE.md` (T93).
+Lifecycle: source freeze done; static build done; artifact promotion not authorized; live Project verification not run.

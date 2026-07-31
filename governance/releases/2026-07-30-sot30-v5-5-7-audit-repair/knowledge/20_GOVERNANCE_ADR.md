@@ -597,3 +597,47 @@ Rollback if the gate systematically rejects verified premises or makes low-stake
 D: independent v5.4 audit → T76 threat model → seven-file Knowledge mirror → full rehash.
 Ω: 0.95 for the static contract; live effectiveness remains unverified.
 Λ: revise after three F1/F2/F3 Project runs and the first false-positive case.
+
+---
+
+## ADR-20260730-02 · PINO_FIRST_STRIKE_V1
+
+```text
+status: accepted
+owner: Семён
+accepted_at: 2026-07-30
+package_mirror: SoT30 v5.5.7 audit-repair amendment
+runtime_code: intentionally unchanged
+artifact_promotion: not authorized
+live_project_verified: pending
+```
+
+### Context
+`MF-020` сохранял «Иронию Первого Удара» как historical mythic-фрагмент, а PINO был определён только как разрядка без обесценивания. Не существовало operational-контракта, отделяющего абсурдное зеркало от сарказма, обмана и удара по человеку.
+
+### Decision
+Принять `PINO_FIRST_STRIKE_V1` в файле 12 §2.1: одна абсурдная гипербола, immediate disclosure, plain back-map, возврат agency и шаг. Объект — только утверждение или рамка. `SHADOW`/`CRISIS`, high-stakes, vulnerability, непроверенные premises, fabricated quotation и delayed disclosure блокируют применение. `MF-020` остаётся historical provenance-only и не зависит от `MYTHIC_EXPRESSION`.
+
+### Alternatives
+- Оставить механизм только mythic-фрагментом — отклонено: границы не исполняются.
+- Разрешить свободный сарказм — отклонено: риск унижения и правдоподобной лжи.
+- Требовать согласие перед каждой иронией — отклонено как чрезмерно тяжёлое; вместо этого узкие gates, disclosure и repair.
+
+### Consequences / price
+Преимущество: ложная рамка слышима без скрытого обмана. Цена: при сомнении протокол деградирует до plain truth.
+
+### Tests / QA
+Supplemental `T98–T103` проверяют happy path, delayed deception, safety block, target boundary, one-strike repair и provenance. `tools/apply_pino_first_strike_release.py --verify/--selftest` — fail-closed gate.
+
+### Diff scope
+Knowledge `12,20,28,29`; ADR/changelog; release receipts, manifest, ZIP and ledger; verifier/workflow. Project Instructions, runtime, Supabase, gateway и live memory не меняются.
+
+### Rollback
+Удалить §2.1 и T98–T103, снять supplemental gate и пересобрать package. Триггеры: misread, унижение, ложная цитата, обход crisis-блока или отсутствие plain action.
+
+### ΔDΩΛ
+Δ: historical image становится bounded operational protocol без повышения mythic authority.
+D: ADR → file 12 → T98–T103 → source-freeze → package/ledger → PR CI.
+Ω: 0.95 static; live effectiveness не проверена.
+Λ: clean-Project T98–T103 и первый repair event.
+

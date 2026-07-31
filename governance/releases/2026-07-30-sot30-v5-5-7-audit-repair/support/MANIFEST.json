@@ -1,25 +1,30 @@
 {
-  "package": "SoT30 v5.5.7 release",
+  "package": "SoT30 v5.5.7 audit repair + PINO amendment",
   "package_version": "v5.5.7",
   "baseline_release": "v5.5.6",
-  "date": "2026-07-30",
+  "date": "2026-07-31",
   "adr": "ADR-20260730-01",
+  "behavior_adrs": [
+    "ADR-20260730-02"
+  ],
   "generated_from": "canonical_git_blobs",
-  "generated_from_ref": "ce9c37f6a110aa6348bf7f5cc81cab8a73b7a7af",
+  "generated_from_ref": "5c07f57e3a7793b1c09caa83bf40a8e7ff893e09",
   "source_tree_path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair",
   "line_ending_policy": "LF",
   "reproducibility": "same-toolchain byte-reproducible (pinned zip mtime); cross-toolchain not guaranteed",
   "knowledge_file_count": 30,
-  "corpus_bytes": 4055351,
+  "corpus_bytes": 4054425,
   "project_instructions_chars": 5996,
   "project_instructions_bytes": 8200,
   "acceptance_range": "T01-T97",
+  "supplemental_acceptance_range": "T98-T103",
   "changed_files": [
     "00_PROJECT_ROUTER.md",
     "01_PARITY_ADVANCEMENT_MANIFEST.md",
     "02_PROJECTS_SURFACE_MAP.md",
     "12_COUNCIL_VOICES.md",
     "15_SUPABASE_MEMORY_PLANE.md",
+    "20_GOVERNANCE_ADR.md",
     "22_CONNECTORS_TOOLS_BOUNDARY.md",
     "25_LIBER_SPACE_BUSIDO.md",
     "28_EVALS_ACCEPTANCE.md",
@@ -41,7 +46,6 @@
     "17_DREAMSPACE_DREAMSEED.md",
     "18_HORIZON_WEAVER.md",
     "19_DRY_DARK_RUN_PROTOCOL.md",
-    "20_GOVERNANCE_ADR.md",
     "21_WORKFLOW_OPS_LEDGER.md",
     "23_BUILDER_PROJECTS_COMPAT.md",
     "24_INTERFACE_STYLE.md",
@@ -111,8 +115,8 @@
     },
     {
       "path": "knowledge/12_COUNCIL_VOICES.md",
-      "bytes": 20020,
-      "sha256": "c16dcb0fd8e778d8470c3e979afe856fb18383191fed1fcec97f014c35490387"
+      "bytes": 24090,
+      "sha256": "5abd0d99876b9096bae7f5806f841c8d911e6a8ecd61917734606ca012b21ac2"
     },
     {
       "path": "knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
@@ -151,8 +155,8 @@
     },
     {
       "path": "knowledge/20_GOVERNANCE_ADR.md",
-      "bytes": 32537,
-      "sha256": "fa80f1f4e06650c1269e65bae4ba412a5351d4d2142330fb74728979cb6151fd"
+      "bytes": 35544,
+      "sha256": "a7fba909f071ee26ea98f353b45d517f07a21a31cca9fa7a9dad490c4b76f6ab"
     },
     {
       "path": "knowledge/21_WORKFLOW_OPS_LEDGER.md",
@@ -191,13 +195,13 @@
     },
     {
       "path": "knowledge/28_EVALS_ACCEPTANCE.md",
-      "bytes": 17857,
-      "sha256": "d6baa57dd6bf894d1e8bb17bd931477102560457d183f1080d905366b78268ba"
+      "bytes": 19157,
+      "sha256": "8acaf1a42e91a56532f3c41de7b1498012c3c833205d06091091098b5537dcea"
     },
     {
       "path": "knowledge/29_INDEX_UPLOAD_MANIFEST.md",
-      "bytes": 14868,
-      "sha256": "70e939cf400710177bd7fe594541d7b4237d67cbd7e536911bc010627a56ab0f"
+      "bytes": 5565,
+      "sha256": "3fda8fe5b1af2253b0a67567e1425d4b06c2d63055173c4d0526ef183d8723bf"
     }
   ],
   "live_project_verified": false
