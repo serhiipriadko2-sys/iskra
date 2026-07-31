@@ -42,7 +42,7 @@ Artifact: `dist/SoT30_v5.5.7.zip`. STATIC-PACKAGE-PASS does not imply LIVE-PROJE
 
 | Gate | Result |
 |---|---|
-| 30 Knowledge + 3 support files | PASS |
+| 30 Knowledge + 3 support files | PASS — exact allowlist |
 | changed set exact 10 / unchanged 20 | PASS |
 | source blobs bound to `{ref}` | PASS |
 | PINO contract + negative fixtures | PASS before commit |
