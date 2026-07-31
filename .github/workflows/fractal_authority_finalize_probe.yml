@@ -1,14 +1,32 @@
-name: Fractal authority finalizer probe
+name: Fractal authority finalizer
 
 on:
   pull_request:
     types: [opened, reopened, synchronize]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  probe:
+  finalize:
+    if: github.event.pull_request.head.ref == 'feat/math-fractal-authority-v1'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "fractal-authority-finalizer-probe"
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/math-fractal-authority-v1
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - run: pnpm install --frozen-lockfile
+      - run: bash tools/finalize-fractal-authority-pr326.sh
