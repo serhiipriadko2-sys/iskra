@@ -19,8 +19,28 @@ function unavailable<T>(reason: string): DerivedValue<T> {
   return { value: null, unavailable: true, reason }
 }
 
+type HashableSignalValue =
+  | number
+  | { readonly non_finite: 'NaN' | '+Infinity' | '-Infinity' }
+
+function hashableSignalValue(value: number): HashableSignalValue {
+  if (Number.isNaN(value)) return { non_finite: 'NaN' }
+  if (value === Number.POSITIVE_INFINITY) return { non_finite: '+Infinity' }
+  if (value === Number.NEGATIVE_INFINITY) return { non_finite: '-Infinity' }
+  return value
+}
+
+function hashableObservation(raw: RawObservation): unknown {
+  return {
+    ...(raw.text === undefined ? {} : { text: raw.text }),
+    ...(raw.signal === undefined
+      ? {}
+      : { signal: raw.signal.map(hashableSignalValue) }),
+  }
+}
+
 export async function computeMetrics(raw: RawObservation): Promise<CalculatorResult> {
-  const input_hash = await sha256Hex(canonicalJson(raw))
+  const input_hash = await sha256Hex(canonicalJson(hashableObservation(raw)))
 
   let shannon_entropy: DerivedValue<number>
   let entropy_regime: DerivedValue<EntropyRegime>
