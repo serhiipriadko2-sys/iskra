@@ -1,0 +1,73 @@
+{
+  "schema": "iskra.supabase.migration-provenance/v1",
+  "observation_date": "2026-07-31",
+  "production_project_ref": "typcvaszcfdpkzbjzuur",
+  "repository": "serhiipriadko2-sys/iskra",
+  "branch": "fix/supabase-migration-provenance-20260731",
+  "base_commit": "aeb3b9087190b55b13f8e176b11c459483aa3fcd",
+  "status": {
+    "live_bodies_recovered": true,
+    "repo_readback_verified": true,
+    "clean_replay": "NOT_RUN",
+    "data_less_staging": "NOT_CREATED",
+    "production_db_mutation": false
+  },
+  "entries": [
+    {
+      "live_version": "20260728171718",
+      "live_name": "revoke_direct_execute_on_graph_trigger_function",
+      "statement_count": 1,
+      "applied_bytes": 283,
+      "applied_sha256": "b2b63f7a3adbd20cb0e3641571b27863bf5fbae9cc3d82471bc42468347dd337",
+      "recovered_repo_path": "supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+      "recovered_github_blob_sha1": "179f97e306096701ad2145c1e2b30b84263c9a99",
+      "exact_applied_match": true,
+      "source_candidate": {
+        "repository": "serhiipriadko2-sys/parallax",
+        "commit": "0489a6bc1b33fc39740338c6f2962cb6449dd7cd",
+        "path": "supabase/migrations/20260728190000_revoke_graph_trigger_execute.sql",
+        "github_blob_sha1": "873af3f890487ecb9b33a1f12d9309980fa78095",
+        "bytes": 289,
+        "sha256": "c384163af19942b03b02b87b93e763339a61067c7acbeb5c4a9932fdddfb496a",
+        "byte_identical_to_applied": false,
+        "all_whitespace_removed_equal": true
+      }
+    },
+    {
+      "live_version": "20260728183421",
+      "live_name": "parallax_memory_gate",
+      "statement_count": 1,
+      "applied_bytes": 2523,
+      "applied_sha256": "8fb653f1926f3ea0217a3c6c78d2a7ad6cde6b7afdb8b5ecce4db61f8f9ea718",
+      "recovered_repo_path": "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+      "recovered_github_blob_sha1": "70ac2651de227e3177b37adce9a6651767605be5",
+      "exact_applied_match": true,
+      "source_candidate": {
+        "repository": "serhiipriadko2-sys/parallax",
+        "commit": "0489a6bc1b33fc39740338c6f2962cb6449dd7cd",
+        "path": "supabase/migrations/20260728193000_parallax_memory_gate.sql",
+        "github_blob_sha1": "5c2c31d0d7d173d6f9fc3d00bf839fc85dfa4af9",
+        "bytes": 2534,
+        "sha256": "708501f97a4f93d3c28d6ae19de84d69c73cc025323244856c6fc80b726c304a",
+        "byte_identical_to_applied": false,
+        "all_whitespace_removed_equal": true
+      }
+    }
+  ],
+  "unresolved_inventory": [
+    {
+      "repo_version": "20260718200634",
+      "repo_name": "restore_closed_beta_graph_acl",
+      "repo_path": "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
+      "live_recorded": false,
+      "classification": "repo-only pending security migration",
+      "gate": "must clean-replay and apply on data-less staging before any production proposal"
+    }
+  ],
+  "evidence": {
+    "live_source": "supabase_migrations.schema_migrations.statements[1]",
+    "hash_algorithm": "sha256 over exact UTF-8 statement bytes",
+    "repo_verification": "GitHub contents API read-back",
+    "source_candidate_relation": "SQL tokens equal after removing all whitespace; bytes intentionally recorded as different"
+  }
+}
