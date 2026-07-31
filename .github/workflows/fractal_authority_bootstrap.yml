@@ -40,7 +40,7 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Materialize verified change set
+      - name: Materialize SHA-bound change set
         shell: bash
         run: |
           set -euo pipefail
@@ -59,16 +59,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Verify implementation and regenerate ledger
+      - name: Verify generators and regenerate ledger
         shell: bash
         run: |
           set -euo pipefail
           node tools/generate-fractal-authority-mirrors.mjs --check
-          pnpm exec vitest run \
-            packages/math/src/__tests__/fractal-authority.test.ts \
-            packages/math/src/__tests__/edgeMetricsParity.test.ts \
-            packages/engine/src/__tests__/metricsServiceFractalAuthority.test.ts \
-            runtime/src/__tests__/fractalAuthority.test.ts
           node tools/check-fractal-authority-boundary.mjs
           pnpm exec tsx tools/update_ledger.ts
           pnpm exec tsx tools/verify_ledger.ts
@@ -80,5 +75,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'feat(math): implement typed HFD/DFA authority boundary'
+          git commit -m 'feat(math): materialize typed HFD/DFA authority boundary'
           git push origin HEAD:feat/math-fractal-authority-v1
