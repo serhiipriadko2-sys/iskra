@@ -1,6 +1,7 @@
 import {
   buildCorsHeaders,
   enforceAiRequestBoundary,
+  fetchVerifiedAiUser,
   isAllowedOrigin,
   parseVerifiedAiUser,
   type AiBoundaryConfig,
@@ -87,7 +88,8 @@ Deno.test('anonymous and unidentified clients are denied before quota RPC', asyn
     requestWithIp(),
     'token',
     { sub: 'anon-1', isAnonymous: true },
-    config
+    config,
+    new AbortController().signal,
   );
   assert(!anonymous.allowed && anonymous.status === 401, 'expected anonymous 401');
 
@@ -95,7 +97,8 @@ Deno.test('anonymous and unidentified clients are denied before quota RPC', asyn
     new Request('https://edge.example/functions/v1/gemini', { method: 'POST' }),
     'token',
     member,
-    config
+    config,
+    new AbortController().signal,
   );
   assert(!missingIp.allowed && missingIp.status === 503, 'expected missing IP fail-closed');
 });
@@ -105,21 +108,82 @@ Deno.test('quota and membership responses map to stable public status codes', as
   try {
     globalThis.fetch = () =>
       Promise.resolve(Response.json({ allowed: false, reason: 'member_minute' }));
-    const limited = await enforceAiRequestBoundary(requestWithIp(), 'token', member, config);
+    const limited = await enforceAiRequestBoundary(
+      requestWithIp(),
+      'token',
+      member,
+      config,
+      new AbortController().signal,
+    );
     assert(!limited.allowed && limited.status === 429, 'expected quota 429');
     assert(limited.error === 'rate_limit_exceeded', 'expected stable quota code');
 
     globalThis.fetch = () => Promise.resolve(new Response(null, { status: 401 }));
-    const expired = await enforceAiRequestBoundary(requestWithIp(), 'token', member, config);
+    const expired = await enforceAiRequestBoundary(
+      requestWithIp(),
+      'token',
+      member,
+      config,
+      new AbortController().signal,
+    );
     assert(!expired.allowed && expired.status === 401, 'expected expired token 401');
 
     globalThis.fetch = () => Promise.resolve(new Response(null, { status: 403 }));
-    const inactive = await enforceAiRequestBoundary(requestWithIp(), 'token', member, config);
+    const inactive = await enforceAiRequestBoundary(
+      requestWithIp(),
+      'token',
+      member,
+      config,
+      new AbortController().signal,
+    );
     assert(!inactive.allowed && inactive.status === 403, 'expected inactive member 403');
 
     globalThis.fetch = () => Promise.reject(new Error('network unavailable'));
-    const unavailable = await enforceAiRequestBoundary(requestWithIp(), 'token', member, config);
+    const unavailable = await enforceAiRequestBoundary(
+      requestWithIp(),
+      'token',
+      member,
+      config,
+      new AbortController().signal,
+    );
     assert(!unavailable.allowed && unavailable.status === 503, 'expected RPC failure 503');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+Deno.test('auth and quota network calls use the caller deadline signal', async () => {
+  const originalFetch = globalThis.fetch;
+  const controller = new AbortController();
+  const observedSignals: AbortSignal[] = [];
+  try {
+    globalThis.fetch = (_input, init) => {
+      observedSignals.push(init?.signal as AbortSignal);
+      if (observedSignals.length === 1) {
+        return Promise.resolve(Response.json({
+          id: 'member-1',
+          is_anonymous: false,
+          app_metadata: { provider: 'email' },
+        }));
+      }
+      return Promise.resolve(Response.json({ allowed: true }));
+    };
+
+    const user = await fetchVerifiedAiUser('token', config, controller.signal);
+    assert(user?.sub === 'member-1', 'expected verified member');
+    const result = await enforceAiRequestBoundary(
+      requestWithIp(),
+      'token',
+      user,
+      config,
+      controller.signal,
+    );
+    assert(result.allowed, 'expected quota allowance');
+    assert(observedSignals.length === 2, 'expected auth and quota fetches');
+    assert(
+      observedSignals.every((signal) => signal === controller.signal),
+      'expected one shared auth/quota deadline signal',
+    );
   } finally {
     globalThis.fetch = originalFetch;
   }

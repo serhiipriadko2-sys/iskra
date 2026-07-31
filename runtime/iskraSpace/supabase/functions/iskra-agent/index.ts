@@ -2,12 +2,17 @@ import {
   AI_RATE_LIMIT_IP_HMAC_SECRET_ENV,
   buildCorsHeaders,
   enforceAiRequestBoundary,
-  parseVerifiedAiUser,
+  fetchVerifiedAiUser,
   isAllowedOrigin,
   type AiBoundaryConfig,
-  type VerifiedAiUser,
 } from '../_shared/aiBoundary.ts';
-import { readBoundedJsonBody } from '../_shared/aiContentPolicy.ts';
+import {
+  MAX_AI_AUTH_QUOTA_TIMEOUT_MS,
+  MAX_AI_PROVIDER_TIMEOUT_MS,
+  MAX_AI_REQUEST_DURATION_MS,
+  createDeadline,
+  readBoundedJsonBody,
+} from '../_shared/aiContentPolicy.ts';
 
 type IskraAgentRequest = {
   message?: string;
@@ -77,26 +82,6 @@ function extractBearerToken(req: Request): string | null {
   return token;
 }
 
-async function validateJwt(token: string): Promise<VerifiedAiUser | null> {
-  if (!SUPABASE_URL || !SUPABASE_API_KEY) return null;
-
-  try {
-    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        apikey: SUPABASE_API_KEY,
-      },
-    });
-
-    if (!res.ok) return null;
-
-    return parseVerifiedAiUser(await res.json());
-  } catch {
-    return null;
-  }
-}
-
 function requestId(): string {
   return crypto.randomUUID();
 }
@@ -150,11 +135,9 @@ Deno.serve(async (req) => {
     }
     return new Response(null, { status: 204, headers: corsHeaders(origin) });
   }
-
   if (req.method !== "POST") {
     return json({ error: "method_not_allowed" }, { status: 405 }, origin);
   }
-
   if (!isOriginAllowed(origin)) {
     return json({ error: "Origin not allowed" }, { status: 403 }, origin);
   }
@@ -164,60 +147,93 @@ Deno.serve(async (req) => {
     return json({ error: "Missing Authorization bearer token" }, { status: 401 }, origin);
   }
 
-  const jwt = await validateJwt(token);
-  if (!jwt) {
-    return json({ error: "Invalid or expired token" }, { status: 401 }, origin);
-  }
-
-  // Resolve membership and consume quota before inspecting payload/provider
-  // configuration. Every direct HTTP path therefore has the same beta gate.
-  const boundary = await enforceAiRequestBoundary(req, token, jwt, boundaryConfig());
-  if (!boundary.allowed) {
-    return json({ error: boundary.error }, { status: boundary.status }, origin);
-  }
-
-  const parsedBody = await readBoundedJsonBody(req);
-  if (!parsedBody.ok) {
-    return json({ error: parsedBody.code }, { status: parsedBody.status }, origin);
-  }
-
-  const agentId = Deno.env.get("AGENT_ID");
-  const agentToken = Deno.env.get("AGENT_ACCESS_TOKEN");
-
-  if (!agentId || !agentToken) {
-    return json({ error: "agent_not_configured" }, { status: 500 }, origin);
-  }
-
-  const payload = parsedBody.value.body as IskraAgentRequest;
-  const input = normalizePayload(payload, jwt.sub);
-  const rid = typeof input.request_id === "string" ? input.request_id : requestId();
-
+  const config = boundaryConfig();
+  const requestDeadline = createDeadline(req.signal, MAX_AI_REQUEST_DURATION_MS);
   try {
-    const agentResponse = await fetch(`${AGENT_API_BASE_ENV}/${agentId}/trigger`, {
-      method: "POST",
-      headers: {
-        "authorization": `Bearer ${agentToken}`,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ input }),
-    });
+    const authQuotaDeadline = createDeadline(
+      requestDeadline.signal,
+      MAX_AI_AUTH_QUOTA_TIMEOUT_MS,
+    );
+    let jwt;
+    try {
+      jwt = await fetchVerifiedAiUser(token, config, authQuotaDeadline.signal);
+      if (!jwt) {
+        const error = authQuotaDeadline.signal.aborted
+          ? "auth_quota_timeout"
+          : "Invalid or expired token";
+        const status = authQuotaDeadline.signal.aborted ? 503 : 401;
+        return json({ error }, { status }, origin);
+      }
 
-    const raw = await agentResponse.json().catch(() => ({}));
-
-    if (!agentResponse.ok) {
-      return json({
-        reply: "Agent API request failed.",
-        status: "error",
-        actions: [],
-        trace: { facts: [], hypotheses: [], risks: ["upstream_unavailable"] },
-        delta: {},
-        artifact_receipt: null,
-        request_id: rid,
-      }, { status: 502 }, origin);
+      const boundary = await enforceAiRequestBoundary(
+        req,
+        token,
+        jwt,
+        config,
+        authQuotaDeadline.signal,
+      );
+      if (!boundary.allowed) {
+        if (authQuotaDeadline.signal.aborted) {
+          return json({ error: "auth_quota_timeout" }, { status: 503 }, origin);
+        }
+        return json({ error: boundary.error }, { status: boundary.status }, origin);
+      }
+    } finally {
+      authQuotaDeadline.abort();
+      authQuotaDeadline.dispose();
     }
 
-    return json(normalizeAgentResponse(raw, rid), {}, origin);
-  } catch {
-    return json({ error: "agent_upstream_unavailable" }, { status: 502 }, origin);
+    const parsedBody = await readBoundedJsonBody(req);
+    if (!parsedBody.ok) {
+      return json({ error: parsedBody.code }, { status: parsedBody.status }, origin);
+    }
+
+    const agentId = Deno.env.get("AGENT_ID");
+    const agentToken = Deno.env.get("AGENT_ACCESS_TOKEN");
+    if (!agentId || !agentToken) {
+      return json({ error: "agent_not_configured" }, { status: 500 }, origin);
+    }
+
+    const payload = parsedBody.value.body as IskraAgentRequest;
+    const input = normalizePayload(payload, jwt.sub);
+    const rid = typeof input.request_id === "string" ? input.request_id : requestId();
+    const providerDeadline = createDeadline(
+      requestDeadline.signal,
+      MAX_AI_PROVIDER_TIMEOUT_MS,
+    );
+
+    try {
+      const agentResponse = await fetch(`${AGENT_API_BASE_ENV}/${agentId}/trigger`, {
+        method: "POST",
+        headers: {
+          "authorization": `Bearer ${agentToken}`,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ input }),
+        signal: providerDeadline.signal,
+      });
+
+      const raw = await agentResponse.json().catch(() => ({}));
+      if (!agentResponse.ok) {
+        return json({
+          reply: "Agent API request failed.",
+          status: "error",
+          actions: [],
+          trace: { facts: [], hypotheses: [], risks: ["upstream_unavailable"] },
+          delta: {},
+          artifact_receipt: null,
+          request_id: rid,
+        }, { status: 502 }, origin);
+      }
+      return json(normalizeAgentResponse(raw, rid), {}, origin);
+    } catch {
+      return json({ error: "agent_upstream_unavailable" }, { status: 502 }, origin);
+    } finally {
+      providerDeadline.abort();
+      providerDeadline.dispose();
+    }
+  } finally {
+    requestDeadline.abort();
+    requestDeadline.dispose();
   }
 });

@@ -9,6 +9,10 @@ const edgeFunctionSource = readFileSync(
   join(__dirname, '../../supabase/functions/iskra-agent/index.ts'),
   'utf-8',
 );
+const boundarySource = readFileSync(
+  join(__dirname, '../../supabase/functions/_shared/aiBoundary.ts'),
+  'utf-8',
+);
 
 describe('iskra-agent Edge Function security boundary', () => {
   it('does not expose wildcard CORS by default', () => {
@@ -21,14 +25,15 @@ describe('iskra-agent Edge Function security boundary', () => {
 
   it('verifies the JWT signature via the Supabase auth endpoint (no raw base64 decode)', () => {
     // The insecure prior implementation trusted an unverified base64-decoded `sub`.
-    expect(edgeFunctionSource).toContain('/auth/v1/user');
+    expect(boundarySource).toContain('/auth/v1/user');
+    expect(boundarySource).toContain('export async function fetchVerifiedAiUser');
     expect(edgeFunctionSource).not.toContain('function readUserId');
   });
 
   it('requires origin, JWT and shared closed-beta quota before calling the billed upstream agent API', () => {
     const originCheck = edgeFunctionSource.indexOf('if (!isOriginAllowed(origin))');
     const tokenCheck = edgeFunctionSource.indexOf('const token = extractBearerToken(req);');
-    const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token);');
+    const jwtCheck = edgeFunctionSource.indexOf('jwt = await fetchVerifiedAiUser(');
     const quotaCheck = edgeFunctionSource.indexOf('const boundary = await enforceAiRequestBoundary(');
     const payloadRead = edgeFunctionSource.indexOf('const parsedBody = await readBoundedJsonBody(req);');
     const providerConfig = edgeFunctionSource.indexOf('const agentId = Deno.env.get("AGENT_ID")');
@@ -45,6 +50,11 @@ describe('iskra-agent Edge Function security boundary', () => {
     expect(edgeFunctionSource).toContain("from '../_shared/aiContentPolicy.ts'");
     expect(edgeFunctionSource).not.toContain('req.json()');
     expect(edgeFunctionSource).not.toContain('rlBuckets');
+    expect(edgeFunctionSource).toContain('MAX_AI_REQUEST_DURATION_MS');
+    expect(edgeFunctionSource).toContain('MAX_AI_AUTH_QUOTA_TIMEOUT_MS');
+    expect(edgeFunctionSource).toContain('MAX_AI_PROVIDER_TIMEOUT_MS');
+    expect(edgeFunctionSource).toContain('signal: providerDeadline.signal');
+    expect(edgeFunctionSource).not.toContain('async function validateJwt');
     expect(edgeFunctionSource).not.toContain('console.');
   });
 });

@@ -51,8 +51,12 @@ describe('AI Edge closed-beta quota contract', () => {
     const gemini = readOrEmpty(geminiPath);
     const iskraAgent = readOrEmpty(iskraAgentPath);
 
+    expect(sharedBoundary).toContain('export async function fetchVerifiedAiUser');
+    expect(sharedBoundary).toContain('parseVerifiedAiUser(await response.json())');
+    expect(sharedBoundary).toContain('signal,');
     for (const edgeSource of [gemini, iskraAgent]) {
-      expect(edgeSource).toContain('parseVerifiedAiUser(await res.json())');
+      expect(edgeSource).toContain('fetchVerifiedAiUser(');
+      expect(edgeSource).not.toContain('async function validateJwt');
       expect(edgeSource).not.toContain('JWT validation error');
     }
     expect(sharedBoundary).toContain('record.is_anonymous === true || anonymousProvider');

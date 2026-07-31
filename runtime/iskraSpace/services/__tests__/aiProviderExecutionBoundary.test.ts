@@ -59,7 +59,8 @@ describe('server provider execution boundary', () => {
     expect(handlerSource).toContain('encodeWithinStreamBudget');
     expect(handlerSource).toContain('controller.error');
     expect(handlerSource).toContain('cancel()');
-    expect(handlerSource).toContain('await runWithFallback(action, payload, req.signal)');
+    expect(handlerSource).toContain('await runWithFallback(');
+    expect(handlerSource).toContain('requestDeadline.signal');
     expect(handlerSource).toContain('const emittedBytes = budget.used > bytesBeforeAttempt');
   });
 

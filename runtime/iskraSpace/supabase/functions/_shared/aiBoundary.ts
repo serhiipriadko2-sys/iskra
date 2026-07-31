@@ -31,6 +31,30 @@ export function parseVerifiedAiUser(value: unknown): VerifiedAiUser | null {
   };
 }
 
+export async function fetchVerifiedAiUser(
+  token: string,
+  config: Pick<AiBoundaryConfig, 'supabaseUrl' | 'supabaseApiKey'>,
+  signal: AbortSignal,
+): Promise<VerifiedAiUser | null> {
+  if (!config.supabaseUrl || !config.supabaseApiKey || signal.aborted) return null;
+  try {
+    const response = await fetch(
+      `${config.supabaseUrl.replace(/\/$/, '')}/auth/v1/user`,
+      {
+        method: 'GET',
+        headers: {
+          authorization: `Bearer ${token}`,
+          apikey: config.supabaseApiKey,
+        },
+        signal,
+      },
+    );
+    return response.ok ? parseVerifiedAiUser(await response.json()) : null;
+  } catch {
+    return null;
+  }
+}
+
 export type AiBoundaryResult =
   | { allowed: true }
   | { allowed: false; status: 401 | 403 | 429 | 503; error: string };
@@ -146,6 +170,7 @@ export async function enforceAiRequestBoundary(
   token: string,
   user: VerifiedAiUser,
   config: AiBoundaryConfig,
+  signal: AbortSignal,
 ): Promise<AiBoundaryResult> {
   // Callers already derive anonymity from auth.jwt() ->> 'is_anonymous' and the
   // anonymous provider marker; this guard ensures the shared boundary stays
@@ -179,6 +204,7 @@ export async function enforceAiRequestBoundary(
         'content-type': 'application/json',
       },
       body: JSON.stringify({ p_ip_digest: ipDigest }),
+      signal,
     });
   } catch {
     return unavailable();

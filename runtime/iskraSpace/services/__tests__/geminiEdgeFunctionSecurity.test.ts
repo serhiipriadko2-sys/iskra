@@ -20,10 +20,10 @@ describe('gemini Edge Function security boundary', () => {
 
   it('keeps closed-beta auth and shared transactional quota before AI provider calls', () => {
     const tokenCheck = edgeFunctionSource.indexOf('const token = extractBearerToken(req);');
-    const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token);');
+    const jwtCheck = edgeFunctionSource.indexOf('jwt = await fetchVerifiedAiUser(');
     const quotaCheck = edgeFunctionSource.indexOf('const boundary = await enforceAiRequestBoundary(');
     const payloadRead = edgeFunctionSource.indexOf('const parsedBody = await readBoundedJsonBody(req);');
-    const providerCall = edgeFunctionSource.indexOf('await runWithFallback(action, payload, req.signal)');
+    const providerCall = edgeFunctionSource.indexOf('await runWithFallback(');
 
     expect(tokenCheck).toBeGreaterThan(-1);
     expect(jwtCheck).toBeGreaterThan(tokenCheck);
@@ -34,6 +34,10 @@ describe('gemini Edge Function security boundary', () => {
     expect(edgeFunctionSource).toContain("from '../_shared/aiContentPolicy.ts'");
     expect(edgeFunctionSource).not.toContain('req.json()');
     expect(edgeFunctionSource).not.toContain('rlBuckets');
+    expect(edgeFunctionSource).toContain('MAX_AI_REQUEST_DURATION_MS');
+    expect(edgeFunctionSource).toContain('MAX_AI_AUTH_QUOTA_TIMEOUT_MS');
+    expect(edgeFunctionSource).toContain('requestDeadline.signal');
+    expect(edgeFunctionSource).not.toContain('async function validateJwt');
     expect(edgeFunctionSource).not.toContain('console.');
   });
 });

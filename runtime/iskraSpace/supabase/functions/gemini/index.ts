@@ -3,13 +3,14 @@ import {
   AI_RATE_LIMIT_IP_HMAC_SECRET_ENV,
   buildCorsHeaders,
   enforceAiRequestBoundary,
-  parseVerifiedAiUser,
+  fetchVerifiedAiUser,
   isAllowedOrigin,
   type AiBoundaryConfig,
-  type VerifiedAiUser,
 } from '../_shared/aiBoundary.ts';
 import {
+  MAX_AI_AUTH_QUOTA_TIMEOUT_MS,
   MAX_AI_PROVIDER_TIMEOUT_MS,
+  MAX_AI_REQUEST_DURATION_MS,
   MAX_AI_STREAM_BYTES,
   MAX_AI_STREAM_DURATION_MS,
   createDeadline,
@@ -73,26 +74,6 @@ function json(body: unknown, init: ResponseInit = {}, origin: string | null = nu
       ...(init.headers ?? {}),
     },
   });
-}
-
-async function validateJwt(token: string): Promise<VerifiedAiUser | null> {
-  if (!SUPABASE_URL || !SUPABASE_API_KEY) return null;
-
-  try {
-    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        apikey: SUPABASE_API_KEY,
-      },
-    });
-
-    if (!res.ok) return null;
-
-    return parseVerifiedAiUser(await res.json());
-  } catch {
-    return null;
-  }
 }
 
 function extractBearerToken(req: Request): string | null {
@@ -459,104 +440,134 @@ async function streamWithFallback(
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin');
 
-  // CORS preflight
   if (req.method === 'OPTIONS') {
     if (!isOriginAllowed(origin)) {
       return json({ error: 'Origin not allowed' }, { status: 403 }, origin);
     }
     return new Response(null, { headers: corsHeaders(origin), status: 204 });
   }
-
   if (req.method !== 'POST') {
     return json({ error: 'Method not allowed' }, { status: 405 }, origin);
   }
-
-  // The beta is browser-only: an absent origin is denied too.
   if (!isOriginAllowed(origin)) {
     return json({ error: 'Origin not allowed' }, { status: 403 }, origin);
   }
 
-  // Authentication: require a valid Supabase JWT
   const token = extractBearerToken(req);
   if (!token) {
     return json({ error: 'Missing Authorization bearer token' }, { status: 401 }, origin);
   }
 
-  const jwt = await validateJwt(token);
-  if (!jwt) {
-    return json({ error: 'Invalid or expired token' }, { status: 401 }, origin);
-  }
-
-  // Membership and quota are security boundaries, not payload-dependent
-  // validation. Run them before parsing or routing so inactive/anonymous
-  // sessions cannot probe provider behavior through alternate error paths.
-  const boundary = await enforceAiRequestBoundary(req, token, jwt, boundaryConfig());
-  if (!boundary.allowed) {
-    return json({ error: boundary.error }, { status: boundary.status }, origin);
-  }
-
-  const parsedBody = await readBoundedJsonBody(req);
-  if (!parsedBody.ok) {
-    return json({ error: parsedBody.code }, { status: parsedBody.status }, origin);
-  }
-
-  const payload = parsedBody.value.body as AiProxyPayload;
-  const action = payload.action;
-  if (!action) {
-    return json({ error: 'Missing action' }, { status: 400 }, origin);
-  }
+  const config = boundaryConfig();
+  const requestDeadline = createDeadline(req.signal, MAX_AI_REQUEST_DURATION_MS);
+  let deadlineTransferredToStream = false;
 
   try {
-    switch (action) {
-      case 'generateContent':
-      case 'embedContent': {
-        const result = await runWithFallback(action, payload, req.signal);
-        return json({ provider: result.provider, ...(result.response as Record<string, unknown>) }, {}, origin);
-      }
-
-      case 'streamGenerateContent': {
-        const streamAbort = new AbortController();
-        const forwardRequestAbort = () => streamAbort.abort();
-        if (req.signal.aborted) streamAbort.abort();
-        else req.signal.addEventListener('abort', forwardRequestAbort, { once: true });
-
-        const stream = new ReadableStream<Uint8Array>({
-          async start(controller) {
-            try {
-              await streamWithFallback(payload, controller, streamAbort.signal);
-              controller.close();
-            } catch (error) {
-              if (!streamAbort.signal.aborted) {
-                controller.error(error instanceof Error ? error : new Error('AI stream failed'));
-              }
-            } finally {
-              req.signal.removeEventListener('abort', forwardRequestAbort);
-            }
-          },
-          cancel() {
-            streamAbort.abort();
-            req.signal.removeEventListener('abort', forwardRequestAbort);
-          },
-        });
-
-        return new Response(stream, {
-          headers: {
-            ...corsHeaders(origin),
-            'content-type': 'text/event-stream; charset=utf-8',
-            'cache-control': 'no-cache, no-store',
-            connection: 'keep-alive',
-          },
-        });
-      }
-
-      default:
-        return json({ error: `Unsupported action: ${action}` }, { status: 400 }, origin);
-    }
-  } catch {
-    return json(
-      { error: 'AI provider unavailable' },
-      { status: 502 },
-      origin,
+    const authQuotaDeadline = createDeadline(
+      requestDeadline.signal,
+      MAX_AI_AUTH_QUOTA_TIMEOUT_MS,
     );
+    let jwt;
+    try {
+      jwt = await fetchVerifiedAiUser(token, config, authQuotaDeadline.signal);
+      if (!jwt) {
+        const error = authQuotaDeadline.signal.aborted
+          ? 'auth_quota_timeout'
+          : 'Invalid or expired token';
+        const status = authQuotaDeadline.signal.aborted ? 503 : 401;
+        return json({ error }, { status }, origin);
+      }
+
+      const boundary = await enforceAiRequestBoundary(
+        req,
+        token,
+        jwt,
+        config,
+        authQuotaDeadline.signal,
+      );
+      if (!boundary.allowed) {
+        if (authQuotaDeadline.signal.aborted) {
+          return json({ error: 'auth_quota_timeout' }, { status: 503 }, origin);
+        }
+        return json({ error: boundary.error }, { status: boundary.status }, origin);
+      }
+    } finally {
+      authQuotaDeadline.abort();
+      authQuotaDeadline.dispose();
+    }
+
+    const parsedBody = await readBoundedJsonBody(req);
+    if (!parsedBody.ok) {
+      return json({ error: parsedBody.code }, { status: parsedBody.status }, origin);
+    }
+
+    const payload = parsedBody.value.body as AiProxyPayload;
+    const action = payload.action;
+    if (!action) {
+      return json({ error: 'Missing action' }, { status: 400 }, origin);
+    }
+
+    try {
+      switch (action) {
+        case 'generateContent':
+        case 'embedContent': {
+          const result = await runWithFallback(
+            action,
+            payload,
+            requestDeadline.signal,
+          );
+          return json(
+            { provider: result.provider, ...(result.response as Record<string, unknown>) },
+            {},
+            origin,
+          );
+        }
+
+        case 'streamGenerateContent': {
+          const stream = new ReadableStream<Uint8Array>({
+            async start(controller) {
+              try {
+                await streamWithFallback(payload, controller, requestDeadline.signal);
+                controller.close();
+              } catch (error) {
+                if (!requestDeadline.signal.aborted) {
+                  controller.error(
+                    error instanceof Error ? error : new Error('AI stream failed'),
+                  );
+                }
+              } finally {
+                requestDeadline.abort();
+                requestDeadline.dispose();
+              }
+            },
+            cancel() {
+              requestDeadline.abort();
+              requestDeadline.dispose();
+            },
+          });
+
+          const response = new Response(stream, {
+            headers: {
+              ...corsHeaders(origin),
+              'content-type': 'text/event-stream; charset=utf-8',
+              'cache-control': 'no-cache, no-store',
+              connection: 'keep-alive',
+            },
+          });
+          deadlineTransferredToStream = true;
+          return response;
+        }
+
+        default:
+          return json({ error: `Unsupported action: ${action}` }, { status: 400 }, origin);
+      }
+    } catch {
+      return json({ error: 'AI provider unavailable' }, { status: 502 }, origin);
+    }
+  } finally {
+    if (!deadlineTransferredToStream) {
+      requestDeadline.abort();
+      requestDeadline.dispose();
+    }
   }
 });
