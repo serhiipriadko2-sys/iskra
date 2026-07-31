@@ -320,3 +320,10 @@
 - **Proof boundary:** no database migration, valid-member provider invocation, browser UI acceptance, Builder activation or advisor remediation is asserted.
 - **Receipt:** `docs/operations/iskraspace_production_promotion_2026-07-31.md`.
 - **Status:** verified-live-production for `gemini` and `iskra-agent`.
+
+### EVI-20260731-002: Supabase advisor and migration-provenance separation
+- **Assertion:** Remaining production advisor findings require a separate database/Auth lifecycle; they neither invalidate nor belong inside the completed function-only Edge release.
+- **Live evidence:** 29 security and 50 performance notices; production history contains live-only migrations `20260728171718` and `20260728183421`, while repository migration `20260718200634` is absent from live history; Graph public-role read policies remain present without a direct `anon` table grant; `authenticated` has broad Graph table privileges; 13 authenticated SECURITY DEFINER RPCs have explicit search paths but require semantic grant/body review.
+- **Repository evidence:** `supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql`; ADR-20260731-001; `docs/operations/supabase_advisor_snapshot_2026-07-31.md`.
+- **Decision boundary:** read-only observation and accepted plan only; no migration, policy, grant, index, extension or Auth write performed.
+- **Status:** accepted for staged remediation planning; implementation and live verification pending.

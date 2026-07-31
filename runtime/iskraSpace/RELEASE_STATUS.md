@@ -13,7 +13,7 @@ App path: `runtime/iskraSpace`
 - `[FACT] supabase-verified` Production source read-back matched 6/6 files. Negative-only smoke passed 8/8 observations and recent logs contained only expected `OPTIONS 204` and platform JWT `POST 401` events for the new versions.
 - `[FACT] cleanup-verified` The temporary preview branch was deleted; branch read-back returned production `main` only.
 - Full production receipt: `docs/operations/iskraspace_production_promotion_2026-07-31.md`.
-- Existing Supabase database/auth WARN/INFO findings are not part of this function-only release. They are handled by a separate advisor ADR and must not be represented as a failed Edge promotion.
+- Existing Supabase database/auth WARN/INFO findings are not part of this function-only release. ADR-20260731-001 and `docs/operations/supabase_advisor_snapshot_2026-07-31.md` isolate their provenance-first remediation; they must not be represented as a failed Edge promotion.
 
 ## 2026-07-28 verified-live-staging acceptance
 

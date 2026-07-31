@@ -284,3 +284,11 @@
 - **Evidence:** Staging 61/61 and cleanup PASS; production `gemini` v14 and `iskra-agent` v9 ACTIVE/JWT; source read-back 6/6; smoke 8/8; full receipt `docs/operations/iskraspace_production_promotion_2026-07-31.md`.
 - **Boundary:** no database migration or billed provider request occurred; existing Supabase advisors are separated into their own ADR.
 - **Status:** verified-live-production for the bounded Edge scope.
+
+### JRN-20260731-002: Supabase advisor ADR and migration provenance hold
+- **Context:** Post-deploy advisor review exposed database/auth warnings plus a source/live migration-history conflict that is independent of the successful Edge promotion.
+- **Actions:** Queried current advisors, migration history, selected policies and SECURITY DEFINER metadata read-only; compared them with repository migrations; separated evidence into `docs/operations/supabase_advisor_snapshot_2026-07-31.md`; accepted ADR-20260731-001 with a provenance-first, staging-only remediation sequence.
+- **Finding:** Production has two migration versions absent from `main`, while repository migration `20260718200634` is absent from production history. Public-role Graph read policies and overlapping permissive policies remain live, but no direct `anon` table grant was observed. The authenticated Graph grant set is broader than the supported API contract has yet proven. Direct application is blocked until exact provenance and clean replay are restored.
+- **Boundary:** no live database/Auth mutation and no change to the verified Edge source.
+- **Next:** recover live-only SQL bodies/checksums, build a migration manifest, clean-replay, then test a forward reconciliation on data-less staging.
+- **Status:** ADR accepted; implementation pending.
