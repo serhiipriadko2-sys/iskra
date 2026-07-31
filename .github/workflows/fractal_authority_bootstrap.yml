@@ -52,9 +52,9 @@ jobs:
           cat .github/fractal-authority-stage.part*.b64 | tr -d '\r\n' | base64 -d > /tmp/fractal-authority-stage.zip
           echo 'fb7e7ed7dedb362e4c2a54ab0bc69b691f14ca28e55e74d07487e93649c24fbd  /tmp/fractal-authority-stage.zip' | sha256sum -c -
           unzip -o /tmp/fractal-authority-stage.zip -d .
+          mv .github/workflows/fractal_authority.yml .github/fractal-authority.workflow.yml.stage
           rm -f .github/fractal-authority-stage.part*.b64
           rm -f .github/fractal-authority-stage.README
-          rm -f .github/workflows/fractal_authority_bootstrap.yml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
