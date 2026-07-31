@@ -794,6 +794,23 @@ negRelease558('neg: file28 T96 row corrupted with decoy span elsewhere', 'C28', 
     'NOTE: unrelated `29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28` aside.\n');
 });
 
+// operator rebuilds without --behavior-adr: the accepted PINO amendment's
+// governance identity silently disappears from the manifest even though the
+// baseline manifest (v5.5.7) still carries it — must fail closed (review A-3)
+negRelease558('neg: behavior_adrs dropped from baseline on rebuild', 'C29', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  delete m.behavior_adrs;
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+// same silent-loss scenario for supplemental_acceptance_range
+negRelease558('neg: supplemental_acceptance_range dropped from baseline on rebuild', 'C29', (dir) => {
+  const p = join(dir, 'support/MANIFEST.json');
+  const m = JSON.parse(readFileSync(p, 'utf8'));
+  delete m.supplemental_acceptance_range;
+  writeFileSync(p, JSON.stringify(m, null, 2));
+});
+
 // Project Instructions grow past the v5.5.8+ internal release_ceiling (5600) while
 // staying under the 6000 platform ceiling — must fail closed, not just warn
 negRelease558('neg: instructions exceed release ceiling', 'C8', (dir) => {

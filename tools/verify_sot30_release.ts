@@ -263,6 +263,29 @@ const actualChanged = knames.filter((n) => kh[n] !== baseHash[n]).sort();
 check(setEq(cset, new Set(actualChanged)), 'C11',
   `changed set = actual diff to baseline (${actualChanged.length} changed)`);
 
+// ---- C29: behavior-amendment metadata inherited fail-closed (review A-3) ----
+// If the baseline manifest already carries accepted behavior_adrs (e.g. PINO's
+// ADR-20260730-02) and/or a supplemental_acceptance_range, the builder support
+// for --behavior-adr/--supplemental-acceptance-range is OPTIONAL, so an operator
+// could rebuild without those flags and still get a syntactically valid package
+// that silently drops the accepted amendment's governance identity. Require the
+// current manifest's behavior_adrs to be a superset of the baseline's, and its
+// supplemental_acceptance_range (if the baseline set one) to be carried forward
+// unchanged. No-op when the baseline itself has neither field.
+{
+  const baseBehaviorAdrs: string[] = Array.isArray(base.behavior_adrs) ? base.behavior_adrs : [];
+  const curBehaviorAdrs: string[] = Array.isArray(manifest.behavior_adrs) ? manifest.behavior_adrs : [];
+  const adrsInherited = baseBehaviorAdrs.every((a) => curBehaviorAdrs.includes(a));
+  const baseSupplemental: string | undefined = base.supplemental_acceptance_range;
+  const supplementalInherited = !baseSupplemental
+    || manifest.supplemental_acceptance_range === baseSupplemental;
+  check(adrsInherited && supplementalInherited, 'C29',
+    `behavior-amendment metadata inherited from baseline `
+    + `(baseline behavior_adrs=[${baseBehaviorAdrs.join(',')}] ⊆ `
+    + `current=[${curBehaviorAdrs.join(',')}]: ${adrsInherited}; `
+    + `baseline supplemental_acceptance_range=${baseSupplemental ?? 'n/a'} carried=${supplementalInherited})`);
+}
+
 // ---- version consistency ----
 let verOk = manifest.package_version === version;
 for (const n of knames) {
