@@ -8,8 +8,14 @@
  */
 
 import { GoogleGenAI, type Content } from "@google/genai";
+import { z } from "zod";
 import type { IskraMetrics } from "../../types/metrics.js";
 import type { VoiceName } from "../../types/voices.js";
+import {
+  calculateSiftOmega,
+  decideSiftVerdictStatus,
+  type SiftResult,
+} from "../../types/sift.js";
 
 const DEFAULT_MODEL = "gemini-2.0-flash";
 
@@ -91,6 +97,23 @@ D (Depth): Источник → Вывод → Факт
 Ω (Omega): Уверенность 0-95%
 Λ (Lambda): Следующий шаг (actionable)
 `;
+
+/**
+ * Strict schema for the model's raw SIFT self-report.
+ *
+ * This is a *candidate* assessment only — model output is untrusted input,
+ * never a verified verdict. `.strict()` rejects unexpected fields; there is
+ * no "FACT"/"verified" status in this enum because a model cannot assign
+ * itself that label (see decideSiftVerdictStatus in ../../types/sift.js).
+ */
+const ModelAssessmentSchema = z
+  .object({
+    status: z.enum(["supported_candidate", "contradicted_candidate", "uncertain_candidate"]),
+    confidenceCandidate: z.number().finite().min(0).max(0.95),
+    proposedSources: z.array(z.string().trim().max(2048)).max(12),
+    rationaleSummary: z.string().trim().min(1).max(8000),
+  })
+  .strict();
 
 /**
  * Message interface for chat history
@@ -219,7 +242,17 @@ ${DELTA_PROTOCOL}
   }
 
   /**
-   * SIFT verification of a statement
+   * SIFT verification of a statement.
+   *
+   * Fail-closed contract: the model's own JSON is a candidate assessment,
+   * never a verdict. There is no independent evidence-retrieval adapter
+   * wired in yet (Wave 1 — see governance/adr for the SIFT runtime repair
+   * plan), so `source`/`evidence`/`trace` below are structurally empty by
+   * construction. Feeding that into the existing decideSiftVerdictStatus()
+   * scorer (types/sift.ts) makes 'verified'/FACT mechanically unreachable
+   * today — the model cannot talk its way to a FACT verdict — while wiring
+   * real adapters in Wave 1 requires no change to this decision logic, only
+   * populating real evidence.
    */
   async siftVerify(statement: string): Promise<{
     statement: string;
@@ -229,20 +262,16 @@ ${DELTA_PROTOCOL}
     sources: string[];
     trace: string;
   }> {
-    const systemInstruction = `Ты — SIFT-верификатор. Анализируй утверждения по протоколу:
-S - Source: Найди источники
-I - Inference: Оцени логический вывод
-F - Fact: Определи тип (FACT/INFERENCE/UNSOURCED)
-T - Trace: Создай цепочку рассуждений
+    const trace = `SIFT-CLI-${Date.now()}`;
 
-Ответ в JSON формате:
+    const systemInstruction = `Ты — модель-ассистент для SIFT-протокола. Твой вывод — КАНДИДАТ на оценку, не финальный вердикт: независимая проверка источников происходит отдельно, вне твоего ответа.
+
+Ответ строго в JSON формате (без лишних полей):
 {
-  "statement": "исходное утверждение",
-  "verdict": "FACT" | "INFERENCE" | "UNSOURCED",
-  "confidence": 0.0-1.0,
-  "reasoning": "цепочка рассуждений",
-  "sources": ["источник1", "источник2"],
-  "trace": "SIFT-YYYY-XXX"
+  "status": "supported_candidate" | "contradicted_candidate" | "uncertain_candidate",
+  "confidenceCandidate": 0.0-0.95,
+  "proposedSources": ["источник1", "источник2"],
+  "rationaleSummary": "краткое обоснование"
 }`;
 
     const response = await this.genAI.models.generateContent({
@@ -255,19 +284,72 @@ T - Trace: Создай цепочку рассуждений
     });
     const text = response.text ?? "";
 
+    let parsed: unknown;
     try {
-      return JSON.parse(text);
+      parsed = JSON.parse(text);
     } catch {
-      // Fallback if JSON parsing fails
       return {
         statement,
         verdict: "UNSOURCED",
-        confidence: 0.5,
-        reasoning: text,
+        confidence: 0,
+        reasoning: "Model response was not valid JSON; treated as unverifiable candidate.",
         sources: [],
-        trace: `SIFT-CLI-${Date.now()}`,
+        trace,
       };
     }
+
+    const schemaResult = ModelAssessmentSchema.safeParse(parsed);
+    if (!schemaResult.success) {
+      const issues = schemaResult.error.issues
+        .map((issue) => `${issue.path.join(".") || "(root)"}: ${issue.message}`)
+        .join("; ");
+      return {
+        statement,
+        verdict: "UNSOURCED",
+        confidence: 0,
+        reasoning: `Model response failed strict schema validation (${issues}); treated as unverifiable candidate.`,
+        sources: [],
+        trace,
+      };
+    }
+
+    const assessment = schemaResult.data;
+
+    // No evidence adapter exists yet: all evidence-dependent fields are
+    // empty by construction, not by omission. `verdict` is a placeholder —
+    // calculateSiftOmega()/decideSiftVerdictStatus() never read it, they
+    // derive the real verdict from source/inference/evidence/trace below.
+    const siftInput: Omit<SiftResult, "delta"> = {
+      source: {
+        identified: [],
+        reliability: 0,
+        flags: assessment.status === "contradicted_candidate" ? ["model_flagged_contradiction"] : [],
+      },
+      inference: { claims: [], assumptions: [], logicalValidity: 0, fallacies: [] },
+      evidence: { supporting: [], contradicting: [], neutral: [], quality: 0 },
+      trace: { chain: [], distortions: [], traceability: 0 },
+      verdict: { status: "unknown", confidence: 0, summary: "", caveats: [] },
+    };
+    const omega = calculateSiftOmega(siftInput);
+    const contraRatio =
+      siftInput.evidence.contradicting.length / (siftInput.evidence.supporting.length + 1);
+    const decision = decideSiftVerdictStatus({
+      omega,
+      contraRatio,
+      flagsCount: siftInput.source.flags.length,
+    });
+
+    const verdict: "FACT" | "INFERENCE" | "UNSOURCED" =
+      decision.status === "verified" ? "FACT" : decision.status === "partially_verified" ? "INFERENCE" : "UNSOURCED";
+
+    return {
+      statement,
+      verdict,
+      confidence: omega / 100,
+      reasoning: `[Model assessment — candidate only, not independently verified] ${assessment.rationaleSummary}`,
+      sources: assessment.proposedSources,
+      trace,
+    };
   }
 
   /**
