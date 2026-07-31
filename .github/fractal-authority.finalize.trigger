@@ -1,0 +1,2 @@
+finalize=2026-07-31T11:40:00Z
+expected_archive_sha256=fb7e7ed7dedb362e4c2a54ab0bc69b691f14ca28e55e74d07487e93649c24fbd
