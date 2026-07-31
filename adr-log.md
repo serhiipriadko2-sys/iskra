@@ -185,7 +185,7 @@ pull request if its verification gates fail.
 
 ## ADR-20260728-001: IskraSpace Canonical AI Boundary and Principal-Scoped Local State
 
-Status: accepted in source; verified-live-staging; production promotion pending.
+Status: accepted; verified-live-production for the bounded Edge scope.
 
 ### Context
 The dual-provider gateway allowed the browser payload and runtime configuration
@@ -250,6 +250,13 @@ post-run advisor/log review. It uses `AI_EDGE_TEST_MODE=true`, so it does not
 prove real provider availability, billing behavior, production traffic or
 browser UI success.
 
+Production follow-up `docs/operations/iskraspace_production_promotion_2026-07-31.md`
+proves exact release SHA `27c60b190dcc89edf4981e8d9b9502a207ddaec0`,
+production secret-name/digest preflight, rollback capture, ACTIVE/JWT read-back,
+6/6 source identity, 8/8 negative smoke observations, post-deploy log review
+and staging deletion. It still does not prove a successful billed provider
+request or browser UI acceptance.
+
 ### Rollback / Reversal Trigger
 Rollback only if staged parity demonstrates a product-blocking incompatibility
 that cannot be fixed inside the bounded schema. Do not restore browser provider
@@ -261,8 +268,7 @@ Delta: AI routing and local-data ownership move from caller/device ambiguity to
 server/principal authority.
 D: Edge source, client storage source, contract tests, Deno tests, official
 Google Gen AI and Supabase Edge documentation.
-Omega: 0.96 for staging behavior; lower for production until exact deploy and
-read-back.
-Lambda: require green PR-head CI, production secret preflight, rollback
-capture, exact-source deployment/read-back and negative-only smoke before
-production promotion is declared complete.
+Omega: 0.95 for the verified function-only production boundary.
+Lambda: refresh after any deployed-file, JWT, ingress, origin or secret-contract
+change; database/auth advisor remediation remains a separate ADR and migration
+lifecycle.

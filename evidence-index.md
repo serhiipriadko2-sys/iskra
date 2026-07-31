@@ -313,3 +313,10 @@
 - **Containment:** an earlier disposable preview emitted branch credentials into local tool output; no value was committed, that preview was deleted, and the full sequence was repeated on the clean preview named above.
 - **Proof boundary:** `AI_EDGE_TEST_MODE=true`; no billed provider call, production deployment, browser UI acceptance or GitHub merge is asserted.
 - **Status:** verified-live-staging; production promotion pending exact-head CI and production preflight.
+
+### EVI-20260731-001: IskraSpace exact-source production promotion
+- **Assertion:** The reviewed P0 Edge source was promoted to production as a function-only change and verified through downloaded source, negative smoke, logs and cleanup.
+- **Evidence:** PR #316 merge `e3708407596581709c2cf86e336045d285ff1144`; PR #322 merge/release SHA `27c60b190dcc89edf4981e8d9b9502a207ddaec0`; refreshed staging `umjuptkdsjutzscvlqfq` at `gemini`/`iskra-agent` v2 with 6/6 source identity and 61/61 acceptance; production `gemini` v14 bundle `6c15096e3c0ce849743c253ebd2d316398a476ecfaae5ed882f4a99c899fea2a`; production `iskra-agent` v9 bundle `ac3e9d8b0e935934f0379d201d592d99cbac344af32356b63573fadc27cc22ad`; both ACTIVE with `verify_jwt=true`; production read-back 6/6; negative smoke 8/8; temporary preview deleted.
+- **Proof boundary:** no database migration, valid-member provider invocation, browser UI acceptance, Builder activation or advisor remediation is asserted.
+- **Receipt:** `docs/operations/iskraspace_production_promotion_2026-07-31.md`.
+- **Status:** verified-live-production for `gemini` and `iskra-agent`.

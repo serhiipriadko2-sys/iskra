@@ -277,3 +277,10 @@
 - **Risk:** Pre-fix automatic preview bundling used wrong default paths; explicit config-relative entrypoints and repository-root deploys now cover that source cause, but the new GitHub preview check must still pass independently. Manual scope proves only `gemini` and `iskra-agent`. Test mode proves no-upstream boundary behavior, not real provider success. Production remains unchanged.
 - **Next:** push the follow-up commit, require green exact-head CI, then perform production secret-name/pre-deploy rollback capture, exact-source deploy/read-back, negative-only smoke and post-deploy log review.
 - **Status:** verified-live-staging; production promotion pending.
+
+### JRN-20260731-001: IskraSpace production promotion closeout
+- **Context:** PR #316 and the CORS follow-up PR #322 were merged; production secrets were provisioned, while the accepted staging proof needed refresh on the exact merge source before promotion.
+- **Actions:** Froze detached source `27c60b190dcc89edf4981e8d9b9502a207ddaec0`; verified secret names/digests without raw values; captured production rollback source; redeployed the two approved functions to data-less staging; downloaded and compared six files; reran 61-test acceptance and cleanup; deployed only `gemini` and `iskra-agent` to production; repeated download/hash comparison; ran negative-only smoke; reviewed new-version logs/advisors; deleted staging and read back the branch list.
+- **Evidence:** Staging 61/61 and cleanup PASS; production `gemini` v14 and `iskra-agent` v9 ACTIVE/JWT; source read-back 6/6; smoke 8/8; full receipt `docs/operations/iskraspace_production_promotion_2026-07-31.md`.
+- **Boundary:** no database migration or billed provider request occurred; existing Supabase advisors are separated into their own ADR.
+- **Status:** verified-live-production for the bounded Edge scope.
