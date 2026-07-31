@@ -6,6 +6,7 @@ on:
       - feat/math-fractal-authority-v1
     paths:
       - '.github/workflows/fractal_authority_bootstrap.yml'
+      - '.github/fractal-authority.finalize.trigger'
   pull_request:
     branches:
       - main
@@ -15,6 +16,7 @@ on:
       - synchronize
     paths:
       - '.github/workflows/fractal_authority_bootstrap.yml'
+      - '.github/fractal-authority.finalize.trigger'
 
 permissions:
   contents: write
@@ -106,13 +108,15 @@ jobs:
           cp /tmp/fractal_authority.yml .github/workflows/fractal_authority.yml
           rm .github/workflows/fractal_authority_bootstrap.yml
           rm .github/fractal-authority.workflow.yml.stage
+          rm -f .github/fractal-authority.finalize.trigger
           git add -A .github
           pnpm exec tsx tools/update_ledger.ts
           pnpm exec tsx tools/verify_ledger.ts
           git reset HEAD -- \
             .github/workflows/fractal_authority.yml \
             .github/workflows/fractal_authority_bootstrap.yml \
-            .github/fractal-authority.workflow.yml.stage
+            .github/fractal-authority.workflow.yml.stage \
+            .github/fractal-authority.finalize.trigger
           rm -f .github/workflows/fractal_authority.yml
           cp /tmp/fractal_authority_bootstrap.yml .github/workflows/fractal_authority_bootstrap.yml
           cp /tmp/fractal_authority.yml .github/fractal-authority.workflow.yml.stage
