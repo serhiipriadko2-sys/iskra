@@ -8,9 +8,13 @@
   "status": {
     "live_bodies_recovered": true,
     "repo_readback_verified": true,
-    "clean_replay": "NOT_RUN",
-    "data_less_staging": "NOT_CREATED",
-    "production_db_mutation": false
+    "clean_replay": "PR_CI_PENDING",
+    "hosted_branch_automatic_replay": "FAILED_AFTER_20260718191950",
+    "data_less_staging_manual_repair": "PASS",
+    "advisor_before_after": "CAPTURED",
+    "two_principal_runtime_acceptance": "NOT_RUN_TOOL_SAFETY_BLOCK",
+    "production_db_mutation": false,
+    "production_promotion": "BLOCKED"
   },
   "entries": [
     {
@@ -52,22 +56,102 @@
         "byte_identical_to_applied": false,
         "all_whitespace_removed_equal": true
       }
+    },
+    {
+      "repo_version": "20260728180000",
+      "repo_name": "reconcile_gateway_events_live_schema",
+      "classification": "forward-only schema-snapshot reconstruction",
+      "original_migration_body_recovered": false,
+      "source": "read-only production catalog snapshot",
+      "repo_path": "supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql",
+      "github_blob_sha1": "786f54c46ed83e81f889ebd0a49e3115fbc745a8",
+      "bytes": 5396,
+      "sha256": "21e066e4449ef2547ea88d1e8a4d88c9486ca7f863c67a0a40a3ffd01fbe1491",
+      "staging_shape_match": {
+        "columns": true,
+        "defaults": true,
+        "constraints": true,
+        "indexes": true,
+        "rls": true,
+        "deny_policy": true,
+        "grants": true,
+        "owner": true,
+        "comment": true
+      }
     }
   ],
-  "unresolved_inventory": [
+  "staging": {
+    "branch_id": "34468814-3afa-4704-b28f-2d0216bf99c3",
+    "project_ref": "iaplmwwpzizmdrrwpkvw",
+    "name": "advisor-provenance-staging-20260731",
+    "with_data": false,
+    "persistent": false,
+    "platform_status": "MIGRATIONS_FAILED",
+    "database_status": "ACTIVE_HEALTHY",
+    "automatic_last_recorded_migration": "20260718191950_supabase_acl_and_graph_contract_hardening",
+    "manual_receipts": [
+      "reconcile_gateway_events_live_schema_staging",
+      "replay_20260718194551_optimize_rls_initplan",
+      "replay_20260718194835_consolidate_rls_policies",
+      "replay_20260718200634_restore_closed_beta_graph_acl",
+      "replay_20260728171718_revoke_direct_execute_on_graph_trigger_function",
+      "replay_20260728183421_parallax_memory_gate"
+    ],
+    "postconditions": {
+      "manual_receipt_count": 6,
+      "graph_public_or_anon_policy_count": 0,
+      "memory_deny_policy_pass_count": 11,
+      "trigger_authenticated_execute": false,
+      "trigger_anon_execute": false,
+      "trigger_public_execute": false,
+      "gateway_events_rows": 0,
+      "memory_consent_registry_rows": 0,
+      "production_data_copied": false,
+      "migration_seed_rows_present": true
+    }
+  },
+  "advisor_delta": {
+    "security": {
+      "before_total": 34,
+      "after_total": 24,
+      "rls_enabled_no_policy": {"before": 12, "after": 3},
+      "function_search_path_mutable": {"before": 7, "after": 7},
+      "extension_in_public": {"before": 1, "after": 1},
+      "authenticated_security_definer_function_executable": {"before": 14, "after": 13}
+    },
+    "performance": {
+      "before_total": 46,
+      "after_total": 46,
+      "unindexed_foreign_keys": {"before": 3, "after": 4},
+      "auth_rls_initplan": {"before": 2, "after": 0},
+      "unused_index": {"before": 38, "after": 41},
+      "multiple_permissive_policies": {"before": 2, "after": 0},
+      "auth_db_connections_absolute": {"before": 1, "after": 1}
+    }
+  },
+  "production_pending": [
     {
       "repo_version": "20260718200634",
       "repo_name": "restore_closed_beta_graph_acl",
       "repo_path": "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
       "live_recorded": false,
-      "classification": "repo-only pending security migration",
-      "gate": "must clean-replay and apply on data-less staging before any production proposal"
+      "staging_manual_apply": "PASS",
+      "production_apply": "NOT_RUN"
+    },
+    {
+      "repo_version": "20260728180000",
+      "repo_name": "reconcile_gateway_events_live_schema",
+      "live_recorded": false,
+      "staging_manual_apply": "PASS",
+      "production_expected_behavior": "fail-closed shape verification then no-op object creation",
+      "production_apply": "NOT_RUN"
     }
   ],
   "evidence": {
     "live_source": "supabase_migrations.schema_migrations.statements[1]",
     "hash_algorithm": "sha256 over exact UTF-8 statement bytes",
     "repo_verification": "GitHub contents API read-back",
-    "source_candidate_relation": "SQL tokens equal after removing all whitespace; bytes intentionally recorded as different"
+    "source_candidate_relation": "SQL tokens equal after removing all whitespace; bytes intentionally recorded as different",
+    "clean_replay_boundary": "hosted automatic replay failed; manual data-less repair is not relabeled as clean replay"
   }
 }
