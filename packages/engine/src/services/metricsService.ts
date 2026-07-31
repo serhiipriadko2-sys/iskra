@@ -1,17 +1,14 @@
-import { IskraMetrics, DEFAULT_METRICS, MantraNode } from '@iskra/core';
+import { DEFAULT_METRICS, type IskraMetrics, type MantraNode } from '@iskra/core'
 import {
-  calculateHFD,
+  calculateHFDMetric,
   calculateShannonEntropy,
   complex,
   interference,
-  QuantumStateVector
-} from '@iskra/math';
-import { Explainable, ExplainStep } from '../types/explainable';
+  type FractalMetricResult,
+  type QuantumStateVector,
+} from '@iskra/math'
+import type { Explainable, ExplainStep } from '../types/explainable'
 
-/**
- * MetricsEngine Service
- * Calculates the 11D Metric Tensor and integrates Scientific Modules (Phase I & II)
- */
 const METRIC_LIMITS: Record<keyof IskraMetrics, { min: number; max: number }> = {
   rhythm: { min: 0, max: 100 },
   trust: { min: 0, max: 1 },
@@ -25,92 +22,92 @@ const METRIC_LIMITS: Record<keyof IskraMetrics, { min: number; max: number }> = 
   interrupt: { min: 0, max: 1 },
   ctxSwitch: { min: 0, max: 1 },
   foresight: { min: 0, max: 1 },
-};
+}
+
+interface FractalFeedback {
+  readonly chaos: FractalMetricResult
+  readonly drift: FractalMetricResult
+  readonly dimension: number | null
+}
+
+interface NextMetricsComputation {
+  readonly next: IskraMetrics
+  readonly entropy: number | null
+  readonly fractal: FractalFeedback
+  readonly appliedModifiers: Record<string, number>
+}
 
 const clampMetric = (metricKey: keyof IskraMetrics, value: number): number => {
-  const limit = METRIC_LIMITS[metricKey];
-  return Math.max(limit.min, Math.min(limit.max, value));
-};
+  const limit = METRIC_LIMITS[metricKey]
+  return Math.max(limit.min, Math.min(limit.max, value))
+}
 
 export class MetricsEngine {
-  private history: IskraMetrics[] = [];
-  private quantumStates: Map<string, QuantumStateVector> = new Map();
+  private history: IskraMetrics[] = []
+  private quantumStates: Map<string, QuantumStateVector> = new Map()
 
   constructor(initialMetrics: IskraMetrics = DEFAULT_METRICS) {
-    this.history.push(initialMetrics);
+    this.history.push(initialMetrics)
   }
 
   private computeNextMetrics(
     modifiers: Partial<IskraMetrics>,
-    text?: string
-  ): {
-    next: IskraMetrics;
-    entropy: number | null;
-    fractalDimension: number;
-    appliedModifiers: Record<string, number>;
-  } {
-    const current = this.getCurrentMetrics();
-    const next: IskraMetrics = { ...current };
-    const appliedModifiers: Record<string, number> = {};
+    text?: string,
+  ): NextMetricsComputation {
+    const current = this.getCurrentMetrics()
+    const next: IskraMetrics = { ...current }
+    const appliedModifiers: Record<string, number> = {}
 
-    // Apply modifiers additively
     for (const key in modifiers) {
-      if (Object.prototype.hasOwnProperty.call(modifiers, key)) {
-        const metricKey = key as keyof IskraMetrics;
-        const val = modifiers[metricKey];
-        if (typeof val === 'number') {
-          const currentVal = next[metricKey] || 0;
-          next[metricKey] = clampMetric(metricKey, currentVal + val);
-          appliedModifiers[metricKey] = val;
-        }
-      }
+      if (!Object.prototype.hasOwnProperty.call(modifiers, key)) continue
+      const metricKey = key as keyof IskraMetrics
+      const value = modifiers[metricKey]
+      if (typeof value !== 'number') continue
+      const currentValue = next[metricKey] || 0
+      next[metricKey] = clampMetric(metricKey, currentValue + value)
+      appliedModifiers[metricKey] = value
     }
 
-    let entropy: number | null = null;
+    let entropy: number | null = null
     if (text) {
-      entropy = calculateShannonEntropy(text);
-      if (entropy < 2.0) next.drift = Math.min(1.0, next.drift + 0.1);
-      if (entropy > 5.0) next.chaos = Math.min(1.0, next.chaos + 0.1);
+      entropy = calculateShannonEntropy(text)
+      if (entropy < 2) next.drift = Math.min(1, next.drift + 0.1)
+      if (entropy > 5) next.chaos = Math.min(1, next.chaos + 0.1)
     }
 
-    const chaosSeries = this.history.map(m => m.chaos);
-    const driftSeries = this.history.map(m => m.drift);
+    const chaos = calculateHFDMetric(this.history.map((metrics) => metrics.chaos))
+    const drift = calculateHFDMetric(this.history.map((metrics) => metrics.drift))
+    const dimension =
+      chaos.status === 'computed' && drift.status === 'computed'
+        ? (chaos.value + drift.value) / 2
+        : null
 
-    const dChaos = chaosSeries.length > 5 ? calculateHFD(chaosSeries) : 1.5;
-    const dDrift = driftSeries.length > 5 ? calculateHFD(driftSeries) : 1.5;
-    const fractalDimension = (dChaos + dDrift) / 2;
-
-    if (fractalDimension > 1.6 && fractalDimension < 1.8) {
-      next.clarity = Math.min(1.0, next.clarity + 0.05);
+    if (dimension !== null && dimension > 1.6 && dimension < 1.8) {
+      next.clarity = Math.min(1, next.clarity + 0.05)
     }
 
-    return { next, entropy, fractalDimension, appliedModifiers };
+    return {
+      next,
+      entropy,
+      fractal: { chaos, drift, dimension },
+      appliedModifiers,
+    }
   }
 
-  /**
-   * Updates metrics based on new input.
-   * Modifiers are ADDITIVE to current state, not replacements.
-   */
   public update(modifiers: Partial<IskraMetrics>, text?: string): IskraMetrics {
-    const computed = this.computeNextMetrics(modifiers, text);
-
-    this.history.push(computed.next);
-    if (this.history.length > 100) this.history.shift();
-
-    return computed.next;
+    const computed = this.computeNextMetrics(modifiers, text)
+    this.history.push(computed.next)
+    if (this.history.length > 100) this.history.shift()
+    return computed.next
   }
 
-  /**
-   * XCode-style explainable update for Scientific Turn metrics pipeline.
-   */
   public updateExplainable(
     modifiers: Partial<IskraMetrics>,
-    text?: string
+    text?: string,
   ): Explainable<IskraMetrics> {
-    const computed = this.computeNextMetrics(modifiers, text);
-
-    this.history.push(computed.next);
-    if (this.history.length > 100) this.history.shift();
+    const computed = this.computeNextMetrics(modifiers, text)
+    this.history.push(computed.next)
+    if (this.history.length > 100) this.history.shift()
 
     const how: ExplainStep[] = [
       {
@@ -118,102 +115,107 @@ export class MetricsEngine {
         formula: 'next[k] = clampByMetricDomain(current[k] + delta[k])',
         inputs: { modifier_count: Object.keys(computed.appliedModifiers).length },
         output: Object.keys(computed.appliedModifiers).length,
-        refs: [{ kind: 'project', ref: 'packages/engine/src/services/metricsService.ts' }]
+        refs: [{ kind: 'project', ref: 'packages/engine/src/services/metricsService.ts' }],
       },
       {
         label: 'entropy_feedback',
         formula: 'if entropy<2 => drift+0.1; if entropy>5 => chaos+0.1',
         inputs: {
           entropy: computed.entropy,
-          has_text: Boolean(text)
+          has_text: Boolean(text),
         },
         output: computed.entropy,
-        refs: [{ kind: 'canon', ref: 'AGENTS.md#3-scientific-turn-vω50' }]
+        refs: [{ kind: 'canon', ref: 'AGENTS.md#3-scientific-turn-vω50' }],
       },
       {
         label: 'fractal_feedback',
-        formula: 'D=(D_chaos + D_drift)/2; if 1.6<D<1.8 => clarity+0.05',
+        formula: 'typed HFD(chaos, drift); apply clarity only when both are computed',
         inputs: {
-          history_size: this.history.length,
-          fractal_dimension: Number(computed.fractalDimension.toFixed(6))
+          history_size: this.history.length - 1,
+          chaos_status: computed.fractal.chaos.status,
+          drift_status: computed.fractal.drift.status,
+          fractal_dimension:
+            computed.fractal.dimension === null
+              ? null
+              : Number(computed.fractal.dimension.toFixed(6)),
         },
-        output: Number(computed.fractalDimension.toFixed(6)),
-        refs: [{ kind: 'canon', ref: 'AGENTS.md#3-scientific-turn-vω50' }]
-      }
-    ];
+        output:
+          computed.fractal.dimension === null
+            ? null
+            : Number(computed.fractal.dimension.toFixed(6)),
+        refs: [
+          { kind: 'project', ref: 'governance/adr_20260729_packages_math_authoritative_api.md' },
+          { kind: 'project', ref: 'https://github.com/serhiipriadko2-sys/iskra/issues/324' },
+        ],
+      },
+    ]
 
     return {
       value: computed.next,
       how,
       contracts_checked: [
         'how.length > 0',
-        'metrics clamped to metric domain (rhythm 0-100, other metrics 0-1) where modifiers applied',
-        'history window <= 100'
+        'metrics clamped to metric domain where modifiers apply',
+        'history window <= 100',
+        'fractal feedback is applied only when both typed HFD results are computed',
       ],
       evidence: [
         { kind: 'canon', ref: 'system/xcode_explainable_code.md' },
-        { kind: 'project', ref: 'packages/engine/src/services/metricsService.ts' }
-      ]
-    };
+        { kind: 'project', ref: 'packages/engine/src/services/metricsService.ts' },
+      ],
+    }
   }
 
-  /**
-   * Adjusts metrics based on retrieved memories
-   * The Psychodynamic Feedback Loop: Past trauma affects current state.
-   */
   public processMemoryImpact(memories: MantraNode[]): IskraMetrics {
-    if (memories.length === 0) return this.getCurrentMetrics();
+    if (memories.length === 0) return this.getCurrentMetrics()
 
-    const current = this.getCurrentMetrics();
-    const next: IskraMetrics = { ...current };
+    const current = this.getCurrentMetrics()
+    const next: IskraMetrics = { ...current }
+    let totalEntropy = 0
+    let painImpact = 0
+    let trustImpact = 0
 
-    let totalEntropy = 0;
-    let painImpact = 0;
-    let trustImpact = 0;
-
-    memories.forEach(m => {
-      if (m.fractal) {
-        totalEntropy += m.fractal.entropy;
-
-        if (m.fractal.dominantVoice === 'KAIN') painImpact += 0.1;
-        if (m.fractal.dominantVoice === 'MAKI') trustImpact += 0.1;
-        if (m.fractal.dominantVoice === 'HUYNDUN') next.chaos = Math.min(1.0, next.chaos + 0.1);
+    memories.forEach((memory) => {
+      if (!memory.fractal) return
+      totalEntropy += memory.fractal.entropy
+      if (memory.fractal.dominantVoice === 'KAIN') painImpact += 0.1
+      if (memory.fractal.dominantVoice === 'MAKI') trustImpact += 0.1
+      if (memory.fractal.dominantVoice === 'HUYNDUN') {
+        next.chaos = Math.min(1, next.chaos + 0.1)
       }
-    });
+    })
 
-    const avgEntropy = totalEntropy / memories.length;
+    const averageEntropy = totalEntropy / memories.length
+    if (averageEntropy > 0.7) next.drift = Math.min(1, next.drift + 0.15)
+    next.pain = Math.min(1, next.pain + painImpact)
+    next.trust = Math.min(1, next.trust + trustImpact)
 
-    if (avgEntropy > 0.7) {
-      next.drift = Math.min(1.0, next.drift + 0.15);
-    }
-
-    next.pain = Math.min(1.0, next.pain + painImpact);
-    next.trust = Math.min(1.0, next.trust + trustImpact);
-
-    this.history.push(next);
-    if (this.history.length > 100) this.history.shift();
-
-    return next;
+    this.history.push(next)
+    if (this.history.length > 100) this.history.shift()
+    return next
   }
 
   public getCurrentMetrics(): IskraMetrics {
-    return this.history[this.history.length - 1] || DEFAULT_METRICS;
+    return this.history[this.history.length - 1] || DEFAULT_METRICS
   }
 
   public getHistory(): IskraMetrics[] {
-    return [...this.history];
+    return [...this.history]
   }
 
-  /**
-   * Calculates Quantum Interference between two voices
-   * SPEC-002: Voice Interference
-   */
   public calculateVoiceInterference(voice1: string, voice2: string): number {
-    const v1State = this.quantumStates.get(voice1) || { amplitude: complex(1, 0), phase: 0, probability: 1 };
-    const v2State = this.quantumStates.get(voice2) || { amplitude: complex(1, 0), phase: Math.PI, probability: 1 };
-
-    return interference(v1State, v2State);
+    const first = this.quantumStates.get(voice1) || {
+      amplitude: complex(1, 0),
+      phase: 0,
+      probability: 1,
+    }
+    const second = this.quantumStates.get(voice2) || {
+      amplitude: complex(1, 0),
+      phase: Math.PI,
+      probability: 1,
+    }
+    return interference(first, second)
   }
 }
 
-export const metricsEngine = new MetricsEngine();
+export const metricsEngine = new MetricsEngine()

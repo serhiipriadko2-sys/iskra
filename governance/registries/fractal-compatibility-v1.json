@@ -1,0 +1,25 @@
+{
+  "schema_version": "iskra.fractal-compatibility.v1",
+  "adr_id": "ADR-20260729-02",
+  "authorization_issue": 324,
+  "status": "pre_activation",
+  "activated_at": null,
+  "compatibility_sunset_at": null,
+  "sunset_days": 30,
+  "compatibility_surfaces": [
+    "packages/math/src/fractal.ts",
+    "runtime/src/types/fractal.ts",
+    "supabase/functions/_shared/iskra-metrics/fractal.ts"
+  ],
+  "compatibility_test_surfaces": [
+    "packages/math/src/__tests__/fractal.test.ts",
+    "runtime/src/__tests__/fractal.test.ts"
+  ],
+  "authority_path_consumers": [
+    "packages/engine/src/services/metricsService.ts",
+    "runtime/src/index.ts",
+    "supabase/functions/_shared/iskra-metrics/calculator.ts"
+  ],
+  "activation_receipt": null,
+  "notes": "Pre-activation registry only. It does not activate HFD/DFA authority."
+}

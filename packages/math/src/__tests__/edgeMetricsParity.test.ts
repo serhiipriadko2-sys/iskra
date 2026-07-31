@@ -1,75 +1,71 @@
-import { describe, expect, it } from 'vitest';
+import { execFileSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
+import { dirname, resolve } from 'node:path'
+import { describe, expect, it } from 'vitest'
 import {
-  calculateDFA as calculateCanonicalDFA,
-  calculateHFD as calculateCanonicalHFD,
-} from '../fractal';
+  calculateDFAMetric as calculateNodeDFA,
+  calculateHFDMetric as calculateNodeHFD,
+} from '../fractal-authority.js'
+import {
+  calculateDFAMetric as calculateEdgeDFA,
+  calculateHFDMetric as calculateEdgeHFD,
+} from '../../../../supabase/functions/_shared/iskra-metrics/fractal-authority'
 import {
   calculateShannonEntropy as calculateCanonicalEntropy,
   interpretEntropy as interpretCanonicalEntropy,
-} from '../entropy';
-import {
-  calculateDFA as calculateEdgeDFA,
-  calculateHFD as calculateEdgeHFD,
-} from '../../../../supabase/functions/_shared/iskra-metrics/fractal';
-import { ALGORITHM_VERSION } from '../../../../supabase/functions/_shared/iskra-metrics/contracts';
+} from '../entropy'
 import {
   calculateShannonEntropy as calculateEdgeEntropy,
   interpretEntropy as interpretEdgeEntropy,
-} from '../../../../supabase/functions/_shared/iskra-metrics/entropy';
+} from '../../../../supabase/functions/_shared/iskra-metrics/entropy'
 
-const signal = (length: number) =>
-  Array.from({ length }, (_, index) =>
-    Math.sin(index / 3) + Math.cos(index / 11) + (index % 7) * 0.05,
-  );
+const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+const signal = (length: number): number[] =>
+  Array.from(
+    { length },
+    (_, index) => Math.sin(index / 3) + Math.cos(index / 11) + (index % 7) * 0.05,
+  )
 
-describe('Edge metrics Atom 1 parity with @iskra/math', () => {
-  it('stamps the revised HFD formula with a new algorithm version', () => {
-    expect(ALGORITHM_VERSION).toBe('iskra-metrics-compute-v1.1.0');
-  });
-
+describe('generated Edge fractal authority parity', () => {
   it.each([
     '',
     'one one two',
     'Signal, signal; entropy must keep the canonical tokenizer.',
-  ])('keeps entropy and regime identical for %j', (text) => {
-    const entropy = calculateCanonicalEntropy(text);
+  ])('keeps entropy and regime unchanged for %j', (text) => {
+    const entropy = calculateCanonicalEntropy(text)
+    expect(calculateEdgeEntropy(text)).toBe(entropy)
+    expect(interpretEdgeEntropy(entropy)).toBe(interpretCanonicalEntropy(entropy))
+  })
 
-    expect(calculateEdgeEntropy(text)).toBe(entropy);
-    expect(interpretEdgeEntropy(entropy)).toBe(interpretCanonicalEntropy(entropy));
-  });
+  it.each([0, 1, 19, 20, 49, 50, 80])(
+    'T8: Node and generated Edge results are exact for N=%i',
+    (length) => {
+      const values = signal(length)
+      expect(calculateEdgeHFD(values)).toEqual(calculateNodeHFD(values))
+      expect(calculateEdgeDFA(values)).toEqual(calculateNodeDFA(values))
+    },
+  )
 
-  it.each([16, 80])('keeps HFD and DFA identical for N=%i', (length) => {
-    const values = signal(length);
+  it('T8: invalid and numerical-failure results are exact', () => {
+    const overflow = Array.from(
+      { length: 80 },
+      (_, index) => (index % 2 === 0 ? Number.MAX_VALUE : -Number.MAX_VALUE),
+    )
+    expect(calculateEdgeHFD([1, Number.NaN])).toEqual(calculateNodeHFD([1, Number.NaN]))
+    expect(calculateEdgeDFA([1, Number.POSITIVE_INFINITY])).toEqual(
+      calculateNodeDFA([1, Number.POSITIVE_INFINITY]),
+    )
+    expect(calculateEdgeHFD(overflow)).toEqual(calculateNodeHFD(overflow))
+    expect(calculateEdgeDFA(overflow)).toEqual(calculateNodeDFA(overflow))
+  })
 
-    expect(calculateEdgeHFD(values)).toBeCloseTo(calculateCanonicalHFD(values), 14);
-    expect(calculateEdgeDFA(values)).toBeCloseTo(calculateCanonicalDFA(values), 14);
-  });
-
-  it('keeps the final-segment HFD reference vector identical', () => {
-    const linear = Array.from({ length: 20 }, (_, index) => index / 10);
-    const expected = 0.9979367669339503;
-
-    expect(calculateCanonicalHFD(linear)).toBeCloseTo(expected, 12);
-    expect(calculateEdgeHFD(linear)).toBeCloseTo(expected, 12);
-  });
-
-  it('preserves canonical short-series fallbacks only for present signals', () => {
-    const values = signal(5);
-
-    expect(calculateEdgeHFD(values)).toBe(1.5);
-    expect(calculateEdgeDFA(values)).toBe(0.5);
-    expect(calculateEdgeHFD(values)).toBe(calculateCanonicalHFD(values));
-    expect(calculateEdgeDFA(values)).toBe(calculateCanonicalDFA(values));
-  });
-
-  it.each([
-    { name: 'empty', values: [] as number[] },
-    { name: 'NaN', values: [1, Number.NaN] },
-    { name: 'Infinity', values: [1, Number.POSITIVE_INFINITY] },
-  ])('rejects the same invalid %s signal class', ({ values }) => {
-    expect(() => calculateCanonicalHFD(values)).toThrow();
-    expect(() => calculateEdgeHFD(values)).toThrow();
-    expect(() => calculateCanonicalDFA(values)).toThrow();
-    expect(() => calculateEdgeDFA(values)).toThrow();
-  });
-});
+  it('T15: committed mirrors regenerate without drift', () => {
+    expect(() =>
+      execFileSync(
+        process.execPath,
+        ['tools/generate-fractal-authority-mirrors.mjs', '--check'],
+        { cwd: repositoryRoot, stdio: 'pipe' },
+      ),
+    ).not.toThrow()
+  })
+})

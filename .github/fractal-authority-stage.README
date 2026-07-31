@@ -1,1 +1,0 @@
-Temporary bootstrap transport. The draft PR materialization job must remove this file together with all stage parts and the bootstrap workflow before implementation review. Presence of this file means the PR is not review-ready.

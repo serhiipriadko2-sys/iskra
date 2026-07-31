@@ -1,0 +1,23 @@
+{
+  "schema_version": "iskra.fractal-authority-corpus.v1",
+  "algorithm_versions": {
+    "hfd": "hfd-v1-kmax5",
+    "dfa": "dfa-v1-min50-box4-16"
+  },
+  "cases": [
+    { "id": "empty", "kind": "literal", "values": [] },
+    { "id": "single", "kind": "literal", "values": [0.5] },
+    { "id": "hfd-boundary-19", "kind": "linear", "length": 19 },
+    { "id": "hfd-boundary-20", "kind": "linear", "length": 20 },
+    { "id": "dfa-boundary-49", "kind": "periodic", "length": 49 },
+    { "id": "dfa-boundary-50", "kind": "periodic", "length": 50 },
+    { "id": "constant-80", "kind": "constant", "length": 80, "value": 0.25 },
+    { "id": "linear-80", "kind": "linear", "length": 80 },
+    { "id": "periodic-80", "kind": "periodic", "length": 80 },
+    { "id": "alternating-80", "kind": "alternating", "length": 80 },
+    { "id": "seeded-noise-80", "kind": "seeded-noise", "length": 80, "seed": 1729 },
+    { "id": "nan-short", "kind": "special", "values": [0, "NaN"] },
+    { "id": "infinity-sufficient", "kind": "special", "length": 80, "inject": "Infinity" },
+    { "id": "overflow-80", "kind": "overflow-alternating", "length": 80 }
+  ]
+}

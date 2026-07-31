@@ -1,0 +1,38 @@
+{
+  "schema_version": "iskra.fractal-authority-t1-t19-matrix.v1",
+  "adr_id": "ADR-20260729-02",
+  "authorization_issue": 324,
+  "status": "candidate_pending_exact_head_ci",
+  "activation_claimed": false,
+  "tests": {
+    "T1": "packages/math/src/__tests__/fractal-authority.test.ts#HFD-boundaries",
+    "T2": "packages/math/src/__tests__/fractal-authority.test.ts#DFA-boundaries",
+    "T3": "packages/math/src/__tests__/fractal-authority.test.ts#invalid-precedence",
+    "T4": "packages/math/src/__tests__/fractal-authority.test.ts#parameter-determinism",
+    "T5": "packages/math/src/__tests__/fractal-authority.test.ts#provenance",
+    "T6": "packages/math/src/__tests__/fractal-authority.test.ts#numerical-failure",
+    "T7": "packages/math/src/fractal-authority-corpus.json",
+    "T8": "packages/math/src/__tests__/edgeMetricsParity.test.ts",
+    "T9": "governance/evidence/metrics/fractal-authority-consumer-inventory-2026-07-30.json",
+    "T10": "tools/check-fractal-authority-boundary.mjs",
+    "T11": "calculateFractalIndicatorsMetric + aggregate test",
+    "T12": "tools/check-fractal-authority-boundary.mjs#raw-import-export-fence",
+    "T13": "governance/registries/fractal-compatibility-v1.json#sunset-fence",
+    "T14": "packages/math/src/index.ts + runtime/src/index.ts",
+    "T15": "tools/generate-fractal-authority-mirrors.mjs --check",
+    "T16": "iskra-metrics package and target remain unchanged",
+    "T17": "tools/check-fractal-authority-boundary.mjs#transition-registry",
+    "T18": "entropy implementation and package-wide authority remain unchanged",
+    "T19": "ADR gate + issue #324; activation receipt remains null"
+  },
+  "local_preflight": {
+    "canonical_strict_typecheck": "pass",
+    "mirror_regeneration_check": "pass",
+    "boundary_vectors": "pass",
+    "overflow_vectors": "pass",
+    "repository_wide_ci": "pending"
+  },
+  "not_applicable": {
+    "cross_language_mirror": "No cross-language mirror is introduced; Node, runtime and Edge are generated TypeScript mirrors."
+  }
+}
