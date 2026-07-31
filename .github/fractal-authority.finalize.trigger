@@ -1,3 +1,4 @@
-finalize=2026-07-31T11:55:00Z
+finalize=2026-07-31T12:05:00Z
 expected_archive_sha256=fb7e7ed7dedb362e4c2a54ab0bc69b691f14ca28e55e74d07487e93649c24fbd
 expected_t7_test_blob=c52df27d6c0203e9e401a40d5962da72c336e139
+workflow_push_trigger=enabled
