@@ -7,6 +7,10 @@ on:
     paths:
       - "supabase/migrations/**"
       - ".github/workflows/supabase_migration_clean_replay.yml"
+  pull_request:
+    paths:
+      - "supabase/migrations/**"
+      - ".github/workflows/supabase_migration_clean_replay.yml"
   workflow_dispatch:
 
 permissions:
@@ -38,15 +42,18 @@ jobs:
       - name: Install pinned workspace dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Verify recovered migration bytes
+      - name: Verify recovered and reconstructed migration bytes
         shell: bash
         run: |
           set -euo pipefail
           test "$(wc -c < supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql)" -eq 283
+          test "$(wc -c < supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql)" -eq 5396
           test "$(wc -c < supabase/migrations/20260728183421_parallax_memory_gate.sql)" -eq 2523
           printf '%s  %s\n' \
             b2b63f7a3adbd20cb0e3641571b27863bf5fbae9cc3d82471bc42468347dd337 \
             supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql \
+            21e066e4449ef2547ea88d1e8a4d88c9486ca7f863c67a0a40a3ffd01fbe1491 \
+            supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
             8fb653f1926f3ea0217a3c6c78d2a7ad6cde6b7afdb8b5ecce4db61f8f9ea718 \
             supabase/migrations/20260728183421_parallax_memory_gate.sql \
             | sha256sum --check --strict
@@ -67,27 +74,48 @@ jobs:
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
             select version || '|' || name || '|' || cardinality(statements)
             from supabase_migrations.schema_migrations
-            where version in ('20260728171718','20260728183421')
+            where version in ('20260728171718','20260728180000','20260728183421')
             order by version;
           " | tee clean-replay-receipt/recovered-history.txt
           grep -Fx '20260728171718|revoke_direct_execute_on_graph_trigger_function|1' clean-replay-receipt/recovered-history.txt
+          grep -Fx '20260728180000|reconcile_gateway_events_live_schema|1' clean-replay-receipt/recovered-history.txt
           grep -Fx '20260728183421|parallax_memory_gate|1' clean-replay-receipt/recovered-history.txt
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
             select version || '|' || octet_length(statements[1]) || '|' ||
                    encode(digest(convert_to(statements[1], 'UTF8'), 'sha256'), 'hex')
             from supabase_migrations.schema_migrations
-            where version in ('20260728171718','20260728183421')
+            where version in ('20260728171718','20260728180000','20260728183421')
             order by version;
           " | tee clean-replay-receipt/recovered-db-hashes.txt
           grep -Fx '20260728171718|283|b2b63f7a3adbd20cb0e3641571b27863bf5fbae9cc3d82471bc42468347dd337' clean-replay-receipt/recovered-db-hashes.txt
+          grep -Fx '20260728180000|5396|21e066e4449ef2547ea88d1e8a4d88c9486ca7f863c67a0a40a3ffd01fbe1491' clean-replay-receipt/recovered-db-hashes.txt
           grep -Fx '20260728183421|2523|8fb653f1926f3ea0217a3c6c78d2a7ad6cde6b7afdb8b5ecce4db61f8f9ea718' clean-replay-receipt/recovered-db-hashes.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select
+              count(*) filter (where roles @> array['public']::name[] or roles @> array['anon']::name[]) || '|' ||
+              count(*) filter (where roles = array['authenticated']::name[])
+            from pg_policies
+            where schemaname='public' and tablename in ('graph_nodes','graph_edges');
+          " | tee clean-replay-receipt/graph-policy-summary.txt
+          grep -Fx '0|10' clean-replay-receipt/graph-policy-summary.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select count(*)
+            from pg_policies
+            where schemaname='iskra_memory'
+              and policyname like '%_deny_clients'
+              and roles = array['anon','authenticated']::name[]
+              and cmd='ALL' and qual='false' and with_check='false';
+          " | tee clean-replay-receipt/memory-deny-policy-count.txt
+          grep -Fx '11' clean-replay-receipt/memory-deny-policy-count.txt
           sha256sum \
             supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql \
+            supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
             supabase/migrations/20260728183421_parallax_memory_gate.sql \
             supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json \
             > clean-replay-receipt/source-sha256.txt
           wc -c \
             supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql \
+            supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
             supabase/migrations/20260728183421_parallax_memory_gate.sql \
             supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json \
             > clean-replay-receipt/source-bytes.txt
