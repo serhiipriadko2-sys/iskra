@@ -41,6 +41,7 @@ This session ran an atomic post-merge audit of merged v5.5.7 (`cc2064fb…`) and
 - This candidate has **not** been through external adversarial review. The scope is deliberately small and mechanically verifiable, but that is a claim this ADR makes, not a substitute for independent review.
 - `release_ceiling=5600` is a packaging convention, not a platform-documented limit.
 - The route-span grammar tightening (item 6) is a verifier-only change with no content-side effect on any of v5.5.4–v5.5.8; regression-tested to confirm.
+- **Open residual finding (review A-2, 2026-07-31, not closed by this ADR):** the claim that the 5996→5599 Instructions compression is "wording only, every normative clause preserved" currently rests on manual authoring judgment, not a verifier gate. The review's suggested fix — a machine-readable `required_semantics` clause registry the verifier checks for presence, not just byte-mirror/length — is a legitimate next step, but designing that registry's contents is itself a normative-content decision (closer to a canon judgment than a mechanical check) and deserves its own scoped ADR rather than a rushed regex bolted onto this one. Left open, not silently dropped.
 
 ## Tests / QA
 
