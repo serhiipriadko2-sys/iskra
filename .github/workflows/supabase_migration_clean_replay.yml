@@ -74,22 +74,28 @@ jobs:
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
             select version || '|' || name || '|' || cardinality(statements)
             from supabase_migrations.schema_migrations
-            where version in ('20260728171718','20260728180000','20260728183421')
+            where version in (
+              '20260718194551','20260718194835','20260718200634',
+              '20260728171718','20260728180000','20260728183421'
+            )
             order by version;
-          " | tee clean-replay-receipt/recovered-history.txt
-          grep -Fx '20260728171718|revoke_direct_execute_on_graph_trigger_function|1' clean-replay-receipt/recovered-history.txt
-          grep -Fx '20260728180000|reconcile_gateway_events_live_schema|1' clean-replay-receipt/recovered-history.txt
-          grep -Fx '20260728183421|parallax_memory_gate|1' clean-replay-receipt/recovered-history.txt
+          " | tee clean-replay-receipt/replay-history.txt
+          grep -Fx '20260718194551|optimize_rls_initplan|11' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260718194835|consolidate_rls_policies|14' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260718200634|restore_closed_beta_graph_acl|27' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260728171718|revoke_direct_execute_on_graph_trigger_function|2' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260728180000|reconcile_gateway_events_live_schema|12' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260728183421|parallax_memory_gate|10' clean-replay-receipt/replay-history.txt
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
-            select version || '|' || octet_length(statements[1]) || '|' ||
-                   encode(digest(convert_to(statements[1], 'UTF8'), 'sha256'), 'hex')
+            select version || '|' ||
+                   encode(digest(convert_to(array_to_string(statements, E'\\n--STATEMENT--\\n'), 'UTF8'), 'sha256'), 'hex')
             from supabase_migrations.schema_migrations
-            where version in ('20260728171718','20260728180000','20260728183421')
+            where version in (
+              '20260718194551','20260718194835','20260718200634',
+              '20260728171718','20260728180000','20260728183421'
+            )
             order by version;
-          " | tee clean-replay-receipt/recovered-db-hashes.txt
-          grep -Fx '20260728171718|283|b2b63f7a3adbd20cb0e3641571b27863bf5fbae9cc3d82471bc42468347dd337' clean-replay-receipt/recovered-db-hashes.txt
-          grep -Fx '20260728180000|5396|21e066e4449ef2547ea88d1e8a4d88c9486ca7f863c67a0a40a3ffd01fbe1491' clean-replay-receipt/recovered-db-hashes.txt
-          grep -Fx '20260728183421|2523|8fb653f1926f3ea0217a3c6c78d2a7ad6cde6b7afdb8b5ecce4db61f8f9ea718' clean-replay-receipt/recovered-db-hashes.txt
+          " | tee clean-replay-receipt/parser-statement-array-sha256.txt
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
             select
               count(*) filter (where roles @> array['public']::name[] or roles @> array['anon']::name[]) || '|' ||
@@ -107,6 +113,13 @@ jobs:
               and cmd='ALL' and qual='false' and with_check='false';
           " | tee clean-replay-receipt/memory-deny-policy-count.txt
           grep -Fx '11' clean-replay-receipt/memory-deny-policy-count.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select
+              has_function_privilege('authenticated','public.prevent_graph_node_cross_owner_cascade()','EXECUTE') || '|' ||
+              has_function_privilege('anon','public.prevent_graph_node_cross_owner_cascade()','EXECUTE') || '|' ||
+              has_function_privilege('public','public.prevent_graph_node_cross_owner_cascade()','EXECUTE');
+          " | tee clean-replay-receipt/trigger-execute-summary.txt
+          grep -Fx 'false|false|false' clean-replay-receipt/trigger-execute-summary.txt
           sha256sum \
             supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql \
             supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
