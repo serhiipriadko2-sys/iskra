@@ -115,11 +115,11 @@ describe('ADR-20260729-02 authoritative fractal contract', () => {
   })
 
   it.each([
-    Array.from({ length: 80 }, () => 0.25),
-    Array.from({ length: 80 }, (_, index) => index / 80),
-    periodic(80),
-    Array.from({ length: 80 }, (_, index) => (index % 2 === 0 ? -1 : 1)),
-    seededNoise(80),
+    [Array.from({ length: 80 }, () => 0.25)],
+    [Array.from({ length: 80 }, (_, index) => index / 80)],
+    [periodic(80)],
+    [Array.from({ length: 80 }, (_, index) => (index % 2 === 0 ? -1 : 1))],
+    [seededNoise(80)],
   ])('T7: deterministic corpus case produces finite scalars', (values) => {
     expectComputed(calculateHFDMetric(values))
     const dfa = calculateDFAMetric(values)
