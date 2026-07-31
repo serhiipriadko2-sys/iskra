@@ -4,7 +4,7 @@
 
 | Gate | Result |
 |---|---|
-| 30 Knowledge + 3 support files | PASS |
+| 30 Knowledge + 3 support files | PASS — exact allowlist |
 | changed set exact 10 / unchanged 20 | PASS |
 | source blobs bound to `5c07f57e3a7793b1c09caa83bf40a8e7ff893e09` | PASS |
 | PINO contract + negative fixtures | PASS before commit |
