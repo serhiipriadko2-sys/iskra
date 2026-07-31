@@ -1,34 +1,18 @@
 # SoT30 v5.5.7 — QC Report
 
-Scope: audit repair over v5.5.6 (ADR-20260730-01, `proposed`).
-
-<!-- composition: changed=9 unchanged=21 baseline=v5.5.6 -->
+<!-- composition: changed=10 unchanged=20 baseline=v5.5.6 -->
 
 | Gate | Result |
 |---|---|
-| exactly 30 Knowledge + 3 support files | PASS |
-| T80 mirror byte-equal + unique | PASS |
-| changed set exactly 9 / unchanged 21 | PASS |
-| C1–C28 verifier | PASS — 29/29 |
-| v5.5.4/v5.5.5/v5.5.6 regression under hardened verifier | PASS — 29/29 each |
-| verifier selftest matrix (incl. C23–C28 fixtures) | PASS |
-| source-freeze byte parity (30 Knowledge + Instructions vs freeze commit) | PASS |
-| v5.5.6 immutability | PASS — v5.5.6 release tree and ZIP untouched |
+| 30 Knowledge + 3 support files | PASS |
+| changed set exact 10 / unchanged 20 | PASS |
+| source blobs bound to `5c07f57e3a7793b1c09caa83bf40a8e7ff893e09` | PASS |
+| PINO contract + negative fixtures | PASS before commit |
+| repository CI | pending GitHub read-back |
 
-## Package facts
+- corpus bytes: 4,054,425
+- ZIP: `dist/SoT30_v5.5.7.zip`, 1135594 bytes, sha256 `193879cadf3b61f61dbbb8b4ca9c360a98c09c5006cc8d08e7f4ecd98508779d`
+- file 29: 5565 bytes, sha256 `3fda8fe5b1af2253b0a67567e1425d4b06c2d63055173c4d0526ef183d8723bf`
+- support/MANIFEST.json sha256 `0decd118a6300324b757d2587ec315a569aaf5800299d2b33bf046feaf56aeff`
 
-- corpus bytes: 4,055,351
-- ZIP: `dist/SoT30_v5.5.7.zip`, 1136277 bytes, sha256 `5d5e05f29c8fbd14f4e657269ae9620beff94527348de2d911c46d18106a0bd4`
-- file 29: 14868 bytes, sha256 `70e939cf400710177bd7fe594541d7b4237d67cbd7e536911bc010627a56ab0f`
-- support/MANIFEST.json sha256 `e88f829104acb716e0f9a7735daceb7fe76ee1e2d01be9c88f8b19dc9880eb92`
-- generated_from_ref: recorded in `support/MANIFEST.json` (`generated_from_ref`)
-
-## Additional verification
-
-- independent in-session rehash of all 32 SHA256SUMS entries against the release tree: PASS;
-- ZIP extracted and diffed byte-for-byte against the release tree: PASS;
-- no mojibake artifact in release-root docs (C26): PASS.
-
-## Boundary
-
-Static candidate only. No live Project pass, no runtime change, no Supabase write, no deployment, no artifact promotion, no merge authorization.
+Boundary: package candidate only; no promotion, upload, invocation or live verification.
