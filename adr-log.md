@@ -277,6 +277,8 @@ lifecycle.
 
 Status: accepted for staged remediation planning; implementation pending.
 
+Canonical file: `governance/adr_20260731_supabase_advisor_migration_provenance.md`.
+
 ### Context
 
 The IskraSpace P0 Edge release is verified-live-production for `gemini` and
