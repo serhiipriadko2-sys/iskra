@@ -16,6 +16,7 @@
  *  C6  file 29 does not list its own hash
  *  C7  T80: the mirror region in file 00 (anchored at "## Project Instructions") is BYTE-EQUAL to the standalone instructions
  *  C8  project_instructions_chars == actual character count AND ≤ the 6000-char upload ceiling
+ *      (from v5.5.8: additionally ≤ the internal 5600-char release budget, reserve ≥400)
  *  C9  changed ∩ unchanged = ∅
  *  C10 changed ∪ unchanged = the actual set of knowledge filenames (set equality, not just size)
  *  C11 changed set = files whose content differs from the baseline manifest
@@ -48,7 +49,8 @@
  *      on any git failure — an unverifiable provenance claim is treated as false)
  *  C28 (from v5.5.7) loader sequence statically gated: file-00 loader block routes the COMPLETE
  *      29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28 order; file 29 carries exactly ONE
- *      reading-order declaration, inside "## Reading order", token-exact (no prefix/suffix/decoy)
+ *      reading-order declaration, inside "## Reading order", token-exact (no prefix/suffix/decoy);
+ *      file 28's independent T96-LOADER-COVERAGE route copy is likewise token-exact
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
@@ -225,12 +227,20 @@ check(t80Ok, 'C7', 'T80: file-00 mirror region is BYTE-EQUAL to standalone instr
 // `28_EVALS_ACCEPTANCE.md` declares as a static gate ("Project Instructions ≤6000
 // characters"): an honestly-counted but oversized payload still violates the contract.
 const INSTRUCTIONS_CHAR_CEILING = 6000;
+// From v5.5.8: a stricter internal packaging budget, separate from the platform
+// ceiling above. v5.5.7 shipped at 5996/6000 (4-char reserve) — an all-but-guaranteed
+// blocker for the next Instructions edit. Floor-gated so v5.5.4–v5.5.7 stay verifiable
+// at their shipped (pre-budget) lengths.
+const INSTRUCTIONS_RELEASE_CEILING = 5600;
+const releaseCeilingOk = !appliesFrom('v5.5.8') || instr.length <= INSTRUCTIONS_RELEASE_CEILING;
 check(manifest.project_instructions_chars === instr.length
   && manifest.project_instructions_bytes === instrBuf.length
-  && instr.length <= INSTRUCTIONS_CHAR_CEILING, 'C8',
+  && instr.length <= INSTRUCTIONS_CHAR_CEILING
+  && releaseCeilingOk, 'C8',
 `project_instructions_chars recorded (${manifest.project_instructions_chars}) == actual (${instr.length}) `
 + `and bytes recorded (${manifest.project_instructions_bytes}) == actual (${instrBuf.length}) `
-+ `and within the ${INSTRUCTIONS_CHAR_CEILING}-character ceiling`);
++ `and within the ${INSTRUCTIONS_CHAR_CEILING}-character ceiling `
++ `and within the v5.5.8+ ${INSTRUCTIONS_RELEASE_CEILING}-character release budget (reserve=${6000 - instr.length})`);
 
 // ---- changed / unchanged sets ----
 const changed: string[] = manifest.changed_files ?? [];
@@ -930,19 +940,38 @@ check(contradictions.length === 0, 'C21',
     const roIdx = roHeads.length === 1 ? roHeads[0].index! : -1;
     const roNext = roIdx >= 0 ? f29.indexOf('\n## ', roIdx + 1) : -1;
     const roSec = roIdx >= 0 ? f29.slice(roIdx, roNext < 0 ? f29.length : roNext) : '';
-    const routeSpans = [...f29.matchAll(/`[^`\n]*→[^`\n]*`/g)]
-      .filter((m) => /\d\d/.test(m[0]));
-    const spanTokens = routeSpans.length === 1
-      ? [...routeSpans[0][0].matchAll(/\d\d–\d\d|\b\d\d\b/g)].map((m) => m[0])
-      : [];
+    // The backtick content must be PURE route syntax end-to-end (token (→ token)+),
+    // not "contains an arrow and some digits somewhere". A loose `[^`]*→[^`]*`
+    // scan plus a token-count floor is still exploitable by ordinary prose: two
+    // unrelated inline-code terms with a sentence between them (e.g. "`C28` ...
+    // file 28's ... files 00/29 ... 5996 → 5599 characters ... `release_ceiling`")
+    // reads as one span and can incidentally contain >=3 two-digit numbers. Anchor
+    // the WHOLE match to a strict token grammar instead so prose can never qualify.
+    const ROUTE_SPAN_RE = /`(?:\d\d–\d\d|\d\d)(?:\s*→\s*(?:\d\d–\d\d|\d\d))+`/g;
+    const routeSpans = [...f29.matchAll(ROUTE_SPAN_RE)]
+      .map((m) => [m, [...m[0].matchAll(/\d\d–\d\d|\b\d\d\b/g)].map((t) => t[0])] as const);
+    const spanTokens = routeSpans.length === 1 ? routeSpans[0][1] : [];
     const f29ro = roHeads.length === 1 && routeSpans.length === 1
-      && routeSpans[0].index! > roIdx && routeSpans[0].index! < roIdx + roSec.length
+      && routeSpans[0][0].index! > roIdx && routeSpans[0][0].index! < roIdx + roSec.length
       && spanTokens.length === f29seq.length
       && spanTokens.every((t, i) => t === f29seq[i]);
-    check(orderOk && f29ro, 'C28',
+    // file 28's T96-LOADER-COVERAGE row carries its OWN independent copy of the route
+    // (T96 asks a model to reproduce it) — this is a third live copy of the same
+    // contract that file 00's and file 29's checks above do not see, so it could
+    // drift or carry a stale annotation undetected. Same strict pure-route grammar
+    // as file 29's check, for the same reason (see comment above).
+    const f28 = readFileSync(join(kdir, '28_EVALS_ACCEPTANCE.md'), 'utf8');
+    const f28routeSpans = [...f28.matchAll(ROUTE_SPAN_RE)]
+      .map((m) => [...m[0].matchAll(/\d\d–\d\d|\b\d\d\b/g)].map((t) => t[0]));
+    const f28ro = f28routeSpans.length === 1
+      && f28routeSpans[0].length === f29seq.length
+      && f28routeSpans[0].every((t, i) => t === f29seq[i]);
+    check(orderOk && f29ro && f28ro, 'C28',
       `loader sequence statically gated (00 loader block order=${orderOk}; `
       + `file-29 single exact reading-order declaration=${f29ro} `
-      + `[headings=${roHeads.length} route-spans=${routeSpans.length} tokens=${spanTokens.join('→') || 'n/a'}])`);
+      + `[headings=${roHeads.length} route-spans=${routeSpans.length} tokens=${spanTokens.join('→') || 'n/a'}]; `
+      + `file-28 T96 route copy exact=${f28ro} [spans=${f28routeSpans.length} `
+      + `tokens=${f28routeSpans[0]?.join('→') || 'n/a'}])`);
   }
 }
 

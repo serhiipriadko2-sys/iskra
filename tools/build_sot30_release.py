@@ -112,6 +112,11 @@ def main() -> int:
     ap.add_argument("--baseline-version", default="v5.5.3")
     ap.add_argument("--package-name", default=None)
     ap.add_argument("--acceptance-range", default="T01-T93")
+    ap.add_argument("--supplemental-acceptance-range", default=None,
+                    help="e.g. T98-T103 for an accepted behavior amendment on top of --acceptance-range")
+    ap.add_argument("--behavior-adr", action="append", default=[],
+                    help="ADR governing an accepted behavior amendment carried into this build "
+                         "(repeatable); recorded separately from --adr, which remains the package ADR")
     ap.add_argument("--from-git", default=None, help="commit SHA to extract knowledge blobs from")
     ap.add_argument("--git-source-dir", default=None,
                     help="repo-relative release dir whose paths --from-git resolves against "
@@ -204,6 +209,9 @@ def main() -> int:
         "project_instructions_chars": len(instr_bytes.decode("utf-8")),
         "project_instructions_bytes": len(instr_bytes),
         "acceptance_range": args.acceptance_range,
+        **({"supplemental_acceptance_range": args.supplemental_acceptance_range}
+           if args.supplemental_acceptance_range else {}),
+        **({"behavior_adrs": args.behavior_adr} if args.behavior_adr else {}),
         "changed_files": changed,
         "unchanged_files": unchanged,
         "files": entries,

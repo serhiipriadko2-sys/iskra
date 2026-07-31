@@ -77,6 +77,14 @@ jobs:
           governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json
           v5.5.7
 
+      - name: Verify SoT30 v5.5.8 release semantics (fail-closed)
+        run: >-
+          npx tsx tools/verify_sot30_release.ts
+          governance/releases/2026-07-31-sot30-v5-5-8-semantic-budget-repair
+          dist/SoT30_v5.5.8.zip
+          governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/MANIFEST.json
+          v5.5.8
+
       - name: Verify SoT30 verifier is fail-closed (negative-fixture matrix)
         run: npx tsx tools/verify_sot30_release.selftest.ts
 

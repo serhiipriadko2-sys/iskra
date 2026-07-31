@@ -29,6 +29,9 @@ const BASELINE_556 = 'governance/releases/2026-07-21-sot30-v5-5-5-provenance/sup
 const RELEASE_557 = 'governance/releases/2026-07-30-sot30-v5-5-7-audit-repair';
 const ZIP_557 = 'dist/SoT30_v5.5.7.zip';
 const BASELINE_557 = 'governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json';
+const RELEASE_558 = 'governance/releases/2026-07-31-sot30-v5-5-8-semantic-budget-repair';
+const ZIP_558 = 'dist/SoT30_v5.5.8.zip';
+const BASELINE_558 = 'governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/MANIFEST.json';
 
 type Run = { code: number; out: string };
 function runVerifier(
@@ -75,6 +78,11 @@ const zipRoot = execFileSync('unzip', ['-Z1', ZIP], { encoding: 'utf8' })
 {
   const r = runVerifier(RELEASE_557, ZIP_557, BASELINE_557, 'v5.5.7');
   expect('positive: real v5.5.7 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
+    `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
+}
+{
+  const r = runVerifier(RELEASE_558, ZIP_558, BASELINE_558, 'v5.5.8');
+  expect('positive: real v5.5.8 PASS', r.code === 0 && /0 failed/.test(r.out) && !/FAIL /.test(r.out),
     `code=${r.code} out=${r.out.split('\n').slice(-2).join(' ')}`);
 }
 
@@ -290,6 +298,16 @@ function negRelease557(name: string, expectCheck: string, mutate: (dir: string) 
   try {
     mutate(dir);
     const r = runVerifier(dir, ZIP_557, BASELINE_557, 'v5.5.7');
+    expect(name, r.code !== 0 && new RegExp(`FAIL ${expectCheck}:`).test(r.out),
+      `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
+  } finally { rmSync(join(dir, '..'), { recursive: true, force: true }); }
+}
+
+function negRelease558(name: string, expectCheck: string, mutate: (dir: string) => void) {
+  const dir = tmpCopyFrom(RELEASE_558);
+  try {
+    mutate(dir);
+    const r = runVerifier(dir, ZIP_558, BASELINE_558, 'v5.5.8');
     expect(name, r.code !== 0 && new RegExp(`FAIL ${expectCheck}:`).test(r.out),
       `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
   } finally { rmSync(join(dir, '..'), { recursive: true, force: true }); }
@@ -744,6 +762,31 @@ function symlinkZip(zc: string, root: string, arcname: string, target: string) {
       `code=${r.code} out=${r.out.split('\n').filter((l) => l.startsWith('FAIL')).join('; ')}`);
   } finally { rmSync(d, { recursive: true, force: true }); }
 }
+
+// --- C28/C8 v5.5.8 fixtures (round 11: file-28 route copy + Instructions release budget) ---
+
+// file 28's independent T96 route copy drifts (token order tampered) — must fail even
+// though files 00/29's copies remain correct, since C28 now checks all three
+negRelease558('neg: file28 T96 route token drift', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/28_EVALS_ACCEPTANCE.md');
+  writeFileSync(p, readFileSync(p, 'utf8').replace(
+    '`29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28`',
+    '`29 → 00 → 02 → 01 → 03–07 → 08–20 → 21–23 → 24–27 → 28`'));
+});
+
+// a second multi-hop route span appears elsewhere in file 28 — contradictory loader
+// copies must not ship even when the canonical T96 row is itself exact
+negRelease558('neg: file28 duplicate route span', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/28_EVALS_ACCEPTANCE.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\n\nNOTE: alternative \`28 → 00 → 01 → 02 → 03–07\` order.\n`);
+});
+
+// Project Instructions grow past the v5.5.8+ internal release_ceiling (5600) while
+// staying under the 6000 platform ceiling — must fail closed, not just warn
+negRelease558('neg: instructions exceed release ceiling', 'C8', (dir) => {
+  const p = join(dir, 'support/PROJECT_INSTRUCTIONS_SOT30.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8')}\n${'x'.repeat(200)}\n`);
+});
 
 // ---- report ----
 for (const r of results) (r.startsWith('OK') ? console.log : console.error)(r);
