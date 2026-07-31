@@ -23,7 +23,7 @@ describe('gemini Edge Function security boundary', () => {
     const jwtCheck = edgeFunctionSource.indexOf('const jwt = await validateJwt(token);');
     const quotaCheck = edgeFunctionSource.indexOf('const boundary = await enforceAiRequestBoundary(');
     const payloadRead = edgeFunctionSource.indexOf('const parsedBody = await readBoundedJsonBody(req);');
-    const providerCall = edgeFunctionSource.indexOf('await runWithFallback(action, payload)');
+    const providerCall = edgeFunctionSource.indexOf('await runWithFallback(action, payload, req.signal)');
 
     expect(tokenCheck).toBeGreaterThan(-1);
     expect(jwtCheck).toBeGreaterThan(tokenCheck);

@@ -8,7 +8,17 @@ import {
   type AiBoundaryConfig,
   type VerifiedAiUser,
 } from '../_shared/aiBoundary.ts';
-import { readBoundedJsonBody } from '../_shared/aiContentPolicy.ts';
+import {
+  MAX_AI_PROVIDER_TIMEOUT_MS,
+  MAX_AI_STREAM_BYTES,
+  MAX_AI_STREAM_DURATION_MS,
+  createDeadline,
+  readBoundedJsonBody,
+} from '../_shared/aiContentPolicy.ts';
+import {
+  createStreamByteBudget,
+  encodeWithinStreamBudget,
+} from '../_shared/aiProviderLimits.ts';
 
 type AiProvider = 'gemini' | 'openai';
 type RequestedProvider = AiProvider | 'auto';
@@ -98,6 +108,14 @@ function getConfig(payload: AiProxyPayload) {
     ...(payload.generationConfig ?? {}),
     ...(payload.systemInstruction ? { systemInstruction: payload.systemInstruction } : {}),
   };
+}
+
+function getProviderConfig(payload: AiProxyPayload, signal: AbortSignal) {
+  return { ...getConfig(payload), abortSignal: signal };
+}
+
+function abortError(message: string): DOMException {
+  return new DOMException(message, 'AbortError');
 }
 
 function normalizeProvider(value: unknown, fallback: RequestedProvider): RequestedProvider {
@@ -243,7 +261,11 @@ function getGeminiClient() {
   return new GoogleGenAI({ apiKey });
 }
 
-async function openAiFetch(path: string, body: Record<string, unknown>): Promise<unknown> {
+async function openAiFetch(
+  path: string,
+  body: Record<string, unknown>,
+  signal: AbortSignal,
+): Promise<unknown> {
   const apiKey = Deno.env.get('OPENAI_API_KEY');
   if (!apiKey) throw new Error('OPENAI_API_KEY is not configured');
 
@@ -254,6 +276,7 @@ async function openAiFetch(path: string, body: Record<string, unknown>): Promise
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify(body),
+    signal,
   });
 
   const data = await response.json().catch(() => ({}));
@@ -263,12 +286,12 @@ async function openAiFetch(path: string, body: Record<string, unknown>): Promise
   return data;
 }
 
-async function generateWithGemini(payload: AiProxyPayload) {
+async function generateWithGemini(payload: AiProxyPayload, signal: AbortSignal) {
   const ai = getGeminiClient();
   const response = await ai.models.generateContent({
     model: modelFor('gemini', 'generateContent'),
     contents: payload.contents as never,
-    config: getConfig(payload),
+    config: getProviderConfig(payload, signal),
   });
 
   return {
@@ -277,7 +300,7 @@ async function generateWithGemini(payload: AiProxyPayload) {
   };
 }
 
-async function generateWithOpenAi(payload: AiProxyPayload) {
+async function generateWithOpenAi(payload: AiProxyPayload, signal: AbortSignal) {
   const input = inputFromContents(payload.contents);
   if (!input) throw new Error('Missing or invalid contents');
 
@@ -286,16 +309,19 @@ async function generateWithOpenAi(payload: AiProxyPayload) {
     input,
     instructions: payload.systemInstruction || undefined,
     text: openAiTextConfig(payload),
-  });
+  }, signal);
   return geminiTextResponse(extractOpenAiText(response));
 }
 
-async function embedWithGemini(payload: AiProxyPayload) {
+async function embedWithGemini(payload: AiProxyPayload, signal: AbortSignal) {
   const ai = getGeminiClient();
   const response = await ai.models.embedContent({
     model: modelFor('gemini', 'embedContent'),
     contents: payload.content as never,
-    config: { outputDimensionality: EMBEDDING_DIMENSIONS },
+    config: {
+      outputDimensionality: EMBEDDING_DIMENSIONS,
+      abortSignal: signal,
+    },
   });
   const maybeEmbedding = response as {
     embedding?: { values?: unknown };
@@ -310,14 +336,14 @@ async function embedWithGemini(payload: AiProxyPayload) {
   };
 }
 
-async function embedWithOpenAi(payload: AiProxyPayload) {
+async function embedWithOpenAi(payload: AiProxyPayload, signal: AbortSignal) {
   const input = inputFromEmbeddingContent(payload.content);
   if (!input) throw new Error('Missing or invalid content');
 
   const response = await openAiFetch('embeddings', {
     model: modelFor('openai', 'embedContent'),
     input,
-  });
+  }, signal);
   const embedding = (response as { data?: Array<{ embedding?: unknown }> }).data?.[0]?.embedding;
   return {
     embedding: {
@@ -326,67 +352,109 @@ async function embedWithOpenAi(payload: AiProxyPayload) {
   };
 }
 
-async function runProvider(provider: AiProvider, action: AiAction, payload: AiProxyPayload) {
+async function runProvider(
+  provider: AiProvider,
+  action: AiAction,
+  payload: AiProxyPayload,
+  signal: AbortSignal,
+) {
   if (provider === 'gemini') {
-    if (action === 'embedContent') return embedWithGemini(payload);
-    return generateWithGemini(payload);
+    if (action === 'embedContent') return embedWithGemini(payload, signal);
+    return generateWithGemini(payload, signal);
   }
 
-  if (action === 'embedContent') return embedWithOpenAi(payload);
-  return generateWithOpenAi(payload);
+  if (action === 'embedContent') return embedWithOpenAi(payload, signal);
+  return generateWithOpenAi(payload, signal);
 }
 
-async function runWithFallback(action: AiAction, payload: AiProxyPayload) {
-  for (const provider of providerSequence()) {
-    try {
-      const response = await runProvider(provider, action, payload);
-      return { provider, response };
-    } catch {}
+async function runWithFallback(
+  action: AiAction,
+  payload: AiProxyPayload,
+  parentSignal: AbortSignal,
+) {
+  const deadline = createDeadline(parentSignal, MAX_AI_PROVIDER_TIMEOUT_MS);
+  try {
+    for (const provider of providerSequence()) {
+      if (deadline.signal.aborted) throw abortError('provider deadline exceeded');
+      try {
+        const response = await runProvider(provider, action, payload, deadline.signal);
+        return { provider, response };
+      } catch (error) {
+        if (parentSignal.aborted || deadline.signal.aborted) throw error;
+      }
+    }
+    throw new Error('AI provider unavailable');
+  } finally {
+    deadline.abort();
+    deadline.dispose();
   }
-  throw new Error('AI provider unavailable');
 }
 
-async function streamWithFallback(payload: AiProxyPayload, controller: ReadableStreamDefaultController<Uint8Array>) {
+async function streamWithFallback(
+  payload: AiProxyPayload,
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  parentSignal: AbortSignal,
+) {
   const encoder = new TextEncoder();
+  const budget = createStreamByteBudget(MAX_AI_STREAM_BYTES);
+  const deadline = createDeadline(parentSignal, MAX_AI_STREAM_DURATION_MS);
 
-  for (const provider of providerSequence()) {
-    try {
-      if (provider === 'gemini') {
-        const ai = getGeminiClient();
-        const response = await ai.models.generateContentStream({
-          model: modelFor('gemini', 'generateContent'),
-          contents: payload.contents as never,
-          config: getConfig(payload),
-        });
+  const enqueue = (value: string): void => {
+    const chunk = encodeWithinStreamBudget(value, budget, encoder);
+    if (!chunk) {
+      deadline.abort();
+      throw abortError('stream byte cap exceeded');
+    }
+    controller.enqueue(chunk);
+  };
 
-        for await (const chunk of response) {
-          controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify({
+  try {
+    for (const provider of providerSequence()) {
+      if (deadline.signal.aborted) throw abortError('stream deadline exceeded');
+      const bytesBeforeAttempt = budget.used;
+
+      try {
+        if (provider === 'gemini') {
+          const ai = getGeminiClient();
+          const response = await ai.models.generateContentStream({
+            model: modelFor('gemini', 'generateContent'),
+            contents: payload.contents as never,
+            config: getProviderConfig(payload, deadline.signal),
+          });
+
+          for await (const chunk of response) {
+            if (deadline.signal.aborted) throw abortError('stream deadline exceeded');
+            enqueue(`data: ${JSON.stringify({
               provider,
               text: chunk.text ?? '',
               candidates: chunk.candidates ?? [],
-            })}\n\n`),
-          );
+            })}\n\n`);
+          }
+          enqueue('data: [DONE]\n\n');
+          return;
         }
-        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-        return;
-      }
 
-      const response = await generateWithOpenAi(payload);
-      controller.enqueue(
-        encoder.encode(`data: ${JSON.stringify({
+        const response = await generateWithOpenAi(payload, deadline.signal);
+        enqueue(`data: ${JSON.stringify({
           provider,
           ...response,
-        })}\n\n`),
-      );
-      controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-      return;
-    } catch {}
+        })}\n\n`);
+        enqueue('data: [DONE]\n\n');
+        return;
+      } catch (error) {
+        const emittedBytes = budget.used > bytesBeforeAttempt;
+        if (parentSignal.aborted || deadline.signal.aborted || emittedBytes) {
+          throw error;
+        }
+      }
+    }
+
+    throw new Error('AI stream provider unavailable');
+  } finally {
+    deadline.abort();
+    deadline.dispose();
   }
-
-  throw new Error('AI stream provider unavailable');
 }
-
 
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin');
@@ -442,23 +510,32 @@ Deno.serve(async (req) => {
     switch (action) {
       case 'generateContent':
       case 'embedContent': {
-        const result = await runWithFallback(action, payload);
+        const result = await runWithFallback(action, payload, req.signal);
         return json({ provider: result.provider, ...(result.response as Record<string, unknown>) }, {}, origin);
       }
 
       case 'streamGenerateContent': {
-        const stream = new ReadableStream({
+        const streamAbort = new AbortController();
+        const forwardRequestAbort = () => streamAbort.abort();
+        if (req.signal.aborted) streamAbort.abort();
+        else req.signal.addEventListener('abort', forwardRequestAbort, { once: true });
+
+        const stream = new ReadableStream<Uint8Array>({
           async start(controller) {
-            const encoder = new TextEncoder();
             try {
-              await streamWithFallback(payload, controller);
+              await streamWithFallback(payload, controller, streamAbort.signal);
               controller.close();
-            } catch {
-              controller.enqueue(
-                encoder.encode(`data: ${JSON.stringify({ error: 'Stream failed' })}\n\n`),
-              );
-              controller.close();
+            } catch (error) {
+              if (!streamAbort.signal.aborted) {
+                controller.error(error instanceof Error ? error : new Error('AI stream failed'));
+              }
+            } finally {
+              req.signal.removeEventListener('abort', forwardRequestAbort);
             }
+          },
+          cancel() {
+            streamAbort.abort();
+            req.signal.removeEventListener('abort', forwardRequestAbort);
           },
         });
 
@@ -466,7 +543,7 @@ Deno.serve(async (req) => {
           headers: {
             ...corsHeaders(origin),
             'content-type': 'text/event-stream; charset=utf-8',
-            'cache-control': 'no-cache',
+            'cache-control': 'no-cache, no-store',
             connection: 'keep-alive',
           },
         });

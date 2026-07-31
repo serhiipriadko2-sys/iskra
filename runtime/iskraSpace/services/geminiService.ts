@@ -277,8 +277,9 @@ async function* streamGenerateContentText(args: {
   signal?: AbortSignal;
 }): AsyncGenerator<string> {
   const config = args.config ?? {};
+  let streamEstablished = false;
 
-  // Best-effort streaming: if anything goes wrong, fall back to single-chunk generation.
+  // Best-effort streaming: if the initial request fails, fall back to single-chunk generation.
   try {
     const res = await callAiEdgeFunction(
       {
@@ -296,6 +297,7 @@ async function* streamGenerateContentText(args: {
       const txt = await res.text();
       throw new Error(`AI stream proxy error: ${res.status} ${txt}`);
     }
+    streamEstablished = true;
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -344,8 +346,8 @@ async function* streamGenerateContentText(args: {
       }
     }
   } catch (err) {
-    // Do not fall back on abort — surface the cancellation cleanly
-    if (err instanceof DOMException && err.name === 'AbortError') return;
+    if (args.signal?.aborted) return;
+    if (streamEstablished) throw err;
     const text = await generateContentText({
       model: args.model,
       contents: args.contents,
