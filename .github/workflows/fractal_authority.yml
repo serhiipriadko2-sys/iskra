@@ -92,7 +92,14 @@ jobs:
         id: edge
         if: always()
         continue-on-error: true
-        run: deno test --no-lock supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts
+        shell: bash
+        run: |
+          set +e
+          deno test --no-lock supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts \
+            > /tmp/fractal-edge.log 2>&1
+          code=$?
+          cat /tmp/fractal-edge.log
+          exit "$code"
 
       - name: Verify exact-head ledger
         id: ledger
@@ -146,6 +153,15 @@ jobs:
 
           Boundary: this receipt verifies implementation bytes only. It does not claim merge, scoped activation, deployment, invocation, or verified-live behavior.
           EOF
+
+          if [[ "$EDGE_OUTCOME" != 'success' && -f /tmp/fractal-edge.log ]]; then
+            {
+              echo
+              echo '<details><summary>Edge failure tail</summary><pre>'
+              tail -n 80 /tmp/fractal-edge.log | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
+              echo '</pre></details>'
+            } >> /tmp/fractal-authority-receipt.md
+          fi
 
           if [[ "$state" == 'success' ]]; then
             description='T1-T19, mirrors, runtime, Edge, and ledger PASS'
