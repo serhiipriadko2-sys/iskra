@@ -1,6 +1,9 @@
 name: Fractal authority finalizer
 
 on:
+  push:
+    branches:
+      - feat/math-fractal-authority-v1
   pull_request:
     types: [opened, reopened, synchronize]
 
@@ -9,7 +12,7 @@ permissions:
 
 jobs:
   finalize:
-    if: github.event.pull_request.head.ref == 'feat/math-fractal-authority-v1'
+    if: github.event_name == 'push' || github.event.pull_request.head.ref == 'feat/math-fractal-authority-v1'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
