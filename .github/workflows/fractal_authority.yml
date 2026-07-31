@@ -11,6 +11,8 @@ on:
 permissions:
   contents: write
   statuses: write
+  issues: write
+  pull-requests: write
 
 jobs:
   verify:
@@ -55,11 +57,15 @@ jobs:
           echo "exact_head=$exact_head"
 
       - name: Verify generated mirrors and authority boundary
+        id: mirrors
+        continue-on-error: true
         run: |
           node tools/generate-fractal-authority-mirrors.mjs --check
           node tools/check-fractal-authority-boundary.mjs
 
       - name: Verify packages math, engine, and runtime authority tests
+        id: packages
+        continue-on-error: true
         run: |
           pnpm exec vitest run \
             packages/math/src/__tests__/fractal-authority.test.ts \
@@ -68,43 +74,94 @@ jobs:
             runtime/src/__tests__/fractalAuthority.test.ts
 
       - name: Verify legacy runtime mirror
+        id: runtime
+        continue-on-error: true
         working-directory: runtime
         run: |
           npm ci --ignore-scripts
           npm run typecheck
           npm run test -- --run src/__tests__/fractalAuthority.test.ts
 
-      - uses: denoland/setup-deno@v2
+      - id: deno_setup
+        continue-on-error: true
+        uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
 
       - name: Verify generated Edge mirror
+        id: edge
+        if: always()
+        continue-on-error: true
         run: deno test --no-lock supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts
 
       - name: Verify exact-head ledger
+        id: ledger
+        if: always()
+        continue-on-error: true
         run: pnpm exec tsx tools/verify_ledger.ts
 
-      - name: Publish exact-head status
+      - name: Publish exact-head receipt
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
-          JOB_STATUS: ${{ job.status }}
+          MIRRORS_OUTCOME: ${{ steps.mirrors.outcome }}
+          PACKAGES_OUTCOME: ${{ steps.packages.outcome }}
+          RUNTIME_OUTCOME: ${{ steps.runtime.outcome }}
+          DENO_SETUP_OUTCOME: ${{ steps.deno_setup.outcome }}
+          EDGE_OUTCOME: ${{ steps.edge.outcome }}
+          LEDGER_OUTCOME: ${{ steps.ledger.outcome }}
         shell: bash
         run: |
           set -euo pipefail
           if [[ -z "${EXACT_HEAD:-}" ]]; then
-            echo 'exact head unavailable; status not published' >&2
-            exit 0
+            echo 'exact head unavailable; receipt not published' >&2
+            exit 1
           fi
-          if [[ "$JOB_STATUS" == 'success' ]]; then
-            state='success'
+
+          state='success'
+          for outcome in \
+            "$MIRRORS_OUTCOME" \
+            "$PACKAGES_OUTCOME" \
+            "$RUNTIME_OUTCOME" \
+            "$DENO_SETUP_OUTCOME" \
+            "$EDGE_OUTCOME" \
+            "$LEDGER_OUTCOME"; do
+            if [[ "$outcome" != 'success' ]]; then
+              state='failure'
+            fi
+          done
+
+          cat > /tmp/fractal-authority-receipt.md <<EOF
+          <!-- fractal-authority-exact-head-receipt -->
+          ## Fractal authority exact-head receipt
+
+          - exact head: \`$EXACT_HEAD\`
+          - mirrors / boundary: **$MIRRORS_OUTCOME**
+          - packages T1–T19: **$PACKAGES_OUTCOME**
+          - legacy runtime: **$RUNTIME_OUTCOME**
+          - Deno setup: **$DENO_SETUP_OUTCOME**
+          - Edge mirror: **$EDGE_OUTCOME**
+          - ledger: **$LEDGER_OUTCOME**
+          - overall: **$state**
+
+          Boundary: this receipt verifies implementation bytes only. It does not claim merge, scoped activation, deployment, invocation, or verified-live behavior.
+          EOF
+
+          if [[ "$state" == 'success' ]]; then
             description='T1-T19, mirrors, runtime, Edge, and ledger PASS'
           else
-            state='failure'
             description='Fractal authority exact-head verification failed'
           fi
+
           gh api --method POST \
             "repos/${GITHUB_REPOSITORY}/statuses/${EXACT_HEAD}" \
             -f state="$state" \
             -f context='fractal-authority/exact-head' \
             -f description="$description"
+          gh api --method POST \
+            "repos/${GITHUB_REPOSITORY}/issues/326/comments" \
+            --raw-field body="$(cat /tmp/fractal-authority-receipt.md)"
+
+          if [[ "$state" != 'success' ]]; then
+            exit 1
+          fi
