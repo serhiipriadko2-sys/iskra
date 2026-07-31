@@ -83,6 +83,14 @@ Deno.test('calculator preserves typed fractal statuses', async () => {
   assertEquals(invalid.metrics.hfd.status, 'invalid')
   assertEquals(invalid.metrics.dfa.status, 'invalid')
   assertEquals([...invalid.invalid].sort(), ['dfa', 'hfd'])
+
+  const invalidRepeat = await computeMetrics({ signal: [1, Number.NaN] })
+  assertEquals(invalidRepeat.input_hash, invalid.input_hash)
+
+  const positiveInfinity = await computeMetrics({
+    signal: [1, Number.POSITIVE_INFINITY],
+  })
+  assert(positiveInfinity.input_hash !== invalid.input_hash)
 })
 
 Deno.test('determinism: same input gives same hash and output', async () => {
