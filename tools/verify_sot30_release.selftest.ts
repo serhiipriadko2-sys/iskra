@@ -781,6 +781,19 @@ negRelease558('neg: file28 duplicate route span', 'C28', (dir) => {
   writeFileSync(p, `${readFileSync(p, 'utf8')}\n\nNOTE: alternative \`28 → 00 → 01 → 02 → 03–07\` order.\n`);
 });
 
+// the T96-LOADER-COVERAGE row's own span is broken just enough to fall out of the
+// strict route grammar, while an unrelated correctly-formed span is planted
+// elsewhere in the file — a bare "exactly one span in the whole file" check would
+// wrongly accept the decoy as if it were the row's declaration; the row-bound
+// check must reject this because the sole surviving span sits outside the row
+negRelease558('neg: file28 T96 row corrupted with decoy span elsewhere', 'C28', (dir) => {
+  const p = join(dir, 'knowledge/28_EVALS_ACCEPTANCE.md');
+  writeFileSync(p, `${readFileSync(p, 'utf8').replace(
+    '`29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28`',
+    '`29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28X`')}\n\n` +
+    'NOTE: unrelated `29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28` aside.\n');
+});
+
 // Project Instructions grow past the v5.5.8+ internal release_ceiling (5600) while
 // staying under the 6000 platform ceiling — must fail closed, not just warn
 negRelease558('neg: instructions exceed release ceiling', 'C8', (dir) => {

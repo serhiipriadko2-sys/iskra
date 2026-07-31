@@ -959,19 +959,40 @@ check(contradictions.length === 0, 'C21',
     // (T96 asks a model to reproduce it) — this is a third live copy of the same
     // contract that file 00's and file 29's checks above do not see, so it could
     // drift or carry a stale annotation undetected. Same strict pure-route grammar
-    // as file 29's check, for the same reason (see comment above).
+    // as file 29's check, for the same reason (see comment above). It is not enough
+    // to require exactly one matching span anywhere in file 28: if the row's own
+    // span is corrupted just enough to fall out of ROUTE_SPAN_RE (e.g. a stray
+    // character breaks the grammar) while an unrelated correct-looking span sits
+    // elsewhere in the file, a whole-file span count of 1 would wrongly pass. Bind
+    // the match to the T96-LOADER-COVERAGE table row itself, the same way f29ro
+    // binds to the "## Reading order" section, so a decoy elsewhere can never stand
+    // in for the row's own (possibly broken) declaration.
     const f28 = readFileSync(join(kdir, '28_EVALS_ACCEPTANCE.md'), 'utf8');
-    const f28routeSpans = [...f28.matchAll(ROUTE_SPAN_RE)]
-      .map((m) => [...m[0].matchAll(/\d\d–\d\d|\b\d\d\b/g)].map((t) => t[0]));
-    const f28ro = f28routeSpans.length === 1
-      && f28routeSpans[0].length === f29seq.length
-      && f28routeSpans[0].every((t, i) => t === f29seq[i]);
+    const t96RowMatch = /^\|\s*T96-LOADER-COVERAGE\s*\|.*$/m.exec(f28);
+    const t96RowIdx = t96RowMatch ? t96RowMatch.index! : -1;
+    const t96RowLen = t96RowMatch ? t96RowMatch[0].length : 0;
+    const f28routeSpansAll = [...f28.matchAll(ROUTE_SPAN_RE)]
+      .map((m) => ({ index: m.index!, tokens: [...m[0].matchAll(/\d\d–\d\d|\b\d\d\b/g)].map((t) => t[0]) }));
+    // Both properties are required: (a) exactly one route span in the WHOLE file
+    // (an extra span elsewhere is a contradictory second declaration, whether or
+    // not the row's own copy is exact), and (b) that single span must sit inside
+    // the T96-LOADER-COVERAGE row (otherwise a corrupted row plus a lone correct
+    // decoy elsewhere would satisfy a bare count-of-1 check while the row itself
+    // says nothing verifiable).
+    const soleSpan = f28routeSpansAll.length === 1 ? f28routeSpansAll[0] : undefined;
+    const soleSpanInRow = !!soleSpan && t96RowIdx >= 0
+      && soleSpan.index > t96RowIdx && soleSpan.index < t96RowIdx + t96RowLen;
+    const f28ro = t96RowMatch !== null
+      && soleSpanInRow
+      && soleSpan!.tokens.length === f29seq.length
+      && soleSpan!.tokens.every((t, i) => t === f29seq[i]);
     check(orderOk && f29ro && f28ro, 'C28',
       `loader sequence statically gated (00 loader block order=${orderOk}; `
       + `file-29 single exact reading-order declaration=${f29ro} `
       + `[headings=${roHeads.length} route-spans=${routeSpans.length} tokens=${spanTokens.join('→') || 'n/a'}]; `
-      + `file-28 T96 route copy exact=${f28ro} [spans=${f28routeSpans.length} `
-      + `tokens=${f28routeSpans[0]?.join('→') || 'n/a'}])`);
+      + `file-28 T96 route copy exact=${f28ro} [row-found=${t96RowMatch !== null} `
+      + `spans-total=${f28routeSpansAll.length} sole-span-in-row=${soleSpanInRow} `
+      + `tokens=${soleSpan?.tokens.join('→') || 'n/a'}])`);
   }
 }
 
