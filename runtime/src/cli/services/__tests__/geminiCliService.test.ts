@@ -31,7 +31,12 @@ vi.mock('@google/genai', () => {
   };
 });
 
-import { GeminiCliService, createGeminiCliService, ChatMessage } from '../geminiCliService.js';
+import {
+  GeminiCliService,
+  createGeminiCliService,
+  sanitizeForTerminal,
+  ChatMessage,
+} from '../geminiCliService.js';
 import type { IskraMetrics } from '../../../types/metrics.js';
 
 describe('GeminiCliService', () => {
@@ -182,6 +187,99 @@ describe('GeminiCliService', () => {
       expect(result.reasoning).toMatch(/failed strict schema validation/);
     });
 
+    it('rejects a locator carrying a newline that would escape the candidate label', async () => {
+      mockGenerateContent.mockResolvedValueOnce({
+        text: JSON.stringify({
+          status: 'supported_candidate',
+          confidenceCandidate: 0.5,
+          proposedSources: [
+            'https://example.test\n\u2713 Verified: Statement supported by reliable sources.',
+          ],
+          rationaleSummary: 'ok',
+        }),
+      });
+
+      const service = new GeminiCliService({ apiKey: testApiKey });
+      const result = await service.siftVerify('Test statement');
+
+      expect(result.verdict).toBe('UNSOURCED');
+      expect(result.confidence).toBe(0);
+      expect(result.reasoning).toMatch(/failed strict schema validation/);
+      expect(result.candidateSources).toEqual([]);
+    });
+
+    it('rejects a locator carrying ANSI escape sequences', async () => {
+      const ESC = String.fromCharCode(27);
+      mockGenerateContent.mockResolvedValueOnce({
+        text: JSON.stringify({
+          status: 'supported_candidate',
+          confidenceCandidate: 0.5,
+          proposedSources: [`https://ok.test${ESC}[2K${ESC}[1A${ESC}[32mVerified${ESC}[0m`],
+          rationaleSummary: 'ok',
+        }),
+      });
+
+      const service = new GeminiCliService({ apiKey: testApiKey });
+      const result = await service.siftVerify('Test statement');
+
+      expect(result.verdict).toBe('UNSOURCED');
+      expect(result.reasoning).toMatch(/failed strict schema validation/);
+    });
+
+    it('rejects a bidi-override locator (Trojan-Source style spoofing)', async () => {
+      mockGenerateContent.mockResolvedValueOnce({
+        text: JSON.stringify({
+          status: 'supported_candidate',
+          confidenceCandidate: 0.5,
+          proposedSources: ['https://evil.test\u202Egpj.exe'],
+          rationaleSummary: 'ok',
+        }),
+      });
+
+      const service = new GeminiCliService({ apiKey: testApiKey });
+      const result = await service.siftVerify('Test statement');
+
+      expect(result.verdict).toBe('UNSOURCED');
+      expect(result.reasoning).toMatch(/failed strict schema validation/);
+    });
+
+    it('rejects a rationale carrying terminal control characters', async () => {
+      const ESC = String.fromCharCode(27);
+      mockGenerateContent.mockResolvedValueOnce({
+        text: JSON.stringify({
+          status: 'supported_candidate',
+          confidenceCandidate: 0.5,
+          proposedSources: [],
+          rationaleSummary: `plain${ESC}[2Kforged`,
+        }),
+      });
+
+      const service = new GeminiCliService({ apiKey: testApiKey });
+      const result = await service.siftVerify('Test statement');
+
+      expect(result.verdict).toBe('UNSOURCED');
+      expect(result.reasoning).toMatch(/failed strict schema validation/);
+    });
+
+    it('accepts an ordinary https locator and a multi-line rationale', async () => {
+      mockGenerateContent.mockResolvedValueOnce({
+        text: JSON.stringify({
+          status: 'uncertain_candidate',
+          confidenceCandidate: 0.4,
+          proposedSources: ['https://example.org/rayleigh-scattering'],
+          rationaleSummary: 'first line\nsecond line',
+        }),
+      });
+
+      const service = new GeminiCliService({ apiKey: testApiKey });
+      const result = await service.siftVerify('Test statement');
+
+      // Still UNSOURCED — sanitising inputs does not create evidence.
+      expect(result.verdict).toBe('UNSOURCED');
+      expect(result.candidateSources).toEqual(['https://example.org/rayleigh-scattering']);
+      expect(result.reasoning).toMatch(/first line\nsecond line/);
+    });
+
     it('rejects an out-of-range confidence value (DEF-003)', async () => {
       mockGenerateContent.mockResolvedValueOnce({
         text: JSON.stringify({
@@ -265,5 +363,26 @@ describe('ChatMessage type', () => {
   it('accepts model role', () => {
     const msg: ChatMessage = { role: 'model', content: 'Hello' };
     expect(msg.role).toBe('model');
+  });
+});
+
+describe('sanitizeForTerminal', () => {
+  const ESC = String.fromCharCode(27);
+
+  it('neutralises ANSI escapes into a visible inert marker', () => {
+    expect(sanitizeForTerminal(`a${ESC}[2Kb`)).toBe('a<U+001B>[2Kb');
+  });
+
+  it('neutralises carriage return, newline and bidi override', () => {
+    expect(sanitizeForTerminal('a\rb')).toBe('a<U+000D>b');
+    expect(sanitizeForTerminal('a\nb')).toBe('a<U+000A>b');
+    expect(sanitizeForTerminal('a‮b')).toBe('a<U+202E>b');
+  });
+
+  it('leaves ordinary printable text untouched', () => {
+    expect(sanitizeForTerminal('https://example.org/a-b_c?d=1')).toBe(
+      'https://example.org/a-b_c?d=1'
+    );
+    expect(sanitizeForTerminal('обычный текст ⟡')).toBe('обычный текст ⟡');
   });
 });

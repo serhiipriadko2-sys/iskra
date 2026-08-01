@@ -3,7 +3,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
-import { createGeminiCliService } from "../services/geminiCliService.js";
+import { createGeminiCliService, sanitizeForTerminal } from "../services/geminiCliService.js";
 
 export const siftCommand = new Command("sift")
   .description("Verify a statement using SIFT protocol (Source → Inference → Fact)")
@@ -64,7 +64,7 @@ export const siftCommand = new Command("sift")
       
       console.log(chalk.cyan("│"), chalk.white("Verdict:   "), verdictColor.bold(siftResult.verdict));
       console.log(chalk.cyan("│"), chalk.white("Confidence:"), verdictColor(`${(siftResult.confidence * 100).toFixed(0)}%`));
-      console.log(chalk.cyan("│"), chalk.white("Trace:     "), chalk.gray(siftResult.trace));
+      console.log(chalk.cyan("│"), chalk.white("Trace:     "), chalk.gray(sanitizeForTerminal(siftResult.trace)));
       console.log(chalk.cyan("│"));
 
       if (options.detailed && siftResult.candidateSources.length > 0) {
@@ -74,15 +74,17 @@ export const siftCommand = new Command("sift")
         // the very source claim this command's fail-closed verdict denies.
         console.log(chalk.yellow("├─ Candidate locators (model-proposed, NOT retrieved or verified)"));
         siftResult.candidateSources.forEach((source, idx) => {
-          console.log(chalk.yellow("│  "), chalk.white(`${idx + 1}.`), chalk.gray(source));
+          console.log(chalk.yellow("│  "), chalk.white(`${idx + 1}.`), chalk.gray(sanitizeForTerminal(source)));
         });
         console.log(chalk.yellow("│  "), chalk.gray("These are not evidence. Nothing above was fetched."));
         console.log(chalk.cyan("│"));
       }
 
       console.log(chalk.cyan("├─ Reasoning"));
-      // Split reasoning into lines for better formatting
-      const reasoningLines = siftResult.reasoning.split("\n");
+      // Split first, then sanitize each line: real line breaks are legitimate
+      // here and get the "│" prefix, while every other control or format
+      // character is neutralised so it cannot escape that prefix.
+      const reasoningLines = siftResult.reasoning.split("\n").map(sanitizeForTerminal);
       reasoningLines.forEach(line => {
         console.log(chalk.cyan("│  "), chalk.white(line));
       });

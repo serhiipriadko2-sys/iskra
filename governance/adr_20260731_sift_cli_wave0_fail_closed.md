@@ -58,6 +58,25 @@ Five P2 findings, all verified against the files before acting, all consequences
 
 Finding 2 is the substantive one: it is the same defect class this ADR exists to close, surviving in the rendering layer after the verdict layer was fixed.
 
+### Independent review round 2 (Codex, 2026-08-01, head `f11f52d`)
+
+One P2 finding, verified and fixed in the same pass. It is **not** a restatement of round-1 finding 2: that one was about the *label* over model-proposed locators, this one is about their *content*.
+
+`proposedSources` items were constrained only by `.trim().max(2048)`, which accepts embedded control characters. Reproduced against the shipped schema: a newline, an ANSI escape sequence, a bare carriage return and a U+202E bidi override were all accepted. Consequences at the terminal:
+
+- `https://example.test\n✓ Verified: …` — only the first line receives the `│ n.` prefix, so the forged second line renders at column 0 and reads as CLI output rather than model data, re-asserting exactly the verified-source claim the fail-closed verdict denies;
+- ANSI sequences (`ESC[2K`, `ESC[1A`) can clear and overwrite the `✗ Warning: No reliable sources found` line that follows;
+- U+202E can make a hostile locator render as a different string entirely (Trojan-Source-style spoofing).
+
+Fixed in two layers, both required:
+
+1. **Reject at the schema boundary** (fail-closed, consistent with the rest of this ADR): locators must match `/^[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}]*$/u` — a single line of printable characters. `rationaleSummary` uses the same class but permits `\n` and `\t`, which are legitimate in prose. A reply carrying control characters is malformed model output and now fails validation like any other schema violation, yielding `UNSOURCED` with `confidence: 0`.
+2. **Neutralise at the render boundary** (`sanitizeForTerminal`, defence in depth): disallowed characters become a visible, inert `<U+XXXX>` marker rather than being silently stripped — an attempt to inject terminal control sequences is evidence about the model's behaviour and should be shown, not hidden. The rendering call site must not depend on validation having happened upstream. Reasoning prose is split on newlines *before* sanitising, so legitimate line breaks still get the `│` prefix.
+
+Eight tests added (268 → 276): newline-escape, ANSI, bidi-override and control-in-rationale rejections; a positive case proving an ordinary `https` locator with multi-line rationale still passes and still returns `UNSOURCED` (sanitising inputs does not manufacture evidence); and three direct `sanitizeForTerminal` unit tests.
+
+This finding generalises the ADR's own thesis: untrusted model output must be constrained not only where it is *interpreted* (the verdict) but also where it is *displayed*. The terminal is an execution surface, not a neutral sink.
+
 ## Context
 
 An external review of the `iskra` SIFT surface flagged three findings that this ADR closes, and one it explicitly does not:

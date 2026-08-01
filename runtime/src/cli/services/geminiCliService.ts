@@ -99,19 +99,67 @@ D (Depth): Источник → Вывод → Факт
 `;
 
 /**
+ * Character classes that must never reach a terminal from model output.
+ *
+ * `\p{Cc}` C0/C1 controls — carries CR, LF and the ESC that starts an ANSI
+ * sequence, so a locator could clear the line, move the cursor up and repaint
+ * the fail-closed warning with a forged "✓ Verified".
+ * `\p{Cf}` format characters — includes the bidi overrides (U+202E et al.)
+ * used to make a hostile locator render as something else entirely.
+ * `\p{Zl}` / `\p{Zp}` line and paragraph separators — line breaks by another
+ * name, with the same escape-the-prefix effect.
+ */
+const FORBIDDEN_IN_LOCATOR = /^[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}]*$/u;
+/** Same, but newline and tab are legitimate inside a prose rationale. */
+const FORBIDDEN_IN_PROSE = /^(?:[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}]|[\n\t])*$/u;
+
+/**
+ * Render-safety net for untrusted strings.
+ *
+ * Schema validation already rejects these characters, so in the current flow
+ * this is unreachable — it exists because the rendering call site must not
+ * depend on validation having happened upstream. Disallowed characters are
+ * replaced by a visible, inert `<U+XXXX>` marker rather than silently
+ * stripped: an attempt to inject terminal control sequences is evidence about
+ * the model's output and should be shown, not hidden.
+ */
+export function sanitizeForTerminal(value: string): string {
+  return value.replace(/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/gu, (ch) => {
+    const code = ch.codePointAt(0) ?? 0;
+    return `<U+${code.toString(16).toUpperCase().padStart(4, "0")}>`;
+  });
+}
+
+/**
  * Strict schema for the model's raw SIFT self-report.
  *
  * This is a *candidate* assessment only — model output is untrusted input,
  * never a verified verdict. `.strict()` rejects unexpected fields; there is
  * no "FACT"/"verified" status in this enum because a model cannot assign
  * itself that label (see decideSiftVerdictStatus in ../../types/sift.js).
+ * Locators must additionally be a single line of printable characters, so a
+ * model cannot smuggle terminal control sequences through a schema-valid
+ * reply and forge output the verdict layer would never produce.
  */
 const ModelAssessmentSchema = z
   .object({
     status: z.enum(["supported_candidate", "contradicted_candidate", "uncertain_candidate"]),
     confidenceCandidate: z.number().finite().min(0).max(0.95),
-    proposedSources: z.array(z.string().trim().max(2048)).max(12),
-    rationaleSummary: z.string().trim().min(1).max(8000),
+    proposedSources: z
+      .array(
+        z
+          .string()
+          .trim()
+          .max(2048)
+          .regex(FORBIDDEN_IN_LOCATOR, "must be a single line of printable characters")
+      )
+      .max(12),
+    rationaleSummary: z
+      .string()
+      .trim()
+      .min(1)
+      .max(8000)
+      .regex(FORBIDDEN_IN_PROSE, "must not contain terminal control or format characters"),
   })
   .strict();
 
