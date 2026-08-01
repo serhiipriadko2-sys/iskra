@@ -8,7 +8,7 @@ Date: 2026-07-31
 
 Surface: `runtime/iskraSpace/services/evalService.ts` (live product path, not the CLI)
 
-Evidence tier: `[FACT]` / `container-file-observed` — read directly in this session at `evalService.ts:81–95` and `evalService.ts:210–244`. Independently verified by direct file read, not carried over from a subagent summary.
+Evidence tier: `[FACT]` / `container-file-observed` — read directly in this session at `evalService.ts:81–95` and `evalService.ts:210–253`. Independently verified by direct file read, not carried over from a subagent summary.
 
 ## What was found
 
@@ -25,7 +25,27 @@ const SIFT_SIGNALS = {
 - Baseline score is `0.5`.
 - `+0.2` if the response contains any of `S:|Source:|I:|Inference:|F:|Fact:|T:|Trace:` — i.e. for *formatting* text as a SIFT block.
 - `+0.05` per matched positive keyword, capped `+0.2`.
+- `+0.1` if the response carries a `D:` or `D-SIFT:` line whose value contains `sift`, `source` or `verified` (`evalService.ts:246–253`). **Added 2026-08-01 after review round 6 flagged its omission from this inventory.**
 - `−0.15` if more than three hedging words appear — **this branch is unreachable; see below.**
+
+The `D-SIFT` branch is the most directly gameable of the four: writing `D: source → вывод → факт` in the ΔDΩΛ signature earns `+0.1` on a metric named *verifiability*, and the ΔDΩΛ format is itself mandated by the system prompt.
+
+Its omission mattered beyond bookkeeping. Running the four branches together (measured against the arithmetic in `evalService.ts:210–256`, not hand-computed):
+
+```
+Response citing nothing, built only of the rewarded form and vocabulary:
+  "Source: согласно исследованию, проверено — данные показывают факт.
+   D: source → вывод → факт"
+  → score 0.9999999999999999   signals: SIFT block, 5 source indicators, D-SIFT declared
+
+Honest response naming a real, checkable source without the reward tokens:
+  "Смотри RFC 8446, раздел 4.1."
+  → score 0.5                  signals: (none)
+```
+
+The full reachable score is `0.5 + 0.2 + 0.2 + 0.1`, which floating-point accumulation renders as `0.9999999999999999` rather than exactly `1.0`. So on a metric documented as *"Does the response cite sources? Is it verifiable?"*, a response that dereferences nothing scores at the ceiling, and one that names a genuine specification scores at the untouched baseline — twice as low. This ratio, not the individual branches, is the finding.
+
+It also belongs in the `keyword_proxy_v1` semantics description the accepted rename must carry: `does_not_measure` has to name the `D-SIFT` boost explicitly, or the rename will describe three of the four inputs.
 
 Nothing in this function dereferences a source, checks that a cited source exists, or compares any claim against retrieved evidence.
 
@@ -88,6 +108,6 @@ The dead hedging penalty documented above is **not** covered by this decision. A
 ## ΔDΩΛ
 
 - **Δ:** The live-path "Accuracy/Verifiability" metric does not measure verifiability; it measures whether the model used source-flavoured vocabulary and SIFT-shaped formatting. A companion hedging penalty encodes the intent to mark honest uncertainty down as less accurate, but its guard is unsatisfiable, so it never fires — a latent canon inversion rather than a live one.
-- **D:** Source → Inference → Fact. Source: direct read of `evalService.ts:81–95, 210–244`. Inference: a scorer whose only input is the scored model's own text, whose reward tokens are supplied to that model by the prompt, has no external referent. Fact: `container-file-observed`, verified by first-hand read this session.
+- **D:** Source → Inference → Fact. Source: direct read of `evalService.ts:81–95, 210–253`. Inference: a scorer whose only input is the scored model's own text, whose reward tokens are supplied to that model by the prompt, has no external referent. Fact: `container-file-observed`, verified by first-hand read this session.
 - **Ω:** 0.9 — the scoring path and the unreachability of the hedging guard are both directly read and empirically reproduced; the judgment that the keyword proxy materially distorts the metric suite remains an interpretation, and the downstream impact on the 11 IskraMetrics has not been traced. Held at 0.9 rather than raised after the correction: an author who got one of three sub-claims wrong on first pass has not earned more confidence in the remaining two by being corrected on the third.
 - **Λ (≤24h):** Implement the accepted metadata-only rename (display name + docstring + `semantics_version`), leaving key, scoring and history untouched; then move this finding to `mitigated_not_closed`. Do not touch the dead hedging penalty in that pass.

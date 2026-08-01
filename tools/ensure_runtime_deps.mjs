@@ -19,10 +19,14 @@ if (!existsSync(packageLock)) {
  * Readiness needs two independent signals, because each catches a failure the
  * other misses:
  *
- *   1. Lockfile hash — catches "the dependency set changed since the last
- *      install". A marker-package check cannot see this: node_modules left
- *      over from an earlier revision still contains the marker, the install
- *      is skipped, and the build fails on the newly added package.
+ *   1. Lockfile hash — catches changes the presence check cannot see, because
+ *      presence only asks "does a directory of this name exist":
+ *        - a declared version/range changed while the old directory is still
+ *          on disk (node_modules/zod exists, but at the previous major);
+ *        - a package promoted from transitive to direct — already installed,
+ *          so its directory is present and nothing looks missing;
+ *        - a lockfile-only change (transitive bump) with package.json
+ *          untouched, where the presence check has nothing to compare at all.
  *
  *   2. Presence of every declared dependency — catches "the installed tree
  *      was mutated without touching the lockfile". A hash check cannot see
@@ -33,7 +37,9 @@ if (!existsSync(packageLock)) {
  *
  * Checking both is not belt-and-braces; each alone is genuinely insufficient.
  * The presence check is derived from package.json rather than a hand-picked
- * marker list so it cannot go stale when dependencies are added.
+ * marker list, so — unlike the original two markers — it does detect a newly
+ * declared package missing from a stale tree. That case is covered twice; the
+ * cases listed under (1) are covered only by the hash.
  */
 const lockHash = createHash('sha256').update(readFileSync(packageLock)).digest('hex');
 
