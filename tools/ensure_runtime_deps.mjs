@@ -47,14 +47,66 @@ if (!existsSync(packageLock)) {
 const lockHash = createHash('sha256').update(readFileSync(packageLock)).digest('hex');
 
 /**
+ * Collect every relative file target a manifest declares as an entry point.
+ *
+ * `main` and `bin` alone are not sufficient. Modern packages ship `exports`
+ * only — `ora` (`{"types": "./index.d.ts", "default": "./index.js"}`) and
+ * `typescript-eslint` (`{".": {...}}`) declare no `main` and no `bin`, so an
+ * entry-point check that looks only at those two fields collects nothing for
+ * them and silently passes a gutted directory. `exports` is the field Node
+ * actually resolves for such packages, so it is the field that must be
+ * validated.
+ *
+ * Wildcard subpath patterns (`"./*": "./dist/*.js"`) are skipped: they name a
+ * mapping rule, not a file, and cannot be existence-checked without expanding
+ * the glob. `null` targets (deliberately blocked subpaths) are skipped for the
+ * same reason.
+ */
+function declaredEntryPoints(manifest) {
+  const targets = [];
+
+  if (typeof manifest.main === 'string') targets.push(manifest.main);
+
+  if (typeof manifest.bin === 'string') targets.push(manifest.bin);
+  else if (manifest.bin && typeof manifest.bin === 'object') {
+    for (const target of Object.values(manifest.bin)) {
+      if (typeof target === 'string') targets.push(target);
+    }
+  }
+
+  const walkExports = (node) => {
+    if (typeof node === 'string') {
+      targets.push(node);
+      return;
+    }
+    if (Array.isArray(node)) {
+      for (const entry of node) walkExports(entry);
+      return;
+    }
+    if (node && typeof node === 'object') {
+      for (const [key, value] of Object.entries(node)) {
+        // Subpath keys may be patterns; condition keys ("import", "types", …)
+        // never are. Skipping any key containing `*` drops only the former.
+        if (key.includes('*')) continue;
+        walkExports(value);
+      }
+    }
+  };
+  walkExports(manifest.exports);
+
+  return targets.filter((rel) => rel.startsWith('./') && !rel.includes('*'));
+}
+
+/**
  * A package counts as present only if its own manifest is readable AND every
  * entry point that manifest declares exists on disk.
  *
  * Checking directory names alone is not enough: a partially restored cache can
  * leave `node_modules/typescript/` in place while omitting `bin/tsc`, and a
  * name-only check then reports a complete tree for one that cannot build.
- * Reading each package.json and resolving its `main`/`bin` targets catches
- * gutted packages without the cost of a full `npm ls` integrity pass.
+ * Reading each package.json and resolving its declared entry points — `main`,
+ * `bin` *and* `exports` — catches gutted packages without the cost of a full
+ * `npm ls` integrity pass.
  */
 function brokenDependencies() {
   if (!existsSync(packageJson)) return [];
@@ -81,16 +133,7 @@ function brokenDependencies() {
       continue;
     }
 
-    const entryPoints = [];
-    if (typeof manifest.main === 'string') entryPoints.push(manifest.main);
-    if (typeof manifest.bin === 'string') entryPoints.push(manifest.bin);
-    else if (manifest.bin && typeof manifest.bin === 'object') {
-      for (const target of Object.values(manifest.bin)) {
-        if (typeof target === 'string') entryPoints.push(target);
-      }
-    }
-
-    const missingEntry = entryPoints.find((rel) => !existsSync(join(dir, rel)));
+    const missingEntry = declaredEntryPoints(manifest).find((rel) => !existsSync(join(dir, rel)));
     if (missingEntry !== undefined) broken.push(`${name} (missing ${missingEntry})`);
   }
   return broken;
