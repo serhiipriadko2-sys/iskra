@@ -33,8 +33,20 @@ if (existsSync(nodeModulesDir) && existsSync(stampFile)) {
   console.log('[legacy-runtime] runtime lockfile changed since last install; reinstalling');
 }
 
-console.log('[legacy-runtime] installing runtime dependencies with npm ci --ignore-scripts');
-const result = spawnSync('npm', ['ci', '--ignore-scripts'], {
+/**
+ * `--include=dev` is not redundant. npm defaults `omit` to `dev` when
+ * NODE_ENV=production, so under a production environment `npm ci` succeeds
+ * while installing none of the devDependencies — and this helper exists
+ * precisely to prepare a typecheck/build/test environment, where typescript
+ * and @types/node are devDependencies. Without forcing it, that partial
+ * install would exit 0, the readiness stamp would be written, and a later
+ * run under a normal environment would skip installation and fail the build
+ * on missing types. Forcing the flag makes the install identical regardless
+ * of ambient NODE_ENV, which is also what keeps the lockfile hash a
+ * sufficient readiness key: one lockfile, one possible installed tree.
+ */
+console.log('[legacy-runtime] installing runtime dependencies with npm ci --ignore-scripts --include=dev');
+const result = spawnSync('npm', ['ci', '--ignore-scripts', '--include=dev'], {
   cwd: runtimeDir,
   stdio: 'inherit',
   shell: process.platform === 'win32',
