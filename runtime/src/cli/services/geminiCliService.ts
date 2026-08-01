@@ -367,11 +367,22 @@ ${DELTA_PROTOCOL}
     // empty by construction, not by omission. `verdict` is a placeholder —
     // calculateSiftOmega()/decideSiftVerdictStatus() never read it, they
     // derive the real verdict from source/inference/evidence/trace below.
+    // source.flags is an EVIDENCE-derived field. Nothing the model says may
+    // enter it. An earlier revision seeded it with the model's own
+    // `contradicted_candidate` status, which looked conservative but handed the
+    // model a veto: once Wave 1 populates real evidence, a single flag costs
+    // 5 Ω points and forces flagsCount !== 0, and `verified` requires
+    // flagsCount === 0 — so a model self-report could downgrade a FACT verdict
+    // backed by perfect external evidence (measured: Ω 95 verified →
+    // partially_verified). This ADR exists to stop the model granting itself a
+    // verdict; letting it deny one is the same error with the sign flipped.
+    // The status is still surfaced, but only in the human-readable rationale
+    // below, clearly labelled as a candidate assessment.
     const siftInput: Omit<SiftResult, "delta"> = {
       source: {
         identified: [],
         reliability: 0,
-        flags: assessment.status === "contradicted_candidate" ? ["model_flagged_contradiction"] : [],
+        flags: [],
       },
       inference: { claims: [], assumptions: [], logicalValidity: 0, fallacies: [] },
       evidence: { supporting: [], contradicting: [], neutral: [], quality: 0 },
@@ -409,7 +420,7 @@ ${DELTA_PROTOCOL}
       statement,
       verdict,
       confidence: omega / 100,
-      reasoning: `[Model assessment — candidate only, not independently verified] ${assessment.rationaleSummary}`,
+      reasoning: `[Model assessment — candidate only, not independently verified; model status: ${assessment.status}] ${assessment.rationaleSummary}`,
       candidateSources: assessment.proposedSources,
       trace,
     };

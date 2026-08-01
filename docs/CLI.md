@@ -143,12 +143,19 @@ iskra sift "Quantum computers can break RSA" --detailed
 **Verdict Types:**
 - `FACT` - Directly supported by sources (green)
 - `INFERENCE` - Logically derived (yellow)
-- `UNSOURCED` - No reliable sources (red)
+- `UNSOURCED` - No reliable sources found (red)
+- `FALSE` - Retrieved evidence **contradicts** the statement (red)
+
+`UNSOURCED` and `FALSE` are not interchangeable. The first says nothing was
+found; the second says something was found and it refutes the claim. A tool
+consuming these verdicts must treat them differently — reporting "no sources"
+for a refuted statement understates it.
 
 > **Wave 0 fail-closed behaviour (current).** `iskra sift` has **no independent
 > evidence retrieval** wired in yet, so it currently returns `UNSOURCED` for
-> *every* input — `FACT` and `INFERENCE` are mechanically unreachable, not
-> merely rare. The model's own reply is treated as an unverified *candidate
+> *every* input — `FACT`, `INFERENCE` and `FALSE` are all mechanically
+> unreachable, not merely rare. `FALSE` requires contradictory evidence, and
+> with no retrieval there is none to contradict with. The model's own reply is treated as an unverified *candidate
 > assessment*: it is validated against a strict schema (a self-declared
 > `FACT` is rejected outright), and any locators it proposes are printed
 > under "Candidate locators", never as "Sources", because nothing is fetched

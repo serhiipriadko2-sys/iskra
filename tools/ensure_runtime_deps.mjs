@@ -19,38 +19,81 @@ if (!existsSync(packageLock)) {
  * Readiness needs two independent signals, because each catches a failure the
  * other misses:
  *
- *   1. Lockfile hash — catches changes the presence check cannot see, because
- *      presence only asks "does a directory of this name exist":
- *        - a declared version/range changed while the old directory is still
- *          on disk (node_modules/zod exists, but at the previous major);
+ *   1. Lockfile hash — catches changes the integrity check cannot see, because
+ *      that check inspects what is on disk, not which version was requested:
+ *        - a declared version/range changed while the old package is still
+ *          installed (node_modules/zod is intact, but at the previous major);
  *        - a package promoted from transitive to direct — already installed,
- *          so its directory is present and nothing looks missing;
+ *          so it looks complete and nothing appears missing;
  *        - a lockfile-only change (transitive bump) with package.json
- *          untouched, where the presence check has nothing to compare at all.
+ *          untouched, where the integrity check has nothing to compare at all.
  *
- *   2. Presence of every declared dependency — catches "the installed tree
+ *   2. Integrity of every declared dependency — catches "the installed tree
  *      was mutated without touching the lockfile". A hash check cannot see
  *      this: `npm prune --omit=dev` removes devDependencies (typescript,
  *      @types/node) while leaving both package-lock.json and this stamp
  *      untouched, so a hash-only check reports readiness for a tree that
- *      cannot build. Same for a partially restored cache.
+ *      cannot build. A partially restored cache is the harder variant — the
+ *      directory survives while its contents do not — which is why
+ *      brokenDependencies() resolves declared entry points rather than
+ *      testing directory names.
  *
  * Checking both is not belt-and-braces; each alone is genuinely insufficient.
- * The presence check is derived from package.json rather than a hand-picked
+ * The integrity check is derived from package.json rather than a hand-picked
  * marker list, so — unlike the original two markers — it does detect a newly
  * declared package missing from a stale tree. That case is covered twice; the
  * cases listed under (1) are covered only by the hash.
  */
 const lockHash = createHash('sha256').update(readFileSync(packageLock)).digest('hex');
 
-function missingDependencies() {
+/**
+ * A package counts as present only if its own manifest is readable AND every
+ * entry point that manifest declares exists on disk.
+ *
+ * Checking directory names alone is not enough: a partially restored cache can
+ * leave `node_modules/typescript/` in place while omitting `bin/tsc`, and a
+ * name-only check then reports a complete tree for one that cannot build.
+ * Reading each package.json and resolving its `main`/`bin` targets catches
+ * gutted packages without the cost of a full `npm ls` integrity pass.
+ */
+function brokenDependencies() {
   if (!existsSync(packageJson)) return [];
   const pkg = JSON.parse(readFileSync(packageJson, 'utf8'));
   const declared = [
     ...Object.keys(pkg.dependencies ?? {}),
     ...Object.keys(pkg.devDependencies ?? {}),
   ];
-  return declared.filter((name) => !existsSync(join(nodeModulesDir, name)));
+
+  const broken = [];
+  for (const name of declared) {
+    const dir = join(nodeModulesDir, name);
+    const manifestPath = join(dir, 'package.json');
+    if (!existsSync(dir) || !existsSync(manifestPath)) {
+      broken.push(name);
+      continue;
+    }
+
+    let manifest;
+    try {
+      manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    } catch {
+      broken.push(`${name} (unreadable package.json)`);
+      continue;
+    }
+
+    const entryPoints = [];
+    if (typeof manifest.main === 'string') entryPoints.push(manifest.main);
+    if (typeof manifest.bin === 'string') entryPoints.push(manifest.bin);
+    else if (manifest.bin && typeof manifest.bin === 'object') {
+      for (const target of Object.values(manifest.bin)) {
+        if (typeof target === 'string') entryPoints.push(target);
+      }
+    }
+
+    const missingEntry = entryPoints.find((rel) => !existsSync(join(dir, rel)));
+    if (missingEntry !== undefined) broken.push(`${name} (missing ${missingEntry})`);
+  }
+  return broken;
 }
 
 if (existsSync(nodeModulesDir) && existsSync(stampFile)) {
@@ -58,13 +101,13 @@ if (existsSync(nodeModulesDir) && existsSync(stampFile)) {
   if (stamped !== lockHash) {
     console.log('[legacy-runtime] runtime lockfile changed since last install; reinstalling');
   } else {
-    const missing = missingDependencies();
+    const missing = brokenDependencies();
     if (missing.length === 0) {
       console.log('[legacy-runtime] runtime dependencies already present (lockfile unchanged, tree complete)');
       process.exit(0);
     }
     console.log(
-      `[legacy-runtime] stamp matches but ${missing.length} declared package(s) are missing from node_modules ` +
+      `[legacy-runtime] stamp matches but ${missing.length} declared package(s) are missing or incomplete ` +
         `(${missing.slice(0, 5).join(', ')}${missing.length > 5 ? ', …' : ''}); reinstalling`
     );
   }
@@ -98,10 +141,10 @@ if (status === 0) {
   // Stamp only after verifying the install actually produced the declared
   // tree — writing it on a bare exit code is what let the production-omit
   // and prune cases through before.
-  const stillMissing = missingDependencies();
+  const stillMissing = brokenDependencies();
   if (stillMissing.length > 0) {
     console.error(
-      `[legacy-runtime] npm ci exited 0 but ${stillMissing.length} declared package(s) are still missing ` +
+      `[legacy-runtime] npm ci exited 0 but ${stillMissing.length} declared package(s) are still missing or incomplete ` +
         `(${stillMissing.slice(0, 5).join(', ')}${stillMissing.length > 5 ? ', …' : ''}); refusing to stamp readiness.`
     );
     process.exit(1);
