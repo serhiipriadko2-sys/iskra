@@ -1,10 +1,49 @@
 # ADR-20260731-02: SIFT CLI — Wave 0 Fail-Closed Wording + Schema Validation
 
-Status: proposed (2026-07-31, awaiting owner decision)
+Status: **accepted** (2026-08-01, owner decision) — superseding `proposed` (2026-07-31)
 
-Date: 2026-07-31
+Date: 2026-07-31 (proposed) · 2026-08-01 (accepted)
 
 Scope: `runtime/src/cli/services/geminiCliService.ts#siftVerify()`, `runtime/src/cli/commands/sift.ts`. No change to `apps/`, `packages/`, `runtime/iskraSpace/`, or any Supabase/live surface.
+
+## Owner acceptance (2026-08-01)
+
+Accepted **strictly within Wave 0**. The acceptance covers exactly:
+
+```yaml
+accepted:
+  - CLI Wave 0 fail-closed containment
+  - strict model-output validation
+  - zero-evidence => UNSOURCED
+  - CLI API-key boundary repair
+
+not_accepted_by_this_ADR:
+  - Wave 1 evidence adapters
+  - live chat SIFT enforcement
+  - HTTP retrieval
+  - packages/engine architecture
+  - evaluateAccuracy remediation
+```
+
+Stated grounds for acceptance: the ADR closes a confirmed fail-open CLI path; the strict schema and the absence of any `FACT`/`verified` value in the model-facing enum are explicit; with no evidence a positive verdict is mechanically unreachable; the synthetic `0.5` confidence is replaced by an honest `0`; the browser-prefixed `VITE_GEMINI_API_KEY` is removed from the CLI security boundary; Wave 1, the live chat path and network adapters are explicitly excluded; and the price is named rather than hidden — the CLI returns `UNSOURCED` for every input until an evidence adapter lands.
+
+Acceptance of this ADR does **not** confer acceptance on `ADR-20260730-01` or `ADR-20260731-01`, which remain separately `proposed`.
+
+### Scope invariant (corrected 2026-08-01)
+
+The PR's completion criterion was originally written as "exactly 11 changed files". That was formulated before it was clear that this ADR and its companion finding are themselves inputs to the canon-index generator, which makes `expected_11_only` and `canon_index_check: PASS` mutually exclusive. The criterion is therefore dependency-aware rather than a raw file count:
+
+```yaml
+changed_files:                       12
+runtime_or_governance_source_files:  11
+generated_index_files:                1   # apps/iskra-site/src/data/canon-index.json
+foreign_index_drift:                  0
+canon_nodes_before:                3737
+canon_nodes_after:                 3739
+canon_index_check:                 PASS
+```
+
+The 12th file is a mandatory derived artifact of this PR's own changes, not scope creep. The same rule binds every later PR that adds canon-tracked files, including PR-A (SoT30 v5.5.8).
 
 ## Context
 
@@ -51,4 +90,4 @@ A separate, much larger external spec proposes a full "Track A: Runtime SIFT Fai
 - **Δ:** SIFT CLI can no longer print "Verified" from a bare model self-report; schema-invalid/malformed model JSON is rejected instead of silently trusted or given a fabricated 0.5 confidence; the CLI's API-key lookup no longer accepts a browser-prefixed variable.
 - **D:** Source → Inference → Fact. Source: direct read of `geminiCliService.ts`/`sift.ts` before and after, plus the review's DEF-001/002/003/006 and B-1/B-2 findings. Inference: reusing the existing typed scorer with structurally-empty evidence makes the unsafe verdict path mechanically (not just conventionally) unreachable. Fact: `container-file-observed` (this session) + `local-test-pass` (268/268, typecheck, lint, build all green in this container).
 - **Ω:** 0.93 — code-level fix directly verified in-container (268/268 tests, typecheck, lint, build) **and** `github-verified` (Runtime CI + SoT integrity + iskraSpace CI green on `b267793`). Held below 0.95 because this change has had no independent adversarial review, unlike v5.5.4–v5.5.7.
-- **Λ (≤24h):** Decide (owner call, not this ADR) whether Wave 1 evidence-adapter work belongs in `packages/engine/` per `migration.yaml`, or warrants an explicit `runtime/` exception — before any adapter code is written. Separately, triage the `evaluateAccuracy` finding recorded in `governance/finding_20260731_eval_accuracy_keyword_proxy.md`.
+- **Λ (≤24h):** Both open owner decisions this ADR pointed at have since been made (2026-08-01) and are recorded here for traceability, though neither is granted by this ADR: **(a)** Wave 1 evidence-adapter work belongs in `packages/engine` per `skills/migration.yaml` — no `runtime/` exception; `runtime/` may hold only a thin compatibility adapter, never retrieval, adjudication or network policy; a real HTTP adapter requires a threat model plus an SSRF negative suite first, with the first Wave 1 PR limited to interfaces and a no-network mock adapter. **(b)** `FINDING-20260731-01` is triaged to a metadata-only rename (display name and docstring corrected; storage key `accuracy`, numeric scoring and historical series untouched; `semantics_version: keyword_proxy_v1`), moving it to `mitigated_not_closed`; a genuinely evidence-backed `evidence_verifiability` metric is added separately after Wave 1 rather than reusing the old key under new meaning. Remaining next step for this ADR: independent adversarial review of the PR head, then owner merge.
