@@ -34,8 +34,8 @@ Acceptance of this ADR does **not** confer acceptance on `ADR-20260730-01` or `A
 The PR's completion criterion was originally written as "exactly 11 changed files". That was formulated before it was clear that this ADR and its companion finding are themselves inputs to the canon-index generator, which makes `expected_11_only` and `canon_index_check: PASS` mutually exclusive. The criterion is therefore dependency-aware rather than a raw file count:
 
 ```yaml
-changed_files:                       12
-runtime_or_governance_source_files:  11
+changed_files:                       14
+runtime_or_governance_source_files:  13
 generated_index_files:                1   # apps/iskra-site/src/data/canon-index.json
 foreign_index_drift:                  0
 canon_nodes_before:                3737
@@ -43,7 +43,20 @@ canon_nodes_after:                 3739
 canon_index_check:                 PASS
 ```
 
-The 12th file is a mandatory derived artifact of this PR's own changes, not scope creep. The same rule binds every later PR that adds canon-tracked files, including PR-A (SoT30 v5.5.8).
+The generated index file is a mandatory derived artifact of this PR's own changes, not scope creep. The same rule binds every later PR that adds canon-tracked files, including PR-A (SoT30 v5.5.8).
+
+The source-file count moved 11 → 13 in the review round below (`docs/CLI.md`, `tools/ensure_runtime_deps.mjs`), which is why this block states a rule rather than a frozen number: the invariant that matters is **zero foreign index drift and every changed file attributable to this PR's own scope**, not a fixed count.
+
+### Independent review round 1 (Codex, 2026-08-01, head `101aab7`)
+
+Five P2 findings, all verified against the files before acting, all consequences of this PR's own changes, all fixed in `a575e4f`:
+
+1. `tools/ensure_runtime_deps.mjs` keyed install-readiness on two hand-picked marker packages, so `node_modules` carried over from the parent revision reported "already present" and skipped `npm ci` — the newly added `zod` never installed (reproduced as `TS2307`). Readiness is now keyed on a sha256 of `runtime/package-lock.json`, so **any** future dependency change invalidates it rather than re-introducing the same staleness.
+2. `siftVerify()` returned model-proposed locators as `sources`, and `--detailed` printed them under the authoritative heading `Sources` immediately before warning that no reliable sources were found — restating the exact source claim the fail-closed verdict denies. Renamed to `candidateSources`; rendered as "Candidate locators (model-proposed, NOT retrieved or verified)" with an explicit "These are not evidence" line.
+3+4. `docs/CLI.md` still documented the pre-change contract: `FACT`/`INFERENCE` as reachable, a worked example returning `FACT` at 95% with "Verified", and `VITE_GEMINI_API_KEY` as a shared alias for both commands. Updated to state the Wave 0 behaviour, replace the example with a truthful `UNSOURCED` run, and scope the alias to `iskra chat` only.
+5. This ADR claimed four new tests; three `it(...)` blocks are new and the fourth diff line renames a pre-existing test. Corrected in item 5 of the Decision section.
+
+Finding 2 is the substantive one: it is the same defect class this ADR exists to close, surviving in the rendering layer after the verdict layer was fixed.
 
 ## Context
 
