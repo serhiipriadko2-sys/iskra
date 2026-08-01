@@ -4,7 +4,9 @@ Status: **accepted** (2026-08-01, owner decision) — superseding `proposed` (20
 
 Date: 2026-07-31 (proposed) · 2026-08-01 (accepted)
 
-Scope: `runtime/src/cli/services/geminiCliService.ts#siftVerify()`, `runtime/src/cli/commands/sift.ts`. No change to `apps/`, `packages/`, `runtime/iskraSpace/`, or any Supabase/live surface.
+Scope: `runtime/src/cli/services/geminiCliService.ts#siftVerify()`, `runtime/src/cli/commands/sift.ts`, plus `tools/ensure_runtime_deps.mjs` and `docs/CLI.md` (added during review — see rounds 1 and 4). No change to `packages/`, `runtime/iskraSpace/`, or any Supabase/live surface.
+
+**`apps/`:** no source or behaviour change. One generated artifact under `apps/` — `apps/iskra-site/src/data/canon-index.json` — *is* modified, and necessarily so: the canon-index generator indexes the whole repository, this ADR and its companion finding are canon-tracked, and `canon:index:check` fails until the index is regenerated. That file is a mandatory derived output of this PR's own governance documents, not an app change. (Corrected 2026-08-01 after review round 5: the header previously said "no change to `apps/`" flat, contradicting this ADR's own 14-file scope block below, which lists that exact file.)
 
 ## Owner acceptance (2026-08-01)
 
@@ -98,6 +100,25 @@ Three P2 findings, all verified, all correct. One is a defect in this ADR's own 
 While applying fix 2 an arithmetic error was introduced into the round-1 correction (`24 → 32` instead of `24 → 27`) and caught before commit by checking `27 + 8 = 35` against the measured file count. Recorded because it is the fourth consecutive instance of the same failure mode in this ADR's receipts, and pretending the correction pass itself was clean would repeat it.
 
 Round 4 sharpens what rounds 1–3 suggested: **the code in this PR has been reviewed harder than the prose describing it.** Every round since round 2 found its defects in receipts, not in behaviour. That asymmetry is now stated in Consequences rather than left for the next reviewer to rediscover.
+
+### Independent review round 5 (Codex, 2026-08-01, head `58521a9`)
+
+Two P2 findings, both verified, both correct.
+
+1. **The readiness check traded one failure mode for another instead of closing both.** Round 1 replaced a marker-package check with a lockfile hash. Round 5 showed the hash alone is insufficient in the opposite direction: `npm prune --omit=dev` removes devDependencies while leaving both `package-lock.json` and the stamp untouched. Reproduced exactly — after `npm prune --omit=dev`, `typescript` was gone, `.iskra-runtime-deps-stamp` survived, and the helper reported *"runtime dependencies already present"* for a tree that cannot build. Codex's observation that the **old** marker check would have caught this case is correct, and is the point: the round-1 fix was not strictly better, it was differently blind.
+
+   The two signals catch disjoint failures and neither is sufficient alone:
+
+   | Failure | Lockfile hash | Declared-package presence |
+   |:--|:--|:--|
+   | Dependency added since last install | detects | misses (stale tree still has old packages) |
+   | Tree pruned / partially restored | misses | detects |
+
+   Both are now required. The presence check is derived from `package.json`'s `dependencies` + `devDependencies` rather than a hand-picked marker list, so it cannot go stale the way the original two markers did. The stamp is additionally written **only after** verifying the install actually produced the declared tree — writing it on a bare exit code is precisely what let both the production-omit case (round 4) and this prune case through. Verified across four scenarios: post-prune reinstall, complete tree skip, stale-hash reinstall, and `NODE_ENV=production` still installing dev dependencies.
+
+2. **The scope header contradicted this ADR's own scope block.** The header said "No change to `apps/`" while the 14-file block below lists `apps/iskra-site/src/data/canon-index.json`. Corrected to distinguish *no app source or behaviour change* from *a mandatory generated index artifact that happens to live under `apps/`*.
+
+Finding 1 is the third consecutive round to find a defect in `tools/ensure_runtime_deps.mjs` — introduced by this PR, then twice repaired incompletely. Recorded plainly: a nine-line helper needed three review rounds to get right, and each intermediate version was confidently described in this ADR as correct.
 
 ## Context
 
