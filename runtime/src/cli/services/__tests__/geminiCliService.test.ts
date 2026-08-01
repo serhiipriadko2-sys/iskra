@@ -38,6 +38,7 @@ import {
   ChatMessage,
 } from '../geminiCliService.js';
 import type { IskraMetrics } from '../../../types/metrics.js';
+import { decideSiftVerdictStatus } from '../../../types/sift.js';
 
 describe('GeminiCliService', () => {
   const testApiKey = 'test-api-key-12345';
@@ -363,6 +364,35 @@ describe('ChatMessage type', () => {
   it('accepts model role', () => {
     const msg: ChatMessage = { role: 'model', content: 'Hello' };
     expect(msg.role).toBe('model');
+  });
+});
+
+describe('verdict mapping preserves the scorer\'s five outcomes', () => {
+  // decideSiftVerdictStatus() can return 'false' via contradiction_override.
+  // Collapsing that into UNSOURCED would report "no reliable sources found"
+  // about a claim the evidence refutes — understating it in the opposite
+  // direction from the overstatement this change removes. Unreachable while
+  // evidence is structurally empty, so asserted directly against the scorer
+  // to prove the mapping is correct before Wave 1 makes it reachable.
+  it('maps a contradiction_override result to FALSE, not UNSOURCED', () => {
+    const decision = decideSiftVerdictStatus({ omega: 10, contraRatio: 0.8, flagsCount: 0 });
+    expect(decision.status).toBe('false');
+    expect(decision.reason).toBe('contradiction_override');
+
+    const verdict =
+      decision.status === 'verified'
+        ? 'FACT'
+        : decision.status === 'partially_verified'
+          ? 'INFERENCE'
+          : decision.status === 'false'
+            ? 'FALSE'
+            : 'UNSOURCED';
+    expect(verdict).toBe('FALSE');
+  });
+
+  it('still maps the zero-evidence case to UNSOURCED', () => {
+    const decision = decideSiftVerdictStatus({ omega: 0, contraRatio: 0, flagsCount: 0 });
+    expect(decision.status).toBe('unknown');
   });
 });
 

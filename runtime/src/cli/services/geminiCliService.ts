@@ -304,7 +304,7 @@ ${DELTA_PROTOCOL}
    */
   async siftVerify(statement: string): Promise<{
     statement: string;
-    verdict: "FACT" | "INFERENCE" | "UNSOURCED";
+    verdict: "FACT" | "INFERENCE" | "UNSOURCED" | "FALSE";
     confidence: number;
     reasoning: string;
     candidateSources: string[];
@@ -387,8 +387,23 @@ ${DELTA_PROTOCOL}
       flagsCount: siftInput.source.flags.length,
     });
 
-    const verdict: "FACT" | "INFERENCE" | "UNSOURCED" =
-      decision.status === "verified" ? "FACT" : decision.status === "partially_verified" ? "INFERENCE" : "UNSOURCED";
+    // decideSiftVerdictStatus() has five outcomes, not three. Its
+    // 'contradiction_override' branch returns 'false' — "evidence contradicts
+    // this claim" — which is categorically different from "no sources were
+    // found". Collapsing it into UNSOURCED would make the CLI understate a
+    // refuted claim as merely unsupported: the same class of dishonest output
+    // this change exists to remove, pointing the other way. Unreachable today
+    // (zero evidence cannot produce contradictions) but mapped correctly now,
+    // so that populating evidence in Wave 1 needs no change here — which is
+    // what this method's contract already promises.
+    const verdict: "FACT" | "INFERENCE" | "UNSOURCED" | "FALSE" =
+      decision.status === "verified"
+        ? "FACT"
+        : decision.status === "partially_verified"
+          ? "INFERENCE"
+          : decision.status === "false"
+            ? "FALSE"
+            : "UNSOURCED";
 
     return {
       statement,

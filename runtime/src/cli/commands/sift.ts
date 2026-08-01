@@ -6,7 +6,13 @@ import ora from "ora";
 import { createGeminiCliService, sanitizeForTerminal } from "../services/geminiCliService.js";
 
 export const siftCommand = new Command("sift")
-  .description("Verify a statement using SIFT protocol (Source → Inference → Fact)")
+  .description(
+    "Verify a statement using SIFT protocol (Source → Inference → Fact → Trace).\n" +
+      "WAVE 0 LIMITATION: no independent evidence retrieval is wired in yet, so every\n" +
+      "input currently returns UNSOURCED — FACT and INFERENCE are unreachable. The\n" +
+      "model's reply is treated as an unverified candidate assessment; any locators it\n" +
+      "proposes are shown as candidates, never as retrieved sources."
+  )
   .argument("[statement]", "Statement to verify")
   .option("-d, --detailed", "Show detailed SIFT analysis")
   .action(async (statement, options) => {
@@ -57,7 +63,7 @@ export const siftCommand = new Command("sift")
       console.log(chalk.cyan("\n┌─ SIFT Analysis Result"));
       console.log(chalk.cyan("│"));
       
-      const verdictColor = 
+      const verdictColor =
         siftResult.verdict === "FACT" ? chalk.green :
         siftResult.verdict === "INFERENCE" ? chalk.yellow :
         chalk.red;
@@ -94,6 +100,11 @@ export const siftCommand = new Command("sift")
       // Recommendations
       if (siftResult.verdict === "INFERENCE") {
         console.log(chalk.yellow("⚠ Recommendation:"), "Seek additional sources to verify this inference.\n");
+      } else if (siftResult.verdict === "FALSE") {
+        // Distinct from UNSOURCED on purpose: "evidence contradicts this" is a
+        // different statement from "nothing was found", and reporting the
+        // second when the first is true understates a refuted claim.
+        console.log(chalk.red("✗ Contradicted:"), "Evidence contradicts this statement.\n");
       } else if (siftResult.verdict === "UNSOURCED") {
         console.log(chalk.red("✗ Warning:"), "No reliable sources found. Treat as speculation.\n");
       } else {
