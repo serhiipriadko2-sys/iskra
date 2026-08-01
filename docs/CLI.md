@@ -145,15 +145,30 @@ iskra sift "Quantum computers can break RSA" --detailed
 - `INFERENCE` - Logically derived (yellow)
 - `UNSOURCED` - No reliable sources (red)
 
+> **Wave 0 fail-closed behaviour (current).** `iskra sift` has **no independent
+> evidence retrieval** wired in yet, so it currently returns `UNSOURCED` for
+> *every* input — `FACT` and `INFERENCE` are mechanically unreachable, not
+> merely rare. The model's own reply is treated as an unverified *candidate
+> assessment*: it is validated against a strict schema (a self-declared
+> `FACT` is rejected outright), and any locators it proposes are printed
+> under "Candidate locators", never as "Sources", because nothing is fetched
+> or checked against the claim. Malformed or schema-invalid replies return
+> `UNSOURCED` with confidence `0`, not a fabricated mid-range score.
+>
+> The verdict list above describes the contract that returns once an evidence
+> adapter lands (Wave 1). See `governance/adr_20260731_sift_cli_wave0_fail_closed.md`.
+
 ---
 
 ## Environment Variables
 
 ```bash
-# Required for chat and sift commands
+# Required for chat and sift commands.
+# `iskra sift` reads ONLY this variable — the VITE_ alias below is deliberately
+# rejected there, because a browser-prefixed variable is not a CLI secret contract.
 export GEMINI_API_KEY=your_api_key_here
 
-# Optional
+# Optional — accepted by `iskra chat` ONLY, never by `iskra sift`
 export VITE_GEMINI_API_KEY=your_api_key_here  # Legacy alias (avoid using VITE_* in frontend env)
 ```
 
@@ -314,25 +329,34 @@ $ iskra sift "The sky is blue" --detailed
 
 Source → Inference → Fact → Trace
 
+(candidate assessment only — no independent evidence retrieval wired in yet;
+ FACT/INFERENCE are unreachable until an evidence adapter lands)
+
 Verifying: The sky is blue
 
 ┌─ SIFT Analysis Result
 │
-│  Verdict:    FACT
-│  Confidence: 95%
-│  Trace:      SIFT-CLI-001
+│  Verdict:    UNSOURCED
+│  Confidence: 0%
+│  Trace:      SIFT-CLI-1754043600000
 │
-├─ Sources
-│   1. DIRECT - Rayleigh scattering of sunlight
-│   2. DIRECT - Observable phenomenon
+├─ Candidate locators (model-proposed, NOT retrieved or verified)
+│   1. https://example.org/rayleigh-scattering
+│   These are not evidence. Nothing above was fetched.
 │
 ├─ Reasoning
-│   Statement widely verified by scientific evidence and observation.
+│   [Model assessment — candidate only, not independently verified] Widely
+│   treated as established by introductory optics texts.
 │
 └─────────────────────────────────────
 
-✓ Verified: Statement supported by reliable sources.
+✗ Warning: No reliable sources found. Treat as speculation.
 ```
+
+The verdict is `UNSOURCED` even though the claim is true and the model is
+confident. That is the Wave 0 contract working as designed: nothing was
+retrieved, so nothing is verified. A truthful-looking answer with an
+unverified locator is exactly the case this command must refuse to bless.
 
 ---
 

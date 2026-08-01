@@ -67,11 +67,16 @@ export const siftCommand = new Command("sift")
       console.log(chalk.cyan("│"), chalk.white("Trace:     "), chalk.gray(siftResult.trace));
       console.log(chalk.cyan("│"));
 
-      if (options.detailed && siftResult.sources.length > 0) {
-        console.log(chalk.cyan("├─ Sources"));
-        siftResult.sources.forEach((source, idx) => {
-          console.log(chalk.cyan("│  "), chalk.white(`${idx + 1}.`), chalk.gray(source));
+      if (options.detailed && siftResult.candidateSources.length > 0) {
+        // Deliberately NOT headed "Sources": these strings come straight from
+        // the model and have not been fetched, dereferenced or checked against
+        // the claim. Printing them under an authoritative heading would restate
+        // the very source claim this command's fail-closed verdict denies.
+        console.log(chalk.yellow("├─ Candidate locators (model-proposed, NOT retrieved or verified)"));
+        siftResult.candidateSources.forEach((source, idx) => {
+          console.log(chalk.yellow("│  "), chalk.white(`${idx + 1}.`), chalk.gray(source));
         });
+        console.log(chalk.yellow("│  "), chalk.gray("These are not evidence. Nothing above was fetched."));
         console.log(chalk.cyan("│"));
       }
 

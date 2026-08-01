@@ -125,7 +125,7 @@ describe('GeminiCliService', () => {
       expect(result).toHaveProperty('verdict');
       expect(result).toHaveProperty('confidence');
       expect(result).toHaveProperty('reasoning');
-      expect(result).toHaveProperty('sources');
+      expect(result).toHaveProperty('candidateSources');
       expect(result).toHaveProperty('trace');
     });
 
@@ -158,7 +158,9 @@ describe('GeminiCliService', () => {
       // unreachable no matter how confident the model claims to be.
       expect(result.verdict).toBe('UNSOURCED');
       expect(result.reasoning).toMatch(/candidate only, not independently verified/);
-      expect(result.sources).toEqual(['https://example.com/looks-authoritative']);
+      // Model-proposed locators survive, but under a name that cannot be mistaken
+      // for retrieved evidence — the CLI renders them as unverified candidates.
+      expect(result.candidateSources).toEqual(['https://example.com/looks-authoritative']);
     });
 
     it('rejects a schema violation (extra field) as unverifiable, not a parsed verdict', async () => {

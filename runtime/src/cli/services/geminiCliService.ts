@@ -259,7 +259,7 @@ ${DELTA_PROTOCOL}
     verdict: "FACT" | "INFERENCE" | "UNSOURCED";
     confidence: number;
     reasoning: string;
-    sources: string[];
+    candidateSources: string[];
     trace: string;
   }> {
     const trace = `SIFT-CLI-${Date.now()}`;
@@ -293,7 +293,7 @@ ${DELTA_PROTOCOL}
         verdict: "UNSOURCED",
         confidence: 0,
         reasoning: "Model response was not valid JSON; treated as unverifiable candidate.",
-        sources: [],
+        candidateSources: [],
         trace,
       };
     }
@@ -308,7 +308,7 @@ ${DELTA_PROTOCOL}
         verdict: "UNSOURCED",
         confidence: 0,
         reasoning: `Model response failed strict schema validation (${issues}); treated as unverifiable candidate.`,
-        sources: [],
+        candidateSources: [],
         trace,
       };
     }
@@ -347,7 +347,7 @@ ${DELTA_PROTOCOL}
       verdict,
       confidence: omega / 100,
       reasoning: `[Model assessment — candidate only, not independently verified] ${assessment.rationaleSummary}`,
-      sources: assessment.proposedSources,
+      candidateSources: assessment.proposedSources,
       trace,
     };
   }
