@@ -77,6 +77,16 @@ Eight tests added (268 → 276): newline-escape, ANSI, bidi-override and control
 
 This finding generalises the ADR's own thesis: untrusted model output must be constrained not only where it is *interpreted* (the verdict) but also where it is *displayed*. The terminal is an execution surface, not a neutral sink.
 
+### Independent review round 3 (Codex, 2026-08-01, head `4265267`)
+
+Two P2 findings, both against `governance/finding_20260731_eval_accuracy_keyword_proxy.md`, both verified and both correct. Neither touches the SIFT CLI code; both are accuracy defects in a governance record authored in this PR.
+
+1. **The finding overstated its own evidence.** It claimed `evaluateAccuracy` *penalises* honest hedging. It does not: `SIFT_SIGNALS.negative` holds exactly three patterns, each matched with `String.prototype.match()` without the `g` flag and with no capture groups, so each contributes exactly `1` and `negativeCount` saturates at `3` — while the guard requires `> 3`. Reproduced: a response repeating every hedge word twenty times still yields `negativeCount = 3` and no penalty. Corrected in place with an explicit correction notice rather than a silent rewrite. The finding's substance survives — the keyword-proxy scoring gradient is live and unaffected — but one of its three stated grounds was false and is now restated as a *latent* canon inversion (the intent sits in the code, one plausible "bug fix" away from becoming real) rather than live behaviour.
+
+2. **Two committed governance sources disagreed on decision state.** This ADR recorded that the owner's triage of `FINDING-20260731-01` had been made, while the finding itself still said triage was pending. A reader could not tell whether a decision was outstanding or only implementation was. The finding now carries the decision verbatim — metadata-only rename, `storage_key`/scoring/history explicitly unchanged, `evidence_verifiability` added separately after Wave 1 — and stays `open` until the rename lands, moving to `mitigated_not_closed` at that point.
+
+Round 3 is the sharper of the three for this ADR's purposes, because both findings are of the same class the ADR exists to attack — a record asserting more than its evidence supports — and this time the record was mine. The Ω on the finding was deliberately *not* raised after the correction: being corrected on one of three sub-claims is not grounds for more confidence in the other two.
+
 ## Context
 
 An external review of the `iskra` SIFT surface flagged three findings that this ADR closes, and one it explicitly does not:
