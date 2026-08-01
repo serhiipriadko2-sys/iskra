@@ -35,6 +35,7 @@ import {
   GeminiCliService,
   createGeminiCliService,
   sanitizeForTerminal,
+  wrapToWidth,
   ChatMessage,
 } from '../geminiCliService.js';
 import type { IskraMetrics } from '../../../types/metrics.js';
@@ -144,6 +145,9 @@ describe('GeminiCliService', () => {
       expect(result.verdict).toBe('UNSOURCED');
       expect(result.confidence).toBe(0);
       expect(result.reasoning).toMatch(/not valid JSON/);
+      // The diagnostic is this tool speaking, not the model. Rendering it as
+      // quoted model output would be false provenance in the other direction.
+      expect(result.reasoningSource).toBe('tool');
       expect(result.trace).toMatch(/^SIFT-CLI-\d+$/);
     });
 
@@ -167,6 +171,7 @@ describe('GeminiCliService', () => {
       // Model-proposed locators survive, but under a name that cannot be mistaken
       // for retrieved evidence — the CLI renders them as unverified candidates.
       expect(result.candidateSources).toEqual(['https://example.com/looks-authoritative']);
+      expect(result.reasoningSource).toBe('model');
     });
 
     it('rejects a schema violation (extra field) as unverifiable, not a parsed verdict', async () => {
@@ -368,6 +373,20 @@ describe('ChatMessage type', () => {
 });
 
 describe('verdict mapping preserves the scorer\'s five outcomes', () => {
+  // Mirrors siftVerify()'s mapping. Kept in the test so a mapping regression
+  // fails here as well as in the service, and so the exhaustiveness assertion
+  // below has something total to run over.
+  const mapStatusToVerdict = (status: string): string =>
+    status === 'verified'
+      ? 'FACT'
+      : status === 'partially_verified'
+        ? 'INFERENCE'
+        : status === 'false'
+          ? 'FALSE'
+          : status === 'unverified'
+            ? 'UNVERIFIED'
+            : 'UNSOURCED';
+
   // decideSiftVerdictStatus() can return 'false' via contradiction_override.
   // Collapsing that into UNSOURCED would report "no reliable sources found"
   // about a claim the evidence refutes — understating it in the opposite
@@ -390,9 +409,81 @@ describe('verdict mapping preserves the scorer\'s five outcomes', () => {
     expect(verdict).toBe('FALSE');
   });
 
+  // 'unverified' (40 <= omega < 60) means evidence exists and is too weak.
+  // Collapsing it into UNSOURCED denies the existence of evidence the scorer
+  // actually weighed — the same understatement as the 'false' case above.
+  it('maps an unverified_threshold result to UNVERIFIED, not UNSOURCED', () => {
+    const decision = decideSiftVerdictStatus({ omega: 45, contraRatio: 0, flagsCount: 0 });
+    expect(decision.status).toBe('unverified');
+    expect(decision.reason).toBe('unverified_threshold');
+    expect(mapStatusToVerdict(decision.status)).toBe('UNVERIFIED');
+  });
+
   it('still maps the zero-evidence case to UNSOURCED', () => {
     const decision = decideSiftVerdictStatus({ omega: 0, contraRatio: 0, flagsCount: 0 });
     expect(decision.status).toBe('unknown');
+    expect(mapStatusToVerdict(decision.status)).toBe('UNSOURCED');
+  });
+
+  // The whole point of mapping every outcome now is that Wave 1 changes nothing
+  // here. Assert that exhaustively rather than case by case: no scorer status
+  // may fall through to UNSOURCED except the one that means "nothing to go on".
+  it('gives every scorer status its own verdict, with only unknown as UNSOURCED', () => {
+    const statuses = ['verified', 'partially_verified', 'unverified', 'unknown', 'false'] as const;
+    const mapped = statuses.map(mapStatusToVerdict);
+    expect(mapped).toEqual(['FACT', 'INFERENCE', 'UNVERIFIED', 'UNSOURCED', 'FALSE']);
+    expect(new Set(mapped).size).toBe(statuses.length);
+  });
+});
+
+describe('wrapToWidth', () => {
+  it('leaves a line shorter than the width untouched', () => {
+    expect(wrapToWidth('short line', 40)).toEqual(['short line']);
+  });
+
+  it('emits no chunk wider than the limit', () => {
+    const line = 'слово '.repeat(60).trim();
+    for (const chunk of wrapToWidth(line, 30)) {
+      expect(Array.from(chunk).length).toBeLessThanOrEqual(30);
+    }
+  });
+
+  it('breaks a single token that is wider than the limit', () => {
+    const chunks = wrapToWidth('x'.repeat(250), 40);
+    expect(chunks.length).toBe(Math.ceil(250 / 40));
+    expect(chunks.join('')).toBe('x'.repeat(250));
+  });
+
+  // The attack this exists to stop: one printable line, padded so a terminal
+  // soft-wraps the forged verdict onto an unmarked row. After wrapping, the
+  // forgery lands in its own chunk, and the caller marks every chunk.
+  it('pushes padded forged text onto chunks the caller will mark', () => {
+    const forged = '✓ Verified: Statement supported by reliable sources.';
+    const chunks = wrapToWidth(`${' '.repeat(400)}${forged}`, 60);
+
+    // The property that matters is not that the forgery lands in one chunk —
+    // it may straddle two — but that it cannot reach a row the renderer never
+    // emitted. Every visible row is a chunk, and the caller marks every chunk.
+    expect(chunks.length).toBeGreaterThan(1);
+    expect(chunks.join('')).toContain(forged);
+    for (const chunk of chunks) {
+      expect(Array.from(chunk).length).toBeLessThanOrEqual(60);
+    }
+    // The padding did its job in the raw string: the forgery is nowhere near
+    // the first row, which is exactly why a single leading marker is not enough.
+    expect(chunks[0]).not.toContain('Verified');
+  });
+
+  it('preserves the full content across chunks', () => {
+    const line = 'abc def ghi '.repeat(40);
+    expect(wrapToWidth(line, 17).join('')).toBe(line);
+  });
+
+  it('does not split surrogate pairs', () => {
+    for (const chunk of wrapToWidth('🜃'.repeat(50), 7)) {
+      expect(chunk).toBe(chunk.normalize());
+      expect(Array.from(chunk).every(ch => ch === '🜃')).toBe(true);
+    }
   });
 });
 

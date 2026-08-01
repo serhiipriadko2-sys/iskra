@@ -3,13 +3,14 @@ import { Command } from "commander";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
-import { createGeminiCliService, sanitizeForTerminal } from "../services/geminiCliService.js";
+import { createGeminiCliService, sanitizeForTerminal, wrapToWidth } from "../services/geminiCliService.js";
 
 export const siftCommand = new Command("sift")
   .description(
     "Verify a statement using SIFT protocol (Source → Inference → Fact → Trace).\n" +
       "WAVE 0 LIMITATION: no independent evidence retrieval is wired in yet, so every\n" +
-      "input currently returns UNSOURCED — FACT and INFERENCE are unreachable. The\n" +
+      "input currently returns UNSOURCED — FACT, INFERENCE, UNVERIFIED and FALSE are\n" +
+      "all unreachable, because each of them requires evidence that was retrieved. The\n" +
       "model's reply is treated as an unverified candidate assessment; any locators it\n" +
       "proposes are shown as candidates, never as retrieved sources."
   )
@@ -20,7 +21,7 @@ export const siftCommand = new Command("sift")
     console.log(chalk.gray("Source → Inference → Fact → Trace\n"));
     console.log(
       chalk.gray("(candidate assessment only — no independent evidence retrieval wired in yet;\n") +
-        chalk.gray(" FACT/INFERENCE are unreachable until an evidence adapter lands)\n")
+        chalk.gray(" FACT/INFERENCE/UNVERIFIED/FALSE are unreachable until an evidence adapter lands)\n")
     );
 
     let statementToVerify = statement;
@@ -86,24 +87,47 @@ export const siftCommand = new Command("sift")
         console.log(chalk.cyan("│"));
       }
 
-      // Attribution must be per-line, not per-block. `rationaleSummary`
-      // deliberately permits newlines (prose needs them), so a model can put
-      // "✓ Verified: Statement supported by reliable sources." on line 2 while
-      // only line 1 carries the "[Model assessment — candidate only]" prefix —
-      // and a long enough rationale scrolls that sole caveat off screen. Round 2
-      // stopped forged lines *escaping* the "│" prefix; it did not stop them
-      // reading as tool output *inside* it. The heading names the whole block as
-      // model-supplied and every line carries a quote marker, so no line here
-      // can be mistaken for the CLI speaking.
-      console.log(chalk.cyan("├─ Reasoning (model-supplied text, NOT verified)"));
-      // Split first, then sanitize each line: real line breaks are legitimate
-      // here and get the "│" prefix, while every other control or format
-      // character is neutralised so it cannot escape that prefix.
+      // Attribution must be per *rendered* line, not per block and not even per
+      // logical line. Two ways a forged "✓ Verified: …" can shed its marker:
+      //   1. `rationaleSummary` permits newlines, so a model can put the forged
+      //      text on line 2 while only line 1 carries the caveat prefix;
+      //   2. it permits a single printable line up to 8000 chars, which the
+      //      terminal soft-wraps into visual lines the renderer never saw — so
+      //      one `>` marker guards the first screen row and the padded forgery
+      //      lands unquoted further down, with the heading scrolled away.
+      // Splitting on "\n" alone fixes (1) and not (2). Hard-wrapping to the
+      // terminal width and marking every chunk fixes both, because the renderer
+      // then emits exactly the lines the terminal shows.
+      const provenance = siftResult.reasoningSource;
+      console.log(
+        provenance === "model"
+          ? chalk.cyan("├─ Reasoning (model-supplied text, NOT verified)")
+          // A validation diagnostic is this tool speaking, and quoting it as
+          // model output would be false provenance in the opposite direction:
+          // it would hide that the rejection is the tool's own finding.
+          : chalk.cyan("├─ Reasoning (validation diagnostic from this tool, not model text)")
+      );
+      // Sanitize per logical line first: real line breaks are legitimate here,
+      // while every other control or format character is neutralised so it
+      // cannot escape the "│" prefix or corrupt the width arithmetic below.
       const reasoningLines = siftResult.reasoning.split("\n").map(sanitizeForTerminal);
+      const marker = provenance === "model" ? ">" : "|";
+      // "│   > " is six visible columns; leave a column of slack so a terminal
+      // that wraps at exactly `columns` still does not fold a chunk.
+      const wrapWidth = Math.max(20, (process.stdout.columns ?? 80) - 7);
       reasoningLines.forEach(line => {
-        console.log(chalk.cyan("│  "), chalk.gray(">"), chalk.white(line));
+        for (const chunk of wrapToWidth(line, wrapWidth)) {
+          console.log(chalk.cyan("│  "), chalk.gray(marker), chalk.white(chunk));
+        }
       });
-      console.log(chalk.cyan("│  "), chalk.gray("Every line above is model output, not a verdict of this tool."));
+      console.log(
+        chalk.cyan("│  "),
+        chalk.gray(
+          provenance === "model"
+            ? "Every line above is model output, not a verdict of this tool."
+            : "Every line above is this tool's validation output, not model text."
+        )
+      );
       console.log(chalk.cyan("│"));
       console.log(chalk.cyan("└─────────────────────────────────────\n"));
 
@@ -115,6 +139,11 @@ export const siftCommand = new Command("sift")
         // different statement from "nothing was found", and reporting the
         // second when the first is true understates a refuted claim.
         console.log(chalk.red("✗ Contradicted:"), "Evidence contradicts this statement.\n");
+      } else if (siftResult.verdict === "UNVERIFIED") {
+        // Distinct from UNSOURCED: evidence was found and is too weak to
+        // support the claim. Reporting "no reliable sources found" here would
+        // deny the existence of evidence the scorer actually weighed.
+        console.log(chalk.red("✗ Insufficient:"), "Evidence was found but is too weak to support this statement.\n");
       } else if (siftResult.verdict === "UNSOURCED") {
         console.log(chalk.red("✗ Warning:"), "No reliable sources found. Treat as speculation.\n");
       } else {

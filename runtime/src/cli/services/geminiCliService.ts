@@ -131,6 +131,58 @@ export function sanitizeForTerminal(value: string): string {
 }
 
 /**
+ * Break one already-sanitized line into chunks no wider than `width`.
+ *
+ * Rendering untrusted prose has to emit the lines the terminal actually shows,
+ * not the lines the string happens to contain. A schema-valid `rationaleSummary`
+ * may be a single printable line of up to 8000 characters: the renderer sees one
+ * line and writes one attribution marker, while the terminal soft-wraps it into
+ * many visual rows — every row after the first then carries no marker, and a
+ * forged `✓ Verified: …` padded far enough down reads as tool output again.
+ * Hard-wrapping here makes per-line attribution mean per-visible-line.
+ *
+ * Wraps on whitespace when it can and breaks mid-token when a token is wider
+ * than `width`, so no chunk can exceed it. Width is counted in code points
+ * (`Array.from`), which keeps surrogate pairs intact; it is an approximation for
+ * double-width CJK and emoji, which is why the caller leaves column slack rather
+ * than wrapping at exactly the terminal width.
+ */
+export function wrapToWidth(line: string, width: number): string[] {
+  const limit = Math.max(1, Math.floor(width));
+  if (Array.from(line).length <= limit) return [line];
+
+  const chunks: string[] = [];
+  let current: string[] = [];
+
+  const flush = (): void => {
+    if (current.length > 0) {
+      chunks.push(current.join(""));
+      current = [];
+    }
+  };
+
+  // Keep trailing whitespace attached to its word so padding is preserved as
+  // visible width rather than silently collapsed — padding is exactly the
+  // mechanism an attacker uses to push text down the screen.
+  for (const token of line.match(/\S+\s*|\s+/gu) ?? []) {
+    const chars = Array.from(token);
+    if (current.length + chars.length <= limit) {
+      current.push(...chars);
+      continue;
+    }
+    flush();
+    for (let i = 0; i < chars.length; i += limit) {
+      const slice = chars.slice(i, i + limit);
+      if (slice.length === limit) chunks.push(slice.join(""));
+      else current = slice;
+    }
+  }
+  flush();
+
+  return chunks.length > 0 ? chunks : [line];
+}
+
+/**
  * Strict schema for the model's raw SIFT self-report.
  *
  * This is a *candidate* assessment only — model output is untrusted input,
@@ -304,9 +356,17 @@ ${DELTA_PROTOCOL}
    */
   async siftVerify(statement: string): Promise<{
     statement: string;
-    verdict: "FACT" | "INFERENCE" | "UNSOURCED" | "FALSE";
+    verdict: "FACT" | "INFERENCE" | "UNVERIFIED" | "UNSOURCED" | "FALSE";
     confidence: number;
     reasoning: string;
+    /**
+     * Who wrote `reasoning`. The renderer must not guess: on the success path
+     * it is model prose and has to be quoted as untrusted; on the failure
+     * paths it is this tool's own validation diagnostic, and labelling that as
+     * model output is false provenance in the opposite direction — it hides
+     * that the tool, not the model, is the one reporting a rejection.
+     */
+    reasoningSource: "model" | "tool";
     candidateSources: string[];
     trace: string;
   }> {
@@ -341,6 +401,7 @@ ${DELTA_PROTOCOL}
         verdict: "UNSOURCED",
         confidence: 0,
         reasoning: "Model response was not valid JSON; treated as unverifiable candidate.",
+        reasoningSource: "tool",
         candidateSources: [],
         trace,
       };
@@ -356,6 +417,7 @@ ${DELTA_PROTOCOL}
         verdict: "UNSOURCED",
         confidence: 0,
         reasoning: `Model response failed strict schema validation (${issues}); treated as unverifiable candidate.`,
+        reasoningSource: "tool",
         candidateSources: [],
         trace,
       };
@@ -398,29 +460,37 @@ ${DELTA_PROTOCOL}
       flagsCount: siftInput.source.flags.length,
     });
 
-    // decideSiftVerdictStatus() has five outcomes, not three. Its
-    // 'contradiction_override' branch returns 'false' — "evidence contradicts
-    // this claim" — which is categorically different from "no sources were
-    // found". Collapsing it into UNSOURCED would make the CLI understate a
-    // refuted claim as merely unsupported: the same class of dishonest output
-    // this change exists to remove, pointing the other way. Unreachable today
-    // (zero evidence cannot produce contradictions) but mapped correctly now,
-    // so that populating evidence in Wave 1 needs no change here — which is
-    // what this method's contract already promises.
-    const verdict: "FACT" | "INFERENCE" | "UNSOURCED" | "FALSE" =
+    // decideSiftVerdictStatus() has FIVE outcomes and each must map to its own
+    // verdict. Two of them are about evidence that exists and falls short, and
+    // collapsing either into UNSOURCED reports an absence of sources that the
+    // scorer did not find:
+    //   'false'      (contradiction_override) — evidence CONTRADICTS the claim;
+    //   'unverified' (40 <= omega < 60)       — evidence exists but is too weak.
+    // Only 'unknown' (omega < 40) means "nothing to go on", which is the
+    // zero-evidence state Wave 0 always produces. Understating a refuted or a
+    // weakly-supported claim as "no reliable sources found" is the same class
+    // of dishonest output this change exists to remove, pointing the other way.
+    // FACT/INFERENCE/UNVERIFIED/FALSE are all unreachable today (zero evidence
+    // yields omega 0), but each is mapped now so that populating evidence in
+    // Wave 1 needs no change here — which is what this method's contract
+    // promises and what a three-arm mapping had already falsified once.
+    const verdict: "FACT" | "INFERENCE" | "UNVERIFIED" | "UNSOURCED" | "FALSE" =
       decision.status === "verified"
         ? "FACT"
         : decision.status === "partially_verified"
           ? "INFERENCE"
           : decision.status === "false"
             ? "FALSE"
-            : "UNSOURCED";
+            : decision.status === "unverified"
+              ? "UNVERIFIED"
+              : "UNSOURCED";
 
     return {
       statement,
       verdict,
       confidence: omega / 100,
       reasoning: `[Model assessment — candidate only, not independently verified; model status: ${assessment.status}] ${assessment.rationaleSummary}`,
+      reasoningSource: "model",
       candidateSources: assessment.proposedSources,
       trace,
     };

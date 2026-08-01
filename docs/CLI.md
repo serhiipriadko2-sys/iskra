@@ -143,30 +143,51 @@ iskra sift "Quantum computers can break RSA" --detailed
 **Verdict Types:**
 - `FACT` - Directly supported by sources (green)
 - `INFERENCE` - Logically derived (yellow)
-- `UNSOURCED` - No reliable sources found (red)
+- `UNVERIFIED` - Evidence was retrieved but is **too weak** to support the claim (red)
+- `UNSOURCED` - No reliable sources found at all (red)
 - `FALSE` - Retrieved evidence **contradicts** the statement (red)
 
-`UNSOURCED` and `FALSE` are not interchangeable. The first says nothing was
-found; the second says something was found and it refutes the claim. A tool
-consuming these verdicts must treat them differently — reporting "no sources"
-for a refuted statement understates it.
+The three red verdicts are not interchangeable, and a consumer that treats them
+alike misreports two of the three:
+
+| Verdict | What the scorer found | Reporting it as `UNSOURCED` would |
+|---------|-----------------------|-----------------------------------|
+| `UNVERIFIED` | evidence exists, is insufficient | deny that any evidence was weighed |
+| `UNSOURCED` | nothing to go on | — |
+| `FALSE` | evidence refutes the claim | understate a refuted claim as merely unsupported |
+
+These map one-to-one onto the five outcomes of the underlying scorer
+(`runtime/src/types/sift.ts`), so no scorer result is collapsed into another.
 
 > **Wave 0 fail-closed behaviour (current).** `iskra sift` has **no independent
 > evidence retrieval** wired in yet, so it currently returns `UNSOURCED` for
-> *every* input — `FACT`, `INFERENCE` and `FALSE` are all mechanically
-> unreachable, not merely rare. `FALSE` requires contradictory evidence, and
-> with no retrieval there is none to contradict with. The model's own reply is treated as an unverified *candidate
+> *every* input — `FACT`, `INFERENCE`, `UNVERIFIED` and `FALSE` are all
+> mechanically unreachable, not merely rare. Each of them requires evidence
+> that was actually retrieved: `FALSE` needs evidence that contradicts,
+> `UNVERIFIED` needs evidence that falls short, and with no retrieval there is
+> neither. The model's own reply is treated as an unverified *candidate
 > assessment*: it is validated against a strict schema (a self-declared
 > `FACT` is rejected outright), and any locators it proposes are printed
 > under "Candidate locators", never as "Sources", because nothing is fetched
 > or checked against the claim. Malformed or schema-invalid replies return
 > `UNSOURCED` with confidence `0`, not a fabricated mid-range score.
 >
-> The `Reasoning` block is model prose and may span several lines, so **every
-> line of it carries a `>` quote marker** and the heading names the block as
-> unverified. Nothing inside that block is output of this tool — a line there
-> reading `✓ Verified: …` is the model's text, not a verdict. The tool's own
-> verdict is the `Verdict:` field and the single summary line after the box.
+> The `Reasoning` block states its own provenance in the heading and marks
+> **every rendered line**:
+>
+> - `Reasoning (model-supplied text, NOT verified)` — lines carry `>`. This is
+>   the model's prose. A line there reading `✓ Verified: …` is model text, not
+>   a verdict.
+> - `Reasoning (validation diagnostic from this tool, not model text)` — lines
+>   carry `|`. This is the CLI reporting why it rejected the reply.
+>
+> Marking is per *rendered* line, not per logical line: model prose may be a
+> single 8000-character line, so the block is hard-wrapped to the terminal
+> width and each resulting row is marked. Otherwise the terminal's own
+> soft-wrapping would produce rows the renderer never marked.
+>
+> The tool's own verdict is always the `Verdict:` field and the single summary
+> line after the box — never anything inside a marked block.
 >
 > The verdict list above describes the contract that returns once an evidence
 > adapter lands (Wave 1). See `governance/adr_20260731_sift_cli_wave0_fail_closed.md`.

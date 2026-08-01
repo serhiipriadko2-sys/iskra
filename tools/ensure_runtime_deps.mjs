@@ -5,7 +5,6 @@ import { spawnSync } from 'node:child_process';
 
 const runtimeDir = join(process.cwd(), 'runtime');
 const packageLock = join(runtimeDir, 'package-lock.json');
-const packageJson = join(runtimeDir, 'package.json');
 const nodeModulesDir = join(runtimeDir, 'node_modules');
 // Stamp lives inside node_modules so wiping node_modules also invalidates it.
 const stampFile = join(nodeModulesDir, '.iskra-runtime-deps-stamp');
@@ -28,7 +27,8 @@ if (!existsSync(packageLock)) {
  *        - a lockfile-only change (transitive bump) with package.json
  *          untouched, where the integrity check has nothing to compare at all.
  *
- *   2. Integrity of every declared dependency — catches "the installed tree
+ *   2. Integrity of every package the lockfile declares — catches "the installed
+ *      tree
  *      was mutated without touching the lockfile". A hash check cannot see
  *      this: `npm prune --omit=dev` removes devDependencies (typescript,
  *      @types/node) while leaving both package-lock.json and this stamp
@@ -39,15 +39,54 @@ if (!existsSync(packageLock)) {
  *      testing directory names.
  *
  * Checking both is not belt-and-braces; each alone is genuinely insufficient.
- * The integrity check is derived from package.json rather than a hand-picked
- * marker list, so — unlike the original two markers — it does detect a newly
- * declared package missing from a stale tree. That case is covered twice; the
- * cases listed under (1) are covered only by the hash.
+ * The integrity check enumerates the lockfile's own `packages` map rather than a
+ * hand-picked marker list or the direct dependencies, so — unlike the original
+ * two markers — it does detect a newly declared package missing from a stale
+ * tree, and unlike a direct-only check it also covers transitive packages. That
+ * case is covered twice; the cases listed under (1) are covered only by the hash.
  */
 const lockHash = createHash('sha256').update(readFileSync(packageLock)).digest('hex');
 
 /**
- * Collect every relative file target a manifest declares as an entry point.
+ * Node's CommonJS resolution for a `main` target, reduced to existence.
+ *
+ * `main` is not required to name a file that exists verbatim: `ms` declares
+ * `"main": "./index"` and Node resolves `./index.js`. Checking the literal
+ * string reports that package broken on a perfectly healthy tree — measured
+ * across this lockfile's 243 packages, literal checking produced four such
+ * false positives. A check that cries wolf on a good tree is worse than none,
+ * because the fix is to stop believing it.
+ */
+function entryPointExists(dir, rel) {
+  const base = join(dir, rel);
+  if (existsSync(base)) return true;
+  for (const ext of ['.js', '.json', '.node', '.cjs', '.mjs']) {
+    if (existsSync(`${base}${ext}`)) return true;
+  }
+  return existsSync(join(base, 'index.js'));
+}
+
+// Conditions Node actually resolves at runtime. Everything else in an `exports`
+// map — `types`, `development`, and vendor-specific keys like `@zod/source` or
+// `@standard-schema/source` — points at TypeScript sources or declaration files
+// that packages routinely do not publish. Checking those targets reports a
+// healthy tree as damaged (measured: `@babel/helper-string-parser` via `types`,
+// `@standard-schema/spec` via a source condition). The set is deliberately
+// narrow: a condition wrongly included costs a false alarm on every run, while
+// one wrongly excluded costs at most a missed file that some other condition of
+// the same package almost always covers.
+const RUNTIME_EXPORT_CONDITIONS = new Set([
+  'node',
+  'node-addons',
+  'import',
+  'require',
+  'browser',
+  'default',
+]);
+
+/**
+ * Collect every relative file target a manifest declares as a runtime entry
+ * point.
  *
  * `main` and `bin` alone are not sufficient. Modern packages ship `exports`
  * only — `ora` (`{"types": "./index.d.ts", "default": "./index.js"}`) and
@@ -57,10 +96,11 @@ const lockHash = createHash('sha256').update(readFileSync(packageLock)).digest('
  * actually resolves for such packages, so it is the field that must be
  * validated.
  *
- * Wildcard subpath patterns (`"./*": "./dist/*.js"`) are skipped: they name a
- * mapping rule, not a file, and cannot be existence-checked without expanding
- * the glob. `null` targets (deliberately blocked subpaths) are skipped for the
- * same reason.
+ * Skipped, because they name something other than a shipped runtime file:
+ * wildcard subpath patterns (`"./*": "./dist/*.js"`), which are mapping rules
+ * that cannot be existence-checked without expanding the glob; `null` targets
+ * (deliberately blocked subpaths); and every condition outside
+ * RUNTIME_EXPORT_CONDITIONS.
  */
 function declaredEntryPoints(manifest) {
   const targets = [];
@@ -85,9 +125,10 @@ function declaredEntryPoints(manifest) {
     }
     if (node && typeof node === 'object') {
       for (const [key, value] of Object.entries(node)) {
-        // Subpath keys may be patterns; condition keys ("import", "types", …)
-        // never are. Skipping any key containing `*` drops only the former.
-        if (key.includes('*')) continue;
+        const isSubpath = key.startsWith('.');
+        // Subpath keys may be patterns; condition keys never are.
+        if (isSubpath && key.includes('*')) continue;
+        if (!isSubpath && !RUNTIME_EXPORT_CONDITIONS.has(key)) continue;
         walkExports(value);
       }
     }
@@ -101,25 +142,45 @@ function declaredEntryPoints(manifest) {
  * A package counts as present only if its own manifest is readable AND every
  * entry point that manifest declares exists on disk.
  *
- * Checking directory names alone is not enough: a partially restored cache can
- * leave `node_modules/typescript/` in place while omitting `bin/tsc`, and a
- * name-only check then reports a complete tree for one that cannot build.
+ * The set to check is derived from the **lockfile**, not from `package.json`'s
+ * direct dependencies. Direct names alone leave the tree's larger half
+ * unverified: `inquirer` is a direct dependency, but importing it loads
+ * `@inquirer/core`, which appears only in the lockfile. A cache restore that
+ * drops a transitive package leaves every direct entry point intact, so a
+ * direct-only check reports a complete tree for one that cannot import.
+ *
+ * Checking directory names alone is likewise not enough: a partially restored
+ * cache can leave `node_modules/typescript/` in place while omitting `bin/tsc`,
+ * and a name-only check then reports a complete tree for one that cannot build.
  * Reading each package.json and resolving its declared entry points — `main`,
  * `bin` *and* `exports` — catches gutted packages without the cost of a full
  * `npm ls` integrity pass.
  */
 function brokenDependencies() {
-  if (!existsSync(packageJson)) return [];
-  const pkg = JSON.parse(readFileSync(packageJson, 'utf8'));
-  const declared = [
-    ...Object.keys(pkg.dependencies ?? {}),
-    ...Object.keys(pkg.devDependencies ?? {}),
-  ];
+  const lock = JSON.parse(readFileSync(packageLock, 'utf8'));
+  const entries = lock.packages;
+  if (!entries || typeof entries !== 'object') {
+    // lockfileVersion 1 has no `packages` map. Fail loudly rather than
+    // silently degrading to "nothing to check" — a readiness check that
+    // quietly verifies nothing is worse than one that refuses to run.
+    console.error(
+      '[legacy-runtime] runtime/package-lock.json has no "packages" map (lockfileVersion < 2); cannot verify tree integrity.'
+    );
+    process.exit(2);
+  }
 
   const broken = [];
-  for (const name of declared) {
-    const dir = join(nodeModulesDir, name);
+  for (const [key, meta] of Object.entries(entries)) {
+    // "" is the root project itself, not an installed package.
+    if (key === '' || !key.startsWith('node_modules/')) continue;
+    // Optional dependencies are legitimately absent when their os/cpu
+    // constraints do not match this platform, so their absence is not damage.
+    // `link: true` entries are symlinked workspace members, not installed trees.
+    if (meta?.optional || meta?.devOptional || meta?.link) continue;
+
+    const dir = join(runtimeDir, key);
     const manifestPath = join(dir, 'package.json');
+    const name = key.slice(key.lastIndexOf('node_modules/') + 'node_modules/'.length);
     if (!existsSync(dir) || !existsSync(manifestPath)) {
       broken.push(name);
       continue;
@@ -133,7 +194,7 @@ function brokenDependencies() {
       continue;
     }
 
-    const missingEntry = declaredEntryPoints(manifest).find((rel) => !existsSync(join(dir, rel)));
+    const missingEntry = declaredEntryPoints(manifest).find((rel) => !entryPointExists(dir, rel));
     if (missingEntry !== undefined) broken.push(`${name} (missing ${missingEntry})`);
   }
   return broken;
