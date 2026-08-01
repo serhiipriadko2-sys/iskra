@@ -162,6 +162,12 @@ for a refuted statement understates it.
 > or checked against the claim. Malformed or schema-invalid replies return
 > `UNSOURCED` with confidence `0`, not a fabricated mid-range score.
 >
+> The `Reasoning` block is model prose and may span several lines, so **every
+> line of it carries a `>` quote marker** and the heading names the block as
+> unverified. Nothing inside that block is output of this tool — a line there
+> reading `✓ Verified: …` is the model's text, not a verdict. The tool's own
+> verdict is the `Verdict:` field and the single summary line after the box.
+>
 > The verdict list above describes the contract that returns once an evidence
 > adapter lands (Wave 1). See `governance/adr_20260731_sift_cli_wave0_fail_closed.md`.
 
@@ -351,9 +357,11 @@ Verifying: The sky is blue
 │   1. https://example.org/rayleigh-scattering
 │   These are not evidence. Nothing above was fetched.
 │
-├─ Reasoning
-│   [Model assessment — candidate only, not independently verified] Widely
-│   treated as established by introductory optics texts.
+├─ Reasoning (model-supplied text, NOT verified)
+│  > [Model assessment — candidate only, not independently verified; model
+│  > status: supported_candidate] Widely treated as established by
+│  > introductory optics texts.
+│   Every line above is model output, not a verdict of this tool.
 │
 └─────────────────────────────────────
 

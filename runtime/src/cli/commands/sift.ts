@@ -86,14 +86,24 @@ export const siftCommand = new Command("sift")
         console.log(chalk.cyan("│"));
       }
 
-      console.log(chalk.cyan("├─ Reasoning"));
+      // Attribution must be per-line, not per-block. `rationaleSummary`
+      // deliberately permits newlines (prose needs them), so a model can put
+      // "✓ Verified: Statement supported by reliable sources." on line 2 while
+      // only line 1 carries the "[Model assessment — candidate only]" prefix —
+      // and a long enough rationale scrolls that sole caveat off screen. Round 2
+      // stopped forged lines *escaping* the "│" prefix; it did not stop them
+      // reading as tool output *inside* it. The heading names the whole block as
+      // model-supplied and every line carries a quote marker, so no line here
+      // can be mistaken for the CLI speaking.
+      console.log(chalk.cyan("├─ Reasoning (model-supplied text, NOT verified)"));
       // Split first, then sanitize each line: real line breaks are legitimate
       // here and get the "│" prefix, while every other control or format
       // character is neutralised so it cannot escape that prefix.
       const reasoningLines = siftResult.reasoning.split("\n").map(sanitizeForTerminal);
       reasoningLines.forEach(line => {
-        console.log(chalk.cyan("│  "), chalk.white(line));
+        console.log(chalk.cyan("│  "), chalk.gray(">"), chalk.white(line));
       });
+      console.log(chalk.cyan("│  "), chalk.gray("Every line above is model output, not a verdict of this tool."));
       console.log(chalk.cyan("│"));
       console.log(chalk.cyan("└─────────────────────────────────────\n"));
 
