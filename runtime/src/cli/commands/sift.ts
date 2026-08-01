@@ -3,7 +3,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
-import { GeminiCliService } from "../services/geminiCliService.js";
+import { createGeminiCliService } from "../services/geminiCliService.js";
 
 export const siftCommand = new Command("sift")
   .description("Verify a statement using SIFT protocol (Source → Inference → Fact)")
@@ -12,6 +12,10 @@ export const siftCommand = new Command("sift")
   .action(async (statement, options) => {
     console.log(chalk.cyan.bold("\n⟡ ISKRA SIFT Protocol\n"));
     console.log(chalk.gray("Source → Inference → Fact → Trace\n"));
+    console.log(
+      chalk.gray("(candidate assessment only — no independent evidence retrieval wired in yet;\n") +
+        chalk.gray(" FACT/INFERENCE are unreachable until an evidence adapter lands)\n")
+    );
 
     let statementToVerify = statement;
 
@@ -30,17 +34,15 @@ export const siftCommand = new Command("sift")
 
     console.log(chalk.white("\nVerifying:"), chalk.bold(statementToVerify), "\n");
 
-    // Check for API key
-    const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
-    if (!apiKey) {
+    // Initialize Gemini service (reads GEMINI_API_KEY only — no VITE_ fallback,
+    // browser-prefixed variables are not a CLI secret contract).
+    const geminiService = createGeminiCliService();
+    if (!geminiService) {
       console.log(chalk.red("Error: GEMINI_API_KEY environment variable not set"));
       console.log(chalk.yellow("\nSet it with:"));
       console.log(chalk.gray("  export GEMINI_API_KEY=your_api_key_here\n"));
       process.exit(1);
     }
-
-    // Initialize Gemini service
-    const geminiService = new GeminiCliService({ apiKey });
 
     // Show loading spinner
     const spinner = ora(chalk.gray("Analyzing with SIFT protocol...")).start();

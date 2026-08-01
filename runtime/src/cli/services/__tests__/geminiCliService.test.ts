@@ -7,20 +7,25 @@
 
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 
+// Shared, hoisted mock fns so individual tests can override the next
+// generateContent response without reaching into service internals.
+const { mockGenerateContent, mockGenerateContentStream } = vi.hoisted(() => ({
+  mockGenerateContent: vi.fn().mockResolvedValue({ text: 'Mocked response' }),
+  mockGenerateContentStream: vi.fn().mockResolvedValue(
+    (async function* () {
+      yield { text: 'Chunk 1' };
+      yield { text: 'Chunk 2' };
+    })()
+  ),
+}));
+
 // Mock @google/genai with Vitest 4.x compatible class mock
 vi.mock('@google/genai', () => {
   return {
     GoogleGenAI: class MockGoogleGenAI {
       models = {
-        generateContent: vi.fn().mockResolvedValue({
-          text: 'Mocked response',
-        }),
-        generateContentStream: vi.fn().mockResolvedValue(
-          (async function* () {
-            yield { text: 'Chunk 1' };
-            yield { text: 'Chunk 2' };
-          })()
-        ),
+        generateContent: mockGenerateContent,
+        generateContentStream: mockGenerateContentStream,
       };
     },
   };
@@ -124,16 +129,73 @@ describe('GeminiCliService', () => {
       expect(result).toHaveProperty('trace');
     });
 
-    it('handles invalid JSON with fallback', async () => {
+    it('handles invalid JSON with fallback (fail-closed, not a fake 0.5 confidence)', async () => {
       const service = new GeminiCliService({ apiKey: testApiKey });
       const result = await service.siftVerify('Test statement');
 
       // Mock returns 'Mocked response' which is invalid JSON
       expect(result.statement).toBe('Test statement');
       expect(result.verdict).toBe('UNSOURCED');
-      expect(result.confidence).toBe(0.5);
-      expect(result.reasoning).toBe('Mocked response');
+      expect(result.confidence).toBe(0);
+      expect(result.reasoning).toMatch(/not valid JSON/);
       expect(result.trace).toMatch(/^SIFT-CLI-\d+$/);
+    });
+
+    it('never returns FACT/verified language for a bare model self-report (DEF-001)', async () => {
+      mockGenerateContent.mockResolvedValueOnce({
+        text: JSON.stringify({
+          status: 'supported_candidate',
+          confidenceCandidate: 0.95,
+          proposedSources: ['https://example.com/looks-authoritative'],
+          rationaleSummary: 'Model claims this is well-supported.',
+        }),
+      });
+
+      const service = new GeminiCliService({ apiKey: testApiKey });
+      const result = await service.siftVerify('Test statement');
+
+      // No evidence adapter exists yet, so 'verified'/FACT must be mechanically
+      // unreachable no matter how confident the model claims to be.
+      expect(result.verdict).toBe('UNSOURCED');
+      expect(result.reasoning).toMatch(/candidate only, not independently verified/);
+      expect(result.sources).toEqual(['https://example.com/looks-authoritative']);
+    });
+
+    it('rejects a schema violation (extra field) as unverifiable, not a parsed verdict', async () => {
+      mockGenerateContent.mockResolvedValueOnce({
+        text: JSON.stringify({
+          status: 'supported_candidate',
+          confidenceCandidate: 0.5,
+          proposedSources: [],
+          rationaleSummary: 'ok',
+          verdict: 'FACT', // not part of the model-facing schema
+        }),
+      });
+
+      const service = new GeminiCliService({ apiKey: testApiKey });
+      const result = await service.siftVerify('Test statement');
+
+      expect(result.verdict).toBe('UNSOURCED');
+      expect(result.confidence).toBe(0);
+      expect(result.reasoning).toMatch(/failed strict schema validation/);
+    });
+
+    it('rejects an out-of-range confidence value (DEF-003)', async () => {
+      mockGenerateContent.mockResolvedValueOnce({
+        text: JSON.stringify({
+          status: 'supported_candidate',
+          confidenceCandidate: 1.2,
+          proposedSources: [],
+          rationaleSummary: 'ok',
+        }),
+      });
+
+      const service = new GeminiCliService({ apiKey: testApiKey });
+      const result = await service.siftVerify('Test statement');
+
+      expect(result.verdict).toBe('UNSOURCED');
+      expect(result.confidence).toBe(0);
+      expect(result.reasoning).toMatch(/failed strict schema validation/);
     });
   });
 });
