@@ -143,17 +143,77 @@ iskra sift "Quantum computers can break RSA" --detailed
 **Verdict Types:**
 - `FACT` - Directly supported by sources (green)
 - `INFERENCE` - Logically derived (yellow)
-- `UNSOURCED` - No reliable sources (red)
+- `UNVERIFIED` - Evidence was retrieved but is **too weak** to support the claim (red)
+- `UNSOURCED` - No reliable sources found at all (red)
+- `FALSE` - Retrieved evidence **contradicts** the statement (red)
+
+The three red verdicts are not interchangeable, and a consumer that treats them
+alike misreports two of the three:
+
+| Verdict | What the scorer found | Reporting it as `UNSOURCED` would |
+|---------|-----------------------|-----------------------------------|
+| `UNVERIFIED` | evidence exists, is insufficient | deny that any evidence was weighed |
+| `UNSOURCED` | nothing to go on | — |
+| `FALSE` | evidence refutes the claim | understate a refuted claim as merely unsupported |
+
+`FACT`, `INFERENCE` and `FALSE` map one-to-one onto the scorer's
+`verified`/`partially_verified`/`false` outcomes. The scorer's fourth and
+fifth outcomes do not: `unverified` always maps to `UNVERIFIED`, but
+`unknown` maps to **either** `UNSOURCED` or `UNVERIFIED`, decided by whether
+any evidence was actually retrieved for that input (`hasAnyEvidence()` in
+`geminiCliService.ts`) — because `unknown` on its own conflates two
+different situations the scorer's `omega`/`contraRatio` numbers alone cannot
+tell apart: "nothing was retrieved" (Wave 0, always, since `siftInput` is a
+hardcoded-empty constant) and "evidence was retrieved, weighed, and still
+scored under 40" (only reachable once Wave 1 populates real evidence). A
+future evidence adapter that assumes a literal one-to-one mapping and skips
+this check will report a weighed-but-weak result as "no reliable sources
+found," the exact understatement this file's earlier table warns against.
+
+> **Wave 0 fail-closed behaviour (current).** `iskra sift` has **no independent
+> evidence retrieval** wired in yet, so it currently returns `UNSOURCED` for
+> *every* input — `FACT`, `INFERENCE`, `UNVERIFIED` and `FALSE` are all
+> mechanically unreachable, not merely rare. Each of them requires evidence
+> that was actually retrieved: `FALSE` needs evidence that contradicts,
+> `UNVERIFIED` needs evidence that falls short, and with no retrieval there is
+> neither. The model's own reply is treated as an unverified *candidate
+> assessment*: it is validated against a strict schema (a self-declared
+> `FACT` is rejected outright), and any locators it proposes are printed
+> under "Candidate locators", never as "Sources", because nothing is fetched
+> or checked against the claim. Malformed or schema-invalid replies return
+> `UNSOURCED` with confidence `0`, not a fabricated mid-range score.
+>
+> The `Reasoning` block states its own provenance in the heading and marks
+> **every rendered line**:
+>
+> - `Reasoning (model-supplied text, NOT verified)` — lines carry `>`. This is
+>   the model's prose. A line there reading `✓ Verified: …` is model text, not
+>   a verdict.
+> - `Reasoning (validation diagnostic from this tool, not model text)` — lines
+>   carry `|`. This is the CLI reporting why it rejected the reply.
+>
+> Marking is per *rendered* line, not per logical line: model prose may be a
+> single 8000-character line, so the block is hard-wrapped to the terminal
+> width and each resulting row is marked. Otherwise the terminal's own
+> soft-wrapping would produce rows the renderer never marked.
+>
+> The tool's own verdict is always the `Verdict:` field and the single summary
+> line after the box — never anything inside a marked block.
+>
+> The verdict list above describes the contract that returns once an evidence
+> adapter lands (Wave 1). See `governance/adr_20260731_sift_cli_wave0_fail_closed.md`.
 
 ---
 
 ## Environment Variables
 
 ```bash
-# Required for chat and sift commands
+# Required for chat and sift commands.
+# `iskra sift` reads ONLY this variable — the VITE_ alias below is deliberately
+# rejected there, because a browser-prefixed variable is not a CLI secret contract.
 export GEMINI_API_KEY=your_api_key_here
 
-# Optional
+# Optional — accepted by `iskra chat` ONLY, never by `iskra sift`
 export VITE_GEMINI_API_KEY=your_api_key_here  # Legacy alias (avoid using VITE_* in frontend env)
 ```
 
@@ -314,25 +374,36 @@ $ iskra sift "The sky is blue" --detailed
 
 Source → Inference → Fact → Trace
 
+(candidate assessment only — no independent evidence retrieval wired in yet;
+ FACT/INFERENCE/UNVERIFIED/FALSE are unreachable until an evidence adapter lands)
+
 Verifying: The sky is blue
 
 ┌─ SIFT Analysis Result
 │
-│  Verdict:    FACT
-│  Confidence: 95%
-│  Trace:      SIFT-CLI-001
+│  Verdict:    UNSOURCED
+│  Confidence: 0%
+│  Trace:      SIFT-CLI-1754043600000
 │
-├─ Sources
-│   1. DIRECT - Rayleigh scattering of sunlight
-│   2. DIRECT - Observable phenomenon
+├─ Candidate locators (model-proposed, NOT retrieved or verified)
+│   1. https://example.org/rayleigh-scattering
+│   These are not evidence. Nothing above was fetched.
 │
-├─ Reasoning
-│   Statement widely verified by scientific evidence and observation.
+├─ Reasoning (model-supplied text, NOT verified)
+│  > [Model assessment — candidate only, not independently verified; model
+│  > status: supported_candidate] Widely treated as established by
+│  > introductory optics texts.
+│   Every line above is model output, not a verdict of this tool.
 │
 └─────────────────────────────────────
 
-✓ Verified: Statement supported by reliable sources.
+✗ Warning: No reliable sources found. Treat as speculation.
 ```
+
+The verdict is `UNSOURCED` even though the claim is true and the model is
+confident. That is the Wave 0 contract working as designed: nothing was
+retrieved, so nothing is verified. A truthful-looking answer with an
+unverified locator is exactly the case this command must refuse to bless.
 
 ---
 

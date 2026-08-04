@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-04T14:58:51.598Z",
-  "total": 3749,
+  "generatedAt": "2026-08-04T16:55:00.539Z",
+  "total": 3751,
   "curated": 20,
   "layers": {
     "root": 347,
@@ -14,7 +14,7 @@
     "canon": 16,
     "builder": 1187,
     "docs": 81,
-    "governance": 433,
+    "governance": 435,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -27170,6 +27170,7 @@
         "governance/adr_20260729_packages_math_authoritative_api.md",
         "governance/adr_20260730_pino_first_strike.md",
         "governance/adr_20260730_sot30_v5_5_7_audit_repair.md",
+        "governance/adr_20260731_sift_cli_wave0_fail_closed.md",
         "governance/adr_20260731_supabase_advisor_migration_provenance.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
@@ -27179,6 +27180,7 @@
         "governance/changelog.md",
         "governance/codex_local_operating_contract.md",
         "governance/evidence_20260729_adr_20260729_02_runtime_fractal_surface.md",
+        "governance/finding_20260731_eval_accuracy_keyword_proxy.md",
         "governance/governance_pack.md",
         "governance/iskra_constitution_v1_annexes.md",
         "governance/iskra_constitution_v1_core.md",
@@ -27729,6 +27731,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/adr_20260730_sot30_v5_5_7_audit_repair.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260731_sift_cli_wave0_fail_closed.md",
+      "name": "adr_20260731_sift_cli_wave0_fail_closed.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260731_sift_cli_wave0_fail_closed.md",
       "related": [],
       "parent": "governance"
     },
@@ -28436,6 +28449,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/evidence_20260729_adr_20260729_02_runtime_fractal_surface.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/finding_20260731_eval_accuracy_keyword_proxy.md",
+      "name": "finding_20260731_eval_accuracy_keyword_proxy.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/finding_20260731_eval_accuracy_keyword_proxy.md",
       "related": [],
       "parent": "governance"
     },
