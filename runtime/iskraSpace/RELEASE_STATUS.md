@@ -1,8 +1,19 @@
 # Iskra Space Release Status
 
-Status: verified-live-staging P0 candidate; production_deployed: false; canonical_activation: blocked
-Last updated: 2026-07-28
+Status: verified-live-production P0 Edge boundary; production_deployed: true; canonical_activation: edge-verified
+Last updated: 2026-07-31
 App path: `runtime/iskraSpace`
+
+## 2026-07-31 verified-live-production promotion
+
+- `[FACT] github-verified` PR #316 merged as `e3708407596581709c2cf86e336045d285ff1144`; the CORS follow-up PR #322 merged as exact release SHA `27c60b190dcc89edf4981e8d9b9502a207ddaec0`. Required checks passed.
+- `[FACT] supabase-verified` Production secret names and digests satisfied the fail-closed Edge contract without exposing raw values. Pre-deploy `gemini` v13 and `iskra-agent` v8 were downloaded and hashed for rollback.
+- `[FACT] verified-live-staging` The refreshed data-less preview redeployed the exact release SHA, matched all six Edge/shared files, and passed 7/7 files plus 61/61 live tests with four-principal cleanup.
+- `[FACT] verified-live-production` Production now serves `gemini` v14 and `iskra-agent` v9, both ACTIVE with `verify_jwt=true`; bundle SHA-256 values are `6c15096e3c0ce849743c253ebd2d316398a476ecfaae5ed882f4a99c899fea2a` and `ac3e9d8b0e935934f0379d201d592d99cbac344af32356b63573fadc27cc22ad`.
+- `[FACT] supabase-verified` Production source read-back matched 6/6 files. Negative-only smoke passed 8/8 observations and recent logs contained only expected `OPTIONS 204` and platform JWT `POST 401` events for the new versions.
+- `[FACT] cleanup-verified` The temporary preview branch was deleted; branch read-back returned production `main` only.
+- Full production receipt: `docs/operations/iskraspace_production_promotion_2026-07-31.md`.
+- Existing Supabase database/auth WARN/INFO findings are not part of this function-only release. ADR-20260731-001 and `docs/operations/supabase_advisor_snapshot_2026-07-31.md` isolate their provenance-first remediation; they must not be represented as a failed Edge promotion.
 
 ## 2026-07-28 verified-live-staging acceptance
 
@@ -36,10 +47,9 @@ App path: `runtime/iskraSpace`
   sequence was repeated on the clean project above.
 - Full receipt:
   `docs/operations/iskraspace_staging_acceptance_2026-07-28.md`.
-- `DRIFT: Staging vs Production` Production remains on `gemini` v9 and
-  `iskra-agent` v4 pre-hardening bundles. Promotion is blocked until exact PR
-  head CI, production secret-name preflight, pre-deploy rollback capture,
-  exact-source read-back and negative-only production smoke are all green.
+- `SUPERSEDED 2026-07-31` At the time of this staging receipt, production
+  still used pre-hardening bundles. The later exact-source promotion and smoke
+  are recorded in `docs/operations/iskraspace_production_promotion_2026-07-31.md`.
 
 ## 2026-07-28 local source candidate
 

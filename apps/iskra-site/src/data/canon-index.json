@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-01T06:26:10.154Z",
-  "total": 3737,
+  "generatedAt": "2026-08-04T14:35:53.103Z",
+  "total": 3740,
   "curated": 20,
   "layers": {
     "root": 347,
@@ -13,8 +13,8 @@
     "web": 13,
     "canon": 16,
     "builder": 1187,
-    "docs": 75,
-    "governance": 432,
+    "docs": 77,
+    "governance": 433,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -26387,6 +26387,7 @@
         "docs/operations/iskraspace_dual_ai_provider_gateway_2026-06-08.md",
         "docs/operations/iskraspace_minimal_memory_write_protocol_2026-06-26.md",
         "docs/operations/iskraspace_post_merge_verification_2026-06-07.md",
+        "docs/operations/iskraspace_production_promotion_2026-07-31.md",
         "docs/operations/iskraspace_production_readiness_receipt_2026-07-01.md",
         "docs/operations/iskraspace_release_readiness_board.md",
         "docs/operations/iskraspace_release_readiness_snapshot_2026-06-07.md",
@@ -26401,6 +26402,7 @@
         "docs/operations/sprint1_remediation_matrix.md",
         "docs/operations/sprint2_implementation_backlog.md",
         "docs/operations/supabase-status-redacted-example.txt",
+        "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
         "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
         "docs/operations/supabase_status_exposure_owner_checklist_2026-06-07.md"
       ]
@@ -26457,6 +26459,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "docs/operations/iskraspace_post_merge_verification_2026-06-07.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/iskraspace_production_promotion_2026-07-31.md",
+      "name": "iskraspace_production_promotion_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/iskraspace_production_promotion_2026-07-31.md",
       "related": [],
       "parent": "docs/operations"
     },
@@ -26611,6 +26624,17 @@
       "role": "text",
       "coverage": "indexed",
       "sourceRef": "docs/operations/supabase-status-redacted-example.txt",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
+      "name": "supabase_advisor_snapshot_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
       "related": [],
       "parent": "docs/operations"
     },
@@ -27086,6 +27110,7 @@
         "governance/adr_20260729_packages_math_authoritative_api.md",
         "governance/adr_20260730_pino_first_strike.md",
         "governance/adr_20260730_sot30_v5_5_7_audit_repair.md",
+        "governance/adr_20260731_supabase_advisor_migration_provenance.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -27644,6 +27669,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "governance/adr_20260730_sot30_v5_5_7_audit_repair.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260731_supabase_advisor_migration_provenance.md",
+      "name": "adr_20260731_supabase_advisor_migration_provenance.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260731_supabase_advisor_migration_provenance.md",
       "related": [],
       "parent": "governance"
     },
