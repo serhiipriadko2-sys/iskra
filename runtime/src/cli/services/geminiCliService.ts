@@ -324,15 +324,24 @@ export function mapSiftStatusToVerdict(
  * Wave 0's real, hardcoded-empty `siftInput` — the case above is
  * unreachable today for the same reason FACT/INFERENCE/FALSE are, and this
  * function is what keeps it that way honestly rather than by coincidence.
+ *
+ * Deliberately restricted to `source.identified` and the `evidence.*`
+ * arrays — the only fields that can be nonempty *only if retrieval actually
+ * happened*. `inference.claims` and `trace.chain` were checked by an
+ * earlier revision and are not: a claim can be parsed straight from the
+ * statement under review with nothing retrieved, and a trace chain can
+ * exist purely as internal bookkeeping of that parse. Counting either would
+ * let "the model's own claim was analyzed" masquerade as "evidence was
+ * found", reporting UNVERIFIED for what is actually still UNSOURCED — the
+ * exact overstatement this ADR exists to remove, reintroduced through a
+ * signal that looked like evidence but wasn't.
  */
 export function hasAnyEvidence(input: Omit<SiftResult, "delta">): boolean {
   return (
     input.source.identified.length > 0 ||
-    input.inference.claims.length > 0 ||
     input.evidence.supporting.length > 0 ||
     input.evidence.contradicting.length > 0 ||
-    input.evidence.neutral.length > 0 ||
-    input.trace.chain.length > 0
+    input.evidence.neutral.length > 0
   );
 }
 

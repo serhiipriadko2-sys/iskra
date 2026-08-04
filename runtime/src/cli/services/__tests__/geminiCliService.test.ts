@@ -413,10 +413,20 @@ describe('hasAnyEvidence', () => {
     expect(hasAnyEvidence(input)).toBe(true);
   });
 
-  it('returns true when a trace chain is present', () => {
+  // Analytical scaffolding, not retrieval. A trace link or a parsed claim can
+  // exist purely as internal bookkeeping over the statement under review,
+  // with nothing external ever fetched — counting either would let "the
+  // model's own claim was analyzed" read as "evidence was found".
+  it('returns false for a trace chain alone -- that is bookkeeping, not retrieval', () => {
     const input = emptySiftInput();
     input.trace.chain.push({ from: 'a', to: 'b' });
-    expect(hasAnyEvidence(input)).toBe(true);
+    expect(hasAnyEvidence(input)).toBe(false);
+  });
+
+  it('returns false for a parsed claim alone -- that is bookkeeping, not retrieval', () => {
+    const input = emptySiftInput();
+    input.inference.claims.push({ text: 'x', type: 'fact', confidence: 0.5 });
+    expect(hasAnyEvidence(input)).toBe(false);
   });
 });
 

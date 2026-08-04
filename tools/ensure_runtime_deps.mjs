@@ -162,14 +162,21 @@ function entryPointExists(dir, rel, kind) {
 }
 
 // Conditions Node actually resolves at runtime. Everything else in an `exports`
-// map — `types`, `development`, and vendor-specific keys like `@zod/source` or
+// map — `development`, and vendor-specific keys like `@zod/source` or
 // `@standard-schema/source` — points at TypeScript sources or declaration files
 // that packages routinely do not publish. Checking those targets reports a
-// healthy tree as damaged (measured: `@babel/helper-string-parser` via `types`,
-// `@standard-schema/spec` via a source condition). The set is deliberately
-// narrow: a condition wrongly included costs a false alarm on every run, while
-// one wrongly excluded costs at most a missed file that some other condition of
-// the same package almost always covers.
+// healthy tree as damaged (measured: `@standard-schema/spec` via a source
+// condition). The set is deliberately narrow: a condition wrongly included
+// costs a false alarm on every run, while one wrongly excluded costs at most a
+// missed file that some other condition of the same package almost always
+// covers. `types` is handled separately (see `checkDeclarations` below) rather
+// than living in this set, because whether it belongs depends on which package
+// it is: `@babel/helper-string-parser` (transitive) declares `exports.types`
+// pointing at an unpublished `./lib/index.d.ts` on this very tree — checking it
+// there is a guaranteed false alarm — while `@google/genai` (this project's own
+// direct dependency) declares one that IS published and IS what this runtime's
+// own `tsc` build needs; skipping it there is a guaranteed false negative
+// (TS7016). Neither "always check `types`" nor "never check it" is correct.
 const RUNTIME_EXPORT_CONDITIONS = new Set([
   'node',
   'node-addons',
@@ -195,9 +202,16 @@ const RUNTIME_EXPORT_CONDITIONS = new Set([
  * wildcard subpath patterns (`"./*": "./dist/*.js"`), which are mapping rules
  * that cannot be existence-checked without expanding the glob; `null` targets
  * (deliberately blocked subpaths); and every condition outside
- * RUNTIME_EXPORT_CONDITIONS.
+ * RUNTIME_EXPORT_CONDITIONS (plus `types`, when `checkDeclarations` is true).
+ *
+ * `checkDeclarations` gates walking the `types` condition inside `exports`.
+ * True only for this project's own direct dependencies (see the call site in
+ * `brokenDependencies()`), because `exports.types` reliability differs by
+ * whether the package is one this build actually type-checks against — see
+ * the comment above `RUNTIME_EXPORT_CONDITIONS` for the measured case on both
+ * sides.
  */
-function declaredEntryPoints(manifest) {
+function declaredEntryPoints(manifest, checkDeclarations) {
   const targets = [];
 
   // npm's own module resolution for `main`, `bin`, `types`/`typings` accepts a
@@ -233,19 +247,18 @@ function declaredEntryPoints(manifest) {
     for (const target of Object.values(manifest.bin)) pushLenient(target, 'code');
   }
 
-  const walkExports = (node) => {
+  const walkExports = (node, kind) => {
     if (typeof node === 'string') {
       // Unlike main/bin/types, `exports` targets are conventionally always
       // "./"-relative; a bare string here is more likely a bare specifier
       // pointing at another package than an omitted prefix, so — unlike the
       // fields above — it is not normalized, only accepted if already
-      // relative. Every condition walked here is code-resolving (`types` is
-      // deliberately excluded from RUNTIME_EXPORT_CONDITIONS — see below).
-      if (node.startsWith('./') && !node.includes('*')) targets.push({ rel: node, kind: 'code' });
+      // relative.
+      if (node.startsWith('./') && !node.includes('*')) targets.push({ rel: node, kind });
       return;
     }
     if (Array.isArray(node)) {
-      for (const entry of node) walkExports(entry);
+      for (const entry of node) walkExports(entry, kind);
       return;
     }
     if (node && typeof node === 'object') {
@@ -253,12 +266,17 @@ function declaredEntryPoints(manifest) {
         const isSubpath = key.startsWith('.');
         // Subpath keys may be patterns; condition keys never are.
         if (isSubpath && key.includes('*')) continue;
-        if (!isSubpath && !RUNTIME_EXPORT_CONDITIONS.has(key)) continue;
-        walkExports(value);
+        if (isSubpath) { walkExports(value, kind); continue; }
+        if (key === 'types') {
+          if (checkDeclarations) walkExports(value, 'declaration');
+          continue;
+        }
+        if (!RUNTIME_EXPORT_CONDITIONS.has(key)) continue;
+        walkExports(value, 'code');
       }
     }
   };
-  walkExports(manifest.exports);
+  walkExports(manifest.exports, 'code');
 
   return targets;
 }
@@ -307,6 +325,16 @@ function optionalAppliesToThisPlatform(meta) {
 function brokenDependencies() {
   const lock = JSON.parse(readFileSync(packageLock, 'utf8'));
   const entries = lock.packages;
+
+  // Direct dependencies only — see the `checkDeclarations` doc on
+  // declaredEntryPoints() for why `exports.types` is checked for these and
+  // not for the transitive tree.
+  const rootEntry = lock.packages?.[''] ?? {};
+  const directDependencyNames = new Set([
+    ...Object.keys(rootEntry.dependencies ?? {}),
+    ...Object.keys(rootEntry.devDependencies ?? {}),
+  ]);
+
   if (!entries || typeof entries !== 'object') {
     // lockfileVersion 1 has no `packages` map. Fail loudly rather than
     // silently degrading to "nothing to check" — a readiness check that
@@ -374,7 +402,15 @@ function brokenDependencies() {
       continue;
     }
 
-    const missingEntry = declaredEntryPoints(manifest).find(({ rel, kind }) => !entryPointExists(dir, rel, kind));
+    // Top-level check (key === 'node_modules/<name>', not nested under
+    // another package's own node_modules) AND named directly in this
+    // project's own package.json — a nested copy of the same name resolving
+    // a conflicting version for some OTHER package is not what this build's
+    // tsc reads from, so it does not get the same declaration scrutiny.
+    const isOwnDirectDependency = directDependencyNames.has(name) && key === `node_modules/${name}`;
+    const missingEntry = declaredEntryPoints(manifest, isOwnDirectDependency).find(
+      ({ rel, kind }) => !entryPointExists(dir, rel, kind)
+    );
     if (missingEntry !== undefined) broken.push(`${name} (missing ${missingEntry.rel})`);
   }
   return broken;
@@ -414,9 +450,23 @@ if (existsSync(nodeModulesDir) && existsSync(stampFile)) {
  * run under a normal environment would skip installation and fail the build
  * on missing types. Forcing the flag makes the install identical regardless
  * of ambient NODE_ENV.
+ *
+ * `--include=optional` exists for the identical reason on the `optional`
+ * category. `NPM_CONFIG_OMIT=optional` in the environment (some CI images and
+ * developer shells set this to skip platform-specific native binaries) is not
+ * overridden by `--include=dev` — each `--include`/`--omit` category is
+ * independent, so omitting `optional` from the flags here left it omitted
+ * regardless. Reproduced: under that env var, `npm ci --ignore-scripts
+ * --include=dev` exits 0 without installing
+ * `@rolldown/binding-linux-x64-gnu`, the round-14 integrity check correctly
+ * refuses to stamp readiness (it IS required on this platform), and every
+ * subsequent invocation repeats the same cycle — install exits 0, stamp
+ * refused, forever, because the one flag that would fix it was never passed.
+ * Forcing both flags makes the install identical regardless of ambient
+ * `NODE_ENV` or `NPM_CONFIG_OMIT`.
  */
-console.log('[legacy-runtime] installing runtime dependencies with npm ci --ignore-scripts --include=dev');
-const result = spawnSync('npm', ['ci', '--ignore-scripts', '--include=dev'], {
+console.log('[legacy-runtime] installing runtime dependencies with npm ci --ignore-scripts --include=dev --include=optional');
+const result = spawnSync('npm', ['ci', '--ignore-scripts', '--include=dev', '--include=optional'], {
   cwd: runtimeDir,
   stdio: 'inherit',
   shell: process.platform === 'win32',
