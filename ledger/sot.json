@@ -101,7 +101,7 @@
     "docs/operations/supabase-status-redacted-example.txt": "a1473fb3fa24709aef0c515f2b22c60357ba5427d3c4a8784708ab74e53f1f61",
     "docs/operations/supabase_advisor_snapshot_2026-07-31.md": "89f8d271054e3d087c13a6d91a3a0746208437e19c6415b06b849d0d746c5b2f",
     "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md": "ad29a40d1235d9a12edbdc03df664b83391440ed5f5d3f2306052d2bc1115ff3",
-    "docs/operations/supabase_graph_api_least_privilege_audit_2026-08-04.md": "e16c046c73cbff8855d8404fcc07ebbbf0013f44ee8e21138e5fc22338efb06f",
+    "docs/operations/supabase_graph_api_least_privilege_audit_2026-08-04.md": "ee32ede77e273da522805e5540e39ebafe9084afb5796e7a9501d8bbb60e8c8e",
     "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md": "e25d774d12ef94da30a2bd2a7a8afe2e7b012a1fac6e3148e63e56cec46e5bf0",
     "docs/operations/supabase_production_db_preflight_2026-08-04.md": "646b7f8311509e7cb15268ec12f3cfd4590d8748224a2470cdfdb769035b220d",
     "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md": "e1ea3f518cd38d45763f4c8774f4d47ca661c467cba01e77ef937f9b5884d37c",

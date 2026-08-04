@@ -1,6 +1,6 @@
 # Supabase Graph API least-privilege audit — 2026-08-04
 
-Status: `PREVIEW_CLEANUP_REVALIDATION_PENDING`; production apply pending.
+Status: `FINAL_PREVIEW_PASS`; production apply pending.
 
 Production project: `typcvaszcfdpkzbjzuur`.
 Source base: merge commit `0672f8a01c2abca1a08eb07745cc65c119dfaa34`.
@@ -182,7 +182,7 @@ available, so preview logs are explicitly NOT_VERIFIED rather than clean.
 Advisor comparison then exposed seven preview-only mutable-search-path WARNs.
 Production has fixed per-function settings for those signatures, proving a
 Git-to-production reproducibility drift. The new migration above supersedes
-this otherwise successful preview receipt and requires one final acceptance.
+this otherwise successful preview receipt and therefore required one final acceptance.
 
 Preview head `1404c73325067e7cb7de15304484fcb74d77a15e` recorded the
 search-path migration, returned seven pinned signatures and reduced security
@@ -193,11 +193,11 @@ referential fixtures but left two member quota rows whose text subjects have
 no foreign key. An exact preview-only cleanup removed those two recent orphan
 rows and no others.
 
-The harness cleanup is now an explicit ordered transaction rather than a set
+The harness cleanup is now one atomic ordered statement rather than a set
 of data-modifying CTEs, followed by at most three idempotent retries scoped to
 the four exact UUIDs. It reports the attempt count and still fails the overall
-gate unless both DB and Auth cleanup succeed. This harness-only change requires
-one final acceptance and post-cleanup zero-count read-back.
+gate unless both DB and Auth cleanup succeed. This harness-only change remained
+pending until final acceptance and post-cleanup zero-count read-back.
 
 The first ordered-cleanup implementation used multiple top-level transaction
 commands. Pinned CLI `2.109.0` rejected that form before execution with
@@ -207,6 +207,15 @@ again left two quota rows. A recent-orphan predicate removed exactly those two
 rows. The final harness sends one atomic PL/pgSQL `DO` statement containing the
 same ordered, UUID-scoped deletes. A no-op invocation against a reserved UUID
 returned exit 0 before the next acceptance run.
+
+Final functional head `5726dc66637df9f92bf8a00bad3af8be4f7a13aa`
+passed 7/7 files and 63/63 tests. The first atomic cleanup attempt returned exit
+0, all four Auth deletions succeeded, and `CLEANUP_OK=True`. Independent
+read-back returned zero for acceptance Auth users, public users, Graph nodes,
+Graph edges, orphan memberships and orphan member quota windows. Final
+advisors remained 0 ERROR: security 29 notices (26 WARN, 3 INFO), including
+zero mutable-search-path findings; performance 35 INFO. Preview log retrieval
+remains NOT_VERIFIED after repeated connector transport failures.
 
 ## Preview credential containment
 
