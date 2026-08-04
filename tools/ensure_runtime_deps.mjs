@@ -48,22 +48,32 @@ if (!existsSync(packageLock)) {
 const lockHash = createHash('sha256').update(readFileSync(packageLock)).digest('hex');
 
 /**
- * Node's CommonJS resolution for a `main` target, reduced to existence.
+ * Node/TypeScript module resolution for a declared target, reduced to
+ * existence. Two different extension sets, because a declaration target and
+ * a code target resolve against different file kinds:
  *
- * `main` is not required to name a file that exists verbatim: `ms` declares
- * `"main": "./index"` and Node resolves `./index.js`. Checking the literal
- * string reports that package broken on a perfectly healthy tree — measured
- * across this lockfile's 243 packages, literal checking produced four such
- * false positives. A check that cries wolf on a good tree is worse than none,
- * because the fix is to stop believing it.
+ *   - `main` is not required to name a file that exists verbatim: `ms`
+ *     declares `"main": "./index"` and Node resolves `./index.js`.
+ *   - `types`/`typings` are declaration targets: `@types/retry` declares
+ *     `"types": "index"` and TypeScript resolves `./index.d.ts` — a `.js`
+ *     extension will never exist for a pure-declaration package, so trying
+ *     only code extensions there reports every such package broken.
+ *
+ * Checking the literal string, or checking one extension set for both kinds,
+ * reports healthy packages as broken — measured across this lockfile's 243
+ * packages: four false positives from literal-string checking (round 11),
+ * two more from applying code extensions to a declaration target (this
+ * round). A check that cries wolf on a good tree is worse than none, because
+ * the fix is to stop believing it.
  */
-function entryPointExists(dir, rel) {
+function entryPointExists(dir, rel, kind) {
   const base = join(dir, rel);
   if (existsSync(base)) return true;
-  for (const ext of ['.js', '.json', '.node', '.cjs', '.mjs']) {
+  const extensions = kind === 'declaration' ? ['.d.ts', '.d.cts', '.d.mts'] : ['.js', '.json', '.node', '.cjs', '.mjs'];
+  for (const ext of extensions) {
     if (existsSync(`${base}${ext}`)) return true;
   }
-  return existsSync(join(base, 'index.js'));
+  return existsSync(join(base, kind === 'declaration' ? 'index.d.ts' : 'index.js'));
 }
 
 // Conditions Node actually resolves at runtime. Everything else in an `exports`
@@ -105,18 +115,48 @@ const RUNTIME_EXPORT_CONDITIONS = new Set([
 function declaredEntryPoints(manifest) {
   const targets = [];
 
-  if (typeof manifest.main === 'string') targets.push(manifest.main);
+  // npm's own module resolution for `main`, `bin`, `types`/`typings` accepts a
+  // bare relative path with no "./" prefix. @types/node declares exactly that
+  // — `{"types": "index.d.ts"}`, no `main`, no `bin`, no `exports` — so a
+  // check that requires a literal "./" prefix drops its only entry point and
+  // reports a package with a stripped .d.ts as complete.
+  const pushLenient = (rel, kind) => {
+    if (typeof rel !== 'string' || rel.length === 0 || rel.includes('*') || rel.startsWith('/')) return;
+    targets.push({ rel: rel.startsWith('./') || rel.startsWith('../') ? rel : `./${rel}`, kind });
+  };
 
-  if (typeof manifest.bin === 'string') targets.push(manifest.bin);
+  // `main`, `types` and `typings` are all ignored ENTIRELY once `exports` is
+  // present — modern resolvers go through `exports` exclusively, so a stale
+  // top-level field left over from before a package adopted `exports` names
+  // nothing the resolver ever reads. Measured twice on this lockfile:
+  // `@humanfs/core` declares `main: "dist/index.js"` (absent — only .d.ts
+  // ships in dist/) while its real target is `exports.import.default:
+  // "./src/index.js"` (present); `rxjs` declares top-level `types:
+  // "index.d.ts"` (absent at the package root) while its real declaration
+  // target is `exports["."].types: "./dist/types/index.d.ts"` (present).
+  // Checking these fields unconditionally reported two healthy packages as
+  // broken. `types`/`typings` still matter when `exports` is ABSENT — that is
+  // exactly the `@types/node` / `@types/retry` case this round exists to fix.
+  if (!manifest.exports) {
+    pushLenient(manifest.main, 'code');
+    pushLenient(manifest.types, 'declaration');
+    pushLenient(manifest.typings, 'declaration');
+  }
+
+  if (typeof manifest.bin === 'string') pushLenient(manifest.bin, 'code');
   else if (manifest.bin && typeof manifest.bin === 'object') {
-    for (const target of Object.values(manifest.bin)) {
-      if (typeof target === 'string') targets.push(target);
-    }
+    for (const target of Object.values(manifest.bin)) pushLenient(target, 'code');
   }
 
   const walkExports = (node) => {
     if (typeof node === 'string') {
-      targets.push(node);
+      // Unlike main/bin/types, `exports` targets are conventionally always
+      // "./"-relative; a bare string here is more likely a bare specifier
+      // pointing at another package than an omitted prefix, so — unlike the
+      // fields above — it is not normalized, only accepted if already
+      // relative. Every condition walked here is code-resolving (`types` is
+      // deliberately excluded from RUNTIME_EXPORT_CONDITIONS — see below).
+      if (node.startsWith('./') && !node.includes('*')) targets.push({ rel: node, kind: 'code' });
       return;
     }
     if (Array.isArray(node)) {
@@ -135,7 +175,30 @@ function declaredEntryPoints(manifest) {
   };
   walkExports(manifest.exports);
 
-  return targets.filter((rel) => rel.startsWith('./') && !rel.includes('*'));
+  return targets;
+}
+
+/**
+ * Whether an optional package's os/cpu constraints admit the platform this
+ * script is running on, using the same semantics npm itself uses to decide
+ * install eligibility (an unconstrained list, i.e. absent or `["any"]`,
+ * matches everything; entries prefixed `!` negate; a negated match always
+ * excludes; a non-empty positive list requires the current value to appear
+ * in it). Absence on an *excluded* platform is not damage — `os`/`cpu` say
+ * npm never installed it there. Absence on an *included* platform is exactly
+ * the failure this check exists to catch.
+ */
+function checkPlatformList(list, current) {
+  if (!Array.isArray(list) || list.length === 0) return true;
+  if (list.length === 1 && list[0] === 'any') return true;
+  const negated = list.filter((v) => v.startsWith('!')).map((v) => v.slice(1));
+  if (negated.includes(current)) return false;
+  const positive = list.filter((v) => !v.startsWith('!'));
+  return positive.length === 0 || positive.includes(current);
+}
+
+function optionalAppliesToThisPlatform(meta) {
+  return checkPlatformList(meta.os, process.platform) && checkPlatformList(meta.cpu, process.arch);
 }
 
 /**
@@ -173,10 +236,30 @@ function brokenDependencies() {
   for (const [key, meta] of Object.entries(entries)) {
     // "" is the root project itself, not an installed package.
     if (key === '' || !key.startsWith('node_modules/')) continue;
-    // Optional dependencies are legitimately absent when their os/cpu
-    // constraints do not match this platform, so their absence is not damage.
     // `link: true` entries are symlinked workspace members, not installed trees.
-    if (meta?.optional || meta?.devOptional || meta?.link) continue;
+    if (meta?.link) continue;
+    // Optional dependencies are legitimately absent for two different reasons
+    // that this check must not conflate:
+    //   1. The entry declares its OWN os/cpu constraint that excludes this
+    //      platform — e.g. `@rolldown/binding-darwin-arm64` never installs on
+    //      Linux. Absence here is correct and must not be flagged.
+    //   2. The entry is optional only because it sits behind an optional edge
+    //      SOMEWHERE ELSE in the graph (a transitive dependency of a
+    //      platform-specific optional package for a different platform), and
+    //      declares no os/cpu of its own — e.g. `@emnapi/core`, pulled in
+    //      only by WASM-fallback bindings this platform does not use.
+    //      Whether npm actually installs such a node depends on the whole
+    //      dependency graph, not on this node's own manifest; this check has
+    //      no path to that answer, so — as before this round — it is skipped.
+    // Tightening therefore applies only to case 1: an entry is checked when
+    // it is optional AND declares an os/cpu constraint that this platform
+    // satisfies. `@rolldown/binding-linux-x64-gnu` (`os: ["linux"], cpu:
+    // ["x64"]`) is exactly that case, and is required for `import 'rolldown'`
+    // to resolve on this platform.
+    if (meta?.optional || meta?.devOptional) {
+      const declaresOwnPlatform = Array.isArray(meta.os) || Array.isArray(meta.cpu);
+      if (!declaresOwnPlatform || !optionalAppliesToThisPlatform(meta)) continue;
+    }
 
     const dir = join(runtimeDir, key);
     const manifestPath = join(dir, 'package.json');
@@ -194,8 +277,8 @@ function brokenDependencies() {
       continue;
     }
 
-    const missingEntry = declaredEntryPoints(manifest).find((rel) => !entryPointExists(dir, rel));
-    if (missingEntry !== undefined) broken.push(`${name} (missing ${missingEntry})`);
+    const missingEntry = declaredEntryPoints(manifest).find(({ rel, kind }) => !entryPointExists(dir, rel, kind));
+    if (missingEntry !== undefined) broken.push(`${name} (missing ${missingEntry.rel})`);
   }
   return broken;
 }

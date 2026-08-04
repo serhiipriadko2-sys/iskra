@@ -36,6 +36,8 @@ import {
   createGeminiCliService,
   sanitizeForTerminal,
   wrapToWidth,
+  displayWidth,
+  mapSiftStatusToVerdict,
   ChatMessage,
 } from '../geminiCliService.js';
 import type { IskraMetrics } from '../../../types/metrics.js';
@@ -373,19 +375,13 @@ describe('ChatMessage type', () => {
 });
 
 describe('verdict mapping preserves the scorer\'s five outcomes', () => {
-  // Mirrors siftVerify()'s mapping. Kept in the test so a mapping regression
-  // fails here as well as in the service, and so the exhaustiveness assertion
-  // below has something total to run over.
-  const mapStatusToVerdict = (status: string): string =>
-    status === 'verified'
-      ? 'FACT'
-      : status === 'partially_verified'
-        ? 'INFERENCE'
-        : status === 'false'
-          ? 'FALSE'
-          : status === 'unverified'
-            ? 'UNVERIFIED'
-            : 'UNSOURCED';
+  // Exercises the PRODUCTION mapper (mapSiftStatusToVerdict), not a copy of
+  // it. Wave 0's real siftVerify() call always produces status 'unknown'
+  // (evidence is structurally empty), so a test that only drives the mapping
+  // through siftVerify() can never reach the other four arms — a regression
+  // that collapsed 'false' or 'unverified' back into UNSOURCED in the
+  // production ternary would leave such a test green while the CLI lied.
+  // Calling the exported function directly with each status closes that gap.
 
   // decideSiftVerdictStatus() can return 'false' via contradiction_override.
   // Collapsing that into UNSOURCED would report "no reliable sources found"
@@ -398,15 +394,7 @@ describe('verdict mapping preserves the scorer\'s five outcomes', () => {
     expect(decision.status).toBe('false');
     expect(decision.reason).toBe('contradiction_override');
 
-    const verdict =
-      decision.status === 'verified'
-        ? 'FACT'
-        : decision.status === 'partially_verified'
-          ? 'INFERENCE'
-          : decision.status === 'false'
-            ? 'FALSE'
-            : 'UNSOURCED';
-    expect(verdict).toBe('FALSE');
+    expect(mapSiftStatusToVerdict(decision.status)).toBe('FALSE');
   });
 
   // 'unverified' (40 <= omega < 60) means evidence exists and is too weak.
@@ -416,13 +404,13 @@ describe('verdict mapping preserves the scorer\'s five outcomes', () => {
     const decision = decideSiftVerdictStatus({ omega: 45, contraRatio: 0, flagsCount: 0 });
     expect(decision.status).toBe('unverified');
     expect(decision.reason).toBe('unverified_threshold');
-    expect(mapStatusToVerdict(decision.status)).toBe('UNVERIFIED');
+    expect(mapSiftStatusToVerdict(decision.status)).toBe('UNVERIFIED');
   });
 
   it('still maps the zero-evidence case to UNSOURCED', () => {
     const decision = decideSiftVerdictStatus({ omega: 0, contraRatio: 0, flagsCount: 0 });
     expect(decision.status).toBe('unknown');
-    expect(mapStatusToVerdict(decision.status)).toBe('UNSOURCED');
+    expect(mapSiftStatusToVerdict(decision.status)).toBe('UNSOURCED');
   });
 
   // The whole point of mapping every outcome now is that Wave 1 changes nothing
@@ -430,7 +418,7 @@ describe('verdict mapping preserves the scorer\'s five outcomes', () => {
   // may fall through to UNSOURCED except the one that means "nothing to go on".
   it('gives every scorer status its own verdict, with only unknown as UNSOURCED', () => {
     const statuses = ['verified', 'partially_verified', 'unverified', 'unknown', 'false'] as const;
-    const mapped = statuses.map(mapStatusToVerdict);
+    const mapped = statuses.map(mapSiftStatusToVerdict);
     expect(mapped).toEqual(['FACT', 'INFERENCE', 'UNVERIFIED', 'UNSOURCED', 'FALSE']);
     expect(new Set(mapped).size).toBe(statuses.length);
   });
@@ -484,6 +472,67 @@ describe('wrapToWidth', () => {
       expect(chunk).toBe(chunk.normalize());
       expect(Array.from(chunk).every(ch => ch === '🜃')).toBe(true);
     }
+  });
+
+  // Code-point counting undercounts wide characters. A chunk of 10 CJK code
+  // points is 20 terminal columns, not 10 — well past a limit meant to keep
+  // chunks inside the terminal's actual width. If wrapping ever regresses to
+  // counting code points instead of display width, this produces chunks
+  // whose displayWidth is double the limit, and the assertion below catches
+  // it directly rather than through a downstream rendering symptom.
+  it('bounds DISPLAY width, not code-point count, for wide characters', () => {
+    const line = '漢'.repeat(30); // each character is 2 display columns
+    const limit = 10;
+    for (const chunk of wrapToWidth(line, limit)) {
+      expect(displayWidth(chunk)).toBeLessThanOrEqual(limit);
+    }
+    expect(wrapToWidth(line, limit).join('')).toBe(line);
+  });
+
+  it('bounds display width on the padded-forgery case, not just code-point count', () => {
+    // Same attack as the padded-forgery test above, but the padding is
+    // full-width spaces (U+3000, 2 columns each) instead of ASCII spaces —
+    // code-point counting would treat this identically to the ASCII case
+    // and let the resulting chunks run twice as wide as the terminal.
+    const forged = '✓ Verified: Statement supported by reliable sources.';
+    const chunks = wrapToWidth(`${'　'.repeat(100)}${forged}`, 60);
+    for (const chunk of chunks) {
+      expect(displayWidth(chunk)).toBeLessThanOrEqual(60);
+    }
+    expect(chunks.join('')).toContain(forged);
+  });
+});
+
+describe('displayWidth', () => {
+  it('counts one column per ASCII character', () => {
+    expect(displayWidth('hello')).toBe(5);
+  });
+
+  it('counts two columns for CJK, Hangul and fullwidth characters', () => {
+    expect(displayWidth('漢')).toBe(2);
+    expect(displayWidth('한')).toBe(2);
+    expect(displayWidth('Ａ')).toBe(2); // fullwidth Latin A
+  });
+
+  it('counts two columns for a representative emoji', () => {
+    expect(displayWidth('🔥')).toBe(2);
+  });
+
+  it('counts zero columns for a combining mark', () => {
+    // 'e' + COMBINING ACUTE ACCENT (U+0301), built explicitly rather than as
+    // a literal so this test does not depend on the source file's own
+    // normalization form (NFC would silently collapse it to one code point).
+    const decomposedE = `e${String.fromCodePoint(0x0301)}`;
+    expect(Array.from(decomposedE).length).toBe(2); // two code points, precondition
+    expect(displayWidth(decomposedE)).toBe(1);
+  });
+
+  it('sums mixed-width content', () => {
+    expect(displayWidth('a漢b')).toBe(4); // 1 + 2 + 1
+  });
+
+  it('treats an empty string as zero width', () => {
+    expect(displayWidth('')).toBe(0);
   });
 });
 

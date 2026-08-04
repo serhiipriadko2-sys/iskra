@@ -74,6 +74,12 @@ export const siftCommand = new Command("sift")
       console.log(chalk.cyan("│"), chalk.white("Trace:     "), chalk.gray(sanitizeForTerminal(siftResult.trace)));
       console.log(chalk.cyan("│"));
 
+      // "│   NN. " is at most eight display columns (two-digit index — the
+      // schema caps proposedSources at 12 entries, so "12." is the widest
+      // label); one column of slack beyond that so a terminal wrapping at
+      // exactly `columns` still cannot fold a chunk.
+      const locatorWrapWidth = Math.max(1, (process.stdout.columns ?? 80) - 9);
+
       if (options.detailed && siftResult.candidateSources.length > 0) {
         // Deliberately NOT headed "Sources": these strings come straight from
         // the model and have not been fetched, dereferenced or checked against
@@ -81,7 +87,19 @@ export const siftCommand = new Command("sift")
         // the very source claim this command's fail-closed verdict denies.
         console.log(chalk.yellow("├─ Candidate locators (model-proposed, NOT retrieved or verified)"));
         siftResult.candidateSources.forEach((source, idx) => {
-          console.log(chalk.yellow("│  "), chalk.white(`${idx + 1}.`), chalk.gray(sanitizeForTerminal(source)));
+          // A schema-valid locator may be a single printable line up to 2048
+          // characters (round 2's schema bound; it constrains character class,
+          // not length) — long enough that a terminal soft-wraps it into rows
+          // this loop never saw, the same vector round 11 closed for the
+          // Reasoning block. Hard-wrapping and marking every resulting chunk
+          // closes it here too, rather than leaving locators as the one block
+          // still vulnerable to it.
+          const label = `${idx + 1}.`;
+          const chunks = wrapToWidth(sanitizeForTerminal(source), locatorWrapWidth);
+          chunks.forEach((chunk, i) => {
+            const marker = i === 0 ? label : " ".repeat(label.length);
+            console.log(chalk.yellow("│  "), chalk.white(marker), chalk.gray(chunk));
+          });
         });
         console.log(chalk.yellow("│  "), chalk.gray("These are not evidence. Nothing above was fetched."));
         console.log(chalk.cyan("│"));
@@ -113,8 +131,14 @@ export const siftCommand = new Command("sift")
       const reasoningLines = siftResult.reasoning.split("\n").map(sanitizeForTerminal);
       const marker = provenance === "model" ? ">" : "|";
       // "│   > " is six visible columns; leave a column of slack so a terminal
-      // that wraps at exactly `columns` still does not fold a chunk.
-      const wrapWidth = Math.max(20, (process.stdout.columns ?? 80) - 7);
+      // that wraps at exactly `columns` still does not fold a chunk. Floored
+      // at 1, not at some larger convenience number: an earlier revision
+      // floored at 20, which meant a terminal narrower than 27 columns got
+      // chunks wider than it could display — the exact soft-wrap-creates-
+      // unmarked-rows failure this wrapping exists to close, self-inflicted
+      // by the floor. wrapToWidth() already floors at 1 internally, so this
+      // just has to stop overriding the real available width upward.
+      const wrapWidth = Math.max(1, (process.stdout.columns ?? 80) - 7);
       reasoningLines.forEach(line => {
         for (const chunk of wrapToWidth(line, wrapWidth)) {
           console.log(chalk.cyan("│  "), chalk.gray(marker), chalk.white(chunk));

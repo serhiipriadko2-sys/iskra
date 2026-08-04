@@ -364,7 +364,7 @@ $ iskra sift "The sky is blue" --detailed
 Source → Inference → Fact → Trace
 
 (candidate assessment only — no independent evidence retrieval wired in yet;
- FACT/INFERENCE are unreachable until an evidence adapter lands)
+ FACT/INFERENCE/UNVERIFIED/FALSE are unreachable until an evidence adapter lands)
 
 Verifying: The sky is blue
 

@@ -15,6 +15,7 @@ import {
   calculateSiftOmega,
   decideSiftVerdictStatus,
   type SiftResult,
+  type SiftVerdictStatus,
 } from "../../types/sift.js";
 
 const DEFAULT_MODEL = "gemini-2.0-flash";
@@ -130,8 +131,72 @@ export function sanitizeForTerminal(value: string): string {
   });
 }
 
+// Approximate Unicode East Asian Width "Wide"/"Fullwidth" ranges, plus the
+// common emoji blocks most terminals render at two columns. Bounded and
+// approximate by design, the same tradeoff as RUNTIME_EXPORT_CONDITIONS in
+// tools/ensure_runtime_deps.mjs: a code point wrongly treated as width 1
+// costs at most one column of the slack the caller already reserves; trying
+// to be exhaustive (multi-codepoint ZWJ emoji sequences, every uncommon
+// script) costs a much larger, harder-to-verify table for cases this CLI's
+// threat model does not need to be exact about.
+const WIDE_CODE_POINT_RANGES: ReadonlyArray<readonly [number, number]> = [
+  [0x1100, 0x115f], // Hangul Jamo
+  [0x2e80, 0x303e], // CJK Radicals .. CJK Symbols and Punctuation
+  [0x3041, 0x33ff], // Hiragana .. CJK Compatibility
+  [0x3400, 0x4dbf], // CJK Unified Ideographs Extension A
+  [0x4e00, 0x9fff], // CJK Unified Ideographs
+  [0xa000, 0xa4cf], // Yi Syllables/Radicals
+  [0xac00, 0xd7a3], // Hangul Syllables
+  [0xf900, 0xfaff], // CJK Compatibility Ideographs
+  [0xfe30, 0xfe4f], // CJK Compatibility Forms
+  [0xff00, 0xff60], // Fullwidth Forms
+  [0xffe0, 0xffe6],
+  [0x1f300, 0x1fbff], // Misc symbols/pictographs, emoji, extended-A
+  [0x20000, 0x3fffd], // CJK Unified Ideographs Extension B and beyond
+];
+
+// Zero-width: combining marks are always drawn attached to the preceding
+// character, and U+200D joins emoji into a single rendered glyph. Same
+// approximate-by-design bound as the wide-range table above.
+const ZERO_WIDTH_CODE_POINT_RANGES: ReadonlyArray<readonly [number, number]> = [
+  [0x0300, 0x036f], // Combining Diacritical Marks
+  [0x1ab0, 0x1aff],
+  [0x1dc0, 0x1dff],
+  [0x20d0, 0x20ff], // Combining Diacritical Marks for Symbols
+  [0xfe20, 0xfe2f], // Combining Half Marks
+  [0x200d, 0x200d], // Zero Width Joiner
+];
+
+function codePointDisplayWidth(codePoint: number): number {
+  for (const [lo, hi] of ZERO_WIDTH_CODE_POINT_RANGES) {
+    if (codePoint >= lo && codePoint <= hi) return 0;
+  }
+  for (const [lo, hi] of WIDE_CODE_POINT_RANGES) {
+    if (codePoint >= lo && codePoint <= hi) return 2;
+  }
+  return 1;
+}
+
 /**
- * Break one already-sanitized line into chunks no wider than `width`.
+ * Approximate terminal column width, not code-point count. Counting code
+ * points undercounts CJK/fullwidth text and most emoji, which terminals
+ * render at two columns each: a rationale padded with double-width
+ * characters and only one column of slack could produce chunks whose real
+ * on-screen width exceeds the terminal, letting the terminal's own
+ * soft-wrap re-open the row a marker was meant to guard. True terminal
+ * width is itself locale/font-dependent (Unicode's East Asian Width
+ * property approximates most terminals' behaviour, it does not guarantee
+ * it) — see the range tables above for the bound on this approximation.
+ */
+export function displayWidth(str: string): number {
+  let width = 0;
+  for (const ch of str) width += codePointDisplayWidth(ch.codePointAt(0) ?? 0);
+  return width;
+}
+
+/**
+ * Break one already-sanitized line into chunks whose *display* width never
+ * exceeds `width`.
  *
  * Rendering untrusted prose has to emit the lines the terminal actually shows,
  * not the lines the string happens to contain. A schema-valid `rationaleSummary`
@@ -139,25 +204,32 @@ export function sanitizeForTerminal(value: string): string {
  * line and writes one attribution marker, while the terminal soft-wraps it into
  * many visual rows — every row after the first then carries no marker, and a
  * forged `✓ Verified: …` padded far enough down reads as tool output again.
- * Hard-wrapping here makes per-line attribution mean per-visible-line.
+ * Hard-wrapping here makes per-line attribution mean per-visible-line — but
+ * only if the wrapping itself tracks what the terminal will actually show.
+ * Counting code points, as an earlier revision of this function did, is not
+ * that: a chunk of N code points can be up to 2N terminal columns wide if it
+ * contains CJK or emoji, silently exceeding the caller's width budget and
+ * letting the terminal re-wrap it into unmarked rows regardless.
  *
- * Wraps on whitespace when it can and breaks mid-token when a token is wider
- * than `width`, so no chunk can exceed it. Width is counted in code points
- * (`Array.from`), which keeps surrogate pairs intact; it is an approximation for
- * double-width CJK and emoji, which is why the caller leaves column slack rather
- * than wrapping at exactly the terminal width.
+ * Wraps on whitespace when it can and breaks mid-token by display width when
+ * a token is wider than `width` on its own, so no chunk's display width can
+ * exceed the limit (a single code point wider than the limit is still
+ * atomic and is not split further — there is nothing narrower to split it
+ * into).
  */
 export function wrapToWidth(line: string, width: number): string[] {
   const limit = Math.max(1, Math.floor(width));
-  if (Array.from(line).length <= limit) return [line];
+  if (displayWidth(line) <= limit) return [line];
 
   const chunks: string[] = [];
   let current: string[] = [];
+  let currentWidth = 0;
 
   const flush = (): void => {
     if (current.length > 0) {
       chunks.push(current.join(""));
       current = [];
+      currentWidth = 0;
     }
   };
 
@@ -165,21 +237,68 @@ export function wrapToWidth(line: string, width: number): string[] {
   // visible width rather than silently collapsed — padding is exactly the
   // mechanism an attacker uses to push text down the screen.
   for (const token of line.match(/\S+\s*|\s+/gu) ?? []) {
-    const chars = Array.from(token);
-    if (current.length + chars.length <= limit) {
-      current.push(...chars);
+    const tokenWidth = displayWidth(token);
+    if (currentWidth + tokenWidth <= limit) {
+      current.push(...Array.from(token));
+      currentWidth += tokenWidth;
       continue;
     }
     flush();
-    for (let i = 0; i < chars.length; i += limit) {
-      const slice = chars.slice(i, i + limit);
-      if (slice.length === limit) chunks.push(slice.join(""));
-      else current = slice;
+
+    let pieceWidth = 0;
+    let piece: string[] = [];
+    for (const ch of token) {
+      const w = codePointDisplayWidth(ch.codePointAt(0) ?? 0);
+      if (pieceWidth + w > limit && piece.length > 0) {
+        chunks.push(piece.join(""));
+        piece = [];
+        pieceWidth = 0;
+      }
+      piece.push(ch);
+      pieceWidth += w;
     }
+    current = piece;
+    currentWidth = pieceWidth;
   }
   flush();
 
   return chunks.length > 0 ? chunks : [line];
+}
+
+/**
+ * decideSiftVerdictStatus() has FIVE outcomes and each must map to its own
+ * verdict. Two of them are about evidence that exists and falls short, and
+ * collapsing either into UNSOURCED reports an absence of sources that the
+ * scorer did not find:
+ *   'false'      (contradiction_override) — evidence CONTRADICTS the claim;
+ *   'unverified' (40 <= omega < 60)       — evidence exists but is too weak.
+ * Only 'unknown' (omega < 40) means "nothing to go on", which is the
+ * zero-evidence state Wave 0 always produces. Understating a refuted or a
+ * weakly-supported claim as "no reliable sources found" is the same class of
+ * dishonest output this change exists to remove, pointing the other way.
+ * FACT/INFERENCE/UNVERIFIED/FALSE are all unreachable today (zero evidence
+ * yields omega 0), but each is mapped now so that populating evidence in
+ * Wave 1 needs no change here.
+ *
+ * Exported and tested directly, not only through siftVerify(): Wave 0's real
+ * scorer call can only ever produce 'unknown', so a test that drives the
+ * mapping through siftVerify() alone can never exercise the other four arms
+ * — a regression that collapsed 'false' or 'unverified' back into UNSOURCED
+ * would leave such a test green. Testing this function in isolation, with
+ * every status fed in directly, is the only way that regression is caught.
+ */
+export function mapSiftStatusToVerdict(
+  status: SiftVerdictStatus
+): "FACT" | "INFERENCE" | "UNVERIFIED" | "UNSOURCED" | "FALSE" {
+  return status === "verified"
+    ? "FACT"
+    : status === "partially_verified"
+      ? "INFERENCE"
+      : status === "false"
+        ? "FALSE"
+        : status === "unverified"
+          ? "UNVERIFIED"
+          : "UNSOURCED";
 }
 
 /**
@@ -460,30 +579,7 @@ ${DELTA_PROTOCOL}
       flagsCount: siftInput.source.flags.length,
     });
 
-    // decideSiftVerdictStatus() has FIVE outcomes and each must map to its own
-    // verdict. Two of them are about evidence that exists and falls short, and
-    // collapsing either into UNSOURCED reports an absence of sources that the
-    // scorer did not find:
-    //   'false'      (contradiction_override) — evidence CONTRADICTS the claim;
-    //   'unverified' (40 <= omega < 60)       — evidence exists but is too weak.
-    // Only 'unknown' (omega < 40) means "nothing to go on", which is the
-    // zero-evidence state Wave 0 always produces. Understating a refuted or a
-    // weakly-supported claim as "no reliable sources found" is the same class
-    // of dishonest output this change exists to remove, pointing the other way.
-    // FACT/INFERENCE/UNVERIFIED/FALSE are all unreachable today (zero evidence
-    // yields omega 0), but each is mapped now so that populating evidence in
-    // Wave 1 needs no change here — which is what this method's contract
-    // promises and what a three-arm mapping had already falsified once.
-    const verdict: "FACT" | "INFERENCE" | "UNVERIFIED" | "UNSOURCED" | "FALSE" =
-      decision.status === "verified"
-        ? "FACT"
-        : decision.status === "partially_verified"
-          ? "INFERENCE"
-          : decision.status === "false"
-            ? "FALSE"
-            : decision.status === "unverified"
-              ? "UNVERIFIED"
-              : "UNSOURCED";
+    const verdict = mapSiftStatusToVerdict(decision.status);
 
     return {
       statement,
