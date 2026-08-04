@@ -120,11 +120,14 @@ describe('staging acceptance source contract', () => {
     expect(harness).toContain('Wait-ForPostgrestJwtReadiness');
     expect(harness).toContain("$body -notmatch 'PGRST303'");
     expect(harness).toContain('GRAPH_FORBIDDEN_CLIENT_GRANT_COUNT');
+    expect(harness).toContain('pnpm exec supabase branches get');
+    expect(harness).toContain('Failed to read staging branch credentials');
     expect(harness).toContain('from information_schema.table_privileges');
     expect(harness).toContain("privilege_type in ('TRUNCATE', 'TRIGGER', 'REFERENCES')");
     expect(harness).toContain("'--db-url', $branch.POSTGRES_URL, '--output-format', 'json'");
     expect(harness).toContain("'--agent', 'yes'");
     expect(harness).toContain('$grantResult.forbidden_grant_count');
+    expect(harness).toContain('$grantRows = @($grantResult.rows)');
     expect(harness).toContain('Set-Item -LiteralPath "Env:$name"');
     expect(harness).toContain('Remove-Item -LiteralPath "Env:$name"');
     expect(harness).toContain("scope in ('member_minute','member_day')");

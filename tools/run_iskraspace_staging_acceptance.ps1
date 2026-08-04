@@ -144,11 +144,21 @@ function Wait-ForPostgrestJwtReadiness(
 
 Push-Location $repoRoot
 try {
-  $branch = (
-    pnpm dlx supabase@2.109.0 branches get $StagingBranchId `
-      --project-ref $ProductionProjectRef --output json
-  ) | ConvertFrom-Json
-  $baseUrl = $branch.SUPABASE_URL.TrimEnd('/')
+  $branchJson = (& pnpm exec supabase branches get $StagingBranchId `
+    --project-ref $ProductionProjectRef --output json | Out-String)
+  $branchReadExit = $LASTEXITCODE
+  if ($branchReadExit -ne 0 -or [string]::IsNullOrWhiteSpace($branchJson)) {
+    throw "Failed to read staging branch credentials (exit $branchReadExit)"
+  }
+  try {
+    $branch = $branchJson | ConvertFrom-Json
+  } catch {
+    throw 'Failed to parse staging branch credentials as JSON'
+  }
+  if (-not $branch.SUPABASE_URL -or -not $branch.POSTGRES_URL) {
+    throw 'Staging branch credentials are incomplete'
+  }
+  $baseUrl = ([string]$branch.SUPABASE_URL).TrimEnd('/')
   $publishableKey = if ($branch.SUPABASE_PUBLISHABLE_KEY) {
     $branch.SUPABASE_PUBLISHABLE_KEY
   } else {
@@ -172,16 +182,16 @@ where table_schema = 'public'
 "@
   $grantSql = $grantSql -replace '\s+', ' '
   $grantQueryArgs = @(
-    'dlx', 'supabase@2.109.0', 'db', 'query', $grantSql,
+    'exec', 'supabase', 'db', 'query', $grantSql,
     '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
   )
   $grantResult = (& pnpm @grantQueryArgs) | ConvertFrom-Json
-  $grantRows = if ($grantResult.rows) {
-    @($grantResult.rows)
+  if ($grantResult.rows) {
+    $grantRows = @($grantResult.rows)
   } elseif ($null -ne $grantResult.forbidden_grant_count) {
-    @($grantResult)
+    $grantRows = @($grantResult)
   } else {
-    @()
+    $grantRows = @()
   }
   if ($LASTEXITCODE -ne 0 -or $grantRows.Count -ne 1) {
     throw 'Failed to read staging Graph privilege postcondition'
@@ -273,7 +283,7 @@ values
 "@
     $membershipSql = $membershipSql -replace '\s+', ' '
     $queryArgs = @(
-      'dlx', 'supabase@2.109.0', 'db', 'query', $membershipSql,
+      'exec', 'supabase', 'db', 'query', $membershipSql,
       '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
     )
     & pnpm @queryArgs | Out-Null
@@ -349,7 +359,7 @@ $cleanupTag;
 "@
       $cleanupSql = $cleanupSql -replace '\s+', ' '
       $queryArgs = @(
-        'dlx', 'supabase@2.109.0', 'db', 'query', $cleanupSql,
+        'exec', 'supabase', 'db', 'query', $cleanupSql,
         '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
       )
       $dbCleanupExit = 1
