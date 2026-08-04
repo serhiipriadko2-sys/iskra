@@ -170,9 +170,10 @@ where table_schema = 'public'
   and grantee in ('PUBLIC', 'anon', 'authenticated')
   and privilege_type in ('TRUNCATE', 'TRIGGER', 'REFERENCES');
 "@
+  $grantSql = $grantSql -replace '\s+', ' '
   $grantQueryArgs = @(
     'dlx', 'supabase@2.109.0', 'db', 'query', $grantSql,
-    '--db-url', $branch.POSTGRES_URL, '--output', 'json'
+    '--db-url', $branch.POSTGRES_URL, '--output-format', 'json'
   )
   $grantResult = (& pnpm @grantQueryArgs) | ConvertFrom-Json
   if ($LASTEXITCODE -ne 0 -or -not $grantResult.rows) {
@@ -266,7 +267,7 @@ values
     $membershipSql = $membershipSql -replace '\s+', ' '
     $queryArgs = @(
       'dlx', 'supabase@2.109.0', 'db', 'query', $membershipSql,
-      '--db-url', $branch.POSTGRES_URL, '--output', 'json'
+      '--db-url', $branch.POSTGRES_URL, '--output-format', 'json'
     )
     & pnpm @queryArgs | Out-Null
     if ($LASTEXITCODE -ne 0) {
@@ -341,7 +342,7 @@ delete from private.beta_members where user_id in ($idList);
       $cleanupSql = $cleanupSql -replace '\s+', ' '
       $queryArgs = @(
         'dlx', 'supabase@2.109.0', 'db', 'query', $cleanupSql,
-        '--db-url', $branch.POSTGRES_URL, '--output', 'json'
+        '--db-url', $branch.POSTGRES_URL, '--output-format', 'json'
       )
       & pnpm @queryArgs | Out-Null
       $dbCleanupExit = $LASTEXITCODE

@@ -24,6 +24,13 @@ const graphLeastPrivilegeMigrationPath = join(
 const graphLeastPrivilegeMigration = existsSync(graphLeastPrivilegeMigrationPath)
   ? readFileSync(graphLeastPrivilegeMigrationPath, 'utf8')
   : '';
+const pgGraphqlMigrationPath = join(
+  dirname(thisFile),
+  '../../../../supabase/migrations/20260804184500_reconcile_pg_graphql_extension.sql',
+);
+const pgGraphqlMigration = existsSync(pgGraphqlMigrationPath)
+  ? readFileSync(pgGraphqlMigrationPath, 'utf8')
+  : '';
 const initplanMigrationPath = join(
   dirname(thisFile),
   '../../../../supabase/migrations/20260718194551_optimize_rls_initplan.sql',
@@ -150,5 +157,16 @@ describe('Supabase ACL hardening migration', () => {
     );
     expect(graphLeastPrivilegeMigration).not.toMatch(/from[^;]*service_role/i);
     expect(graphLeastPrivilegeMigration).not.toMatch(/revoke[^;]*(select|insert|update|delete)/i);
+  });
+
+  it('reconciles the production pg_graphql dependency into clean replay', () => {
+    expect(pgGraphqlMigration).toContain('create schema if not exists graphql;');
+    expect(pgGraphqlMigration).toMatch(
+      /create extension if not exists pg_graphql[\s\S]*with schema graphql[\s\S]*version '1\.5\.11';/i,
+    );
+    expect(pgGraphqlMigration).toContain('revoke all on schema graphql from public;');
+    expect(pgGraphqlMigration).toContain(
+      'grant usage on schema graphql to anon, authenticated, service_role;',
+    );
   });
 });

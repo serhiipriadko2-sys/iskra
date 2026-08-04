@@ -1,6 +1,6 @@
 # Supabase Graph API least-privilege audit — 2026-08-04
 
-Status: `LOCAL_CLEAN_REPLAY_PASS`; disposable preview and production apply pending.
+Status: `LOCAL_CLEAN_REPLAY_PASS`; final preview acceptance and production apply pending.
 
 Production project: `typcvaszcfdpkzbjzuur`.
 Source base: merge commit `0672f8a01c2abca1a08eb07745cc65c119dfaa34`.
@@ -64,6 +64,15 @@ not disable known queries. Therefore GraphQL is tested explicitly with owner,
 foreign active-member and non-member JWTs rather than treated as closed by the
 existing introspection comment.
 
+The first exact-PR preview acceptance found a source-of-truth dependency drift:
+production runs `pg_graphql 1.5.11` in schema `graphql`, but the clean preview
+reported that the extension was available and not installed. No migration had
+declared that production dependency. Migration
+`20260804184500_reconcile_pg_graphql_extension.sql` now pins the production
+version and API-role schema usage so fresh replay and preview exercise the
+same GraphQL surface. `CREATE EXTENSION IF NOT EXISTS` leaves the already
+installed production extension unchanged.
+
 Sources:
 
 - <https://supabase.com/docs/guides/graphql/security>
@@ -80,18 +89,32 @@ Migration `20260804183000_graph_api_least_privilege.sql`:
 - leaves the full administrative privilege set for `service_role` unchanged;
 - contains no row DML and does not alter Edge Functions or Auth.
 
+Migration `20260804184500_reconcile_pg_graphql_extension.sql`:
+
+- creates schema `graphql` only when absent;
+- installs `pg_graphql 1.5.11` only when absent;
+- denies generic `PUBLIC` schema usage and grants endpoint usage to `anon`,
+  `authenticated` and `service_role`, matching the observed production API
+  boundary;
+- contains no row DML and does not upgrade the existing production extension.
+
 The clean-replay workflow now requires an exact `0|8` Graph grant receipt:
 zero forbidden client grants and eight authenticated DML grants across the two
-tables. The live acceptance harness independently checks the forbidden-grant
-count before creating any fixture.
+tables. It also requires `pg_graphql 1.5.11|graphql` with the explicit schema
+usage matrix. The live acceptance harness independently checks the
+forbidden-grant count before creating any fixture.
 
 ## Local clean replay
 
 Pinned Supabase CLI `2.109.0` rebuilt the database from empty state and applied
-the full migration chain through `20260804183000`. Read-back returned:
+the full migration chain through `20260804184500`. Read-back returned:
 
 - migration history: `20260804183000|graph_api_least_privilege|4`;
+- migration history: `20260804184500|reconcile_pg_graphql_extension|6`;
 - Graph grant summary: `0|8`;
+- pg_graphql dependency: `1.5.11|graphql|false|true|true|true` for
+  version, schema and `PUBLIC`/`anon`/`authenticated`/`service_role` schema
+  usage;
 - database lint: no error-level finding (one pre-existing warning for the
   unread `current_reset` variable in `public.check_rate_limit`);
 - canonical-versus-live local Graph snapshot verifier: PASS, including columns,
@@ -121,12 +144,30 @@ and a valid non-member. Only the owner may observe the private node. Existing
 tests retain mutation, direct-table, suspended-member, Edge, CORS, JWT and
 quota-spoof coverage.
 
+The first preview run passed 61 of 63 tests and completed full fixture cleanup.
+Its GraphQL failure identified the missing extension dependency above. Its
+quota-spoof failure was a test-clock false negative: the eleven requests used
+one stable IP digest but split across adjacent database minute windows as
+eight plus three. The test now aligns its start to the Supabase gateway `Date`
+header with a bounded safety margin; the quota implementation is unchanged.
+The acceptance harness also now uses the pinned CLI's documented
+`--output-format json` query flag and normalizes SQL to a single Windows-safe
+argument before any fixture creation.
+
+## Preview credential containment
+
+During CLI diagnosis, the disposable preview database URL was emitted into a
+private operator-tool log. The value is not repeated, stored in Git or used as
+production evidence; no production credential was involved. The preview
+credential is treated as compromised. This PR cannot close until branch
+`70c977e4-3a3b-4361-ac72-471d23d5497f` is deleted and deletion is read back.
+
 ## Stop and forward-repair conditions
 
-Stop before production if clean replay does not record all three pending
+Stop before production if clean replay does not record all four pending
 migrations, the preview reports any forbidden Graph grant, any RPC exposes the
-other principal's node, GraphQL differs from REST RLS, supported CRUD breaks,
-or final-head CI is not green.
+other principal's node, pg_graphql is absent or not version `1.5.11`, GraphQL
+differs from REST RLS, supported CRUD breaks, or final-head CI is not green.
 
 The migration is transactional. After a successful production apply, do not
 restore `TRUNCATE`, `REFERENCES` or `TRIGGER` to client roles as a rollback.

@@ -55,6 +55,19 @@ type GrantSnapshot = {
   privileges?: string[];
 };
 
+type PgGraphqlSnapshot = {
+  name?: string;
+  version?: string;
+  schema?: string;
+  public_schema_usage?: boolean;
+  anon_schema_usage?: boolean;
+  authenticated_schema_usage?: boolean;
+  service_role_schema_usage?: boolean;
+  anon_resolve_execute?: boolean;
+  authenticated_resolve_execute?: boolean;
+  service_role_resolve_execute?: boolean;
+};
+
 type LiveSnapshot = {
   checked_at?: string;
   columns?: ColumnSnapshot[];
@@ -64,6 +77,7 @@ type LiveSnapshot = {
   policies?: PolicySnapshot[];
   rls?: RlsSnapshot[];
   grants?: GrantSnapshot[];
+  pg_graphql?: PgGraphqlSnapshot[];
   migration_history?: Array<{ version?: string; name?: string }>;
 };
 
@@ -96,6 +110,7 @@ const CANONICAL_GRAPH_MIGRATION_FILES = [
   'supabase/migrations/20260710110000_graph_shared_row_guard.sql',
   'supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql',
   'supabase/migrations/20260804183000_graph_api_least_privilege.sql',
+  'supabase/migrations/20260804184500_reconcile_pg_graphql_extension.sql',
 ];
 
 const LEGACY_RUNTIME_SQL_SNAPSHOTS = [
@@ -111,6 +126,7 @@ const CLOSED_BETA_FILE = CANONICAL_GRAPH_MIGRATION_FILES[6];
 const GRAPH_SHARED_ROW_GUARD_FILE = CANONICAL_GRAPH_MIGRATION_FILES[7];
 const GRAPH_CLOSED_BETA_RESTORE_FILE = CANONICAL_GRAPH_MIGRATION_FILES[8];
 const GRAPH_LEAST_PRIVILEGE_FILE = CANONICAL_GRAPH_MIGRATION_FILES[9];
+const PG_GRAPHQL_RECONCILIATION_FILE = CANONICAL_GRAPH_MIGRATION_FILES[10];
 
 const CANONICAL_GRAPH_MIGRATION_RECEIPTS: ExpectedMigration[] = CANONICAL_GRAPH_MIGRATION_FILES.map((file) => {
   const match = path.basename(file).match(/^(\d+)_([^/]+)\.sql$/);
@@ -319,6 +335,24 @@ select jsonb_build_object(
       group by table_name, grantee
     ) grant_rows
   ), '[]'::jsonb),
+  'pg_graphql', coalesce((
+    select jsonb_agg(jsonb_build_object(
+      'name', e.extname,
+      'version', e.extversion,
+      'schema', n.nspname,
+      'public_schema_usage', has_schema_privilege('public', n.oid, 'USAGE'),
+      'anon_schema_usage', has_schema_privilege('anon', n.oid, 'USAGE'),
+      'authenticated_schema_usage', has_schema_privilege('authenticated', n.oid, 'USAGE'),
+      'service_role_schema_usage', has_schema_privilege('service_role', n.oid, 'USAGE'),
+      'anon_resolve_execute', has_function_privilege('anon', p.oid, 'EXECUTE'),
+      'authenticated_resolve_execute', has_function_privilege('authenticated', p.oid, 'EXECUTE'),
+      'service_role_resolve_execute', has_function_privilege('service_role', p.oid, 'EXECUTE')
+    ))
+    from pg_extension e
+    join pg_namespace n on n.oid = e.extnamespace
+    join pg_proc p on p.pronamespace = n.oid and p.proname = 'resolve'
+    where e.extname = 'pg_graphql'
+  ), '[]'::jsonb),
   'migration_history', coalesce((
     select jsonb_agg(jsonb_build_object('version', version, 'name', name) order by version desc)
     from supabase_migrations.schema_migrations
@@ -332,7 +366,8 @@ select jsonb_build_object(
       '20260709170000',
       '20260710110000',
       '20260718200634',
-      '20260804183000'
+      '20260804183000',
+      '20260804184500'
     ])
   ), '[]'::jsonb)
 )::text as graph_snapshot;
@@ -645,6 +680,19 @@ function assertCurrentGraphLeastPrivilege(): void {
   assertContains(sql, 'to authenticated', GRAPH_LEAST_PRIVILEGE_FILE);
 }
 
+function assertPgGraphqlDependency(): void {
+  const sql = readText(PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(sql, 'create schema if not exists graphql', PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(sql, 'create extension if not exists pg_graphql', PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(sql, "version '1.5.11'", PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(sql, 'revoke all on schema graphql from public', PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(
+    sql,
+    'grant usage on schema graphql to anon, authenticated, service_role',
+    PG_GRAPHQL_RECONCILIATION_FILE,
+  );
+}
+
 function assertFinalClosedBetaGraphAcl(): void {
   const sql = readText(GRAPH_CLOSED_BETA_RESTORE_FILE);
   for (const policyName of REQUIRED_GRAPH_POLICY_NAMES) {
@@ -673,6 +721,7 @@ function verifyRepoContract(): void {
   assertCurrentGraphSharedRowGuard();
   assertFinalClosedBetaGraphAcl();
   assertCurrentGraphLeastPrivilege();
+  assertPgGraphqlDependency();
   assertLegacySnapshotsAreExcluded();
   ok(`canonical root-migration graph contract verified: ${CANONICAL_GRAPH_MIGRATION_FILES.join(', ')}`);
   warn('repo-only graph contract does not prove deployed DDL, deployed Edge Functions, or live migration parity');
@@ -846,6 +895,25 @@ function verifyLiveGrants(snapshot: LiveSnapshot): void {
   }
 }
 
+function verifyLivePgGraphql(snapshot: LiveSnapshot): void {
+  const extensions = snapshot.pg_graphql ?? [];
+  if (extensions.length !== 1) fail(`Live graph snapshot must contain exactly one pg_graphql receipt, found ${extensions.length}`);
+  const extension = extensions[0];
+  if (extension.name !== 'pg_graphql' || extension.version !== '1.5.11' || extension.schema !== 'graphql') {
+    fail(`Live pg_graphql must be version 1.5.11 in schema graphql`);
+  }
+  if (extension.public_schema_usage !== false) fail('Live graphql schema must deny generic PUBLIC usage');
+  for (const [role, schemaUsage, resolveExecute] of [
+    ['anon', extension.anon_schema_usage, extension.anon_resolve_execute],
+    ['authenticated', extension.authenticated_schema_usage, extension.authenticated_resolve_execute],
+    ['service_role', extension.service_role_schema_usage, extension.service_role_resolve_execute],
+  ] as const) {
+    if (schemaUsage !== true || resolveExecute !== true) {
+      fail(`Live pg_graphql ${role} endpoint privileges are incomplete`);
+    }
+  }
+}
+
 function normalizePolicyExpression(policy: PolicySnapshot): string {
   return normalizeSql(`${policy.using ?? ''} ${policy.with_check ?? ''}`);
 }
@@ -899,6 +967,7 @@ function compareLiveToRepo(snapshot: LiveSnapshot, allowUnreconciledHistory: boo
   verifyLiveFunctions(snapshot);
   verifyLiveRls(snapshot);
   verifyLiveGrants(snapshot);
+  verifyLivePgGraphql(snapshot);
   verifyLivePolicies(snapshot);
   verifyMigrationHistory(snapshot, allowUnreconciledHistory);
 }

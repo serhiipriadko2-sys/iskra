@@ -77,7 +77,7 @@ jobs:
             where version in (
               '20260718194551','20260718194835','20260718200634',
               '20260728171718','20260728180000','20260728183421',
-              '20260804183000'
+              '20260804183000','20260804184500'
             )
             order by version;
           " | tee clean-replay-receipt/replay-history.txt
@@ -88,6 +88,7 @@ jobs:
           grep -Fx '20260728180000|reconcile_gateway_events_live_schema|12' clean-replay-receipt/replay-history.txt
           grep -Fx '20260728183421|parallax_memory_gate|10' clean-replay-receipt/replay-history.txt
           grep -Fx '20260804183000|graph_api_least_privilege|4' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260804184500|reconcile_pg_graphql_extension|6' clean-replay-receipt/replay-history.txt
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
             select version || '|' ||
                    encode(digest(convert_to(array_to_string(statements, E'\\n--STATEMENT--\\n'), 'UTF8'), 'sha256'), 'hex')
@@ -95,7 +96,7 @@ jobs:
             where version in (
               '20260718194551','20260718194835','20260718200634',
               '20260728171718','20260728180000','20260728183421',
-              '20260804183000'
+              '20260804183000','20260804184500'
             )
             order by version;
           " | tee clean-replay-receipt/parser-statement-array-sha256.txt
@@ -138,11 +139,23 @@ jobs:
               and table_name in ('graph_nodes','graph_edges');
           " | tee clean-replay-receipt/graph-grant-summary.txt
           grep -Fx '0|8' clean-replay-receipt/graph-grant-summary.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select e.extversion || '|' || n.nspname || '|' ||
+              has_schema_privilege('public','graphql','USAGE') || '|' ||
+              has_schema_privilege('anon','graphql','USAGE') || '|' ||
+              has_schema_privilege('authenticated','graphql','USAGE') || '|' ||
+              has_schema_privilege('service_role','graphql','USAGE')
+            from pg_extension e
+            join pg_namespace n on n.oid=e.extnamespace
+            where e.extname='pg_graphql';
+          " | tee clean-replay-receipt/pg-graphql-extension.txt
+          grep -Fx '1.5.11|graphql|false|true|true|true' clean-replay-receipt/pg-graphql-extension.txt
           sha256sum \
             supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql \
             supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
             supabase/migrations/20260728183421_parallax_memory_gate.sql \
             supabase/migrations/20260804183000_graph_api_least_privilege.sql \
+            supabase/migrations/20260804184500_reconcile_pg_graphql_extension.sql \
             supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json \
             > clean-replay-receipt/source-sha256.txt
           wc -c \
@@ -150,6 +163,7 @@ jobs:
             supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
             supabase/migrations/20260728183421_parallax_memory_gate.sql \
             supabase/migrations/20260804183000_graph_api_least_privilege.sql \
+            supabase/migrations/20260804184500_reconcile_pg_graphql_extension.sql \
             supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json \
             > clean-replay-receipt/source-bytes.txt
 
