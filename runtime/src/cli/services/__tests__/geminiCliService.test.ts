@@ -574,6 +574,27 @@ describe('displayWidth', () => {
     expect(displayWidth('🔥')).toBe(2);
   });
 
+  it('counts two columns for BMP emoji outside the Misc Pictographs block', () => {
+    // Reproduced against a real terminal (`wc -L` under a UTF-8 locale)
+    // rather than assumed: U+231A/U+231B sit below the 0x1f300 range the
+    // main emoji block starts at, in Miscellaneous Symbols (U+2600 block),
+    // and were missing from the wide-range table until this test.
+    expect(displayWidth('⌚')).toBe(2); // U+231A WATCH
+    expect(displayWidth('⌛')).toBe(2); // U+231B HOURGLASS
+    expect(displayWidth('⚡')).toBe(2); // U+26A1 HIGH VOLTAGE SIGN
+  });
+
+  it('counts one column for narrow Misc Symbols in the same block as wide emoji', () => {
+    // The block above is not uniformly wide: measured directly, U+2600 ☀
+    // and neighbouring code points render at width 1 in the same terminal
+    // where U+231A renders at width 2. A range-based fix that widened the
+    // whole Misc Symbols block would misclassify these as width 2 — this
+    // test is what would catch that regression.
+    expect(displayWidth('☀')).toBe(1); // U+2600 BLACK SUN WITH RAYS
+    expect(displayWidth('☎')).toBe(1); // U+260E BLACK TELEPHONE
+    expect(displayWidth('⚠')).toBe(1); // U+26A0 WARNING SIGN
+  });
+
   it('counts zero columns for a combining mark', () => {
     // 'e' + COMBINING ACUTE ACCENT (U+0301), built explicitly rather than as
     // a literal so this test does not depend on the source file's own

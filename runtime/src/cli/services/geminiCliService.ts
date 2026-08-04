@@ -151,6 +151,21 @@ const WIDE_CODE_POINT_RANGES: ReadonlyArray<readonly [number, number]> = [
   [0xfe30, 0xfe4f], // CJK Compatibility Forms
   [0xff00, 0xff60], // Fullwidth Forms
   [0xffe0, 0xffe6],
+  // U+231A/U+231B (⌚/⌛) individually, NOT the surrounding Miscellaneous
+  // Symbols block as a range: measured directly (`wc -L` under a UTF-8
+  // locale) against every code point from U+2600 to U+262B, and almost all
+  // of that block — U+2600 ☀, U+260E ☎, U+26A0 ⚠, U+2764 ❤, thirty-plus
+  // others checked — renders at width 1, not 2. Only these two, plus other
+  // individually-verified entries below, are actually wide. A blanket range
+  // here would misclassify the width-1 majority of the block as width 2,
+  // which is safe (over-wide only wastes a column) but wrong, and this table
+  // does not carry entries that are known wrong.
+  [0x231a, 0x231b], // ⌚ WATCH, ⌛ HOURGLASS
+  [0x2614, 0x2615], // ☔ UMBRELLA WITH RAIN DROPS, ☕ HOT BEVERAGE
+  [0x26a1, 0x26a1], // ⚡ HIGH VOLTAGE SIGN
+  [0x2757, 0x2757], // ❗ HEAVY EXCLAMATION MARK SYMBOL
+  [0x2b50, 0x2b50], // ⭐ WHITE MEDIUM STAR
+  [0x2b55, 0x2b55], // ⭕ HEAVY LARGE CIRCLE
   [0x1f300, 0x1fbff], // Misc symbols/pictographs, emoji, extended-A
   [0x20000, 0x3fffd], // CJK Unified Ideographs Extension B and beyond
 ];
