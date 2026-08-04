@@ -1,6 +1,12 @@
 # IskraSpace production hardening — 2026-07-28
 
-Status: source implementation candidate; verified-live-staging; production not deployed.
+Status: merged source; verified-live-production for the bounded `gemini` and `iskra-agent` Edge scope.
+
+## Production closeout addendum — 2026-07-31
+
+The reviewed source chain merged through PR #316 and PR #322. Exact production deployment identity is `27c60b190dcc89edf4981e8d9b9502a207ddaec0`; later `main` changes have an empty diff for the six deployed Edge/shared files. Production read-back matched those six files, negative-only smoke passed, rollback source was captured, and the temporary staging branch was deleted.
+
+Authoritative receipt: `docs/operations/iskraspace_production_promotion_2026-07-31.md`. Existing database/auth advisor warnings are a separate governed workstream and do not change this function-only deployment verdict.
 
 ## Authority boundary
 
@@ -229,24 +235,18 @@ This remains the local verification receipt. The separate staging receipt
 proves deployed source and no-upstream acceptance behavior, not a real provider
 invocation.
 
-## Promotion gates still required
+## Production promotion gates
 
-Completed: exact-source staging, secret-plane configuration, deployed-source
-read-back, JWT verification, negative matrix, two-principal RLS/Graph
-acceptance, advisor/log review and an immutable staging receipt.
+Completed on the exact release source:
 
-Remaining:
+1. PR #316 and PR #322 merge/check evidence: PASS.
+2. Production secret-name/digest preflight with test mode disabled: PASS.
+3. Pre-deploy versions, hashes, advisors, logs and rollback source capture: PASS.
+4. Exact-source production deploy and 6/6 downloaded read-back: PASS.
+5. Negative-only production smoke and post-deploy Edge log review: PASS.
+6. Temporary staging deletion and branch read-back: PASS.
 
-1. Push the follow-up acceptance/dependency commit and require green GitHub
-   checks on the exact PR #316 head.
-2. Confirm required production secret names without reading or replacing
-   provider credential values; set `AI_EDGE_TEST_MODE=false` and the
-   staging-proven `cf-connecting-ip` ingress setting.
-3. Capture production pre-deploy function hashes, JWT settings, advisors and
-   recent logs.
-4. Deploy the exact reviewed Edge source, read it back byte-for-byte, and run
-   negative-only production smoke tests that cannot invoke a billed provider.
-5. Preserve rollback evidence and review production post-deploy logs.
+Provider success and browser UI end-to-end acceptance remain NOT_RUN and are not required for the bounded negative-only release claim.
 
 ## Residual risk
 
@@ -260,16 +260,18 @@ Remaining:
 - The current static content classifier is a narrow boundary, not a complete
   safety system. Crisis-support semantics need dedicated clinical/product
   review before broad public release.
-- Staging parity is proved only for the receipt's data-less preview project.
-  No claim is made about production source parity, production acceptance or
-  real provider success.
+- Exact production source parity and negative boundary behavior are proved.
+  No claim is made about a successful billed provider request, browser UI
+  end-to-end behavior or public load capacity.
 
 ## ∆DΩΛ
 
 ∆: caller-controlled provider/data ambiguity is replaced with canonical Edge
-and principal ownership boundaries.
-D: source, tests, dependency locks, ADR-20260728-001, exact-source staging
-read-back and acceptance output.
-Ω: 0.96 for staging readiness; production remains unverified.
-Λ: require green PR-head CI, production secret preflight, exact deployment,
-read-back and negative-only smoke before declaring promotion complete.
+and principal ownership boundaries, now verified on production for the bounded
+function scope.
+D: source, tests, dependency locks, ADR-20260728-001, staging acceptance,
+production secret preflight, rollback capture, exact-source deployment/read-back,
+smoke and logs.
+Ω: 0.95 for the stated function-only production boundary.
+Λ: refresh after any deployed-file, JWT, ingress, origin or secret-contract
+change; database remediation requires a separate migration receipt.

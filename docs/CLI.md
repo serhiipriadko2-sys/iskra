@@ -156,8 +156,19 @@ alike misreports two of the three:
 | `UNSOURCED` | nothing to go on | — |
 | `FALSE` | evidence refutes the claim | understate a refuted claim as merely unsupported |
 
-These map one-to-one onto the five outcomes of the underlying scorer
-(`runtime/src/types/sift.ts`), so no scorer result is collapsed into another.
+`FACT`, `INFERENCE` and `FALSE` map one-to-one onto the scorer's
+`verified`/`partially_verified`/`false` outcomes. The scorer's fourth and
+fifth outcomes do not: `unverified` always maps to `UNVERIFIED`, but
+`unknown` maps to **either** `UNSOURCED` or `UNVERIFIED`, decided by whether
+any evidence was actually retrieved for that input (`hasAnyEvidence()` in
+`geminiCliService.ts`) — because `unknown` on its own conflates two
+different situations the scorer's `omega`/`contraRatio` numbers alone cannot
+tell apart: "nothing was retrieved" (Wave 0, always, since `siftInput` is a
+hardcoded-empty constant) and "evidence was retrieved, weighed, and still
+scored under 40" (only reachable once Wave 1 populates real evidence). A
+future evidence adapter that assumes a literal one-to-one mapping and skips
+this check will report a weighed-but-weak result as "no reliable sources
+found," the exact understatement this file's earlier table warns against.
 
 > **Wave 0 fail-closed behaviour (current).** `iskra sift` has **no independent
 > evidence retrieval** wired in yet, so it currently returns `UNSOURCED` for

@@ -2,6 +2,8 @@
 
 Status: `verified-live-staging`; production promotion not yet performed.
 
+Follow-up: production promotion was completed and independently verified on 2026-07-31. See `docs/operations/iskraspace_production_promotion_2026-07-31.md`. This staging receipt remains immutable evidence for its own preview run.
+
 ## Proof boundary
 
 This receipt covers the data-less Supabase preview project

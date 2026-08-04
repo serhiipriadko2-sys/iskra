@@ -313,3 +313,17 @@
 - **Containment:** an earlier disposable preview emitted branch credentials into local tool output; no value was committed, that preview was deleted, and the full sequence was repeated on the clean preview named above.
 - **Proof boundary:** `AI_EDGE_TEST_MODE=true`; no billed provider call, production deployment, browser UI acceptance or GitHub merge is asserted.
 - **Status:** verified-live-staging; production promotion pending exact-head CI and production preflight.
+
+### EVI-20260731-001: IskraSpace exact-source production promotion
+- **Assertion:** The reviewed P0 Edge source was promoted to production as a function-only change and verified through downloaded source, negative smoke, logs and cleanup.
+- **Evidence:** PR #316 merge `e3708407596581709c2cf86e336045d285ff1144`; PR #322 merge/release SHA `27c60b190dcc89edf4981e8d9b9502a207ddaec0`; refreshed staging `umjuptkdsjutzscvlqfq` at `gemini`/`iskra-agent` v2 with 6/6 source identity and 61/61 acceptance; production `gemini` v14 bundle `6c15096e3c0ce849743c253ebd2d316398a476ecfaae5ed882f4a99c899fea2a`; production `iskra-agent` v9 bundle `ac3e9d8b0e935934f0379d201d592d99cbac344af32356b63573fadc27cc22ad`; both ACTIVE with `verify_jwt=true`; production read-back 6/6; negative smoke 8/8; temporary preview deleted.
+- **Proof boundary:** no database migration, valid-member provider invocation, browser UI acceptance, Builder activation or advisor remediation is asserted.
+- **Receipt:** `docs/operations/iskraspace_production_promotion_2026-07-31.md`.
+- **Status:** verified-live-production for `gemini` and `iskra-agent`.
+
+### EVI-20260731-002: Supabase advisor and migration-provenance separation
+- **Assertion:** Remaining production advisor findings require a separate database/Auth lifecycle; they neither invalidate nor belong inside the completed function-only Edge release.
+- **Live evidence:** 29 security and 50 performance notices; production history contains live-only migrations `20260728171718` and `20260728183421`, while repository migration `20260718200634` is absent from live history; Graph public-role read policies remain present without a direct `anon` table grant; `authenticated` has broad Graph table privileges; 13 authenticated SECURITY DEFINER RPCs have explicit search paths but require semantic grant/body review.
+- **Repository evidence:** `supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql`; ADR-20260731-001; `docs/operations/supabase_advisor_snapshot_2026-07-31.md`.
+- **Decision boundary:** read-only observation and accepted plan only; no migration, policy, grant, index, extension or Auth write performed.
+- **Status:** accepted for staged remediation planning; implementation and live verification pending.
