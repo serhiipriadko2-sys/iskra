@@ -1,75 +1,81 @@
-import { describe, expect, it } from 'vitest';
+import { execFileSync } from 'node:child_process'
+import { cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { describe, expect, it } from 'vitest'
 import {
-  calculateDFA as calculateCanonicalDFA,
-  calculateHFD as calculateCanonicalHFD,
-} from '../fractal';
+  calculateDFAMetric as calculateNodeDFA,
+  calculateHFDMetric as calculateNodeHFD,
+} from '../fractal-authority.js'
 import {
-  calculateShannonEntropy as calculateCanonicalEntropy,
-  interpretEntropy as interpretCanonicalEntropy,
-} from '../entropy';
+  calculateDFAMetric as calculateEdgeDFA,
+  calculateHFDMetric as calculateEdgeHFD,
+} from '../../../../supabase/functions/_shared/iskra-metrics/fractal-authority'
 import {
-  calculateDFA as calculateEdgeDFA,
-  calculateHFD as calculateEdgeHFD,
-} from '../../../../supabase/functions/_shared/iskra-metrics/fractal';
-import { ALGORITHM_VERSION } from '../../../../supabase/functions/_shared/iskra-metrics/contracts';
-import {
-  calculateShannonEntropy as calculateEdgeEntropy,
-  interpretEntropy as interpretEdgeEntropy,
-} from '../../../../supabase/functions/_shared/iskra-metrics/entropy';
+  FRACTAL_AUTHORITY_CORPUS_CASES,
+  materializeCorpusSignal,
+} from './fractal-authority-corpus.js'
 
-const signal = (length: number) =>
-  Array.from({ length }, (_, index) =>
-    Math.sin(index / 3) + Math.cos(index / 11) + (index % 7) * 0.05,
-  );
+const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+const generatedFiles = [
+  'packages/math/src/fractal-authority-source.ts',
+  'packages/math/src/fractal-authority-contracts.ts',
+  'packages/math/src/fractal-authority.ts',
+  'packages/math/src/fractal-authority-provenance.ts',
+  'packages/math/src/fractal-authority-corpus.json',
+  'runtime/src/types/fractal-authority-source.ts',
+  'runtime/src/types/fractal-authority-contracts.ts',
+  'runtime/src/types/fractal-authority.ts',
+  'runtime/src/types/fractal-authority-provenance.ts',
+  'supabase/functions/_shared/iskra-metrics/fractal-authority-source.ts',
+  'supabase/functions/_shared/iskra-metrics/fractal-authority-contracts.ts',
+  'supabase/functions/_shared/iskra-metrics/fractal-authority.ts',
+  'supabase/functions/_shared/iskra-metrics/fractal-authority-provenance.ts',
+]
 
-describe('Edge metrics Atom 1 parity with @iskra/math', () => {
-  it('stamps the revised HFD formula with a new algorithm version', () => {
-    expect(ALGORITHM_VERSION).toBe('iskra-metrics-compute-v1.1.0');
-  });
+describe('generated Edge fractal authority parity', () => {
+  it('T8: Node and generated Edge results match for every registered corpus case', () => {
+    for (const testCase of FRACTAL_AUTHORITY_CORPUS_CASES) {
+      const signal = materializeCorpusSignal(testCase)
+      expect(calculateEdgeHFD(signal, testCase.hfd_options)).toEqual(
+        calculateNodeHFD(signal, testCase.hfd_options),
+      )
+      expect(calculateEdgeDFA(signal, testCase.dfa_options)).toEqual(
+        calculateNodeDFA(signal, testCase.dfa_options),
+      )
+    }
+  })
 
-  it.each([
-    '',
-    'one one two',
-    'Signal, signal; entropy must keep the canonical tokenizer.',
-  ])('keeps entropy and regime identical for %j', (text) => {
-    const entropy = calculateCanonicalEntropy(text);
+  it('T15: committed mirrors regenerate without drift', () => {
+    expect(() => execFileSync(
+      process.execPath,
+      ['tools/generate-fractal-authority-mirrors.mjs', '--check'],
+      { cwd: repositoryRoot, stdio: 'pipe' },
+    )).not.toThrow()
+  })
 
-    expect(calculateEdgeEntropy(text)).toBe(entropy);
-    expect(interpretEdgeEntropy(entropy)).toBe(interpretCanonicalEntropy(entropy));
-  });
-
-  it.each([16, 80])('keeps HFD and DFA identical for N=%i', (length) => {
-    const values = signal(length);
-
-    expect(calculateEdgeHFD(values)).toBeCloseTo(calculateCanonicalHFD(values), 14);
-    expect(calculateEdgeDFA(values)).toBeCloseTo(calculateCanonicalDFA(values), 14);
-  });
-
-  it('keeps the final-segment HFD reference vector identical', () => {
-    const linear = Array.from({ length: 20 }, (_, index) => index / 10);
-    const expected = 0.9979367669339503;
-
-    expect(calculateCanonicalHFD(linear)).toBeCloseTo(expected, 12);
-    expect(calculateEdgeHFD(linear)).toBeCloseTo(expected, 12);
-  });
-
-  it('preserves canonical short-series fallbacks only for present signals', () => {
-    const values = signal(5);
-
-    expect(calculateEdgeHFD(values)).toBe(1.5);
-    expect(calculateEdgeDFA(values)).toBe(0.5);
-    expect(calculateEdgeHFD(values)).toBe(calculateCanonicalHFD(values));
-    expect(calculateEdgeDFA(values)).toBe(calculateCanonicalDFA(values));
-  });
-
-  it.each([
-    { name: 'empty', values: [] as number[] },
-    { name: 'NaN', values: [1, Number.NaN] },
-    { name: 'Infinity', values: [1, Number.POSITIVE_INFINITY] },
-  ])('rejects the same invalid %s signal class', ({ values }) => {
-    expect(() => calculateCanonicalHFD(values)).toThrow();
-    expect(() => calculateEdgeHFD(values)).toThrow();
-    expect(() => calculateCanonicalDFA(values)).toThrow();
-    expect(() => calculateEdgeDFA(values)).toThrow();
-  });
-});
+  it('T15: CRLF worktrees produce the same normalized hashes and mirrors', () => {
+    const fixtureRoot = mkdtempSync(resolve(tmpdir(), 'iskra-fractal-generator-'))
+    try {
+      for (const relativePath of generatedFiles) {
+        const source = resolve(repositoryRoot, relativePath)
+        const target = resolve(fixtureRoot, relativePath)
+        mkdirSync(dirname(target), { recursive: true })
+        const crlf = readFileSync(source, 'utf8').replace(/\r\n?/g, '\n').replace(/\n/g, '\r\n')
+        writeFileSync(target, crlf, 'utf8')
+      }
+      cpSync(
+        resolve(repositoryRoot, 'tools/generate-fractal-authority-mirrors.mjs'),
+        resolve(fixtureRoot, 'tools/generate-fractal-authority-mirrors.mjs'),
+      )
+      expect(() => execFileSync(
+        process.execPath,
+        ['tools/generate-fractal-authority-mirrors.mjs', '--check', '--root', fixtureRoot],
+        { cwd: fixtureRoot, stdio: 'pipe' },
+      )).not.toThrow()
+    } finally {
+      rmSync(fixtureRoot, { recursive: true, force: true })
+    }
+  })
+})

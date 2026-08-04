@@ -1,0 +1,88 @@
+{
+  "schema_version": "iskra.fractal-authority-consumer-inventory.v1",
+  "adr_id": "ADR-20260729-02",
+  "authorization_issue": 324,
+  "source_main_commit": "0672f8a01c2abca1a08eb07745cc65c119dfaa34",
+  "status": "review_repair_candidate",
+  "search_terms": [
+    "calculateHFD(",
+    "calculateDFA(",
+    "calculateFractalIndicators(",
+    "calculateHFDMetric",
+    "calculateDFAMetric"
+  ],
+  "authority_path_before": [
+    {
+      "path": "packages/engine/src/services/metricsService.ts",
+      "finding": "raw calculateHFD import plus 1.5 stand-in in state-mutating feedback",
+      "migration": "typed calculateHFDMetric; no feedback unless both results are computed"
+    },
+    {
+      "path": "runtime/src/types/fractal.ts",
+      "finding": "duplicate raw HFD/DFA and aggregate implementation",
+      "migration": "compatibility-only; generated typed mirror becomes authoritative runtime surface"
+    },
+    {
+      "path": "runtime/src/index.ts",
+      "finding": "first-class raw scalar and aggregate exports",
+      "migration": "typed generated mirror exports plus bounded fractalCompatibility namespace"
+    },
+    {
+      "path": "supabase/functions/_shared/iskra-metrics/calculator.ts",
+      "finding": "raw Edge functions and N>=6 shared sufficiency",
+      "migration": "typed generated mirror with independent HFD/DFA sufficiency"
+    },
+    {
+      "path": "packages/math/src/index.ts",
+      "finding": "wildcard export exposes competing raw and typed APIs",
+      "migration": "explicit typed authority exports plus bounded compatibility namespace"
+    },
+    {
+      "path": "runtime/iskraSpace/types.ts",
+      "finding": "app facade re-exported the raw legacy aggregate from the runtime package root",
+      "migration": "explicit compatibility facade via fractalCompatibility; registered for sunset and excluded from authority paths"
+    }
+  ],
+  "compatibility_only": [
+    "packages/math/src/fractal.ts",
+    "runtime/src/types/fractal.ts",
+    "supabase/functions/_shared/iskra-metrics/fractal.ts",
+    "runtime/iskraSpace/types.ts"
+  ],
+  "generated_mirrors": [
+    "runtime/src/types/fractal-authority-source.ts",
+    "runtime/src/types/fractal-authority-contracts.ts",
+    "runtime/src/types/fractal-authority-provenance.ts",
+    "runtime/src/types/fractal-authority.ts",
+    "supabase/functions/_shared/iskra-metrics/fractal-authority-source.ts",
+    "supabase/functions/_shared/iskra-metrics/fractal-authority-contracts.ts",
+    "supabase/functions/_shared/iskra-metrics/fractal-authority-provenance.ts",
+    "supabase/functions/_shared/iskra-metrics/fractal-authority.ts"
+  ],
+  "non_authority_references": [
+    "CLAUDE.md",
+    "docs/specs/SPEC-001_FRACTAL_METRICS.md",
+    "system/fractal_monitoring.md",
+    "skills/architecture.yaml",
+    "Versions/Fullspark/3_COGNITIVE_ARCH.md"
+  ],
+  "activation_claimed": false,
+  "reviewed_implementation_parent": "4d0a863644565113b25f91da9396f90793705856",
+  "verification": {
+    "search_scope": [
+      "packages",
+      "runtime/src",
+      "runtime/iskraSpace",
+      "supabase/functions",
+      "skills",
+      "docs",
+      "system"
+    ],
+    "public_api_non_regression": [
+      "InferenceAnalysis",
+      "ConflictResolution",
+      "FractalIndicators"
+    ],
+    "activation_claimed": false
+  }
+}

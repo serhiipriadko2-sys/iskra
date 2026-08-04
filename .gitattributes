@@ -3,3 +3,9 @@ ScienceAndTests/independent_judge_chatgpt_projects_stack_v3.5-rc.3/** -text
 ScienceAndTests/INDEPENDENT_JUDGE_CHATGPT_PROJECTS_STACK_v3.5-rc.3.receipt.json text eol=lf
 ScienceAndTests/ACTIVE_JUDGE_STACK text eol=lf
 .github/workflows/judge_stack_qc.yml text eol=lf
+# Fractal authority source, evidence, and generated mirrors are normalized to LF.
+packages/math/src/fractal-authority*.ts text eol=lf
+packages/math/src/fractal-authority-corpus.json text eol=lf
+runtime/src/types/fractal-authority*.ts text eol=lf
+supabase/functions/_shared/iskra-metrics/fractal-authority*.ts text eol=lf
+tools/generate-fractal-authority-mirrors.mjs text eol=lf

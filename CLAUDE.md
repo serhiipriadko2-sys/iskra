@@ -11,7 +11,7 @@
 
 - **@iskra/core** — единственный источник истины (types, constants, manifests). Zero dependencies.
 - **Strict Types** — никаких `any`. Типизация через `@iskra/core`.
-- **Pure Math** — вся математика в `@iskra/math` (чистые функции, без побочных эффектов).
+- **Pure Math** — вся математика в `@iskra/math` (чистые функции, без побочных эффектов). HFD/DFA authority is lifecycle-gated by ADR-20260729-02; implementation PASS is not activation.
 - **State** — состояние и побочные эффекты только в `@iskra/engine`.
 - **UI** — `apps/iskra-web` — слой проекции, без бизнес-логики.
 - **Canon** — `core/` изменяется только через ADR-процесс (`governance/adr.md`).
@@ -147,7 +147,7 @@ apps/iskra-web (depends: core, engine)
 | Пакет | Роль | Статус | Ключевые файлы |
 |:------|:-----|:-------|:----------------|
 | `@iskra/core` | Source of Truth | Stable | `types.ts` (IskraMetrics, VoiceID, MantraNode), `manifest/voices.json` |
-| `@iskra/math` | Pure Logic | Stable | `fractal.ts` (HFD, DFA, CSI, EI, NC), `quantum.ts`, `entropy.ts` |
+| `@iskra/math` | Pure Logic | HFD/DFA implementation candidate | `fractal-authority*.ts` (typed HFD/DFA), `fractal.ts` (compatibility), `quantum.ts`, `entropy.ts` |
 | `@iskra/engine` | Orchestrator | Active | `CoreEngine.ts`, `services/metricsService.ts`, `services/voiceSystem.ts`, `services/memory.ts` |
 | `apps/iskra-web` | Holographic UI | Active | `ChatInterface.tsx`, `QuantumField.tsx`, `useEngine.ts`, `useSomaticFeedback.ts` |
 | `runtime/` | Legacy | Deprecated | 33+ сервисов, ожидает миграции (Phase 3) |
@@ -231,8 +231,8 @@ Liber → Shadow → Скрижаль → Reset → Commit
 
 | Модель | Функция | Назначение |
 |:-------|:--------|:-----------|
-| Higuchi Fractal Dimension | `calculateHFD()` | Сложность сигнала |
-| Detrended Fluctuation Analysis | `calculateDFA()` | Долгосрочные корреляции |
+| Higuchi Fractal Dimension | `calculateHFDMetric()` | Typed complexity result; raw API compatibility-only |
+| Detrended Fluctuation Analysis | `calculateDFAMetric()` | Typed long-range-correlation result; raw API compatibility-only |
 | Shannon Entropy | `calculateShannonEntropy()` | Дрифт системы |
 | Quantum Interference | `interference()` | Суперпозиция голосов |
 | Quantum Resonance | `calculateResonance()` | Фазово-амплитудное согласование |

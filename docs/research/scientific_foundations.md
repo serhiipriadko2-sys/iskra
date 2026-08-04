@@ -1,5 +1,8 @@
 # Scientific Research Foundations vΩ.4.0
 
+> [!CAUTION]
+> **Research context, not formula authority.** The source list is a literature-discovery record and has not been revalidated in this implementation PR. Scientific motivation does not replace the versioned algorithm contract, deterministic corpus, provenance, or activation gates in ADR-20260729-02.
+
 **Manifest:**
 - type: SoT
 - layer: research

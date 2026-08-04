@@ -1,0 +1,229 @@
+import {
+  computedResult,
+  invalidResult,
+  numericalFailureResult,
+  readRequestedParameters,
+  unavailableResult,
+  validateFractalSignal,
+  type DfaMetricOptions,
+  type FractalIndicatorComponents,
+  type FractalIndicatorsMetricResult,
+  type FractalMetricResult,
+  type FractalMetricSample,
+  type HfdMetricOptions,
+} from './fractal-authority-contracts.js'
+import {
+  computeDfaV1,
+  computeHfdV1,
+  DFA_V1_MIN_BOX,
+  DFA_V1_MIN_SAMPLES,
+  getDfaV1MaxBox,
+  HFD_V1_K_MAX,
+  HFD_V1_MIN_SAMPLES,
+} from './fractal-authority-source.js'
+import {
+  DFA_ALGORITHM_VERSION,
+  HFD_ALGORITHM_VERSION,
+} from './fractal-authority-provenance.js'
+
+export type {
+  ComputedFractalIndicators,
+  ComputedFractalMetricResult,
+  DfaMetricOptions,
+  FractalIndicatorComponents,
+  FractalIndicatorsMetricResult,
+  FractalMetricEvidence,
+  FractalMetricResult,
+  FractalMetricSample,
+  HfdMetricOptions,
+  InvalidFractalMetricResult,
+  NumericalFailureFractalMetricResult,
+  UnavailableFractalMetricResult,
+} from './fractal-authority-contracts.js'
+
+export {
+  DFA_ALGORITHM_VERSION,
+  FRACTAL_CANONICAL_SOURCE_HASH,
+  FRACTAL_GENERATED_ARTIFACT_HASH,
+  FRACTAL_GENERATOR_VERSION,
+  FRACTAL_PARITY_CORPUS_HASH,
+  HFD_ALGORITHM_VERSION,
+} from './fractal-authority-provenance.js'
+
+export function calculateHFDMetric(
+  timeSeries: unknown,
+  options?: HfdMetricOptions,
+): FractalMetricResult
+export function calculateHFDMetric(
+  timeSeries: unknown,
+  options: unknown = {},
+): FractalMetricResult {
+  const signal = validateFractalSignal(timeSeries)
+  if (signal.status === 'invalid') {
+    return invalidResult(
+      HFD_ALGORITHM_VERSION,
+      signal.sampleCount,
+      null,
+      signal.reason,
+      signal.detail,
+    )
+  }
+
+  const requested = readRequestedParameters(options, ['kMax'])
+  if (requested.status === 'invalid') {
+    return invalidResult(
+      HFD_ALGORITHM_VERSION,
+      signal.values.length,
+      null,
+      'invalid_parameter',
+      requested.detail,
+    )
+  }
+
+  if (requested.value?.kMax !== undefined && requested.value.kMax !== HFD_V1_K_MAX) {
+    return invalidResult(
+      HFD_ALGORITHM_VERSION,
+      signal.values.length,
+      requested.value,
+      'invalid_parameter',
+      `v1 requires kMax=${HFD_V1_K_MAX}`,
+    )
+  }
+
+  if (signal.values.length < HFD_V1_MIN_SAMPLES) {
+    return unavailableResult(
+      HFD_ALGORITHM_VERSION,
+      signal.values.length,
+      HFD_V1_MIN_SAMPLES,
+      requested.value,
+    )
+  }
+
+  const effective = { kMax: HFD_V1_K_MAX }
+  const value = computeHfdV1(signal.values)
+  return Number.isFinite(value)
+    ? computedResult(HFD_ALGORITHM_VERSION, value, signal.values.length, requested.value, effective)
+    : numericalFailureResult(
+        HFD_ALGORITHM_VERSION,
+        signal.values.length,
+        requested.value,
+        effective,
+      )
+}
+
+export function calculateDFAMetric(
+  timeSeries: unknown,
+  options?: DfaMetricOptions,
+): FractalMetricResult
+export function calculateDFAMetric(
+  timeSeries: unknown,
+  options: unknown = {},
+): FractalMetricResult {
+  const signal = validateFractalSignal(timeSeries)
+  if (signal.status === 'invalid') {
+    return invalidResult(
+      DFA_ALGORITHM_VERSION,
+      signal.sampleCount,
+      null,
+      signal.reason,
+      signal.detail,
+    )
+  }
+
+  const requested = readRequestedParameters(options, ['minBox', 'maxBox'])
+  if (requested.status === 'invalid') {
+    return invalidResult(
+      DFA_ALGORITHM_VERSION,
+      signal.values.length,
+      null,
+      'invalid_parameter',
+      requested.detail,
+    )
+  }
+
+  const expectedMaxBox = getDfaV1MaxBox(signal.values.length)
+  if (requested.value?.minBox !== undefined && requested.value.minBox !== DFA_V1_MIN_BOX) {
+    return invalidResult(
+      DFA_ALGORITHM_VERSION,
+      signal.values.length,
+      requested.value,
+      'invalid_parameter',
+      `v1 requires minBox=${DFA_V1_MIN_BOX}`,
+    )
+  }
+  if (requested.value?.maxBox !== undefined && requested.value.maxBox !== expectedMaxBox) {
+    return invalidResult(
+      DFA_ALGORITHM_VERSION,
+      signal.values.length,
+      requested.value,
+      'invalid_parameter',
+      `v1 requires maxBox=${expectedMaxBox} for N=${signal.values.length}`,
+    )
+  }
+
+  if (signal.values.length < DFA_V1_MIN_SAMPLES) {
+    return unavailableResult(
+      DFA_ALGORITHM_VERSION,
+      signal.values.length,
+      DFA_V1_MIN_SAMPLES,
+      requested.value,
+    )
+  }
+
+  const effective = { minBox: DFA_V1_MIN_BOX, maxBox: expectedMaxBox }
+  const value = computeDfaV1(signal.values)
+  return Number.isFinite(value)
+    ? computedResult(DFA_ALGORITHM_VERSION, value, signal.values.length, requested.value, effective)
+    : numericalFailureResult(
+        DFA_ALGORITHM_VERSION,
+        signal.values.length,
+        requested.value,
+        effective,
+      )
+}
+
+export function calculateFractalIndicatorsMetric(
+  history: readonly FractalMetricSample[],
+  windowSize = 50,
+): FractalIndicatorsMetricResult {
+  const recent = history.slice(-windowSize)
+  const components: FractalIndicatorComponents = {
+    D_chaos: calculateHFDMetric(recent.map((sample) => sample.chaos)),
+    D_clarity: calculateHFDMetric(recent.map((sample) => sample.clarity)),
+    D_drift: calculateHFDMetric(recent.map((sample) => sample.drift)),
+    H_trust: calculateDFAMetric(recent.map((sample) => sample.trust)),
+  }
+  const results = Object.values(components)
+
+  if (results.some((result) => result.status === 'invalid')) {
+    return { status: 'invalid', value: null, components }
+  }
+  if (results.some((result) => result.status === 'numerical_failure')) {
+    return { status: 'numerical_failure', value: null, components }
+  }
+  if (results.some((result) => result.status === 'unavailable')) {
+    return { status: 'unavailable', value: null, components }
+  }
+
+  if (
+    components.D_chaos.status !== 'computed' ||
+    components.D_clarity.status !== 'computed' ||
+    components.D_drift.status !== 'computed' ||
+    components.H_trust.status !== 'computed'
+  ) {
+    return { status: 'unavailable', value: null, components }
+  }
+
+  const D_chaos = components.D_chaos.value
+  const D_clarity = components.D_clarity.value
+  const D_drift = components.D_drift.value
+  const H_trust = components.H_trust.value
+  const complexityIndex = Math.max(0, Math.min(1, (D_chaos + D_drift) / 2 - D_clarity * 0.5))
+  const edgeDistance = Math.abs(D_chaos - 1.5) / 1.5
+
+  return {
+    status: 'computed',
+    components,
+    value: { D_chaos, D_clarity, D_drift, H_trust, complexityIndex, edgeDistance },
+  }
+}

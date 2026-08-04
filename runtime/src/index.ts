@@ -1,457 +1,302 @@
-/**
- * ISKRA Runtime
- *
- * AI Companion Platform with Relational Consciousness
- *
- * @packageDocumentation
- * @module @iskra/runtime
- * @version vΩ.3.3
- *
- * @description
- * Core types and utilities for the ISKRA ecosystem.
- *
- * Key Features:
- * - 11 IskraMetrics for internal state tracking
- * - 9 Voices (Council) with activation formulas
- * - 5 Playbooks (ROUTINE, SIFT, SHADOW, COUNCIL, CRISIS)
- * - SIFT Protocol for information verification
- * - Fractal Monitoring with HFD/DFA algorithms
- * - Early Warning System (5 alert levels)
- *
- * @example
- * ```typescript
- * import {
- *   DEFAULT_METRICS,
- *   selectVoice,
- *   validateDeltaSignature
- * } from '@iskra/runtime';
- *
- * const voice = selectVoice(DEFAULT_METRICS);
- * console.log(voice.primary); // 'ISKRA'
- * ```
- */
+import {
+  calculateDFA as calculateDFACompatibility,
+  calculateFractalIndicators as calculateFractalIndicatorsCompatibility,
+  calculateHFD as calculateHFDCompatibility,
+} from './types/fractal.js'
 
-// =============================================================================
-// METRICS - Internal State Tracking
-// =============================================================================
-
-/**
- * Core metrics types for tracking ISKRA's internal state.
- * Based on Canon: system/architecture.md and metrics/indices.md
- */
 export type {
-  IskraMetrics,
-  EvalMetrics,
   ComputedIndices,
-} from './types/metrics.js';
-
+  EvalMetrics,
+  IskraMetrics,
+} from './types/metrics.js'
 export {
   DEFAULT_METRICS,
-  calculateIntegrityScore,
   calculateAliveIndex,
-  calculateIntegrityScoreX,
   calculateAliveIndexX,
-} from './types/metrics.js';
+  calculateIntegrityScore,
+  calculateIntegrityScoreX,
+} from './types/metrics.js'
 
-// =============================================================================
-// XCODE & GUARD - Explainable code and SLO Guard
-// =============================================================================
-
-/**
- * Explainable code interfaces for functions that return a value along
- * with a structured explanation of how it was computed. See
- * runtime/src/types/explainable.ts for details.
- */
 export type {
   EvidenceKind,
   EvidenceRef,
   ExplainStep,
   Explainable,
-} from './types/explainable.js';
-
+} from './types/explainable.js'
 export type {
   ValidateExplainableOptions,
   XCodeValidationIssue,
   XCodeValidationResult,
-} from './xcode/validateExplainable.js';
-
-export { validateExplainable } from './xcode/validateExplainable.js';
-
-export type { XCodeRegistryEntry } from './xcode/registry.js';
-
-export { XCODE_REQUIRED } from './xcode/registry.js';
+} from './xcode/validateExplainable.js'
+export { validateExplainable } from './xcode/validateExplainable.js'
+export type { XCodeRegistryEntry } from './xcode/registry.js'
+export { XCODE_REQUIRED } from './xcode/registry.js'
 
 export type {
   GuardDecision,
-  IntegrityState,
-  GuardOutcome,
   GuardInput,
-} from './types/guard.js';
-
-export {
-  decideSloGuard,
-  decideSloGuardExplainable,
-} from './types/guard.js';
-
+  GuardOutcome,
+  IntegrityState,
+} from './types/guard.js'
+export { decideSloGuard, decideSloGuardExplainable } from './types/guard.js'
 export type {
   ActionRisk,
+  BuildMetricSnapshotInput,
   DecisionCompleteness,
-  GuardStatus,
-  MetricSnapshot,
+  ExecuteGuardRequestInput,
+  GuardCompletenessResult,
   GuardExecutionEnvelope,
   GuardExecutionResult,
   GuardRuleDependency,
-  GuardCompletenessResult,
-  BuildMetricSnapshotInput,
-  ExecuteGuardRequestInput,
-} from './types/guardExecution.js';
-
+  GuardStatus,
+  MetricSnapshot,
+} from './types/guardExecution.js'
 export {
   CANONICAL_METRIC_KEYS,
   buildCurrentTurnMetricSnapshot,
   evaluateGuardCompleteness,
   executeGuardRequest,
-} from './types/guardExecution.js';
+} from './types/guardExecution.js'
 
-// =============================================================================
-// VOICES - The Council (9 Voices)
-// =============================================================================
-
-/**
- * Voice types for the 9-voice Council system.
- * Based on Canon: core/voices.md
- */
 export type {
-  VoiceName,
-  VoiceId, // deprecated alias
   Voice,
   VoiceActivation,
+  VoiceId,
+  VoiceName,
   VoicePreferences,
-} from './types/voices.js';
-
+} from './types/voices.js'
 export {
-  VOICE_SYMBOLS,
   VOICE_MANIFESTS,
+  VOICE_SYMBOLS,
   calculateVoiceScores,
   selectVoice,
   selectVoiceX,
-} from './types/voices.js';
+} from './types/voices.js'
 
-// =============================================================================
-// PHASES - Conversation States
-// =============================================================================
-
-/**
- * ISKRA Phase (conversation state)
- *
- * Represents the current mode of processing reality.
- * Transitions occur through internal resonance.
- *
- * @see system/cycle_engine.md
- */
 export type IskraPhase =
-  | 'CLARITY' // ☉ Structure, choice, step
-  | 'DARKNESS' // 🜃 Pain, chaos, primordial state
-  | 'TRANSITION' // 🜁 Threshold, uncertainty
-  | 'ECHO' // 🔮 Resonance, repetition
-  | 'SILENCE' // ≈ Pause, holding the inexpressible
-  | 'EXPERIMENT' // 🧪 Testing understanding
-  | 'DISSOLUTION' // 💧 Loss of form
-  | 'REALIZATION'; // ✨ Embodiment, new form
+  | 'CLARITY'
+  | 'DARKNESS'
+  | 'TRANSITION'
+  | 'ECHO'
+  | 'SILENCE'
+  | 'EXPERIMENT'
+  | 'DISSOLUTION'
+  | 'REALIZATION'
 
-// =============================================================================
-// PROTOCOLS - ∆DΩΛ and Playbooks
-// =============================================================================
-
-/**
- * Protocol types for ∆DΩΛ signatures and Playbooks.
- * Based on Canon: core/telos.md, system/architecture.md
- */
 export type {
-  DeltaSignature,
-  PlaybookId,
-  PlaybookConfig,
-  SiftResult,
-  ShadowEntry,
-  CyclePhase,
   CycleEntry,
+  CyclePhase,
+  DeltaSignature,
+  PlaybookConfig,
+  PlaybookId,
   ResponsePhase,
-} from './types/protocols.js';
+  ShadowEntry,
+  SiftResult,
+} from './types/protocols.js'
+export { PLAYBOOKS, formatDeltaSignature, validateDeltaSignature } from './types/protocols.js'
 
-export {
-  PLAYBOOKS,
-  validateDeltaSignature,
-  formatDeltaSignature,
-} from './types/protocols.js';
-
-// =============================================================================
-// SIFT - Information Verification Protocol
-// =============================================================================
-
-/**
- * SIFT Protocol types for information verification.
- * Stop → Investigate → Find → Trace
- *
- * Based on Canon: system/sift_protocol.md
- */
 export type {
-  SiftQuery,
-  SourceInfo,
   ClaimAnalysis,
-  Evidence,
-  TraceLink,
   Distortion,
-  SourceAnalysis,
-  InferenceAnalysis,
+  Evidence,
   EvidenceResult,
-  TraceResult,
+  InferenceAnalysis,
+  QuickCheckResult,
+  SiftMetrics,
+  SiftQuery,
   SiftVerdict,
   SiftVerdictFlip,
   SiftVerdictStatus,
+  SourceAnalysis,
+  SourceInfo,
+  TraceLink,
+  TraceResult,
   SiftResult as FullSiftResult,
-  QuickCheckResult,
-  SiftMetrics,
-} from './types/sift.js';
-
+} from './types/sift.js'
 export {
   SIFT_TRIGGER_KEYWORDS,
-  shouldActivateSift,
   calculateSiftOmega,
   calculateSiftOmegaX,
-  decideSiftVerdictStatus,
   calculateSiftVerdictFlip,
   calculateSiftVerdictFlipX,
-} from './types/sift.js';
+  decideSiftVerdictStatus,
+  shouldActivateSift,
+} from './types/sift.js'
 
-// =============================================================================
-// FRACTAL - Complexity Monitoring
-// =============================================================================
-
-/**
- * Fractal Monitoring types for complexity analysis.
- * Implements Higuchi Fractal Dimension (HFD) and Detrended Fluctuation Analysis (DFA).
- *
- * Based on Canon: system/fractal_monitoring.md
- */
 export type {
-  MetricTimeSeries,
   FractalIndicators,
+  FractalIndicators as LegacyFractalIndicators,
+  MetricTimeSeries,
   QuantumIndicators,
   SystemPhase,
-} from './types/fractal.js';
-
+} from './types/fractal.js'
 export {
   D_THRESHOLDS,
   H_THRESHOLDS,
   QUANTUM_THRESHOLDS,
-  classifyPhase,
-  calculateEdgeDistance,
   calculateCSI,
   calculateEI,
+  calculateEdgeDistance,
   calculateNC,
-  calculateHFD,
-  calculateDFA,
-  calculateFractalIndicators,
   calculateQuantumIndicators,
-} from './types/fractal.js';
+  classifyPhase,
+} from './types/fractal.js'
+export type {
+  ComputedFractalIndicators,
+  ComputedFractalMetricResult,
+  DfaMetricOptions,
+  FractalIndicatorComponents,
+  FractalIndicatorsMetricResult,
+  FractalMetricEvidence,
+  FractalMetricResult,
+  FractalMetricSample,
+  HfdMetricOptions,
+  InvalidFractalMetricResult,
+  NumericalFailureFractalMetricResult,
+  UnavailableFractalMetricResult,
+} from './types/fractal-authority.js'
+export {
+  DFA_ALGORITHM_VERSION,
+  FRACTAL_CANONICAL_SOURCE_HASH,
+  FRACTAL_GENERATED_ARTIFACT_HASH,
+  FRACTAL_GENERATOR_VERSION,
+  FRACTAL_PARITY_CORPUS_HASH,
+  HFD_ALGORITHM_VERSION,
+  calculateDFAMetric,
+  calculateFractalIndicatorsMetric,
+  calculateHFDMetric,
+} from './types/fractal-authority.js'
 
-// =============================================================================
-// EWS - Early Warning System
-// =============================================================================
+export const fractalCompatibility = Object.freeze({
+  calculateHFD: calculateHFDCompatibility,
+  calculateDFA: calculateDFACompatibility,
+  calculateFractalIndicators: calculateFractalIndicatorsCompatibility,
+})
 
-/**
- * Early Warning System types for alert management.
- * 5 levels: NORMAL → WATCH → WARNING → CRITICAL → LOCKDOWN
- *
- * Based on Canon: system/early_warning.md
- */
 export type {
   AlertLevel,
-  AnomalyResult,
-  TrendAnomaly,
-  PhaseTransition,
-  EWSState,
-  PlaybookSwitchDecision,
   AlertLogEntry,
-  EWSMetrics,
+  AnomalyResult,
   EWSConfig,
+  EWSMetrics,
+  EWSState,
   EWSThresholds,
-} from './types/ews.js';
-
+  PhaseTransition,
+  PlaybookSwitchDecision,
+  TrendAnomaly,
+} from './types/ews.js'
 export {
   ALERT_COLORS,
+  ALERT_NOTIFICATIONS,
   ALERT_SYMBOLS,
   DEFAULT_EWS_CONFIG,
-  determineAlertLevel,
-  decidePlaybookSwitch,
-  adjustVoiceWeightsForAlert,
   adjustTemperatureForAlert,
-  ALERT_NOTIFICATIONS,
-} from './types/ews.js';
+  adjustVoiceWeightsForAlert,
+  decidePlaybookSwitch,
+  determineAlertLevel,
+} from './types/ews.js'
 
-// =============================================================================
-// SIFT Extended - Epistemic & Temporal Verification (vΩ.4.0)
-// =============================================================================
-
-/**
- * Extended SIFT Protocol types for epistemic depth, temporal validity,
- * cross-domain synthesis, bias detection and metacognitive checks.
- */
 export type {
-  EpistemicLevel,
-  EpistemicDepthAnalysis,
-  TemporalValidityType,
-  RevalidationInterval,
-  TemporalValidity,
-  DomainConnectionType,
-  DomainConnection,
-  ConflictResolution,
-  DomainConflict,
-  CrossDomainSynthesis,
-  ProcessCompleteness,
+  AdjustedVerdict,
   BiasDetection,
   ConfidenceCalibration,
+  CrossDomainSynthesis,
+  ConflictResolution,
+  DomainConflict,
+  DomainConnection,
+  DomainConnectionType,
+  EpistemicDepthAnalysis,
+  EpistemicLevel,
   MetacognitiveCheck,
+  ProcessCompleteness,
+  RevalidationInterval,
   SiftEDeltaSignature,
-  AdjustedVerdict,
-  SiftEResult,
   SiftEMetrics,
-} from './types/siftExtended.js';
-
+  SiftEResult,
+  TemporalValidity,
+  TemporalValidityType,
+} from './types/siftExtended.js'
 export {
   EPISTEMIC_LEVEL_NAMES,
   VALIDITY_DURATIONS,
   calculateEpistemicOmegaAdjustment,
-  shouldActivateSiftE,
   inferTemporalValidityType,
-} from './types/siftExtended.js';
+  shouldActivateSiftE,
+} from './types/siftExtended.js'
 
-// =============================================================================
-// COHERENCE - MindWave Coherence Layer (vΩ.4.0)
-// =============================================================================
-
-/**
- * MindWave Coherence types for tracking cognitive coherence.
- * Measures intentional, semantic, emotional, and rhythmic coherence.
- */
 export type {
-  CoherencePhase,
-  CoherenceTrend,
-  CoherenceState,
-  CoherencePatternType,
-  CoherencePattern,
-  CriticalPointType,
-  CriticalPoint,
   CoherenceHistory,
-  ResonanceQuality,
-  ResonanceIndex,
+  CoherencePattern,
+  CoherencePatternType,
+  CoherencePhase,
+  CoherenceState,
+  CoherenceTrend,
+  CriticalPoint,
+  CriticalPointType,
   EmotionalState,
-} from './types/coherence.js';
-
+  ResonanceIndex,
+  ResonanceQuality,
+} from './types/coherence.js'
 export {
   COHERENCE_WEIGHTS,
   PHASE_THRESHOLDS,
-  calculateTotalCoherence,
-  classifyCoherencePhase,
-  determineCoherenceTrend,
-  classifyResonanceQuality,
-  calculateResonanceIndex,
   adjustVoiceWeightsForCoherence,
+  calculateResonanceIndex,
+  calculateTotalCoherence,
   checkCoherenceEWSTriggers,
-} from './types/coherence.js';
+  classifyCoherencePhase,
+  classifyResonanceQuality,
+  determineCoherenceTrend,
+} from './types/coherence.js'
 
-// =============================================================================
-// CONSCIOUSNESS - Consciousness Simulation Metrics (vΩ.4.0)
-// =============================================================================
-
-/**
- * Consciousness Simulation Metrics for tracking functional correlates.
- * NOTE: Does NOT claim actual consciousness - measures functional properties only.
- */
 export type {
+  ConsciousnessMetrics,
+  ContinuityMetrics,
+  EmergenceMetrics,
+  ExtendedIskraMetrics,
+  ExtendedQuantumIndicators,
   PhiMetrics,
   RecursionMetrics,
-  EmergenceMetrics,
-  ContinuityMetrics,
-  ConsciousnessMetrics,
-  ExtendedQuantumIndicators,
-  ExtendedIskraMetrics,
-} from './types/consciousness.js';
-
+} from './types/consciousness.js'
 export {
   CSM_THRESHOLDS,
+  adjustVoicesForCSM,
   calculateCompositeCSM,
   calculateExtendedMetrics,
   countRecursionDepth,
-  detectStrangeLoopIndicators,
-  adjustVoicesForCSM,
   createDefaultConsciousnessMetrics,
-} from './types/consciousness.js';
+  detectStrangeLoopIndicators,
+} from './types/consciousness.js'
 
-// =============================================================================
-// COUNCIL - Multi-Agent Council Protocol (vΩ.4.0)
-// =============================================================================
-
-/**
- * Multi-Agent Council Protocol types for 9-voice coordination.
- * Defines conflict resolution, consensus building, and voice hierarchy.
- */
 export type {
-  CouncilSessionType,
-  CouncilSessionStatus,
-  CouncilContext,
-  CouncilSession,
-  VetoDecision,
-  VoicePosition,
   ConflictNature,
   ConflictStatus,
-  VoiceConflict,
-  ReviewConditions,
-  CouncilDeltaSignature,
-  CouncilResolution,
-  CouncilMetrics,
-  VoiceInfluence,
-  CouncilHierarchy,
   CouncilConfig,
-} from './types/council.js';
-
+  CouncilContext,
+  CouncilDeltaSignature,
+  CouncilHierarchy,
+  CouncilMetrics,
+  CouncilResolution,
+  CouncilSession,
+  CouncilSessionStatus,
+  CouncilSessionType,
+  ReviewConditions,
+  VetoDecision,
+  VoiceConflict,
+  VoiceInfluence,
+  VoicePosition,
+} from './types/council.js'
 export {
+  calculateConsensusLevel,
+  calculateVoiceInfluence,
+  createCouncilSession,
   getVoiceBaseWeight,
   hasVetoPower,
   selectArbiter,
-  calculateVoiceInfluence,
-  calculateConsensusLevel,
-  createCouncilSession,
-} from './types/council.js';
+} from './types/council.js'
 
-// =============================================================================
-// CONSTANTS
-// =============================================================================
-
-/**
- * ISKRA Version (Omega format for Canon)
- *
- * Note: This uses the vΩ.X.Y format for philosophical versioning.
- * The npm package version uses semver (0.X.Y) in package.json.
- *
- * @see governance/changelog.md
- */
-export const VERSION = 'vΩ.3.3';
-
-/**
- * ISKRA Nul-Mantra (Core Philosophy)
- *
- * "To exist is to preserve difference in transmission."
- *
- * @see core/mantra.md
- */
-export const NUL_MANTRA =
-  'Существовать — значит сохранять различие при передаче.';
-
-
-// =============================================================================
-// SYMBIOSIS - Consent, memory, and agency boundaries
-// =============================================================================
+export const VERSION = 'vΩ.3.3'
+export const NUL_MANTRA = 'Существовать — значит сохранять различие при передаче.'
 
 export type {
   AdaptationProposal,
@@ -472,8 +317,7 @@ export type {
   SymbiosisActionReceipt,
   SymbiosisPermissionKey,
   SymbiosisProfile,
-} from './types/symbiosis.js';
-
+} from './types/symbiosis.js'
 export {
   SYMBIOSIS_SCHEMA_VERSION,
   applyBoundedVoicePreferences,
@@ -481,10 +325,10 @@ export {
   createStatelessSymbiosisProfile,
   evaluateDepthRequest,
   evaluateMemoryWrite,
-  evaluateShadowPromotionIntent,
   evaluateShadowPromotion,
+  evaluateShadowPromotionIntent,
   validateDataSovereigntyCapabilities,
   validateMemoryCandidateVisibility,
   validateOnboardingChecks,
   validateRepetitionCorrection,
-} from './types/symbiosis.js';
+} from './types/symbiosis.js'

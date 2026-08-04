@@ -1,0 +1,80 @@
+name: Fractal authority
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.gitattributes'
+      - '.github/workflows/fractal_authority.yml'
+      - 'governance/adr_20260729_packages_math_authoritative_api.md'
+      - 'governance/evidence/metrics/fractal-authority-**'
+      - 'governance/registries/fractal-compatibility-v1.json'
+      - 'ledger/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'packages/engine/src/**'
+      - 'packages/math/src/**'
+      - 'runtime/src/**'
+      - 'supabase/functions/_shared/iskra-metrics/**'
+      - 'tools/check-fractal-authority-boundary.mjs'
+      - 'tools/generate-fractal-authority-mirrors.mjs'
+  push:
+    branches: [main]
+    paths:
+      - '.gitattributes'
+      - '.github/workflows/fractal_authority.yml'
+      - 'governance/adr_20260729_packages_math_authoritative_api.md'
+      - 'governance/evidence/metrics/fractal-authority-**'
+      - 'governance/registries/fractal-compatibility-v1.json'
+      - 'ledger/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'packages/engine/src/**'
+      - 'packages/math/src/**'
+      - 'runtime/src/**'
+      - 'supabase/functions/_shared/iskra-metrics/**'
+      - 'tools/check-fractal-authority-boundary.mjs'
+      - 'tools/generate-fractal-authority-mirrors.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify generated mirrors and authority boundary
+        run: pnpm run check:fractal-authority
+      - name: Verify package, engine, and runtime authority tests
+        run: >-
+          pnpm exec vitest run
+          packages/math/src/__tests__/fractal-authority.test.ts
+          packages/math/src/__tests__/edgeMetricsParity.test.ts
+          packages/engine/src/__tests__/metricsServiceFractalAuthority.test.ts
+          runtime/src/__tests__/fractalAuthority.test.ts
+      - name: Verify legacy runtime public API and focused tests
+        working-directory: runtime
+        run: |
+          npm ci --ignore-scripts
+          npm run typecheck
+          npm run test -- --run src/__tests__/fractalAuthority.test.ts
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify generated Edge mirror
+        run: deno test --no-lock supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts
+      - name: Verify committed integrity receipts are current
+        shell: bash
+        run: |
+          pnpm exec tsx tools/update_ledger.ts
+          git diff --exit-code -- ledger/sot.json ledger/checksum.asc
+          pnpm exec tsx tools/verify_ledger.ts

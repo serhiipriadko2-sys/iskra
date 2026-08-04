@@ -1,18 +1,3 @@
-// =============================================================================
-// Metrics Calculator — orchestrator (Atom 1)
-// =============================================================================
-// Turns a RawObservation into deterministic ComputedMetrics plus a
-// reproducibility envelope (algorithm_version + input_hash). Pure and async
-// only because of Web Crypto hashing; given the same input it always returns
-// the same hash and the same numbers.
-//
-// Discipline (ADR-20260717-01 / file 09 "no inputs or method → no number"):
-//   - Absent/insufficient input yields `unavailable: true` + `value: null`.
-//   - It NEVER substitutes a placeholder like 0.5 or 1.5 for missing data.
-//     (The 1.5/0.5 fallbacks inside HFD/DFA apply only to a PRESENT-but-short
-//      signal, matching canon; a MISSING signal is reported unavailable here.)
-// =============================================================================
-
 import {
   ALGORITHM_VERSION,
   type CalculatorResult,
@@ -20,74 +5,92 @@ import {
   type DerivedValue,
   type EntropyRegime,
   type RawObservation,
-} from './contracts.ts';
-import { canonicalJson } from './canonicalJson.ts';
-import { sha256Hex } from './hash.ts';
-import { calculateShannonEntropy, interpretEntropy } from './entropy.ts';
-import { calculateHFD, calculateDFA } from './fractal.ts';
-
-/** Minimum signal length below which fractal measures are not meaningful. */
-const MIN_FRACTAL_SIGNAL = 6;
+} from './contracts.ts'
+import { canonicalJson } from './canonicalJson.ts'
+import { sha256Hex } from './hash.ts'
+import { calculateShannonEntropy, interpretEntropy } from './entropy.ts'
+import { calculateDFAMetric, calculateHFDMetric } from './fractal-authority.ts'
 
 function available<T>(value: T): DerivedValue<T> {
-  return { value, unavailable: false, reason: null };
+  return { value, unavailable: false, reason: null }
 }
 
 function unavailable<T>(reason: string): DerivedValue<T> {
-  return { value: null, unavailable: true, reason };
+  return { value: null, unavailable: true, reason }
 }
 
-/** Compute deterministic derived metrics from a raw observation. */
-export async function computeMetrics(
-  raw: RawObservation,
-): Promise<CalculatorResult> {
-  const input_hash = await sha256Hex(canonicalJson(raw));
+type HashableSignalValue =
+  | number
+  | { readonly non_finite: 'NaN' | '+Infinity' | '-Infinity' }
 
-  // --- Entropy -------------------------------------------------------------
-  let shannon_entropy: DerivedValue<number>;
-  let entropy_regime: DerivedValue<EntropyRegime>;
+function hashableSignalValue(value: number): HashableSignalValue {
+  if (Number.isNaN(value)) return { non_finite: 'NaN' }
+  if (value === Number.POSITIVE_INFINITY) return { non_finite: '+Infinity' }
+  if (value === Number.NEGATIVE_INFINITY) return { non_finite: '-Infinity' }
+  return value
+}
+
+function hashableUnknown(value: unknown): unknown {
+  if (typeof value === 'number') return hashableSignalValue(value)
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value
+  if (Array.isArray(value)) return value.map(hashableUnknown)
+  if (typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, item]) => [key, hashableUnknown(item)]),
+    )
+  }
+  return { unsupported_type: typeof value }
+}
+
+function hashableObservation(raw: RawObservation): unknown {
+  return {
+    ...(raw.text === undefined ? {} : { text: raw.text }),
+    ...(raw.signal === undefined ? {} : { signal: hashableUnknown(raw.signal) }),
+  }
+}
+
+export async function computeMetrics(raw: RawObservation): Promise<CalculatorResult> {
+  const input_hash = await sha256Hex(canonicalJson(hashableObservation(raw)))
+
+  let shannon_entropy: DerivedValue<number>
+  let entropy_regime: DerivedValue<EntropyRegime>
   if (typeof raw.text === 'string' && raw.text.trim().length > 0) {
-    const h = calculateShannonEntropy(raw.text);
-    shannon_entropy = available(h);
-    entropy_regime = available(interpretEntropy(h));
+    const entropy = calculateShannonEntropy(raw.text)
+    shannon_entropy = available(entropy)
+    entropy_regime = available(interpretEntropy(entropy))
   } else {
-    shannon_entropy = unavailable('no text provided');
-    entropy_regime = unavailable('no text provided');
+    shannon_entropy = unavailable('no text provided')
+    entropy_regime = unavailable('no text provided')
   }
 
-  // --- Fractal -------------------------------------------------------------
-  let hfd: DerivedValue<number>;
-  let dfa: DerivedValue<number>;
-  const signal = raw.signal;
-  if (!signal || signal.length === 0) {
-    hfd = unavailable('no signal provided');
-    dfa = unavailable('no signal provided');
-  } else if (signal.some((x) => !Number.isFinite(x))) {
-    hfd = unavailable('signal contains non-finite values');
-    dfa = unavailable('signal contains non-finite values');
-  } else if (signal.length < MIN_FRACTAL_SIGNAL) {
-    hfd = unavailable(`signal too short (<${MIN_FRACTAL_SIGNAL})`);
-    dfa = unavailable(`signal too short (<${MIN_FRACTAL_SIGNAL})`);
-  } else {
-    hfd = available(calculateHFD(signal));
-    dfa = available(calculateDFA(signal));
-  }
+  const signal = raw.signal ?? []
+  const hfd = calculateHFDMetric(signal)
+  const dfa = calculateDFAMetric(signal)
+  const metrics: ComputedMetrics = { shannon_entropy, entropy_regime, hfd, dfa }
 
-  const metrics: ComputedMetrics = {
-    shannon_entropy,
-    entropy_regime,
-    hfd,
-    dfa,
-  };
-
-  const unavailableNames = Object.entries(metrics)
-    .filter(([, v]) => v.unavailable)
-    .map(([k]) => k);
+  const unavailableNames = [
+    ...(shannon_entropy.unavailable ? ['shannon_entropy'] : []),
+    ...(entropy_regime.unavailable ? ['entropy_regime'] : []),
+    ...(hfd.status === 'unavailable' ? ['hfd'] : []),
+    ...(dfa.status === 'unavailable' ? ['dfa'] : []),
+  ]
+  const invalidNames = [
+    ...(hfd.status === 'invalid' ? ['hfd'] : []),
+    ...(dfa.status === 'invalid' ? ['dfa'] : []),
+  ]
+  const numericalFailureNames = [
+    ...(hfd.status === 'numerical_failure' ? ['hfd'] : []),
+    ...(dfa.status === 'numerical_failure' ? ['dfa'] : []),
+  ]
 
   return {
     algorithm_version: ALGORITHM_VERSION,
     input_hash,
     metrics,
     unavailable: unavailableNames,
-  };
+    invalid: invalidNames,
+    numerical_failure: numericalFailureNames,
+  }
 }

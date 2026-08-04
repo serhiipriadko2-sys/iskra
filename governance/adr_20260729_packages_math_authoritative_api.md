@@ -2,16 +2,20 @@
 sigil: governance__adr_20260729_packages_math_authoritative_api
 layer: governance
 status: accepted
-updated: 2026-07-29
-authority: owner-accepted
+updated: 2026-07-30
+authority: owner-accepted+implementation-authorized
 accepted_at: 2026-07-29T21:19:00+03:00
 acceptance_phrase: "Принимаю ADR-20260729-02"
+implementation_authorized_at: 2026-07-30T22:09:00+03:00
+implementation_authorization_phrase: "implementation authorization."
+implementation_authorization_receipt: "https://github.com/serhiipriadko2-sys/iskra/issues/324"
 ---
 
 # ADR-20260729-02 — Authoritative HFD/DFA public API boundary in `packages/math`
 
 **Status:** `accepted`
 **Accepted:** `2026-07-29T21:19:00+03:00` by Owner Семён
+**Implementation authorized:** `2026-07-30T22:09:00+03:00` by Owner Семён; receipt issue `#324`
 **Layer:** `system + governance`
 **Owner:** Семён
 **Builder:** Искра / SAM+ISKRIV
@@ -229,12 +233,14 @@ No HFD/DFA receipt may claim entropy parity or package-wide formula-owner activa
 
 This ADR was explicitly accepted by the Owner on `2026-07-29T21:19:00+03:00` with the exact phrase `Принимаю ADR-20260729-02`.
 
-Acceptance establishes the decision boundary only. It does **not** authorize implementation, merge runtime changes, activate HFD/DFA authority, activate package-wide formula authority, install a Skill, or deprecate transition Skills.
+Acceptance established the decision boundary only. A separate implementation authorization was then issued by the Owner on `2026-07-30T22:09:00+03:00` with the exact phrase `implementation authorization.` and recorded in GitHub issue `#324`.
+
+The implementation authorization permits the bounded HFD/DFA code and migration work in this ADR. It does **not** authorize merge before QA, scoped activation, package-wide formula authority, Skill installation, transition-Skill deprecation, deployment, Supabase mutation or live invocation.
 
 HFD/DFA scoped activation requires all of:
 
 1. Owner acceptance of this ADR — **satisfied**;
-2. separate implementation authorization — **not satisfied**;
+2. separate implementation authorization — **satisfied; receipt issue #324**;
 3. all tests below passing on the implementation head;
 4. review and merge of the implementation PR;
 5. migration of every authority-path raw consumer and duplicate public runtime surface;
@@ -412,39 +418,33 @@ Expected: no; Skill parity and deprecation remain separate blocked gates.
 
 ## Diff scope
 
-This ADR acceptance PR changes only:
+The implementation PR authorized by issue `#324` may change:
 
-- `governance/adr_20260729_packages_math_authoritative_api.md` lifecycle metadata and acceptance boundary;
-- `ledger/sot.json` and `ledger/checksum.asc` as derived integrity receipts for the accepted ADR bytes.
+- authoritative typed HFD/DFA source, contracts, provenance and explicit package exports;
+- deterministic runtime and Edge generated mirrors;
+- package, runtime, engine and Edge tests for T1–T19;
+- `packages/engine/src/services/metricsService.ts` authority-path migration;
+- `runtime/src/index.ts` typed export boundary and compatibility namespace;
+- Edge calculator/contracts migration without changing entropy formulas;
+- consumer inventory, compatibility registry, generator and CI fences;
+- this ADR authorization gate;
+- `ledger/sot.json` and `ledger/checksum.asc` as derived integrity receipts.
 
-Follow-up implementation scope may include:
-
-- `packages/math/src/fractal.ts`;
-- `packages/math/src/index.ts`;
-- package and consumer tests;
-- typed aggregate API;
-- `packages/engine/src/services/metricsService.ts`;
-- `runtime/src/types/fractal.ts`;
-- `runtime/src/index.ts`;
-- consumer inventory/allowlist and fixed sunset enforcement;
-- Edge generator, generated mirror and receipts;
-- `iskra-metrics` package only after HFD/DFA scoped activation.
-
-Entropy implementation remains governed by the parent ADR and is not silently included in this implementation scope.
+It does not include `iskra-metrics`, transition-Skill deprecation, entropy authority, deployment, Supabase mutation or an activation receipt.
 
 ## Rollback
 
-After acceptance but before implementation: supersede this ADR through another explicit Owner decision.
+Before merge: close the implementation PR and delete its branch.
 
-After implementation: retain a versioned compatibility namespace until the fixed recorded sunset if rollback is required, but do not restore stand-ins, false provenance, unbounded overrides or raw authority-path consumers.
+After merge but before activation: revert the implementation merge commit while retaining the accepted ADR and authorization receipt. Do not restore authority-path stand-ins or claim activation.
 
 ## Builder/package mirror
 
-`pending` — no Builder or Skill package change in this acceptance PR.
+`pending` — no Builder or Skill package change in the implementation PR.
 
 ## Live verification
 
-`not_applicable` — governance acceptance only.
+`not_applicable` — implementation PR and repository CI only; no deployment or live invocation.
 
 ## Status ladder
 
@@ -461,9 +461,11 @@ priority approved
 != verified-live
 ```
 
+Current lifecycle point: `implementation authorized`; implementation remains a PR candidate until exact-head QA and merge.
+
 ## ΔDΩΛ
 
-- **Δ:** Owner acceptance recorded; the fixed, typed, provenance-bearing HFD/DFA authority boundary is accepted, while implementation and activation remain gated.
-- **D:** exact Owner phrase `Принимаю ADR-20260729-02` -> lifecycle transition `proposed -> accepted` -> separate implementation authorization remains required.
-- **Ω:** 0.95 for governance acceptance and repository-static decision shape; implementation and activation remain unverified.
+- **Δ:** Owner implementation authorization recorded; bounded HFD/DFA implementation may proceed without activation.
+- **D:** acceptance merge `cf6ac6e` -> authorization issue `#324` -> implementation PR -> T1–T19 exact-head QA -> separate activation receipt gate.
+- **Ω:** 0.95 for governance authorization and repository-static scope; implementation, merge and activation remain unverified until their own receipts.
 - **Λ:** revise only through a later explicit Owner decision, or if implementation evidence proves a load-bearing contract technically impossible.
