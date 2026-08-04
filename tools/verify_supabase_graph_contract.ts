@@ -60,8 +60,11 @@ type PgGraphqlSnapshot = {
   version?: string;
   schema?: string;
   public_schema_usage?: boolean;
+  public_schema_create?: boolean;
   anon_schema_usage?: boolean;
+  anon_schema_create?: boolean;
   authenticated_schema_usage?: boolean;
+  authenticated_schema_create?: boolean;
   service_role_schema_usage?: boolean;
   anon_resolve_execute?: boolean;
   authenticated_resolve_execute?: boolean;
@@ -341,8 +344,11 @@ select jsonb_build_object(
       'version', e.extversion,
       'schema', n.nspname,
       'public_schema_usage', has_schema_privilege('public', n.oid, 'USAGE'),
+      'public_schema_create', has_schema_privilege('public', n.oid, 'CREATE'),
       'anon_schema_usage', has_schema_privilege('anon', n.oid, 'USAGE'),
+      'anon_schema_create', has_schema_privilege('anon', n.oid, 'CREATE'),
       'authenticated_schema_usage', has_schema_privilege('authenticated', n.oid, 'USAGE'),
+      'authenticated_schema_create', has_schema_privilege('authenticated', n.oid, 'CREATE'),
       'service_role_schema_usage', has_schema_privilege('service_role', n.oid, 'USAGE'),
       'anon_resolve_execute', has_function_privilege('anon', p.oid, 'EXECUTE'),
       'authenticated_resolve_execute', has_function_privilege('authenticated', p.oid, 'EXECUTE'),
@@ -683,9 +689,12 @@ function assertCurrentGraphLeastPrivilege(): void {
 function assertPgGraphqlDependency(): void {
   const sql = readText(PG_GRAPHQL_RECONCILIATION_FILE);
   assertContains(sql, 'create schema if not exists graphql', PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(sql, "where e.extname = 'pg_graphql'", PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(sql, "installed_version <> '1.5.11'", PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(sql, "installed_schema <> 'graphql'", PG_GRAPHQL_RECONCILIATION_FILE);
   assertContains(sql, 'create extension if not exists pg_graphql', PG_GRAPHQL_RECONCILIATION_FILE);
   assertContains(sql, "version '1.5.11'", PG_GRAPHQL_RECONCILIATION_FILE);
-  assertContains(sql, 'revoke all on schema graphql from public', PG_GRAPHQL_RECONCILIATION_FILE);
+  assertContains(sql, 'revoke all on schema graphql from public, anon, authenticated', PG_GRAPHQL_RECONCILIATION_FILE);
   assertContains(
     sql,
     'grant usage on schema graphql to anon, authenticated, service_role',
@@ -903,6 +912,9 @@ function verifyLivePgGraphql(snapshot: LiveSnapshot): void {
     fail(`Live pg_graphql must be version 1.5.11 in schema graphql`);
   }
   if (extension.public_schema_usage !== false) fail('Live graphql schema must deny generic PUBLIC usage');
+  if (extension.public_schema_create !== false) fail('Live graphql schema must deny generic PUBLIC create');
+  if (extension.anon_schema_create !== false) fail('Live graphql schema must deny anon create');
+  if (extension.authenticated_schema_create !== false) fail('Live graphql schema must deny authenticated create');
   for (const [role, schemaUsage, resolveExecute] of [
     ['anon', extension.anon_schema_usage, extension.anon_resolve_execute],
     ['authenticated', extension.authenticated_schema_usage, extension.authenticated_resolve_execute],
@@ -912,10 +924,6 @@ function verifyLivePgGraphql(snapshot: LiveSnapshot): void {
       fail(`Live pg_graphql ${role} endpoint privileges are incomplete`);
     }
   }
-}
-
-function normalizePolicyExpression(policy: PolicySnapshot): string {
-  return normalizeSql(`${policy.using ?? ''} ${policy.with_check ?? ''}`);
 }
 
 function verifyLivePolicies(snapshot: LiveSnapshot): void {
@@ -938,8 +946,17 @@ function verifyLivePolicies(snapshot: LiveSnapshot): void {
     if (membershipPolicy.permissive?.toUpperCase() !== 'RESTRICTIVE') {
       fail(`Live ${table}.beta_membership_required must be RESTRICTIVE`);
     }
-    if (!normalizePolicyExpression(membershipPolicy).includes('private.is_active_beta_member')) {
-      fail(`Live ${table}.beta_membership_required is missing active-member guard`);
+    if (membershipPolicy.command?.toUpperCase() !== 'ALL') {
+      fail(`Live ${table}.beta_membership_required must cover ALL commands`);
+    }
+    if (!sameJson(membershipPolicy.roles ?? [], ['authenticated'])) {
+      fail(`Live ${table}.beta_membership_required must target authenticated only`);
+    }
+    if (!normalizeSql(membershipPolicy.using ?? '').includes('private.is_active_beta_member')) {
+      fail(`Live ${table}.beta_membership_required USING is missing active-member guard`);
+    }
+    if (!normalizeSql(membershipPolicy.with_check ?? '').includes('private.is_active_beta_member')) {
+      fail(`Live ${table}.beta_membership_required WITH CHECK is missing active-member guard`);
     }
   }
 }

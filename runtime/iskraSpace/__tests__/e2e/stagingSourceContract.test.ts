@@ -120,8 +120,11 @@ describe('staging acceptance source contract', () => {
     expect(harness).toContain('Wait-ForPostgrestJwtReadiness');
     expect(harness).toContain("$body -notmatch 'PGRST303'");
     expect(harness).toContain('GRAPH_FORBIDDEN_CLIENT_GRANT_COUNT');
+    expect(harness).toContain('from information_schema.table_privileges');
     expect(harness).toContain("privilege_type in ('TRUNCATE', 'TRIGGER', 'REFERENCES')");
     expect(harness).toContain("'--db-url', $branch.POSTGRES_URL, '--output-format', 'json'");
+    expect(harness).toContain("'--agent', 'yes'");
+    expect(harness).toContain('$grantResult.forbidden_grant_count');
     expect(harness).toContain('Set-Item -LiteralPath "Env:$name"');
     expect(harness).toContain('Remove-Item -LiteralPath "Env:$name"');
     expect(harness).toContain("scope in ('member_minute','member_day')");
@@ -132,5 +135,19 @@ describe('staging acceptance source contract', () => {
     expect(harness).toContain('do $cleanupTag');
     expect(harness).toContain('delete from public.users where id in ($idList);');
     expect(harness).not.toContain('delete from private.ai_rate_limit_windows returning 1');
+  });
+
+  it('keeps strict production schema verification behind an explicit post-deploy dispatch', () => {
+    const workflow = readFileSync(
+      join(resolveRepositoryRoot(), '.github', 'workflows', 'supabase_schema_contract.yml'),
+      'utf8',
+    );
+
+    expect(workflow).toContain('verify_live:');
+    expect(workflow).toContain("github.event_name == 'workflow_dispatch'");
+    expect(workflow).toContain('inputs.verify_live == true');
+    expect(workflow).toContain('AGIISKRA_SUPABASE_DB_URL is required for verify_live=true');
+    expect(workflow).toContain('pnpm check:supabase-graph-contract');
+    expect(workflow).not.toContain('--allow-unreconciled-history');
   });
 });

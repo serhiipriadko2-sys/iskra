@@ -12,6 +12,12 @@ on:
       - "CONTRIBUTING.md"
       - ".github/workflows/supabase_schema_contract.yml"
   workflow_dispatch:
+    inputs:
+      verify_live:
+        description: Run the strict post-deploy production contract gate
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   voice-metrics-contract:
@@ -37,18 +43,24 @@ jobs:
           pnpm check:supabase-voice-metrics-contract:repo
           pnpm check:supabase-graph-contract:repo
 
-      - name: Report skipped live gate
-        if: ${{ env.AGIISKRA_SUPABASE_DB_URL == '' }}
-        run: echo "::notice::Live Supabase schema contract gate skipped because AGIISKRA_SUPABASE_DB_URL is not configured."
+      - name: Report deferred live gate
+        if: ${{ github.event_name == 'pull_request' || inputs.verify_live != true }}
+        run: echo "::notice::Strict live verification is a post-deploy gate. Dispatch this workflow with verify_live=true after production migration apply."
+
+      - name: Fail closed when live credential is missing
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.verify_live == true && env.AGIISKRA_SUPABASE_DB_URL == '' }}
+        run: |
+          echo "::error::AGIISKRA_SUPABASE_DB_URL is required for verify_live=true."
+          exit 1
 
       - name: Install PostgreSQL client for live gate
-        if: ${{ env.AGIISKRA_SUPABASE_DB_URL != '' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.verify_live == true && env.AGIISKRA_SUPABASE_DB_URL != '' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
       - name: Verify live Supabase schema contract
-        if: ${{ env.AGIISKRA_SUPABASE_DB_URL != '' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.verify_live == true && env.AGIISKRA_SUPABASE_DB_URL != '' }}
         env:
           SUPABASE_DB_URL: ${{ env.AGIISKRA_SUPABASE_DB_URL }}
         run: |

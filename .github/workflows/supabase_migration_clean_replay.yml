@@ -88,7 +88,7 @@ jobs:
           grep -Fx '20260728180000|reconcile_gateway_events_live_schema|12' clean-replay-receipt/replay-history.txt
           grep -Fx '20260728183421|parallax_memory_gate|10' clean-replay-receipt/replay-history.txt
           grep -Fx '20260804183000|graph_api_least_privilege|4' clean-replay-receipt/replay-history.txt
-          grep -Fx '20260804184500|reconcile_pg_graphql_extension|6' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260804184500|reconcile_pg_graphql_extension|7' clean-replay-receipt/replay-history.txt
           grep -Fx '20260804190000|reconcile_iskra_memory_search_paths|9' clean-replay-receipt/replay-history.txt
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
             select version || '|' ||
@@ -135,7 +135,7 @@ jobs:
                 where grantee='authenticated'
                   and privilege_type in ('SELECT','INSERT','UPDATE','DELETE')
               )
-            from information_schema.role_table_grants
+            from information_schema.table_privileges
             where table_schema='public'
               and table_name in ('graph_nodes','graph_edges');
           " | tee clean-replay-receipt/graph-grant-summary.txt
@@ -143,14 +143,17 @@ jobs:
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
             select e.extversion || '|' || n.nspname || '|' ||
               has_schema_privilege('public','graphql','USAGE') || '|' ||
+              has_schema_privilege('public','graphql','CREATE') || '|' ||
               has_schema_privilege('anon','graphql','USAGE') || '|' ||
+              has_schema_privilege('anon','graphql','CREATE') || '|' ||
               has_schema_privilege('authenticated','graphql','USAGE') || '|' ||
+              has_schema_privilege('authenticated','graphql','CREATE') || '|' ||
               has_schema_privilege('service_role','graphql','USAGE')
             from pg_extension e
             join pg_namespace n on n.oid=e.extnamespace
             where e.extname='pg_graphql';
           " | tee clean-replay-receipt/pg-graphql-extension.txt
-          grep -Fx '1.5.11|graphql|false|true|true|true' clean-replay-receipt/pg-graphql-extension.txt
+          grep -Fx '1.5.11|graphql|false|false|true|false|true|false|true' clean-replay-receipt/pg-graphql-extension.txt
           docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
             select count(*)
             from pg_proc p

@@ -171,7 +171,11 @@ describe('Supabase ACL hardening migration', () => {
     expect(pgGraphqlMigration).toMatch(
       /create extension if not exists pg_graphql[\s\S]*with schema graphql[\s\S]*version '1\.5\.11';/i,
     );
-    expect(pgGraphqlMigration).toContain('revoke all on schema graphql from public;');
+    expect(pgGraphqlMigration).toContain("installed_version <> '1.5.11'");
+    expect(pgGraphqlMigration).toContain("installed_schema <> 'graphql'");
+    expect(pgGraphqlMigration).toContain(
+      'revoke all on schema graphql from public, anon, authenticated;',
+    );
     expect(pgGraphqlMigration).toContain(
       'grant usage on schema graphql to anon, authenticated, service_role;',
     );

@@ -164,7 +164,7 @@ try {
 
   $grantSql = @"
 select count(*)::int as forbidden_grant_count
-from information_schema.role_table_grants
+from information_schema.table_privileges
 where table_schema = 'public'
   and table_name in ('graph_nodes', 'graph_edges')
   and grantee in ('PUBLIC', 'anon', 'authenticated')
@@ -173,13 +173,20 @@ where table_schema = 'public'
   $grantSql = $grantSql -replace '\s+', ' '
   $grantQueryArgs = @(
     'dlx', 'supabase@2.109.0', 'db', 'query', $grantSql,
-    '--db-url', $branch.POSTGRES_URL, '--output-format', 'json'
+    '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
   )
   $grantResult = (& pnpm @grantQueryArgs) | ConvertFrom-Json
-  if ($LASTEXITCODE -ne 0 -or -not $grantResult.rows) {
+  $grantRows = if ($grantResult.rows) {
+    @($grantResult.rows)
+  } elseif ($null -ne $grantResult.forbidden_grant_count) {
+    @($grantResult)
+  } else {
+    @()
+  }
+  if ($LASTEXITCODE -ne 0 -or $grantRows.Count -ne 1) {
     throw 'Failed to read staging Graph privilege postcondition'
   }
-  $forbiddenGrantCount = [int]$grantResult.rows[0].forbidden_grant_count
+  $forbiddenGrantCount = [int]$grantRows[0].forbidden_grant_count
   if ($forbiddenGrantCount -ne 0) {
     throw "Staging Graph privilege postcondition failed with count $forbiddenGrantCount"
   }
@@ -267,7 +274,7 @@ values
     $membershipSql = $membershipSql -replace '\s+', ' '
     $queryArgs = @(
       'dlx', 'supabase@2.109.0', 'db', 'query', $membershipSql,
-      '--db-url', $branch.POSTGRES_URL, '--output-format', 'json'
+      '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
     )
     & pnpm @queryArgs | Out-Null
     if ($LASTEXITCODE -ne 0) {
@@ -343,7 +350,7 @@ $cleanupTag;
       $cleanupSql = $cleanupSql -replace '\s+', ' '
       $queryArgs = @(
         'dlx', 'supabase@2.109.0', 'db', 'query', $cleanupSql,
-        '--db-url', $branch.POSTGRES_URL, '--output-format', 'json'
+        '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
       )
       $dbCleanupExit = 1
       $dbCleanupAttempts = 0

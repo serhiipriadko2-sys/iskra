@@ -144,14 +144,15 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
   });
 
   it('applies the same ownership boundary through the pg_graphql surface', async () => {
-    async function queryNode(token: string, nodeId: string) {
+    async function queryNode(token: string | undefined, nodeId: string) {
+      const headers: Record<string, string> = {
+        apikey: config.publishableKey,
+        'content-type': 'application/json',
+      };
+      if (token) headers.authorization = `Bearer ${token}`;
       const response = await fetch(`${config.url}/graphql/v1`, {
         method: 'POST',
-        headers: {
-          apikey: config.publishableKey,
-          authorization: `Bearer ${token}`,
-          'content-type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           query: `query IsolatedGraphNode {
             graph_nodesCollection(filter: { id: { eq: "${nodeId}" } }, first: 10) {
@@ -167,15 +168,20 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
       }>;
     }
 
-    const [owner, foreign, nonMember] = await Promise.all([
+    const [owner, foreign, nonMember, suspended, anonymous] = await Promise.all([
       queryNode(config.userAToken, nodeA),
       queryNode(config.userBToken, nodeA),
       queryNode(config.nonMemberToken, nodeA),
+      queryNode(config.suspendedMemberToken, nodeA),
+      queryNode(undefined, nodeA),
     ]);
-    for (const result of [owner, foreign, nonMember]) expect(result.errors).toBeUndefined();
+    for (const result of [owner, foreign, nonMember, suspended]) expect(result.errors).toBeUndefined();
     expect(owner.data?.graph_nodesCollection?.edges?.map(edge => edge.node?.id)).toEqual([nodeA]);
     expect(foreign.data?.graph_nodesCollection?.edges ?? []).toEqual([]);
     expect(nonMember.data?.graph_nodesCollection?.edges ?? []).toEqual([]);
+    expect(suspended.data?.graph_nodesCollection?.edges ?? []).toEqual([]);
+    expect(anonymous.data?.graph_nodesCollection?.edges ?? []).toEqual([]);
+    expect(JSON.stringify(anonymous)).not.toContain(nodeA);
   });
 
   it('does not update another active member\'s node through Graph RPC', async () => {
