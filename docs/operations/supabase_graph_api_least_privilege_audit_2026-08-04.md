@@ -1,6 +1,6 @@
 # Supabase Graph API least-privilege audit — 2026-08-04
 
-Status: `LOCAL_CLEAN_REPLAY_PASS`; final preview acceptance and production apply pending.
+Status: `LOCAL_CLEAN_REPLAY_PASS`; final preview revalidation and production apply pending.
 
 Production project: `typcvaszcfdpkzbjzuur`.
 Source base: merge commit `0672f8a01c2abca1a08eb07745cc65c119dfaa34`.
@@ -98,6 +98,17 @@ Migration `20260804184500_reconcile_pg_graphql_extension.sql`:
   boundary;
 - contains no row DML and does not upgrade the existing production extension.
 
+Migration `20260804190000_reconcile_iskra_memory_search_paths.sql`:
+
+- closes advisor drift for seven service-role-only `iskra_memory` RPCs that
+  were pinned in production but not reproducible from Git;
+- sets `search_path = pg_catalog, iskra_memory` for every signature after
+  confirming that all project-object references in their bodies are schema
+  qualified;
+- removes the unnecessary mutable `public` component present in three live
+  production settings;
+- changes no function body, ownership, grant or row data.
+
 The clean-replay workflow now requires an exact `0|8` Graph grant receipt:
 zero forbidden client grants and eight authenticated DML grants across the two
 tables. It also requires `pg_graphql 1.5.11|graphql` with the explicit schema
@@ -127,6 +138,12 @@ composition in `20260718200634`. The verifier now checks the actual terminal
 chain: eight authenticated-only action policies plus restrictive active-beta
 membership policies, with no public/anon Graph policy.
 
+The chain was replayed again after adding the search-path migration. Read-back
+recorded `20260804190000|reconcile_iskra_memory_search_paths|9`, found all
+seven exact signatures with `search_path=pg_catalog, iskra_memory`, and kept
+the canonical Graph snapshot PASS. Preview advisor read-back remains mandatory
+before merge.
+
 ## Extended behavioral matrix
 
 The two-principal suite now checks every read-oriented Graph RPC:
@@ -154,6 +171,19 @@ The acceptance harness also now uses the pinned CLI's documented
 `--output-format json` query flag and normalizes SQL to a single Windows-safe
 argument before any fixture creation.
 
+After GraphQL reconciliation and quota-window stabilization, exact head
+`ae0ba831a39a1df6384e6c05dfefe938791c1bb5` passed 7/7 files and 63/63 tests.
+All four Auth principals and every public/private acceptance fixture were
+removed; six independent post-cleanup counts returned zero. Advisors returned
+0 ERROR, 36 security notices and 35 performance INFO notices. Preview log API
+calls failed with transport `FetchException`; production log access remained
+available, so preview logs are explicitly NOT_VERIFIED rather than clean.
+
+Advisor comparison then exposed seven preview-only mutable-search-path WARNs.
+Production has fixed per-function settings for those signatures, proving a
+Git-to-production reproducibility drift. The new migration above supersedes
+this otherwise successful preview receipt and requires one final acceptance.
+
 ## Preview credential containment
 
 During CLI diagnosis, the disposable preview database URL was emitted into a
@@ -164,7 +194,7 @@ credential is treated as compromised. This PR cannot close until branch
 
 ## Stop and forward-repair conditions
 
-Stop before production if clean replay does not record all four pending
+Stop before production if clean replay does not record all five pending
 migrations, the preview reports any forbidden Graph grant, any RPC exposes the
 other principal's node, pg_graphql is absent or not version `1.5.11`, GraphQL
 differs from REST RLS, supported CRUD breaks, or final-head CI is not green.

@@ -31,6 +31,13 @@ const pgGraphqlMigrationPath = join(
 const pgGraphqlMigration = existsSync(pgGraphqlMigrationPath)
   ? readFileSync(pgGraphqlMigrationPath, 'utf8')
   : '';
+const memorySearchPathMigrationPath = join(
+  dirname(thisFile),
+  '../../../../supabase/migrations/20260804190000_reconcile_iskra_memory_search_paths.sql',
+);
+const memorySearchPathMigration = existsSync(memorySearchPathMigrationPath)
+  ? readFileSync(memorySearchPathMigrationPath, 'utf8')
+  : '';
 const initplanMigrationPath = join(
   dirname(thisFile),
   '../../../../supabase/migrations/20260718194551_optimize_rls_initplan.sql',
@@ -168,5 +175,21 @@ describe('Supabase ACL hardening migration', () => {
     expect(pgGraphqlMigration).toContain(
       'grant usage on schema graphql to anon, authenticated, service_role;',
     );
+  });
+
+  it('pins every service-role memory RPC to immutable resolution schemas', () => {
+    for (const signature of [
+      'iskra_project_observe(jsonb, text)',
+      'iskra_project_commit(uuid, jsonb, text)',
+      'iskra_project_horizon_propose(jsonb, text)',
+      'iskra_memory_write(text, jsonb, text)',
+      'iskra_memory_search(text, text[], integer)',
+      'iskra_memory_promote_shadow(uuid, text, jsonb, text, text, text, text[], numeric)',
+      'iskra_memory_crystallize_dream(uuid, text, text, jsonb, text, text, text, text)',
+    ]) {
+      expect(memorySearchPathMigration).toContain(`alter function iskra_memory.${signature}`);
+    }
+    expect(memorySearchPathMigration.match(/set search_path = pg_catalog, iskra_memory;/g)).toHaveLength(7);
+    expect(memorySearchPathMigration).not.toMatch(/set search_path\s*=\s*[^;]*public/i);
   });
 });
