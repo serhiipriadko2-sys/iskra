@@ -199,6 +199,15 @@ the four exact UUIDs. It reports the attempt count and still fails the overall
 gate unless both DB and Auth cleanup succeed. This harness-only change requires
 one final acceptance and post-cleanup zero-count read-back.
 
+The first ordered-cleanup implementation used multiple top-level transaction
+commands. Pinned CLI `2.109.0` rejected that form before execution with
+`LegacyDbQueryExecError: cannot insert multiple commands into a prepared
+statement`; three retries therefore failed deterministically and Auth cascade
+again left two quota rows. A recent-orphan predicate removed exactly those two
+rows. The final harness sends one atomic PL/pgSQL `DO` statement containing the
+same ordered, UUID-scoped deletes. A no-op invocation against a reserved UUID
+returned exit 0 before the next acceptance run.
+
 ## Preview credential containment
 
 During CLI diagnosis, the disposable preview database URL was emitted into a

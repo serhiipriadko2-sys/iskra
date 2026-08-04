@@ -318,8 +318,10 @@ values
     if ($safeIds.Count -gt 0) {
       $idList = ($safeIds | ForEach-Object { "'$_'::uuid" }) -join ','
       $memberSubjectList = ($safeIds | ForEach-Object { "'$_'" }) -join ','
+      $cleanupTag = '$acceptance_cleanup$'
       $cleanupSql = @"
-begin;
+do $cleanupTag
+begin
 delete from public.graph_edges where user_id in ($idList);
 delete from public.graph_nodes where user_id in ($idList);
 delete from public.audit_log where user_id in ($idList);
@@ -335,7 +337,8 @@ delete from private.ai_rate_limit_windows
    and subject in ($memberSubjectList);
 delete from private.beta_members where user_id in ($idList);
 delete from public.users where id in ($idList);
-commit;
+end
+$cleanupTag;
 "@
       $cleanupSql = $cleanupSql -replace '\s+', ' '
       $queryArgs = @(
