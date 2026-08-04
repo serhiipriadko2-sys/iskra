@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-04T14:43:57.435Z",
-  "total": 3748,
+  "generatedAt": "2026-08-04T14:58:51.598Z",
+  "total": 3749,
   "curated": 20,
   "layers": {
     "root": 347,
@@ -13,7 +13,7 @@
     "web": 13,
     "canon": 16,
     "builder": 1187,
-    "docs": 80,
+    "docs": 81,
     "governance": 433,
     "ingest": 10,
     "ledger": 7,
@@ -26417,6 +26417,7 @@
         "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
         "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
         "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
+        "docs/operations/supabase_production_db_preflight_2026-08-04.md",
         "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
         "docs/operations/supabase_staging_cleanup_2026-07-31.md",
         "docs/operations/supabase_status_exposure_owner_checklist_2026-06-07.md"
@@ -26672,6 +26673,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_production_db_preflight_2026-08-04.md",
+      "name": "supabase_production_db_preflight_2026-08-04.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_production_db_preflight_2026-08-04.md",
       "related": [],
       "parent": "docs/operations"
     },

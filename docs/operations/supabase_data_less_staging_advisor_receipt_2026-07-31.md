@@ -1,6 +1,6 @@
 # Supabase data-less staging and advisor receipt — 2026-07-31
 
-Status: `MANUAL_DATALESS_REPAIR_PASS`; clean replay PASS; production DB promotion remains blocked.
+Status: `MANUAL_DATALESS_REPAIR_PASS`; clean replay PASS; final preview acceptance PASS; production DB promotion remains blocked.
 
 Production project: `typcvaszcfdpkzbjzuur`.
 Staging branch ID: `34468814-3afa-4704-b28f-2d0216bf99c3`.
@@ -83,6 +83,41 @@ rewritten as PASS.
 
 A full temporary two-principal behavioral fixture was attempted. The first two attempts correctly rolled back on fixture-contract errors and left zero fixture rows. The final corrected attempt was blocked by the tool safety layer before execution. Therefore two-principal runtime acceptance is `NOT_RUN`, not PASS.
 
+## Final preview follow-up — 2026-08-04
+
+The final PR preview `opygpmrvjlcfwvydxcic` (branch
+`bc9ef83b-7bbb-4fe6-a714-e98bbd0d9662`) automatically recorded all tracked
+migrations through `20260728183421`. Read-back returned zero public/anonymous
+Graph policies, ten authenticated Graph policies, eleven exact memory deny
+policies, and no direct trigger-helper EXECUTE for `authenticated`, `anon` or
+`public`.
+
+The first harness attempt did not start Vitest because the new worktree had no
+installed dependencies. Cleanup still removed all four principals and all
+fixtures. After `pnpm install --frozen-lockfile`, the next run exposed two
+preview-environment issues rather than a migration regression:
+
+- the PR preview had not inherited the seven test-boundary Edge secret names,
+  so both functions rejected the acceptance origin;
+- freshly issued Auth tokens could briefly reach PostgREST before its clock
+  accepted their `iat`, returning `PGRST303` (`JWT issued at future`).
+
+The preview-only secret plane was configured with the approved local acceptance
+origin, fail-closed production environment mode, development wildcard disabled,
+`cf-connecting-ip`, a fresh non-recorded HMAC secret and test mode enabled. The
+harness now polls a harmless authenticated zero-row REST query for at most 30
+seconds and retries only `PGRST303`; every other status fails immediately. No
+credential value is recorded. Local Windows-checkout harness receipt: 13,455
+bytes, SHA-256
+`8185917be368d95764e900235a84380e69e03a6dcad414f11f1a46e74ae16a58`.
+
+Final result: seven files and 61/61 tests passed. Four distinct principals were
+created, two were active members, and anonymous, non-member, suspended-member,
+two-principal RLS/Graph/RPC, CORS/JWT and quota-spoof controls passed. Cleanup
+returned `DB_EXIT=0`, `AUTH_ERRORS=0`, `PRINCIPALS=4`, `CLEANUP_OK=true`.
+Post-cleanup catalog read-back found zero acceptance Auth users, beta members or
+public user profiles.
+
 ## Advisor before/after
 
 ### Security
@@ -114,15 +149,13 @@ The added FK and unused-index INFO notices come from exact live-parity reconstru
 
 Production DB promotion remains blocked until all of the following are complete:
 
-1. Clean replay passes again on the final PR head after synchronization with `main`.
-2. The provenance PR passes integrity and migration CI on that exact head.
-3. Two-principal Graph/RPC/REST acceptance passes after the repair chain.
-4. A production preflight proves the reconstruction migration will validate and no-op against the existing `gateway_events` object.
-5. Exact migration scope, rollback/forward-repair plan and post-apply read-back are approved separately.
+1. Clean replay and integrity CI pass again on the final receipt-bearing PR head.
+2. Review the remaining Graph table grants and authenticated SECURITY DEFINER contracts required by ADR-20260731-001; the 61-test matrix does not prove every warned RPC or GraphQL/grant surface.
+3. Approve exact migration scope, forward-repair plan and post-apply read-back in a separate production promotion step.
 
 ## ∆DΩΛ
 
 ∆: live-only migration provenance and the hidden `gateway_events` prerequisite are now explicit; the repair chain is proven on a disposable data-less database.
 D: production migration statements and catalogs → GitHub exact/reconstructed files → data-less branch → advisor before → six staged migrations → policy/grant/history read-back → advisor after.
-Ω: 0.95 for exact recovered bodies, clean replay and staging metadata postconditions; 0.82 for production readiness because final-head CI, two-principal runtime acceptance and production no-op preflight are still open.
+Ω: 0.96 for exact recovered bodies, clean replay, final preview acceptance and staging metadata postconditions; 0.86 for production readiness because final-head CI and the remaining grant/RPC governance scope are still open.
 Λ: revise after PR CI clean replay, successful two-principal acceptance, or any change to production migration history or `gateway_events` schema.

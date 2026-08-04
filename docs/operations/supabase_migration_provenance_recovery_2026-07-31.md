@@ -1,6 +1,6 @@
 # Supabase migration provenance recovery — 2026-07-31
 
-Status: `LIVE_BODIES_RECOVERED`; clean replay PASS; data-less staging repair PASS; production DB promotion blocked.
+Status: `LIVE_BODIES_RECOVERED`; clean replay PASS; final preview acceptance PASS; production DB promotion blocked.
 
 Production project: `typcvaszcfdpkzbjzuur`.
 Repository branch: `fix/supabase-migration-provenance-20260731`.
@@ -57,11 +57,10 @@ or the manual data-less repair as a clean replay.
 
 ## Next gates
 
-1. Re-run clean replay on the final PR head after synchronization with `main`.
-2. Run anonymous, non-member, suspended and two-principal Graph/RPC/REST tests on a disposable branch.
-3. Prove the production reconstruction migration validates and no-ops against the existing `gateway_events` object.
-4. Prepare and approve exact production migration scope, forward-repair plan and post-apply read-back.
-5. Keep this DB promotion separate from the completed Edge production release.
+1. Re-run clean replay and integrity CI on the final receipt-bearing PR head.
+2. Complete the remaining ADR-20260731-001 Graph grant, GraphQL and authenticated SECURITY DEFINER contract review.
+3. Prepare and approve the separate production migration execution and post-apply read-back receipt.
+4. Keep this DB promotion separate from the completed Edge production release.
 
 Current Supabase branch price observed for the `kate` organization: `$0.01344/hour`. No branch has been created by this receipt.
 
@@ -69,5 +68,5 @@ Current Supabase branch price observed for the `kate` organization: `$0.01344/ho
 
 ∆: two live-only production migration receipts now have exact repository bodies and cryptographic provenance.
 D: production `schema_migrations.statements[1]` → SHA-256/bytes → GitHub write → GitHub read-back → exact equality test.
-Ω: 0.95 for the recovered applied bytes and the recorded clean replay; production runtime acceptance remains unverified.
+Ω: 0.96 for recovered applied bytes, clean replay and final preview runtime acceptance; production execution remains unverified.
 Λ: revise if GitHub read-back changes, production migration history changes, or clean replay exposes an ordering/dependency conflict.

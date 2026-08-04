@@ -12,9 +12,10 @@
     "hosted_branch_automatic_replay": "FAILED_AFTER_20260718191950",
     "data_less_staging_manual_repair": "PASS",
     "advisor_before_after": "CAPTURED",
-    "two_principal_runtime_acceptance": "NOT_RUN_TOOL_SAFETY_BLOCK",
+    "two_principal_runtime_acceptance": "PASS_PREVIEW_20260804_61_OF_61",
+    "production_noop_preflight": "PASS_READ_ONLY_20260804",
     "production_db_mutation": false,
-    "production_promotion": "BLOCKED"
+    "production_promotion": "BLOCKED_SEPARATE_SECURITY_SCOPE"
   },
   "entries": [
     {
@@ -159,6 +160,27 @@
       "workflow_run_id": 30663869451,
       "workflow_url": "https://github.com/serhiipriadko2-sys/iskra/actions/runs/30663869451",
       "conclusion": "success"
+    },
+    "final_preview_acceptance": {
+      "verified_at": "2026-08-04",
+      "project_ref": "opygpmrvjlcfwvydxcic",
+      "branch_id": "bc9ef83b-7bbb-4fe6-a714-e98bbd0d9662",
+      "deployed_pr_head": "9dac828cdd7b849b46f474b76f85b5bce781898f",
+      "tests_passed": 61,
+      "tests_total": 61,
+      "cleanup_principals": 4,
+      "cleanup_ok": true,
+      "harness_sha256_local_windows_checkout": "8185917be368d95764e900235a84380e69e03a6dcad414f11f1a46e74ae16a58"
+    },
+    "production_noop_preflight": {
+      "verified_at": "2026-08-04",
+      "mode": "read-only catalog comparison plus Supabase CLI dry-run",
+      "gateway_events_contract_match": true,
+      "gateway_events_existing_rows": 7,
+      "would_push": [
+        "20260718200634_restore_closed_beta_graph_acl.sql",
+        "20260728180000_reconcile_gateway_events_live_schema.sql"
+      ]
     }
   }
 }
