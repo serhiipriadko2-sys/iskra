@@ -179,7 +179,7 @@
     "governance/adr_20260729_packages_math_authoritative_api.md": "4157778fe1328f424c04bcb1bccb22ef70b8112b17dcc010001ae0e15431b364",
     "governance/adr_20260730_pino_first_strike.md": "9afa757053e38feb0b9adf3ae1c2bfd5956c4da6aa25a245ab44b3c7a3e097a8",
     "governance/adr_20260730_sot30_v5_5_7_audit_repair.md": "e9ea3b9c8ce6683f8302019c326a7c4388d2b2af17ca0e141d76501de61b971c",
-    "governance/adr_20260731_sift_cli_wave0_fail_closed.md": "b49c81bdd78454ab310c9557fb888bb7fa7650733fb6f408748b52e2ba0c5881",
+    "governance/adr_20260731_sift_cli_wave0_fail_closed.md": "6ca4f38dd577527cb66f8c677cf41c0dab2d6845980f94e4d50e0fe5f7f6a5f4",
     "governance/adr_20260731_supabase_advisor_migration_provenance.md": "91e9c68b5fe1a5634dbc9dafce90fb7022e1f7236020b077659ca55b4208ee32",
     "governance/adr_gitagent_export.md": "5d28aaf5944b201052853c3ebde22765ba5a661bfbce4004b16dff7692c180ae",
     "governance/adr_memory_stack.md": "31447b99ee89e5586242ec2704e7de1d501291efc1aeb7f9ba89564aa694f5f3",
