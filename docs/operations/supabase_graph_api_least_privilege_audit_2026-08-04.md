@@ -1,6 +1,6 @@
 # Supabase Graph API least-privilege audit — 2026-08-04
 
-Status: `LOCAL_CLEAN_REPLAY_PASS`; final preview revalidation and production apply pending.
+Status: `PREVIEW_CLEANUP_REVALIDATION_PENDING`; production apply pending.
 
 Production project: `typcvaszcfdpkzbjzuur`.
 Source base: merge commit `0672f8a01c2abca1a08eb07745cc65c119dfaa34`.
@@ -183,6 +183,21 @@ Advisor comparison then exposed seven preview-only mutable-search-path WARNs.
 Production has fixed per-function settings for those signatures, proving a
 Git-to-production reproducibility drift. The new migration above supersedes
 this otherwise successful preview receipt and requires one final acceptance.
+
+Preview head `1404c73325067e7cb7de15304484fcb74d77a15e` recorded the
+search-path migration, returned seven pinned signatures and reduced security
+advisors from 36 to 29 with zero mutable-search-path notices and zero ERROR.
+Its behavior matrix again passed 63/63. The run still failed closed because
+the database cleanup command exited nonzero; subsequent Auth deletion removed
+referential fixtures but left two member quota rows whose text subjects have
+no foreign key. An exact preview-only cleanup removed those two recent orphan
+rows and no others.
+
+The harness cleanup is now an explicit ordered transaction rather than a set
+of data-modifying CTEs, followed by at most three idempotent retries scoped to
+the four exact UUIDs. It reports the attempt count and still fails the overall
+gate unless both DB and Auth cleanup succeed. This harness-only change requires
+one final acceptance and post-cleanup zero-count read-back.
 
 ## Preview credential containment
 

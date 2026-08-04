@@ -319,33 +319,38 @@ values
       $idList = ($safeIds | ForEach-Object { "'$_'::uuid" }) -join ','
       $memberSubjectList = ($safeIds | ForEach-Object { "'$_'" }) -join ','
       $cleanupSql = @"
-with
-  deleted_graph_edges as (delete from public.graph_edges where user_id in ($idList) returning 1),
-  deleted_graph_nodes as (delete from public.graph_nodes where user_id in ($idList) returning 1),
-  deleted_audit as (delete from public.audit_log where user_id in ($idList) returning 1),
-  deleted_metrics as (delete from public.metrics_snapshots where user_id in ($idList) returning 1),
-  deleted_memory as (delete from public.memory_nodes where user_id in ($idList) returning 1),
-  deleted_journal as (delete from public.journal_entries where user_id in ($idList) returning 1),
-  deleted_tasks as (delete from public.tasks where user_id in ($idList) returning 1),
-  deleted_habits as (delete from public.habits where user_id in ($idList) returning 1),
-  deleted_voice as (delete from public.voice_preferences where user_id in ($idList) returning 1),
-  deleted_chat as (delete from public.chat_history where user_id in ($idList) returning 1),
-  deleted_users as (delete from public.users where id in ($idList) returning 1),
-  deleted_member_rate_windows as (
-    delete from private.ai_rate_limit_windows
-     where scope in ('member_minute','member_day')
-       and subject in ($memberSubjectList)
-    returning 1
-  )
+begin;
+delete from public.graph_edges where user_id in ($idList);
+delete from public.graph_nodes where user_id in ($idList);
+delete from public.audit_log where user_id in ($idList);
+delete from public.metrics_snapshots where user_id in ($idList);
+delete from public.memory_nodes where user_id in ($idList);
+delete from public.journal_entries where user_id in ($idList);
+delete from public.tasks where user_id in ($idList);
+delete from public.habits where user_id in ($idList);
+delete from public.voice_preferences where user_id in ($idList);
+delete from public.chat_history where user_id in ($idList);
+delete from private.ai_rate_limit_windows
+ where scope in ('member_minute','member_day')
+   and subject in ($memberSubjectList);
 delete from private.beta_members where user_id in ($idList);
+delete from public.users where id in ($idList);
+commit;
 "@
       $cleanupSql = $cleanupSql -replace '\s+', ' '
       $queryArgs = @(
         'dlx', 'supabase@2.109.0', 'db', 'query', $cleanupSql,
         '--db-url', $branch.POSTGRES_URL, '--output-format', 'json'
       )
-      & pnpm @queryArgs | Out-Null
-      $dbCleanupExit = $LASTEXITCODE
+      $dbCleanupExit = 1
+      $dbCleanupAttempts = 0
+      for ($cleanupAttempt = 1; $cleanupAttempt -le 3; $cleanupAttempt += 1) {
+        $dbCleanupAttempts = $cleanupAttempt
+        & pnpm @queryArgs | Out-Null
+        $dbCleanupExit = $LASTEXITCODE
+        if ($dbCleanupExit -eq 0) { break }
+        Start-Sleep -Milliseconds (500 * $cleanupAttempt)
+      }
       $authCleanupErrors = 0
       foreach ($id in $safeIds) {
         try {
@@ -357,6 +362,7 @@ delete from private.beta_members where user_id in ($idList);
       }
       $cleanupOk = $dbCleanupExit -eq 0 -and $authCleanupErrors -eq 0
       "CLEANUP_DB_EXIT=$dbCleanupExit"
+      "CLEANUP_DB_ATTEMPTS=$dbCleanupAttempts"
       "CLEANUP_AUTH_ERRORS=$authCleanupErrors"
       "CLEANUP_PRINCIPALS=$($safeIds.Count)"
       "CLEANUP_OK=$cleanupOk"

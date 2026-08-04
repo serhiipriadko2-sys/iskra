@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-04T15:47:23.406Z",
-  "total": 3752,
+  "generatedAt": "2026-08-04T15:52:00.214Z",
+  "total": 3753,
   "curated": 20,
   "layers": {
     "root": 347,
@@ -25,7 +25,7 @@
     "reference": 82,
     "runtime": 379,
     "skills": 269,
-    "backend": 86,
+    "backend": 87,
     "system": 26,
     "tools": 70
   },
@@ -44662,6 +44662,7 @@
         "supabase/migrations/20260728183421_parallax_memory_gate.sql",
         "supabase/migrations/20260804183000_graph_api_least_privilege.sql",
         "supabase/migrations/20260804184500_reconcile_pg_graphql_extension.sql",
+        "supabase/migrations/20260804190000_reconcile_iskra_memory_search_paths.sql",
         "supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
@@ -45116,6 +45117,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260804184500_reconcile_pg_graphql_extension.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260804190000_reconcile_iskra_memory_search_paths.sql",
+      "name": "20260804190000_reconcile_iskra_memory_search_paths.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260804190000_reconcile_iskra_memory_search_paths.sql",
       "related": [],
       "parent": "supabase/migrations"
     },

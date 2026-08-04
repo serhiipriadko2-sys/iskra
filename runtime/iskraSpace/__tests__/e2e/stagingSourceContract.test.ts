@@ -126,6 +126,9 @@ describe('staging acceptance source contract', () => {
     expect(harness).toContain('Remove-Item -LiteralPath "Env:$name"');
     expect(harness).toContain("scope in ('member_minute','member_day')");
     expect(harness).toContain('subject in ($memberSubjectList)');
+    expect(harness).toContain('CLEANUP_DB_ATTEMPTS');
+    expect(harness).toContain('$cleanupAttempt -le 3');
+    expect(harness).toContain('delete from public.users where id in ($idList);');
     expect(harness).not.toContain('delete from private.ai_rate_limit_windows returning 1');
   });
 });
