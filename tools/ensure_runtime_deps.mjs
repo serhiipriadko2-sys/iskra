@@ -121,7 +121,17 @@ function overridesMatchLock(pkg, lock) {
 }
 
 function packageJsonMatchesLock() {
-  if (!existsSync(packageJson)) return true; // nothing to compare against
+  // A missing manifest is drift, not agreement: `npm ci`, every runtime
+  // script, and this very check all need `runtime/package.json` to exist.
+  // Reproduced: with the stamp matching and every entry point on disk
+  // intact, deleting only `runtime/package.json` left the pre-fix version
+  // ("nothing to compare against" -> true) reporting "tree complete" while
+  // `npm run <anything>` in runtime/ has no manifest to read. Returning
+  // false here routes to the same "package.json diverged from lockfile"
+  // branch a hand-edited package.json already takes, which correctly falls
+  // through to `npm ci` and lets it fail loudly instead of this script
+  // silently agreeing there is nothing to disagree with.
+  if (!existsSync(packageJson)) return false;
   const pkg = JSON.parse(readFileSync(packageJson, 'utf8'));
   const lock = JSON.parse(readFileSync(packageLock, 'utf8'));
   const rootEntry = lock.packages?.[''] ?? {};
