@@ -130,10 +130,10 @@ export function validateFractalSignal(value: unknown): ValidSignal | InvalidSign
 }
 
 export function readRequestedParameters(
-  value: object,
+  value: unknown,
   allowedKeys: readonly string[],
 ): RequestedParametersResult {
-  if (value === null || Array.isArray(value)) {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
     return { status: 'invalid', detail: 'options must be an object' }
   }
 

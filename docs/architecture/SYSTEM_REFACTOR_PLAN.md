@@ -1,5 +1,8 @@
 # SYSTEM REFACTOR PLAN: The Monolith to Monorepo Transition
 
+> [!NOTE]
+> **Migration history, not current topology.** Verify package boundaries against the working tree and `docs/architecture/ARCHITECTURE_TRUTH_BOUNDARY_v1.md`. Typed HFD/DFA authority remains a pre-activation implementation candidate under ADR-20260729-02.
+
 **Status:** Draft
 **Target:** vΩ.5.0 (Modular Iskra)
 **Integrity:** SoT-Architecture

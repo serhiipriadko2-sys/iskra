@@ -1,0 +1,97 @@
+name: PINO First Strike Materialize
+
+on:
+  push:
+    branches: [feat/pino-first-strike-v557]
+    paths:
+      - "tools/apply_pino_first_strike_release.py"
+      - "tools/pino_release/**"
+      - ".github/workflows/pino_first_strike_materialize.yml"
+      - "governance/adr_20260730_pino_first_strike.md"
+      - "governance/changelog.d/2026-07-30-pino-first-strike.md"
+  pull_request:
+    paths:
+      - "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/**"
+      - "dist/SoT30_v5.5.7.zip"
+      - "tools/apply_pino_first_strike_release.py"
+      - "tools/pino_release/**"
+      - ".github/workflows/pino_first_strike_materialize.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: github.event_name == 'push' && github.ref_name == 'feat/pino-first-strike-v557'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/pino-first-strike-v557
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --frozen-lockfile
+      - name: Configure bot commit
+        run: |
+          git config user.name "iskra-release-bot"
+          git config user.email "iskra-release-bot@users.noreply.github.com"
+      - name: Create source freeze
+        id: source
+        run: |
+          python tools/apply_pino_first_strike_release.py --source
+          git add governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(sot30): mirror PINO First Strike source contract"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "ref=$(python -c 'import json;print(json.load(open("governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/MANIFEST.json"))["generated_from_ref"])')" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build package from source commit
+        run: python tools/apply_pino_first_strike_release.py --build "${{ steps.source.outputs.ref }}"
+      - name: Verify PINO contract
+        run: |
+          python tools/apply_pino_first_strike_release.py --verify
+          python tools/apply_pino_first_strike_release.py --selftest
+      - name: Verify existing SoT30 contract
+        run: >-
+          npx tsx tools/verify_sot30_release.ts
+          governance/releases/2026-07-30-sot30-v5-5-7-audit-repair
+          dist/SoT30_v5.5.7.zip
+          governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json
+          v5.5.7
+      - name: Refresh and verify ledger
+        run: |
+          pnpm ledger:update
+          npx tsx tools/verify_ledger.ts
+      - name: Commit generated artifacts
+        run: |
+          git add governance/releases/2026-07-30-sot30-v5-5-7-audit-repair dist/SoT30_v5.5.7.zip ledger/sot.json ledger/checksum.asc
+          if ! git diff --cached --quiet; then
+            git commit -m "build(sot30): package PINO First Strike amendment"
+          fi
+          git push origin HEAD:feat/pino-first-strike-v557
+
+  verify:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - uses: pnpm/action-setup@v4
+      - run: pnpm install --frozen-lockfile
+      - run: python tools/apply_pino_first_strike_release.py --verify
+      - run: python tools/apply_pino_first_strike_release.py --selftest
+      - run: >-
+          npx tsx tools/verify_sot30_release.ts
+          governance/releases/2026-07-30-sot30-v5-5-7-audit-repair
+          dist/SoT30_v5.5.7.zip
+          governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair/support/MANIFEST.json
+          v5.5.7
+      - run: npx tsx tools/verify_ledger.ts

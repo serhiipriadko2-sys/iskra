@@ -1,5 +1,8 @@
 # ISKRA LIVEBUILD vΩ.3.0 — ГЛУБОКИЙ АУДИТ
 
+> [!WARNING]
+> **Historical audit snapshot (January 2026).** Counts, readiness labels, dependency versions and “ready” claims are not current repository evidence. For the HFD/DFA implementation lifecycle, use ADR-20260729-02, PR #326, and `docs/operations/fractal_authority_review_repair_2026-08-04.md`.
+
 **Дата аудита:** 2026-01-03 (обновлено vΩ.3.1)
 **Первый аудит:** 2026-01-02
 **Аудитор:** Claude (Opus 4.5)

@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-07-29T18:28:12.615Z",
-  "total": 3683,
+  "generatedAt": "2026-08-04T14:58:51.598Z",
+  "total": 3749,
   "curated": 20,
   "layers": {
-    "root": 346,
+    "root": 347,
     "agents": 46,
     "devcontainer": 2,
-    "ci": 14,
+    "ci": 16,
     "research": 487,
     "appendix": 26,
     "site": 69,
     "web": 13,
     "canon": 16,
     "builder": 1187,
-    "docs": 75,
-    "governance": 388,
+    "docs": 81,
+    "governance": 433,
     "ingest": 10,
     "ledger": 7,
     "metrics": 7,
@@ -25,9 +25,9 @@
     "reference": 82,
     "runtime": 379,
     "skills": 269,
-    "backend": 80,
+    "backend": 84,
     "system": 26,
-    "tools": 62
+    "tools": 70
   },
   "nodes": [
     {
@@ -728,9 +728,11 @@
         ".github/workflows/iskra-site_deploy.yml",
         ".github/workflows/iskraspace_ci.yml",
         ".github/workflows/judge_stack_qc.yml",
+        ".github/workflows/pino_first_strike_materialize.yml",
         ".github/workflows/production_deploy.yml",
         ".github/workflows/runtime_ci.yml",
         ".github/workflows/sot_integrity.yml",
+        ".github/workflows/supabase_migration_clean_replay.yml",
         ".github/workflows/supabase_schema_contract.yml"
       ]
     },
@@ -801,6 +803,17 @@
       "parent": ".github/workflows"
     },
     {
+      "path": ".github/workflows/pino_first_strike_materialize.yml",
+      "name": "pino_first_strike_materialize.yml",
+      "kind": "file",
+      "layer": "ci",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".github/workflows/pino_first_strike_materialize.yml",
+      "related": [],
+      "parent": ".github/workflows"
+    },
+    {
       "path": ".github/workflows/production_deploy.yml",
       "name": "production_deploy.yml",
       "kind": "file",
@@ -830,6 +843,17 @@
       "role": "config",
       "coverage": "indexed",
       "sourceRef": ".github/workflows/sot_integrity.yml",
+      "related": [],
+      "parent": ".github/workflows"
+    },
+    {
+      "path": ".github/workflows/supabase_migration_clean_replay.yml",
+      "name": "supabase_migration_clean_replay.yml",
+      "kind": "file",
+      "layer": "ci",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".github/workflows/supabase_migration_clean_replay.yml",
       "related": [],
       "parent": ".github/workflows"
     },
@@ -10475,7 +10499,8 @@
         "dist/SoT30_v5.5.3.zip",
         "dist/SoT30_v5.5.4.zip",
         "dist/SoT30_v5.5.5.zip",
-        "dist/SoT30_v5.5.6.zip"
+        "dist/SoT30_v5.5.6.zip",
+        "dist/SoT30_v5.5.7.zip"
       ]
     },
     {
@@ -10530,6 +10555,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "dist/SoT30_v5.5.6.zip",
+      "related": [],
+      "parent": "dist"
+    },
+    {
+      "path": "dist/SoT30_v5.5.7.zip",
+      "name": "SoT30_v5.5.7.zip",
+      "kind": "file",
+      "layer": "root",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "dist/SoT30_v5.5.7.zip",
       "related": [],
       "parent": "dist"
     },
@@ -26363,6 +26399,7 @@
         "docs/operations/iskraspace_dual_ai_provider_gateway_2026-06-08.md",
         "docs/operations/iskraspace_minimal_memory_write_protocol_2026-06-26.md",
         "docs/operations/iskraspace_post_merge_verification_2026-06-07.md",
+        "docs/operations/iskraspace_production_promotion_2026-07-31.md",
         "docs/operations/iskraspace_production_readiness_receipt_2026-07-01.md",
         "docs/operations/iskraspace_release_readiness_board.md",
         "docs/operations/iskraspace_release_readiness_snapshot_2026-06-07.md",
@@ -26377,7 +26414,12 @@
         "docs/operations/sprint1_remediation_matrix.md",
         "docs/operations/sprint2_implementation_backlog.md",
         "docs/operations/supabase-status-redacted-example.txt",
+        "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
+        "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+        "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
+        "docs/operations/supabase_production_db_preflight_2026-08-04.md",
         "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
+        "docs/operations/supabase_staging_cleanup_2026-07-31.md",
         "docs/operations/supabase_status_exposure_owner_checklist_2026-06-07.md"
       ]
     },
@@ -26433,6 +26475,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "docs/operations/iskraspace_post_merge_verification_2026-06-07.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/iskraspace_production_promotion_2026-07-31.md",
+      "name": "iskraspace_production_promotion_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/iskraspace_production_promotion_2026-07-31.md",
       "related": [],
       "parent": "docs/operations"
     },
@@ -26591,6 +26644,50 @@
       "parent": "docs/operations"
     },
     {
+      "path": "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
+      "name": "supabase_advisor_snapshot_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+      "name": "supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
+      "name": "supabase_migration_provenance_recovery_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_production_db_preflight_2026-08-04.md",
+      "name": "supabase_production_db_preflight_2026-08-04.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_production_db_preflight_2026-08-04.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
       "path": "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
       "name": "supabase_residual_advisors_approval_packet_2026-06-26.md",
       "kind": "file",
@@ -26598,6 +26695,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_staging_cleanup_2026-07-31.md",
+      "name": "supabase_staging_cleanup_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_staging_cleanup_2026-07-31.md",
       "related": [],
       "parent": "docs/operations"
     },
@@ -27060,6 +27168,9 @@
         "governance/adr_20260722_skill_registry_consolidation.md",
         "governance/adr_20260724_metrics_authority.md",
         "governance/adr_20260729_packages_math_authoritative_api.md",
+        "governance/adr_20260730_pino_first_strike.md",
+        "governance/adr_20260730_sot30_v5_5_7_audit_repair.md",
+        "governance/adr_20260731_supabase_advisor_migration_provenance.md",
         "governance/adr_gitagent_export.md",
         "governance/adr_memory_stack.md",
         "governance/adr_migration_vOmega5.md",
@@ -27067,6 +27178,7 @@
         "governance/audit.md",
         "governance/changelog.md",
         "governance/codex_local_operating_contract.md",
+        "governance/evidence_20260729_adr_20260729_02_runtime_fractal_surface.md",
         "governance/governance_pack.md",
         "governance/iskra_constitution_v1_annexes.md",
         "governance/iskra_constitution_v1_core.md",
@@ -27599,6 +27711,39 @@
       "parent": "governance"
     },
     {
+      "path": "governance/adr_20260730_pino_first_strike.md",
+      "name": "adr_20260730_pino_first_strike.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260730_pino_first_strike.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260730_sot30_v5_5_7_audit_repair.md",
+      "name": "adr_20260730_sot30_v5_5_7_audit_repair.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260730_sot30_v5_5_7_audit_repair.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
+      "path": "governance/adr_20260731_supabase_advisor_migration_provenance.md",
+      "name": "adr_20260731_supabase_advisor_migration_provenance.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/adr_20260731_supabase_advisor_migration_provenance.md",
+      "related": [],
+      "parent": "governance"
+    },
+    {
       "path": "governance/adr_gitagent_export.md",
       "name": "adr_gitagent_export.md",
       "kind": "file",
@@ -27792,7 +27937,9 @@
         "governance/changelog.d/2026-07-20-sot30-v554-lifecycle-provenance.md",
         "governance/changelog.d/2026-07-20-sot30-v554-verifier-hardening.md",
         "governance/changelog.d/2026-07-21-sot30-v5-5-5-provenance.md",
-        "governance/changelog.d/2026-07-21-sot30-v5-5-6-acceptance-repair.md"
+        "governance/changelog.d/2026-07-21-sot30-v5-5-6-acceptance-repair.md",
+        "governance/changelog.d/2026-07-30-pino-first-strike.md",
+        "governance/changelog.d/2026-07-30-sot30-v5-5-7-audit-repair.md"
       ]
     },
     {
@@ -28126,6 +28273,28 @@
       "parent": "governance/changelog.d"
     },
     {
+      "path": "governance/changelog.d/2026-07-30-pino-first-strike.md",
+      "name": "2026-07-30-pino-first-strike.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-30-pino-first-strike.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
+      "path": "governance/changelog.d/2026-07-30-sot30-v5-5-7-audit-repair.md",
+      "name": "2026-07-30-sot30-v5-5-7-audit-repair.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/changelog.d/2026-07-30-sot30-v5-5-7-audit-repair.md",
+      "related": [],
+      "parent": "governance/changelog.d"
+    },
+    {
       "path": "governance/changelog.md",
       "name": "changelog.md",
       "kind": "file",
@@ -28258,6 +28427,17 @@
       "sourceRef": "governance/evidence/metrics/pr-306-post-merge-audit.json",
       "related": [],
       "parent": "governance/evidence/metrics"
+    },
+    {
+      "path": "governance/evidence_20260729_adr_20260729_02_runtime_fractal_surface.md",
+      "name": "evidence_20260729_adr_20260729_02_runtime_fractal_surface.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/evidence_20260729_adr_20260729_02_runtime_fractal_surface.md",
+      "related": [],
+      "parent": "governance"
     },
     {
       "path": "governance/governance_pack.md",
@@ -28406,6 +28586,7 @@
         "governance/releases/2026-07-21-sot30-v5-5-5-provenance",
         "governance/releases/2026-07-21-sot30-v5-5-6-acceptance-repair",
         "governance/releases/2026-07-24-atom1-metrics-authority",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair",
         "governance/releases/2026-06-05-agent-builder-dreamspace-docs.md",
         "governance/releases/2026-06-24-relational-vow-canon-receipt.md",
         "governance/releases/2026-06-28-sense-event-operational-bridge-receipt.md",
@@ -31720,6 +31901,479 @@
       "sourceRef": "governance/releases/2026-07-24-atom1-metrics-authority/PACKAGE_RECEIPT.json",
       "related": [],
       "parent": "governance/releases/2026-07-24-atom1-metrics-authority"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair",
+      "name": "2026-07-30-sot30-v5-5-7-audit-repair",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair",
+      "related": [],
+      "parent": "governance/releases",
+      "children": [
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/PACKAGE_RECEIPT.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/QC_REPORT.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/README.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/PACKAGE_RECEIPT.md",
+      "name": "PACKAGE_RECEIPT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/PACKAGE_RECEIPT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/QC_REPORT.md",
+      "name": "QC_REPORT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/QC_REPORT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/README.md",
+      "name": "README.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/README.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge",
+      "name": "knowledge",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair",
+      "children": [
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/00_PROJECT_ROUTER.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/02_PROJECTS_SURFACE_MAP.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/04_IDENTITY_NON_MIRROR.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/05_TRUTH_SIFT_RAG.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/06_SECURITY_INTEGRITY.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/07_UNIVERSAL_ROUTER.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/08_STATECYCLE_RUNTIME.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/09_METRICS_ENGINE.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/12_COUNCIL_VOICES.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/14_MEMORY_MODEL.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/16_SHADOW_LAYER.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/17_DREAMSPACE_DREAMSEED.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/18_HORIZON_WEAVER.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/20_GOVERNANCE_ADR.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/24_INTERFACE_STYLE.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/25_LIBER_SPACE_BUSIDO.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/26_SOMATIC_INTUITION.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/28_EVALS_ACCEPTANCE.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/29_INDEX_UPLOAD_MANIFEST.md"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/00_PROJECT_ROUTER.md",
+      "name": "00_PROJECT_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/00_PROJECT_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "name": "01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/01_PARITY_ADVANCEMENT_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "name": "02_PROJECTS_SURFACE_MAP.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/02_PROJECTS_SURFACE_MAP.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "name": "03_TELOS_MANTRA_PRINCIPLES.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/03_TELOS_MANTRA_PRINCIPLES.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "name": "04_IDENTITY_NON_MIRROR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/04_IDENTITY_NON_MIRROR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/05_TRUTH_SIFT_RAG.md",
+      "name": "05_TRUTH_SIFT_RAG.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/05_TRUTH_SIFT_RAG.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/06_SECURITY_INTEGRITY.md",
+      "name": "06_SECURITY_INTEGRITY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/06_SECURITY_INTEGRITY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/07_UNIVERSAL_ROUTER.md",
+      "name": "07_UNIVERSAL_ROUTER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/07_UNIVERSAL_ROUTER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/08_STATECYCLE_RUNTIME.md",
+      "name": "08_STATECYCLE_RUNTIME.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/08_STATECYCLE_RUNTIME.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/09_METRICS_ENGINE.md",
+      "name": "09_METRICS_ENGINE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/09_METRICS_ENGINE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "name": "10_ENTROPY_FRACTAL_EWS.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/10_ENTROPY_FRACTAL_EWS.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "name": "11_SLO_PLAYBOOK_CONTROL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/11_SLO_PLAYBOOK_CONTROL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/12_COUNCIL_VOICES.md",
+      "name": "12_COUNCIL_VOICES.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/12_COUNCIL_VOICES.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "name": "13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/13_OUTPUT_RECEIPTS_ANTI_EMPTY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/14_MEMORY_MODEL.md",
+      "name": "14_MEMORY_MODEL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/14_MEMORY_MODEL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "name": "15_SUPABASE_MEMORY_PLANE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/15_SUPABASE_MEMORY_PLANE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/16_SHADOW_LAYER.md",
+      "name": "16_SHADOW_LAYER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/16_SHADOW_LAYER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "name": "17_DREAMSPACE_DREAMSEED.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/17_DREAMSPACE_DREAMSEED.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/18_HORIZON_WEAVER.md",
+      "name": "18_HORIZON_WEAVER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/18_HORIZON_WEAVER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "name": "19_DRY_DARK_RUN_PROTOCOL.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/19_DRY_DARK_RUN_PROTOCOL.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/20_GOVERNANCE_ADR.md",
+      "name": "20_GOVERNANCE_ADR.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/20_GOVERNANCE_ADR.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "name": "21_WORKFLOW_OPS_LEDGER.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/21_WORKFLOW_OPS_LEDGER.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "name": "22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/22_CONNECTORS_TOOLS_BOUNDARY.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "name": "23_BUILDER_PROJECTS_COMPAT.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/23_BUILDER_PROJECTS_COMPAT.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/24_INTERFACE_STYLE.md",
+      "name": "24_INTERFACE_STYLE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/24_INTERFACE_STYLE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "name": "25_LIBER_SPACE_BUSIDO.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/25_LIBER_SPACE_BUSIDO.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/26_SOMATIC_INTUITION.md",
+      "name": "26_SOMATIC_INTUITION.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/26_SOMATIC_INTUITION.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "name": "27_WHAT_IF_SCENARIO_MATRIX.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/27_WHAT_IF_SCENARIO_MATRIX.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/28_EVALS_ACCEPTANCE.md",
+      "name": "28_EVALS_ACCEPTANCE.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/28_EVALS_ACCEPTANCE.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "name": "29_INDEX_UPLOAD_MANIFEST.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge/29_INDEX_UPLOAD_MANIFEST.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/knowledge"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support",
+      "name": "support",
+      "kind": "directory",
+      "layer": "governance",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair",
+      "children": [
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/MANIFEST.json",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/PROJECT_INSTRUCTIONS_SOT30.md",
+        "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/SHA256SUMS"
+      ]
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/MANIFEST.json",
+      "name": "MANIFEST.json",
+      "kind": "file",
+      "layer": "governance",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/MANIFEST.json",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "name": "PROJECT_INSTRUCTIONS_SOT30.md",
+      "kind": "file",
+      "layer": "governance",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/PROJECT_INSTRUCTIONS_SOT30.md",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support"
+    },
+    {
+      "path": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/SHA256SUMS",
+      "name": "SHA256SUMS",
+      "kind": "file",
+      "layer": "governance",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support/SHA256SUMS",
+      "related": [],
+      "parent": "governance/releases/2026-07-30-sot30-v5-5-7-audit-repair/support"
     },
     {
       "path": "governance/update_protocol.md",
@@ -43991,6 +44645,10 @@
         "supabase/migrations/20260718194551_optimize_rls_initplan.sql",
         "supabase/migrations/20260718194835_consolidate_rls_policies.sql",
         "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
+        "supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+        "supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql",
+        "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+        "supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
         "supabase/migrations/README_LEGACY_DATA_MIGRATION.sql"
@@ -44389,6 +45047,50 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+      "name": "20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql",
+      "name": "20260728180000_reconcile_gateway_events_live_schema.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+      "name": "20260728183421_parallax_memory_gate.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json",
+      "name": "MANIFEST_2026-07-31_LIVE_RECOVERY.json",
+      "kind": "file",
+      "layer": "backend",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json",
       "related": [],
       "parent": "supabase/migrations"
     },
@@ -44837,7 +45539,9 @@
       "sourceRef": "tools",
       "related": [],
       "children": [
+        "tools/pino_release",
         "tools/projects_stack_templates",
+        "tools/apply_pino_first_strike_release.py",
         "tools/apply_supabase_migration.ts",
         "tools/apply_workspace_agent_modernization.py",
         "tools/build_checkpoint.py",
@@ -44893,6 +45597,17 @@
         "tools/verify_supabase_graph_contract.ts",
         "tools/verify_supabase_voice_metrics_contract.ts"
       ]
+    },
+    {
+      "path": "tools/apply_pino_first_strike_release.py",
+      "name": "apply_pino_first_strike_release.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/apply_pino_first_strike_release.py",
+      "related": [],
+      "parent": "tools"
     },
     {
       "path": "tools/apply_supabase_migration.ts",
@@ -45234,6 +45949,91 @@
       "sourceRef": "tools/import_phase1_shard3.py",
       "related": [],
       "parent": "tools"
+    },
+    {
+      "path": "tools/pino_release",
+      "name": "pino_release",
+      "kind": "directory",
+      "layer": "tools",
+      "role": "container",
+      "coverage": "indexed",
+      "sourceRef": "tools/pino_release",
+      "related": [],
+      "parent": "tools",
+      "children": [
+        "tools/pino_release/__init__.py",
+        "tools/pino_release/build.py",
+        "tools/pino_release/common.py",
+        "tools/pino_release/payloads.py",
+        "tools/pino_release/source.py",
+        "tools/pino_release/verify.py"
+      ]
+    },
+    {
+      "path": "tools/pino_release/__init__.py",
+      "name": "__init__.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/pino_release/__init__.py",
+      "related": [],
+      "parent": "tools/pino_release"
+    },
+    {
+      "path": "tools/pino_release/build.py",
+      "name": "build.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/pino_release/build.py",
+      "related": [],
+      "parent": "tools/pino_release"
+    },
+    {
+      "path": "tools/pino_release/common.py",
+      "name": "common.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/pino_release/common.py",
+      "related": [],
+      "parent": "tools/pino_release"
+    },
+    {
+      "path": "tools/pino_release/payloads.py",
+      "name": "payloads.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/pino_release/payloads.py",
+      "related": [],
+      "parent": "tools/pino_release"
+    },
+    {
+      "path": "tools/pino_release/source.py",
+      "name": "source.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/pino_release/source.py",
+      "related": [],
+      "parent": "tools/pino_release"
+    },
+    {
+      "path": "tools/pino_release/verify.py",
+      "name": "verify.py",
+      "kind": "file",
+      "layer": "tools",
+      "role": "script",
+      "coverage": "indexed",
+      "sourceRef": "tools/pino_release/verify.py",
+      "related": [],
+      "parent": "tools/pino_release"
     },
     {
       "path": "tools/projects_stack_templates",

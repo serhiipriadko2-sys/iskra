@@ -7,124 +7,94 @@ import {
   FRACTAL_GENERATED_ARTIFACT_HASH,
   FRACTAL_PARITY_CORPUS_HASH,
 } from '../fractal-authority.js'
+import {
+  assertCorpusHash,
+  FRACTAL_AUTHORITY_CORPUS_CASES,
+  materializeCorpusSignal,
+  type CorpusExpectation,
+} from './fractal-authority-corpus.js'
 
 const periodic = (length: number): number[] =>
   Array.from({ length }, (_, index) => Math.sin(index / 3) + (index % 7) * 0.05)
 
-const seededNoise = (length: number, seed = 1729): number[] => {
-  let state = seed >>> 0
-  return Array.from({ length }, () => {
-    state = (1664525 * state + 1013904223) >>> 0
-    return state / 0xffffffff
-  })
-}
-
-const expectComputed = (result: ReturnType<typeof calculateHFDMetric>): number => {
-  expect(result.status).toBe('computed')
-  if (result.status !== 'computed') throw new Error(`expected computed, got ${result.status}`)
-  expect(Number.isFinite(result.value)).toBe(true)
-  return result.value
+function expectRegisteredResult(
+  result: ReturnType<typeof calculateHFDMetric>,
+  expected: CorpusExpectation,
+): void {
+  expect(result.status).toBe(expected.status)
+  if ('reason' in result && expected.reason !== undefined) expect(result.reason).toBe(expected.reason)
+  if (result.status === 'computed') {
+    expect(Number.isFinite(result.value)).toBe(true)
+    expect(result.value).toBe(expected.value)
+  }
 }
 
 describe('ADR-20260729-02 authoritative fractal contract', () => {
-  it.each([0, 1, 19])('T1: HFD N=%i is unavailable', (length) => {
-    const result = calculateHFDMetric(periodic(length))
-    expect(result.status).toBe('unavailable')
-    expect(result.sample_count).toBe(length)
-    expect(result.effective_parameters).toBeNull()
+  it('T7: executes the SHA-bound registered corpus', () => {
+    assertCorpusHash()
+    expect(FRACTAL_AUTHORITY_CORPUS_CASES.length).toBeGreaterThanOrEqual(18)
+    for (const testCase of FRACTAL_AUTHORITY_CORPUS_CASES) {
+      const signal = materializeCorpusSignal(testCase)
+      expectRegisteredResult(calculateHFDMetric(signal, testCase.hfd_options), testCase.expected.hfd)
+      expectRegisteredResult(calculateDFAMetric(signal, testCase.dfa_options), testCase.expected.dfa)
+    }
   })
 
-  it('T1: HFD N=20 computes with kMax=5', () => {
+  it('T1: HFD boundary uses kMax=5 without stand-ins', () => {
+    expect(calculateHFDMetric(periodic(19)).status).toBe('unavailable')
     const result = calculateHFDMetric(periodic(20))
     expect(result.status).toBe('computed')
     expect(result.effective_parameters).toEqual({ kMax: 5 })
-    expectComputed(result)
   })
 
-  it.each([0, 1, 49])('T2: DFA N=%i is unavailable', (length) => {
-    const result = calculateDFAMetric(periodic(length))
-    expect(result.status).toBe('unavailable')
-    expect(result.sample_count).toBe(length)
-    expect(result.effective_parameters).toBeNull()
-  })
-
-  it('T2: DFA N=50 computes with fixed boxes', () => {
+  it('T2: DFA boundary uses fixed boxes without stand-ins', () => {
+    expect(calculateDFAMetric(periodic(49)).status).toBe('unavailable')
     const result = calculateDFAMetric(periodic(50))
     expect(result.status).toBe('computed')
     expect(result.effective_parameters).toEqual({ minBox: 4, maxBox: 16 })
-    if (result.status === 'computed') expect(Number.isFinite(result.value)).toBe(true)
   })
 
-  it.each([
-    null,
-    'not-an-array',
-    [1, Number.NaN],
-    [1, Number.POSITIVE_INFINITY],
-  ])('T3: malformed signal is invalid before sufficiency', (signal) => {
-    expect(calculateHFDMetric(signal).status).toBe('invalid')
-    expect(calculateDFAMetric(signal).status).toBe('invalid')
+  it('T3: malformed signal wins over malformed explicit parameters', () => {
+    const hfd = calculateHFDMetric([Number.NaN], { kMax: Number.NaN } as never)
+    const dfa = calculateDFAMetric('not-an-array', { unsupported: 1 } as never)
+    expect(hfd.status).toBe('invalid')
+    expect(dfa.status).toBe('invalid')
+    if (hfd.status === 'invalid') expect(hfd.reason).toBe('invalid_signal')
+    if (dfa.status === 'invalid') expect(dfa.reason).toBe('invalid_container')
   })
 
-  it('T4: explicit HFD default matches omission', () => {
+  it('T4: explicit defaults equal omission; non-defaults fail closed', () => {
     const values = periodic(80)
-    const omitted = calculateHFDMetric(values)
-    const explicit = calculateHFDMetric(values, { kMax: 5 })
-    expect(omitted.status).toBe('computed')
-    expect(explicit.status).toBe('computed')
-    if (omitted.status === 'computed' && explicit.status === 'computed') {
-      expect(explicit.value).toBe(omitted.value)
-      expect(explicit.effective_parameters).toEqual(omitted.effective_parameters)
+    const hfdOmitted = calculateHFDMetric(values)
+    const hfdExplicit = calculateHFDMetric(values, { kMax: 5 })
+    const dfaOmitted = calculateDFAMetric(values)
+    const dfaExplicit = calculateDFAMetric(values, { minBox: 4, maxBox: 16 })
+    expect(hfdExplicit.status).toBe('computed')
+    expect(dfaExplicit.status).toBe('computed')
+    if (hfdOmitted.status === 'computed' && hfdExplicit.status === 'computed') {
+      expect(hfdExplicit.value).toBe(hfdOmitted.value)
+      expect(hfdExplicit.effective_parameters).toEqual(hfdOmitted.effective_parameters)
     }
-  })
-
-  it('T4: explicit DFA defaults match omission', () => {
-    const values = periodic(80)
-    const omitted = calculateDFAMetric(values)
-    const explicit = calculateDFAMetric(values, { minBox: 4, maxBox: 16 })
-    expect(omitted.status).toBe('computed')
-    expect(explicit.status).toBe('computed')
-    if (omitted.status === 'computed' && explicit.status === 'computed') {
-      expect(explicit.value).toBe(omitted.value)
-      expect(explicit.effective_parameters).toEqual(omitted.effective_parameters)
+    if (dfaOmitted.status === 'computed' && dfaExplicit.status === 'computed') {
+      expect(dfaExplicit.value).toBe(dfaOmitted.value)
+      expect(dfaExplicit.effective_parameters).toEqual(dfaOmitted.effective_parameters)
     }
+    expect(calculateHFDMetric(values, { kMax: 6 }).status).toBe('invalid')
+    expect(calculateDFAMetric(values, { maxBox: 64 }).status).toBe('invalid')
   })
 
-  it('T4: non-default parameters are invalid without clamping', () => {
-    expect(calculateHFDMetric(periodic(80), { kMax: 6 }).status).toBe('invalid')
-    expect(calculateDFAMetric(periodic(80), { minBox: 5 }).status).toBe('invalid')
-    expect(calculateDFAMetric(periodic(80), { maxBox: 64 }).status).toBe('invalid')
-  })
-
-  it('T5: computed receipts bind requested/effective parameters and hashes', () => {
-    const result = calculateHFDMetric(periodic(80), { kMax: 5 })
-    expect(result.status).toBe('computed')
-    expect(result.requested_parameters).toEqual({ kMax: 5 })
-    expect(result.effective_parameters).toEqual({ kMax: 5 })
-    expect(result.canonical_source_hash).toBe(FRACTAL_CANONICAL_SOURCE_HASH)
-    expect(result.generated_artifact_hash).toBe(FRACTAL_GENERATED_ARTIFACT_HASH)
-    expect(result.parity_corpus_hash).toBe(FRACTAL_PARITY_CORPUS_HASH)
-  })
-
-  it('T6: overflow is numerical_failure, never computed non-finite', () => {
-    const values = Array.from(
+  it('T5/T6: computed receipts bind provenance and never contain non-finite values', () => {
+    const computed = calculateHFDMetric(periodic(80), { kMax: 5 })
+    expect(computed.status).toBe('computed')
+    expect(computed.canonical_source_hash).toBe(FRACTAL_CANONICAL_SOURCE_HASH)
+    expect(computed.generated_artifact_hash).toBe(FRACTAL_GENERATED_ARTIFACT_HASH)
+    expect(computed.parity_corpus_hash).toBe(FRACTAL_PARITY_CORPUS_HASH)
+    const overflow = Array.from(
       { length: 80 },
       (_, index) => (index % 2 === 0 ? Number.MAX_VALUE : -Number.MAX_VALUE),
     )
-    expect(calculateHFDMetric(values).status).toBe('numerical_failure')
-    expect(calculateDFAMetric(values).status).toBe('numerical_failure')
-  })
-
-  it.each([
-    [Array.from({ length: 80 }, () => 0.25)],
-    [Array.from({ length: 80 }, (_, index) => index / 80)],
-    [periodic(80)],
-    [Array.from({ length: 80 }, (_, index) => (index % 2 === 0 ? -1 : 1))],
-    [seededNoise(80)],
-  ])('T7: deterministic corpus case produces finite scalars', (values) => {
-    expectComputed(calculateHFDMetric(values))
-    const dfa = calculateDFAMetric(values)
-    expect(dfa.status).toBe('computed')
-    if (dfa.status === 'computed') expect(Number.isFinite(dfa.value)).toBe(true)
+    expect(calculateHFDMetric(overflow).status).toBe('numerical_failure')
+    expect(calculateDFAMetric(overflow).status).toBe('numerical_failure')
   })
 
   it('T11: aggregate preserves component statuses without stand-ins', () => {

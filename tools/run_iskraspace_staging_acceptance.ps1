@@ -102,6 +102,46 @@ function New-ExpiredJwt([string]$UserId, [string]$Email, [string]$Secret) {
   return "$unsigned.$signature"
 }
 
+function Wait-ForPostgrestJwtReadiness(
+  [string]$BaseUrl,
+  [string]$PublishableKey,
+  [string]$Token,
+  [string]$Label,
+  [int]$TimeoutSeconds = 30
+) {
+  $deadline = [DateTimeOffset]::UtcNow.AddSeconds($TimeoutSeconds)
+  $headers = @{
+    apikey = $PublishableKey
+    Authorization = "Bearer $Token"
+  }
+
+  do {
+    try {
+      Invoke-WebRequest -Method Get `
+        -Uri "$BaseUrl/rest/v1/users?select=id&limit=0" `
+        -Headers $headers -UseBasicParsing | Out-Null
+      return
+    } catch {
+      $statusCode = [int]$_.Exception.Response.StatusCode
+      $body = ''
+      if ($null -ne $_.Exception.Response) {
+        $reader = New-Object IO.StreamReader($_.Exception.Response.GetResponseStream())
+        try {
+          $body = $reader.ReadToEnd()
+        } finally {
+          $reader.Dispose()
+        }
+      }
+      if ($statusCode -ne 401 -or $body -notmatch 'PGRST303') {
+        throw "Disposable principal $Label JWT readiness returned unexpected status $statusCode"
+      }
+    }
+    Start-Sleep -Seconds 1
+  } while ([DateTimeOffset]::UtcNow -lt $deadline)
+
+  throw "Disposable principal $Label JWT readiness timed out"
+}
+
 Push-Location $repoRoot
 try {
   $branch = (
@@ -179,6 +219,9 @@ try {
         throw "Disposable principal $($spec.label) sign-in returned no JWT"
       }
       $spec.token = $session.access_token
+    }
+    foreach ($spec in $specs) {
+      Wait-ForPostgrestJwtReadiness $baseUrl $publishableKey $spec.token $spec.label
     }
 
     $a = $specs | Where-Object label -eq 'A'

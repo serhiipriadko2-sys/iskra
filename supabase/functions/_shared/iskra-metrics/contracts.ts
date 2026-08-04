@@ -6,7 +6,7 @@ export type EntropyRegime = 'LOOP' | 'FLOW' | 'CHAOS'
 
 export interface RawObservation {
   readonly text?: string
-  readonly signal?: readonly number[]
+  readonly signal?: unknown
 }
 
 export interface DerivedValue<T> {

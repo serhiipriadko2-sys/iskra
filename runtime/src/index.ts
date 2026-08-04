@@ -100,6 +100,7 @@ export type {
   Distortion,
   Evidence,
   EvidenceResult,
+  InferenceAnalysis,
   QuickCheckResult,
   SiftMetrics,
   SiftQuery,
@@ -123,6 +124,7 @@ export {
 } from './types/sift.js'
 
 export type {
+  FractalIndicators,
   FractalIndicators as LegacyFractalIndicators,
   MetricTimeSeries,
   QuantumIndicators,
@@ -199,6 +201,7 @@ export type {
   BiasDetection,
   ConfidenceCalibration,
   CrossDomainSynthesis,
+  ConflictResolution,
   DomainConflict,
   DomainConnection,
   DomainConnectionType,

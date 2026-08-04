@@ -1,23 +1,305 @@
 {
-  "schema_version": "iskra.fractal-authority-corpus.v1",
+  "schema_version": "iskra.fractal-authority-corpus.v2",
   "algorithm_versions": {
     "hfd": "hfd-v1-kmax5",
     "dfa": "dfa-v1-min50-box4-16"
   },
   "cases": [
-    { "id": "empty", "kind": "literal", "values": [] },
-    { "id": "single", "kind": "literal", "values": [0.5] },
-    { "id": "hfd-boundary-19", "kind": "linear", "length": 19 },
-    { "id": "hfd-boundary-20", "kind": "linear", "length": 20 },
-    { "id": "dfa-boundary-49", "kind": "periodic", "length": 49 },
-    { "id": "dfa-boundary-50", "kind": "periodic", "length": 50 },
-    { "id": "constant-80", "kind": "constant", "length": 80, "value": 0.25 },
-    { "id": "linear-80", "kind": "linear", "length": 80 },
-    { "id": "periodic-80", "kind": "periodic", "length": 80 },
-    { "id": "alternating-80", "kind": "alternating", "length": 80 },
-    { "id": "seeded-noise-80", "kind": "seeded-noise", "length": 80, "seed": 1729 },
-    { "id": "nan-short", "kind": "special", "values": [0, "NaN"] },
-    { "id": "infinity-sufficient", "kind": "special", "length": 80, "inject": "Infinity" },
-    { "id": "overflow-80", "kind": "overflow-alternating", "length": 80 }
+    {
+      "id": "empty",
+      "kind": "literal",
+      "values": [],
+      "expected": {
+        "hfd": {
+          "status": "unavailable",
+          "reason": "insufficient_samples"
+        },
+        "dfa": {
+          "status": "unavailable",
+          "reason": "insufficient_samples"
+        }
+      }
+    },
+    {
+      "id": "single",
+      "kind": "literal",
+      "values": [
+        0.5
+      ],
+      "expected": {
+        "hfd": {
+          "status": "unavailable",
+          "reason": "insufficient_samples"
+        },
+        "dfa": {
+          "status": "unavailable",
+          "reason": "insufficient_samples"
+        }
+      }
+    },
+    {
+      "id": "hfd-boundary-19",
+      "kind": "linear",
+      "length": 19,
+      "expected": {
+        "hfd": {
+          "status": "unavailable",
+          "reason": "insufficient_samples"
+        },
+        "dfa": {
+          "status": "unavailable",
+          "reason": "insufficient_samples"
+        }
+      }
+    },
+    {
+      "id": "hfd-boundary-20",
+      "kind": "linear",
+      "length": 20,
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 0.9974586372645207
+        },
+        "dfa": {
+          "status": "unavailable",
+          "reason": "insufficient_samples"
+        }
+      }
+    },
+    {
+      "id": "dfa-boundary-49",
+      "kind": "periodic",
+      "length": 49,
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 1.1163069080265604
+        },
+        "dfa": {
+          "status": "unavailable",
+          "reason": "insufficient_samples"
+        }
+      }
+    },
+    {
+      "id": "dfa-boundary-50",
+      "kind": "periodic",
+      "length": 50,
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 1.1290172634546272
+        },
+        "dfa": {
+          "status": "computed",
+          "value": 1.632940849513128
+        }
+      }
+    },
+    {
+      "id": "constant-80",
+      "kind": "constant",
+      "length": 80,
+      "value": 0.25,
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 0
+        },
+        "dfa": {
+          "status": "computed",
+          "value": 0
+        }
+      }
+    },
+    {
+      "id": "linear-80",
+      "kind": "linear",
+      "length": 80,
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 0.997554865773197
+        },
+        "dfa": {
+          "status": "computed",
+          "value": 2.0211878415252347
+        }
+      }
+    },
+    {
+      "id": "periodic-80",
+      "kind": "periodic",
+      "length": 80,
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 1.1084834699767825
+        },
+        "dfa": {
+          "status": "computed",
+          "value": 1.7487684972634134
+        }
+      }
+    },
+    {
+      "id": "alternating-80",
+      "kind": "alternating",
+      "length": 80,
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 2.7093522927505926
+        },
+        "dfa": {
+          "status": "computed",
+          "value": 0.09299714675139382
+        }
+      }
+    },
+    {
+      "id": "seeded-noise-80",
+      "kind": "seeded-noise",
+      "length": 80,
+      "seed": 1729,
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 2.0505393762856654
+        },
+        "dfa": {
+          "status": "computed",
+          "value": 0.5324053444185125
+        }
+      }
+    },
+    {
+      "id": "explicit-defaults-80",
+      "kind": "periodic",
+      "length": 80,
+      "hfd_options": {
+        "kMax": 5
+      },
+      "dfa_options": {
+        "minBox": 4,
+        "maxBox": 16
+      },
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 1.1084834699767825
+        },
+        "dfa": {
+          "status": "computed",
+          "value": 1.7487684972634134
+        }
+      }
+    },
+    {
+      "id": "nan-short-signal-first",
+      "kind": "special",
+      "values": [
+        "NaN"
+      ],
+      "hfd_options": {
+        "kMax": 6
+      },
+      "dfa_options": {
+        "maxBox": 64
+      },
+      "expected": {
+        "hfd": {
+          "status": "invalid",
+          "reason": "invalid_signal"
+        },
+        "dfa": {
+          "status": "invalid",
+          "reason": "invalid_signal"
+        }
+      }
+    },
+    {
+      "id": "infinity-sufficient",
+      "kind": "special",
+      "length": 80,
+      "inject": "Infinity",
+      "expected": {
+        "hfd": {
+          "status": "invalid",
+          "reason": "invalid_signal"
+        },
+        "dfa": {
+          "status": "invalid",
+          "reason": "invalid_signal"
+        }
+      }
+    },
+    {
+      "id": "invalid-container",
+      "kind": "invalid-container",
+      "value": "not-an-array",
+      "expected": {
+        "hfd": {
+          "status": "invalid",
+          "reason": "invalid_container"
+        },
+        "dfa": {
+          "status": "invalid",
+          "reason": "invalid_container"
+        }
+      }
+    },
+    {
+      "id": "overflow-80",
+      "kind": "overflow-alternating",
+      "length": 80,
+      "expected": {
+        "hfd": {
+          "status": "numerical_failure",
+          "reason": "non_finite_result"
+        },
+        "dfa": {
+          "status": "numerical_failure",
+          "reason": "non_finite_result"
+        }
+      }
+    },
+    {
+      "id": "hfd-non-default-80",
+      "kind": "periodic",
+      "length": 80,
+      "hfd_options": {
+        "kMax": 6
+      },
+      "expected": {
+        "hfd": {
+          "status": "invalid",
+          "reason": "invalid_parameter"
+        },
+        "dfa": {
+          "status": "computed",
+          "value": 1.7487684972634134
+        }
+      }
+    },
+    {
+      "id": "dfa-non-default-80",
+      "kind": "periodic",
+      "length": 80,
+      "dfa_options": {
+        "maxBox": 64
+      },
+      "expected": {
+        "hfd": {
+          "status": "computed",
+          "value": 1.1084834699767825
+        },
+        "dfa": {
+          "status": "invalid",
+          "reason": "invalid_parameter"
+        }
+      }
+    }
   ]
 }

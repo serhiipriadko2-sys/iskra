@@ -5,6 +5,8 @@
  * Defines app-specific types
  */
 
+import { fractalCompatibility } from '@iskra/runtime';
+
 // =============================================================================
 // RE-EXPORTS FROM @iskra/runtime (Core Types)
 // =============================================================================
@@ -99,9 +101,11 @@ export {
   QUANTUM_THRESHOLDS,
   classifyPhase,
   calculateEdgeDistance,
-  calculateFractalIndicators,
   calculateQuantumIndicators,
 } from '@iskra/runtime';
+
+/** Compatibility-only app facade. New authority paths must use the typed metric aggregate. */
+export const calculateFractalIndicators = fractalCompatibility.calculateFractalIndicators;
 
 // Import types for use in local interfaces
 import type { IskraMetrics, VoiceName, VoicePreferences, DeltaSignature, Voice as CanonVoice } from '@iskra/runtime';

@@ -1,183 +1,80 @@
 name: Fractal authority
 
 on:
-  push:
-    branches:
-      - feat/math-fractal-authority-v1
   pull_request:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - '.gitattributes'
+      - '.github/workflows/fractal_authority.yml'
+      - 'governance/adr_20260729_packages_math_authoritative_api.md'
+      - 'governance/evidence/metrics/fractal-authority-**'
+      - 'governance/registries/fractal-compatibility-v1.json'
+      - 'ledger/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'packages/engine/src/**'
+      - 'packages/math/src/**'
+      - 'runtime/src/**'
+      - 'supabase/functions/_shared/iskra-metrics/**'
+      - 'tools/check-fractal-authority-boundary.mjs'
+      - 'tools/generate-fractal-authority-mirrors.mjs'
+  push:
+    branches: [main]
+    paths:
+      - '.gitattributes'
+      - '.github/workflows/fractal_authority.yml'
+      - 'governance/adr_20260729_packages_math_authoritative_api.md'
+      - 'governance/evidence/metrics/fractal-authority-**'
+      - 'governance/registries/fractal-compatibility-v1.json'
+      - 'ledger/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'packages/engine/src/**'
+      - 'packages/math/src/**'
+      - 'runtime/src/**'
+      - 'supabase/functions/_shared/iskra-metrics/**'
+      - 'tools/check-fractal-authority-boundary.mjs'
+      - 'tools/generate-fractal-authority-mirrors.mjs'
 
 permissions:
-  contents: write
-  statuses: write
-  issues: write
-  pull-requests: write
+  contents: read
 
 jobs:
   verify:
-    if: github.event_name == 'push' || github.event.pull_request.head.ref == 'feat/math-fractal-authority-v1'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/math-fractal-authority-v1
           fetch-depth: 0
-
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
-      - name: Install workspace dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Recalculate ledger and select exact head
-        shell: bash
-        run: |
-          set -euo pipefail
-          pnpm exec tsx tools/update_ledger.ts
-          git diff --name-only | sort > /tmp/fractal-ledger-actual
-          if [[ -s /tmp/fractal-ledger-actual ]]; then
-            printf '%s\n' ledger/checksum.asc ledger/sot.json | sort > /tmp/fractal-ledger-expected
-            diff -u /tmp/fractal-ledger-expected /tmp/fractal-ledger-actual
-            git diff --check
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add ledger/sot.json ledger/checksum.asc
-            git commit -m 'chore(ledger): recalculate fractal authority final tree'
-            git push origin HEAD:feat/math-fractal-authority-v1
-          fi
-          git fetch origin feat/math-fractal-authority-v1
-          git reset --hard origin/feat/math-fractal-authority-v1
-          exact_head="$(git rev-parse HEAD)"
-          echo "EXACT_HEAD=$exact_head" >> "$GITHUB_ENV"
-          echo "exact_head=$exact_head"
-
+      - run: pnpm install --frozen-lockfile
       - name: Verify generated mirrors and authority boundary
-        id: mirrors
-        continue-on-error: true
-        run: |
-          node tools/generate-fractal-authority-mirrors.mjs --check
-          node tools/check-fractal-authority-boundary.mjs
-
-      - name: Verify packages math, engine, and runtime authority tests
-        id: packages
-        continue-on-error: true
-        run: |
-          pnpm exec vitest run \
-            packages/math/src/__tests__/fractal-authority.test.ts \
-            packages/math/src/__tests__/edgeMetricsParity.test.ts \
-            packages/engine/src/__tests__/metricsServiceFractalAuthority.test.ts \
-            runtime/src/__tests__/fractalAuthority.test.ts
-
-      - name: Verify legacy runtime mirror
-        id: runtime
-        continue-on-error: true
+        run: pnpm run check:fractal-authority
+      - name: Verify package, engine, and runtime authority tests
+        run: >-
+          pnpm exec vitest run
+          packages/math/src/__tests__/fractal-authority.test.ts
+          packages/math/src/__tests__/edgeMetricsParity.test.ts
+          packages/engine/src/__tests__/metricsServiceFractalAuthority.test.ts
+          runtime/src/__tests__/fractalAuthority.test.ts
+      - name: Verify legacy runtime public API and focused tests
         working-directory: runtime
         run: |
           npm ci --ignore-scripts
           npm run typecheck
           npm run test -- --run src/__tests__/fractalAuthority.test.ts
-
-      - id: deno_setup
-        continue-on-error: true
-        uses: denoland/setup-deno@v2
+      - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-
       - name: Verify generated Edge mirror
-        id: edge
-        if: always()
-        continue-on-error: true
+        run: deno test --no-lock supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts
+      - name: Verify committed integrity receipts are current
         shell: bash
         run: |
-          set +e
-          deno test --no-lock supabase/functions/_shared/iskra-metrics/iskra-metrics_test.ts \
-            > /tmp/fractal-edge.log 2>&1
-          code=$?
-          cat /tmp/fractal-edge.log
-          exit "$code"
-
-      - name: Verify exact-head ledger
-        id: ledger
-        if: always()
-        continue-on-error: true
-        run: pnpm exec tsx tools/verify_ledger.ts
-
-      - name: Publish exact-head receipt
-        if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-          MIRRORS_OUTCOME: ${{ steps.mirrors.outcome }}
-          PACKAGES_OUTCOME: ${{ steps.packages.outcome }}
-          RUNTIME_OUTCOME: ${{ steps.runtime.outcome }}
-          DENO_SETUP_OUTCOME: ${{ steps.deno_setup.outcome }}
-          EDGE_OUTCOME: ${{ steps.edge.outcome }}
-          LEDGER_OUTCOME: ${{ steps.ledger.outcome }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [[ -z "${EXACT_HEAD:-}" ]]; then
-            echo 'exact head unavailable; receipt not published' >&2
-            exit 1
-          fi
-
-          state='success'
-          for outcome in \
-            "$MIRRORS_OUTCOME" \
-            "$PACKAGES_OUTCOME" \
-            "$RUNTIME_OUTCOME" \
-            "$DENO_SETUP_OUTCOME" \
-            "$EDGE_OUTCOME" \
-            "$LEDGER_OUTCOME"; do
-            if [[ "$outcome" != 'success' ]]; then
-              state='failure'
-            fi
-          done
-
-          cat > /tmp/fractal-authority-receipt.md <<EOF
-          <!-- fractal-authority-exact-head-receipt -->
-          ## Fractal authority exact-head receipt
-
-          - exact head: \`$EXACT_HEAD\`
-          - mirrors / boundary: **$MIRRORS_OUTCOME**
-          - packages T1–T19: **$PACKAGES_OUTCOME**
-          - legacy runtime: **$RUNTIME_OUTCOME**
-          - Deno setup: **$DENO_SETUP_OUTCOME**
-          - Edge mirror: **$EDGE_OUTCOME**
-          - ledger: **$LEDGER_OUTCOME**
-          - overall: **$state**
-
-          Boundary: this receipt verifies implementation bytes only. It does not claim merge, scoped activation, deployment, invocation, or verified-live behavior.
-          EOF
-
-          if [[ "$EDGE_OUTCOME" != 'success' && -f /tmp/fractal-edge.log ]]; then
-            {
-              echo
-              echo '<details><summary>Edge failure tail</summary><pre>'
-              tail -n 80 /tmp/fractal-edge.log | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
-              echo '</pre></details>'
-            } >> /tmp/fractal-authority-receipt.md
-          fi
-
-          if [[ "$state" == 'success' ]]; then
-            description='T1-T19, mirrors, runtime, Edge, and ledger PASS'
-          else
-            description='Fractal authority exact-head verification failed'
-          fi
-
-          gh api --method POST \
-            "repos/${GITHUB_REPOSITORY}/statuses/${EXACT_HEAD}" \
-            -f state="$state" \
-            -f context='fractal-authority/exact-head' \
-            -f description="$description"
-          gh api --method POST \
-            "repos/${GITHUB_REPOSITORY}/issues/326/comments" \
-            --raw-field body="$(cat /tmp/fractal-authority-receipt.md)"
-
-          if [[ "$state" != 'success' ]]; then
-            exit 1
-          fi
+          pnpm exec tsx tools/update_ledger.ts
+          git diff --exit-code -- ledger/sot.json ledger/checksum.asc
+          pnpm exec tsx tools/verify_ledger.ts

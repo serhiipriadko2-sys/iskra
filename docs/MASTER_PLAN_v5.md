@@ -1,5 +1,8 @@
 # MASTER PLAN: ISKRA vΩ.5.0 (The Scientific Turn)
 
+> [!NOTE]
+> **Strategic historical plan.** The monorepo extraction described here has partly occurred. Current HFD/DFA mechanics and lifecycle are defined by ADR-20260729-02 and `docs/specs/SPEC-001_FRACTAL_METRICS.md`; this plan does not confer formula authority.
+
 > "To exist is to preserve difference during transmission." - Law-0
 
 ## Executive Summary

@@ -5,7 +5,7 @@ import process from 'node:process'
 const ROOT = resolve(import.meta.dirname, '..')
 const registryPath = 'governance/registries/fractal-compatibility-v1.json'
 const skillRegistryPath = 'docs/skills/registry-v1.json'
-const sourceRoots = ['packages', 'runtime/src', 'supabase/functions']
+const sourceRoots = ['packages', 'runtime/src', 'runtime/iskraSpace', 'supabase/functions']
 const rawIdentifier = /\bcalculate(?:HFD|DFA|FractalIndicators)\b/
 const ignoredDirectories = new Set([
   '.git',
@@ -144,6 +144,33 @@ for (const consumer of registry.authority_path_consumers) {
     !/\?\s*1\.5\s*:|:\s*1\.5\b|\?\s*0\.5\s*:|:\s*0\.5\b/.test(content),
     `authority-path numeric stand-in remains: ${consumer}`,
   )
+}
+
+const documentationContracts = [
+  {
+    path: 'CLAUDE.md',
+    required: ['calculateHFDMetric()', 'calculateDFAMetric()', 'compatibility-only'],
+    forbidden: ['| Higuchi Fractal Dimension | `calculateHFD()`', '| Detrended Fluctuation Analysis | `calculateDFA()`'],
+  },
+  {
+    path: 'docs/specs/SPEC-001_FRACTAL_METRICS.md',
+    required: ['computed | unavailable | invalid | numerical_failure', 'implementation candidate'],
+    forbidden: ['return 1.5', 'return 0.5'],
+  },
+  {
+    path: 'system/fractal_monitoring.md',
+    required: ['calculateHFDMetric()', 'calculateDFAMetric()', 'compatibility-only'],
+    forbidden: ['function calculateHFD(timeSeries', 'function calculateDFA(timeSeries'],
+  },
+]
+for (const contract of documentationContracts) {
+  const content = await readFile(resolve(ROOT, contract.path), 'utf8')
+  for (const required of contract.required) {
+    requireCondition(content.includes(required), `documentation drift: ${contract.path} lacks ${required}`)
+  }
+  for (const forbidden of contract.forbidden) {
+    requireCondition(!content.includes(forbidden), `documentation drift: ${contract.path} contains ${forbidden}`)
+  }
 }
 
 const skillRegistry = await readJson(skillRegistryPath)

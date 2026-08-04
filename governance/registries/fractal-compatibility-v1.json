@@ -9,6 +9,7 @@
   "compatibility_surfaces": [
     "packages/math/src/fractal.ts",
     "runtime/src/types/fractal.ts",
+    "runtime/iskraSpace/types.ts",
     "supabase/functions/_shared/iskra-metrics/fractal.ts"
   ],
   "compatibility_test_surfaces": [

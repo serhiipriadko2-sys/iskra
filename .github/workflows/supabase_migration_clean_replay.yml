@@ -1,0 +1,142 @@
+name: Supabase Migration Clean Replay
+
+on:
+  push:
+    branches:
+      - fix/supabase-migration-provenance-20260731
+    paths:
+      - "supabase/migrations/**"
+      - ".github/workflows/supabase_migration_clean_replay.yml"
+  pull_request:
+    paths:
+      - "supabase/migrations/**"
+      - ".github/workflows/supabase_migration_clean_replay.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-migration-clean-replay-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  clean-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install pinned workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify recovered and reconstructed migration bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(wc -c < supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql)" -eq 283
+          test "$(wc -c < supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql)" -eq 5396
+          test "$(wc -c < supabase/migrations/20260728183421_parallax_memory_gate.sql)" -eq 2523
+          printf '%s  %s\n' \
+            b2b63f7a3adbd20cb0e3641571b27863bf5fbae9cc3d82471bc42468347dd337 \
+            supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql \
+            21e066e4449ef2547ea88d1e8a4d88c9486ca7f863c67a0a40a3ffd01fbe1491 \
+            supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
+            8fb653f1926f3ea0217a3c6c78d2a7ad6cde6b7afdb8b5ecce4db61f8f9ea718 \
+            supabase/migrations/20260728183421_parallax_memory_gate.sql \
+            | sha256sum --check --strict
+
+      - name: Start local Supabase stack
+        run: pnpm exec supabase start -x studio,imgproxy,edge-runtime,logflare,vector,postgres-meta,mailpit,realtime,storage-api
+
+      - name: Replay all migrations from an empty database
+        run: pnpm exec supabase db reset --local
+
+      - name: Verify local migration history and lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p clean-replay-receipt
+          pnpm exec supabase migration list --local | tee clean-replay-receipt/migration-list.txt
+          pnpm exec supabase db lint --local --level warning --fail-on error | tee clean-replay-receipt/db-lint.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select version || '|' || name || '|' || cardinality(statements)
+            from supabase_migrations.schema_migrations
+            where version in (
+              '20260718194551','20260718194835','20260718200634',
+              '20260728171718','20260728180000','20260728183421'
+            )
+            order by version;
+          " | tee clean-replay-receipt/replay-history.txt
+          grep -Fx '20260718194551|optimize_rls_initplan|11' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260718194835|consolidate_rls_policies|14' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260718200634|restore_closed_beta_graph_acl|27' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260728171718|revoke_direct_execute_on_graph_trigger_function|2' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260728180000|reconcile_gateway_events_live_schema|12' clean-replay-receipt/replay-history.txt
+          grep -Fx '20260728183421|parallax_memory_gate|10' clean-replay-receipt/replay-history.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select version || '|' ||
+                   encode(digest(convert_to(array_to_string(statements, E'\\n--STATEMENT--\\n'), 'UTF8'), 'sha256'), 'hex')
+            from supabase_migrations.schema_migrations
+            where version in (
+              '20260718194551','20260718194835','20260718200634',
+              '20260728171718','20260728180000','20260728183421'
+            )
+            order by version;
+          " | tee clean-replay-receipt/parser-statement-array-sha256.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select
+              count(*) filter (where roles @> array['public']::name[] or roles @> array['anon']::name[]) || '|' ||
+              count(*) filter (where roles = array['authenticated']::name[])
+            from pg_policies
+            where schemaname='public' and tablename in ('graph_nodes','graph_edges');
+          " | tee clean-replay-receipt/graph-policy-summary.txt
+          grep -Fx '0|10' clean-replay-receipt/graph-policy-summary.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select count(*)
+            from pg_policies
+            where schemaname='iskra_memory'
+              and policyname like '%_deny_clients'
+              and roles = array['anon','authenticated']::name[]
+              and cmd='ALL' and qual='false' and with_check='false';
+          " | tee clean-replay-receipt/memory-deny-policy-count.txt
+          grep -Fx '11' clean-replay-receipt/memory-deny-policy-count.txt
+          docker exec supabase_db_iskra psql -U postgres -d postgres -v ON_ERROR_STOP=1 -Atc "
+            select
+              has_function_privilege('authenticated','public.prevent_graph_node_cross_owner_cascade()','EXECUTE') || '|' ||
+              has_function_privilege('anon','public.prevent_graph_node_cross_owner_cascade()','EXECUTE') || '|' ||
+              has_function_privilege('public','public.prevent_graph_node_cross_owner_cascade()','EXECUTE');
+          " | tee clean-replay-receipt/trigger-execute-summary.txt
+          grep -Fx 'false|false|false' clean-replay-receipt/trigger-execute-summary.txt
+          sha256sum \
+            supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql \
+            supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
+            supabase/migrations/20260728183421_parallax_memory_gate.sql \
+            supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json \
+            > clean-replay-receipt/source-sha256.txt
+          wc -c \
+            supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql \
+            supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql \
+            supabase/migrations/20260728183421_parallax_memory_gate.sql \
+            supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json \
+            > clean-replay-receipt/source-bytes.txt
+
+      - name: Upload clean replay receipt
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: supabase-clean-replay-${{ github.sha }}
+          path: clean-replay-receipt/
+          retention-days: 30

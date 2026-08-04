@@ -52,27 +52,31 @@ export {
 
 export function calculateHFDMetric(
   timeSeries: unknown,
-  options: HfdMetricOptions = {},
+  options?: HfdMetricOptions,
+): FractalMetricResult
+export function calculateHFDMetric(
+  timeSeries: unknown,
+  options: unknown = {},
 ): FractalMetricResult {
-  const requested = readRequestedParameters(options, ['kMax'])
-  if (requested.status === 'invalid') {
-    return invalidResult(
-      HFD_ALGORITHM_VERSION,
-      0,
-      null,
-      'invalid_parameter',
-      requested.detail,
-    )
-  }
-
   const signal = validateFractalSignal(timeSeries)
   if (signal.status === 'invalid') {
     return invalidResult(
       HFD_ALGORITHM_VERSION,
       signal.sampleCount,
-      requested.value,
+      null,
       signal.reason,
       signal.detail,
+    )
+  }
+
+  const requested = readRequestedParameters(options, ['kMax'])
+  if (requested.status === 'invalid') {
+    return invalidResult(
+      HFD_ALGORITHM_VERSION,
+      signal.values.length,
+      null,
+      'invalid_parameter',
+      requested.detail,
     )
   }
 
@@ -109,27 +113,31 @@ export function calculateHFDMetric(
 
 export function calculateDFAMetric(
   timeSeries: unknown,
-  options: DfaMetricOptions = {},
+  options?: DfaMetricOptions,
+): FractalMetricResult
+export function calculateDFAMetric(
+  timeSeries: unknown,
+  options: unknown = {},
 ): FractalMetricResult {
-  const requested = readRequestedParameters(options, ['minBox', 'maxBox'])
-  if (requested.status === 'invalid') {
-    return invalidResult(
-      DFA_ALGORITHM_VERSION,
-      0,
-      null,
-      'invalid_parameter',
-      requested.detail,
-    )
-  }
-
   const signal = validateFractalSignal(timeSeries)
   if (signal.status === 'invalid') {
     return invalidResult(
       DFA_ALGORITHM_VERSION,
       signal.sampleCount,
-      requested.value,
+      null,
       signal.reason,
       signal.detail,
+    )
+  }
+
+  const requested = readRequestedParameters(options, ['minBox', 'maxBox'])
+  if (requested.status === 'invalid') {
+    return invalidResult(
+      DFA_ALGORITHM_VERSION,
+      signal.values.length,
+      null,
+      'invalid_parameter',
+      requested.detail,
     )
   }
 

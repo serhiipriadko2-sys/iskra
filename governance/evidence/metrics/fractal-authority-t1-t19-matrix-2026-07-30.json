@@ -2,7 +2,7 @@
   "schema_version": "iskra.fractal-authority-t1-t19-matrix.v1",
   "adr_id": "ADR-20260729-02",
   "authorization_issue": 324,
-  "status": "candidate_pending_exact_head_ci",
+  "status": "review_repair_candidate_pending_exact_head_ci",
   "activation_claimed": false,
   "tests": {
     "T1": "packages/math/src/__tests__/fractal-authority.test.ts#HFD-boundaries",
@@ -11,15 +11,15 @@
     "T4": "packages/math/src/__tests__/fractal-authority.test.ts#parameter-determinism",
     "T5": "packages/math/src/__tests__/fractal-authority.test.ts#provenance",
     "T6": "packages/math/src/__tests__/fractal-authority.test.ts#numerical-failure",
-    "T7": "packages/math/src/fractal-authority-corpus.json",
-    "T8": "packages/math/src/__tests__/edgeMetricsParity.test.ts",
+    "T7": "packages/math/src/fractal-authority-corpus.json + executable corpus tests",
+    "T8": "registered corpus exact Node/generated-Edge parity",
     "T9": "governance/evidence/metrics/fractal-authority-consumer-inventory-2026-07-30.json",
     "T10": "tools/check-fractal-authority-boundary.mjs",
     "T11": "calculateFractalIndicatorsMetric + aggregate test",
     "T12": "tools/check-fractal-authority-boundary.mjs#raw-import-export-fence",
     "T13": "governance/registries/fractal-compatibility-v1.json#sunset-fence",
     "T14": "packages/math/src/index.ts + runtime/src/index.ts",
-    "T15": "tools/generate-fractal-authority-mirrors.mjs --check",
+    "T15": "generator --check + simulated CRLF worktree regression",
     "T16": "iskra-metrics package and target remain unchanged",
     "T17": "tools/check-fractal-authority-boundary.mjs#transition-registry",
     "T18": "entropy implementation and package-wide authority remain unchanged",
@@ -28,11 +28,33 @@
   "local_preflight": {
     "canonical_strict_typecheck": "pass",
     "mirror_regeneration_check": "pass",
-    "boundary_vectors": "pass",
-    "overflow_vectors": "pass",
-    "repository_wide_ci": "pending"
+    "boundary_and_documentation_fence": "pass",
+    "focused_vitest": "14/14 pass",
+    "runtime_typecheck": "pass",
+    "deno_edge": "8/8 pass",
+    "workspace_typecheck": "pass",
+    "iskraspace_unit": "77 files / 860 pass / 27 staging-only skipped",
+    "math_unit": "64/64 pass",
+    "engine_unit": "54/54 pass",
+    "release_manifest": "8/8 pass",
+    "repository_wide_ci": "local_integrated_pass_pending_github_exact_head"
   },
   "not_applicable": {
     "cross_language_mirror": "No cross-language mirror is introduced; Node, runtime and Edge are generated TypeScript mirrors."
+  },
+  "review_repair": {
+    "review_comment": 5147116459,
+    "integrated_main": "0672f8a01c2abca1a08eb07745cc65c119dfaa34",
+    "blockers_addressed": [
+      "signal_first_validation",
+      "total_edge_input_hashing",
+      "registered_corpus_execution",
+      "lf_normalized_generation",
+      "runtime_public_api_non_regression",
+      "read_only_ci",
+      "current_evidence_receipts",
+      "main_integration_and_ledger_regeneration"
+    ],
+    "dependency_audit_boundary": "Issue #310 remains separate; GHSA-rgw5-rvv9-x895 requires brace-expansion 5.0.9."
   }
 }

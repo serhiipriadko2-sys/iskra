@@ -1,55 +1,27 @@
 ---
 sigil: projects__29_index_upload_manifest
 layer: projects
-updated: 2026-07-30
+updated: 2026-07-31
 version: v5.5.7
 supersedes: v5.4.1 (2026-07-14), v5.5 delta, v5.5.1 content delta, v5.5.2 backlog, v5.5.3 instructions-sync, v5.5.4 semantic-consistency, v5.5.5 provenance-cleanup, v5.5.6 acceptance-repair
 ---
-# 29 · INDEX & UPLOAD MANIFEST — SoT30 v5.5.7 (audit repair)
+# 29 · INDEX & UPLOAD MANIFEST — SoT30 v5.5.7 (audit repair + PINO amendment)
 
 ## Upload rule
-Upload exactly the 30 files in `knowledge/` and paste `support/PROJECT_INSTRUCTIONS_SOT30.md` into Project Instructions. Support files are receipts/tests, not Knowledge prerequisites. Business/Pro/Enterprise/Edu plans allow up to 40 files/project with a 10-file simultaneous-upload cap — upload in 3 batches of 10 and verify a final count of 30. Go/Plus (25-file ceiling) and Free (5-file ceiling) cannot hold this package.
+Upload exactly the 30 files in `knowledge/` and paste `support/PROJECT_INSTRUCTIONS_SOT30.md` into Project Instructions. Support files are receipts/tests, not Knowledge prerequisites.
 
 ## What this package is
-v5.5.7 is a narrow **audit repair** over immutable v5.5.6 under `ADR-20260730-01`. A full static audit of v5.5.6 (2026-07-29/30) confirmed package-hash integrity but found semantic defects that survived C23: file 02 lacked the shared-project memory branch and carried stale runtime/gateway/schema claims; file 25 stamped an old version as current; the loader in 00 skipped files 01/02; T86's declared 06/07 coverage was not implemented; and a 07 §2.2 vs 12 §4.2 M3 veto-attribution divergence was unmapped. v5.5.7 fixes those contracts, maps the M3 divergence in 12 §4.2, adds acceptance cases T94–T97 with hardened fail-closed verifier coverage, and changes no runtime, Supabase schema, gateway, or memory database.
-
-The v5.5.6 release and ZIP remain byte-immutable. Baseline: v5.5.6. v5.5.7 live-Project verification is pending; the audit report is evidence of the defects, not a live pass.
-
-### Three baselines (do not conflate)
-- **release_tree_baseline** — committed v5.5.6 `knowledge/` content; authoritative for the v5.5.7 semantic diff.
-- **dist_zip_baseline** — immutable `dist/SoT30_v5.5.6.zip`, an artifact comparison surface, not the source of v5.5.7 bytes.
-- **live_project_baseline** — no v5.5.7 upload exists yet. No clean-Project run has attested this corrected package.
+v5.5.7 remains the audit-repair candidate governed by `ADR-20260730-01`. Accepted behavior amendment `ADR-20260730-02` adds `PINO_FIRST_STRIKE_V1` to file 12, mirrors governance in file 20, and adds supplemental T98–T103 in file 28. Project Instructions, runtime, Supabase, gateway and memory database are unchanged.
 
 ### Composition vs the v5.5.6 release tree
-The build recomputes disjoint `changed_files` / `unchanged_files` sets whose union is all 30 Knowledge files. The expected v5.5.7 changed set is `{00, 01, 02, 12, 15, 22, 25, 28, 29}` — **9 changed / 21 unchanged** (01 reclassifies its status snapshot as historical; 15 carries a fresh dated live overlay). `support/MANIFEST.json`, not this prose count, is authoritative.
-
-### On the earlier chain (historical, do not over-generalize)
-The v5.5.2→v5.5.3 receipts established that external commit `82191ce` overwrote
-v5.5.2's `support/SHA256SUMS`/`MANIFEST.json`; that `31340c5`'s recorded hash was
-correct for `01` but was itself already wrong for `06/09/24` (it matched the
-divergent v5.5.2 zip, not the committed blob). v5.5.4 inherited v5.5.3's
-reconciled, git-blob-derived content; v5.5.5 does not re-litigate that chain.
-
-### File 24 provenance (resolved in v5.5.4)
-`24_INTERFACE_STYLE.md`'s 18-byte / hash gap first recorded at v5.5.1 was **resolved
-in v5.5.4**: the raw-blob receipt under `governance/audits/2026-07-20-sot30-v554/`
-(`FILE24_PROVENANCE_RECEIPT.json`, `root_cause_status: verified`) showed the change is
-**exactly two** `auth.uid()` → `(select auth.uid())` RLS-initplan optimizations
-(9 bytes ×2 = 18, zero CRLF in both blobs) — a benign optimization the manifest hash
-previously lagged, not a corruption and not a CRLF artifact. **v5.5.6 keeps file 24
-byte-identical to v5.5.5** and makes no new file-24 claim.
-
-> **STATIC-PACKAGE-PASS does not imply LIVE-PROJECT-PASS.** A green
-> `sha256sum -c` and a passing semantic verifier attest the *package*. A
-> LIVE-PROJECT-PASS requires an exact 30-file manifest-hash match recorded from
-> a real upload — see `28_EVALS_ACCEPTANCE.md` (T93).
+`support/MANIFEST.json` is authoritative for changed/unchanged sets, bytes and hashes. No prose count overrides it.
 
 ## Reading order
-`29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28` (v5.5.7 closes the loader gap: 01 status overlay and 02 surface map are explicitly in the load path). File 25 contains two-stage Mythic Cognition Router v0.3.1: inquiry after Trace, expression after Voice, with executable load-bearing-premise verification.
+`29 → 00 → 01 → 02 → 03–07 → 08–20 → 21–23 → 24–27 → 28`
 
-`[INTERP]` This reading order is this package's own canonical routing instruction. It is not a claim about OpenAI's internal retrieval/ranking behavior, which is undocumented.
+`[INTERP]` This is a package routing contract, not a claim about platform retrieval order.
 
-## Knowledge table (29 non-self hashes, recomputed for the merged corpus)
+## Knowledge table (29 non-self hashes, recomputed for the amended corpus)
 
 | File | Bytes | SHA-256 |
 |---|---:|---|
@@ -65,7 +37,7 @@ byte-identical to v5.5.5** and makes no new file-24 claim.
 | `09_METRICS_ENGINE.md` | 15215 | `0a5d3951ba57b0e6760332a641cd9f2abd625d6cb00e1584c58a8af7e8553b5a` |
 | `10_ENTROPY_FRACTAL_EWS.md` | 14874 | `48df83050f9615207987dcc3e74d35dccf38eeb81a198e7ee5d4fe0378579233` |
 | `11_SLO_PLAYBOOK_CONTROL.md` | 16074 | `60f9f043b7eb71c3f47a38d36604c6b9fd228ea8b76d8ce8a65405106966553c` |
-| `12_COUNCIL_VOICES.md` | 20020 | `c16dcb0fd8e778d8470c3e979afe856fb18383191fed1fcec97f014c35490387` |
+| `12_COUNCIL_VOICES.md` | 24090 | `5abd0d99876b9096bae7f5806f841c8d911e6a8ecd61917734606ca012b21ac2` |
 | `13_OUTPUT_RECEIPTS_ANTI_EMPTY.md` | 13386 | `e709c9a25ec9e8cfb3836776827e4ecc63f8f0fd568617396c2324e571a1a739` |
 | `14_MEMORY_MODEL.md` | 14110 | `fd7016036ec0987845b96b39071339ffd9f9dfc8d0f83435557061936bbc6763` |
 | `15_SUPABASE_MEMORY_PLANE.md` | 15325 | `b5a47d2803e672beed5d87760719c02766c91835055832cd6012fd556e59b27e` |
@@ -73,7 +45,7 @@ byte-identical to v5.5.5** and makes no new file-24 claim.
 | `17_DREAMSPACE_DREAMSEED.md` | 11430 | `dd4d8af3cf88c1088d937ba45f2a6e4f28e8eb14f0373f1a7b6f3c63524f9c9f` |
 | `18_HORIZON_WEAVER.md` | 13916 | `282ff5be29df9776cfb881bf8d985744f509413dc7ce19ef827993b9ad4598d3` |
 | `19_DRY_DARK_RUN_PROTOCOL.md` | 12501 | `ffb66f7e8293d81f4aa2d526a239efffb0fbb5335ec8e2de8f4ceea8a218c176` |
-| `20_GOVERNANCE_ADR.md` | 32537 | `fa80f1f4e06650c1269e65bae4ba412a5351d4d2142330fb74728979cb6151fd` |
+| `20_GOVERNANCE_ADR.md` | 35544 | `a7fba909f071ee26ea98f353b45d517f07a21a31cca9fa7a9dad490c4b76f6ab` |
 | `21_WORKFLOW_OPS_LEDGER.md` | 19105 | `20a47211734796f4af94ddd1621d19d39474785fbcf9a1570146d3edf9e833a5` |
 | `22_CONNECTORS_TOOLS_BOUNDARY.md` | 4045 | `c1d1de95b836c277f354cbaf16b8c8a142ac53d2d824fc5d537b2be0218feebb` |
 | `23_BUILDER_PROJECTS_COMPAT.md` | 1091 | `b5f58d2d1226fff156d5cef4c6e34b9aff0dfe55836a8ca0870fe59201ffd334` |
@@ -81,63 +53,19 @@ byte-identical to v5.5.5** and makes no new file-24 claim.
 | `25_LIBER_SPACE_BUSIDO.md` | 458205 | `d37f90d554be82e41393a64017ce0a6f9e6bacd334414c863bd5cf6ab6bb3aa5` |
 | `26_SOMATIC_INTUITION.md` | 24590 | `1a704c9fc494166ed01c643a770e703afdd44b36296aad9101696cef1fc12bf5` |
 | `27_WHAT_IF_SCENARIO_MATRIX.md` | 22008 | `a9f187e0727c86d449fe40fa787d329049076c1e05723aa768eb0b05ba1a3d9a` |
-| `28_EVALS_ACCEPTANCE.md` | 17857 | `d6baa57dd6bf894d1e8bb17bd931477102560457d183f1080d905366b78268ba` |
+| `28_EVALS_ACCEPTANCE.md` | 19157 | `8acaf1a42e91a56532f3c41de7b1498012c3c833205d06091091098b5537dcea` |
 File 29 hash is stored in external `support/MANIFEST.json` and `support/SHA256SUMS` to avoid self-reference.
 
-## v5.5.7 audit repair (this build)
-Adds the shared-project memory branch and context-boundary matrix to 02; retracts stale Guard/gateway/schema claims in 02; closes the 00 loader gap (01/02 now in the load path); fixes the stale package-identity stamp in 25; maps the 07 §2.2 M3 veto-attribution divergence in 12 §4.2; adds acceptance cases T94–T97; hardens the release verifier (malformed-version fail-closed, 06/07 coverage, shared-project and semantic-regression checks, release-root allowlist). The P0 correction loop (external PR-audit, 2026-07-30) additionally: stamps the Project Instructions identity as v5.5.7 in both copies; reclassifies the 01 status snapshot as historical; adds a fresh dated Supabase overlay to 15 (37 migrations, 11 tables, gateway `DEPLOYED-PROBE-ONLY`); records the four App permission modes in 22; makes source-freeze provenance genuine (file 29 committed before the freeze); and extends the verifier with active-identity (C27) and loader-sequence (C28) gates, matrix cell-value parsing, an allowlisted Enterprise lexicon, integer/percent M2 detection, root-doc secret scan and a wider encoding scan. Under ADR-20260730-01.
+## v5.5.7 audit repair + PINO amendment (this build)
+Package authority remains `ADR-20260730-01`; behavior authority is `ADR-20260730-02`. Manifest `adr` remains the package ADR and `behavior_adrs` records the accepted amendment.
 
-## v5.5.6 T85/T86 acceptance repair
-Corrects plan-specific Project-memory prerequisites and removes the non-normative numeric M2 drift activation from files 03/04. Adds C23 fail-closed regression coverage under ADR-20260721-02.
+- `ADR-20260730-01` — v5.5.7 audit repair **(this build)**; status: proposed; artifact promotion not authorized.
+- `ADR-20260730-02` — `PINO_FIRST_STRIKE_V1`; status: accepted; static mirror implemented, live verification pending.
 
-## v5.5.5 provenance & version-identity cleanup
-Resolves the two in-ZIP inaccuracies deferred from v5.5.4 (E1 untrue `generated_from` label, E2 ZIP root missing `v`) and makes the active package identity consistent at v5.5.5. Built from a source-freeze commit via genuine `--from-git` under ADR-20260721-01.
-
-## v5.5.4 semantic & runtime-status consistency
-Corrects in-corpus prose that no longer matched reality: file 29's own
-composition narrative; `MANIFEST.json` disjoint changed/unchanged sets; the
-bounded-Guard lifecycle and proxy `postGuardEws` status in `11`/`20`/`01`;
-Supabase live-overlay freshness in `15`; historical-Ω / reference quarantine in
-`25`/`24`; and adds acceptance cases T88–T93 in `28`. No runtime, Supabase, or
-live-Project change. Full trace: `governance/adr_20260720_sot30_v5_5_4_semantic_runtime_consistency.md`.
-
-## v5.5.3 instructions-version-sync + hash-chain repair
-Version-label sync (00) + restoration of a verified-correct hash chain after
-external commit `82191ce` corrupted v5.5.2's SHA256SUMS/MANIFEST.json. Full
-trace: `governance/adr_20260719_sot30_v5_5_3_instructions_version_sync.md`.
-
-## v5.5.2 backlog-batch resolution
-Seven files changed from v5.5.1: `04`, `06`, `07`, `09`, `12`, `27`, `28`. Each closes a specific coordinate from the independently cross-verified SoT30 v5.5.1 audit (Mythic Router / RESEARCH function / Voice completeness). Full trace: `governance/adr_20260718_sot30_v5_5_2_backlog_batch.md`.
-
-## File-13 manifest-drift resolution
-This regenerated table records file 13 at its actual merged content — **13386 bytes, `e709c9a25ec9e8cfb3836776827e4ecc63f8f0fd568617396c2324e571a1a739`** — which carries the corrected `Ω ≤ 0.95` wording plus the v5.5.1 Kernel Order sync. The stale v5.4.1 declaration (12869 bytes / `f57dcbe2…`, old `Ω=1.0` wording) is superseded here; manifest now matches the file, closing the prior drift.
-
-## Governance trace
-- `ADR-20260712-01` — Instructions hardening, accepted.
-- `ADR-20260712-02` — Mythic Router, accepted; SoT30 mirror done in v5.2.
-- `Amendment A.1` — numeric voice specificity/provenance, accepted.
-- `ADR-20260714-01` — Mythic Cognition Router v0.2, accepted; Knowledge-only mirror done in v5.3.
-- `ADR-20260714-02` — Mythic Corpus Pass 2 / Arc Routing v0.3, accepted; Knowledge-only mirror done in v5.4.
-- `ADR-20260714-03` — executable falsifier / false-premise gate v0.3.1, accepted; Knowledge-only mirror done in v5.4.1.
-- `ADR-20260716-01` — Business Projects Runtime Hardening (files 02/22/28/29, T77–T85), accepted; merged PR #264.
-- `ADR-20260716-02` — SoT30 Content Integrity (base64 externalize, ontology quarantine, Kernel Order sync, Guard recompute unification, what-if type repair), accepted; merged PR #267.
-- `ADR-20260718-01` — v5.5.2 backlog batch (threshold table, RESEARCH-distributed declaration + FOG strengthening, veto-contract fix, SIBYL activation, Mythic Router triggers + usage tracking), accepted.
-- `ADR-20260719-01` — v5.5.3 instructions version sync + hash-chain repair, accepted; merged PR #285/#288.
-- `ADR-20260720-01` — prune stale SoT30 dist zips (v5.5.2 zip divergent for 06/09/24), accepted; merged PR #286.
-- `ADR-20260720-02` — v5.5.4 semantic & runtime-status consistency, accepted; merged PR #289, hardened by PR #291/#292.
-- `ADR-20260721-01` — v5.5.5 provenance & version-identity cleanup, accepted; merged PR #293; clean-Project diagnostic found T85/T86.
-- `ADR-20260721-02` — v5.5.6 T85/T86 acceptance repair, accepted; merged; live verification never recorded (see v5.5.7 lifecycle note).
-- `ADR-20260730-01` — v5.5.7 audit repair (this build); status: proposed, awaiting owner decision; built as a candidate package, merge into an active-release role not yet authorized.
+## Acceptance identity
+- canonical package range: `T01-T97`;
+- supplemental PINO range is `T98-T103`;
+- both require a fresh Project run before LIVE-PROJECT-PASS.
 
 ## Current non-claims
-- package is not proven uploaded to a live Project (STATIC-PACKAGE-PASS ≠ LIVE-PROJECT-PASS);
-- T01–T97 are not yet live-run;
-- lifecycle history (recorded, not repeated): v5.5.6 was merged to the repository while its own receipt still said "Merge not authorized" and `live_project_verified=false` — a source-merge happened without the live-verification stage; v5.5.7 therefore distinguishes stages explicitly: `source_merge` (storing the candidate in the repo) ≠ `artifact_promotion` (declaring it the active package) ≠ `live_project_verified`; none of the latter two is claimed here;
-- the bounded-Guard controller is implemented and wired, but `postGuardEws` is a decision-derived **proxy**, not an independently-observed true late-signal EWS (see `11`); the true-late-signal path is E2E-unverified;
-- file 15's Supabase overlay is a read-only observation stamped with `observed_at`; migration parity, live schema, live data counts, edge-function deployment, and Projects-Action invocation are independent facts and none is inferred from another;
-- file 24's root cause was `verified` in v5.5.4 (raw-blob receipt: two RLS-initplan optimizations, +18 bytes fully accounted); v5.5.5 keeps file 24 byte-identical and makes no new file-24 claim;
-- T76 F1/F2/F3 falsifier behavior is statically specified, not verified-live;
-- gateway Projects Action/JWT role and Archive/Shadow DB enforcement remain pending;
-- current Project memory mode (project-only vs default) for any specific live Project is unknown until explicitly checked;
-- retrieval-order of the 30 files inside a live Project is not guaranteed by this document;
-- lifecycle (do not conflate stages): v5.5.6 is merged and immutable; ADR-20260730-01 is proposed; v5.5.7 is a static candidate — source_merge, artifact_promotion and live verification are separate stages and each requires its own recorded authorization.
+STATIC-PACKAGE-PASS ≠ LIVE-PROJECT-PASS. Source merge ≠ artifact promotion ≠ Project upload ≠ invocation ≠ verified-live. `MF-020` is historical provenance, not permission. PINO does not authorize sarcasm, deception, person-targeting or crisis/high-stakes humor.

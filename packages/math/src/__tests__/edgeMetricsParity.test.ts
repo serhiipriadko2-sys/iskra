@@ -1,6 +1,8 @@
 import { execFileSync } from 'node:child_process'
-import { fileURLToPath } from 'node:url'
+import { cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   calculateDFAMetric as calculateNodeDFA,
@@ -11,61 +13,69 @@ import {
   calculateHFDMetric as calculateEdgeHFD,
 } from '../../../../supabase/functions/_shared/iskra-metrics/fractal-authority'
 import {
-  calculateShannonEntropy as calculateCanonicalEntropy,
-  interpretEntropy as interpretCanonicalEntropy,
-} from '../entropy'
-import {
-  calculateShannonEntropy as calculateEdgeEntropy,
-  interpretEntropy as interpretEdgeEntropy,
-} from '../../../../supabase/functions/_shared/iskra-metrics/entropy'
+  FRACTAL_AUTHORITY_CORPUS_CASES,
+  materializeCorpusSignal,
+} from './fractal-authority-corpus.js'
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
-const signal = (length: number): number[] =>
-  Array.from(
-    { length },
-    (_, index) => Math.sin(index / 3) + Math.cos(index / 11) + (index % 7) * 0.05,
-  )
+const generatedFiles = [
+  'packages/math/src/fractal-authority-source.ts',
+  'packages/math/src/fractal-authority-contracts.ts',
+  'packages/math/src/fractal-authority.ts',
+  'packages/math/src/fractal-authority-provenance.ts',
+  'packages/math/src/fractal-authority-corpus.json',
+  'runtime/src/types/fractal-authority-source.ts',
+  'runtime/src/types/fractal-authority-contracts.ts',
+  'runtime/src/types/fractal-authority.ts',
+  'runtime/src/types/fractal-authority-provenance.ts',
+  'supabase/functions/_shared/iskra-metrics/fractal-authority-source.ts',
+  'supabase/functions/_shared/iskra-metrics/fractal-authority-contracts.ts',
+  'supabase/functions/_shared/iskra-metrics/fractal-authority.ts',
+  'supabase/functions/_shared/iskra-metrics/fractal-authority-provenance.ts',
+]
 
 describe('generated Edge fractal authority parity', () => {
-  it.each([
-    '',
-    'one one two',
-    'Signal, signal; entropy must keep the canonical tokenizer.',
-  ])('keeps entropy and regime unchanged for %j', (text) => {
-    const entropy = calculateCanonicalEntropy(text)
-    expect(calculateEdgeEntropy(text)).toBe(entropy)
-    expect(interpretEdgeEntropy(entropy)).toBe(interpretCanonicalEntropy(entropy))
-  })
-
-  it.each([0, 1, 19, 20, 49, 50, 80])(
-    'T8: Node and generated Edge results are exact for N=%i',
-    (length) => {
-      const values = signal(length)
-      expect(calculateEdgeHFD(values)).toEqual(calculateNodeHFD(values))
-      expect(calculateEdgeDFA(values)).toEqual(calculateNodeDFA(values))
-    },
-  )
-
-  it('T8: invalid and numerical-failure results are exact', () => {
-    const overflow = Array.from(
-      { length: 80 },
-      (_, index) => (index % 2 === 0 ? Number.MAX_VALUE : -Number.MAX_VALUE),
-    )
-    expect(calculateEdgeHFD([1, Number.NaN])).toEqual(calculateNodeHFD([1, Number.NaN]))
-    expect(calculateEdgeDFA([1, Number.POSITIVE_INFINITY])).toEqual(
-      calculateNodeDFA([1, Number.POSITIVE_INFINITY]),
-    )
-    expect(calculateEdgeHFD(overflow)).toEqual(calculateNodeHFD(overflow))
-    expect(calculateEdgeDFA(overflow)).toEqual(calculateNodeDFA(overflow))
+  it('T8: Node and generated Edge results match for every registered corpus case', () => {
+    for (const testCase of FRACTAL_AUTHORITY_CORPUS_CASES) {
+      const signal = materializeCorpusSignal(testCase)
+      expect(calculateEdgeHFD(signal, testCase.hfd_options)).toEqual(
+        calculateNodeHFD(signal, testCase.hfd_options),
+      )
+      expect(calculateEdgeDFA(signal, testCase.dfa_options)).toEqual(
+        calculateNodeDFA(signal, testCase.dfa_options),
+      )
+    }
   })
 
   it('T15: committed mirrors regenerate without drift', () => {
-    expect(() =>
-      execFileSync(
+    expect(() => execFileSync(
+      process.execPath,
+      ['tools/generate-fractal-authority-mirrors.mjs', '--check'],
+      { cwd: repositoryRoot, stdio: 'pipe' },
+    )).not.toThrow()
+  })
+
+  it('T15: CRLF worktrees produce the same normalized hashes and mirrors', () => {
+    const fixtureRoot = mkdtempSync(resolve(tmpdir(), 'iskra-fractal-generator-'))
+    try {
+      for (const relativePath of generatedFiles) {
+        const source = resolve(repositoryRoot, relativePath)
+        const target = resolve(fixtureRoot, relativePath)
+        mkdirSync(dirname(target), { recursive: true })
+        const crlf = readFileSync(source, 'utf8').replace(/\r\n?/g, '\n').replace(/\n/g, '\r\n')
+        writeFileSync(target, crlf, 'utf8')
+      }
+      cpSync(
+        resolve(repositoryRoot, 'tools/generate-fractal-authority-mirrors.mjs'),
+        resolve(fixtureRoot, 'tools/generate-fractal-authority-mirrors.mjs'),
+      )
+      expect(() => execFileSync(
         process.execPath,
-        ['tools/generate-fractal-authority-mirrors.mjs', '--check'],
-        { cwd: repositoryRoot, stdio: 'pipe' },
-      ),
-    ).not.toThrow()
+        ['tools/generate-fractal-authority-mirrors.mjs', '--check', '--root', fixtureRoot],
+        { cwd: fixtureRoot, stdio: 'pipe' },
+      )).not.toThrow()
+    } finally {
+      rmSync(fixtureRoot, { recursive: true, force: true })
+    }
   })
 })

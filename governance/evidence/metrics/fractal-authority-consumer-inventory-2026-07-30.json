@@ -2,8 +2,8 @@
   "schema_version": "iskra.fractal-authority-consumer-inventory.v1",
   "adr_id": "ADR-20260729-02",
   "authorization_issue": 324,
-  "source_main_commit": "cf6ac6ecd80fb3ea0c64e19b9d083625e7aeb144",
-  "status": "implementation_candidate",
+  "source_main_commit": "0672f8a01c2abca1a08eb07745cc65c119dfaa34",
+  "status": "review_repair_candidate",
   "search_terms": [
     "calculateHFD(",
     "calculateDFA(",
@@ -36,12 +36,18 @@
       "path": "packages/math/src/index.ts",
       "finding": "wildcard export exposes competing raw and typed APIs",
       "migration": "explicit typed authority exports plus bounded compatibility namespace"
+    },
+    {
+      "path": "runtime/iskraSpace/types.ts",
+      "finding": "app facade re-exported the raw legacy aggregate from the runtime package root",
+      "migration": "explicit compatibility facade via fractalCompatibility; registered for sunset and excluded from authority paths"
     }
   ],
   "compatibility_only": [
     "packages/math/src/fractal.ts",
     "runtime/src/types/fractal.ts",
-    "supabase/functions/_shared/iskra-metrics/fractal.ts"
+    "supabase/functions/_shared/iskra-metrics/fractal.ts",
+    "runtime/iskraSpace/types.ts"
   ],
   "generated_mirrors": [
     "runtime/src/types/fractal-authority-source.ts",
@@ -60,5 +66,23 @@
     "skills/architecture.yaml",
     "Versions/Fullspark/3_COGNITIVE_ARCH.md"
   ],
-  "activation_claimed": false
+  "activation_claimed": false,
+  "reviewed_implementation_parent": "4d0a863644565113b25f91da9396f90793705856",
+  "verification": {
+    "search_scope": [
+      "packages",
+      "runtime/src",
+      "runtime/iskraSpace",
+      "supabase/functions",
+      "skills",
+      "docs",
+      "system"
+    ],
+    "public_api_non_regression": [
+      "InferenceAnalysis",
+      "ConflictResolution",
+      "FractalIndicators"
+    ],
+    "activation_claimed": false
+  }
 }

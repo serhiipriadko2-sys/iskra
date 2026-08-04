@@ -1,116 +1,63 @@
-# SPEC-001: Fractal Metrics Implementation (HFD/DFA)
+# SPEC-001 — Typed HFD/DFA Authority Boundary
 
-**Status:** Draft
-**Target:** vΩ.5.0
-**Integrity:** SoT-Spec
-**Context:** Реализация фрактального анализа временных рядов диалога.
+**Lifecycle:** implementation candidate under ADR-20260729-02.
+**Authority:** accepted and implementation-authorized; not merged, not activated, not deployed.
+**Canonical implementation:** `packages/math/src/fractal-authority*.ts`.
 
----
+## 1. Purpose
 
-## §1 · Context & Problem
+The v1 result union is `computed | unavailable | invalid | numerical_failure`.
+The boundary removes missing-data numeric stand-ins from authority paths. HFD and DFA return typed outcomes:
 
-В текущей версии (`vΩ.4.0`) метрика `fractality` рассчитывается как линейная комбинация `trust` и `clarity`:
-```typescript
-const fractality = integrity * resonance * 2.0; // Simulated
-```
+- `computed` — finite scalar plus provenance;
+- `unavailable` — valid signal, insufficient samples;
+- `invalid` — malformed signal or explicit parameter request;
+- `numerical_failure` — validated finite input produced unusable numerical output.
 
-Это **симуляция**. Научный канон требует использования **Higuchi Fractal Dimension (HFD)** для оценки сложности сигнала и **Detrended Fluctuation Analysis (DFA)** для оценки памяти системы.
+Raw `calculateHFD()`, `calculateDFA()` and `calculateFractalIndicators()` remain compatibility-only and are not formula authority.
 
-## §2 · Data Source: Token Entropy Series
+## 2. Fixed v1 methods
 
-Для расчета фрактальных метрик входным сигналом является не "текст", а временной ряд **Энтропии Токенов** (Token Entropy Series - TES).
+| Method | Sufficiency | Effective parameters |
+|---|---:|---|
+| `calculateHFDMetric` | `N >= 20` | `kMax = 5` |
+| `calculateDFAMetric` | `N >= 50` | `minBox = 4`, `maxBox = min(16, floor(N/2))` |
 
-$X = \{x_1, x_2, ..., x_N\}$
+Omission and an explicitly supplied exact default are equivalent. Non-default parameters fail closed as `invalid_parameter`; they are never clamped.
 
-Где $x_i$ — это семантическая "дистанция" или "новизна" i-го сообщения относительно контекста.
-В упрощенной модели $x_i$ может быть длиной сообщения, вариативностью словаря (TTR) или sentiment score.
+## 3. Evaluation order
 
-**Рекомендация для v1:** Использовать **Sentiment Variance** и **Topic Drift Magnitude** как входной сигнал.
+1. Validate signal container, numeric values and finiteness.
+2. Validate explicitly supplied options.
+3. Return `unavailable` when the valid signal is too short.
+4. Derive fixed effective defaults.
+5. Compute.
+6. Reject non-finite or invariant-breaking output as `numerical_failure`.
 
----
+Signal failure has precedence when both signal and options are malformed.
 
-## §3 · Higuchi Fractal Dimension (HFD) Implementation
+## 4. Provenance and generation
 
-### 3.1. Algorithm
-Алгоритм Хигучи вычисляет длину кривой $L(k)$ при разном масштабе $k$.
-Если $L(k) \propto k^{-D}$, то $D$ — фрактальная размерность.
+Every result binds algorithm version, requested/effective parameters, sample count, canonical source hash, generator version, generated bundle hash and parity corpus hash. The generator normalizes LF before hashing and deterministically regenerates runtime and Supabase Edge mirrors.
 
-### 3.2. TypeScript Reference Implementation
+The registered corpus is `packages/math/src/fractal-authority-corpus.json`. Tests load this exact file, verify its SHA-256, execute every case, and compare Node with generated Edge output.
 
-```typescript
-/**
- * Calculates Higuchi Fractal Dimension for a time series.
- * @param data Array of numbers (metrics history)
- * @param kMax Maximum scale parameter (e.g., 10 for short history)
- * @returns Fractal Dimension D (1.0 to 2.0)
- */
-export function calculateHFD(data: number[], kMax: number = 5): number {
-    const N = data.length;
-    if (N < kMax * 2) return 1.5; // Not enough data, return noise level
+## 5. Consumer boundary
 
-    const L_k = []; // Lengths for each k
+Primary typed consumers:
 
-    for (let k = 1; k <= kMax; k++) {
-        let L_m_k_sum = 0;
+- `packages/engine/src/services/metricsService.ts`;
+- `runtime/src/index.ts`;
+- `supabase/functions/_shared/iskra-metrics/calculator.ts`.
 
-        for (let m = 0; m < k; m++) {
-            let L_m_k = 0;
-            const n_max = Math.floor((N - m - 1) / k);
+Compatibility consumers must import raw APIs only through `fractalCompatibility`. Typed failures must not be converted into `1.5`, `0.5`, or another state-changing scalar.
 
-            for (let i = 1; i <= n_max; i++) {
-                L_m_k += Math.abs(data[m + i * k] - data[m + (i - 1) * k]);
-            }
+## 6. CI and lifecycle
 
-            const norm = (N - 1) / (n_max * k);
-            L_m_k = (L_m_k * norm) / k;
-            L_m_k_sum += L_m_k;
-        }
+`.github/workflows/fractal_authority.yml` is read-only. It checks mirrors, import/export fences, corpus parity, package/runtime/Edge tests and committed ledger freshness. It does not commit, push, post PR comments, merge, activate or deploy.
 
-        const avg_L_k = L_m_k_sum / k;
-        if (avg_L_k > 0) {
-             L_k.push({ k, val: avg_L_k });
-        }
-    }
+Passing CI proves implementation bytes only. Scoped activation requires merge plus a separate activation receipt with immutable timestamps and the 30-day compatibility sunset.
 
-    // Calculate slope of log(L(k)) vs log(1/k) using Least Squares
-    const x = L_k.map(p => Math.log(1 / p.k));
-    const y = L_k.map(p => Math.log(p.val));
+## 7. Non-claims
 
-    return calculateSlope(x, y); // This slope is D
-}
-```
-
-### 3.3. Interpretation
-- **D ~ 1.5**: Brownian Motion (Random Walk). Оптимальное состояние "Потока".
-- **D < 1.4**: Persistence (Trend). Слишком жесткая структура (Rigidity/Stuck). -> Триггер для `HUYNDUN` (Chaos).
-- **D > 1.6**: Anti-persistence (Noise). Хаос, отсутствие структуры. -> Триггер для `SAM` (Structure).
-
----
-
-## §4 · Detrended Fluctuation Analysis (DFA)
-
-### 4.1. Purpose
-DFA вычисляет экспоненту Хёрста ($H$).
-- $H = 0.5$: Случайный процесс (отсутствие памяти).
-- $H > 0.5$: Долгосрочная память (трендовость).
-- $H < 0.5$: Mean-reversion (возврат к среднему).
-
-### 4.2. Implementation Strategy
-Реализация DFA вычислительно сложнее. Для MVP предлагается использовать упрощенный **R/S Analysis (Rescaled Range)** для оценки $H$.
-
----
-
-## §5 · Integration into MetricsService
-
-1. **Storage:** `MetricsService` должен хранить историю последних 50-100 значений метрик (Rolling Window).
-2. **Compute:** При каждом обновлении метрик запускается `calculateHFD(history.pain)` и `calculateHFD(history.chaos)`.
-3. **Trigger:**
-    - Если `HFD(pain) > 1.8` -> Система в состоянии "Паника" (шум).
-    - Если `HFD(trust) < 1.2` -> Система в состоянии "Стагнация" (ригидность).
-
-## ∆DΩΛ
-
-**∆:** Спецификация алгоритмов фрактального анализа.
-**D:** Literature review (Higuchi, 1988).
-**Ω:** 90% (Алгоритм стандартный).
-**Λ:** Реализовать `utils/math/fractal.ts`.
+This specification does not activate entropy authority, package-wide formula authority, the `iskra-metrics` Skill, Supabase production deployment, or verified-live behavior.

@@ -30,12 +30,24 @@ function hashableSignalValue(value: number): HashableSignalValue {
   return value
 }
 
+function hashableUnknown(value: unknown): unknown {
+  if (typeof value === 'number') return hashableSignalValue(value)
+  if (value === null || typeof value === 'string' || typeof value === 'boolean') return value
+  if (Array.isArray(value)) return value.map(hashableUnknown)
+  if (typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, item]) => [key, hashableUnknown(item)]),
+    )
+  }
+  return { unsupported_type: typeof value }
+}
+
 function hashableObservation(raw: RawObservation): unknown {
   return {
     ...(raw.text === undefined ? {} : { text: raw.text }),
-    ...(raw.signal === undefined
-      ? {}
-      : { signal: raw.signal.map(hashableSignalValue) }),
+    ...(raw.signal === undefined ? {} : { signal: hashableUnknown(raw.signal) }),
   }
 }
 
