@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-04T14:58:51.598Z",
-  "total": 3749,
+  "generatedAt": "2026-08-04T15:20:02.048Z",
+  "total": 3751,
   "curated": 20,
   "layers": {
     "root": 347,
@@ -13,7 +13,7 @@
     "web": 13,
     "canon": 16,
     "builder": 1187,
-    "docs": 81,
+    "docs": 82,
     "governance": 433,
     "ingest": 10,
     "ledger": 7,
@@ -25,7 +25,7 @@
     "reference": 82,
     "runtime": 379,
     "skills": 269,
-    "backend": 84,
+    "backend": 85,
     "system": 26,
     "tools": 70
   },
@@ -26416,6 +26416,7 @@
         "docs/operations/supabase-status-redacted-example.txt",
         "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
         "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+        "docs/operations/supabase_graph_api_least_privilege_audit_2026-08-04.md",
         "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
         "docs/operations/supabase_production_db_preflight_2026-08-04.md",
         "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
@@ -26662,6 +26663,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_graph_api_least_privilege_audit_2026-08-04.md",
+      "name": "supabase_graph_api_least_privilege_audit_2026-08-04.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_graph_api_least_privilege_audit_2026-08-04.md",
       "related": [],
       "parent": "docs/operations"
     },
@@ -44648,6 +44660,7 @@
         "supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
         "supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql",
         "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+        "supabase/migrations/20260804183000_graph_api_least_privilege.sql",
         "supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
@@ -45080,6 +45093,17 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260804183000_graph_api_least_privilege.sql",
+      "name": "20260804183000_graph_api_least_privilege.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260804183000_graph_api_least_privilege.sql",
       "related": [],
       "parent": "supabase/migrations"
     },

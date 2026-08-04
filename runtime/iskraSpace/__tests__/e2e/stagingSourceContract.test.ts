@@ -119,6 +119,8 @@ describe('staging acceptance source contract', () => {
     expect(harness).toContain('$acceptanceEnvSnapshot');
     expect(harness).toContain('Wait-ForPostgrestJwtReadiness');
     expect(harness).toContain("$body -notmatch 'PGRST303'");
+    expect(harness).toContain('GRAPH_FORBIDDEN_CLIENT_GRANT_COUNT');
+    expect(harness).toContain("privilege_type in ('TRUNCATE', 'TRIGGER', 'REFERENCES')");
     expect(harness).toContain('Set-Item -LiteralPath "Env:$name"');
     expect(harness).toContain('Remove-Item -LiteralPath "Env:$name"');
     expect(harness).toContain("scope in ('member_minute','member_day')");

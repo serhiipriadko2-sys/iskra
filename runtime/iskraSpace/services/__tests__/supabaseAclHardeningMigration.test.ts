@@ -17,6 +17,13 @@ const triggerAclMigrationPath = join(
 const triggerAclMigration = existsSync(triggerAclMigrationPath)
   ? readFileSync(triggerAclMigrationPath, 'utf8')
   : '';
+const graphLeastPrivilegeMigrationPath = join(
+  dirname(thisFile),
+  '../../../../supabase/migrations/20260804183000_graph_api_least_privilege.sql',
+);
+const graphLeastPrivilegeMigration = existsSync(graphLeastPrivilegeMigrationPath)
+  ? readFileSync(graphLeastPrivilegeMigrationPath, 'utf8')
+  : '';
 const initplanMigrationPath = join(
   dirname(thisFile),
   '../../../../supabase/migrations/20260718194551_optimize_rls_initplan.sql',
@@ -132,5 +139,16 @@ describe('Supabase ACL hardening migration', () => {
     expect(triggerAclMigration).toContain('and exists (');
     expect(triggerAclMigration).toContain('alter policy users_select_own');
     expect(triggerAclMigration).toContain('alter policy audit_log_insert_own');
+  });
+
+  it('removes Graph privileges that bypass or exceed the supported row API', () => {
+    expect(graphLeastPrivilegeMigration).toMatch(
+      /revoke truncate, references, trigger[\s\S]*on table public\.graph_nodes, public\.graph_edges[\s\S]*from public, anon, authenticated;/i,
+    );
+    expect(graphLeastPrivilegeMigration).toMatch(
+      /grant select, insert, update, delete[\s\S]*on table public\.graph_nodes, public\.graph_edges[\s\S]*to authenticated;/i,
+    );
+    expect(graphLeastPrivilegeMigration).not.toMatch(/from[^;]*service_role/i);
+    expect(graphLeastPrivilegeMigration).not.toMatch(/revoke[^;]*(select|insert|update|delete)/i);
   });
 });

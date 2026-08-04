@@ -49,6 +49,12 @@ type RlsSnapshot = {
   rowsecurity?: boolean;
 };
 
+type GrantSnapshot = {
+  table: string;
+  grantee: string;
+  privileges?: string[];
+};
+
 type LiveSnapshot = {
   checked_at?: string;
   columns?: ColumnSnapshot[];
@@ -57,6 +63,7 @@ type LiveSnapshot = {
   functions?: FunctionSnapshot[];
   policies?: PolicySnapshot[];
   rls?: RlsSnapshot[];
+  grants?: GrantSnapshot[];
   migration_history?: Array<{ version?: string; name?: string }>;
 };
 
@@ -87,6 +94,8 @@ const CANONICAL_GRAPH_MIGRATION_FILES = [
   'supabase/migrations/20260626164745_graph_rpc_boundary_acl_hardening.sql',
   'supabase/migrations/20260709170000_closed_beta_access_boundary.sql',
   'supabase/migrations/20260710110000_graph_shared_row_guard.sql',
+  'supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql',
+  'supabase/migrations/20260804183000_graph_api_least_privilege.sql',
 ];
 
 const LEGACY_RUNTIME_SQL_SNAPSHOTS = [
@@ -100,6 +109,8 @@ const GRAPH_RPC_BOUNDARY_FILE = CANONICAL_GRAPH_MIGRATION_FILES[4];
 const GRAPH_RPC_ACL_FILE = CANONICAL_GRAPH_MIGRATION_FILES[5];
 const CLOSED_BETA_FILE = CANONICAL_GRAPH_MIGRATION_FILES[6];
 const GRAPH_SHARED_ROW_GUARD_FILE = CANONICAL_GRAPH_MIGRATION_FILES[7];
+const GRAPH_CLOSED_BETA_RESTORE_FILE = CANONICAL_GRAPH_MIGRATION_FILES[8];
+const GRAPH_LEAST_PRIVILEGE_FILE = CANONICAL_GRAPH_MIGRATION_FILES[9];
 
 const CANONICAL_GRAPH_MIGRATION_RECEIPTS: ExpectedMigration[] = CANONICAL_GRAPH_MIGRATION_FILES.map((file) => {
   const match = path.basename(file).match(/^(\d+)_([^/]+)\.sql$/);
@@ -292,6 +303,22 @@ select jsonb_build_object(
     where n.nspname = 'public'
       and c.relname in ('graph_nodes', 'graph_edges')
   ), '[]'::jsonb),
+  'grants', coalesce((
+    select jsonb_agg(jsonb_build_object(
+      'table', table_name,
+      'grantee', grantee,
+      'privileges', privileges
+    ) order by table_name, grantee)
+    from (
+      select table_name, grantee,
+        jsonb_agg(privilege_type order by privilege_type) as privileges
+      from information_schema.table_privileges
+      where table_schema = 'public'
+        and table_name in ('graph_nodes', 'graph_edges')
+        and grantee in ('PUBLIC', 'anon', 'authenticated', 'service_role')
+      group by table_name, grantee
+    ) grant_rows
+  ), '[]'::jsonb),
   'migration_history', coalesce((
     select jsonb_agg(jsonb_build_object('version', version, 'name', name) order by version desc)
     from supabase_migrations.schema_migrations
@@ -303,7 +330,9 @@ select jsonb_build_object(
       '20260626164633',
       '20260626164745',
       '20260709170000',
-      '20260710110000'
+      '20260710110000',
+      '20260718200634',
+      '20260804183000'
     ])
   ), '[]'::jsonb)
 )::text as graph_snapshot;
@@ -608,6 +637,25 @@ function assertCurrentGraphSharedRowGuard(): void {
   assertContains(sql, 'create trigger graph_nodes_block_cross_owner_cascade', GRAPH_SHARED_ROW_GUARD_FILE);
 }
 
+function assertCurrentGraphLeastPrivilege(): void {
+  const sql = readText(GRAPH_LEAST_PRIVILEGE_FILE);
+  assertContains(sql, 'revoke truncate, references, trigger', GRAPH_LEAST_PRIVILEGE_FILE);
+  assertContains(sql, 'from public, anon, authenticated', GRAPH_LEAST_PRIVILEGE_FILE);
+  assertContains(sql, 'grant select, insert, update, delete', GRAPH_LEAST_PRIVILEGE_FILE);
+  assertContains(sql, 'to authenticated', GRAPH_LEAST_PRIVILEGE_FILE);
+}
+
+function assertFinalClosedBetaGraphAcl(): void {
+  const sql = readText(GRAPH_CLOSED_BETA_RESTORE_FILE);
+  for (const policyName of REQUIRED_GRAPH_POLICY_NAMES) {
+    assertContains(sql, `create policy ${policyName}`, GRAPH_CLOSED_BETA_RESTORE_FILE);
+  }
+  assertContains(sql, 'for select to authenticated', GRAPH_CLOSED_BETA_RESTORE_FILE);
+  if (/for\s+select\s+to\s+(?:public|anon)/i.test(sql)) {
+    fail(`${GRAPH_CLOSED_BETA_RESTORE_FILE}: final Graph SELECT policies must not target public or anon`);
+  }
+}
+
 function assertLegacySnapshotsAreExcluded(): void {
   for (const file of LEGACY_RUNTIME_SQL_SNAPSHOTS) {
     const header = readText(file).split('\n').slice(0, 8).join('\n');
@@ -623,6 +671,8 @@ function verifyRepoContract(): void {
   assertCanonicalBaseTables();
   assertCurrentGraphRpcBoundary();
   assertCurrentGraphSharedRowGuard();
+  assertFinalClosedBetaGraphAcl();
+  assertCurrentGraphLeastPrivilege();
   assertLegacySnapshotsAreExcluded();
   ok(`canonical root-migration graph contract verified: ${CANONICAL_GRAPH_MIGRATION_FILES.join(', ')}`);
   warn('repo-only graph contract does not prove deployed DDL, deployed Edge Functions, or live migration parity');
@@ -774,6 +824,28 @@ function verifyLiveRls(snapshot: LiveSnapshot): void {
   }
 }
 
+function verifyLiveGrants(snapshot: LiveSnapshot): void {
+  const grants = snapshot.grants ?? [];
+  const expectedAuthenticated = ['DELETE', 'INSERT', 'SELECT', 'UPDATE'];
+  const expectedService = ['DELETE', 'INSERT', 'REFERENCES', 'SELECT', 'TRIGGER', 'TRUNCATE', 'UPDATE'];
+
+  for (const table of ['graph_nodes', 'graph_edges']) {
+    const authenticated = grants.find((row) => row.table === table && row.grantee === 'authenticated');
+    if (!authenticated || !sameJson(authenticated.privileges ?? [], expectedAuthenticated)) {
+      fail(`Live ${table} authenticated grants must be exactly ${expectedAuthenticated.join(',')}`);
+    }
+    const service = grants.find((row) => row.table === table && row.grantee === 'service_role');
+    if (!service || !sameJson(service.privileges ?? [], expectedService)) {
+      fail(`Live ${table} service_role grants must retain the full administrative set`);
+    }
+    for (const grantee of ['PUBLIC', 'anon']) {
+      if (grants.some((row) => row.table === table && row.grantee === grantee)) {
+        fail(`Live ${table} must not expose table grants to ${grantee}`);
+      }
+    }
+  }
+}
+
 function normalizePolicyExpression(policy: PolicySnapshot): string {
   return normalizeSql(`${policy.using ?? ''} ${policy.with_check ?? ''}`);
 }
@@ -783,9 +855,13 @@ function verifyLivePolicies(snapshot: LiveSnapshot): void {
   for (const name of REQUIRED_GRAPH_POLICY_NAMES) {
     const policy = policies.find((item) => item.name === name);
     if (!policy) fail(`Live graph snapshot missing policy ${name}`);
-    if (!normalizePolicyExpression(policy).includes('private.is_active_beta_member')) {
-      fail(`Live graph policy ${name} is missing the active closed-beta membership guard`);
+    if (!sameJson(policy.roles ?? [], ['authenticated'])) {
+      fail(`Live graph policy ${name} must target authenticated only`);
     }
+  }
+
+  if (policies.some((item) => (item.roles ?? []).some((role) => role === 'public' || role === 'anon'))) {
+    fail('Live Graph policies must not target public or anon');
   }
 
   for (const table of ['graph_nodes', 'graph_edges']) {
@@ -822,6 +898,7 @@ function compareLiveToRepo(snapshot: LiveSnapshot, allowUnreconciledHistory: boo
   verifyLiveIndexes(snapshot);
   verifyLiveFunctions(snapshot);
   verifyLiveRls(snapshot);
+  verifyLiveGrants(snapshot);
   verifyLivePolicies(snapshot);
   verifyMigrationHistory(snapshot, allowUnreconciledHistory);
 }

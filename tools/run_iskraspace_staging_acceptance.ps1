@@ -162,6 +162,28 @@ try {
     throw 'Staging branch URL does not match the requested project ref'
   }
 
+  $grantSql = @"
+select count(*)::int as forbidden_grant_count
+from information_schema.role_table_grants
+where table_schema = 'public'
+  and table_name in ('graph_nodes', 'graph_edges')
+  and grantee in ('PUBLIC', 'anon', 'authenticated')
+  and privilege_type in ('TRUNCATE', 'TRIGGER', 'REFERENCES');
+"@
+  $grantQueryArgs = @(
+    'dlx', 'supabase@2.109.0', 'db', 'query', $grantSql,
+    '--db-url', $branch.POSTGRES_URL, '--output', 'json'
+  )
+  $grantResult = (& pnpm @grantQueryArgs) | ConvertFrom-Json
+  if ($LASTEXITCODE -ne 0 -or -not $grantResult.rows) {
+    throw 'Failed to read staging Graph privilege postcondition'
+  }
+  $forbiddenGrantCount = [int]$grantResult.rows[0].forbidden_grant_count
+  if ($forbiddenGrantCount -ne 0) {
+    throw "Staging Graph privilege postcondition failed with count $forbiddenGrantCount"
+  }
+  "GRAPH_FORBIDDEN_CLIENT_GRANT_COUNT=$forbiddenGrantCount"
+
   $adminHeaders = @{ apikey = $serviceRoleKey; Authorization = "Bearer $serviceRoleKey" }
   $publicHeaders = @{ apikey = $publishableKey }
   $users = @()
