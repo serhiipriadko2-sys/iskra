@@ -89,6 +89,37 @@ function sameDependencyMap(a, b) {
  * resolve it (a genuine mismatch here means `npm ci` itself should be left to
  * fail with its own actionable error, not silently patched around here).
  */
+/**
+ * Whether every exact-version `overrides` entry in `package.json` still
+ * matches the version actually resolved for that package in the lockfile.
+ *
+ * `dependencies`/`devDependencies` alone miss this: `overrides` pins a
+ * TRANSITIVE package's version, so the overridden name never appears in
+ * either map. Changing an override's value in `package.json` — e.g.
+ * `"protobufjs": "7.6.5"` → a newer pin — leaves the lockfile's own
+ * `node_modules/protobufjs` entry at the old version, and neither the
+ * lockfile hash (unchanged) nor the dependency-map comparison (does not
+ * look at `overrides`) would ever see it.
+ *
+ * Only string (exact-version) overrides are checked, matching what this
+ * package.json actually declares — nested override objects (overriding a
+ * dependency's own transitive dependency specifically, rather than every
+ * occurrence) are a distinct npm feature this does not attempt to resolve.
+ * A package the override names that has no top-level `node_modules/<name>`
+ * entry at all is not treated as a mismatch: that means nothing in this
+ * tree currently depends on it, so the override has no effect to verify.
+ */
+function overridesMatchLock(pkg, lock) {
+  const overrides = pkg.overrides;
+  if (!overrides || typeof overrides !== 'object') return true;
+  for (const [name, version] of Object.entries(overrides)) {
+    if (typeof version !== 'string') continue;
+    const installed = lock.packages?.[`node_modules/${name}`];
+    if (installed && installed.version !== version) return false;
+  }
+  return true;
+}
+
 function packageJsonMatchesLock() {
   if (!existsSync(packageJson)) return true; // nothing to compare against
   const pkg = JSON.parse(readFileSync(packageJson, 'utf8'));
@@ -96,7 +127,8 @@ function packageJsonMatchesLock() {
   const rootEntry = lock.packages?.[''] ?? {};
   return (
     sameDependencyMap(pkg.dependencies, rootEntry.dependencies) &&
-    sameDependencyMap(pkg.devDependencies, rootEntry.devDependencies)
+    sameDependencyMap(pkg.devDependencies, rootEntry.devDependencies) &&
+    overridesMatchLock(pkg, lock)
   );
 }
 
@@ -327,6 +359,18 @@ function brokenDependencies() {
       manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
     } catch {
       broken.push(`${name} (unreadable package.json)`);
+      continue;
+    }
+
+    // A cache restore can replace a package with a COMPLETE but different
+    // version — every entry point present, nothing missing, and yet builds
+    // and tests run against code the lockfile does not describe. Existence
+    // checks alone cannot see this; every lockfile entry that survives the
+    // skips above carries its own resolved `version`, so comparing it
+    // against the installed manifest's own `version` costs nothing extra
+    // and catches a class of drift no entry-point check can.
+    if (typeof meta.version === 'string' && manifest.version !== meta.version) {
+      broken.push(`${name} (version ${manifest.version ?? '?'} !== locked ${meta.version})`);
       continue;
     }
 

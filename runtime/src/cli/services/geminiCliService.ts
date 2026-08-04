@@ -302,6 +302,41 @@ export function mapSiftStatusToVerdict(
 }
 
 /**
+ * `decideSiftVerdictStatus()`'s `'unknown'` status (`omega < 40`,
+ * `contraRatio < 0.6`) is reached two structurally different ways that
+ * `mapSiftStatusToVerdict()` alone cannot tell apart, because the scorer
+ * function only ever sees `omega`/`contraRatio`/`flagsCount`, not the
+ * evidence those numbers were computed from:
+ *
+ *   - Wave 0 today: `siftInput` is a constant with every evidence field
+ *     empty, `omega` is mechanically 0, and `'unknown'` genuinely means
+ *     "nothing to go on" — UNSOURCED is the honest word for it.
+ *   - Wave 1, once evidence is populated: real sources can be retrieved,
+ *     weighed, and still land under omega 40 (weak reliability, low
+ *     traceability, thin logical validity) without needing 60%+
+ *     contradiction to trigger the `false` override. Reporting THAT as "no
+ *     reliable sources found" denies that any evidence was weighed — the
+ *     same understatement UNVERIFIED (the 40–59 band) already exists to
+ *     avoid, just one omega band lower.
+ *
+ * This checks the actual input, not the derived omega, so the distinction
+ * is exact rather than inferred from a threshold. It returns `false` for
+ * Wave 0's real, hardcoded-empty `siftInput` — the case above is
+ * unreachable today for the same reason FACT/INFERENCE/FALSE are, and this
+ * function is what keeps it that way honestly rather than by coincidence.
+ */
+export function hasAnyEvidence(input: Omit<SiftResult, "delta">): boolean {
+  return (
+    input.source.identified.length > 0 ||
+    input.inference.claims.length > 0 ||
+    input.evidence.supporting.length > 0 ||
+    input.evidence.contradicting.length > 0 ||
+    input.evidence.neutral.length > 0 ||
+    input.trace.chain.length > 0
+  );
+}
+
+/**
  * Strict schema for the model's raw SIFT self-report.
  *
  * This is a *candidate* assessment only — model output is untrusted input,
@@ -579,7 +614,19 @@ ${DELTA_PROTOCOL}
       flagsCount: siftInput.source.flags.length,
     });
 
-    const verdict = mapSiftStatusToVerdict(decision.status);
+    // decision.status === 'unknown' means EITHER "no evidence at all" (Wave
+    // 0's actual, always-empty siftInput) OR "evidence was weighed and
+    // still scored under 40" (only reachable once Wave 1 populates real
+    // evidence). mapSiftStatusToVerdict() cannot distinguish them — it only
+    // sees the scorer's categorical status, not the input that produced it
+    // — so that distinction is made here, against the actual siftInput,
+    // rather than folded into the pure mapper. See hasAnyEvidence()'s own
+    // comment for why this stays unreachable today and what makes it
+    // correct once it is not.
+    const verdict =
+      decision.status === "unknown" && hasAnyEvidence(siftInput)
+        ? "UNVERIFIED"
+        : mapSiftStatusToVerdict(decision.status);
 
     return {
       statement,

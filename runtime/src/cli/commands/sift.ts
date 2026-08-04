@@ -94,10 +94,18 @@ export const siftCommand = new Command("sift")
           // Reasoning block. Hard-wrapping and marking every resulting chunk
           // closes it here too, rather than leaving locators as the one block
           // still vulnerable to it.
+          // Continuation chunks must carry a NON-BLANK marker, not indentation
+          // alone. A blank-padded continuation row is indistinguishable from
+          // an unmarked one once the numbered first row (and the heading
+          // above it) has scrolled off screen — exactly the gap this
+          // wrapping exists to close. ">".padStart(label.length) keeps the
+          // same visible width as the numbered label while still being
+          // unambiguously a "this is still model text" mark on every row.
           const label = `${idx + 1}.`;
+          const continuationMarker = ">".padStart(label.length);
           const chunks = wrapToWidth(sanitizeForTerminal(source), locatorWrapWidth);
           chunks.forEach((chunk, i) => {
-            const marker = i === 0 ? label : " ".repeat(label.length);
+            const marker = i === 0 ? label : continuationMarker;
             console.log(chalk.yellow("│  "), chalk.white(marker), chalk.gray(chunk));
           });
         });

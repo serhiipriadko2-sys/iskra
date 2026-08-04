@@ -38,6 +38,7 @@ import {
   wrapToWidth,
   displayWidth,
   mapSiftStatusToVerdict,
+  hasAnyEvidence,
   ChatMessage,
 } from '../geminiCliService.js';
 import type { IskraMetrics } from '../../../types/metrics.js';
@@ -371,6 +372,51 @@ describe('ChatMessage type', () => {
   it('accepts model role', () => {
     const msg: ChatMessage = { role: 'model', content: 'Hello' };
     expect(msg.role).toBe('model');
+  });
+});
+
+describe('hasAnyEvidence', () => {
+  const emptySiftInput = () => ({
+    source: { identified: [], reliability: 0, flags: [] },
+    inference: { claims: [], assumptions: [], logicalValidity: 0, fallacies: [] },
+    evidence: { supporting: [], contradicting: [], neutral: [], quality: 0 },
+    trace: { chain: [], distortions: [], traceability: 0 },
+    verdict: { status: 'unknown' as const, confidence: 0, summary: '', caveats: [] },
+  });
+
+  // This is exactly Wave 0's real siftInput shape (see siftVerify()). It has
+  // to return false, or the 'unknown' -> UNVERIFIED override in siftVerify()
+  // would fire on every call today, silently reintroducing a positive-ish
+  // verdict from zero evidence.
+  it('returns false for Wave 0\'s actual empty siftInput', () => {
+    expect(hasAnyEvidence(emptySiftInput())).toBe(false);
+  });
+
+  const stubSource = { name: 'stub', type: 'secondary' as const };
+  const stubEvidence = { source: stubSource, content: 'x', relevance: 1, strength: 1 };
+
+  it('returns true when supporting evidence is present', () => {
+    const input = emptySiftInput();
+    input.evidence.supporting.push(stubEvidence);
+    expect(hasAnyEvidence(input)).toBe(true);
+  });
+
+  it('returns true when contradicting evidence is present', () => {
+    const input = emptySiftInput();
+    input.evidence.contradicting.push(stubEvidence);
+    expect(hasAnyEvidence(input)).toBe(true);
+  });
+
+  it('returns true when identified sources are present, even with no evidence entries', () => {
+    const input = emptySiftInput();
+    input.source.identified.push(stubSource);
+    expect(hasAnyEvidence(input)).toBe(true);
+  });
+
+  it('returns true when a trace chain is present', () => {
+    const input = emptySiftInput();
+    input.trace.chain.push({ from: 'a', to: 'b' });
+    expect(hasAnyEvidence(input)).toBe(true);
   });
 });
 
