@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 
 const runtimeDir = join(process.cwd(), 'runtime');
 const packageLock = join(runtimeDir, 'package-lock.json');
+const packageJson = join(runtimeDir, 'package.json');
 const nodeModulesDir = join(runtimeDir, 'node_modules');
 // Stamp lives inside node_modules so wiping node_modules also invalidates it.
 const stampFile = join(nodeModulesDir, '.iskra-runtime-deps-stamp');
@@ -15,8 +16,8 @@ if (!existsSync(packageLock)) {
 }
 
 /**
- * Readiness needs two independent signals, because each catches a failure the
- * other misses:
+ * Readiness needs three independent signals, because each catches a failure
+ * the other two miss:
  *
  *   1. Lockfile hash — catches changes the integrity check cannot see, because
  *      that check inspects what is on disk, not which version was requested:
@@ -28,8 +29,7 @@ if (!existsSync(packageLock)) {
  *          untouched, where the integrity check has nothing to compare at all.
  *
  *   2. Integrity of every package the lockfile declares — catches "the installed
- *      tree
- *      was mutated without touching the lockfile". A hash check cannot see
+ *      tree was mutated without touching the lockfile". A hash check cannot see
  *      this: `npm prune --omit=dev` removes devDependencies (typescript,
  *      @types/node) while leaving both package-lock.json and this stamp
  *      untouched, so a hash-only check reports readiness for a tree that
@@ -38,14 +38,67 @@ if (!existsSync(packageLock)) {
  *      brokenDependencies() resolves declared entry points rather than
  *      testing directory names.
  *
- * Checking both is not belt-and-braces; each alone is genuinely insufficient.
- * The integrity check enumerates the lockfile's own `packages` map rather than a
- * hand-picked marker list or the direct dependencies, so — unlike the original
- * two markers — it does detect a newly declared package missing from a stale
- * tree, and unlike a direct-only check it also covers transitive packages. That
- * case is covered twice; the cases listed under (1) are covered only by the hash.
+ *   3. package.json's own declared dependencies against the lockfile's own
+ *      record of them — catches "package.json was edited without regenerating
+ *      the lockfile" (a dependency added, removed, or its range changed by
+ *      hand, with no `npm install` run afterward). Neither signal above sees
+ *      this: the lockfile's bytes are untouched, so the hash still matches;
+ *      and since round 11 the integrity check is DERIVED from the lockfile's
+ *      own `packages` map, so a dependency package.json newly declares but
+ *      the lockfile has never heard of is not iterated at all — nothing
+ *      reports it missing, because nothing looks for it. Reproduced: adding a
+ *      dependency to package.json alone, lockfile and node_modules untouched,
+ *      left signals (1) and (2) both silent and the check reporting "tree
+ *      complete".
+ *
+ * Checking all three is not belt-and-braces; each alone is genuinely
+ * insufficient. The integrity check enumerates the lockfile's own `packages`
+ * map rather than a hand-picked marker list or the direct dependencies, so —
+ * unlike the original two markers — it does detect a newly declared package
+ * missing from a stale tree that the LOCKFILE already knows about, and unlike
+ * a direct-only check it also covers transitive packages. That case is
+ * covered twice; the cases listed under (1) are covered only by the hash; the
+ * case under (3) — package.json diverging from the lockfile itself — is
+ * covered only by comparing the two directly.
  */
 const lockHash = createHash('sha256').update(readFileSync(packageLock)).digest('hex');
+
+/**
+ * Order-independent equality for a `dependencies`/`devDependencies` map:
+ * same keys, same values, key order irrelevant. Not a JSON.stringify
+ * comparison — npm and a hand-edited file need not preserve the same key
+ * order for the comparison to be meaningless (a reordered-but-unchanged
+ * `package.json` must not read as drift).
+ */
+function sameDependencyMap(a, b) {
+  const left = a ?? {};
+  const right = b ?? {};
+  const keys = new Set([...Object.keys(left), ...Object.keys(right)]);
+  for (const key of keys) {
+    if (left[key] !== right[key]) return false;
+  }
+  return true;
+}
+
+/**
+ * Whether `package.json`'s declared dependencies still match what the
+ * lockfile's own root entry (`packages[""]`) recorded them as at the last
+ * `npm install`/`npm ci`. That root entry mirrors `dependencies`/
+ * `devDependencies` exactly as of lock generation, so this comparison detects
+ * drift directly — no separate npm invocation needed to see it, only to
+ * resolve it (a genuine mismatch here means `npm ci` itself should be left to
+ * fail with its own actionable error, not silently patched around here).
+ */
+function packageJsonMatchesLock() {
+  if (!existsSync(packageJson)) return true; // nothing to compare against
+  const pkg = JSON.parse(readFileSync(packageJson, 'utf8'));
+  const lock = JSON.parse(readFileSync(packageLock, 'utf8'));
+  const rootEntry = lock.packages?.[''] ?? {};
+  return (
+    sameDependencyMap(pkg.dependencies, rootEntry.dependencies) &&
+    sameDependencyMap(pkg.devDependencies, rootEntry.devDependencies)
+  );
+}
 
 /**
  * Node/TypeScript module resolution for a declared target, reduced to
@@ -287,6 +340,13 @@ if (existsSync(nodeModulesDir) && existsSync(stampFile)) {
   const stamped = readFileSync(stampFile, 'utf8').trim();
   if (stamped !== lockHash) {
     console.log('[legacy-runtime] runtime lockfile changed since last install; reinstalling');
+  } else if (!packageJsonMatchesLock()) {
+    // Lockfile hash and installed-tree integrity can both be satisfied while
+    // package.json itself has drifted from what the lockfile last recorded
+    // — see signal (3) above. Falling through to `npm ci` here is
+    // deliberate: it is npm's own job to refuse an out-of-sync lockfile with
+    // an actionable error, not this script's job to guess what to install.
+    console.log('[legacy-runtime] runtime package.json has diverged from package-lock.json; reinstalling');
   } else {
     const missing = brokenDependencies();
     if (missing.length === 0) {
