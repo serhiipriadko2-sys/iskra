@@ -1,6 +1,6 @@
 # Supabase data-less staging and advisor receipt — 2026-07-31
 
-Status: `MANUAL_DATALESS_REPAIR_PASS`; clean replay and production promotion remain blocked.
+Status: `MANUAL_DATALESS_REPAIR_PASS`; clean replay PASS; production DB promotion remains blocked.
 
 Production project: `typcvaszcfdpkzbjzuur`.
 Staging branch ID: `34468814-3afa-4704-b28f-2d0216bf99c3`.
@@ -59,7 +59,11 @@ The following bodies were applied sequentially to the disposable staging databas
 5. `replay_20260728171718_revoke_direct_execute_on_graph_trigger_function`;
 6. `replay_20260728183421_parallax_memory_gate`.
 
-This proves the forward repair chain on a data-less database. It does not prove the repository can replay automatically from an empty local stack; that remains a PR CI gate.
+This proves the forward repair chain on a data-less database. A later independent
+GitHub Actions clean replay also passed from an empty local Supabase stack on PR
+head `86051688e31fd01279d36a31921fe959ffd41766` (run `30663869451`). The hosted
+preview's automatic replay failure remains a separate platform result and is not
+rewritten as PASS.
 
 ## Postconditions
 
@@ -110,8 +114,8 @@ The added FK and unused-index INFO notices come from exact live-parity reconstru
 
 Production DB promotion remains blocked until all of the following are complete:
 
-1. PR-triggered clean replay from an empty database passes with read-back.
-2. The stacked provenance PR passes integrity and migration CI.
+1. Clean replay passes again on the final PR head after synchronization with `main`.
+2. The provenance PR passes integrity and migration CI on that exact head.
 3. Two-principal Graph/RPC/REST acceptance passes after the repair chain.
 4. A production preflight proves the reconstruction migration will validate and no-op against the existing `gateway_events` object.
 5. Exact migration scope, rollback/forward-repair plan and post-apply read-back are approved separately.
@@ -120,5 +124,5 @@ Production DB promotion remains blocked until all of the following are complete:
 
 ∆: live-only migration provenance and the hidden `gateway_events` prerequisite are now explicit; the repair chain is proven on a disposable data-less database.
 D: production migration statements and catalogs → GitHub exact/reconstructed files → data-less branch → advisor before → six staged migrations → policy/grant/history read-back → advisor after.
-Ω: 0.95 for exact recovered bodies and staging metadata postconditions; 0.80 for production readiness because clean replay and two-principal runtime acceptance are still open.
+Ω: 0.95 for exact recovered bodies, clean replay and staging metadata postconditions; 0.82 for production readiness because final-head CI, two-principal runtime acceptance and production no-op preflight are still open.
 Λ: revise after PR CI clean replay, successful two-principal acceptance, or any change to production migration history or `gateway_events` schema.

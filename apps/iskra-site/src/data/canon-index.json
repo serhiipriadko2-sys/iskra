@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-07-31T11:58:58.394Z",
-  "total": 3740,
+  "generatedAt": "2026-08-04T14:43:57.435Z",
+  "total": 3748,
   "curated": 20,
   "layers": {
     "root": 347,
     "agents": 46,
     "devcontainer": 2,
-    "ci": 15,
+    "ci": 16,
     "research": 487,
     "appendix": 26,
     "site": 69,
     "web": 13,
     "canon": 16,
     "builder": 1187,
-    "docs": 77,
+    "docs": 80,
     "governance": 433,
     "ingest": 10,
     "ledger": 7,
@@ -25,7 +25,7 @@
     "reference": 82,
     "runtime": 379,
     "skills": 269,
-    "backend": 80,
+    "backend": 84,
     "system": 26,
     "tools": 70
   },
@@ -732,6 +732,7 @@
         ".github/workflows/production_deploy.yml",
         ".github/workflows/runtime_ci.yml",
         ".github/workflows/sot_integrity.yml",
+        ".github/workflows/supabase_migration_clean_replay.yml",
         ".github/workflows/supabase_schema_contract.yml"
       ]
     },
@@ -842,6 +843,17 @@
       "role": "config",
       "coverage": "indexed",
       "sourceRef": ".github/workflows/sot_integrity.yml",
+      "related": [],
+      "parent": ".github/workflows"
+    },
+    {
+      "path": ".github/workflows/supabase_migration_clean_replay.yml",
+      "name": "supabase_migration_clean_replay.yml",
+      "kind": "file",
+      "layer": "ci",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": ".github/workflows/supabase_migration_clean_replay.yml",
       "related": [],
       "parent": ".github/workflows"
     },
@@ -26403,7 +26415,10 @@
         "docs/operations/sprint2_implementation_backlog.md",
         "docs/operations/supabase-status-redacted-example.txt",
         "docs/operations/supabase_advisor_snapshot_2026-07-31.md",
+        "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+        "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
         "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
+        "docs/operations/supabase_staging_cleanup_2026-07-31.md",
         "docs/operations/supabase_status_exposure_owner_checklist_2026-06-07.md"
       ]
     },
@@ -26639,6 +26654,28 @@
       "parent": "docs/operations"
     },
     {
+      "path": "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+      "name": "supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_data_less_staging_advisor_receipt_2026-07-31.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
+      "name": "supabase_migration_provenance_recovery_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_migration_provenance_recovery_2026-07-31.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
       "path": "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
       "name": "supabase_residual_advisors_approval_packet_2026-06-26.md",
       "kind": "file",
@@ -26646,6 +26683,17 @@
       "role": "documentation",
       "coverage": "indexed",
       "sourceRef": "docs/operations/supabase_residual_advisors_approval_packet_2026-06-26.md",
+      "related": [],
+      "parent": "docs/operations"
+    },
+    {
+      "path": "docs/operations/supabase_staging_cleanup_2026-07-31.md",
+      "name": "supabase_staging_cleanup_2026-07-31.md",
+      "kind": "file",
+      "layer": "docs",
+      "role": "documentation",
+      "coverage": "indexed",
+      "sourceRef": "docs/operations/supabase_staging_cleanup_2026-07-31.md",
       "related": [],
       "parent": "docs/operations"
     },
@@ -44585,6 +44633,10 @@
         "supabase/migrations/20260718194551_optimize_rls_initplan.sql",
         "supabase/migrations/20260718194835_consolidate_rls_policies.sql",
         "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
+        "supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+        "supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql",
+        "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+        "supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json",
         "supabase/migrations/PROVENANCE_2026-06-05.md",
         "supabase/migrations/PROVENANCE_2026-06-27.md",
         "supabase/migrations/README_LEGACY_DATA_MIGRATION.sql"
@@ -44983,6 +45035,50 @@
       "role": "data",
       "coverage": "indexed",
       "sourceRef": "supabase/migrations/20260718200634_restore_closed_beta_graph_acl.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+      "name": "20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260728171718_revoke_direct_execute_on_graph_trigger_function.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql",
+      "name": "20260728180000_reconcile_gateway_events_live_schema.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260728180000_reconcile_gateway_events_live_schema.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+      "name": "20260728183421_parallax_memory_gate.sql",
+      "kind": "file",
+      "layer": "backend",
+      "role": "data",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/20260728183421_parallax_memory_gate.sql",
+      "related": [],
+      "parent": "supabase/migrations"
+    },
+    {
+      "path": "supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json",
+      "name": "MANIFEST_2026-07-31_LIVE_RECOVERY.json",
+      "kind": "file",
+      "layer": "backend",
+      "role": "config",
+      "coverage": "indexed",
+      "sourceRef": "supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json",
       "related": [],
       "parent": "supabase/migrations"
     },

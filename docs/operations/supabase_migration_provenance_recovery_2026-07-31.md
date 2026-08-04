@@ -1,6 +1,6 @@
 # Supabase migration provenance recovery — 2026-07-31
 
-Status: `LIVE_BODIES_RECOVERED`; clean replay and staging pending.
+Status: `LIVE_BODIES_RECOVERED`; clean replay PASS; data-less staging repair PASS; production DB promotion blocked.
 
 Production project: `typcvaszcfdpkzbjzuur`.
 Repository branch: `fix/supabase-migration-provenance-20260731`.
@@ -41,16 +41,27 @@ Repository migration `20260718200634_restore_closed_beta_graph_acl.sql` is not r
 
 `supabase/migrations/MANIFEST_2026-07-31_LIVE_RECOVERY.json`
 
+## Clean replay follow-up
+
+GitHub Actions run `30663869451` completed successfully on PR head
+`86051688e31fd01279d36a31921fe959ffd41766` at `2026-07-31T20:45:28Z`:
+
+`https://github.com/serhiipriadko2-sys/iskra/actions/runs/30663869451`
+
+The workflow started a fresh local Supabase stack, reset it from an empty
+database, verified the tracked migration history and parser statement counts,
+ran database lint, and read back the expected Graph policies, memory deny
+policies and trigger-function EXECUTE restrictions. This is an independent
+clean-replay PASS. It does not relabel the earlier hosted preview replay failure
+or the manual data-less repair as a clean replay.
+
 ## Next gates
 
-1. Clean replay from an empty database using the stacked branch migration order.
-2. Confirm the data-less branch cost and create a staging branch.
-3. Capture security/performance advisors before remediation.
-4. Apply only the reviewed forward migration set on staging.
-5. Run anonymous, non-member, suspended and two-principal Graph/RPC/REST tests.
-6. Capture advisors, policies, grants, functions and migration history after remediation.
-7. Delete staging after evidence is complete.
-8. Prepare a separate production DB promotion proposal; do not merge it into the completed Edge release.
+1. Re-run clean replay on the final PR head after synchronization with `main`.
+2. Run anonymous, non-member, suspended and two-principal Graph/RPC/REST tests on a disposable branch.
+3. Prove the production reconstruction migration validates and no-ops against the existing `gateway_events` object.
+4. Prepare and approve exact production migration scope, forward-repair plan and post-apply read-back.
+5. Keep this DB promotion separate from the completed Edge production release.
 
 Current Supabase branch price observed for the `kate` organization: `$0.01344/hour`. No branch has been created by this receipt.
 
@@ -58,5 +69,5 @@ Current Supabase branch price observed for the `kate` organization: `$0.01344/ho
 
 ∆: two live-only production migration receipts now have exact repository bodies and cryptographic provenance.
 D: production `schema_migrations.statements[1]` → SHA-256/bytes → GitHub write → GitHub read-back → exact equality test.
-Ω: 0.95 for the recovered applied bytes; clean replay and staging remain unverified.
+Ω: 0.95 for the recovered applied bytes and the recorded clean replay; production runtime acceptance remains unverified.
 Λ: revise if GitHub read-back changes, production migration history changes, or clean replay exposes an ordering/dependency conflict.

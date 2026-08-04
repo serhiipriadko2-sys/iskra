@@ -8,7 +8,7 @@
   "status": {
     "live_bodies_recovered": true,
     "repo_readback_verified": true,
-    "clean_replay": "PR_CI_PENDING",
+    "clean_replay": "PASS_PR_HEAD_86051688",
     "hosted_branch_automatic_replay": "FAILED_AFTER_20260718191950",
     "data_less_staging_manual_repair": "PASS",
     "advisor_before_after": "CAPTURED",
@@ -152,6 +152,13 @@
     "hash_algorithm": "sha256 over exact UTF-8 statement bytes",
     "repo_verification": "GitHub contents API read-back",
     "source_candidate_relation": "SQL tokens equal after removing all whitespace; bytes intentionally recorded as different",
-    "clean_replay_boundary": "hosted automatic replay failed; manual data-less repair is not relabeled as clean replay"
+    "clean_replay_boundary": "Supabase hosted preview automatic replay failed; the independent GitHub Actions empty-database clean replay passed and the manual data-less repair remains separately labeled",
+    "clean_replay": {
+      "verified_at": "2026-07-31T20:45:28Z",
+      "head_sha": "86051688e31fd01279d36a31921fe959ffd41766",
+      "workflow_run_id": 30663869451,
+      "workflow_url": "https://github.com/serhiipriadko2-sys/iskra/actions/runs/30663869451",
+      "conclusion": "success"
+    }
   }
 }
