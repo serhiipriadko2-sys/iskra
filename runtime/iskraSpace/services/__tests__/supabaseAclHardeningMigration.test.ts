@@ -17,6 +17,27 @@ const triggerAclMigrationPath = join(
 const triggerAclMigration = existsSync(triggerAclMigrationPath)
   ? readFileSync(triggerAclMigrationPath, 'utf8')
   : '';
+const graphLeastPrivilegeMigrationPath = join(
+  dirname(thisFile),
+  '../../../../supabase/migrations/20260804183000_graph_api_least_privilege.sql',
+);
+const graphLeastPrivilegeMigration = existsSync(graphLeastPrivilegeMigrationPath)
+  ? readFileSync(graphLeastPrivilegeMigrationPath, 'utf8')
+  : '';
+const pgGraphqlMigrationPath = join(
+  dirname(thisFile),
+  '../../../../supabase/migrations/20260804184500_reconcile_pg_graphql_extension.sql',
+);
+const pgGraphqlMigration = existsSync(pgGraphqlMigrationPath)
+  ? readFileSync(pgGraphqlMigrationPath, 'utf8')
+  : '';
+const memorySearchPathMigrationPath = join(
+  dirname(thisFile),
+  '../../../../supabase/migrations/20260804190000_reconcile_iskra_memory_search_paths.sql',
+);
+const memorySearchPathMigration = existsSync(memorySearchPathMigrationPath)
+  ? readFileSync(memorySearchPathMigrationPath, 'utf8')
+  : '';
 const initplanMigrationPath = join(
   dirname(thisFile),
   '../../../../supabase/migrations/20260718194551_optimize_rls_initplan.sql',
@@ -132,5 +153,47 @@ describe('Supabase ACL hardening migration', () => {
     expect(triggerAclMigration).toContain('and exists (');
     expect(triggerAclMigration).toContain('alter policy users_select_own');
     expect(triggerAclMigration).toContain('alter policy audit_log_insert_own');
+  });
+
+  it('removes Graph privileges that bypass or exceed the supported row API', () => {
+    expect(graphLeastPrivilegeMigration).toMatch(
+      /revoke truncate, references, trigger[\s\S]*on table public\.graph_nodes, public\.graph_edges[\s\S]*from public, anon, authenticated;/i,
+    );
+    expect(graphLeastPrivilegeMigration).toMatch(
+      /grant select, insert, update, delete[\s\S]*on table public\.graph_nodes, public\.graph_edges[\s\S]*to authenticated;/i,
+    );
+    expect(graphLeastPrivilegeMigration).not.toMatch(/from[^;]*service_role/i);
+    expect(graphLeastPrivilegeMigration).not.toMatch(/revoke[^;]*(select|insert|update|delete)/i);
+  });
+
+  it('reconciles the production pg_graphql dependency into clean replay', () => {
+    expect(pgGraphqlMigration).toContain('create schema if not exists graphql;');
+    expect(pgGraphqlMigration).toMatch(
+      /create extension if not exists pg_graphql[\s\S]*with schema graphql[\s\S]*version '1\.5\.11';/i,
+    );
+    expect(pgGraphqlMigration).toContain("installed_version <> '1.5.11'");
+    expect(pgGraphqlMigration).toContain("installed_schema <> 'graphql'");
+    expect(pgGraphqlMigration).toContain(
+      'revoke all on schema graphql from public, anon, authenticated;',
+    );
+    expect(pgGraphqlMigration).toContain(
+      'grant usage on schema graphql to anon, authenticated, service_role;',
+    );
+  });
+
+  it('pins every service-role memory RPC to immutable resolution schemas', () => {
+    for (const signature of [
+      'iskra_project_observe(jsonb, text)',
+      'iskra_project_commit(uuid, jsonb, text)',
+      'iskra_project_horizon_propose(jsonb, text)',
+      'iskra_memory_write(text, jsonb, text)',
+      'iskra_memory_search(text, text[], integer)',
+      'iskra_memory_promote_shadow(uuid, text, jsonb, text, text, text, text[], numeric)',
+      'iskra_memory_crystallize_dream(uuid, text, text, jsonb, text, text, text, text)',
+    ]) {
+      expect(memorySearchPathMigration).toContain(`alter function iskra_memory.${signature}`);
+    }
+    expect(memorySearchPathMigration.match(/set search_path = pg_catalog, iskra_memory;/g)).toHaveLength(7);
+    expect(memorySearchPathMigration).not.toMatch(/set search_path\s*=\s*[^;]*public/i);
   });
 });

@@ -144,11 +144,21 @@ function Wait-ForPostgrestJwtReadiness(
 
 Push-Location $repoRoot
 try {
-  $branch = (
-    pnpm dlx supabase@2.109.0 branches get $StagingBranchId `
-      --project-ref $ProductionProjectRef --output json
-  ) | ConvertFrom-Json
-  $baseUrl = $branch.SUPABASE_URL.TrimEnd('/')
+  $branchJson = (& pnpm exec supabase branches get $StagingBranchId `
+    --project-ref $ProductionProjectRef --output json | Out-String)
+  $branchReadExit = $LASTEXITCODE
+  if ($branchReadExit -ne 0 -or [string]::IsNullOrWhiteSpace($branchJson)) {
+    throw "Failed to read staging branch credentials (exit $branchReadExit)"
+  }
+  try {
+    $branch = $branchJson | ConvertFrom-Json
+  } catch {
+    throw 'Failed to parse staging branch credentials as JSON'
+  }
+  if (-not $branch.SUPABASE_URL -or -not $branch.POSTGRES_URL) {
+    throw 'Staging branch credentials are incomplete'
+  }
+  $baseUrl = ([string]$branch.SUPABASE_URL).TrimEnd('/')
   $publishableKey = if ($branch.SUPABASE_PUBLISHABLE_KEY) {
     $branch.SUPABASE_PUBLISHABLE_KEY
   } else {
@@ -161,6 +171,36 @@ try {
   if ($baseUrl -ne "https://$StagingProjectRef.supabase.co") {
     throw 'Staging branch URL does not match the requested project ref'
   }
+
+  $grantSql = @"
+select count(*)::int as forbidden_grant_count
+from information_schema.table_privileges
+where table_schema = 'public'
+  and table_name in ('graph_nodes', 'graph_edges')
+  and grantee in ('PUBLIC', 'anon', 'authenticated')
+  and privilege_type in ('TRUNCATE', 'TRIGGER', 'REFERENCES');
+"@
+  $grantSql = $grantSql -replace '\s+', ' '
+  $grantQueryArgs = @(
+    'exec', 'supabase', 'db', 'query', $grantSql,
+    '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
+  )
+  $grantResult = (& pnpm @grantQueryArgs) | ConvertFrom-Json
+  if ($grantResult.rows) {
+    $grantRows = @($grantResult.rows)
+  } elseif ($null -ne $grantResult.forbidden_grant_count) {
+    $grantRows = @($grantResult)
+  } else {
+    $grantRows = @()
+  }
+  if ($LASTEXITCODE -ne 0 -or $grantRows.Count -ne 1) {
+    throw 'Failed to read staging Graph privilege postcondition'
+  }
+  $forbiddenGrantCount = [int]$grantRows[0].forbidden_grant_count
+  if ($forbiddenGrantCount -ne 0) {
+    throw "Staging Graph privilege postcondition failed with count $forbiddenGrantCount"
+  }
+  "GRAPH_FORBIDDEN_CLIENT_GRANT_COUNT=$forbiddenGrantCount"
 
   $adminHeaders = @{ apikey = $serviceRoleKey; Authorization = "Bearer $serviceRoleKey" }
   $publicHeaders = @{ apikey = $publishableKey }
@@ -243,8 +283,8 @@ values
 "@
     $membershipSql = $membershipSql -replace '\s+', ' '
     $queryArgs = @(
-      'dlx', 'supabase@2.109.0', 'db', 'query', $membershipSql,
-      '--db-url', $branch.POSTGRES_URL, '--output', 'json'
+      'exec', 'supabase', 'db', 'query', $membershipSql,
+      '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
     )
     & pnpm @queryArgs | Out-Null
     if ($LASTEXITCODE -ne 0) {
@@ -295,34 +335,42 @@ values
     if ($safeIds.Count -gt 0) {
       $idList = ($safeIds | ForEach-Object { "'$_'::uuid" }) -join ','
       $memberSubjectList = ($safeIds | ForEach-Object { "'$_'" }) -join ','
+      $cleanupTag = '$acceptance_cleanup$'
       $cleanupSql = @"
-with
-  deleted_graph_edges as (delete from public.graph_edges where user_id in ($idList) returning 1),
-  deleted_graph_nodes as (delete from public.graph_nodes where user_id in ($idList) returning 1),
-  deleted_audit as (delete from public.audit_log where user_id in ($idList) returning 1),
-  deleted_metrics as (delete from public.metrics_snapshots where user_id in ($idList) returning 1),
-  deleted_memory as (delete from public.memory_nodes where user_id in ($idList) returning 1),
-  deleted_journal as (delete from public.journal_entries where user_id in ($idList) returning 1),
-  deleted_tasks as (delete from public.tasks where user_id in ($idList) returning 1),
-  deleted_habits as (delete from public.habits where user_id in ($idList) returning 1),
-  deleted_voice as (delete from public.voice_preferences where user_id in ($idList) returning 1),
-  deleted_chat as (delete from public.chat_history where user_id in ($idList) returning 1),
-  deleted_users as (delete from public.users where id in ($idList) returning 1),
-  deleted_member_rate_windows as (
-    delete from private.ai_rate_limit_windows
-     where scope in ('member_minute','member_day')
-       and subject in ($memberSubjectList)
-    returning 1
-  )
+do $cleanupTag
+begin
+delete from public.graph_edges where user_id in ($idList);
+delete from public.graph_nodes where user_id in ($idList);
+delete from public.audit_log where user_id in ($idList);
+delete from public.metrics_snapshots where user_id in ($idList);
+delete from public.memory_nodes where user_id in ($idList);
+delete from public.journal_entries where user_id in ($idList);
+delete from public.tasks where user_id in ($idList);
+delete from public.habits where user_id in ($idList);
+delete from public.voice_preferences where user_id in ($idList);
+delete from public.chat_history where user_id in ($idList);
+delete from private.ai_rate_limit_windows
+ where scope in ('member_minute','member_day')
+   and subject in ($memberSubjectList);
 delete from private.beta_members where user_id in ($idList);
+delete from public.users where id in ($idList);
+end
+$cleanupTag;
 "@
       $cleanupSql = $cleanupSql -replace '\s+', ' '
       $queryArgs = @(
-        'dlx', 'supabase@2.109.0', 'db', 'query', $cleanupSql,
-        '--db-url', $branch.POSTGRES_URL, '--output', 'json'
+        'exec', 'supabase', 'db', 'query', $cleanupSql,
+        '--db-url', $branch.POSTGRES_URL, '--output-format', 'json', '--agent', 'yes'
       )
-      & pnpm @queryArgs | Out-Null
-      $dbCleanupExit = $LASTEXITCODE
+      $dbCleanupExit = 1
+      $dbCleanupAttempts = 0
+      for ($cleanupAttempt = 1; $cleanupAttempt -le 3; $cleanupAttempt += 1) {
+        $dbCleanupAttempts = $cleanupAttempt
+        & pnpm @queryArgs | Out-Null
+        $dbCleanupExit = $LASTEXITCODE
+        if ($dbCleanupExit -eq 0) { break }
+        Start-Sleep -Milliseconds (500 * $cleanupAttempt)
+      }
       $authCleanupErrors = 0
       foreach ($id in $safeIds) {
         try {
@@ -334,6 +382,7 @@ delete from private.beta_members where user_id in ($idList);
       }
       $cleanupOk = $dbCleanupExit -eq 0 -and $authCleanupErrors -eq 0
       "CLEANUP_DB_EXIT=$dbCleanupExit"
+      "CLEANUP_DB_ATTEMPTS=$dbCleanupAttempts"
       "CLEANUP_AUTH_ERRORS=$authCleanupErrors"
       "CLEANUP_PRINCIPALS=$($safeIds.Count)"
       "CLEANUP_OK=$cleanupOk"

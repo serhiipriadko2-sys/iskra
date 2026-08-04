@@ -3,10 +3,16 @@ import { readFileSync } from 'node:fs';
 
 const SEARCH_ROOTS = ['runtime/iskraSpace/', 'apps/', 'packages/', 'deploy/'];
 const FORBIDDEN = /\b(apollo|urql|graphql-request)\b|\/graphql\/v1\b|from\s+['"]graphql['"]/i;
+const TEST_ONLY_GRAPHQL_ACCEPTANCE = new Set([
+  'runtime/iskraSpace/__tests__/e2e/graphIsolation.staging.e2e.test.ts',
+]);
 
 const files = execFileSync('git', ['ls-files', ...SEARCH_ROOTS], { encoding: 'utf8' })
   .split(/\r?\n/)
   .filter(Boolean)
+  // This live-only acceptance probe verifies pg_graphql grants and RLS. It is
+  // never bundled into an application surface and remains the sole exception.
+  .filter((file) => !TEST_ONLY_GRAPHQL_ACCEPTANCE.has(file.replaceAll('\\', '/')))
   .filter((file) => /\.(?:[cm]?[jt]sx?|json|ya?ml)$/i.test(file));
 
 const matches: string[] = [];
