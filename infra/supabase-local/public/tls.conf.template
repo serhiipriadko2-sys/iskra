@@ -1,0 +1,63 @@
+# Included inside nginx's http block. Only the public anon key is substituted.
+limit_req_zone $binary_remote_addr zone=iskra_probe:1m rate=5r/s;
+map "$request_method:$http_authorization" $iskra_probe_invalid_auth {
+    default 1;
+    ~^OPTIONS: 0;
+    "~*^POST:Bearer[[:space:]]+[^[:space:]]+$" 0;
+}
+server {
+    listen 80 default_server;
+    server_name _;
+    access_log off;
+    error_log /dev/null crit;
+    server_tokens off;
+    location ~ "^/\.well-known/acme-challenge/[A-Za-z0-9_-]+$" {
+        if ($request_method !~ ^(GET|HEAD)$) { return 404; }
+        root /var/www/acme;
+        default_type text/plain;
+        try_files $uri =404;
+    }
+    location / { return 404; }
+}
+server {
+    listen 443 ssl default_server;
+    server_name _;
+    ssl_certificate /etc/letsencrypt/live/iskra-public-ip/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/iskra-public-ip/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_session_tickets off;
+    access_log off;
+    error_log /dev/null crit;
+    server_tokens off;
+    client_max_body_size 2k;
+    client_body_timeout 10s;
+    location = /functions/v1/iskra-memory-gateway/auth/whoami {
+        if ($request_method !~ ^(POST|OPTIONS)$) { return 404; }
+        if ($args != '') { return 404; }
+        if ($iskra_probe_invalid_auth) { return 401; }
+        limit_req zone=iskra_probe burst=10 nodelay;
+        limit_req_status 429;
+        proxy_http_version 1.1;
+        proxy_pass_request_headers off;
+        proxy_set_header Host api-gw;
+        proxy_set_header Connection '';
+        proxy_set_header Authorization $http_authorization;
+        proxy_set_header apikey '${ISKRA_PUBLIC_ANON_KEY}';
+        proxy_set_header Content-Type application/json;
+        proxy_set_header Origin $http_origin;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout 20s;
+        proxy_send_timeout 10s;
+        proxy_pass http://api-gw:8000;
+    }
+    location / { return 404; }
+}
+server {
+    listen 127.0.0.1:8081;
+    access_log off;
+    error_log /dev/null crit;
+    location = /healthz { return 200 'ok\n'; }
+    location / { return 404; }
+}

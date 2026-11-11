@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "checks": {
+    "two_anon_public_channels_subscribed": true,
+    "broadcast_acknowledged": true,
+    "second_client_received_synthetic_event": true
+  },
+  "postgres_changes_verified": false,
+  "private_channel_rls_verified": false,
+  "secrets_output": false
+}

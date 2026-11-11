@@ -34,7 +34,7 @@ import { canonService } from './services/canonService';
 import { storageService } from './services/storageService';
 import { checkRitualTriggers, executePhoenix, executeShatter, getPhaseAfterRitual } from './services/ritualService';
 import { executeGuardRequest, type GuardExecutionResult } from '../src/types/guardExecution.js';
-import { quickRiskCheck } from './services/policyEngine';
+import { getPolicyGuardContext, quickRiskCheck } from './services/policyEngine';
 
 export type AppView = 'PULSE' | 'PLANNER' | 'JOURNAL' | 'BEACON' | 'DUO' | 'CHAT' | 'RUNES' | 'RESEARCH' | 'MEMORY' | 'METRICS' | 'COUNCIL' | 'EVAL' | 'GLOSSARY' | 'SHADOW' | 'DESIGN' | 'SETTINGS' | 'FOCUS';
 
@@ -269,6 +269,7 @@ export function IskraSpaceApp() {
             current_input: text,
             previous_metrics: previousMetrics,
             metrics: currentTurnMetrics,
+            ...getPolicyGuardContext(currentTurnMetrics),
             source_ref: 'runtime/iskraSpace/App.tsx#handleUserInput',
         });
     };

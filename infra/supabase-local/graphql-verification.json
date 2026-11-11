@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "anon_introspection_disabled": false,
+    "backup_schema_annotation_restored": true,
+    "fixture_cleanup_verified": true,
+    "graphql_anon_cannot_read_fixture": true,
+    "graphql_other_user_cannot_read_fixture": true,
+    "graphql_owner_reads_own_fixture": true,
+    "graphql_route_serves_query": true,
+    "missing_apikey_rejected": true
+  },
+  "failed_stage": null,
+  "functional_rls_acceptance": "pass",
+  "http_statuses": {
+    "introspection": 200,
+    "missing_apikey": 401,
+    "query": 200
+  },
+  "metadata": {
+    "extension_version": "1.5.11",
+    "public_schema_comment": "@graphql({\"introspection\": false})",
+    "realtime_published_tables": 0
+  },
+  "residual_drift": "pg_graphql 1.5.11 ignores introspection schema directive; keep GraphQL loopback-only pending supported-version review",
+  "secrets_output": false,
+  "status": "partial",
+  "synthetic_fixture_data_queried": true,
+  "user_data_queried": false
+}

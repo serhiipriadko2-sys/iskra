@@ -1,0 +1,82 @@
+{
+  "Context": {
+    "approved_scope": "HTTP01 challenge-only TCP80, exact auth/whoami HTTPS443, rollback on acceptance failure",
+    "frozen_review_sha256": "0485811ed52a95442fff715d9feb37e15a8c59fe75207364667a225e244eeada",
+    "observed_at_utc": "2026-10-14T20:25:01.994002+00:00",
+    "public_experiment_authorized": true
+  },
+  "Evidence": {
+    "actions_preview": "not verified",
+    "expired_windows_store_root_x2_not_after": "2025-09-15T16:00:00Z",
+    "firewall_parameters_initially_verified": true,
+    "firewall_readback": "official Windows Firewall COM API",
+    "firewall_rule_names": [
+      "IskraProbe-20261014-HTTP01",
+      "IskraProbe-20261014-HTTPS"
+    ],
+    "firewall_rules_after_rollback": 0,
+    "http01_external_control": "CA issuance PASS",
+    "ip_san_and_key_pair": "PASS",
+    "known_execution_order_correction": "issue -> gateway -> renewal dry-run -> periodic Certbot to avoid concurrent config locks",
+    "leaf_der_sha256": "d5746ffb297e86d88dbe896a265559bdb45168bc1cd7ba4030c580a99938ea66",
+    "local_backend_all_12_services_healthy": true,
+    "node_public_ca_tls": {
+      "same_leaf_fingerprint": true,
+      "status": "PASS",
+      "version": "TLSv1.3"
+    },
+    "outside_https_acceptance": "not verified",
+    "periodic_certbot": "not started",
+    "ports_80_443_after_rollback": "no listening services",
+    "production_cert_valid_from_utc": "2026-10-14T18:55:07+00:00",
+    "production_cert_valid_until_utc": "2026-10-21T10:55:06+00:00",
+    "provider_calls": 0,
+    "renewal_dry_run": "not attempted",
+    "router_rule_names": [
+      "Iskra-20261014-HTTP01",
+      "Iskra-20261014-HTTPS"
+    ],
+    "router_table_after_rollback": "empty, observed in browser",
+    "served_chain_certificates": 4,
+    "served_chain_time_validity": "all four PASS",
+    "strict_existing_root_x1_context": {
+      "cert_required": true,
+      "global_store_changes": 0,
+      "hostname_verification": true,
+      "status": "PASS, independently reported and matching peer fingerprint",
+      "x509_strict": true
+    },
+    "windows_default_tls": {
+      "reason": "certificate has expired",
+      "status": "FAIL",
+      "verify_code": 10
+    }
+  },
+  "Finding / Decision": {
+    "certificate_issued": true,
+    "certificate_retained_outside_git": true,
+    "loopback_configuration_restored": true,
+    "public_experiment_rolled_back": true,
+    "public_gateway_now_stopped": true,
+    "public_gateway_started_temporarily": true,
+    "system_trust_store_changed": false
+  },
+  "Next": [
+    "Obtain the target GPT/Builder surface for the actual Preview; question remains pending.",
+    "Use strict Node/public CA validation plus an independent cloud TLS client for a future approved experiment.",
+    "Do not reopen ports while waiting for the target surface."
+  ],
+  "Risk": [
+    "Default Windows/Python trust-store chain selection still fails; client validation must use current public trust anchors without disabling certificate verification.",
+    "GraphQL introspection drift remains local and excluded from the public gateway.",
+    "Public HTTPS reachability, renewal and actual Actions compatibility have not been established."
+  ],
+  "Status": {
+    "current_public_access": "OFF",
+    "external_integration": "PARTIAL",
+    "local_supabase": "PASS",
+    "rollback": "PASS",
+    "secrets_or_real_public_ip_in_receipt": false,
+    "tls_diagnosis": "client trust-anchor selection confirmed"
+  }
+}

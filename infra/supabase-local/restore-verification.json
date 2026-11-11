@@ -1,0 +1,73 @@
+{
+  "application_functions_verified": 44,
+  "auth_storage_runtime_verified": false,
+  "external_access_configured": false,
+  "foreign_keys": {
+    "constraints_checked": 27,
+    "orphan_rows": 0
+  },
+  "migration_history": {
+    "allowed_rehearsal_versions_verified": {
+      "20260718200634": "4fb9dd851ebf5e9d90c970722523219e04c4e8ebf6177457c8cfe43a9b1d6ded",
+      "20260728180000": "21e066e4449ef2547ea88d1e8a4d88c9486ca7f863c67a0a40a3ffd01fbe1491",
+      "20261014000000": "1792e69957b039bdf2820e84b991461e190010c4d724ca0fbd67a80b5d7afafa",
+      "20261014001000": "eb4d9e07774d1e7cd5e0eae5164169e5acf6b17982f7245d00dd6a638bb8d680"
+    },
+    "crlf_to_lf_comparison_versions": [
+      "20260718200634",
+      "20260728180000",
+      "20261014000000"
+    ],
+    "history_rows": 41,
+    "original_versions_verified": 37
+  },
+  "old_session_rows": 0,
+  "project": "iskra-supabase-local-20261014",
+  "rls_tables_verified": 29,
+  "row_counts": {
+    "auth.audit_log_entries": 0,
+    "auth.identities": 1,
+    "auth.mfa_factors": 0,
+    "auth.oauth_clients": 0,
+    "auth.oauth_consents": 0,
+    "auth.saml_providers": 0,
+    "auth.sso_domains": 0,
+    "auth.sso_providers": 0,
+    "auth.users": 1,
+    "auth.webauthn_credentials": 0,
+    "iskra.canon_chunks": 1,
+    "iskra.canon_documents": 1,
+    "iskra.canon_memory_nodes": 1,
+    "iskra_memory.gateway_events": 7,
+    "iskra_memory.horizon_events": 0,
+    "iskra_memory.memory_archive": 2,
+    "iskra_memory.memory_consent_registry": 0,
+    "iskra_memory.memory_dream_seeds": 2,
+    "iskra_memory.memory_edges": 5,
+    "iskra_memory.memory_journal": 33,
+    "iskra_memory.memory_open_loops": 14,
+    "iskra_memory.memory_sense_events": 2,
+    "iskra_memory.memory_shadow": 2,
+    "iskra_memory.statecycle_snapshots": 4,
+    "private.ai_rate_limit_windows": 0,
+    "private.beta_invites": 1,
+    "private.beta_members": 0,
+    "public.audit_log": 0,
+    "public.chat_history": 2,
+    "public.graph_edges": 1,
+    "public.graph_nodes": 9,
+    "public.habits": 0,
+    "public.journal_entries": 0,
+    "public.memory_nodes": 1,
+    "public.metrics_snapshots": 1,
+    "public.rate_limits": 0,
+    "public.tasks": 0,
+    "public.users": 1,
+    "public.voice_preferences": 0,
+    "storage.buckets": 1,
+    "storage.objects": 1,
+    "supabase_migrations.schema_migrations": 41
+  },
+  "status": "pass",
+  "tables_verified": 42
+}

@@ -16,7 +16,7 @@
 import { IskraMetrics, VoiceName, Message } from '../types';
 import { auditService } from './auditService';
 // Guard and integrity imports
-import { GuardOutcome, IntegrityState } from '../../src/types/guard.js';
+import { GuardOutcome, IntegrityState, type GuardInput } from '../../src/types/guard.js';
 import { runBoundedGuardController } from '../../src/types/guardController.js';
 import type { GuardExecutionResult } from '../../src/types/guardExecution.js';
 import {
@@ -34,6 +34,23 @@ function alertLevelProxy(metrics: IskraMetrics): 'normal' | 'watch' | 'warning' 
   if (metrics.drift >= 0.4 || metrics.pain > 0.5 || metrics.trust < 0.4) return 'warning';
   if (metrics.drift >= 0.25 || metrics.chaos > 0.6) return 'watch';
   return 'normal';
+}
+
+/** Read safety context before evaluating the current-turn frozen snapshot. */
+export function getPolicyGuardContext(
+  metrics: IskraMetrics,
+  history: Message[] = []
+): Pick<GuardInput, 'integrity' | 'anti_dryness_hits' | 'leader_flaps' | 'alertLevel' | 'currentPlaybook'> {
+  const lastPlaybook = getLastPlaybook() ?? 'ROUTINE';
+  const integrity = getStoredIntegrity() ?? deriveGuardIntegrity(history, lastPlaybook);
+  const counters = integrity.counters ?? getGuardCounters();
+  return {
+    integrity,
+    anti_dryness_hits: counters.anti_dryness_hits,
+    leader_flaps: counters.leader_flaps,
+    alertLevel: alertLevelProxy(metrics),
+    currentPlaybook: lastPlaybook,
+  };
 }
 
 // ============================================
@@ -440,25 +457,14 @@ export function makeDecision(
   // present, clear it so it is only used once. Otherwise derive
   // integrity from the history and last playbook. Then evaluate the
   // guard and override the playbook if necessary.
-  const lastPlaybook = getLastPlaybook() ?? 'ROUTINE';
-  let integrity = getStoredIntegrity();
-  if (integrity) {
-    clearIntegrityState();
-  } else {
-    integrity = deriveGuardIntegrity(history ?? [], lastPlaybook);
-  }
-  const counters = (integrity && integrity.counters)
-    ? integrity.counters
-    : getGuardCounters();
+  const guardContext = getPolicyGuardContext(metrics, history);
+  const integrity = guardContext.integrity;
+  clearIntegrityState();
 
   const initialGuardInput = {
     metrics,
-    integrity: integrity ?? undefined,
-    anti_dryness_hits: counters.anti_dryness_hits,
-    leader_flaps: counters.leader_flaps,
+    ...guardContext,
     chaos_overheat: metrics.chaos >= 0.7,
-    alertLevel: alertLevelProxy(metrics),
-    currentPlaybook: lastPlaybook,
   };
 
   const ALERT_RANK_LOCAL: Record<string, number> = {
@@ -483,7 +489,27 @@ export function makeDecision(
     }
   };
 
-  const controllerResult = guardExecution
+  // A precomputed result can predate the integrity read (or omit history).
+  // Enforce the non-numeric integrity fence before provider execution without
+  // rebuilding the metric snapshot or adding another numeric Guard evaluation.
+  // Preserve explicit crisis containment, as required by Guard rule priority.
+  const crisisContainment = guardContext.alertLevel === 'critical' ||
+    guardContext.alertLevel === 'lockdown' ||
+    (guardExecution?.guard_status === 'not_invoked' &&
+      guardExecution.orchestration_decision === 'FORCE_CRISIS');
+  const integrityFence = guardExecution && integrity?.ok === false && !crisisContainment;
+  const controllerResult = integrityFence
+    ? {
+        finalOutcome: {
+          decision: 'CLOSE_HONESTLY',
+          why: 'Integrity violation detected before provider execution',
+          reasons: ['Integrity violation', ...(integrity.missing ?? [])],
+          rule_refs: ['system/slo_guard.md#§3.5'],
+        } as GuardOutcome,
+        evaluations: 0,
+        closure: 'integrity_fence',
+      }
+    : guardExecution
     ? {
         finalOutcome: guardExecution.guard_outcome ?? {
           decision: guardExecution.orchestration_decision,

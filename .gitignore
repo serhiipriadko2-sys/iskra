@@ -69,3 +69,6 @@ coverage/
 
 # Claude Code
 .claude/
+
+# Local browser rehearsal artifacts (retained in the workspace).
+output/playwright/

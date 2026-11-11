@@ -1,0 +1,366 @@
+{
+  "Artifacts": {
+    "bytes": 338013,
+    "count": 52,
+    "files": [
+      {
+        "bytes": 1290,
+        "path": ".gitignore",
+        "sha256": "be060dd583a2df7a655ac18ceb2736a48c6b95009d7c223b22b2a216e23b887e"
+      },
+      {
+        "bytes": 3258,
+        "path": "governance/adr_20261014_temporary_local_supabase.md",
+        "sha256": "75177f66fcf5ff16900ec2ba39741b59ebd5694f7340e48985d30720adcbae9d"
+      },
+      {
+        "bytes": 9087,
+        "path": "infra/supabase-local/README.md",
+        "sha256": "59e0f12860852aea803d6a9cc74fb25032843ad69a7125f87a3a9a9873217e4a"
+      },
+      {
+        "bytes": 2648,
+        "path": "infra/supabase-local/compose.local.yml",
+        "sha256": "dffebcc4199ad1f61c00d9a0c4295b34af78b2495d448c2d66cc4825b2f2cac5"
+      },
+      {
+        "bytes": 407,
+        "path": "infra/supabase-local/edge-log-verification.json",
+        "sha256": "284d0d884ec1bb9ac78f0d9fe474e4dc470b245218b5fe5182413772d5399a8e"
+      },
+      {
+        "bytes": 979,
+        "path": "infra/supabase-local/graphql-verification.json",
+        "sha256": "b0eb3beaa9263022f3fb15edc96177948d73299f2916836d4cd8a574c360ab8c"
+      },
+      {
+        "bytes": 6996,
+        "path": "infra/supabase-local/public/README.md",
+        "sha256": "90301890b799d108e29e7aa877d7ba5122019c5d789b21589ffa5640f78611fa"
+      },
+      {
+        "bytes": 541,
+        "path": "infra/supabase-local/public/bootstrap-verification.json",
+        "sha256": "3f110a1da3d87e511af3aa66184fa8b05843a556acf82fa630d3366cf7cd5fdf"
+      },
+      {
+        "bytes": 630,
+        "path": "infra/supabase-local/public/bootstrap.conf",
+        "sha256": "009d198c6372346227d41a6b7f6cff96137a338c95f0586c8bae32f29255f6e9"
+      },
+      {
+        "bytes": 1748,
+        "path": "infra/supabase-local/public/certbot.sh",
+        "sha256": "e3fdc2a0f16492409041834397e7e6700790a2814fe8e4e7a905cf3f87dbbeb7"
+      },
+      {
+        "bytes": 4058,
+        "path": "infra/supabase-local/public/compose.gateway.yml",
+        "sha256": "e2242c8b4b4233e903858ce53d6e68ebe11feea59714ba04e885100862511304"
+      },
+      {
+        "bytes": 1407,
+        "path": "infra/supabase-local/public/loopback-verification.json",
+        "sha256": "48ee209893fefa4c360bdd976d6c52e3e48b5fe6fa62dfd1535c4e778811e38e"
+      },
+      {
+        "bytes": 1815,
+        "path": "infra/supabase-local/public/nginx.sh",
+        "sha256": "ff7047cd61b11d488cbc14d6217a5d01add477454566d649377fffa1766c8c00"
+      },
+      {
+        "bytes": 2060,
+        "path": "infra/supabase-local/public/openapi-probe.json",
+        "sha256": "110ffda312e3e3f578949de63aa420ff13aa7a3882240b41811a284837e00e41"
+      },
+      {
+        "bytes": 2218,
+        "path": "infra/supabase-local/public/tls.conf.template",
+        "sha256": "521dc8d0c624bb891e763bffb8a3f90adbd64caeff80578d33f9d8e7e3836971"
+      },
+      {
+        "bytes": 284,
+        "path": "infra/supabase-local/realtime-verification.json",
+        "sha256": "0ecd6ccdde34c98b8875154b1461ef5e5bb117fec10868b65547dd6f1422f33b"
+      },
+      {
+        "bytes": 2447,
+        "path": "infra/supabase-local/restore-verification.json",
+        "sha256": "821d08ae332c179c11cbab5ef249a10379826910bcc6d3e4b33ab1b708da54a5"
+      },
+      {
+        "bytes": 3032,
+        "path": "infra/supabase-local/runtime-verification.json",
+        "sha256": "4ce650cfd5249b65ac1998cb9afbb4099609915fdbb520edec6a4bd5e0f10c53"
+      },
+      {
+        "bytes": 2198,
+        "path": "infra/supabase-local/service-verification.json",
+        "sha256": "13c6f57147a76f227f43899a1f463027c9830b5b7f9eb1c77558387dceb55a5b"
+      },
+      {
+        "bytes": 2863,
+        "path": "infra/supabase-local/upstream-manifest.json",
+        "sha256": "60542c6ff87fd0f5c8a57bb46265cac9d5ad3f1c9f3c4161a90692277dde6aa8"
+      },
+      {
+        "bytes": 21240,
+        "path": "infra/supabase-local/upstream/docker-compose.yml",
+        "sha256": "8ba18fd43e9afba90e8287c8e8afc4bdda1e38d2228e57ff660968bb550da054"
+      },
+      {
+        "bytes": 5901,
+        "path": "infra/supabase-local/upstream/volumes/api/envoy/cds.yaml",
+        "sha256": "1d7514b891370ed27c25911df008887402e16ab09273e6e433225bb7f09f7905"
+      },
+      {
+        "bytes": 1366,
+        "path": "infra/supabase-local/upstream/volumes/api/envoy/docker-entrypoint.sh",
+        "sha256": "8a0c9503764de32ba39e0d81e73629457b13ec42ef19897e30e4918c996d0508"
+      },
+      {
+        "bytes": 677,
+        "path": "infra/supabase-local/upstream/volumes/api/envoy/envoy.yaml",
+        "sha256": "3697f23b0be9ec5b829f937c600eb9b878f1f778ab510b42ad5e4f14742447e9"
+      },
+      {
+        "bytes": 50085,
+        "path": "infra/supabase-local/upstream/volumes/api/envoy/lds.template.yaml",
+        "sha256": "9d9a6d6ea0a372be99e165d995f012d383d5cc8473b92a06b7aa0bbd73566c3d"
+      },
+      {
+        "bytes": 83,
+        "path": "infra/supabase-local/upstream/volumes/db/_supabase.sql",
+        "sha256": "9dce462adc04137d6afabcf28efa60a6c355270a4b32d7af58891ac4eb964c5f"
+      },
+      {
+        "bytes": 98,
+        "path": "infra/supabase-local/upstream/volumes/db/jwt.sql",
+        "sha256": "c1d3f5c01e44646c2e533c5a1c111821cc49cb5a4c2534e08cddad61d8fb0339"
+      },
+      {
+        "bytes": 144,
+        "path": "infra/supabase-local/upstream/volumes/db/logs.sql",
+        "sha256": "f0463ce5030907acef49326d2bffd36002df0718035071be7c99bd7fc897c63d"
+      },
+      {
+        "bytes": 144,
+        "path": "infra/supabase-local/upstream/volumes/db/pooler.sql",
+        "sha256": "df97ebe148d94cfb92a5e37ebf972dfd496be195f0915ecf14396b2cf50efecb"
+      },
+      {
+        "bytes": 117,
+        "path": "infra/supabase-local/upstream/volumes/db/realtime.sql",
+        "sha256": "7e9e442e7fc4dae05544c07b67bede37a00d84644304dfce4d937134cb4c8f88"
+      },
+      {
+        "bytes": 379,
+        "path": "infra/supabase-local/upstream/volumes/db/roles.sql",
+        "sha256": "3ad717b225daa38aa982da26750f35641eb404e1eb5e69a763c22236ab96c1b2"
+      },
+      {
+        "bytes": 9070,
+        "path": "infra/supabase-local/upstream/volumes/db/webhooks.sql",
+        "sha256": "05a61316b899374253891cbba66ce073d9273f33983c3f47961eda3aa26c2823"
+      },
+      {
+        "bytes": 136,
+        "path": "infra/supabase-local/upstream/volumes/functions/deno.jsonc",
+        "sha256": "a9a29da36c2576f755dd868b9f553a02afdf7d7bccf52e97e65c7f68cf36bfef"
+      },
+      {
+        "bytes": 1341,
+        "path": "infra/supabase-local/upstream/volumes/functions/hello/index.ts",
+        "sha256": "65e7d7ce5d898dd285e660cbab54521fca4bf990c41370f51fad5b4d4cae5f42"
+      },
+      {
+        "bytes": 6901,
+        "path": "infra/supabase-local/upstream/volumes/functions/main/index.ts",
+        "sha256": "9b7978abd7fd4af39e4f407f8a956137aa99e6ffaeb2190a5e29c8e1787d2da6"
+      },
+      {
+        "bytes": 1103,
+        "path": "infra/supabase-local/upstream/volumes/pooler/pooler.exs",
+        "sha256": "d844e49f8915021ccbf6af6b769fef7909a723346bfc8f94ddb0433a328e49b1"
+      },
+      {
+        "bytes": 18966,
+        "path": "runtime/iskraSpace/App.tsx",
+        "sha256": "96185c5b9c7bf754ac0ed1b205019b2f6f3cc963683aab1cda6d40085c4d8aac"
+      },
+      {
+        "bytes": 15576,
+        "path": "runtime/iskraSpace/services/__tests__/policyEngine.test.ts",
+        "sha256": "273e8883216c7d4650d94ae81e65eedc0369f3f62165573a2d3cf82088179035"
+      },
+      {
+        "bytes": 22603,
+        "path": "runtime/iskraSpace/services/policyEngine.ts",
+        "sha256": "03f92b803d087aef9fb2b11a7d264d9541907f9b6cc5fa2f9ab44ba2f436069f"
+      },
+      {
+        "bytes": 372,
+        "path": "supabase/migrations/20261014000000_graph_table_least_privilege.sql",
+        "sha256": "1792e69957b039bdf2820e84b991461e190010c4d724ca0fbd67a80b5d7afafa"
+      },
+      {
+        "bytes": 532,
+        "path": "supabase/migrations/20261014001000_restore_graphql_runtime.sql",
+        "sha256": "eb4d9e07774d1e7cd5e0eae5164169e5acf6b17982f7245d00dd6a638bb8d680"
+      },
+      {
+        "bytes": 3688,
+        "path": "tools/local_supabase/apply_rehearsal_migrations.py",
+        "sha256": "d70407af9c5e9e12f8d31a39a13a9c218258d32b59045f5087065cdd1dd8777a"
+      },
+      {
+        "bytes": 23419,
+        "path": "tools/local_supabase/local_stack.py",
+        "sha256": "d9e24d88d5292adead3453fc3064c12e5722020caf855bd92f70205e6aec206d"
+      },
+      {
+        "bytes": 23971,
+        "path": "tools/local_supabase/rehearse_restore.py",
+        "sha256": "f6097c59a8545ec53ad623d28d897990a43973a18a7c0bbaea6171eb2d8828f0"
+      },
+      {
+        "bytes": 25017,
+        "path": "tools/local_supabase/restore_backup.py",
+        "sha256": "5d07f3c982808382ed4551d994e1d7e15fc8366d0b482cd706dc46d0c5445d63"
+      },
+      {
+        "bytes": 4377,
+        "path": "tools/local_supabase/run_iskraspace.py",
+        "sha256": "dc9779ae18aa8963b17956ef885b6380818c13299905da8fe98ba61ee3560c15"
+      },
+      {
+        "bytes": 2889,
+        "path": "tools/local_supabase/set_docker_memory.ps1",
+        "sha256": "d2fcd64a9e36eb3432cfcaa398310fa34c3f60b46c44b89f7786fe5eda0f2f5c"
+      },
+      {
+        "bytes": 7189,
+        "path": "tools/local_supabase/test_local_stack.py",
+        "sha256": "62e2011286921fe980441e11ac54723bf21dd5749a570ccfa9765cd77800fe59"
+      },
+      {
+        "bytes": 7707,
+        "path": "tools/local_supabase/test_rehearse_restore.py",
+        "sha256": "40b59bf3831189618eac6f840575074e140a82bf959c5ba30a337c8fb0c8871d"
+      },
+      {
+        "bytes": 8824,
+        "path": "tools/local_supabase/test_restore_backup.py",
+        "sha256": "be4f00ce1016a083a38395d18840e280c32c2b2866fcbe5d3a03a3539f4baa93"
+      },
+      {
+        "bytes": 4169,
+        "path": "tools/local_supabase/test_verify_runtime.py",
+        "sha256": "da40adbd086d10425ebe33604b6e6f08fa3d2651e6f0aa03fc0a512b7c0a8194"
+      },
+      {
+        "bytes": 19963,
+        "path": "tools/local_supabase/verify_runtime.py",
+        "sha256": "56f6eba00ee2a36c11719bc3f1002497aba5529d12b39526efb54edafaf397c2"
+      }
+    ],
+    "receipt_excluded_from_own_hash_manifest": true
+  },
+  "Context": {
+    "local_implementation_authorized": true,
+    "observed_at_utc": "2026-10-14T19:04:21.822643+00:00",
+    "project": "iskra-supabase-local-20261014",
+    "public_activation_authorized": false,
+    "workspace_git_base": "e38ecb00c07176c7a1b0dcbee24ccac3cbe5f786",
+    "wsl_restart_authorized": true
+  },
+  "Evidence": {
+    "application_functions": 44,
+    "browser_artifact": "output/playwright/.playwright-cli/page-2026-10-14T18-23-53-117Z.yml",
+    "browser_observation": "invitation screen rendered; one existing favicon 404; no form submission",
+    "derived_private_source_sha256": {
+      "edge_main": "56d99b819b04c280e053708ca75b0659bb9b1263ee9eb04aceed2c90ae6e04c6",
+      "envoy_template": "813c8acd4925ae5a5bc6aacba999c710823176c1837fc1f28141b75e93c92946"
+    },
+    "edge_jwt_log_checks_passed": 6,
+    "fixture_cleanup_verified": true,
+    "foreign_keys": {
+      "constraints_checked": 27,
+      "orphan_rows": 0
+    },
+    "graph_repo_contract": "PASS with documented legacy-snapshot warnings",
+    "graphql_functional_rls_acceptance": "pass",
+    "graphql_introspection_negative_check": false,
+    "migration_history_rows": 41,
+    "policy_tests": "36 PASS including integrity regression",
+    "provider_calls": 0,
+    "public_bootstrap_checks_passed": 5,
+    "public_loopback_checks_passed": 15,
+    "public_project_stopped": true,
+    "python_tests": "37 PASS",
+    "realtime_broadcast_checks_passed": 3,
+    "restored_rows": 135,
+    "restored_tables": 42,
+    "rls_tables": 29,
+    "runtime_checks_passed": 34,
+    "sensitive_dump_check": "PASS",
+    "services_healthy": true,
+    "source_gzip_sha256": "e916fef8a5419bb10efa0a5f0c2c35d13f7150e454aa11aa117f288519125a69",
+    "source_storage_zip_sha256": "6af86053984c1abe259233c3ac3ef553e06c9d8a548934378e429e3181304f76",
+    "storage_archive_payload": "one zero-byte empty-folder placeholder; local upload/download checked",
+    "typecheck": "PASS",
+    "upstream_commit": "564eab8ad7840b13324f68b1bfac074ef8d51c21",
+    "upstream_files_verified": 16,
+    "upstream_manifest_verified": true
+  },
+  "Finding / Decision": {
+    "cloud_mutations": 0,
+    "isolated_named_volumes": true,
+    "local_backup_restored": true,
+    "loopback_urls": {
+      "api": "http://127.0.0.1:18000",
+      "iskraspace": "http://127.0.0.1:3000/",
+      "mailpit": "http://127.0.0.1:18025",
+      "studio": "http://127.0.0.1:13000"
+    },
+    "new_local_migrations_applied": [
+      "20260718200634",
+      "20260728180000",
+      "20261014000000",
+      "20261014001000"
+    ],
+    "original_archives_retained": true,
+    "preexisting_volumes_retained": true,
+    "private_state": "E:/IskraSupabase/iskra-supabase-local-20261014",
+    "public_probe_mode": "probe_only",
+    "public_probe_route": "POST /functions/v1/iskra-memory-gateway/auth/whoami",
+    "public_state_layout": "distinct smoke and empty production certificate stores; both configs loopback by default",
+    "wsl_memory_config": "8GB",
+    "wsl_memtotal_observed_kib": 8133868
+  },
+  "Next": [
+    "Obtain explicit public activation approval for exact probe route, ports 80/443 and CA terms.",
+    "Verify router forwarding and external challenge reachability using separate production certificate store.",
+    "Observe trusted IP TLS, certificate renewal and actual approved client call.",
+    "Configure provider credentials privately and verify separately; resolve GraphQL version/introspection before any exposure."
+  ],
+  "Risk": [
+    "Historical backup does not establish current cloud writes.",
+    "pg_graphql 1.5.11 ignores introspection annotation; GraphQL is loopback-only and not permitted by public gateway.",
+    "Gemini/Agent/provider execution unconfigured; restored canon embeddings NULL.",
+    "Realtime source publication has zero tables; CDC/private-channel RLS not verified.",
+    "Mailpit is local test email; external SMTP/OAuth not transferred.",
+    "Public WAN, trusted certificate, ACME renewal, ChatGPT Preview and MCP connectivity unverified.",
+    "Existing metrics-authority ADR drift remains unresolved.",
+    "TCP-peer identity through nginx aggregates future AI quotas; review trusted proxy before AI exposure."
+  ],
+  "Status": {
+    "committed": false,
+    "external_access": "prepared and loopback-tested; not activated",
+    "graphql_security": "PARTIAL",
+    "local_restore": "PASS",
+    "local_runtime": "PASS",
+    "overall": "PARTIAL",
+    "secrets_in_receipt": false
+  }
+}

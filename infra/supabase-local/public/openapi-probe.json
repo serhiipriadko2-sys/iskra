@@ -1,0 +1,45 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Iskra credential probe",
+    "version": "1.0.0",
+    "description": "Read-only credential classification. Persona memory remains on security hold."
+  },
+  "servers": [{"url": "https://203.0.113.10", "description": "Replace this documentation-only address in a private upload copy after TLS verification."}],
+  "security": [{"bearerAuth": []}],
+  "paths": {
+    "/functions/v1/iskra-memory-gateway/auth/whoami": {
+      "post": {
+        "operationId": "probeIskraCredential",
+        "summary": "Verify the configured credential and return its class",
+        "description": "Does not read, write, activate or disclose persona memory.",
+        "x-openai-isConsequential": false,
+        "requestBody": {
+          "required": false,
+          "content": {"application/json": {"schema": {"type": "object", "additionalProperties": false}}}
+        },
+        "responses": {
+          "200": {
+            "description": "Credential verified; gateway remains probe_only",
+            "content": {"application/json": {"schema": {
+              "type": "object",
+              "required": ["ok", "service", "mode", "credential_class"],
+              "properties": {
+                "ok": {"type": "boolean", "const": true},
+                "service": {"type": "string", "const": "iskra-memory-gateway"},
+                "mode": {"type": "string", "const": "probe_only"},
+                "credential_class": {"type": "string", "enum": ["anon", "authenticated", "service_role", "other"]}
+              },
+              "additionalProperties": false
+            }}}
+          },
+          "401": {"description": "Missing, expired or invalid Bearer credential"},
+          "404": {"description": "Route or method is outside the published probe"},
+          "429": {"description": "Probe rate limit reached"},
+          "502": {"description": "Local backend is unavailable"}
+        }
+      }
+    }
+  },
+  "components": {"securitySchemes": {"bearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"}}}
+}

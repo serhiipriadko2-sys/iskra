@@ -6,6 +6,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {
   classifyRequest,
   makeDecision,
+  getPolicyGuardContext,
   getPlaybookConfig,
   requiresCouncil,
   forcePlaybook,
@@ -14,6 +15,8 @@ import {
 } from '../policyEngine';
 import { IskraMetrics } from '../../types';
 import { safeStorage } from '../storageCompat';
+import { executeGuardRequest } from '../../../src/types/guardExecution';
+import { getStoredIntegrity, saveGuardCounters, saveIntegrityState } from '../integrityService';
 
 // Default metrics for testing
 const defaultMetrics: IskraMetrics = {
@@ -125,6 +128,87 @@ describe('PolicyEngine', () => {
   });
 
   describe('makeDecision', () => {
+    it('closes on stored integrity failure even when an earlier UI Guard result allowed execution', async () => {
+      const guardExecution = await executeGuardRequest({
+        turn_id: 'integrity-regression',
+        operation_id: 'iskra.chat.respond',
+        action_risk: 'low',
+        reversible: true,
+        risk_source_ref: 'test:integrity-regression',
+        current_input: 'Привет',
+        metrics: defaultMetrics,
+      });
+      expect(guardExecution.orchestration_decision).toBe('PROCEED');
+      saveIntegrityState({
+        ok: false,
+        warnings: [],
+        missing: ['receipt'],
+        evidenceCount: 0,
+      });
+
+      const decision = makeDecision('Привет', defaultMetrics, [], guardExecution);
+
+      expect(decision.integrityState?.ok).toBe(false);
+      expect(decision.guardOutcome?.decision).toBe('CLOSE_HONESTLY');
+      expect(decision.classification.playbook).toBe('SIFT');
+    });
+
+    it('closes on history-derived integrity failure despite a precomputed PROCEED', async () => {
+      const guardExecution = await executeGuardRequest({
+        turn_id: 'history-integrity-regression',
+        operation_id: 'iskra.chat.respond',
+        action_risk: 'low',
+        reversible: true,
+        risk_source_ref: 'test:history-integrity-regression',
+        current_input: 'Привет',
+        metrics: defaultMetrics,
+      });
+      const history = [{ role: 'model' as const, text: '[FACT] unsupported claim' }];
+
+      const decision = makeDecision('Привет', defaultMetrics, history, guardExecution);
+
+      expect(decision.guardOutcome?.decision).toBe('CLOSE_HONESTLY');
+      expect(decision.integrityState?.missing).toContain('canon_reference');
+    });
+
+    it('keeps integrity closure ahead of a precomputed numeric drift escalation', async () => {
+      const metrics = { ...defaultMetrics, drift: 0.5 };
+      const guardExecution = await executeGuardRequest({
+        turn_id: 'drift-integrity-regression',
+        operation_id: 'iskra.chat.respond',
+        action_risk: 'low',
+        reversible: true,
+        risk_source_ref: 'test:drift-integrity-regression',
+        current_input: 'Привет',
+        metrics,
+      });
+      expect(guardExecution.guard_decision).toBe('FORCE_CRISIS');
+      saveIntegrityState({ ok: false, warnings: [], missing: ['receipt'], evidenceCount: 0 });
+
+      const decision = makeDecision('Привет', metrics, [], guardExecution);
+
+      expect(decision.guardOutcome?.decision).toBe('CLOSE_HONESTLY');
+    });
+
+    it('preserves explicit security crisis containment ahead of integrity closure', async () => {
+      const guardExecution = await executeGuardRequest({
+        turn_id: 'security-integrity-priority',
+        operation_id: 'iskra.chat.respond',
+        action_risk: 'critical',
+        reversible: false,
+        risk_source_ref: 'test:security-integrity-priority',
+        security_emergency: true,
+        current_input: 'Хочу умереть',
+        metrics: defaultMetrics,
+      });
+      saveIntegrityState({ ok: false, warnings: [], missing: ['receipt'], evidenceCount: 0 });
+
+      const decision = makeDecision('Хочу умереть', defaultMetrics, [], guardExecution);
+
+      expect(decision.guardOutcome?.decision).toBe('FORCE_CRISIS');
+      expect(decision.classification.playbook).toBe('CRISIS');
+    });
+
     it('should return full decision with config', () => {
       const decision = makeDecision('Как принять решение?', defaultMetrics);
       expect(decision.classification).toBeDefined();
@@ -144,6 +228,61 @@ describe('PolicyEngine', () => {
       if (decision.classification.playbook === 'SHADOW') {
         expect(decision.preActions.some(a => a.type === 'pause')).toBe(true);
       }
+    });
+  });
+
+  describe('current-turn Guard safety context', () => {
+    it('includes stored integrity before execution without consuming it', async () => {
+      saveIntegrityState({ ok: false, warnings: [], missing: ['receipt'], evidenceCount: 0 });
+      const execution = await executeGuardRequest({
+        turn_id: 'complete-integrity-context',
+        operation_id: 'iskra.chat.respond',
+        action_risk: 'low',
+        reversible: true,
+        risk_source_ref: 'test:complete-integrity-context',
+        current_input: 'Привет',
+        metrics: defaultMetrics,
+        ...getPolicyGuardContext(defaultMetrics),
+      });
+
+      expect(execution.guard_decision).toBe('CLOSE_HONESTLY');
+      expect(execution.provider_execution_authorized).toBe(false);
+      expect(getStoredIntegrity()?.ok).toBe(false);
+    });
+
+    it('includes persisted counters in the first Guard evaluation', async () => {
+      saveGuardCounters({ anti_dryness_hits: 2, leader_flaps: 0 });
+      const execution = await executeGuardRequest({
+        turn_id: 'counter-context',
+        operation_id: 'iskra.chat.respond',
+        action_risk: 'low',
+        reversible: true,
+        risk_source_ref: 'test:counter-context',
+        current_input: 'Привет',
+        metrics: defaultMetrics,
+        ...getPolicyGuardContext(defaultMetrics),
+      });
+
+      expect(execution.guard_decision).toBe('FORCE_SHADOW');
+    });
+
+    it('includes the existing critical alert proxy before Guard execution', async () => {
+      const metrics = { ...defaultMetrics, interrupt: 0.9 };
+      saveIntegrityState({ ok: false, warnings: [], missing: ['receipt'], evidenceCount: 0 });
+      const execution = await executeGuardRequest({
+        turn_id: 'critical-alert-context',
+        operation_id: 'iskra.chat.respond',
+        action_risk: 'low',
+        reversible: true,
+        risk_source_ref: 'test:critical-alert-context',
+        current_input: 'Привет',
+        metrics,
+        ...getPolicyGuardContext(metrics),
+      });
+
+      expect(execution.guard_decision).toBe('FORCE_CRISIS');
+      const decision = makeDecision('Привет', metrics, [], execution);
+      expect(decision.guardOutcome?.decision).toBe('FORCE_CRISIS');
     });
   });
 
