@@ -1,0 +1,111 @@
+# Separate project; no service runs until a profile is explicitly selected.
+# Default bindings are loopback. Public bindings require reviewed private env.
+name: iskra-gateway-20261014
+
+x-nginx-image: &nginx-image nginx:1.31.6-alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2
+x-public-ports: &public-ports
+  - "${ISKRA_PUBLIC_BIND_HOST:-127.0.0.1}:${ISKRA_PUBLIC_HTTP_PORT:-18080}:80"
+  - "${ISKRA_PUBLIC_BIND_HOST:-127.0.0.1}:${ISKRA_PUBLIC_HTTPS_PORT:-18443}:443"
+x-health: &health
+  test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8081/healthz"]
+  interval: 30s
+  timeout: 3s
+  retries: 3
+
+services:
+  bootstrap:
+    profiles: [bootstrap]
+    container_name: iskra-gateway-20261014-bootstrap
+    image: *nginx-image
+    restart: unless-stopped
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    ports:
+      - "${ISKRA_PUBLIC_BIND_HOST:-127.0.0.1}:${ISKRA_PUBLIC_HTTP_PORT:-18080}:80"
+    entrypoint: ["nginx", "-c", "/packet/bootstrap.conf", "-g", "daemon off;"]
+    tmpfs: [/var/cache/nginx, /var/run]
+    volumes:
+      - type: bind
+        source: ./bootstrap.conf
+        target: /packet/bootstrap.conf
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: "${ISKRA_PUBLIC_STATE_DIR:?Private public state directory is required}/acme"
+        target: /var/www/acme
+        read_only: true
+        bind: {create_host_path: false}
+    healthcheck: *health
+
+  gateway:
+    profiles: [tls]
+    container_name: iskra-gateway-20261014-nginx
+    image: *nginx-image
+    restart: unless-stopped
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    ports: *public-ports
+    entrypoint: ["/bin/sh", "/packet/nginx.sh"]
+    environment:
+      ISKRA_PUBLIC_ANON_KEY: "${ISKRA_PUBLIC_ANON_KEY:?Local anon key is required}"
+    tmpfs: [/etc/nginx/conf.d, /var/cache/nginx, /var/run]
+    volumes:
+      - type: bind
+        source: ./nginx.sh
+        target: /packet/nginx.sh
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ./tls.conf.template
+        target: /packet/tls.conf.template
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: "${ISKRA_PUBLIC_STATE_DIR:?Private public state directory is required}/letsencrypt"
+        target: /etc/letsencrypt
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: "${ISKRA_PUBLIC_STATE_DIR:?Private public state directory is required}/acme"
+        target: /var/www/acme
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [default, backend]
+    healthcheck: *health
+
+  certbot:
+    profiles: [certificate]
+    container_name: iskra-gateway-20261014-certbot
+    image: certbot/certbot:v5.8.0@sha256:f70ad0adbb7e117f0fe42a63c553f28ea451edabc0148757b6efcd9735acaa20
+    restart: unless-stopped
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    entrypoint: ["/bin/sh", "/packet/certbot.sh"]
+    command: [renew]
+    environment:
+      ISKRA_PUBLIC_IP: "${ISKRA_PUBLIC_IP:?Public IPv4 is required in the private env}"
+      CERTBOT_EMAIL: "${CERTBOT_EMAIL:-}"
+    tmpfs: [/tmp, /var/lib/letsencrypt]
+    volumes:
+      - type: bind
+        source: ./certbot.sh
+        target: /packet/certbot.sh
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: "${ISKRA_PUBLIC_STATE_DIR:?Private public state directory is required}/letsencrypt"
+        target: /etc/letsencrypt
+        bind: {create_host_path: false}
+      - type: bind
+        source: "${ISKRA_PUBLIC_STATE_DIR:?Private public state directory is required}/acme"
+        target: /var/www/acme
+        bind: {create_host_path: false}
+      - type: bind
+        source: "${ISKRA_PUBLIC_STATE_DIR:?Private public state directory is required}/logs"
+        target: /var/log/letsencrypt
+        bind: {create_host_path: false}
+
+networks:
+  backend:
+    external: true
+    name: iskra-supabase-local-20261014_default

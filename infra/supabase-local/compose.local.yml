@@ -1,0 +1,79 @@
+# Local rehearsal only. Upstream source stays immutable; this overlay isolates
+# names, persists data in project-specific volumes, and binds UI/API to loopback.
+name: iskra-supabase-local-20261014
+
+services:
+  studio:
+    container_name: iskra-supabase-local-20261014-studio
+    ports:
+      - "127.0.0.1:13000:3000"
+    volumes:
+      - iskra-snippets:/app/snippets
+      - "${ISKRA_LOCAL_STATE_DIR}/functions:/app/edge-functions:ro"
+  api-gw:
+    container_name: iskra-supabase-local-20261014-envoy
+    ports: !override
+      - "127.0.0.1:18000:8000/tcp"
+    volumes:
+      - "${ISKRA_LOCAL_STATE_DIR}/envoy/lds.template.yaml:/etc/envoy/lds.template.yaml:ro"
+  auth:
+    container_name: iskra-supabase-local-20261014-auth
+    depends_on:
+      mailpit:
+        condition: service_started
+    environment:
+      GOTRUE_LOG_LEVEL: error
+  rest:
+    container_name: iskra-supabase-local-20261014-rest
+  realtime:
+    container_name: realtime-dev.iskra-supabase-local-20261014-realtime
+    networks:
+      default:
+        aliases:
+          - realtime-dev.supabase-realtime
+  storage:
+    container_name: iskra-supabase-local-20261014-storage
+    volumes:
+      - iskra-storage:/var/lib/storage
+  imgproxy:
+    container_name: iskra-supabase-local-20261014-imgproxy
+    volumes:
+      - iskra-storage:/var/lib/storage
+  meta:
+    container_name: iskra-supabase-local-20261014-meta
+  functions:
+    container_name: iskra-supabase-local-20261014-functions
+    volumes:
+      - "${ISKRA_LOCAL_STATE_DIR}/functions:/home/deno/functions:ro"
+    environment:
+      SUPABASE_JWT_SECRET: ${JWT_SECRET}
+      ISKRA_GATEWAY_ALLOWED_ORIGINS: ${ISKRA_GATEWAY_ALLOWED_ORIGINS}
+      AI_PROXY_ALLOWED_ORIGINS: ${AI_PROXY_ALLOWED_ORIGINS}
+      ISKRA_AGENT_ALLOWED_ORIGINS: ${ISKRA_AGENT_ALLOWED_ORIGINS}
+      KAIN_ALLOWED_ORIGINS: ${KAIN_ALLOWED_ORIGINS}
+      AI_EDGE_ENV: development
+      AI_EDGE_ALLOW_DEV_WILDCARD: "false"
+      AI_EDGE_TEST_MODE: "false"
+      AI_RATE_LIMIT_IP_HMAC_SECRET: ${AI_RATE_LIMIT_IP_HMAC_SECRET}
+      AI_EDGE_INGRESS_IP_HEADER: ${AI_EDGE_INGRESS_IP_HEADER}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      AGENT_ID: ${AGENT_ID:-}
+      AGENT_ACCESS_TOKEN: ${AGENT_ACCESS_TOKEN:-}
+  db:
+    container_name: iskra-supabase-local-20261014-db
+    volumes:
+      - iskra-db-data:/var/lib/postgresql/data
+  supavisor:
+    container_name: iskra-supabase-local-20261014-pooler
+    ports: !override []
+  mailpit:
+    container_name: iskra-supabase-local-20261014-mailpit
+    image: axllent/mailpit:v1.31.5
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18025:8025"
+
+volumes:
+  iskra-db-data:
+  iskra-storage:
+  iskra-snippets:

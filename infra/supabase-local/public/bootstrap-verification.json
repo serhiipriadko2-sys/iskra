@@ -1,0 +1,28 @@
+{
+  "acme_issuance_attempted": false,
+  "checks": {
+    "challenge": {
+      "http_status": 200,
+      "pass": true
+    },
+    "challenge_post": {
+      "http_status": 404,
+      "pass": true
+    },
+    "probe": {
+      "http_status": 404,
+      "pass": true
+    },
+    "root": {
+      "http_status": 404,
+      "pass": true
+    },
+    "unknown_challenge": {
+      "http_status": 404,
+      "pass": true
+    }
+  },
+  "public_route_verified": false,
+  "scope": "loopback_http01_routing_only",
+  "status": "pass"
+}

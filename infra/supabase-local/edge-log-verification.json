@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "constant_auth_failure_logged": true,
+    "decoded_payload_label_absent": true,
+    "expired_signed_jwt_rejected": true,
+    "logs_read_successfully": true,
+    "synthetic_payload_absent": true,
+    "token_absent": true
+  },
+  "http_status": 401,
+  "private_logs_printed": false,
+  "scope": "edge_jwt_failure_logging_only",
+  "secrets_output": false,
+  "status": "pass"
+}

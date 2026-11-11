@@ -1,0 +1,79 @@
+{
+  "containers": [
+    {
+      "Names": "iskra-supabase-local-20261014-functions",
+      "Ports": "",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-envoy",
+      "Ports": "127.0.0.1:18000->8000/tcp",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-auth",
+      "Ports": "",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-studio",
+      "Ports": "127.0.0.1:13000->3000/tcp",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-storage",
+      "Ports": "5000/tcp",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "realtime-dev.iskra-supabase-local-20261014-realtime",
+      "Ports": "",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-meta",
+      "Ports": "8080/tcp",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-pooler",
+      "Ports": "",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-rest",
+      "Ports": "3000/tcp",
+      "State": "running",
+      "Status": "Up 6 minutes (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-db",
+      "Ports": "5432/tcp",
+      "State": "running",
+      "Status": "Up About an hour (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-mailpit",
+      "Ports": "127.0.0.1:18025->8025/tcp",
+      "State": "running",
+      "Status": "Up About an hour (healthy)"
+    },
+    {
+      "Names": "iskra-supabase-local-20261014-imgproxy",
+      "Ports": "8080/tcp",
+      "State": "running",
+      "Status": "Up About an hour (healthy)"
+    }
+  ],
+  "project": "iskra-supabase-local-20261014",
+  "public_project_stopped": true,
+  "services_healthy": true
+}

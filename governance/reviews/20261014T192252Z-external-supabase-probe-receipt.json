@@ -1,0 +1,12 @@
+{
+  "archive": "governance/reviews/20261014T192252Z-external-supabase-probe.zip",
+  "archive_items": 10,
+  "bytes": 11743,
+  "crc_and_readback_pass": true,
+  "network_mutations": 0,
+  "public_activation_authorized": false,
+  "sha256": "0485811ed52a95442fff715d9feb37e15a8c59fe75207364667a225e244eeada",
+  "source_files": 9,
+  "source_sha256_matches_previous_receipt": true,
+  "status": "REQUIRE_APPROVAL"
+}
