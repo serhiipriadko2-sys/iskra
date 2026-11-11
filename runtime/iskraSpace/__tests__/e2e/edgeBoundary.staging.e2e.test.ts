@@ -43,6 +43,22 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
         : { message: 'staging access probe', route: 'chat' };
     }
 
+    async function waitForStableQuotaWindow(): Promise<void> {
+      const response = await fetch(`${config.url}/rest/v1/`, {
+        headers: { apikey: config.publishableKey },
+      });
+      const gatewayDate = response.headers.get('date');
+      const seconds = gatewayDate ? new Date(gatewayDate).getUTCSeconds() : new Date().getUTCSeconds();
+
+      // consume_ai_quota uses database minute buckets. Starting late in a
+      // minute can split eleven sequential requests into two valid buckets and
+      // create a false negative. The gateway clock keeps this wait independent
+      // of workstation clock skew.
+      if (seconds > 35) {
+        await new Promise(resolve => setTimeout(resolve, (61 - seconds) * 1_000));
+      }
+    }
+
     it.each<EdgeFunction>(['gemini', 'iskra-agent'])(
       '%s rejects missing, malformed, and genuinely expired JWTs',
       async functionName => {
@@ -92,6 +108,7 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
     );
 
     it('proves the Gemini IP limiter cannot be bypassed with client-selected X-Forwarded-For values', async () => {
+      await waitForStableQuotaWindow();
       const responses: Response[] = [];
       for (let index = 0; index < 11; index += 1) {
         responses.push(await invoke('gemini', {
@@ -108,6 +125,6 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
       expect(responses.slice(0, 10).map(response => response.status)).toEqual(Array(10).fill(502));
       expect(responses[10]?.status).toBe(429);
       expect(responses[10]?.headers.get('access-control-allow-origin')).toBe(config.allowedOrigin);
-    }, 30_000);
+    }, 45_000);
   },
 );

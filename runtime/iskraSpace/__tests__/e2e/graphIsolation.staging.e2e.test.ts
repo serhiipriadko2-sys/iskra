@@ -70,6 +70,7 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
         p_layer: 'archive',
         p_type: 'insight',
         p_content: 'staging isolation node B',
+        p_resonance_score: 0.99,
       }),
     ]);
     expect(createdA.error).toBeNull();
@@ -120,6 +121,67 @@ describe.skipIf(process.env.RUN_STAGING_ACCEPTANCE !== 'true').sequential(
     const { data, error } = await userA.rpc('graph_get_user_nodes', { p_node_ids: [nodeB] });
     expect(error).toBeNull();
     expect(data).toEqual([]);
+  });
+
+  it('keeps every read-oriented Graph SECURITY DEFINER RPC principal-scoped', async () => {
+    const [search, resonant, candidates, nodeWithEdges, traversal, stats, visibleCount] = await Promise.all([
+      userA.rpc('graph_search_nodes', { p_query: 'staging isolation', p_limit_count: 100 }),
+      userA.rpc('graph_find_resonant_nodes', { p_min_resonance: 0.9, p_limit_count: 100 }),
+      userA.rpc('graph_get_connection_candidates', { p_node_id: nodeA, p_limit_count: 100 }),
+      userA.rpc('graph_get_node_with_edges', { node_id: nodeB }),
+      userA.rpc('graph_traverse_bfs_nodes', { p_start_id: nodeB, p_max_depth: 3, p_min_weight: 0 }),
+      userA.rpc('graph_get_stats'),
+      userA.from('graph_nodes').select('id', { count: 'exact', head: true }),
+    ]);
+
+    for (const result of [search, resonant, candidates, nodeWithEdges, traversal, stats, visibleCount]) {
+      expect(result.error).toBeNull();
+    }
+    for (const result of [search, resonant, candidates, nodeWithEdges, traversal]) {
+      expect(JSON.stringify(result.data)).not.toContain(nodeB);
+    }
+    expect((stats.data as { totalNodes?: number } | null)?.totalNodes).toBe(visibleCount.count);
+  });
+
+  it('applies the same ownership boundary through the pg_graphql surface', async () => {
+    async function queryNode(token: string | undefined, nodeId: string) {
+      const headers: Record<string, string> = {
+        apikey: config.publishableKey,
+        'content-type': 'application/json',
+      };
+      if (token) headers.authorization = `Bearer ${token}`;
+      const response = await fetch(`${config.url}/graphql/v1`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          query: `query IsolatedGraphNode {
+            graph_nodesCollection(filter: { id: { eq: "${nodeId}" } }, first: 10) {
+              edges { node { id user_id } }
+            }
+          }`,
+        }),
+      });
+      expect(response.status).toBe(200);
+      return response.json() as Promise<{
+        data?: { graph_nodesCollection?: { edges?: Array<{ node?: { id?: string; user_id?: string | null } }> } };
+        errors?: unknown[];
+      }>;
+    }
+
+    const [owner, foreign, nonMember, suspended, anonymous] = await Promise.all([
+      queryNode(config.userAToken, nodeA),
+      queryNode(config.userBToken, nodeA),
+      queryNode(config.nonMemberToken, nodeA),
+      queryNode(config.suspendedMemberToken, nodeA),
+      queryNode(undefined, nodeA),
+    ]);
+    for (const result of [owner, foreign, nonMember, suspended]) expect(result.errors).toBeUndefined();
+    expect(owner.data?.graph_nodesCollection?.edges?.map(edge => edge.node?.id)).toEqual([nodeA]);
+    expect(foreign.data?.graph_nodesCollection?.edges ?? []).toEqual([]);
+    expect(nonMember.data?.graph_nodesCollection?.edges ?? []).toEqual([]);
+    expect(suspended.data?.graph_nodesCollection?.edges ?? []).toEqual([]);
+    expect(anonymous.data?.graph_nodesCollection?.edges ?? []).toEqual([]);
+    expect(JSON.stringify(anonymous)).not.toContain(nodeA);
   });
 
   it('does not update another active member\'s node through Graph RPC', async () => {
